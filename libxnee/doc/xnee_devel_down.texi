@@ -1,0 +1,38 @@
+@node Download, Development requirements, Overview, top
+@chapter Download 
+@cindex download Xnee
+
+Xnee can be downloaded using:
+@itemize @bullet
+@item CVS
+@item http
+@end itemize
+
+The instructions for downloading can be found at @url{http://sourceforge.net}
+
+@section http download
+@cindex download Xnee with http
+from Sourceforge.
+Go to the following URL:
+@url{http://sourceforge.net/projects/xnee}
+and follow the Xnee Download link
+
+
+@section CVS download
+@cindex download Xnee with CVS
+@subsection Anonymous download
+@example 
+ cvs -d:pserver:anonymous@@cvs.xnee.sourceforge.net:/cvsroot/xnee login
+When asked for password just type <ENTER> (that is a blank password)
+ cvs -z3 -d:pserver:anonymous@@cvs.xnee.sourceforge.net:/cvsroot/xnee co xnee
+@end example 
+
+@subsection Developer download
+@example 
+export CVS_RSH=ssh
+cvs -z3 -d:ext:developername@@cvs.xnee.sourceforge.net:/cvsroot/xnee co xnee
+@end example 
+
+
+
+

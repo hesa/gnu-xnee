@@ -1,0 +1,97 @@
+@chapter FAQ
+
+
+@table @samp
+
+@item When setting ranges (integers), how do I know what numbers belong to X11 data?
+@cindex When setting ranges (integers), how do I know what numbers belong to X11 data?
+You can either type the name directly (e.g MotionNotify) or you can use the print-xxx-name options. 
+@itemize @bullet
+@item  @code{--print-data-name} 
+@item  @code{--print-event-name}
+@item  @code{--print-error-name}
+@item  @code{--print-reply-name}
+@item  @code{--print-request-name} 
+@end itemize
+
+@item Can Xnee record more than one display?
+@cindex can Xnee record more than one display
+ No, but we are considering adding the functionality (see the TODO file)
+
+@item Will you put up a source tree so that I can join ?
+ You can find a CVS tree (soon) at Sourceforge.
+ You are more than welcome to join
+
+@item Is there a GUI frontend for Xnee ?
+@cindex GUI frontend for Xnee
+ No !
+
+@item Can I write a GUI frontend for you ?
+@cindex can Xnee record more than one display
+ Yes !
+
+@item What license is Xnee released under ?
+@cindex license
+ GPL  @url{http://www.gnu.org/copyleft/gpl.html}
+
+@item Why GPL?
+@cindex why gpl
+ We think:
+@itemize @bullet
+@item  programs shall be free
+@item  xnee is a fun way for me to (hopefully) become a better programmer
+@item  xnee is a small payback for our free operating systems (GNU/Linux and OpenBSD)
+@item  xnee is a way to make free operating systems better and more widely used than XXX
+@end itemize
+ And of course I think it would be a great kick for my ego to have other 
+ people using my programs (especially if the alternative is a non-free program on a non-free operating system).
+
+@item Why the name Xnee?
+@cindex why name it Xnee
+  We wanted to use a recursive acronym, as GNU (``GNU's Not Unix'). After having read the Wine documentation, I thought that Xnee is not an Event Emulator would work fine. Since Xnee is Not an Event Emulator but rather a XEvent generator. Emulation is not part of the game here.... 
+  .... it just sounds nice! 
+
+@item Can you add xxx functionality to Xnee
+  Send an email to @email{xnee@@sandklef.com} and we'll consider it.
+
+
+@item When starting Xnee I get noticed that I am missing RECORD extension
+@cindex missing RECORD extension
+Your X server doesn't have the RECORD extension either loaded or compiled. To solve this you have to, depending on what Xserver you have do the following:
+
+@itemize @bullet
+@item XFree86 4.0 and higher
+Make sure that the RECORD extension is loaded. This is done by letting the Module section in the X config file (e.g /etc/X11/XF86Config-4) look something like:
+
+@code{Section "Module"}@*
+@ @ @ @ @code{Load  "dbe"             # Double-buffering}@*
+@ @ @ @ @code{Load  "GLcore"          # OpenGL support}@*
+@ @ @ @ @code{Load  "dri"             # Direct rendering infrastructure}@*
+@ @ @ @ @code{Load  "glx"             # OpenGL X protocol interface}@*
+@ @ @ @ @code{Load  "extmod"          # Misc. required extensions}@*
+@ @ @ @ @code{Load  "v4l"             # Video4Linux}@*
+@ @ @ @ @code{# Load  "pex5"          # PHIGS for X 3D environment (obsolete)}@*
+@ @ @ @ @code{Load  "record"  # X event recorder}@*
+@ @ @ @ @code{# Load  "xie"           # X Image Extension (obsolete)}@*
+@ @ @ @ @code{# You only need the following two modules if you do not use xfs.}@*
+@ @ @ @ @code{# Load  "freetype"       # TrueType font handler}@*
+@ @ @ @ @code{# Load  "type1"         # Adobe Type 1 font handler}@*
+EndSection
+
+The important load directive (in this case) is the following line@*
+@ @ @ @ @code{Load  "record"  # X event recorder}@*
+
+
+
+@item X.org, XFree86 (3.3 and lower)  or any other Xserver
+Recompile and reinstall the Xserver and make sure that RECORD extension is built into the Xserver. Please look at the documentation from your Xserver "vendor" on how to do that.
+@end itemize
+
+@item Where do I send questions?
+@cindex questions is sent where?
+ @email{xnee@@sandklef.com}
+
+
+@end table
+
+

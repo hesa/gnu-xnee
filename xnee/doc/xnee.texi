@@ -1,0 +1,98 @@
+\input texinfo  @c -*- Texinfo -*-
+@c %**start of header
+@setfilename xnee.info
+@settitle Xnee Manual
+@setchapternewpage off
+@c %**end o
+
+
+
+@include version.texi
+
+
+@dircategory Miscellaneous
+@direntry
+@ * : (Xnee).        Xnee's Not Event Emulator.
+@end direntry
+
+
+@c Put everything in one index (arbitrarily chosen to be the concept index).
+@syncodeindex fn cp
+@syncodeindex ky cp
+@syncodeindex pg cp
+@syncodeindex vr cp
+
+@c This is used by a cross ref in make-stds.texi
+@set CODESTD  1
+@iftex
+@set CHAPTER chapter
+@end iftex
+@ifinfo
+@set CHAPTER node
+@end ifinfo
+
+
+
+
+@titlepage
+@sp 10
+@c omment The title is printed in a large font
+@center @titlefont{Xnee Manual}
+
+@c The following two commands start the copyright page.
+@page
+@vskip 0pt plus 1filll
+@title Xnee Manual 
+@subtitle a recorder, replayer and sistributor for X Window System
+@subtitle version @value{VERSION} @value{UPDATED} 
+@author Henrik Sandklef
+@include xnee_copying
+@end titlepage
+
+
+@ifinfo
+@node Top,Introduction,, (dir)
+@top 
+@include xnee_copying
+@end ifinfo
+
+
+@menu
+* Introduction::         Xnee Introduction
+* Usage::                Xnee Usage
+* Installation::         Xnee Installation
+* Examples::             Xnee Usage Examples
+* Synchronisation::      Xnee Synchronisation
+* Requirements::         Xnee Requirements
+* FAQ::                  Xnee FAQ
+* Copying This Manual::  Copying This Manual
+* Index::                Index
+@end menu
+
+
+@shortcontents
+
+@node Introduction, Usage, top, top
+@include xnee_intro.texi
+@include xnee_usage.texi
+@include xnee_install.texi
+@include xnee_exampl.texi
+@include xnee_synch.texi
+@include xnee_req.texi
+@node FAQ, Copying This Manual, Requirements, top
+@include xnee_faq.texi
+
+
+@node Copying This Manual, Index, FAQ, top
+@appendix Copying This Manual
+
+@include fdl.texi
+
+@node Index, (dir), Copying This Manual, top
+@chapter Index
+@printindex cp
+
+@contents
+
+@bye
+

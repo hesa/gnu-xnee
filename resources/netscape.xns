@@ -1,0 +1,22 @@
+#
+# Name:        netscape.xns
+# Description: Xnee settings used when recording and replaying 
+#              netscape
+#
+# Author:	Henrik Sandklef
+# 
+#
+#verbose
+device-event-range:        2-6
+delivered-event-range:     15-19
+request-range:             12
+loops:                     1000
+out-file:                  xnee.out
+err-file:                  xnee.err
+all-clients
+
+
+
+
+
+

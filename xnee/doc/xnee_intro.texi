@@ -1,0 +1,58 @@
+@chapter Introduction
+
+@section Short description
+Xnee can record and replay an X session. Xnee also has the ability to
+distribute events to multiple displays.
+
+@section Xnee features
+@cindex features
+
+@b{Test tool}
+Instead of performing test cases for a GUI (or CLI program) cases 
+over and over again, the test cases can be automated. Simply record 
+a user session and replay it later. 
+
+@b{Performance test tool}
+	If you want to simulate lots of simultaneous users in a network (or
+	a local machine) you can use Xnee. Simply record a (or many) users
+	sessions and start multiple instances of Xnee.
+
+@b{Demo tool}
+	You can use Xnee to demonstrate the features of your program. Simply 
+	record a user session and replay it later. 
+
+@b{Distribution tool}
+	If you want to send over your mouse/keyboard actions to another display
+	you can use the built-in distribution mechanism in Xnee. 
+
+
+
+@section Background
+@cindex background
+In order to verify that a program does the job it's supposed to do, 
+certain tests have to be made. These tests are, IMHO, perhaps the most 
+boring things a programmer can do. With xnee the testcase(s) can be 
+recorded and later on replayed. Xnee can also distribute events (both 
+when recording and replaying) to other displays.
+
+Initially, Xnee was made to release the programmer (that's me) from the burden of testing, who hopefully will be writing free software instead (I am doing that).
+
+
+@section How does it work
+@cindex how does xnee work
+Xnee uses X Windows System. For more information about this lovely 
+system, go to : 
+@itemize @bullet
+@item	X.org                   @url{http://www.x.org}
+@item	XFree86 		@url{http://www.xfree86.org}
+@item	Ken Lee's X site	@url{http://www.rahul.net/kenton/xsites.html}
+@end itemize
+
+Xnee receives X11 protocol data (e g XEvents) from an X server and prints
+them to a file (or stdout). Mouse and keyboard actions generate device events. 
+These events can be relpayed. Other X11 data can also recorded. These data is 
+used when replaying to synchronise. This is not only useful but essential. 
+We can not replay or regenerate keyboard-events to a window before it's 
+ready to "receive" events. By recording data other than device events
+
+

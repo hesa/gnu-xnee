@@ -1,0 +1,179 @@
+@node Development requirements, Building Xnee, Download, top
+@chapter Development requirements for Xnee 
+@cindex development requirements
+Apart from the obvious operating system and a compiler the following softwares are needed when developing Xnee.
+@itemize @bullet
+@item X11 development environment
+        this must include the RECORD and XTEST extensions
+@item auto*
+        aclocal, automake, autoconf (GNU software)
+@item doygen
+        a documentation system
+@item rpm
+        RedHat's packet manager
+@item GNU make
+@end itemize
+
+One can develop Xnee without auto* & rpm. Rpms, and tar.gz files cannot be built for release at @url{Soureforge.net} without them.
+
+@chapter Building Xnee
+@node    Building Xnee, FAQ, Development requirements, top
+@cindex build xnee
+Xnee can be built the following ways:
+@itemize @bullet
+@item from CVS sources
+@item from tar.gz file
+@end itemize
+
+
+
+@section Build Xnee from CVS sources
+@cindex build xnee from CVS source
+
+
+@subsection Using autotools from GNU
+@itemize @bullet
+@item make -f Makefile.cvs
+@item ./configure
+@item make
+@item make install
+@end itemize
+
+
+@subsection Not using autotools from GNU
+@itemize @bullet
+@item make -f Makefile.xnee
+@end itemize
+Installation has to made by you. You're on your own here!
+
+
+@section Build Xnee from tar.gz (gzipped tar file)
+@cindex build xnee from tar.gz
+@subsection Using autotools from GNU
+@itemize @bullet
+@item ./configure
+@item make
+@item make install
+@end itemize
+
+
+@subsection Not using autotools from GNU
+@itemize @bullet
+@item make -f Makefile.xnee
+@end itemize
+Installation has to made by you. You're on your own here!
+
+@section Document test
+@cindex document testing
+Open the documents aa described below and make sure they 
+look good (formatting correct etc) and that they have correct 
+version number, date etc.
+@multitable  @columnfractions .10 .45 .45
+@item 
+@tab @b{Document type}
+@tab @b{Todo}
+
+@item
+@tab   @b{man}
+@tab   Use man:
+@item
+@tab
+@tab   mkdir tmp
+@item
+@tab
+@tab   pushd tmp
+@item
+@tab
+@tab   mkdir man/man1/
+@item
+@tab
+@tab   cp ../doc/xnee.1 man/man1/
+@item
+@tab
+@tab   man -M . xnee
+@item
+@tab
+@tab   [make sure it is correct]
+@item
+@tab
+@tab   popd
+@item
+@tab
+@tab   \rm -fr tmp
+
+@item
+@tab   @b{info}
+@tab   Use info: 
+@item
+@tab
+@tab   info -f doc/xnee.info
+@item
+@tab
+@tab   info -f doc/xnee_develop.info
+
+@item
+@tab   @b{txt}
+@tab   Use a pager (e.g less):
+@item
+@tab
+@tab   less doc/xnee_man.txt
+
+@item
+@tab   @b{pdf}
+@tab   Use a pdf reader (e.g xpdf)
+@item
+@tab
+@tab   xpdf doc/xnee.pdf
+@item
+@tab
+@tab   xpdf doc/xnee_develop.pdf
+
+@item
+@tab   @b{ps}
+@tab   Use a ghostscript reader (e.g ggv):
+@item
+@tab
+@tab   ggv doc/xnee.ps
+@item
+@tab
+@tab   ggv doc/xnee_develop.ps
+
+@item
+@tab   @b{html}
+@tab   Use a browser (e.g galeon):
+@item
+@tab
+@tab   galeon file:`pwd`/doc/xnee.html
+@item
+@tab
+@tab   galeon file:`pwd`/doc/xnee_develop.html
+@end multitable
+A script is ditributed with xnee to speed this test up a bit. 
+Use 'doctest.sh' in the Xnee root directory
+@subsection Regression test
+Perfom the examples in the Examples section of the manual.
+
+
+@chapter Releasing x new version of Xnee 
+@cindex release a new version of Xnee
+To release Xnee the following has to made:
+@itemize @bullet
+@item  Update NEWS, TODO
+@item  Update Version information (doc/version.texi configure.in)
+@item  Test the changes (including version number)
+@item  Make sure that all documents is correct
+@item  Do a regression test of Xnee
+@item  Check in to the CVS repository
+@item  Tag in CVS with version
+@item  1) Make distribution (make dist) and rpms (xxxx)
+@item  or 
+@item  2) Use the build script (./build.sh --rpm)
+@item  Test installation of SRPM and RPM
+@item  Test build & installation of tar.gz
+@item  Release the files at @url{htt://sourceforge.net}
+@item  Make a release at @url{htt://freshmeat.net}
+@item  Update the Xnee homepage @url{http://xnee.sourceforge.net}
+@end itemize
+
+
+

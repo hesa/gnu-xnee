@@ -1,0 +1,27 @@
+#
+# Name:        xnee.xns
+# Description: Xnee settings used when recording and replaying 
+#              ???? applications
+#
+# Author:	Henrik Sandklef
+# 
+#
+#verbose
+device-event-range:         3-6
+delivered-event-range:     7-11,15-33
+request-range:              1,4-13,64-65
+loops: 200
+#out: xnee.xlr
+#err: xnee.err
+all_clients
+#
+#
+#
+#
+
+
+
+
+
+
+

@@ -1,0 +1,94 @@
+@node Overview, Download, Introduction, top
+@chapter Development Overview
+It is assumed that the reader has the read through the Xnee Manual.
+
+It has been one of the goals with Xnee to deliver an API that us easy to use and object-oriented as much as C allows. As an example you don't have to allocate any of the structs in Xnee or any other for that matter. It is all hanlde by the functions in the Xnee library.
+
+@section Xnee components
+@cindex components
+Xnee is made up of
+@itemize @bullet
+@item library (libxnee)
+@item a command line tool (xnee) 
+@end itemize
+The library is seperated from the binary to make the development of a GUI frontend easier. 
+
+@section Xnee library
+@cindex xnee library
+The library itself can bee seen as consisting of three parts. 
+
+@subsection base 
+This part of Xnee library contains the macros (define), structs and common functions (e.g data printing functions, data allocating functions). 
+
+Base is made up of the following files 
+@itemize @bullet
+@item xnee.h & xnee.c
+        contains the structs, macros and prototypes (no, not declarations) and definitions of the common functions
+@item print.h & print.c
+        Xnee specific printing functions used throughout Xnee. 
+@end itemize
+
+@subsection record 
+
+Record is made up of the following files:
+@itemize @bullet
+@item xnee_record.h & xnee_record.c
+        functions specific for recording
+@end itemize
+        
+@subsection replay 
+Replay is made up of the following files:
+@itemize @bullet
+@item xnee_record.h & xnee_record.c
+        functions specific for recording
+@end itemize
+
+@section Xnee command
+@cindex xnee command
+The command line program Xnee consists of
+@subsection parser
+@itemize @bullet
+@item parse.h & parse.c 
+        parser for the command line options, help printouts etc
+@end itemize
+
+@subsection main
+@itemize @bullet
+@item main.c
+        main program. Simply consists of invocations of functions in Xnee library and in the parser.
+@end itemize
+
+
+
+@section Making a GUI frontend for Xnee
+@cindex gui frontend for Xnee
+An Xnee GUI fronted can be made in any of the following ways
+@itemize @bullet
+@item invoikng xnee using the execv* calls
+        This GUI would build up an Xnee command line that is eventually executed.
+@item using libxnee
+        User settings are used with Xnee library to set up the Xnee structs and there after use any of the Xnee replay/record functions.
+@end itemize
+
+
+
+@section Xnee requirements
+It is assumed that you're familiar with X11. If not go to the following URLs
+and read:
+@itemize @bullet
+@item	X.org                   @url{http://www.x.org}
+@item	XFree86 		@url{http://www.xfree86.org}
+@item	Ken Lee's X site	@url{http://www.rahul.net/kenton/xsites.html}
+@end itemize
+
+Xnee records X11 data using RECORD extension. For more details
+on that look for the specifications of the extension: 
+@ 	record.ps
+@ 	recordlib.ps
+
+Xnee fakes/replays events using XTest extension. For more 
+details on that look for the specifications of the extension:
+@ 	xtest.ps
+@ 	xtestlib.ps
+
+

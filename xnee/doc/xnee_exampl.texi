@@ -1,0 +1,25 @@
+@node Examples, Synchronisation, Installation, top
+@chapter Examples
+
+@section Recorder
+
+@subsection Recording a netscape session
+Start one terminal exmulator (e.g xterm)
+Start Xnee,
+@example
+   @code{xnee -p  &}
+@end example
+=======
+TBD
+
+@section Recorder
+
+
+@section Replayer
+
+TBD
+
+@section Distributor
+
+TBD
+
