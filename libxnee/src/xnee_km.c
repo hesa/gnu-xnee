@@ -651,7 +651,8 @@ xnee_get_action_key (xnee_data     *xd,
 			"string \"%s\" to an int\n",key);
       return ( XNEE_SYNTAX_ERROR);
     }
-  xnee_verbose((xd, "  --- xnee_get_action_key %s gives us %d \n", key, ks));
+  xnee_verbose((xd, "  --- xnee_get_action_key %s gives us %d \n", 
+		key, (int)ks));
 
   /* OK, it's a integer... just use it! */
   ak->key = XKeysymToKeycode (xd->grab, ks);

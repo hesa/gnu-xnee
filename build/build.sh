@@ -205,6 +205,19 @@ build_rpm_prepare()
     check_status "$?" "make"
 }
 
+build_cvs()
+{
+    rm -fr /tmp/xnee_tar
+    mkdir  /tmp/xnee_tar
+    cd     /tmp/xnee_tar
+    export CVS_RSH=ssh
+    cvs -dhesa@subversions.gnu.org:/cvsroot/xnee co xnee
+    DATE=$(date '+%Y%m%d')
+    tar cvf Xnee-cvs-${DATE}.tar *
+    gzip Xnee-cvs-${DATE}.tar 
+    cd -
+    mv /tmp/xnee_tar/Xnee-cvs-${DATE}.tar.gz ./
+}
 
 
 if [ "$BUILD_RPM" != "true" ] ;
@@ -310,4 +323,5 @@ fi
 #check_version $XNEE_VERSION "xnee from Makefile.solaris"
 #mv xnee/src/xnee ./xnee.makefile_solaris
 
+build_cvs
 

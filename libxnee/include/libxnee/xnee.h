@@ -1098,6 +1098,14 @@ int
 xnee_free_recordext_setup( xnee_data* xd);
 
 
+void
+xnee_free_replay_setup( /*@only@*/ /*@null@*/ xnee_testext_setup* xrs);
+
+xnee_testext_setup*
+xnee_new_replay_setup(void);
+
+
+
 /**
  * Zeros the sync data in xd.
  * @param xd     xnee's main structure

@@ -91,7 +91,7 @@ xnee_replay_event_handler( xnee_data* xd,
   Time saved_time = 0 ; /* used to restore time of last replayable event */
 
   xnee_verbose((xd, "---> xnee_replay_event_handler \n "));
-  xnee_verbose((xd, "---  xnee_replay_event_handler fake=%d\n ", xd->fake));
+  xnee_verbose((xd, "---  xnee_replay_event_handler fake=%d\n ", (int)xd->fake));
   XTestGrabControl (xd->fake, True); 
   xnee_verbose((xd, "---  xnee_replay_event_handler 0\n "));
   XFlush(xd->fake);                 
@@ -171,8 +171,6 @@ xnee_replay_event_handler( xnee_data* xd,
   xnee_verbose((xd, "---  xnee_replay_event_handler \n "));
   
 
-  xnee_verbose ((xd, "   switching type: %d sleep_amt: %d\n", 
-		 xindata->u.event.type, sleep_amt ));
 
   fflush( NULL );
   
@@ -217,7 +215,8 @@ xnee_replay_event_handler( xnee_data* xd,
     {
       ;
     }
-  xnee_verbose((xd, "<--- xnee_replay_event_handler returning after handling of \n", xindata->u.event.type ));
+  xnee_verbose((xd, "<--- xnee_replay_event_handler returning after handling of %d \n", 
+		xindata->u.event.type ));
 
   return return_value ;
 }
@@ -400,7 +399,7 @@ xnee_fake_motion_event (xnee_data* xd,
     {
 
       xnee_fake_sleep (dtime);
-      xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %lu))\n",
+      xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))\n",
 		    (int) xd->fake, 
 		    (int) screen, 
 		    (int) x,
@@ -418,7 +417,7 @@ xnee_fake_motion_event (xnee_data* xd,
     {
       XTestGrabControl (xd->distr_list[i].dpy, True); 
 
-      xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %lu))  **\n",
+      xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))  **\n",
 		   (int) xd->distr_list[i].dpy, 
 		   (int) screen, 
 		   (int) x,
@@ -455,7 +454,7 @@ xnee_fake_relative_motion_event (xnee_data* xd,
   if (!xnee_is_recorder (xd))
     {
       xnee_fake_sleep (dtime);
-      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%d, %d, %d, %lu))\n",
+      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%d, %d, %d, %d))\n",
 		    (int) xd->fake, 
 		    (int) x,
 		    (int) y,
@@ -471,7 +470,7 @@ xnee_fake_relative_motion_event (xnee_data* xd,
     {
       XTestGrabControl (xd->distr_list[i].dpy, True); 
 
-      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%d, %d, %d, %lu))  **\n",
+      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%d, %d, %d, %d))  **\n",
 		   (int) xd->distr_list[i].dpy, 
 		   (int) x,
 		   (int) y,

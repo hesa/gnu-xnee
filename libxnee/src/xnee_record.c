@@ -127,6 +127,7 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
    KeyCode kc;
    int do_print;
    int ret ; 
+   unsigned int screen ;
 
 
    if ( xrecintd==NULL )
@@ -255,9 +256,8 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 	      break;
 	    case MotionNotify:  
                kc = 0;
-	       unsigned int screen = 
-		 get_screen_nr(xd->data,
-			       xrec_data->event.u.keyButtonPointer.root);
+	       screen = get_screen_nr(xd->data,
+				      xrec_data->event.u.keyButtonPointer.root);
 	       do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
 	       fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
 			event_type,
@@ -748,7 +748,7 @@ xnee_unsetup_recording(xnee_data *xd)
   if (xd->record_setup->rContext != 0)
     {
       xnee_verbose((xd, "---  disabling context %d \n", 
-		    xd->record_setup->rContext));
+		    (int)xd->record_setup->rContext));
       (void)XRecordDisableContext(xd->control, xd->record_setup->rContext);
 
       xnee_verbose((xd, "---  freeing context \n"));

@@ -638,7 +638,6 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 static int
 xnee_expression_handle_comment(xnee_data *xd, char *tmp)
 {
-  int i ;
   int len ;
 
   len = strlen(tmp);

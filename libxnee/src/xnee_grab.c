@@ -76,7 +76,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       xnee_verbose((xd, "---  xnee_ungrab_key\n"));
       xnee_verbose((xd, "window   %d\n", window));
       xnee_verbose((xd, "screen   %d\n", screen));
-      xnee_verbose((xd, "data     %d\n", xd->grab));
+      xnee_verbose((xd, "data     %d\n", (int)xd->grab));
       xnee_verbose((xd, "stop key %d\n", xd->grab_keys->action_keys[mode].key));
       xnee_verbose((xd, "stop mod %d\n", AnyModifier));
       XUngrabKey (xd->grab,  
@@ -161,7 +161,7 @@ xnee_grab_key (xnee_data* xd, int mode, char *key)
   /* grab key + modifier */
   screen = DefaultScreen (xd->grab);
   window = RootWindow    (xd->grab, screen );
-  xnee_verbose((xd, "grab     %d\n", xd->grab));
+  xnee_verbose((xd, "grab     %d\n", (int)xd->grab));
   xnee_verbose((xd, "stop key %d\n", ak.key));
   xnee_verbose((xd, "stop mod %d\n", AnyModifier));
   xnee_verbose((xd, "window   %d\n", window));

@@ -593,14 +593,14 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		    }
 		  break;
 		case XNEE_REQUEST:
-		  xnee_verbose((xd, "READ A REQUEST, %d\n", xindata)); 
+		  xnee_verbose((xd, "READ A REQUEST\n")); 
 		  xnee_replay_buffer_handler ( xd, 
 					       XNEE_REQUEST, 
 					       xindata.u.request.type, 
 					       XNEE_REPLAYED);
                   break;
 		case XNEE_REPLY:
-		  xnee_verbose((xd, "READ A REPLY, %d\n", xindata)); 
+		  xnee_verbose((xd, "READ A REPLY\n")); 
 		  xnee_replay_buffer_handler ( 
 					      xd, 
 					      XNEE_REPLY, 
@@ -682,7 +682,7 @@ xnee_setup_rep_recording(xnee_data *xd)
     }
   xnee_verbose((xd, "\t  CreateContext   nr_of_ranges=%d\n", nr_of_ranges));  
 
-  xnee_verbose ((xd, "creating context .... on control = %d\n", xd->control));
+  xnee_verbose ((xd, "creating context .... on control = %d\n", (int)xd->control));
   xrs->rContext = XRecordCreateContext(xd->control, 
 				       xrs->data_flags, 
 				       xrs->xids, 1, 
@@ -697,7 +697,7 @@ xnee_setup_rep_recording(xnee_data *xd)
   if (ret==0)
     {
       xnee_verbose ((xd, "Could not register clients dpy=%u data_flags=%d"
-		     "nr of ranges=%\n", 
+		     "nr of ranges=%d\n", 
 		     (unsigned int)xd->control,
 		     xrs->data_flags,
 		     nr_of_ranges));
@@ -724,10 +724,10 @@ xnee_setup_rep_recording(xnee_data *xd)
     }
 
   xnee_verbose((xd, "--- xnee_setup_rep_recording getting context \n"));             
-  xnee_verbose((xd, "--- \t %d\n", xd->control));             
-  xnee_verbose((xd, "--- \t %d\n", xrs));             
-  xnee_verbose((xd, "--- \t %d\n", xrs->rContext));             
-  xnee_verbose((xd, "--- \t %d\n", xrs->rState));             
+  xnee_verbose((xd, "--- \t %d\n", (int)xd->control));             
+  xnee_verbose((xd, "--- \t %d\n", (int)xrs));             
+  xnee_verbose((xd, "--- \t %d\n", (int)xrs->rContext));             
+  xnee_verbose((xd, "--- \t %d\n", (int)xrs->rState));             
 
   if( XRecordGetContext(xd->control, xrs->rContext, (XRecordState **) xrs->rState) == 0)
     {

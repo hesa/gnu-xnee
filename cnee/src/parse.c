@@ -694,7 +694,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--verbose", "-v")) 
 	{
            xnee_set_verbose(xd);
-           printf ("setting verbose on %d\n", xd);
+           printf ("setting verbose on %d\n", (int)xd);
 	}
       else if(xnee_check(argv[i], "--buffer-verbose", "-bv")) 
 	{
@@ -793,9 +793,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  xnee_verbose((xd, "Reading replay data from %s (%d))\n", 
-			xnee_get_data_name (xd), 
-			xnee_get_data_file (xd)));
+	  xnee_verbose((xd, "Reading replay data from %s \n", 
+			xnee_get_data_name (xd)));
 	  continue;
 	}
       else if ( xnee_check (argv[i], "--write-settings", "-ws"))

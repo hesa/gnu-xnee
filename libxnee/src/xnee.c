@@ -995,7 +995,6 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
   
   xnee_verbose((xd, "Adding Display \"%s\" to distribution list\n", disp_str));
   
-  xnee_verbose((xd, "Adding Display - allocating memory \n", disp_str));
   if (xd->distr_list_size==0) 
     {
       xnee_verbose((xd, 
@@ -1029,7 +1028,7 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
       xnee_print_error ("Could not open display %s\n", disp_str);
       exit ( XNEE_NOT_OPEN_DISPLAY );
     }
-  xnee_verbose((xd, "Adding Display  - opening display gave us %d\n", dpy));
+  xnee_verbose((xd, "Adding Display  - opening display gave us %d\n", (int) dpy));
   
   xnee_verbose((xd, "Adding Display  - trying to grab control\n"));
   /*@ignore@*/
@@ -1066,11 +1065,8 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
     {
       xd->distr_list[xd->distr_list_size].is_used=0;
       
-      xnee_verbose ((xd, "\t width %d \n"));
       xd->distr_list[xd->distr_list_size].res.x_res=DisplayWidth  (dpy, 0);
-      xnee_verbose ((xd, "\t height\n"));
       xd->distr_list[xd->distr_list_size].res.y_res=DisplayHeight (dpy, 0);
-      xnee_verbose ((xd, "\t dpy \n"));
       xd->distr_list[xd->distr_list_size].dpy=dpy;
       
       
@@ -1108,7 +1104,7 @@ xnee_add_display (Display *dpy, xnee_data* xd)
   int xtest_version_major = 0;
   int xtest_version_minor = 0;
 
-  xnee_verbose((xd, "Adding Display \"%d\" to distribution list\n", dpy));
+  xnee_verbose((xd, "Adding Display \"%d\" to distribution list\n", (int) dpy));
   if (xd->distr_list_size==0) 
     {
       xd->distr_list = (xnee_distr *) calloc (1,sizeof (Display));
@@ -1137,7 +1133,7 @@ xnee_add_display (Display *dpy, xnee_data* xd)
        return (XNEE_NO_TEST_EXT);
     }
   xnee_verbose ((xd, "  XTest  Release on \"%d\"         %d.%d\n", 
-		dpy,
+		 (int)dpy,
 		 xtest_version_major,
 		 xtest_version_minor));
   
@@ -1273,7 +1269,7 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
       exit(XNEE_PLUGIN_FILE_ERROR);
     }
   
-  xnee_verbose ((xd, "We've got plugin file handle %d\n", xd->plugin_handle));
+  xnee_verbose ((xd, "We've got plugin file handle %d\n", (int)xd->plugin_handle));
 
   ret = xnee_set_callback (xd, 
 			   &xd->rec_callback,
@@ -1613,7 +1609,7 @@ xnee_set_autorepeat (xnee_data *xd)
   xnee_verbose ((xd," bell_duration      %d\n", 
 		 xd->kbd_orig.bell_duration));
   xnee_verbose ((xd," led_mask           %d\n",  
-		 xd->kbd_orig.led_mask));
+		 (int)xd->kbd_orig.led_mask));
   xnee_verbose ((xd," global_auto_repeat %d\n", 
 		 xd->kbd_orig.global_auto_repeat));
 
@@ -1652,7 +1648,7 @@ xnee_reset_autorepeat (xnee_data *xd)
 
 
   xnee_verbose((xd,"Resetting autorepeat on (%d) to: ",
-		(xd->fake==NULL)?0:xd->fake));
+		(xd->fake==NULL)?0:(int)xd->fake));
 
   if (!xd->fake)
     return XNEE_OK;
@@ -1806,7 +1802,7 @@ xnee_rep_prepare(xnee_data *xd)
       return ret;
     }
   
-  xnee_verbose((xd," building modifier map on %d\n", xd->fake)); 
+  xnee_verbose((xd," building modifier map on %d\n", (int)xd->fake)); 
   xd->map = XGetModifierMapping(xd->fake);
 
   /*
@@ -2098,7 +2094,8 @@ handle_xerr(Display *dpy, XErrorEvent *errevent)
 	  errevent->request_code,errevent->request_code);
   printf ("\terror code minor %u (0x%x)\n", 
 	  errevent->minor_code,errevent->minor_code);
-  printf ("\tdisplay          %d (0x%x)\n", (int)dpy);
+  printf ("\tdisplay          %d (0x%x)\n", 
+	  (int)dpy, (unsigned int)dpy);
 
   ret = XGetErrorText (dpy, 
 		       (int) errevent->error_code, 

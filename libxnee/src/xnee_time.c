@@ -208,7 +208,7 @@ xnee_calc_sleep_amount(xnee_data *xd,
       sleep_amt=2;
     }
 
-    xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", sleep_amt )); 
+  xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", (int)sleep_amt )); 
   return ( sleep_amt );
 }
 
@@ -309,7 +309,7 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
       sleep_amt=0;
     }
 
-  xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", sleep_amt )); 
+  xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", (int)sleep_amt )); 
   return ( sleep_amt );
 }
 
@@ -401,7 +401,7 @@ xnee_calc_sleep_amount_fast(xnee_data *xd,
       /* right on time */ 
       sleep_amt=0;
     }
-    xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", sleep_amt )); 
+    xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", (int)sleep_amt )); 
   /*
     printf ("sleep_mt=%lu\n", sleep_amt);*/
   return ( sleep_amt );
