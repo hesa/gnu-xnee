@@ -24,8 +24,11 @@ OPTIONS
   --err, -e <file_name>          
 	Redirect all Xnee verbose output file_name (default is stderr)
 
-  --plugin ,-p <file_name>       
-	Use plugin file file_name
+  --resource ,-r <file_name>     
+	Use resource file file_name
+
+  --plugin ,-p <name     >       
+	Use the plugin name name
 
   --all-events, -ae              
 	Intercept all events
@@ -56,6 +59,9 @@ OPTIONS
 
   --verbose, -v                  
 	Verbose printout
+
+  --buffer-verbose, -bv          
+	Verbose printout of replay buffer
 
   --time, -t  <secs>             
 	Delay start of application for <secs> seconds. Used to prevent recording of KeyRelease when starting Xnee from terminal
@@ -90,8 +96,11 @@ OPTIONS
   --print-settings, -ps          
 	Prints Xnee settings and waits (for <ENTER>)
 
-  --print-event-names, -pen      
+  --print-event-names, -pens     
 	Prints X11 event number and name 
+
+  --print-event-name, -pen <ev>  
+	Prints X11 event number or name coresponding to ev
 
   --print-error-names, -pern     
 	Prints X11 error number and name 
@@ -99,8 +108,11 @@ OPTIONS
   --print-reply-names, -pren     
 	Prints X11 reply number and name 
 
-  --print-request-names, -prn    
+  --print-request-names, -prns   
 	Prints X11 request number and name 
+
+  --print-request-name, -prn <req> 
+	Prints X11 request number or name  coresponding to req
 
   --print-data-names, -pdn       
 	Prints X11 data number and name 
@@ -138,6 +150,9 @@ OPTIONS
   --extension-reply-mainor-range, -erpmir  <X_LIST>   
 	Set extension reply minor range to X_LIST
 
+  --force-replay, -fp             
+	Keep replaying even if we are out of sync .... dangerous
+
 COMMENTS
   file_name
 	Name of a file (e.g /tmp/user1_session.xnee)
@@ -154,7 +169,7 @@ COMMENTS
 
 EXAMPLES
 
-  xnee  -k_log -devera 2-6 -o /tmp/xnee.rec -e /tmp/xnee.log -v 
+  xnee  --k_log -devera 2-6 -o /tmp/xnee.rec -e /tmp/xnee.log -v 
 	Writes 1000 data to file /tmp/xnee.rec and dumps the verbose printout to /tmp/xnee.log
 
   xnee -rep -f /tmp/xnee.rec -v -e /tmp/xnee.log --no-sync
@@ -162,4 +177,4 @@ EXAMPLES
 
   For more examples, look at the EXAMPLES file
 
-  Report bugs to xnee@sandklef.com
+  Report bugs to info-xnee@gnu.org

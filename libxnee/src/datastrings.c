@@ -74,15 +74,23 @@ xnee_event2int(char *ev)
 }
 
 int
-xnee_request2int(char *ev)
+xnee_request2int(char *req)
 {
   int i ; 
 
-  for (i=2;request_names[i]!=NULL;i++)
+  for (i=1;i<=X_NoOperation;i++)
     {
-      if (strncmp(request_names[i], ev, strlen(request_names[i]))==0)
+      if (request_names[i]==NULL)
 	{
-	  return i;
+	  ;
+	}
+      else
+	{
+	  int len = XNEE_MAX (strlen(request_names[i]), strlen(req));
+	  if (strncmp(request_names[i], req, len)==0)
+	    {
+	      return i;
+	    }
 	}
     }
   return -1;
@@ -163,9 +171,16 @@ xnee_print_request ( int err)
  *
  */
 char *
-xnee_int2request(int ev)
+xnee_int2request(int req)
 {
-  return request_names[ev];
+  if ( (req <= 0) || (req>X_NoOperation) )
+    {
+      return NULL;
+    }
+  else 
+    {
+      return request_names[req];
+    }
 }
 
 
@@ -182,7 +197,14 @@ xnee_int2request(int ev)
 char *
 xnee_int2event(int ev)
 {
-  return event_names[ev];
+  if ( (ev <= 1) || (ev>LASTEvent) )
+    {
+      return NULL;
+    }
+  else 
+    {
+      return event_names[ev];
+    }
 }
 
 
@@ -337,7 +359,7 @@ xnee_init_request_names()
   xnee_add_to_list(request_names,X_QueryFont,"X_QueryFont");
   xnee_add_to_list(request_names,X_QueryTextExtents,"X_QueryTextExtents");
   xnee_add_to_list(request_names,X_ListFonts,"X_ListFonts");
-  xnee_add_to_list(request_names,X_ListFontsWithInfo	,"X_ListFontsWithInfo	");
+  xnee_add_to_list(request_names,X_ListFontsWithInfo	,"X_ListFontsWithInfo");
   xnee_add_to_list(request_names,X_SetFontPath,"X_SetFontPath");
   xnee_add_to_list(request_names,X_GetFontPath,"X_GetFontPath");
   xnee_add_to_list(request_names,X_CreatePixmap,"X_CreatePixmap");
@@ -401,12 +423,12 @@ xnee_init_request_names()
   xnee_add_to_list(request_names,X_SetAccessControl,"X_SetAccessControl");
   xnee_add_to_list(request_names,X_SetCloseDownMode,"X_SetCloseDownMode");
   xnee_add_to_list(request_names,X_KillClient,"X_KillClient");
-  xnee_add_to_list(request_names,X_RotateProperties	,"X_RotateProperties	");
-  xnee_add_to_list(request_names,X_ForceScreenSaver	,"X_ForceScreenSaver	");
+  xnee_add_to_list(request_names,X_RotateProperties	,"X_RotateProperties");
+  xnee_add_to_list(request_names,X_ForceScreenSaver	,"X_ForceScreenSaver");
   xnee_add_to_list(request_names,X_SetPointerMapping,"X_SetPointerMapping");
   xnee_add_to_list(request_names,X_GetPointerMapping,"X_GetPointerMapping");
-  xnee_add_to_list(request_names,X_SetModifierMapping	,"X_SetModifierMapping	");
-  xnee_add_to_list(request_names,X_GetModifierMapping	,"X_GetModifierMapping	");
+  xnee_add_to_list(request_names,X_SetModifierMapping	,"X_SetModifierMapping");
+  xnee_add_to_list(request_names,X_GetModifierMapping	,"X_GetModifierMapping");
   xnee_add_to_list(request_names,X_NoOperation,"X_NoOperation");
   xnee_add_to_list(request_names,X_NoOperation+1,NULL); 
 }

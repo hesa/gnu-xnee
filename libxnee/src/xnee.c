@@ -1230,10 +1230,9 @@ int
 xnee_use_plugin(xnee_data *xd, char *pl_name)
 {
   int ret=0;
-  xnee_verbose ((xd, "Using plugin file: %s\n", pl_name));
-  
   char lib_name[100];
 
+  xnee_verbose ((xd, "Using plugin file: %s\n", pl_name));
   strcpy (lib_name, "lib");
   strcat (lib_name, pl_name);
   

@@ -26,10 +26,10 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 /**
  * Prints number and name of X11 events
  *
- * @param xd     xnee's main structure
- * @return void  
+ * @param  xd     xnee's main structure
+ * @return int    XNEE_OK on success. 
  */
-void
+int
 xnee_print_event_info (xnee_data *xd);
 
 

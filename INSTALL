@@ -51,32 +51,33 @@ The simplest way to compile this package is:
      all sorts of other programs in order to regenerate files that came
      with the distribution.
 
-Another way to build Xnee is (e.g on OpenBSD):
+Another way to build Xnee is :
   1. `cd' to the directory containing the package's source code and type
-	on OpenBSD:
-	     make -f Makefile.xnee
-	else
 	     make -f Makefile.openbsd
      This way might seem easier but I can not guarantee that the Makefile
-     will work for all platforms ..... howveer it seems to work on OpenBSD
-     RedHat GNU/Linux and Debian GNU/Linux.
+     will work for all platforms ..... however it seems to work on Debian 
+     GNU/Linux.
 
      There is no install rule in this Makefile. You have to copy as you pleas
      are update various paths (e.g PATH and MANPATH).
 
 To compile the documents in the doc directory:
-  1. cd doc
-
-  2. make all 
-     generates html, man, info txt versions of the Manuals
-
-  3. make pdf
+  1. make pdf
      generates pdf version of the Manuals
 
-  4. make ps
+  2. make ps
      generates pdf version of the Manuals
 
-  5 make develdoc
+  3. make txt
+     generates pdf version of the Manuals
+
+  4. make info
+     generates info version of the Manuals
+
+  5. make html
+     generates html version of the Manuals
+
+  5 make devel-doc
     generates rtf, ps, pdf versions of the APIs
 
   There is no install rule for thes files.

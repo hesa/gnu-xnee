@@ -50,7 +50,7 @@ xnee_print_error_code22(int status)
  * Prints the number and name of the XEvent  
  *
  */
-void
+int
 xnee_print_event_info (xnee_data *xd) 
 {
   int i ; 
@@ -62,6 +62,7 @@ xnee_print_event_info (xnee_data *xd)
     {
       fprintf (xd->out,"%.2d\t%s\n",i,xnee_print_event(i));
     }
+  return XNEE_OK;
 }
 
 

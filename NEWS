@@ -8,7 +8,7 @@ Changes in 1.07
 	- synchronization rewritten
 	- force-replay option added
 	- replay delay rewritten
-	- Xnee can be configured to:
+	- Xnee can be configured (during configure) to:
 	  + exclude buffer verbose
 	
 Changes in 1.0.6

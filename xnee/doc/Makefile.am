@@ -24,7 +24,7 @@ CLEANFILES = xnee.acs  xnee.cvs  xnee.mss  xnee.prs \
 ##  ALL
 ##
 all: xnee.1
-doc: html man info txt 
+doc: html man info txt pdf ps
 
 
 ## ----------------------------- ##

@@ -15,7 +15,7 @@ AC_ARG_ENABLE(buffer_verbose,
   yes) buffer_verbose=true ;;
   no)  buffer_verbose=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --disable-buffer_verbose) ;;
-esac],[buffer_verbose=true])
+esac],[buffer_verbose=false])
 
 AC_ARG_ENABLE(gcov,
 [  --enable-gcov           build xnee with support for gcov],

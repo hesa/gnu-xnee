@@ -1,16 +1,16 @@
 PACKAGE=\"xnee\"
-VERSION=\"1.0.6pre1\"
+VERSION=\"1.07\"
 
 CC=gcc
-CFLAGS =  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -I/usr/X11R6/include -I./src -I./src/lib -I./replay -I./src/cli -g -DHAVE_STDARG_H=1
+CFLAGS =  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src -g -DHAVE_STDARG_H=1
 
 
 LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib
 
-LIBS = -lX11 -lXext -lXtst
+LIBS = -lX11 -lXext -lXtst -lpthread
 
-CLI_OBJS =  src/cli/parse.o  src/cli/main.o  
-COMM_OBJS = src/lib/xnee.o src/lib/xnee_record.o  src/lib/xnee_replay.o  src/lib/print.o src/lib/print_varargs.o src/lib/datastrings.o
+CLI_OBJS =  xnee/src/parse.o  xnee/src/main.o  
+COMM_OBJS = libxnee/src/xnee.o libxnee/src/xnee_record.o  libxnee/src/xnee_replay.o  libxnee/src/print.o libxnee/src/print_varargs.o libxnee/src/datastrings.o libxnee/src/xnee_dl.o  libxnee/src/xnee_sem.o 
 
 
 OBJS = ${COMM_OBJS} 
@@ -24,7 +24,7 @@ XNEELIB = libxnee.a
 
 
 
-XNEE_CLI= src/cli/xnee  
+XNEE_CLI= xnee/src/xnee  
 
 all : ${XNEE_CLI}
 
@@ -42,8 +42,4 @@ bin : ${XNEE_CLI}
 ${XNEE_CLI}: ${XNEELIB} ${CLI_OBJS}
 	${CC}  -o ${XNEE_CLI}  ${CLI_OBJS} ${LDFLAGS} ${LIBS} -L./ -lxnee ${LIBS}
 
-
-
-test: ${XNEELIB} src/lib/test.c
-	${CC}  -o test -DXNEE_DEBUG  src/lib/xnee.o src/lib/xnee_record.o ${LDFLAGS} -lxnee ${LIBS} src/lib/test.c -I./ -I./
 

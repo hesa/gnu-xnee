@@ -49,7 +49,7 @@ function check_version()
     EXPECTED=`echo $1 | sed 's/[ \t]*//g'`
     ERR_MESS=$2
     verbose "Checking version on $2"
-    RECEIVED=`src/cli/xnee --version 2>&1 | grep  '^xnee [0-9\. a-zA-Z]*$'| awk '{print $2}' `
+    RECEIVED=`./xnee/src/xnee --version 2>&1 | grep  '^xnee [0-9\. a-zA-Z]*$'| awk '{print $2}' `
     
     if [ "$EXPECTED" != "$RECEIVED" ] ;
     then
@@ -139,14 +139,14 @@ verbose "    make clean all text html man info"
 make clean all text html man info txt 
 check_status "$?" "make"
 check_version $XNEE_VERSION "xnee from configure && make"
-cp src/cli/xnee ./xnee.makefile_configure
+cp xnee/src/xnee ./xnee.makefile_configure
 
 #
 #  XNEE
 #
 verbose "Generating USAGE"
-verbose "   src/cli/xnee --help"
-src/cli/xnee --help > USAGE 
+verbose "   xnee/src/xnee --help"
+xnee/src/xnee --help > USAGE 
 check_status "$?" "xnee --help"
 
 #
@@ -163,7 +163,7 @@ check_status "$?" "make dist"
 #
 #  GNU/Linux binary
 #
-cp src/cli/xnee ./xnee.configure
+cp xnee/src/xnee ./xnee.configure
 
 
 
@@ -245,18 +245,18 @@ fi
 #
 #make -f Makefile.openbsd clean all
 #check_version $XNEE_VERSION "xnee from Makefile.openbsd"
-#mv src/cli/xnee ./xnee.makefile_openbsd
+#mv xnee/src/xnee ./xnee.makefile_openbsd
 
 #make -f Makefile.solaris clean all
 #check_version $XNEE_VERSION "xnee from Makefile.solaris"
-#mv src/cli/xnee ./xnee.makefile_solaris
+#mv xnee/src/xnee ./xnee.makefile_solaris
 
 make -f Makefile.xnee clean all
 check_version $XNEE_VERSION "xnee from Makefile.xnee"
-mv src/cli/xnee ./xnee.makefile_xnee
+mv xnee/src/xnee ./xnee.makefile_xnee
 
 
 verbose "Putting back configure binary"
-cp ./xnee.makefile_configure src/cli/xnee
+cp ./xnee.makefile_configure xnee/src/xnee
 
 

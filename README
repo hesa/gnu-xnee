@@ -1,6 +1,11 @@
 Xnee / README
 -------------
 
+Xnee is a GNU package. For more information about GNU, please visit 
+	http://www.gnu.org
+
+
+
 
 The following files contains information about Xnee
 
@@ -19,19 +24,3 @@ NEWS		Contains information about what is new in "this" release
 README		This file
 TODO		List of features, fixes, docs,  ... to implement 
 USAGE		A printout of Xnee's built in doc, 'xnee --help'
-
-
-The following directories and files are source code:
-src             The source code for Xnee (library and cli)
-src/cli		The source code for Xnee cli
-src/lib		The source code for Xnee library
-doc/*.texi	User documentation source files 
-doc/xnee.dox	Doxygen configuration file
-
-*) All information is located in the file doc/xnee.txt
-
-
-NOTE:
-For Xnee developers on Linux:
- - I have tried to make the Makefile.am as independent as I could, but I could not get it to work on both RedHat GNU/Linux and Debian GNU/Linux. RedHat developers doesn't have to anything but Debian developers have to edit doc/Makefile.am. Use the Debian rules instead of the RedHat rules.....
-

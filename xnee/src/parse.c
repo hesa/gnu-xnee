@@ -96,7 +96,7 @@ static char *explain[] = {
 
 
 static char *examples[] = {
-  "" PACKAGE "  -k_log -devera 2-6 -o /tmp/xnee.rec -e /tmp/xnee.log -v ", 
+  "" PACKAGE "  --k_log -devera 2-6 -o /tmp/xnee.rec -e /tmp/xnee.log -v ", 
   "Writes 1000 data to file /tmp/xnee.rec and dumps the verbose printout to /tmp/xnee.log",
   "" PACKAGE " -rep -f /tmp/xnee.rec -v -e /tmp/xnee.log --no-sync",
   "Read data from /tmp/xnee.rec, replay it and verbose print to file /tmp/xnee.log",
@@ -399,8 +399,9 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--print-event-names", "-pens")) 
 	{
-	  xnee_print_event_info (xd) ;
-	  exit(XNEE_OK);
+	  int ret =
+	    xnee_print_event_info (xd) ;
+	  exit(ret);
 	}
       else if(xnee_check(argv[i], "--print-event-name", "-pen")) 
 	{
@@ -410,13 +411,27 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    {
 	      ev_nr=atoi(argv[i+1]);
 	      ev = (char*) xnee_int2event (ev_nr);
-	      fprintf (stdout, "%s\n", ev);
+	      if (ev==NULL)
+		{
+		  exit (XNEE_WRONG_PARAMS);
+		}
+	      else
+		{
+		  fprintf (stdout, "%s\n", ev);
+		}
 	    }
 	  else
 	    {
 	      ev = argv[i+1]; 
 	      ev_nr = xnee_event2int (ev);
-	      fprintf (stdout, "%d\n", ev_nr);
+	      if ( ev_nr == -1)
+		{
+		  exit (XNEE_WRONG_PARAMS);
+		}
+	      else
+		{
+		  fprintf (stdout, "%d\n", ev_nr);
+		}
 	    }
 	  exit(XNEE_OK);
 	}
@@ -438,13 +453,27 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    {
 	      req_nr=atoi(argv[i+1]);
 	      req = (char*)  xnee_int2request (req_nr);
-	      fprintf (stdout, "%s\n", req);
+	      if (req==NULL)
+		{
+		  exit (XNEE_WRONG_PARAMS);
+		}
+	      else
+		{
+		  fprintf (stdout, "%s\n", req);
+		}
 	    }
 	  else
 	    {
 	      req = argv[i+1]; 
 	      req_nr = xnee_request2int (req);
-	      fprintf (stdout, "%d\n", req_nr);
+	      if ( req_nr == -1)
+		{
+		  exit (XNEE_WRONG_PARAMS);
+		}
+	      else
+		{
+		  fprintf (stdout, "%d\n", req_nr);
+		}
 	    }
 	  exit(XNEE_OK);
 	}
