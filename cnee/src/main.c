@@ -71,7 +71,7 @@ int main(int argc,char *argv[])
       /* start up the action set during parsing the commnd line */
       ret = xnee_start(xd);
     }
-  
+
   if ( ret != XNEE_OK)
   {
     xnee_print_error (PACKAGE " failed to start\n");

@@ -109,7 +109,7 @@ function test_keyboard()
     
     sleep 2
     verbose "shoot Xnee down"
-    kill -2 $XNEE_PID
+    $KILL_1 $XNEE_PID
 #    press_key a 
     sleep 3
 

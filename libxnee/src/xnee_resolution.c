@@ -280,7 +280,7 @@ xnee_resolution_init (xnee_data *xd)
   xd->res_info.record.y_res=1;
   xd->res_info.replay.x_res=1;
   xd->res_info.replay.y_res=1;
-  xnee_set_resolution_used(xd);
+/*   xnee_set_resolution_used(xd); */
   return XNEE_OK;
 }
  

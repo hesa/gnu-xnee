@@ -74,6 +74,8 @@ xnee_grab_handle_buffer(xnee_data *xd, char *str, int mode);
 
 int
 xnee_get_grab_mode ( xnee_data *xd, int key);
+ 
+
 
 
 #endif /* XNEE_GRAB_H */

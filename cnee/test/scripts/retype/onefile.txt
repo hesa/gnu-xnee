@@ -1,2 +1,14 @@
-This is a file to be reprinted......
+This is a file to be reprinted...... 
+If this file is being reprinted everything is fine.
+
+
+Hey, let's test some 'strange' chars:
+   ! " # % & / ( ) = ? 
+
+
+Did that work? Hopefully it did or else some of us is better get back to the computer and do some work!
+
+
+
+
 

@@ -1242,5 +1242,12 @@ int
 xnee_free( /*@only@*/ /*@out@*/ /*@null@*/ void *mem);
 
 
+#define DEBUG_XNEE_DATA                                        
+#ifdef DEBUG_XNEE_DATA                                        
+void                                                          
+xnee_debug_xnee_data(xnee_data *xd, char *str)                ;
+#endif
+
+
 #endif /*   XNEE_XNEE_H */
 

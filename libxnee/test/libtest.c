@@ -3,8 +3,8 @@
 #include "libxnee/xnee.h"
 #include "libxnee/datastrings.h"
 
-int global_succ=0;
-int global_fail=0;
+int global_succ = 0;
+int global_fail = 0;
 xnee_data *xd ;
 
 int test_datastrings()
@@ -92,33 +92,60 @@ int test_xnee_data()
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
   if (xd!=NULL)
-     global_succ++;
+    {
+      global_succ++;
+    }
   else
-     global_fail++;
+    {
+      fprintf (stdout, "failed to alloc xnee_data\n");
+      global_fail++;
+    }
 
   
   for (i=0;i<10;i++)
   {
-     ret=xnee_start(xd);
-     if (ret==0)
-        global_succ++;
-     else
-        global_fail++;
+    xnee_set_verbose(xd);
+    xnee_set_recorder(xd);
+    ret=xnee_start(xd);
+    exit(0);
+    if (ret==0)
+      {
+	global_succ++;
+       }
+    else
+      {
+	 fprintf (stdout, "failed to start %d   %s)\n", 
+		  ret,
+		  xnee_get_err_description(ret));
+	 global_fail++;
+       }
+     
      ret=xnee_renew_xnee_data(xd);
      if (ret==0)
-        global_succ++;
+       {
+	 global_succ++;
+       }
      else
-        global_fail++;
+       {
+	 fprintf (stdout, "failed to renew xnee_data\n");
+	global_fail++;
+       }
   }
-
+  
   
   /* start up the action set during parsing the commnd line */
   ret = xnee_start(xd);
   if (ret==0)
-     global_succ++;
+    {
+      global_succ++;
+    }
   else
-     global_fail++;
-  
+    {
+      fprintf (stdout, "failed to start %d   %s)\n", 
+	       ret,
+	       xnee_get_err_description(ret));
+      global_fail++;
+    }
 }
 
 

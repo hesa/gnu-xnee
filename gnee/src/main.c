@@ -146,7 +146,7 @@ main (int argc, char *argv[])
       }
 
     /* TEST */
-     gx_add_event (gnee_window,"MotionNotify"); 
+    gx_add_event (gnee_window,"MotionNotify"); 
     /* END OF TEST */
 
     
@@ -157,8 +157,8 @@ main (int argc, char *argv[])
     gx_set_events_max (xd, 10);
     gnee_set_events_max (10);
 
-    gx_set_data_max (xd, 100);
-    gnee_set_data_max (100);
+    gx_set_data_max (xd, -1);
+    gnee_set_data_max (-1);
 
     gx_set_time_max (xd, -1);
     gnee_set_time_max (-1);

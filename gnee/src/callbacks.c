@@ -43,7 +43,7 @@ int err_quit_clicked=0;
 int
 read_session_file()
 {
-
+  GNEE_DEBUG(("read_session_file()\n"));
   if (fs==NULL)
     fs = create_fileselection1 ();
   file_choosen = CHOOSE_XNEE_SESSION_FILE;
@@ -56,6 +56,7 @@ read_session_file()
 int
 write_session_file()
 {
+  GNEE_DEBUG(("write_session_file()\n"));
   if (fs==NULL)
     fs = create_fileselection1 ();
   file_choosen = CHOOSE_XNEE_SESSION_FILE;
@@ -68,6 +69,7 @@ write_session_file()
 int
 read_project_file()
 {
+GNEE_DEBUG(("read_project_file()\n"));
   if (fs==NULL)
     fs = create_fileselection1 ();
   file_choosen = CHOOSE_XNEE_PROJECT_FILE;
@@ -80,6 +82,7 @@ read_project_file()
 int
 write_project_file()
 {
+  GNEE_DEBUG(("write_project_file()\n"));
   if (fs==NULL)
     fs = create_fileselection1 ();
   file_choosen = CHOOSE_XNEE_PROJECT_FILE;
@@ -92,9 +95,10 @@ write_project_file()
 
 int get_type(GtkWidget* combo_label)
 {
-    int   type = 0 ;
+  int   type = 0 ;
     gchar *selection;
 
+  GNEE_DEBUG(("int get_type(GtkWidget* combo_label)\n"));
     selection = gtk_editable_get_chars
         (GTK_EDITABLE(combo_label), 0, -1);
 
@@ -131,11 +135,12 @@ void
 on_record_include_button_clicked       (GtkButton       *button,
                                         gpointer         user_data)
 {
-    GtkWidget          *source_list;
+  GtkWidget          *source_list;
     GtkWidget          *destination_list;
     GtkWidget          *combo_label;
 
-    source_list      = lookup_widget(GTK_WIDGET(user_data),
+    GNEE_DEBUG(("on_record_include_button_clicked\n"));
+	       source_list      = lookup_widget(GTK_WIDGET(user_data),
                                      "exclude_list");
     destination_list = lookup_widget(GTK_WIDGET(user_data),
                                      "include_list");
@@ -157,6 +162,7 @@ on_record_exclude_button_clicked       (GtkButton       *button,
     GtkWidget          *destination_list;
     GtkWidget          *combo_label;
 
+    GNEE_DEBUG(("on_record_exclude_button_clicked\n"));
     source_list      = lookup_widget(GTK_WIDGET(user_data),
                                      "include_list");
     destination_list = lookup_widget(GTK_WIDGET(user_data),
@@ -181,6 +187,7 @@ on_exclude_list_row_activated          (GtkTreeView     *treeview,
     GtkWidget          *destination_list;
     GtkWidget          *combo_label;
 
+    GNEE_DEBUG(("on_exclude_list_row_activated\n"));
     source_list      = lookup_widget(GTK_WIDGET(user_data),
                                      "exclude_list");
     destination_list = lookup_widget(GTK_WIDGET(user_data),
@@ -205,6 +212,7 @@ on_include_list_row_activated          (GtkTreeView     *treeview,
     GtkWidget          *destination_list;
     GtkWidget          *combo_label;
 
+    GNEE_DEBUG(("on_include_list_row_activated\n"));
     source_list      = lookup_widget(GTK_WIDGET(user_data),
                                      "include_list");
     destination_list = lookup_widget(GTK_WIDGET(user_data),
@@ -225,6 +233,7 @@ fake_on_include_list_row_activated (gpointer user_data, int type)
   GtkWidget          *destination_list;
   GtkWidget          *combo_label;
   
+    GNEE_DEBUG(("fake_on_include_list_row_activated\n"));
   source_list      = lookup_widget(GTK_WIDGET(user_data),
 				   "include_list");
   destination_list = lookup_widget(GTK_WIDGET(user_data),
@@ -247,6 +256,7 @@ on_combo_label1_changed                (GtkEditable     *editable,
     gchar              *selection;
     GtkWidget          *combo_label;
 
+    GNEE_DEBUG(("on_combo_label1_changed\n"));
     exclude_list = lookup_widget(GTK_WIDGET(user_data),
                                  "exclude_list");
     include_list = lookup_widget(GTK_WIDGET(user_data),
@@ -308,6 +318,7 @@ void
 on_new1_activate                       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_new1_activate\n"));
   write_project_file();
 }
 
@@ -316,6 +327,7 @@ void
 on_open1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_open1_activate\n"));
   read_project_file();
 }
 
@@ -324,6 +336,7 @@ void
 on_save1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_save1_activate\n"));
   gx_save();
 }
 
@@ -332,6 +345,7 @@ void
 on_save_as1_activate                   (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_save_as1\n"));
   write_project_file();
 }
 
@@ -340,6 +354,7 @@ void
 on_quit1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_quit1_activate\n"));
   gnee_close_down();
 }
 
@@ -348,6 +363,7 @@ void
 on_cut1_activate                       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_cut1_activate\n"));
 }
 
 
@@ -355,6 +371,7 @@ void
 on_copy1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_copy1_activate\n"));
   printf ("on_copy1\n");
 
 }
@@ -364,6 +381,7 @@ void
 on_paste1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_paste1_activate\n"));
   printf ("on_paste1\n");
 
 }
@@ -373,6 +391,7 @@ void
 on_delete1_activate                    (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_delete1_activate\n"));
   printf ("on_delete1\n");
 }
 
@@ -382,6 +401,7 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
   GtkWidget          *about_box;
+  GNEE_DEBUG(("on_about1_activate\n"));
 
   printf ("on_about1_activate 1\n");
   about_box      = lookup_widget(GTK_WIDGET(user_data),
@@ -400,6 +420,7 @@ void
 on_log_window_activate                 (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_log_window\n"));
   printf ("on_log11\n");
 }
 
@@ -411,30 +432,29 @@ on_record                              (GtkButton       *button,
     GtkWidget   *window;
 
     window = lookup_widget(user_data, "gnee_window");
-    
+
     if (window != NULL)
     {
-      
-      gtk_widget_hide(window); 
-      while (gtk_events_pending ())
-	{
-	  gtk_main_iteration ();
-	}
-      
-      if (ext_xd != NULL)
-        {
-	  xnee_set_verbose(ext_xd);
- 	  gnee_recordable2xd(ext_gnee_window,  
-			     "include_event_store" , 
- 			  XNEE_EVENT); 
-
-	  gx_set_variable_data(ext_xd, ext_gx);
+	  gtk_widget_hide(window); 
+	  while (gtk_events_pending ())
+	    {
+	      gtk_main_iteration ();
+	    }
 	  
-	  gx_start_recording(ext_xd);
-        }
-      
+	  if (ext_xd != NULL)
+	    {
+	      gnee_recordable2xd(ext_gnee_window,  
+				 "include_event_store" , 
+				 XNEE_EVENT); 
+	      
+	      gx_set_variable_data(ext_xd, ext_gx);
+	      
+	      gx_start_recording(ext_xd);
+	    }
+	  
     }
     gtk_widget_show_all(window); 
+    fflush(stdout);
 }
 
 
@@ -487,8 +507,7 @@ void
 on_wait_spinbutton_value_changed       (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-  printf (" 4444444\n");
-  
+  GNEE_DEBUG(("on_wait_spinbutton\n"));
 }
 
 
@@ -497,6 +516,7 @@ on_wait_checkbox_toggled               (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
   gint speed = 0 ; 
+  GNEE_DEBUG(("on_wait_checkbox\n"));
   
   use_delay = gtk_toggle_button_get_active(togglebutton);
 
@@ -520,6 +540,7 @@ void
 on_wait_button_value_change            (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_wait_button\n"));
   printf ("on_wb\n");
 }
 
@@ -528,7 +549,8 @@ void
 on_wait_spinbutton_value_change        (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-
+  GNEE_DEBUG(("on_wait_spinbutton\n"));
+  
 }
 
 
@@ -536,7 +558,8 @@ void
 on_wait_spinbutto_change_value         (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-
+  GNEE_DEBUG(("on_wait_spinbutto\n"));
+  
 }
 
 
@@ -544,7 +567,8 @@ void
 on_wait_spinbutton_change_value        (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-    delay = gtk_spin_button_get_value_as_int(spinbutton);
+  GNEE_DEBUG(("on_wait_spinbutton\n"));
+  delay = gtk_spin_button_get_value_as_int(spinbutton);
     
     if (ext_xd != NULL)
       {
@@ -563,20 +587,21 @@ void
 on_verbose_logging_checkbox_toggled    (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GtkWidget   *window;
+
+  GNEE_DEBUG(("on_verbose_logging_checkbox_toggled\n"));
   if (ext_xd != NULL)
     {
-      printf (" verbose: ");
       if (gtk_toggle_button_get_active(togglebutton))
 	{
-      printf (" set\n");
 	  gx_set_verbose(ext_xd); 
 	}
       else
 	{
-      printf (" unset\n");
 	  gx_unset_verbose(ext_xd); 
 	}
     }
+
 }
 
 
@@ -586,6 +611,7 @@ void
 on_spinbutton5_change_value            (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_spinbutton5_change\n"));
   if (ext_xd != NULL)
     {
       gx_set_events_max(ext_xd,gtk_spin_button_get_value_as_int(spinbutton)); 
@@ -597,6 +623,7 @@ void
 on_spinbutton4_change_value            (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_spinbutton4_change\n"));
   if (ext_xd != NULL)
     {
       gx_set_data_max(ext_xd,gtk_spin_button_get_value_as_int(spinbutton)); 
@@ -609,6 +636,7 @@ void
 on_spinbutton6_change_value            (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_spinbutton6_change\n"));
   if (ext_xd != NULL)
     {
       gx_set_time_max(ext_xd,gtk_spin_button_get_value_as_int(spinbutton)); 
@@ -625,6 +653,7 @@ on_ok_button1_clicked                  (GtkButton       *button,
   FILE *file;
   GtkEntry *file_text ; 
 
+  GNEE_DEBUG(("on_ok_button1_clicked\n"));
   if (filename!=NULL)
     free (filename);
 
@@ -714,6 +743,7 @@ void
 on_open_button_clicked                 (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_open_button\n"));
   read_project_file();
 }
 
@@ -722,6 +752,7 @@ void
 on_cancel_button1_clicked              (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_cancel_button1\n"));
   gtk_widget_hide(fs);
 }
 
@@ -730,6 +761,7 @@ void
 on_sfile_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_sfile_activate\n"));
 }
 
 
@@ -737,6 +769,7 @@ void
 on_save_button_clicked                 (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_save_button\n"));
   if (ext_xd != NULL)
     {
       FILE *file;
@@ -763,7 +796,7 @@ on_about_ok_button_clicked             (GtkButton       *button,
 {
   GtkWidget          *about_box;
 
-  printf ("on_about1 \n" );
+  GNEE_DEBUG(("on_about_ok\n"));
   about_box      = lookup_widget(GTK_WIDGET(user_data),
 				 "about_window");
   
@@ -788,6 +821,7 @@ combo_change_helper(gpointer gw,
   GtkWidget          *k_combo = NULL;
 
   char  k_combo_name[50] ;
+  GNEE_DEBUG(("combo_change_helper\n"));
 
 
 
@@ -847,8 +881,6 @@ combo_change_helper(gpointer gw,
 	  
 	  
  	  gx_set_key (ext_xd, grab_action, mod_key); 
- 	  GNEE_DEBUG(("   ----> %s\n", 
-		  gx_get_km (ext_xd, grab_action))); 
 	}
     }
 }
@@ -857,6 +889,7 @@ void
 on_stop_m_combo_changed                (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_stop_m_combo_changed\n"));
   combo_change_helper(user_data, 
 		      "stop_m_combo", 
 		      XNEE_GRAB_MODIFIER, 
@@ -868,6 +901,7 @@ void
 on_stop_k_combo_changed                (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_stop_k\n"));
   combo_change_helper(user_data, 
 		      "stop_k_combo", 
 		      XNEE_GRAB_KEY, 
@@ -881,8 +915,8 @@ void
 on_pause_m_combo_changed               (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_pause_m\n"));
   printf ("PAUSE set ...\n");
-  xnee_set_verbose(ext_xd);
   combo_change_helper(user_data, 
 		      "pause_m_combo", 
 		      XNEE_GRAB_MODIFIER, 
@@ -895,6 +929,7 @@ void
 on_resume_m_combo_changed              (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_resume_m\n"));
   combo_change_helper(user_data, 
 		      "resume_m_combo", 
 		      XNEE_GRAB_MODIFIER, 
@@ -907,6 +942,7 @@ void
 on_mark_m_combo_changed                (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_mark_m\n"));
   combo_change_helper(user_data, 
 		      "mark_m_combo", 
 		      XNEE_GRAB_MODIFIER, 
@@ -919,6 +955,7 @@ void
 on_exec_m_combo_changed                (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_exec_m\n"));
   combo_change_helper(user_data, 
 		      "exec_m_combo", 
 		      XNEE_GRAB_MODIFIER, 
@@ -931,6 +968,7 @@ void
 on_pause_k_combo_changed               (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_pause_k\n"));
   combo_change_helper(user_data, 
 		      "pause_k_combo", 
 		      XNEE_GRAB_KEY, 
@@ -943,6 +981,7 @@ void
 on_resume_k_combo_changed              (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_resume_k\n"));
   combo_change_helper(user_data, 
 		      "resume_k_combo", 
 		      XNEE_GRAB_KEY, 
@@ -955,6 +994,7 @@ void
 on_mark_k_combo_changed                (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_mark_k\n"));
   combo_change_helper(user_data, 
 		      "mark_k_combo", 
 		      XNEE_GRAB_KEY, 
@@ -967,6 +1007,7 @@ void
 on_exec_k_combo_changed                (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_exec_k\n"));
   combo_change_helper(user_data, 
 		      "exec_k_combo", 
 		      XNEE_GRAB_KEY, 
@@ -978,6 +1019,7 @@ void
 on_err_cont_button_clicked             (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_err_cont\n"));
 }
 
 
@@ -985,6 +1027,7 @@ void
 on_err_quit_button_clicked             (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_err_quit\n"));
   printf ("quit..... hey now\n");
 }
 
@@ -993,6 +1036,7 @@ void
 on_cancelbutton1_clicked               (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_cancelbutton1_clicked\n"));
   err_continue_clicked=1;
   err_quit_clicked=0;
   gx_undisplay_errror();
@@ -1003,6 +1047,7 @@ void
 on_okbutton1_clicked                   (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_okbutton1_clicked\n"));
 }
 
 
@@ -1010,6 +1055,7 @@ void
 on_rep_menu_open_activate              (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+    GNEE_DEBUG(("on_rep_menu\n"));
   read_session_file();
 }
 
@@ -1020,6 +1066,7 @@ void
 on_open_project_file2_activate         (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_open_project\n"));
   read_project_file();
 }
 
@@ -1028,6 +1075,7 @@ void
 on_set_session_file1_activate          (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_set_session\n"));
   write_session_file();
 }
 
@@ -1036,6 +1084,7 @@ void
 on_checkbutton10_toggled               (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_checkbutton10_toggled\n"));
   if (gtk_toggle_button_get_active(togglebutton))
     {
       printf ("use rec disp\n");
@@ -1054,6 +1103,7 @@ void
 on_rec_file_sel_clicked                (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_rec_file\n"));
   write_session_file();
 }
 
@@ -1062,6 +1112,7 @@ void
 on_rep_disp_cb_toggled                 (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_rep_disp\n"));
   if (gtk_toggle_button_get_active(togglebutton))
     {
       printf ("use rep disp\n");
@@ -1079,7 +1130,8 @@ void
 on_rep_disp_text_changed               (GtkEditable     *editable,
                                         gpointer         user_data)
 {
-
+  GNEE_DEBUG(("on_rep_disp\n"));
+  
 }
 
 
@@ -1087,6 +1139,7 @@ void
 on_button11_clicked                    (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_button11_clicked\n"));
   read_session_file();
 }
 
@@ -1095,6 +1148,7 @@ void
 on_max_thresh_sb_value_changed         (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_max_thresh\n"));
   if (ext_xd != NULL)
     {
       gx_set_max_threshold(ext_xd,
@@ -1107,6 +1161,7 @@ void
 on_min_thresh_sb_value_changed         (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_min_thresh\n"));
   if (ext_xd != NULL)
     {
       gx_set_min_threshold(ext_xd,
@@ -1119,6 +1174,7 @@ void
 on_tot_thresh_sb_value_changed         (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_tot_thresh\n"));
   if (ext_xd != NULL)
     {
       gx_set_tot_threshold(ext_xd,
@@ -1131,6 +1187,7 @@ void
 on_spinbutton11_change_value           (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_spinbutton11_change\n"));
   if (ext_xd != NULL)
     {
       gx_set_events_max(ext_xd,gtk_spin_button_get_value_as_int(spinbutton)); 
@@ -1142,6 +1199,7 @@ void
 on_spinbutton12_change_value           (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_spinbutton12_change\n"));
   if (ext_xd != NULL)
     {
       gx_set_data_max(ext_xd,gtk_spin_button_get_value_as_int(spinbutton)); 
@@ -1153,6 +1211,7 @@ void
 on_spinbutton13_change_value           (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_spinbutton13_change\n"));
   if (ext_xd != NULL)
     {
       gx_set_time_max(ext_xd,gtk_spin_button_get_value_as_int(spinbutton)); 
@@ -1164,7 +1223,8 @@ void
 on_spinbutton7_change_value            (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-
+  GNEE_DEBUG(("on_spinbutton7_change\n"));
+  
 }
 
 
@@ -1172,8 +1232,9 @@ void
 on_speed_spin_change_value             (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-    gint speed = 0 ; 
+  gint speed = 0 ; 
 
+  GNEE_DEBUG(("on_speed_spin\n"));
     speed = gtk_spin_button_get_value_as_int(spinbutton);
     
     if (ext_xd != NULL)
@@ -1189,6 +1250,7 @@ void
 on_rec_disp_text_changed               (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_rec_disp\n"));
 }
 
 
@@ -1196,6 +1258,7 @@ void
 on_skip_sync_cb_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_skip_sync\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1217,6 +1280,7 @@ void
 on_force_rep_cb_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_force_rep\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1237,6 +1301,7 @@ void
 on_okbutton2_clicked                   (GtkButton       *button,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_okbutton2_clicked\n"));
   err_continue_clicked=0;
   err_quit_clicked=1;
   gx_undisplay_errror();
@@ -1247,6 +1312,7 @@ void
 on_speed_toggle_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_speed_toggle\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1266,6 +1332,7 @@ void
 on_radiobutton1_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_radiobutton1_toggled\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1280,6 +1347,7 @@ void
 on_radiobutton2_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_radiobutton2_toggled\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1294,6 +1362,7 @@ void
 on_xnee_format_rb_toggled              (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_xnee_format\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1309,6 +1378,7 @@ void
 on_human_format_rb_toggled             (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_human_format\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1324,6 +1394,7 @@ void
 on_gnee_window_destroy                 (GtkObject       *object,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_gnee_window\n"));
   printf ("destroy.... and search\n");
   gnee_close_down();
 }
@@ -1333,6 +1404,7 @@ void
 on_stderr_fb_b_toggled                 (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_stderr_fb\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1347,6 +1419,7 @@ void
 on_no_fb_b_toggled                     (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_no_fb\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
@@ -1362,6 +1435,7 @@ void
 on_xosd_fb_b_toggled                   (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
+  GNEE_DEBUG(("on_xosd_fb\n"));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))

@@ -376,7 +376,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--retype-file", "-rtf" )) 
 	{
 	  xnee_set_retyper(xd);
-	  if (++i >= argc)
+	  i++;
+	  if (i >= argc)
 	    {
 	      xnee_usage(stderr);
 	      xnee_close_down(xd);

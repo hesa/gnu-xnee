@@ -668,25 +668,32 @@ xnee_km_check_not_same(xnee_data *xd, char *str, int start)
   int ret  = 0 ;
   char *tmp_ptr = NULL ; 
   
-  if (str==NULL)
-    return XNEE_OK;
-
-  xnee_verbose((xd, "---> xnee_km_check_not_same %s %d\n",
-		str, start));
-
   if (start!=XNEE_GRAB_UNKOWN)
     {
       if (start == XNEE_GRAB_STOP)
-	return  0;
+	{
+	  return  XNEE_OK;
+	}
       else if ( (start>0) && (start<XNEE_GRAB_LAST))
-	tmp_ptr = xd->grab_keys->action_keys[start].str;
+	{
+	  tmp_ptr = xd->grab_keys->action_keys[start].str;
+	}
       else
-	return 0;
+	{
+	  return XNEE_OK;
+	}
+
+      if (str==NULL)
+	{
+	  return  XNEE_OK + xnee_km_check_not_same( xd, str, start + 1); 
+	}
 
       if (tmp_ptr!=NULL)
 	{
 	  if (strcmp ( str, tmp_ptr)==0)
-	    ret = 1;
+	    {
+	      ret = 1;
+	    }
 	}
       xnee_verbose((xd, "---  xnee_km_check_not_same %s %s %d ret =  %d\n",
 		str, tmp_ptr, start, ret ));
@@ -709,7 +716,9 @@ xnee_key_check(xnee_data *xd)
   int ret ; 
   xnee_verbose((xd, " ---> xnee_km_check\n"));
 
-  ret = xnee_km_check_not_same(xd, xd->grab_keys->action_keys[XNEE_GRAB_STOP].str, XNEE_GRAB_STOP);
+  ret = xnee_km_check_not_same(xd, 
+			       xd->grab_keys->action_keys[XNEE_GRAB_STOP].str, 
+			       XNEE_GRAB_STOP);
   
   xnee_verbose((xd, "  --- xnee_km_check %d \n", ret));
 

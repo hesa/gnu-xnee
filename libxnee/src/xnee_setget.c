@@ -573,6 +573,8 @@ xnee_set_extra_str (xnee_data *xd, int idx, char *str)
   if ( (idx<0) && (idx>XNEE_GRAB_LAST) )
     return XNEE_BAD_GRAB_DATA;
 
+  xnee_verbose((xd, "xnee_set_extra_str\n"));
+
   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[idx].extra_str);
   xd->grab_keys->action_keys[idx].extra_str = strdup(str);
   return XNEE_OK;
@@ -583,6 +585,8 @@ xnee_set_key_str (xnee_data *xd, int idx, char *str)
 {
   if ( (idx<0) && (idx>XNEE_GRAB_LAST) )
     return XNEE_BAD_GRAB_DATA;
+
+  xnee_verbose((xd, "xnee_set_key_str\n"));
 
   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[idx].str);
   xd->grab_keys->action_keys[idx].str = strdup(str);
@@ -617,6 +621,9 @@ int
 xnee_set_exec_prog (xnee_data *xd, char *prog)
 {
   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str);
+
+  xnee_verbose((xd, "xnee_set_exec_prog\n"));
+
   xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str =strdup(prog);
   return XNEE_OK;
 }

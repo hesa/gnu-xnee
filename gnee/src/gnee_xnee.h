@@ -14,10 +14,10 @@
 #include <libxnee/xnee_setget.h>
 #include <libxnee/xnee_resource.h>
 
-/* #define USE_GNEE_DEBUG */
+#define USE_GNEE_DEBUG
 
 #ifdef USE_GNEE_DEBUG
-#define GNEE_DEBUG(a) printf a ; 
+#define GNEE_DEBUG(a) printf ("==================    GNEE_DEBUG:  %s\n", a) ; 
 #else
 #define GNEE_DEBUG(a) 
 #endif

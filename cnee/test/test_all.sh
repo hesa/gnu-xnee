@@ -6,6 +6,7 @@ init_test
 sighandler()
 {
    echo "Signal received in test_all.sh"
+   echo "  while executig $CMD"
 }
 
 trap sighandler 2
@@ -19,6 +20,7 @@ option_scripts()
     for i in `ls scripts/options/*.sh | grep -v test_all\.sh `; 
       do 
       echo "exec $i"
+      CMD="$i $*"
       $i $*
       sleep 1
     done
@@ -26,25 +28,48 @@ option_scripts()
 
 function_scripts()
 {
+    CMD="scripts/record/keyboard.sh    $* "
+    echo "executing $CD"
     scripts/record/keyboard.sh    $* 
+
+    CMD="scripts/record/mouse.sh       $*"
+    echo "executing $CD"
     scripts/record/mouse.sh       $*
+
+    CMD="scripts/replay/keyboard.sh    $*"
+    echo "executing $CD"
     scripts/replay/keyboard.sh    $*
+
+    CMD="scripts/replay/mouse.sh       $*"
+    echo "executing $CD"
     scripts/replay/mouse.sh       $*
+
+    CMD="scripts/resolution/mo-res.sh  $*"
+    echo "executing $CD"
     scripts/resolution/mo-res.sh  $*
+
+    CMD="scripts/timing/mo-time.sh     $*"
+    echo "executing $CD"
     scripts/timing/mo-time.sh     $*
+
+    CMD="scripts/timing/mo-time.sh     $*"
+    echo "executing $CD"
     scripts/timing/mo-time.sh     $*
+
+    CMD="scripts/retype/keyboard.sh    $*"
+    echo "executing $CD"
     scripts/retype/keyboard.sh    $*
 }
 
 
 scan_logs()
 {
-NEW_LOG=test_all.log
-rm    $NEW_LOG
-touch $NEW_LOG
-echo "Script name: test_all.sh" >> $NEW_LOG
-echo "Results from test"  >> $NEW_LOG
-cat $LOG | awk 'BEGIN { FS="[:]" ; TOT_T=0 ; SUC_T=0 ; ERR_T=0 ; WARN_T=0 ; RET_T=0 ; RET_E=0 ; UNT=0 ; } \
+    NEW_LOG=test_all.log
+    rm    $NEW_LOG
+    touch $NEW_LOG
+    echo "Script name: test_all.sh" >> $NEW_LOG
+    echo "Results from test"  >> $NEW_LOG
+    cat $LOG | awk 'BEGIN { FS="[:]" ; TOT_T=0 ; SUC_T=0 ; ERR_T=0 ; WARN_T=0 ; RET_T=0 ; RET_E=0 ; UNT=0 ; } \
     { \
     TOT_T=TOT_T   + $2 ;\
     SUC_T=SUC_T  + $3 ;\
@@ -74,7 +99,10 @@ cat $LOG | awk 'BEGIN { FS="[:]" ; TOT_T=0 ; SUC_T=0 ; ERR_T=0 ; WARN_T=0 ; RET_
     if (WARN_T > 0) { printf "\n\n*** %d warning(s) found ***\n" , WARN_T } ;\
     }' | tee $NEW_LOG
 
-echo "TIME 0:"$(( $STOP - $START ))":$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS" >> $NEW_LOG
+    echo "TIME 0:"$(( $STOP - $START ))":$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS" >> $NEW_LOG
+
+    echo "... perhaps we should add analysis of gcov, valgrind and gprof files....."
+
 }
 
 NAME=test_all.sh
@@ -84,6 +112,13 @@ remove_gcov_gprof_file
 if [ "$1" == "--no-run" ];
 then
     scan_logs
+elif [ "$1" == "--help" ];
+then
+    echo "OPTIONS:"
+    echo "   --clean     removes all generated files"
+    echo "   --function  test cnee functionality only"
+    echo "   --option    test cnee options only"
+    echo "   --no-run    Dont exec cnee. Scan logs"
 elif [ "$1" == "--clean" ];
 then
     remove_gcov_gprof_file

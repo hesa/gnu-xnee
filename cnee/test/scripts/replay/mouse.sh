@@ -213,7 +213,6 @@ verify_device swmouse
 NR_OF_PIX=400
 HALF_WAYS=200
 
-
 #get mouse in position and zero the device counter
 get_in_position
 zero_device swmouse

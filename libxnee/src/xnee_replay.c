@@ -626,8 +626,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	  xnee_verbose((xd, "  <-- Flushed after handled event\n"));
 
 	  ret_str = fgets(tmp, 256, xd->data_file);
-	  ret_str = fgets(tmp, 256, xd->data_file);
-
 
 	  if (ret_str == NULL)
 	    {

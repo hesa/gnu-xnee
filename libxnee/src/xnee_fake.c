@@ -507,7 +507,8 @@ xnee_type_file(xnee_data *xd)
   
   xnee_verbose ((xd,"--- xnee_type_file\n"));
 
-  xnee_verbose ((xd,"---> xnee_type_file loop\n"));
+  xnee_verbose ((xd,"---> xnee_type_file loop file=%s   %d\n", 
+		 xd->rt_name,xd->rt_file));
 
   while (fgets(tmp, 256, xd->rt_file)!=NULL)
     {

@@ -564,6 +564,18 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
     {
       ret = xnee_set_err_name (xd, range);
     }
+  else if (!strncmp(XNEE_FEEDBACK_XOSD,tmp,strlen(XNEE_FEEDBACK_XOSD))) 
+    {
+      ret = xnee_set_xosd_feedback(xd);
+    }
+  else if (!strncmp(XNEE_FEEDBACK_STDERR,tmp,strlen(XNEE_FEEDBACK_STDERR))) 
+    {
+      ret = xnee_set_stderr_feedback(xd);
+    }
+  else if (!strncmp(XNEE_FEEDBACK_NONE,tmp,strlen(XNEE_FEEDBACK_NONE))) 
+    {
+      ret = xnee_set_no_feedback(xd);
+    }
   else if (!strncmp(XNEE_DISTRIBUTE,tmp,strlen(XNEE_DISTRIBUTE)))
     {
        if ( (range==NULL ) || (strlen(range)==0) )

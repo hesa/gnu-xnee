@@ -62,6 +62,10 @@
 
 xnee_data *xd_global;
 
+static int xnee_free_dyn_data(xnee_data *xd);
+
+
+
 /**************************************************************
  *                                                            *
  * xnee_get_max_range                                         *
@@ -327,11 +331,6 @@ xnee_close_down(xnee_data* xd)
 
   xnee_verbose((xd, "Freeing context "));
 
-  if (xd->grab_keys==NULL)
-      xnee_verbose((xd, " ---  xnee_close_down the grab data seem to have been freed already\n"));
-  else
-      xnee_verbose((xd, " ---  xnee_close_down the grab exists.....\n"));
-    
   xnee_verbose((xd, "xnee_close_down : ungrab -----> \n"));
   ret = xnee_ungrab_keys (xd);
   xnee_verbose((xd, "xnee_close_down : ungrab <---- %d\n", ret));
@@ -395,16 +394,19 @@ xnee_close_down(xnee_data* xd)
 
   xnee_verbose((xd ," --  xnee_close_down() free data_file \n"  ));
   ret = xnee_free_file (xd, xd->data_name, xd->data_file);
+  xd->data_file=NULL;
   xnee_verbose((xd ," --  xnee_close_down() free data_file <-- %d\n", ret));
 
   xnee_verbose((xd ," --  xnee_close_down() free rc_file \n"  ));
   ret = xnee_free_file (xd, xd->rc_name,   xd->rc_file);
+  xd->rc_file=NULL;
   xnee_verbose((xd ," --  xnee_close_down() free rc_file <-- %d\n", ret));
 
   if (xd->err_file!=stdout)
     {
       xnee_verbose((xd ," --  xnee_close_down() free out_file \n"  ));
       ret = xnee_free_file (xd, xd->out_name,  xd->out_file);
+      xd->out_file=NULL;
       xnee_verbose((xd ," --  xnee_close_down() free out_file <-- %d\n", ret));
     }
 
@@ -412,6 +414,7 @@ xnee_close_down(xnee_data* xd)
     {
       xnee_verbose((xd ," --  xnee_close_down() free rt_file \n"  ));
       ret = xnee_free_file (xd, xd->rt_name,  xd->rt_file);
+      xd->rt_file=NULL;
       xnee_verbose((xd ," --  xnee_close_down() free rt_file <-- %d\n", ret));
     }
 
@@ -419,6 +422,7 @@ xnee_close_down(xnee_data* xd)
     {
       xnee_verbose((xd ," --  xnee_close_down() free err_file\n"  ));
       ret = xnee_free_file (xd, xd->err_name,  xd->err_file); 
+      xd->err_file=NULL;
       xnee_verbose((xd ," --  xnee_close_down() free err_file <-- %d\n", ret));
     }
 
@@ -428,7 +432,7 @@ xnee_close_down(xnee_data* xd)
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.6 \n"  ));
   xnee_verbose((xd, "Freeeing data "));
   ret = xnee_free_xnee_data(xd);
-  xnee_verbose((xd, "Freeeing data <-- %d\n ", ret));
+  xd=NULL;
 
 }
 
@@ -507,15 +511,12 @@ xnee_init(xnee_data* xd)
       xnee_init_names();
   */
 
-  
-  ret = xnee_set_resolution_used (xd);
-  XNEE_RETURN_IF_ERR(ret);
-
   ret = xnee_resolution_init (xd);
   XNEE_RETURN_IF_ERR(ret);
 
   ret = xnee_grab_keys_init(xd);
   XNEE_RETURN_IF_ERR(ret);
+
 
 
   /* 
@@ -622,14 +623,14 @@ signal_handler(int sig)
       
       exit (sig);
     case SIGINT:
-       fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
-       ret = xnee_ungrab_keys(xd_global);
-       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
-       
-       ret = xnee_reset_autorepeat (xd_global);
-       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
-
-       exit (sig);
+      fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
+      ret = xnee_ungrab_keys(xd_global);
+      XNEE_PRINT_ERROR_IF_NOT_OK(ret);
+      
+      ret = xnee_reset_autorepeat (xd_global);
+      XNEE_PRINT_ERROR_IF_NOT_OK(ret);
+      
+      exit (sig);
     default:
       fprintf (stderr, 
 	       "signal_handler error. Unxpected signal (%d)\n .... leaving",
@@ -708,9 +709,9 @@ xnee_free_recordext_setup(xnee_data* xd)
   xnee_recordext_setup *record_setup = NULL ;
 
 
-  XNEE_DEBUG ( (stderr ," -->xnee_free_recordext_data()  \n"  ));
+  XNEE_DEBUG ((stderr ," -->xnee_free_recordext_data()  \n"  ));
   
-  if (xd!=NULL)
+  if ( (xd!=NULL) && (xd->record_setup!=NULL))
   {
      record_setup = xd->record_setup;
      
@@ -732,11 +733,9 @@ xnee_free_recordext_setup(xnee_data* xd)
            if ((record_setup != NULL) && 
                (record_setup->range_array != NULL ) &&
                (record_setup->range_array[i] != NULL ))
-              /*@end@*/
            {
-              /*@ignore@*/
-              ret = xnee_free (record_setup->range_array[i]);
-              /*@end@*/
+	     ret = xnee_free (record_setup->range_array[i]);
+	     record_setup->range_array[i] = 0 ;
 	      if (ret!=XNEE_OK)
 		{
 		  xnee_print_error ("Could not free memory at  "
@@ -745,6 +744,7 @@ xnee_free_recordext_setup(xnee_data* xd)
 		  return ret;
 		}
            }
+	   /*@end@*/
         }
      }
   }
@@ -756,9 +756,9 @@ xnee_free_recordext_setup(xnee_data* xd)
     XNEE_FREE_IF_NOT_NULL (record_setup->xids);
     XNEE_FREE_IF_NOT_NULL (record_setup->rState);
   }
-  XNEE_FREE_IF_NOT_NULL (record_setup);
+  XNEE_FREE_IF_NOT_NULL (xd->record_setup);
 
-  XNEE_DEBUG ( (stderr ," <--xnee_free_xnee_data()\n"  ));
+  XNEE_DEBUG ( (stderr ," <--xnee_free_recordext_setup\n"  ));
   return XNEE_OK;
   /*@end@*/
 }
@@ -767,7 +767,7 @@ xnee_free_recordext_setup(xnee_data* xd)
 void
 xnee_free_replay_setup( /*@only@*/ /*@null@*/ xnee_testext_setup* xrs)
 {
-  XNEE_FREE_IF_NOT_NULL (xrs); 
+  XNEE_FREE_IF_NOT_NULL (xrs);
   return ;
 }
 
@@ -785,28 +785,34 @@ static int
 xnee_new_dyn_data(xnee_data *xd)
 {
    int ret;
-   xnee_verbose((xd, "---> xnee_new_dyn_data\n"));
-
-/*    xnee_verbose((xd, " --- xnee_new_dyn_data: xnee_info\n")); */
-/*    xd->xnee_info     =   */
-/*      (xnee_record_init_data*)  malloc (sizeof (xnee_record_init_data)) ;  */
-/*    memset (xd->xnee_info, 0, sizeof(xnee_record_init_data));  */
 
    if (xd==NULL)
    {
       return XNEE_MEMORY_FAULT;
    }
+
+   xnee_verbose((xd, "---> xnee_new_dyn_data\n"));
+
+   /* 
+    * Freeing old memory 
+    */
+   xnee_verbose((xd, "---  xnee_new_dyn_data: freeing old memory (if found)\n"));
+   xnee_free_dyn_data(xd);
+
    
-   xnee_free_replay_setup(xd->replay_setup);
+   /* 
+    * Getting new memory 
+    */
    xd->replay_setup = xnee_new_replay_setup();
    XNEE_CHECK_ALLOCED_MEMORY_INT(xd->replay_setup);
    
    xd->record_setup  = xnee_new_recordext_setup(); 
    XNEE_CHECK_ALLOCED_MEMORY_INT(xd->record_setup);
    
-   ret  = xnee_free_grab_keys(xd->grab_keys);
    xd->grab_keys     = xnee_new_grab_keys();
    XNEE_CHECK_ALLOCED_MEMORY_INT(xd->grab_keys);
+   
+   xnee_grab_keys_init(xd);
    
    return XNEE_OK;
 }
@@ -842,6 +848,10 @@ xnee_free_dyn_data(xnee_data *xd)
       XNEE_RETURN_IF_ERR(ret);
    }
 
+   xnee_verbose((xd, " --- xnee_free_dyn_data: replay_setup\n"));
+   xnee_free_replay_setup(xd->replay_setup);
+   xd->replay_setup = NULL;
+
    xnee_verbose((xd, " --- xnee_free_dyn_data: record_ext\n"));
    ret = xnee_free_recordext_setup (xd);
    XNEE_RETURN_IF_ERR(ret);
@@ -849,6 +859,7 @@ xnee_free_dyn_data(xnee_data *xd)
    xnee_verbose((xd, " --- xnee_free_dyn_data: grab_keys\n"));
    ret = xnee_free_grab_keys(xd->grab_keys);
    XNEE_RETURN_IF_ERR(ret);
+   xd->grab_keys=NULL;
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: resource_meta\n"));
    ret = xnee_free_xnee_resource_meta(&xd->xrm);
@@ -1723,6 +1734,7 @@ xnee_open_files(xnee_data *xd)
       if (file_name!=NULL)
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: handling data (in)\n"));
+
 	  if ( xnee_check (file_name, "stdin", "STDIN") == 0 )
 	    {
 	      xnee_verbose((xd, "---  xnee_open_files: opening data: %s\n", 
@@ -1738,10 +1750,12 @@ xnee_open_files(xnee_data *xd)
     {
       xnee_verbose((xd, "---  xnee_open_files: is retyper\n"));
       file_name = xnee_get_rt_name(xd);
+      xnee_verbose((xd, "---  xnee_open_files: retype file %s\n", file_name));
+
       if (file_name!=NULL)
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: handling retype (in)\n"));
-	  if ( xnee_check (file_name, "stdin", "STDIN") != 0)
+	  if ( xnee_check (file_name, "stdin", "STDIN") == 0)
 	    {
 	      xnee_verbose((xd, "---  xnee_open_files: opening retype: %s\n", 
 			    xd->rt_name));
@@ -1829,7 +1843,7 @@ int
 xnee_prepare(xnee_data *xd)
 {
    int ret;
-   
+
    xnee_verbose((xd, "--> xnee_prepare\n"));
    ret = xnee_open_files(xd);
    if (ret == XNEE_OK)
@@ -1846,7 +1860,6 @@ int
 xnee_start(xnee_data *xd)
 {
    int ret ;
-
 
 #ifdef XNEE_OBSOLETE
    ret = xnee_prepare(xd);

@@ -37,7 +37,7 @@ KEYBOARD_DEVICE=/dev/swkeybd
 
 
 
-function replay_file()
+function retype_file()
 {
     RECORDED_FILE=$1
     
@@ -46,65 +46,12 @@ function replay_file()
     verbose "  launching xterm/cat"
     xterm -e 'cat > /tmp/xnee_test.txt' &
     sleep 2
-    verbose "  launching xnee"
-    $XNEE --replay -f $RECORDED_FILE 
+    verbose "  launching cnee"
+    $XNEE --retype-file scripts/retype/onefile.txt
     sleep 2 
-    verbose "  faking enter"
-    fake_enter
-    sleep 3
     verbose "  faking control-d"
     fake_controld
     sleep 1
-}
-
-function test_keyboard()
-{
-    STR=$1
-    FILE=$2
-
-    
-    LEN=${#STR}
-	
-    CAPS=0
-    TMP=0
-    while [ "$TMP" != "$LEN" ];
-    do
-      echo ${STR:$TMP:1} | grep -e '[A-Z]'  2>/dev/null 1>/dev/null
-      if [ "$?" == "0" ]
-	  then 
-	  CAPS=$(( $CAPS + 1))
-      fi
-      TMP=$(( $TMP + 1 ))
-    done
-
-    verbose "CAPS=$CAPS"
-    verbose "LEN=$LEN"
-    LEN=$(( $LEN + $CAPS)) 
-    TLEN=$(( $LEN * 3 ))
-    verbose "TLEN=$TLEN"
-    
-
-    verbose "starting xnee"
-    $XNEE --record --device-event-range 2-3 --loops $TLEN -o $FILE &
-    XNEE_PID=$!
-
-    verbose "XNEE PID = $XNEE_PID"
-    sleep 2
-
-    TMP=0
-    while [ "$TMP" != "$LEN" ];
-    do
-      press_key "${STR:$TMP:1}"
-      TMP=$(( $TMP + 1 ))
-    done
-
-    
-    sleep 2
-    verbose "shoot Xnee down"
-    kill -2 $XNEE_PID
-#    press_key a 
-    sleep 3
-
 }
 
 
@@ -112,34 +59,14 @@ function test_keyboard()
 
 verify_device swkeybd
 
-FILE=k1.log
-rm $FILE
-
-STRING="This is a simple test string for Xnee"
-test_keyboard "$STRING"   $FILE
-
-verbose  "starting...."
-
-replay_file  $FILE
+retype_file  $FILE
 
 
-LEN_STRING=${#STRING}
-#add one for the enter
-LEN_STRING=$(( $LEN_STRING + 1 ))
+DIFF_LINES=$(sdiff -s  /tmp/xnee_test.txt scripts/retype/onefile.txt | wc -l)
 
-if [ -f /tmp/xnee_test.txt ]
-then
-    LEN_FAKE=`wc -c /tmp/xnee_test.txt | awk '{print $1}' | sed 's, ,,g'`
-else
-    LEN_FAKE=0
-fi
 
 verbose "Verifying the lengths of $LEN_STRING $LEN_FAKE"
-verify_same $LEN_STRING $LEN_FAKE
-
-rm $FILE
+verify_same $DIFF_LINES 0
 
 result_log $MYNAME 
-fake_controlc
-fake_controlc
 exit
