@@ -6,7 +6,7 @@
 init_test
 
 START=`date '+%s'`
-for i in `ls opt_scripts/*.sh | grep -v test_all\.sh `; 
+for i in `ls scripts/options/*.sh | grep -v test_all\.sh `; 
 do 
   $i $*
 done
@@ -19,7 +19,7 @@ echo " "
 cat $LOG | awk 'BEGIN { FS="[:]" ; TOT_T=0 ; SUC_T=0 ; ERR_T=0 ; WARN_T=0 ; RET_T=0 ; RET_E=0 ; } \
     { \
     TOT_T=TOT_T   + $2 ;\
-    SUC_T=SUCC_T  + $3 ;\
+    SUC_T=SUC_T  + $3 ;\
     ERR_T=ERR_T   + $4 ;\
     WARN_T=WARN_T + $5 ;\
     RET_T=RET_T   + $6 ;\
