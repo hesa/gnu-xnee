@@ -227,6 +227,7 @@ feedback(xnee_data *xd, valist)
   str = va_arg(argp, char *);
 #endif
 
+
   conv = vsnprintf ((char*) buf, 
 		    200, 
 		    str, 
@@ -238,7 +239,6 @@ feedback(xnee_data *xd, valist)
   feedback_init(xd, NULL); 
   if (feedback_used==XNEE_XOSD_FEEDBACK)
     {
-      
       xosd_print(osd, 0, XOSD_string, buf); 
       ret = XNEE_OK;
     }

@@ -50,10 +50,10 @@ static char *help[] = {
   "--out-file, -o <file_name>     ", "Redirect all Xnee data to file_name (default is stdout)", 
   "--err-file, -e <file_name>     ", "Redirect all Xnee verbose output file_name (default is stderr)", 
   "--project ,-pr <file_name>     ", "Use project file file_name",
-  "--plugin ,-p <name     >       ", "Use the plugin name name",
+  "--plugin ,-p <name>            ", "Use the plugin name",
   "--all-events, -ae              ", "Intercept all events",
   "--first-last, -fl              ", "Print only first and last of multiple successive MotionEvent ",
-  "--loops <n>, -l                ", "Intercept n numbers of events ( n<0 means forever)",
+  "--store-mouse-pos, -smp        ", "Store the initial position of the mouse",
   "--events-to-record <n>, -etr   ", "Intercept n numbers of events ( n<0 means forever)",
   "--data-to-record <n>, -dtr     ", "Intercept n numbers of data ( n<0 means forever)",
   "--seconds-to-record <n>, -str  ", "Intercept for n seconds ( n<0 means forever)",
@@ -64,7 +64,7 @@ static char *help[] = {
   "--all-clients, -ac             ", "Record all client's data (default)" , 
   "--future-clients, -fc          ", "Record future client's data" , 
   "--human-printout, -hp          ", "Prints human readable" , 
-  "--record, -rec                 ", "Set recording mode (default)" , 
+  "--record, -rec                 ", "Set recording mode" , 
   "--replay, -rep                 ", "Set replaying mode" , 
   "--speed-percent, -sp           ", "Set replaying speed (percentage)",
   "--exec-key mod,key, -ek        ", "When pressing modifier mod and key key Xnee inserts a exec mark into the session file" , 
@@ -98,9 +98,9 @@ static char *help[] = {
   "--request-range, -reqra <X_LIST>","Set request range to X_LIST", 
   "--reply-range, -repra   <X_LIST>","Set reply range to X_LIST", 
   "--extension-request-major-range, -erqmar  <X_LIST>  ","Set extension request major range to X_LIST", 
-  "--extension-request-mainor-range, -erqmir  <X_LIST> ", "Set extension request minor range to X_LIST", 
+  "--extension-request-minor-range, -erqmir  <X_LIST> ", "Set extension request minor range to X_LIST", 
   "--extension-reply-major-range, -erpmar  <X_LIST>    ","Set extension reply major range to X_LIST", 
-  "--extension-reply-mainor-range, -erpmir  <X_LIST>   ","Set extension reply minor range to X_LIST",
+  "--extension-reply-minor-range, -erpmir  <X_LIST>   ","Set extension reply minor range to X_LIST",
   "--type-help, -tp               ", "Type this help message using faked keys (used to test xnee itself)",
   "--force-replay, -fp            ", "Keep replaying even if we are out of sync .... dangerous",
   "--max-threshold, -mat <nr>      ", "Set the maximum threshold for sync to nr",
@@ -121,9 +121,9 @@ static char *explain[] = {
 
 
 static char *examples[] = {
-  "" PACKAGE "  --record --events-to-record 1000 -devera 2-6 -o /tmp/xnee.xns -e /tmp/xnee.log -v ", 
+  "" XNEE_CLI " --record --events-to-record 1000 -devera 2-6 -o /tmp/xnee.xns -e /tmp/xnee.log -v ", 
   "Writes 1000 data to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log",
-  "" PACKAGE " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
+  "" XNEE_CLI " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
   "Read data from /tmp/xnee.xns, replay it and verbose print to file /tmp/xnee.log",
   "For more examples, read the Xnee manual",
   NULL 
@@ -435,7 +435,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--all-events", "-ae" )) 
 	{
-	  xnee_set_all_events (xd);
+	  xnee_add_range (xd, XNEE_DEVICE_EVENT, 2,6);
+	  xnee_add_range (xd, XNEE_DELIVERED_EVENT, 7,LASTEvent);
 	  continue;
 	}
       else if(xnee_check(argv[i], "--print-settings", "-ps")) 
@@ -449,6 +450,10 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--first-last", "-fl")) 
 	{
 	  xnee_set_first_last (xd);
+	}
+      else if(xnee_check(argv[i], "--store-mouse-pos", "-smp")) 
+	{
+	  xnee_set_store_mouse_pos (xd);
 	}
       else if(xnee_check(argv[i], "--mouse", "--mouse")) 
 	{
@@ -478,14 +483,6 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    }
 	  continue; 
 	}
-      else if(xnee_check(argv[i], "--loops", "-l")) 
-	{
-	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --loops\n"));
-	  fprintf (stderr, "--loops / -l is OBSOLETED " 
-		   "in this release of Xnee/cnee\n"
-		   "use '--events-to-record' or '--data-to-record' instead\n");
-	  xnee_set_events_max (xd, atoi(argv[++i]));
-	}
       else if(xnee_check(argv[i], "--events-to-record", "-etr")) 
 	{
 	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --events-to-record\n"));
@@ -504,27 +501,27 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--stop-key", "-sk")) 
 	{
 	  xnee_verbose ((xd, "Found -sk/--stop ... : %s\n", argv[i]));
-	  xnee_set_km (xd, XNEE_GRAB_STOP, argv[++i]);
+	  xnee_set_key (xd, XNEE_GRAB_STOP, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--pause-key", "-pk")) 
 	{
 	  xnee_verbose ((xd, "Found -pk/--pause ... : %s\n", argv[i]));
-	  xnee_set_km (xd, XNEE_GRAB_PAUSE, argv[++i]);
+	  xnee_set_key (xd, XNEE_GRAB_PAUSE, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--resume-key", "-rk")) 
 	{
 	  xnee_verbose ((xd, "Found -rk/--resume ... : %s\n", argv[i]));
-	  xnee_set_km (xd, XNEE_GRAB_RESUME, argv[++i]);
+	  xnee_set_key (xd, XNEE_GRAB_RESUME, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--insert-key", "-ik")) 
 	{
 	  xnee_verbose ((xd, "Found -ik/--insert ... : %s\n", argv[i]));
-	  xnee_set_km (xd, XNEE_GRAB_INSERT, argv[++i]);
+	  xnee_set_key (xd, XNEE_GRAB_INSERT, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--exec-key", "-ek")) 
 	{
 	  xnee_verbose ((xd, "Found -ek/--exec ... : %s\n", argv[i]));
-	  xnee_set_km (xd, XNEE_GRAB_EXEC, argv[++i]);
+	  xnee_set_key (xd, XNEE_GRAB_EXEC, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--exec-program", "-ep")) 
 	{
@@ -764,13 +761,14 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  ret=xnee_parse_range (xd, XNEE_EXT_REPLY_MAJOR, argv[++i]);
 	  continue;
 	}
-      else if(xnee_check(argv[i], "--extension-reply-mainor-range", "-erpmir")) 
+      else if(xnee_check(argv[i], "--extension-reply-manor-range", "-erpmir")) 
 	{
 	  ret=xnee_parse_range (xd, XNEE_EXT_REPLY_MINOR, argv[++i]);
 	  continue;
 	}
       else if(xnee_check(argv[i], "--version", "-V")) 
 	{
+	  fprintf (stderr, XNEE_CLI " part of " );
 	  xnee_version(xd);
 	  exit(XNEE_OK);
 	}
@@ -1021,10 +1019,11 @@ int
 xnee_type_help (xnee_data *xd)
 {
   int i ;
-  xnee_key_code x_kc;
+  xnee_script_s xss ;
 
   char my_string[500];
   char **cpp;
+  int  switcher = 1 ;
 
   KeyCode shift_kc ;
   KeyCode return_kc ;
@@ -1036,33 +1035,36 @@ xnee_type_help (xnee_data *xd)
   if (!xnee_has_xtest_extension(xd))
     exit(XNEE_NO_TEST_EXT);
 
-  shift_kc  = xnee_str2keycode (xd, "Shift_L");
-  return_kc = xnee_str2keycode (xd, "Return");
-  
   for (cpp = help; *cpp; cpp+=1) 
     {
       xnee_verbose ((xd,"string to fake %s\n", *cpp));
       strcpy(my_string,*cpp);
+
       for (i=0;(size_t)i<strlen(my_string);i++)
 	{
-	  xnee_char2keycode(xd, my_string[i], &x_kc); 
-/* 	  if (x_kc.shift_press) */
-/* 	    xnee_fake_key_event (xd, shift_kc, True,  CurrentTime); */
+	  xnee_char2keycode(xd, my_string[i], &xss.kc); 
+	  xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS,  CurrentTime);
+	  usleep (1000*10);
+	  xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE,  CurrentTime);
 
-	  xnee_fake_key_event (xd, x_kc.kc, True,  CurrentTime);
-	  usleep (1000*100);
-	  xnee_fake_key_event (xd, x_kc.kc, False, CurrentTime);
-
-/* 	  if (x_kc.shift_press) */
-/* 	      xnee_fake_key_event (xd, shift_kc, False,  CurrentTime); */
 	    
 	}
       usleep(1000*200);
 
-      xnee_fake_key_event (xd, return_kc, True,  CurrentTime);
-      xnee_fake_key_event (xd, return_kc, False, 100000);
-      
-      
+      if ( switcher= !switcher )
+	{
+	  my_string[0]='\n';
+	  my_string[1]='\0';
+	  xnee_char2keycode(xd, my_string[i], &xss.kc); 
+	  xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS,  CurrentTime);
+	  usleep (1000*100);
+	  xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE,  CurrentTime);
+	}
+
+      xnee_char2keycode(xd, my_string[0], &xss.kc); 
+      xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS,  CurrentTime);
+      usleep (1000*100);
+      xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE,  CurrentTime);
     } 
  xnee_reset_autorepeat (xd);
  xnee_verbose ((xd,"<--- xnee_type_help\n"));

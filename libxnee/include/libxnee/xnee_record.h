@@ -108,19 +108,6 @@ xnee_record_init              (xnee_data* xd) ;
 
 
 
-/**
- * Selects some default ranges of data to record
- *
- * @param xd     xnee's main structure
- * @return void  
- */
-void 
-xnee_record_select_default_protocol   (xnee_data *xd) ;
-
-
-
-
-
 
 /**
  * Sets up Record extension with some nice values

@@ -59,6 +59,7 @@
 int
 xnee_free_xnee_resource_meta(xnee_resource_meta* xrm)
 {
+  xrm->new_project = 0;
   XNEE_FREE_AND_NULL (xrm->project_name);
   XNEE_FREE_AND_NULL (xrm->project_descr);
   XNEE_FREE_AND_NULL (xrm->creat_date);
@@ -484,58 +485,70 @@ xnee_get_project_descr(xnee_data *xd){
 }
 
 char *
-xnee_get_creat_date(xnee_data *xd){
+xnee_get_creat_date(xnee_data *xd)
+{
+  time_t rawtime;
+  struct tm * timeinfo;
+  static char buf[20];
   if (xd->xrm.creat_date!=NULL)  
     return xd->xrm.creat_date;
-  else
-    return "none";
+  time ( &rawtime );
+  timeinfo = localtime ( &rawtime );
+  sprintf(buf, "%.4d-%.2d-%.2d",
+	  timeinfo->tm_year + 1900 , 
+	  timeinfo->tm_mon + 1 , 
+	  timeinfo->tm_mday  );
+  return buf;
 }
 
 char *
-xnee_get_creat_program(xnee_data *xd){
-  if (xd->xrm.author_email!=NULL)  
-  return xd->xrm.creat_prog;
+xnee_get_creat_program(xnee_data *xd)
+{
+  if (xd->xrm.creat_prog!=NULL)  
+    return xd->xrm.creat_prog;
   else
-    return "none";
+    return xnee_get_program_name(xd);
 }
 
 char *
 xnee_get_creat_prog_vers(xnee_data *xd)
 {
-  if (xd->xrm.author_email!=NULL)  
-  return xd->xrm.creat_prog_vers;
+  if (xd->xrm.creat_prog_vers!=NULL)  
+    return xd->xrm.creat_prog_vers;
+  else
+    return VERSION;
+}
+
+char *
+xnee_get_last_date(xnee_data *xd)
+{
+  if (xd->xrm.last_date!=NULL)  
+    return xd->xrm.last_date;
   else
     return "none";
 }
 
 char *
-xnee_get_last_date(xnee_data *xd){
-  if (xd->xrm.author_email!=NULL)  
-  return xd->xrm.last_date;
-  else
-    return "none";
-}
-
-char *
-xnee_get_last_program(xnee_data *xd){
-  if (xd->xrm.author_email!=NULL)  
-  return xd->xrm.last_prog;
+xnee_get_last_program(xnee_data *xd)
+{
+  if (xd->xrm.last_prog!=NULL)  
+    return xd->xrm.last_prog;
   else
     return "none";
 }
 
 char *
 xnee_get_last_prog_vers(xnee_data *xd){
-  if (xd->xrm.author_email!=NULL)  
-  return xd->xrm.last_prog_vers;
+  if (xd->xrm.last_prog_vers!=NULL)  
+    return xd->xrm.last_prog_vers;
   else
     return "none";
 }
 
 char *
 xnee_get_author_name(xnee_data *xd){
-  if (xd->xrm.author_email!=NULL)  
-  return xd->xrm.author_name;
+  if (xd->xrm.author_name!=NULL)  
+    return xd->xrm.author_name;
   else
     return "none";
 }
@@ -551,7 +564,8 @@ xnee_get_author_email(xnee_data *xd){
 
 int
 xnee_set_project_name(xnee_data *xd, char *str){
- xd->xrm.project_name=strdup(str);
+  XNEE_FREE_IF_NOT_NULL(xd->xrm.project_name);
+  xd->xrm.project_name=strdup(str);
  return XNEE_OK;
 }
 
@@ -560,15 +574,19 @@ xnee_set_project_descr(xnee_data *xd, char *str){
  xd->xrm.project_descr=strdup(str);
  return XNEE_OK;
 }
+
 int
 xnee_set_creat_date(xnee_data *xd, char *str){
- xd->xrm.creat_date=strdup(str);
- return XNEE_OK;
+  XNEE_FREE_IF_NOT_NULL(xd->xrm.creat_date);
+  xd->xrm.creat_date=strdup(str);
+  return XNEE_OK;
 }
+
 int
 xnee_set_creat_program(xnee_data *xd, char *str){
- xd->xrm.creat_prog=strdup(str);
- return XNEE_OK;
+  XNEE_FREE_IF_NOT_NULL(xd->xrm.creat_prog_vers);
+  xd->xrm.creat_prog=strdup(str);
+  return XNEE_OK;
 }
 
 int
@@ -578,19 +596,23 @@ xnee_set_creat_prog_vers(xnee_data *xd, char *str){
 }
 
 int
-xnee_set_last_date(xnee_data *xd, char *str){
- xd->xrm.last_date=strdup(str);
- return XNEE_OK;
+xnee_set_last_date(xnee_data *xd, char *str)
+{
+  XNEE_FREE_IF_NOT_NULL(xd->xrm.last_date);
+  xd->xrm.last_date=strdup(str);
+  return XNEE_OK;
 }
+
 int
 xnee_set_last_program(xnee_data *xd, char *str){
  xd->xrm.last_prog=strdup(str);
  return XNEE_OK;
 }
 int
-xnee_set_last_prog_vers(xnee_data *xd, char *str){
- xd->xrm.last_prog_vers=strdup(str);
- return XNEE_OK;
+xnee_set_last_prog_vers(xnee_data *xd, char *str)
+{
+  xd->xrm.last_prog_vers=strdup(str);
+  return XNEE_OK;
 }
 int
 xnee_set_author_name(xnee_data *xd, char *str){

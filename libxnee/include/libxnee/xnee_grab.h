@@ -44,6 +44,37 @@ xnee_grab_keys_init(xnee_data *xd);
 int 
 xnee_grab_all_keys (xnee_data* xd);
 
+
+enum 
+  {
+    XNEE_GRAB_NONE_PRESSED=0,
+    XNEE_GRAB_NONE_IN_USE,
+    XNEE_GRAB_SOME_IN_USE,
+    XNEE_GRAB_ALL_IN_USE,
+    XNEE_GRAB_DO_SAVE,
+    XNEE_GRAB_DO_PRINT,
+    XNEE_GRAB_DONT_PRINT,
+    XNEE_OVERRIDE_FALSE,
+    XNEE_OVERRIDE_TRUE,
+    XNEE_OVERRIDE_GET,
+    XNEE_GRAB_BUFFER_SAVE,
+    XNEE_GRAB_BUFFER_PRINT,
+    XNEE_GRAB_BUFFER_RESET,
+    XNEE_GRAB_KM_PRESS,
+    XNEE_GRAB_KM_RELEASE,
+    XNEE_GRAB_MOUSE
+  } xnee_grab_modifiers_control ;
+  
+int
+xnee_save_or_print(xnee_data *xd, KeyCode kc, int mode);
+
+int 
+xnee_grab_handle_buffer(xnee_data *xd, char *str, int mode);
+
+int
+xnee_get_grab_mode ( xnee_data *xd, int key);
+
+
 #endif /* XNEE_GRAB_H */
 
 

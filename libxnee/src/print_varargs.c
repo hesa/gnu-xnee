@@ -81,6 +81,7 @@ xnee_print_error (char * error, ...)
   va_list ap;
   va_start(ap, error);
   vprintf ( error, ap );
+  va_end(ap);
 }
 #else
 void
@@ -91,6 +92,7 @@ xnee_print_error (char * error, ...)
   va_start(ap);
   fmt = va_arg(argp, char *);
   vprintf ( error, ap );
+  va_end(ap);
 }
 #endif
 

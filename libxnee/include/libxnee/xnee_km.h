@@ -38,28 +38,24 @@ xnee_grab_key (xnee_data* xd , int mode, char *mod_key);
 
 
 int
-xnee_get_grab_mode ( xnee_data *xd, int key, int modifier);
-
-int
-xnee_check_km(xnee_data *xd);
+xnee_check_key(xnee_data *xd);
 
 
 
 int
-xnee_get_km_tuple (xnee_data     *xd, 
-		   xnee_km_tuple *km, 
-		   char          *mod_and_key);
-
+xnee_get_action_key (xnee_data        *xd, 
+		     xnee_action_key  *xk, 
+		     char             *mod_and_key);
 
 int 
-xnee_handle_rec_km(xnee_data *xd);
+xnee_handle_rec_key(xnee_data *xd);
 
 int 
-xnee_handle_rep_km(xnee_data *xd);
+xnee_handle_rep_key(xnee_data *xd);
 
 
 int
-xnee_km_check(xnee_data *xd);
+xnee_key_check(xnee_data *xd);
 
 
 #endif /* XNEE_KM_H */

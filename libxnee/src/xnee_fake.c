@@ -182,16 +182,16 @@ xnee_replay_event_handler( xnee_data* xd,
   switch (xindata->u.event.type)
     {
     case KeyPress:
-      xnee_fake_key_event (xd, xindata->u.event.keycode, True, sleep_amt );
+      xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_PRESS, sleep_amt );
       break;
     case KeyRelease:
-      xnee_fake_key_event  (xd, xindata->u.event.keycode, False, sleep_amt);
+      xnee_fake_key_event  (xd, xindata->u.event.keycode, XNEE_RELEASE, sleep_amt);
       break;
     case ButtonPress:
-      xnee_fake_button_event (xd, xindata->u.event.button, True, sleep_amt);
+      xnee_fake_button_event (xd, xindata->u.event.button, XNEE_PRESS, sleep_amt);
       break;
     case ButtonRelease:
-      xnee_fake_button_event (xd, xindata->u.event.button, False, sleep_amt);
+      xnee_fake_button_event (xd, xindata->u.event.button, XNEE_RELEASE, sleep_amt);
       break;
     case MotionNotify:
       screen = xindata->u.event.screen_nr ; 
@@ -290,7 +290,7 @@ xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
 	  xnee_verbose((xd, "XTestFakeKeyEvent modifier \n"));
 	  xnee_fake_key_event (xd,
 			       xss->kc.mod_keycodes[mods], 
-			       True, 
+			       bo, 
 			       0);
 	}
       xnee_fake_sleep (dtime);
@@ -387,6 +387,7 @@ xnee_fake_motion_event (xnee_data* xd,
 {
   int i=0;
   int size= xd->distr_list_size;
+	  
 
   x = xnee_resolution_newx(xd,x);
   y = xnee_resolution_newy(xd,y);
@@ -394,6 +395,7 @@ xnee_fake_motion_event (xnee_data* xd,
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   if (!xnee_is_recorder (xd))
     {
+
       xnee_fake_sleep (dtime);
       xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %lu))\n",
 		    (int) xd->fake, 
@@ -433,7 +435,7 @@ xnee_fake_motion_event (xnee_data* xd,
 
 /**************************************************************
  *                                                            *
- * xnee_fake_realtive_motion_event                            *
+ * xnee_fake_relative_motion_event                            *
  *                                                            *
  *                                                            *
  **************************************************************/
@@ -516,9 +518,9 @@ xnee_type_file(xnee_data *xd)
 	  xnee_verbose ((xd, "retyping key %c keycode %d\n", 
 			 tmp[i],xss.kc.kc));
 	  
-	  xnee_fake_key_mod_event (xd, &xss, True, 0);
+	  xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
 	  usleep (1000*100);
-	  xnee_fake_key_mod_event (xd, &xss, False, 0);
+	  xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
 	  
 	  
 	}

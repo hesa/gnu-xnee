@@ -158,6 +158,14 @@ Verify the build by running @code{xdpyinfo} in an xterm in the vncserver
 and verify that RECORD and XTEST extensions are loaded.
 
 
+@item How do I ensure that the mouse, during replay, is at the same position (x,y) as when recorded?
+Use the @code{--store-mouse-pos} option. 
+This will cause Xnee to store the mouse position before starting to record. This position will be used to set the start position before replaying of recorded data starts.
+
+@item How do I ensure that the same window is focused as when recorded?
+It's simple, just make sure that you record the window get focus.
+
+
 @end table
 
 

@@ -59,7 +59,6 @@
 
 
 xnee_data *xd_global;
-static XModifierKeymap *map = NULL;
 int masks[] =
   {
     0,
@@ -73,7 +72,6 @@ int masks[] =
     Mod5Mask,
     -1
   } ;
-
 
 /**************************************************************
  *                                                            *
@@ -318,9 +316,8 @@ xnee_close_down(xnee_data* xd)
     
   xnee_verbose((xd, "xnee_close_down : ungrab -----> \n"));
   xnee_ungrab_keys (xd);
-  xnee_verbose((xd, "xnee_clos_down : ungrab <---- \n"));
+  xnee_verbose((xd, "xnee_close_down : ungrab <---- \n"));
   xnee_reset_autorepeat (xd_global);
-  
 
   if (xd->plugin_handle!=NULL)
     {
@@ -425,6 +422,7 @@ xnee_init(xnee_data* xd)
 
   xd_global = xd ; 
 
+
   /*  xd->human_print = False  ; */
   xd->plugin_handle    = NULL;
   xd->rec_callback     = xnee_record_dispatch ;
@@ -464,6 +462,7 @@ xnee_init(xnee_data* xd)
   xd->buf_sem = (sem_t *) malloc (sizeof(sem_t));
   xnee_sem_init (xd, xd->buf_sem, 0, 1);
 
+  xd->autorepeat_saved = 0 ;
 
   xd->button_pressed=0;
   /*  Not done until needed
@@ -488,6 +487,7 @@ xnee_init(xnee_data* xd)
   xd->meta_data.sum_max_threshold  = XNEE_DEFAULT_MAX_THRESHOLD;
   xd->meta_data.sum_min_threshold  = XNEE_DEFAULT_MIN_THRESHOLD;
   xd->meta_data.tot_diff_threshold = XNEE_DEFAULT_TOT_THRESHOLD;
+
 
   /* Init Recording variables
    * Since those are used when recording and replaying. */
@@ -1367,6 +1367,12 @@ xnee_set_autorepeat (xnee_data *xd)
   int i ;
   int j;
 
+  if (xd->autorepeat_saved==1)
+    {
+      return XNEE_OK;
+    }
+  
+
   XGetKeyboardControl (xd->fake, &xd->kbd_orig);
   
   xnee_verbose ((xd," key_click_percent  %d \n", 
@@ -1398,6 +1404,7 @@ xnee_set_autorepeat (xnee_data *xd)
     }
   */
   XAutoRepeatOff(xd->fake);
+  xd->autorepeat_saved=1;  
   return xd->kbd_orig.global_auto_repeat;
 }
 
@@ -1405,6 +1412,11 @@ xnee_set_autorepeat (xnee_data *xd)
 int
 xnee_reset_autorepeat (xnee_data *xd)
 {  
+  if (xd->autorepeat_saved==0)
+    {
+      return XNEE_OK;
+    }
+
   xnee_verbose((xd,"Resetting autorepeat on (%d) to: ",
 		xd->fake));
 
@@ -1424,34 +1436,40 @@ xnee_reset_autorepeat (xnee_data *xd)
   /* Make sure the resetting of autorepeat is handled
      before we close down the display */
   XFlush (xd->fake);
-  
+  xd->autorepeat_saved=0;  
   return XNEE_OK;
 }
 
 
 KeyCode
-xnee_str2keycode(xnee_data* xd, char *str )
+xnee_str2keycode(xnee_data* xd, char *str, xnee_key_code *kc)
 {
   if (xd->fake==NULL)
     return -1;
-  return  XKeysymToKeycode(xd->fake,XStringToKeysym(str));
+  kc->kc = XKeysymToKeycode(xd->fake,XStringToKeysym(str));
+  if (kc!=NULL)
+    xnee_token_to_km (xd,kc->kc, str,kc);
+  return kc->kc;
 }
 
 
 KeyCode
-xnee_keysym2keycode(xnee_data* xd, KeySym ks)
+xnee_keysym2keycode(xnee_data* xd, KeySym ks, char * str, xnee_key_code *kc)
 {
   if (xd->fake==NULL)
     return -1;
-  return  XKeysymToKeycode(xd->fake,ks);
+
+  kc->kc = XKeysymToKeycode(xd->fake, ks);
+  xnee_token_to_km (xd,kc->kc,str,kc);
+  return kc->kc;
 }
 
 
 int
-xnee_token_to_km (Display *dpy,
-	      int keycode,
-	      char *str,
-	      xnee_key_code *kc)
+xnee_token_to_km (xnee_data *xd,
+		  int keycode,
+		  char *str,
+		  xnee_key_code *kc)
 {
   XEvent event;
   int size;
@@ -1460,6 +1478,7 @@ xnee_token_to_km (Display *dpy,
   int ret=-1;
   char string[20];
   KeySym keysym;
+  Display *dpy = xd->fake;
   
   for (i=0;masks[i]!=-1;i++)
     {
@@ -1478,15 +1497,15 @@ xnee_token_to_km (Display *dpy,
 	{
 	  KeySym ks ;
 	  char *nm ;
-	  k = (i-1)*map->max_keypermod ;
+	  k = (i-1)*xd->map->max_keypermod ;
 	  ks = XKeycodeToKeysym(dpy,
-				map->modifiermap[k],
+				xd->map->modifiermap[k],
 				0);
 	  nm = XKeysymToString(ks);
 	  
 	  
 	  
-	  kc->mod_keycodes[0] = map->modifiermap[k];
+	  kc->mod_keycodes[0] = xd->map->modifiermap[k];
 	  ret = XNEE_OK ;
 	  break;
        }
@@ -1505,12 +1524,8 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
   char buf[2];
   if (xd->fake==NULL)
     return -1;
-  
-  if (map==NULL)
-    {
-      map = XGetModifierMapping(xd->fake);
-    }
-  
+
+  KeySym ks = 0 ;
   
   memset(kc,0,sizeof(xnee_key_code));
   buf[0]=token;
@@ -1519,23 +1534,19 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
   switch( token)
     {
     case ' ':
-      kc->kc = xnee_keysym2keycode(xd,XK_space);
-      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
-      break;
+      ks = XK_space ;
     case '$':
       break;
     case '%':
       break;
     case '&':
-      kc->kc = xnee_keysym2keycode(xd,XK_ampersand);
-      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
+      ks = XK_ampersand ;
       break;
     case '-':
-      kc->kc = xnee_keysym2keycode(xd,XK_minus);
-      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
+      ks = XK_minus ;
       break;
     case '\n':
-      kc->kc = xnee_keysym2keycode(xd,XK_Return);
+      ks = XK_Return ;
     case '\0':
       break;
     case '(':
@@ -1543,12 +1554,10 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
     case ')':
       break;
     case '/':
-      kc->kc = xnee_keysym2keycode(xd,XK_slash);
-      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
+      ks = XK_slash;
       break;
     case '\\':
-      kc->kc = xnee_keysym2keycode(xd,XK_backslash);
-      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
+      ks = XK_backslash;
       break;
     case ',':
       break;
@@ -1565,12 +1574,24 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
     case '!':
       break;
     default:
-      kc->kc = xnee_str2keycode(xd,buf);
+      /*    a-z, 0-9   */
+      ks = 0 ;
       break;
     }
+
+  if ( ks != 0)
+    {
+      xnee_keysym2keycode(xd, ks, buf, kc);
+    }
+  else
+    {
+      xnee_str2keycode(xd, buf, kc);
+    }
+    
   if ((token >= 'A') && (token <='Z'))
     /*     kc->shift_press=1; */
     ;
+
   return XNEE_OK;
 }
 
@@ -1661,6 +1682,7 @@ xnee_rep_prepare(xnee_data *xd)
   int ret ; 
 
 
+  xnee_verbose((xd, "--> xnee_rep_prepare\n"));
   /* 
    * Print settings 
    * only done if verbose mode  
@@ -1673,10 +1695,17 @@ xnee_rep_prepare(xnee_data *xd)
   
   if ( xnee_is_recorder(xd) )
   {
-     if (ret==XNEE_NO_PROT_CHOOSEN)
-     {
+    if (ret==XNEE_NO_PROT_CHOOSEN)
+      {
+	xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", ret));
         return ret;
-     }
+      }
+  }
+
+  if ( xnee_is_replayer(xd) )
+  {
+    xnee_verbose((xd, "Entering main loop (replayer) to read META data \n"));
+    ret = xnee_replay_main_loop(xd, XNEE_REPLAY_READ_META_DATA);
   }
 
   /* 
@@ -1685,8 +1714,14 @@ xnee_rep_prepare(xnee_data *xd)
    */
   ret = xnee_setup_display (xd);
   if (ret!=XNEE_OK)
-     return ret;
+    {
+      xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", ret));
+      return ret;
+    }
   
+  xnee_verbose((xd," building modifier map on %d\n", xd->fake)); 
+  xd->map = XGetModifierMapping(xd->fake);
+
   
   /*
    * If no recording client, init xnee_sync 
@@ -1703,6 +1738,7 @@ xnee_rep_prepare(xnee_data *xd)
    */
   xnee_set_autorepeat (xd);
   
+  xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", XNEE_OK));
   return XNEE_OK;
 }
 
@@ -1710,11 +1746,15 @@ int
 xnee_prepare(xnee_data *xd)
 {
    int ret;
-   ret = xnee_open_files(xd);
-   if (ret != XNEE_OK)
-     return ret;
    
-   return xnee_rep_prepare(xd);
+   xnee_verbose((xd, "--> xnee_prepare\n"));
+   ret = xnee_open_files(xd);
+   if (ret == XNEE_OK)
+     {
+       ret = xnee_rep_prepare(xd);
+     }
+   xnee_verbose((xd, "<-- xnee_prepare returning %d\n", ret));
+   return ret;
 }
 
 
@@ -1724,6 +1764,7 @@ xnee_start(xnee_data *xd)
 {
    int ret ;
 
+#ifdef XNEE_OBSOLETE
    ret = xnee_prepare(xd);
    if (ret!=XNEE_OK)
      {
@@ -1732,7 +1773,7 @@ xnee_start(xnee_data *xd)
 	 {
 	   if (ret==XNEE_NO_PROT_CHOOSEN)
 	     {
-	       xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
+	       xnee_verbose((xd, "xnee_prepare failed.... failure %d\n", ret));
 	       return ret;
 	     }
 	   xnee_verbose((xd, "xnee_prepare failed.... it was not OK\n"));
@@ -1740,10 +1781,11 @@ xnee_start(xnee_data *xd)
 	 }
       else
       {
-         xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
+         xnee_verbose((xd, "xnee_prepare failed.... failure nr %d\n", ret));
          return ret;
       }
    }
+#endif
    /* grab all keys that have been specified */
    ret = xnee_grab_all_keys (xd);
    if (ret != XNEE_OK)
@@ -1763,18 +1805,6 @@ xnee_start(xnee_data *xd)
     */
    if (xnee_is_recorder(xd)) 
    {
-      
-     ret = xnee_prepare(xd);
-     if (ret!=XNEE_OK)
-       {
-	 if (ret==XNEE_NO_PROT_CHOOSEN)
-	   {
-	     xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
-	     return ret;
-	   }
-	 xnee_verbose((xd, "xnee_prepare failed.... it was not OK\n"));
-	 return ret;
-       }
      
       /* 
        * Print settings 
@@ -1804,7 +1834,7 @@ xnee_start(xnee_data *xd)
        xnee_zero_events_recorded(xd);
        xnee_zero_data_recorded(xd);
        xnee_zero_time_recorded(xd);
-  
+
 
        /*
         * At last. Time to enter the main loop
@@ -1852,7 +1882,7 @@ xnee_start(xnee_data *xd)
        * Thanks: Janice Waddick 
        */
       xnee_verbose((xd, "Entering main loop (replayer)\n"));
-      ret = xnee_replay_main_loop(xd);
+      ret = xnee_replay_main_loop(xd, XNEE_REPLAY_READ_REPLAY_DATA);
       if (ret != XNEE_OK)
 	{
 	  ;
@@ -1868,9 +1898,7 @@ xnee_start(xnee_data *xd)
     }
   else
     {
-      fprintf (stderr, 
-	       "No mode specified... leaving\n"
-	       "You can use either of record/replay/retype\n");
+      return XNEE_MODE_NOT_SET;
     }
   /*
    * Close everything down .... free memory, tell X server we are leaving ...

@@ -33,9 +33,17 @@ typedef struct
   int use_speed ;
   int speed ; 
 
-  
-
 } gnee_xnee ;
+
+
+#define GNEE_IF_ERROR_RETURN(ret, wind) \
+  if (ret != XNEE_OK)				\
+    {						\
+      gtk_widget_show_all(ext_gnee_window);	\
+      gx_display_errror(ret);			\
+      return ret;				\
+    }						
+
 
 
 int
@@ -130,8 +138,8 @@ gx_set_variable_data(xnee_data *xd, gnee_xnee *gx);
 #define gx_set_out_byname(xd,f)          xnee_set_out_byname(xd,f)
 #define gx_get_rc_name(xd)               xnee_get_rc_name(xd)
 #define gx_write_settings_to_file(xd,f)  xnee_write_settings_to_file(xd,f) 
-#define gx_set_km(xd,km,mode)            xnee_set_km(xd,km,mode) 
-#define gx_get_km(ext_xd,mode)           xnee_get_km(ext_xd,mode)
+#define gx_set_key(xd,km,mode)            xnee_set_key(xd,km,mode) 
+#define gx_get_key(ext_xd,mode)           xnee_get_key(ext_xd,mode)
 
 #define gx_set_events_max(ext_xd,loops) xnee_set_events_max(ext_xd, loops);
 #define gx_get_events_max(ext_xd)       xnee_get_events_max(ext_xd)

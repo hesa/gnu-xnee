@@ -24,7 +24,6 @@
 
 
 
-
 #include "libxnee/xnee.h"
 #include "libxnee/datastrings.h"
 #include "libxnee/print.h"
@@ -32,6 +31,7 @@
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_km.h"
 #include "libxnee/xnee_fake.h"
+#include "libxnee/xnee_grab.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/feedback.h"
 #include "libxnee/xnee_range.h"
@@ -80,7 +80,11 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           event_type = xrec_data->type ;
   FILE *out = xd->out_file;
-  
+  int i ; 
+  int ret ;
+  int release_ret ;
+  KeyCode kc;
+  int do_print = 1;
 
   XNEE_DEBUG ( (stderr ," -->xnee_record_handle_event()  \n"  ));
   if ((xd->xnee_info.first_last) && (xd->xnee_info.last_motion > 0) && (event_type==MotionNotify)) 
@@ -111,23 +115,55 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
       else 
 	{
 	  XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 3 (%d)  \n" ,event_type ));
+
 	  switch(event_type)
 	    {	  
 	    case KeyPress:
-	      fprintf (out,"0,%d,0,0,0,%d,0,%lu\n",
-		       event_type,
-		       xrec_data->event.u.u.detail,
-		       xrecintd->server_time
-		       );
-	      xnee_fake_key_event  (xd,xrec_data->event.u.u.detail , True,CurrentTime );
+	      kc = xrec_data->event.u.u.detail;
+
+	      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_PRESS);
+	      if (do_print==XNEE_GRAB_DO_PRINT)
+		{
+		  fprintf (out,"0,%d,0,0,0,%d,0,%lu\n",
+			   event_type,
+			   kc,
+			   xrecintd->server_time
+			   );
+		  xnee_fake_key_event  (xd, kc, True, CurrentTime );
+		}
+	      else if (do_print==XNEE_GRAB_DO_SAVE)
+		{
+		  char buf[64];
+		  sprintf (buf, "0,%d,0,0,0,%d,0,%lu\n",
+			    event_type,
+			    kc,
+			   xrecintd->server_time);
+		  xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
+		}
 	      break;
 	    case KeyRelease:
-	      fprintf (out,"0,%d,0,0,0,%d,0,%lu\n",
-		       event_type,
-		       xrec_data->event.u.u.detail,
-		       xrecintd->server_time
-		       );
-	      xnee_fake_key_event  (xd,xrec_data->event.u.u.detail , False, CurrentTime);
+	      kc = xrec_data->event.u.u.detail;
+	      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_RELEASE);
+
+	      if (do_print==XNEE_GRAB_DO_PRINT)
+		{
+		  fprintf (out,"0,%d,0,0,0,%d,0,%lu\n",
+			   event_type,
+			   xrec_data->event.u.u.detail,
+			   xrecintd->server_time
+			   );
+		  xnee_fake_key_event  (xd,xrec_data->event.u.u.detail , False, CurrentTime);
+		}
+	      else if (do_print==XNEE_GRAB_DO_SAVE)
+		{
+		  char buf[64];
+		  sprintf (buf, "0,%d,0,0,0,%d,0,%lu\n",
+			    event_type,
+			    kc,
+			   xrecintd->server_time);
+		  xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
+
+		}
 	      break;
 	    case ButtonPress:
 	      fprintf (out,"0,%d,0,0,%d,0,0,%lu\n",
@@ -146,6 +182,7 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
 	      xnee_fake_button_event (xd, xrec_data->event.u.u.detail, False, CurrentTime);
 	      break;
 	    case MotionNotify:  
+	      xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
 	      fprintf (out,"0,%d,%d,%d,0,0,0,%lu\n",
 		       event_type,
 		       xrec_data->event.u.keyButtonPointer.rootX,
@@ -172,12 +209,6 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
 		       xrecintd->server_time
 		       );
 	      break;
-	    case NoExpose :
-	      XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 4  \n"  ));
-	      if (xd->xnee_info.no_expose) break ;
-	    case Expose :
-	      XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 5  \n"  ));
-	      if (xd->xnee_info.no_expose) break ;
 	    default:
 	      XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 6  \n"  ));
 	      fprintf (out,"0,%d,0,0,0,0,0,%lu\n", 
@@ -408,13 +439,11 @@ xnee_record_init (xnee_data *xd)
 {
   int i=0;
   XNEE_DEBUG ( (stderr ," --> xnee_record_init()  \n"  ));
-  xd->xnee_info.all_events      = False  ; /* Intercept all events  */
-  xd->xnee_info.everything      = False  ; /* Intercept everything (events, requests, errors, replies) */
   xd->xnee_info.first_last      = False  ; /* Intercept all MotionNotify, else only first and last */
-  xd->xnee_info.no_expose       = False  ; /* Do not Intercept Expose or NoExpose */
 
   xd->xnee_info.last_motion     = False  ; /* Used to record only first and last Motion in a row*/
   xd->xnee_info.events_recorded = 0    ; /* Default 100 Datum */
+  xd->xnee_info.store_mouse_pos = 0;
    
   xd->xnee_info.data_recorded   = 0    ; /* Default 500 Datum*/
    
@@ -451,79 +480,6 @@ xnee_record_init (xnee_data *xd)
 
 
 
-
-/**************************************************************
- *                                                            *
- * xnee_record_select_default_protocol                        *
- *                                                            *
- *                                                            *
- **************************************************************/
-void 
-xnee_record_select_default_protocol (xnee_data *xd)
-{ 
-  xnee_verbose((xd, "---> xnee_record_select_default_protocol\n"));
-  XNEE_DEBUG ( (stderr ," --> xnee_record_select_default_protocol()  \n"  ));
-  if(xd->xnee_info.everything) 
-    {  
-      xnee_verbose((xd, "xnee_record_select_default_protocol (everything)\n"));
-      /* = X_NoOperation, but that implies too much data*/
-      /*      xnee_add_range (xnee_info, REQUEST, X_PolyPoint, X_PolyFillArc, NULL, xrs);*/
-      xnee_add_range (xd, XNEE_REQUEST, X_PolyPoint, X_NoOperation);
-      xnee_add_range (xd, XNEE_DEVICE_EVENT, CreateNotify, ConfigureRequest);
-    } 
-  else if (xd->xnee_info.all_events) 
-    {
-      xnee_verbose((xd, "xnee_record_select_default_protocol (all_events)\n"));
-      /*      xnee_add_range (xd, XNEE_DELIVERED_EVENT, EnterNotify, MappingNotify);*/
-      xnee_add_range (xd, XNEE_DELIVERED_EVENT, EnterNotify, KeymapNotify);
-      xnee_add_range (xd, XNEE_REQUEST, 0, 0);
-    }
-  else
-    {
-      xnee_verbose((xd, "xnee_record_select_default_protocol (--)\n"));
-      xnee_add_range (xd, XNEE_REQUEST, 0, 0);
-      xnee_add_range (xd, XNEE_DEVICE_EVENT, CreateNotify, ConfigureRequest);
-    }      
-  xnee_verbose((xd, "xnee_record_select_default_protocol (rest)\n"));
-  xnee_add_range (xd, XNEE_DEVICE_EVENT, KeyPress, MotionNotify);
-  xnee_add_range (xd, XNEE_REPLY, sz_xGenericReply, sz_xSetModifierMappingReply);
-  /*  xnee_add_range (xd, ERROR, Success, BadImplementation);*/
-  /*
-    
-    r_array->client_started = True;
-    r_array->client_died = True; 
-  */
-  xnee_verbose((xd, "<--- xnee_record_select_default_protocol\n"));
-  XNEE_DEBUG ( (stderr ," <-- xnee_record_select_default_protocol()  \n"  ));
-} 
-
-
-
-/*
- *  
- * Set the record range 
- * This is used when recording data to  synchronize the replay
- *
- *  OBSOLETE .... USED BEFORE WHEN TESTING
- *
- *
- void 
- xnee_replay_select_protocol (XRecordRange *range_array)
- {    
- range_array->delivered_events.first = UnmapNotify  ;
- range_array->delivered_events.last  = MapNotify ; 
- range_array->device_events.first    = 0 ;
- range_array->device_events.last     = 0 ;  
- range_array->core_requests.first    = 0 ;
- range_array->core_requests.last     = 0 ; 
- range_array->core_replies.first     = sz_xGenericReply ; 
- range_array->core_replies.last      = sz_xSetModifierMappingReply ; 
- range_array->errors.first           = Success  ;
- range_array->errors.last            = BadImplementation  ;
- range_array->client_started         = True;
- range_array->client_died            = True; 
- }
-*/
 
 
 
@@ -709,7 +665,6 @@ xnee_record_loop(xnee_data *xd)
    */
   usleep ( XNEE_DELAY_RECORDING );
 
-
   XRecordEnableContext(xd->data, 
 		       xd->record_setup->rContext, 
 		       xd->rec_callback, 
@@ -743,6 +698,11 @@ xnee_record_async(xnee_data *xd)
    */
   usleep ( XNEE_DELAY_RECORDING );
 
+  if (xnee_is_store_mouse_pos(xd))
+    {
+      xnee_store_mouse_pos (xd);
+    }
+
 
   XRecordEnableContextAsync(xd->data, 
 			    xd->record_setup->rContext, 
@@ -753,9 +713,9 @@ xnee_record_async(xnee_data *xd)
     {
       int ret;
       /* has the user pressed a modifier+key */
-      if (xnee_check_km (xd)==XNEE_GRAB_DATA)
+      if (xnee_check_key (xd)==XNEE_GRAB_DATA)
 	{
-	  ret = xnee_handle_rec_km(xd) ; 
+	  ret = xnee_handle_rec_key(xd) ; 
 	  if (ret == XNEE_GRAB_STOP)
 	    {
 	      xnee_verbose  ((xd," breaking async loop since STOP \n"));

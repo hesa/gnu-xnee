@@ -862,7 +862,7 @@ combo_change_helper(gpointer gw,
 		      mod_key));
 	  
 	  
- 	  gx_set_km (ext_xd, grab_action, mod_key); 
+ 	  gx_set_key (ext_xd, grab_action, mod_key); 
  	  GNEE_DEBUG(("   ----> %s\n", 
 		  gx_get_km (ext_xd, grab_action))); 
 	}

@@ -1,6 +1,6 @@
 /*
 Xnee's Not an Event Emulator enables recording and replaying of X protocol data
-Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef
+Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License
@@ -453,9 +453,9 @@ xnee_record_print_record_range (xnee_data *xd, FILE* out)
   max=xnee_get_max_range(xd);
 
 
-  fprintf (out, "####################################\n");
-  fprintf (out, "#          Record settings         #\n");
-  fprintf (out, "####################################\n");
+  fprintf (out, "#########################################\n");
+  fprintf (out, "#          Record settings              #\n");
+  fprintf (out, "#########################################\n");
   fprintf (out, "#   data_flags          %d\n", 
 	   xd->record_setup->data_flags);
   fprintf (out, "#   rState              %d\n", 
@@ -527,10 +527,13 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
   
   max=xnee_get_max_range(xd);
 
+  fprintf (fp, "#########################################\n");
+  fprintf (fp, "#          Recording ranges             #\n");
+  fprintf (fp, "#########################################\n");
   for ( i=0 ; i<max ; i++ )
     {
   
-      fprintf (fp, "\n# range nr:%d\n", i);
+      fprintf (fp, "\n# Range nr:%d\n", i);
 
       if ( ( xd->record_setup->range_array[i]->core_requests.first!=0)
 	   &&
@@ -633,59 +636,54 @@ xnee_print_xnee_resource_settings (xnee_data* xd, FILE* out)
 	out=xd->err_file;
     }
 
-  fprintf (out,  "##########################################\n");
-  fprintf (out,  "#                                        #\n");
-  fprintf (out,  "#           Xnee resource file           #\n");
-  fprintf (out,  "#                                        #\n");
-  fprintf (out,  "##########################################\n");
-  fprintf (out,  "#                                        #\n");
-  fprintf (out,  "# This file is automagically created by  #\n");
-  fprintf (out,  "# libxnee.                               #\n");
-  fprintf (out,  "# ... edit if you know what you do       #\n");
-  fprintf (out,  "#                                        #\n");
-  fprintf (out,  "##########################################\n");
-  fprintf (out,  "#\n");
-  fprintf (out,  "#\n");
-  fprintf (out,  "#\n");
-  fprintf (out,  "#########################################\n");
-  fprintf (out,  "#      Project info     #\n");
-  fprintf (out,  "#########################################\n");
-  fprintf (out,  XNEE_RES_PROJECT":\t%s\n",
+  fprintf (out,  "###############################################\n");
+  fprintf (out,  "#                                             #\n");
+  fprintf (out,  "#            Xnee Project file                #\n");
+  fprintf (out,  "#                                             #\n");
+  fprintf (out,  "#                                             #\n");
+  fprintf (out,  "#  This file is automagically created by      #\n");
+  fprintf (out,  "#  libxnee.... edit if you know what you do   #\n");
+  fprintf (out,  "#                                             #\n");
+  fprintf (out,  "###############################################\n");
+  fprintf (out,  "\n");
+  fprintf (out,  "\n");
+  fprintf (out,  "\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Project info                          #\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  XNEE_RES_PROJECT":  \t\t\t%s\n",
 	   xnee_get_project_name(xd));
-  fprintf (out,  XNEE_RES_DESCRIPTION":\t%s\n",
+  fprintf (out,  XNEE_RES_DESCRIPTION":\t\t%s\n",
 	   xnee_get_project_descr(xd));
-  fprintf (out,  "#\n");
-  fprintf (out,  "#\n");
 
-  fprintf (out,  "#########################################\n");
-  fprintf (out,  "#     Creation info     #\n");
-  fprintf (out,  "#########################################\n");
-  fprintf (out,  XNEE_RES_CREAT_DATE":  \t%s\n",
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#     Creation info                          #\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  XNEE_RES_CREAT_DATE":    \t%s\n",
 	   xnee_get_creat_date(xd));
-  fprintf (out,  XNEE_RES_CREAT_PROGRAM":\t%s\n",
+  fprintf (out,  XNEE_RES_CREAT_PROGRAM": \t%s\n",
 	   xnee_get_creat_program(xd));
-  fprintf (out,  XNEE_RES_CREAT_PROG_VER":\t%s\n",
+  fprintf (out,  XNEE_RES_CREAT_PROG_VER":  \t%s\n",
 	   xnee_get_creat_prog_vers(xd));
 
 
-  fprintf (out,  "#\n");
-  fprintf (out,  "#\n");
-  fprintf (out,  "#########################################\n");
-  fprintf (out,  "#    Last change info   #\n");
-  fprintf (out,  "#########################################\n");
-  fprintf (out,  XNEE_RES_LASTCHANGE_DATE":\t%s\n",
-	   xnee_get_creat_date(xd));
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#    Last change info                        #\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  XNEE_RES_LASTCHANGE_DATE":  \t%s\n",
+	   xnee_get_last_date(xd));
   fprintf (out,  XNEE_RES_LASTCHANGE_PROGRAM":\t%s\n",
-	   xnee_get_creat_program(xd));
-  fprintf (out,  XNEE_RES_LASTCHANGE_PROG_VER":%s\n",
+	   xnee_get_last_program(xd));
+  fprintf (out,  XNEE_RES_LASTCHANGE_PROG_VER":\t%s\n",
 	   xnee_get_last_prog_vers(xd));
 
 
-  fprintf (out,  "#\n");
-  fprintf (out,  "#\n");
-  fprintf (out,  "#########################################\n");
-  fprintf (out,  "#      Current info     #\n");
-  fprintf (out,  "#########################################\n");
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Current info                          #\n");
+  fprintf (out,  "##############################################\n");
   fprintf (out,  XNEE_RES_CURRENT_CHANGE_DATE":  \t%.4d-%.2d-%.2d \n",
 	   timeinfo->tm_year + 1900 , 
 	   timeinfo->tm_mon + 1 , 
@@ -730,25 +728,29 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
   
   /* GRAB */
   
-  fprintf (out,  "\n# Grab\n");
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Key Grabs                             #\n");
+  fprintf (out,  "##############################################\n");
   fprintf (out,  "%s         %s\n",
-	   XNEE_STOP_KEY,
-	   (xd->grab_keys->stop_str) ? xd->grab_keys->stop_str: "0" );
+	   XNEE_STOP_KEY,  
+	   (xd->grab_keys->action_keys[XNEE_GRAB_STOP].str) ? xd->grab_keys->action_keys[XNEE_GRAB_STOP].str: "0" );
   fprintf (out,   "%s        %s\n",
 	   XNEE_PAUSE_KEY,
-	   (xd->grab_keys->pause_str) ? xd->grab_keys->pause_str: "0" );
+	   (xd->grab_keys->action_keys[XNEE_GRAB_PAUSE].str) ? xd->grab_keys->action_keys[XNEE_GRAB_PAUSE].str: "0" );
   fprintf (out,   "%s       %s\n",
 	   XNEE_RESUME_KEY,
-	   (xd->grab_keys->resume_str) ? xd->grab_keys->resume_str: "0" );
+	   (xd->grab_keys->action_keys[XNEE_GRAB_RESUME].str) ? xd->grab_keys->action_keys[XNEE_GRAB_RESUME].str: "0" );
   fprintf (out,   "%s       %s\n",
 	   XNEE_INSERT_KEY,
-	   (xd->grab_keys->insert_str) ? xd->grab_keys->insert_str: "0" );
+	   (xd->grab_keys->action_keys[XNEE_GRAB_INSERT].str) ? xd->grab_keys->action_keys[XNEE_GRAB_INSERT].str: "0" );
   fprintf (out,   "%s         %s\n",
 	   XNEE_EXEC_KEY,
-	   (xd->grab_keys->exec_str) ? xd->grab_keys->exec_str: "0" );
+	   (xd->grab_keys->action_keys[XNEE_GRAB_EXEC].str) ? xd->grab_keys->action_keys[XNEE_GRAB_EXEC].str: "0" );
   fprintf (out,   "%s         %s\n",
 	   XNEE_EXEC_PROGRAM,
-	   (xd->grab_keys->exec_prog) ? xd->grab_keys->exec_prog: XNEE_EXEC_NO_PROG );
+	   (xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str) 
+	   ? xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str: XNEE_EXEC_NO_PROG );
   
   /* Limits */
   fprintf (out,  "\n# Recording limits\n");
@@ -763,13 +765,13 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
   
   
   /* Plugin */
-  fprintf (out,  "\n# Plugin\n");
+  fprintf (out,  "\n# Plugin file (0 means none)\n");
   fprintf (out,  XNEE_PLUGIN"       %s\n",
 	   xd->plugin_name? xd->plugin_name : "0" ); 
   
   
   /* Modes */
-  fprintf (out,  "\n# Modes\n");
+  fprintf (out,  "\n# Modes (currently not used)\n");
   fprintf (out,  XNEE_SYNC_MODE"       %d\n",
 	   xd->sync ); 
 
@@ -799,8 +801,6 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
   
   /* Various */
   fprintf (out,  "\n# Various\n");
-  
-  
 }
 
 
@@ -871,6 +871,43 @@ xnee_replay_printbuffer_impl (xnee_data *xd )
       fp (file,"\n");
     }
 }
+
+
+
+/*
+ *
+ *   
+ *
+ */
+void 
+xnee_store_mouse_pos (xnee_data* xd )
+{
+  int rx;
+  int ry;
+  int wx;
+  int wy;
+  Window root;
+  Window child;
+  unsigned int mask;
+  Bool bo;
+
+  bo = XQueryPointer(xd->data,
+		     RootWindow(xd->data,0),
+		     &root,
+		     &child,
+		     &rx,
+		     &ry,
+		     &wx,
+		     &wy,
+		     &mask);
+  
+  xd->data_fp (xd->out_file, 
+	       XNEE_FAKE_MOTION " " 
+	       XNEE_FAKE_X_ARG "=%d " 
+	       XNEE_FAKE_Y_ARG "=%d \n" 
+	       , rx, ry );
+}
+
 
 
 /**************************************************************

@@ -267,15 +267,7 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
 
   xnee_verbose((xd, "xnee_handle_meta_data (3) (xd, \"%s\");\n", str));
 
-  if (strncmp (str, XNEE_ALL_EVENTS, strlen (XNEE_ALL_EVENTS)) == 0  )
-    {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info.all_events, str,  strlen(XNEE_ALL_EVENTS) );
-    }
-  else if (strncmp (str, XNEE_EVERYTHING, strlen (XNEE_EVERYTHING)) == 0  )
-    {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info.everything, str,  strlen(XNEE_EVERYTHING) );
-    }
-  else if (strncmp (str, XNEE_LOOPS_LEFT, strlen (XNEE_LOOPS_LEFT)) == 0  )
+  if (strncmp (str, XNEE_LOOPS_LEFT, strlen (XNEE_LOOPS_LEFT)) == 0  )
     {
       xnee_handle_meta_data_sub1 (&xd->xnee_info.events_max, str,  strlen(XNEE_LOOPS_LEFT) );
     }
@@ -290,14 +282,6 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
   else if (strncmp (str, XNEE_TIME_MAX, strlen (XNEE_TIME_MAX)) == 0  )
     {
       xnee_handle_meta_data_sub1 (&xd->xnee_info.time_max, str,  strlen(XNEE_TIME_MAX) );
-    }
-  else if (strncmp (str, XNEE_NO_EXPOSE, strlen (XNEE_NO_EXPOSE)) == 0  )
-    {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info.no_expose, str,  strlen(XNEE_NO_EXPOSE) );
-    }
-  else if (strncmp (str, XNEE_NO_EXPOSE, strlen (XNEE_NO_EXPOSE)) == 0  )
-    {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info.no_expose, str,  strlen(XNEE_NO_EXPOSE) );
     }
   else if ( 
 	   (strncmp (str, XNEE_REQUEST_STR, strlen (XNEE_REQUEST_STR)) == 0  )
@@ -379,7 +363,7 @@ print_time()
  *                                                            *
  **************************************************************/
 int
-xnee_replay_main_loop(xnee_data *xd)
+xnee_replay_main_loop(xnee_data *xd, int read_mode)
 {
   xnee_intercept_data xindata ;
   int logread = -1 ;
@@ -387,7 +371,7 @@ xnee_replay_main_loop(xnee_data *xd)
   static int last_logread=1;
   int last_elapsed = 0;
   int ret = XNEE_OK ; 
-  char tmp[256] ;
+  static char tmp[256] ;
   char *ret_str;
 /*   static int in_pause_mode = 0 ;  */
 
@@ -400,221 +384,218 @@ xnee_replay_main_loop(xnee_data *xd)
       xd->data_file=stdin;
     }
   
-  
-  /* First of all ... read up the META DATA 
-   * so we know our settings */
-  while (logread && xd->cont) 
+  if ( (read_mode==XNEE_REPLAY_READ_META_DATA) || (read_mode==XNEE_REPLAY_READ_ALL_DATA))
     {
-      ret_str = strcpy(tmp,"");
-      ret_str = fgets(tmp, 256, xd->data_file);
-      
-      if ( ret_str == NULL)
-	ret = -1;
-      else
-	ret = strlen (ret_str);
-
-      if ( ret == -1 )
+      while (logread && xd->cont) 
 	{
-	  fprintf (stderr, "Could not read data from file\n");
-	  xnee_close_down (xd);
-	  return XNEE_OK;
-	}	
-      else if ( ret == 0 )
-	{
-	  xnee_verbose((xd, "Empty line in data file\n"));
-	}
-      else 
-	{
-	  ret = xnee_expression_handle_session(xd, ret_str, &xindata);
-
-	  if ( (ret == XNEE_REPLAY_DATA) || (ret == XNEE_PRIMITIVE_DATA) )
+	  ret_str = strcpy(tmp,"");
+	  ret_str = fgets(tmp, 256, xd->data_file);
+	  
+	  if ( ret_str == NULL)
+	    ret = -1;
+	  else
+	    ret = strlen (ret_str);
+	  
+	  if ( ret == -1 )
 	    {
-	      xnee_verbose((xd, 
-			    "We are finished reading settings"
-			    " etc from data file\n"));
-	      
-	      /* since NULL arg printing is done when in verbose mode */
-	      xnee_record_print_record_range (xd, NULL);
-	      xnee_print_xnee_settings       (xd, NULL); 
-	      
-	      if (xd->sync)
-		{
-		  xnee_setup_rep_recording(xd);
-		}
-	      if (xnee_is_verbose(xd))
-		{
-		  xnee_print_sys_info(xd , xd->out_file);
-		}
-	      xnee_verbose((xd, "REPLAY DATA coming up .... %s \n",
-			    ret_str));
-	      break ; 
+	      return XNEE_OK;
+	    }	
+	  else if ( ret == 0 )
+	    {
+	      xnee_verbose((xd, "Empty line in data file\n"));
 	    }
-
+	  else 
+	    {
+	      ret = xnee_expression_handle_session(xd, ret_str, &xindata);
+	      
+	      if ( (ret == XNEE_REPLAY_DATA) || (ret == XNEE_PRIMITIVE_DATA) )
+		{
+		  xnee_verbose((xd, 
+				"We are finished reading settings"
+				" etc from data file\n"));
+		  
+		  /* since NULL arg printing is done when in verbose mode */
+		  xnee_record_print_record_range (xd, NULL);
+		  xnee_print_xnee_settings       (xd, NULL); 
+		  
+		  xnee_verbose((xd, "REPLAY DATA coming up .... %s \n",
+				ret_str));
+		  break ; 
+		}
+	      
+	    }
 	}
     }
-
-
-  /* REMOVE ME... after testing.
-     rep_prepare is done in xnee_prepare */
-/*    ret = xnee_rep_prepare(xd); */
-/*    if (ret!=XNEE_OK) */
-/*      { */
-/*        xnee_verbose((xd, "xnee_prepare failed (%d)....checking\n", ret)); */
-/*        xnee_verbose((xd, "xnee_prepare failed.... failure\n")); */
-/*        return ret; */
-/*      } */
-
-   ret = XNEE_REPLAY_DATA ; 
-
-   
-   /**
-    * all META DATA setting up our sessions is read ...
-    * go on replaying
-    *
-    * 
-    *       Think of this as the main loop
-    */
-   while  ( (ret!=XNEE_SYNTAX_ERROR) && xd->cont ) 
+  if ( (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || (read_mode==XNEE_REPLAY_READ_ALL_DATA))
     {
-
-      ret_str = fgets(tmp, 256, xd->data_file);
-      if (ret_str == NULL)
-	break;
-
-
-      xnee_verbose((xd, "REPLAY str = '%s' ret=%d (last_log_read=%d) \n",
-		    ret_str, ret, last_logread));
-      if (last_logread)
+      /* REMOVE ME... after testing.
+	 rep_prepare is done in xnee_prepare */
+      /*    ret = xnee_rep_prepare(xd); */
+      /*    if (ret!=XNEE_OK) */
+      /*      { */
+      /*        xnee_verbose((xd, "xnee_prepare failed (%d)....checking\n", ret)); */
+      /*        xnee_verbose((xd, "xnee_prepare failed.... failure\n")); */
+      /*        return ret; */
+      /*      } */
+      
+      if (xd->sync)
 	{
-	  /* 
-	   * set value for forthcoming time calculations 
-	   * Now replay starts off
-	   */
-	  xnee_verbose((xd, " -->  xnee_get_elapsed_time\n"));
-	  last_elapsed = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
-	  xnee_verbose((xd, " <--  xnee_get_elapsed_time\n"));
+	  xnee_setup_rep_recording(xd);
 	}
-      if ( ret == XNEE_META_DATA )
+      if (xnee_is_verbose(xd))
 	{
-	  xnee_verbose((xd, "META DATA read ... should be "
-			"handled in the future... eg script ????\n"));
+	  xnee_print_sys_info(xd , xd->out_file);
 	}
-      else if (ret)
+      ret = XNEE_REPLAY_DATA ; 
+      
+   
+      /**
+       * all META DATA setting up our sessions is read ...
+       * go on replaying
+       *
+       * 
+       *       Think of this as the main loop
+       */
+      while  ( (ret!=XNEE_SYNTAX_ERROR) && xd->cont ) 
 	{
-	  if (xd->first_read_time==0)
-            xd->first_read_time = xindata.newtime;
-
-
-	  if (xnee_check_km (xd)==XNEE_GRAB_DATA)
-	    {
-	      ret = xnee_handle_rep_km(xd) ; 
-	      if (ret == XNEE_GRAB_STOP)
-		{
-		  xnee_verbose  ((xd," breaking async loop since STOP \n"));
-		  return XNEE_OK;
-		}
-	      else if (ret == XNEE_GRAB_RESUME)
-		{
-		  xnee_verbose  ((xd," starting async loop since RESUME \n"));
-		  XRecordEnableContextAsync(xd->data, 
-					    xd->record_setup->rContext, 
-					    xd->rec_callback, 
-					    (XPointer) (xd) );
-		}
-	    }
 	  
-	  switch (xindata.type)
+	  ret_str = fgets(tmp, 256, xd->data_file);
+	  if (ret_str == NULL)
+	    break;
+	  
+	  xnee_verbose((xd, "REPLAY str = '%s' ret=%d (last_log_read=%d) \n",
+			ret_str, ret, last_logread));
+	  if (last_logread)
 	    {
-	    case XNEE_EVENT:
+	      /* 
+	       * set value for forthcoming time calculations 
+	       * Now replay starts off
+	       */
+	      xnee_verbose((xd, " -->  xnee_get_elapsed_time\n"));
+	      last_elapsed = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
+	      xnee_verbose((xd, " <--  xnee_get_elapsed_time\n"));
+	    }
+	  if ( ret == XNEE_META_DATA )
+	    {
+	      xnee_verbose((xd, "META DATA read ... should be "
+			    "handled in the future... eg script ????\n"));
+	    }
+	  else if (ret)
+	    {
+	      if (xd->first_read_time==0)
+		xd->first_read_time = xindata.newtime;
 	      
-	      /* is it a device event ? */
-	      if ( ( xindata.u.event.type >= KeyPress ) 
-		   && (xindata.u.event.type <= MotionNotify) )
+	      
+	      if (xnee_check_key (xd)==XNEE_GRAB_DATA)
 		{
-		  
-		  if ( xindata.u.event.type == ButtonPress )
+		  ret = xnee_handle_rep_key(xd) ; 
+		  if (ret == XNEE_GRAB_STOP)
 		    {
-		      xd->button_pressed++;
+		      xnee_verbose  ((xd," breaking async loop since STOP \n"));
+		      return XNEE_OK;
 		    }
-		  else if ( xindata.u.event.type == ButtonRelease )
+		  else if (ret == XNEE_GRAB_RESUME)
 		    {
-		      xd->button_pressed--;
+		      xnee_verbose  ((xd," starting async loop since RESUME \n"));
+		      XRecordEnableContextAsync(xd->data, 
+						xd->record_setup->rContext, 
+						xd->rec_callback, 
+						(XPointer) (xd) );
 		    }
-		  if ( xindata.u.event.type == KeyPress )
-		    {
-		      xd->key_pressed++;
-		    }
-		  else if ( xindata.u.event.type == KeyRelease )
-		    {
-		      xd->key_pressed--;
-		    }
-
-
-		  /*		  if ( (xd->button_pressed==0) ||
-				  (xd->key_pressed==0) )
-				  {
-		  */
-		  ret = xnee_replay_synchronize (xd);
-		  if (ret != XNEE_OK)
-		    {
-		      xnee_verbose((xd, "xnee_replay_main_loop return %d\n", 
-				    ret));
-		      return ret;
-		    }
-		  /*		  */
-		  /*		    }*/
-		  xnee_verbose((xd," replay MAIN  new %lu   old %lu\n",xindata.newtime , xindata.oldtime ));
-		  replayable = 
-		    xnee_replay_event_handler(xd, 
-					      &xindata, last_elapsed);
-		  
 		}
-	      else
+	      
+	      switch (xindata.type)
 		{
-		  XNEE_SYNC_DEBUG ( (stderr, 
-				     "SYNC     EVENT   %d\n", 
-				     xindata.u.event.type ) );
+		case XNEE_EVENT:
+		  
+		  /* is it a device event ? */
+		  if ( ( xindata.u.event.type >= KeyPress ) 
+		       && (xindata.u.event.type <= MotionNotify) )
+		    {
+		      
+		      if ( xindata.u.event.type == ButtonPress )
+			{
+			  xd->button_pressed++;
+			}
+		      else if ( xindata.u.event.type == ButtonRelease )
+			{
+			  xd->button_pressed--;
+			}
+		      if ( xindata.u.event.type == KeyPress )
+			{
+			  xd->key_pressed++;
+			}
+		      else if ( xindata.u.event.type == KeyRelease )
+			{
+			  xd->key_pressed--;
+			}
+		      
+		      
+		      /*		  if ( (xd->button_pressed==0) ||
+			(xd->key_pressed==0) )
+			{
+		      */
+		      ret = xnee_replay_synchronize (xd);
+		      if (ret != XNEE_OK)
+			{
+			  xnee_verbose((xd, "xnee_replay_main_loop return %d\n", 
+					ret));
+			  return ret;
+			}
+		      /*		  */
+		      /*		    }*/
+		      xnee_verbose((xd," replay MAIN  new %lu   old %lu\n",xindata.newtime , xindata.oldtime ));
+		      replayable = 
+			xnee_replay_event_handler(xd, 
+						  &xindata, last_elapsed);
+		      
+		    }
+		  else
+		    {
+		      XNEE_SYNC_DEBUG ( (stderr, 
+					 "SYNC     EVENT   %d\n", 
+					 xindata.u.event.type ) );
+		      xnee_replay_buffer_handler ( 
+						  xd, 
+						  XNEE_EVENT, 
+						  xindata.u.event.type, 
+						  XNEE_REPLAYED);
+		    }
+		  break;
+		case XNEE_REQUEST:
+		  xnee_verbose((xd, "READ A REQUEST, %d\n", xindata)); 
+		  xnee_replay_buffer_handler ( xd, 
+					       XNEE_REQUEST, 
+					       xindata.u.request.type, 
+					       XNEE_REPLAYED);
+		case XNEE_REPLY:
+		  xnee_verbose((xd, "READ A REPLY, %d\n", xindata)); 
 		  xnee_replay_buffer_handler ( 
 					      xd, 
-					      XNEE_EVENT, 
-					      xindata.u.event.type, 
+					      XNEE_REPLY, 
+					      xindata.u.reply.type, 
 					      XNEE_REPLAYED);
+		  break;
+		default:
+		  xnee_verbose((xd, 
+				"xnee_replay_MainReplayLoop: Unknown type \n"));
+		  break;
 		}
-	      break;
-	    case XNEE_REQUEST:
-	      xnee_verbose((xd, "READ A REQUEST, %d\n", xindata)); 
-	      xnee_replay_buffer_handler ( xd, 
-					   XNEE_REQUEST, 
-					   xindata.u.request.type, 
-					   XNEE_REPLAYED);
-	    case XNEE_REPLY:
-	      xnee_verbose((xd, "READ A REPLY, %d\n", xindata)); 
-	      xnee_replay_buffer_handler ( 
-					  xd, 
-					  XNEE_REPLY, 
-					  xindata.u.reply.type, 
-					  XNEE_REPLAYED);
-	      break;
-	    default:
-	      xnee_verbose((xd, 
-			    "xnee_replay_MainReplayLoop: Unknown type \n"));
+	    }
+	  else 
+	    {
+	      xnee_verbose((xd, "Corrupt line ... skipped \n"));
 	      break;
 	    }
+	  
+	  
+	  XSync(xd->control, False);
+	  xnee_verbose((xd, "Flushing after handled event\n"));
+	  XFlush(xd->control);
+	  xnee_verbose((xd, "  <-- Flushed after handled event\n"));
+	  last_logread = 0;
+	  ret = xnee_expression_handle_session(xd, ret_str, &xindata);
 	}
-      else 
-	{
-	  xnee_verbose((xd, "Corrupt line ... skipped \n"));
-	  break;
-	}
-
-
-      XSync(xd->control, False);
-      xnee_verbose((xd, "Flushing after handled event\n"));
-      XFlush(xd->control);
-      xnee_verbose((xd, "  <-- Flushed after handled event\n"));
-      last_logread = 0;
-      ret = xnee_expression_handle_session(xd, ret_str, &xindata);
-
     }
   return XNEE_OK;
 }

@@ -86,11 +86,12 @@ xnee_handle_meta_data(xnee_data* xd ,char* str );
  * Reads data from file (or stdin) until the file reaches an end or the user presses
  * the stop modifier+key.
  * 
- * @param xd    xnee's main structure
+ * @param xd           xnee's main structure
+ * @param read_mode    Read meta data or read replay data
  * @return void  
  */
 int
-xnee_replay_main_loop ( xnee_data *xd);
+xnee_replay_main_loop ( xnee_data *xd, int read_mode);
 
 
 

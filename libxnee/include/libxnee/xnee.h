@@ -116,6 +116,10 @@ enum _xnee_mode {
   XNEE_DISTRIBUTOR          
 } xnee_mode ;
 
+
+  
+typedef int xnee_keymask;
+
 #define xnee_delay_timeout 5000 
 #define XNEE_DELAY 10
 #define XNEE_MISSING_DATA_DELAY (10*5)
@@ -223,7 +227,7 @@ enum return_values
   XNEE_NOT_SYNCING       ,
   XNEE_NO_PLUGIN_FILE    ,
   XNEE_PLUGIN_FILE_ERROR ,
-  XNEE_NO_PROJECT_FILE  ,
+  XNEE_NO_PROJECT_FILE   ,
   XNEE_NO_MAIN_DATA      ,
   XNEE_SYNTAX_ERROR      , 
   XNEE_UNKNOWN_GRAB_MODE ,
@@ -238,6 +242,8 @@ enum return_values
   XNEE_BLANK_LINE        ,
   XNEE_XOSD_FAILURE      ,
   XNEE_FEEDBACK_FAILURE  ,
+  XNEE_MODE_NOT_SET      ,
+  XNEE_GRAB_MEM_FAILURE  ,
   XNEE_LAST_ERROR
 } _return_values;
   
@@ -258,18 +264,24 @@ enum xnee_resolution_states
  */
 enum xnee_grab_modes 
   {
-    XNEE_GRAB_NODATA = 0,
-    XNEE_GRAB_SET    = 1,
-    XNEE_GRAB_STOP    ,
+    XNEE_GRAB_STOP    = 0,
     XNEE_GRAB_PAUSE   ,
     XNEE_GRAB_RESUME  ,
     XNEE_GRAB_INSERT  ,
     XNEE_GRAB_EXEC    ,
+    XNEE_GRAB_LAST,
+    XNEE_GRAB_NODATA = 0,
+    XNEE_GRAB_SET    = 1,
     XNEE_GRAB_UNKOWN  = 15
   } _xnee_grab_modes;
 
 #define XNEE_GRAB_MODIFIER 1
 #define XNEE_GRAB_KEY      2
+#define XNEE_SAVED_LINES_BYTES 1024
+
+#define XNEE_REPLAY_READ_META_DATA     10
+#define XNEE_REPLAY_READ_REPLAY_DATA   20
+#define XNEE_REPLAY_READ_ALL_DATA      30
 
 
 /*
@@ -291,7 +303,7 @@ enum cont_proc_commands
 #define FSF_HOME_URL      "http://www.fsf.org/"
 #define XNEE_PLUGIN_DIR   "/usr/local/lib/xnee/plugins" 
 #define XNEE_RESOURCE_DIR "/usr/local/lib/xnee/resources" 
-
+#define XNEE_CLI          "cnee"
 #define DATA_NAME_SIZE_MAX 32
 
 #define SYNCHRONIZATION_EVENT (CreateNotify | MapRequest | ConfigureRequest | DestroyNotify | MapNotify | ConfigureNotify | UnmapNotify )
@@ -340,6 +352,7 @@ enum cont_proc_commands
 #define XNEE_BUFFER_VERBOSE       "buffer-verbose"
 #define XNEE_MOUSE                "mouse"
 #define XNEE_KEYBOARD             "keyboard"
+#define XNEE_STORE_MOUSE_POS      "store-mouse-position"
 
 #define XNEE_REQUEST_STR          "request-range"
 #define XNEE_REPLIES_STR          "reply-range"
@@ -364,7 +377,7 @@ enum cont_proc_commands
 
 #define XNEE_FAKE_MOTION          "fake-motion"
 #define XNEE_FAKE_X_ARG           "x"
-#define XNEE_FAKE_Y_ARG           "x"
+#define XNEE_FAKE_Y_ARG           "y"
 
 #define XNEE_FAKE_BUTTON_PRESS    "fake-button-press"
 #define XNEE_FAKE_BUTTON_RELEASE  "fake-button-release"
@@ -387,6 +400,8 @@ enum cont_proc_commands
 #define XNEE_FALSE_STRING         "false"
 #define XNEE_0_STRING             "0"
 
+
+#define XNEE_NR_OF_GRABBED_MODIFIER 8
 /** 
  * \brief simply an X event. 
  *
@@ -435,16 +450,17 @@ struct data_description
 
 typedef struct 
 {
-  char * project_name ;
-  char * project_descr;
-  char * creat_date;
-  char * creat_prog;
-  char * creat_prog_vers;
-  char * last_date;
-  char * last_prog;
-  char * last_prog_vers;
-  char * author_name;
-  char * author_email;
+  Bool  new_project;   
+  char *project_name ;
+  char *project_descr;
+  char *creat_date;
+  char *creat_prog;
+  char *creat_prog_vers;
+  char *last_date;
+  char *last_prog;
+  char *last_prog_vers;
+  char *author_name;
+  char *author_email;
 } xnee_resource_meta ; 
 
 
@@ -462,14 +478,15 @@ typedef struct
 
 
 
-/*! \brief Holds a integer tuple describing key + modifier
+/*! \brief Holds a 
  *
  */
 typedef struct
 {
-  int	 key ;             /*!< key */
-  int    modifier ;        /*!< modifier key  */
-} xnee_km_tuple;
+  KeyCode         key ;         /*!< key */
+  char           *str;          /*!<  string representation of the key */
+  char           *extra_str;
+} xnee_action_key;
 
 
 
@@ -648,7 +665,7 @@ typedef struct
 {
   Bool            first_last     ;  /*!< when true, only first and last motion events are printed */
   Bool            last_motion    ;  /*!< was the last event a motion event */
-  
+  Bool            store_mouse_pos;  /*!< shall we save the mouse position before starting recording  */
   unsigned long   server_time    ;  /*!< when the X11 data did occur       /     */
   int             x              ;  /*!< last MotionNotify RootX-value      /   */
   int             y              ;  /*!< last MotionNotify RootY-value       / */
@@ -661,42 +678,20 @@ typedef struct
   unsigned int    interval       ;  /*!< how many seconds to record         /   */
   unsigned int    size           ;  /*!< max size of file                  /     */
 
-  Bool	all_events       ; /*!< Intercept all XEvents */
-  Bool	everything       ; /*!< Intercept everything */
-  Bool  no_expose        ; /*!< when true, no Expose or NoExpose will be printed out */
-
   int data_ranges[XNEE_NR_OF_TYPES] ;  /*!< Count how many data ranges specified */
 
 } xnee_record_init_data ; 
+
 /**
- * Holds information about Record Extension setup
+ * 
  */
 typedef struct
 {
 
-  int     grab         ;    /*!< true if any key+mod is grabbed */
-  int     grabbed_action ;  /*!< set to the action when grabbed */
+  int     grab         ;   /*!< true if any key     is grabbed */
+  int     grabbed_action ; /*!< set to the action when grabbed */
 
-  int     stop_key     ;    /*!< key used to stop Xnee */
-  int     stop_mod     ;    /*!< modifier used to stop Xnee */
-  char   *stop_str     ;     /*!< string representation of the key+modifier */
-
-  int     pause_key    ;    /*!< key used to pause Xnee */
-  int     pause_mod    ;    /*!< modifier used to pause Xnee */
-  char   *pause_str    ;     /*!< string representation of the key+modifier */
-
-  int     resume_key   ;    /*!< key used to resume Xnee */
-  int     resume_mod   ;    /*!< modifier used to resume Xnee */
-  char   *resume_str   ;   /*!< string representation of the key+modifier */
-
-  int     insert_key   ;    /*!< key used to insert a mark in Xnee's log */
-  int     insert_mod   ;    /*!< modifier used to insert a mark in Xnee's log */
-  char   *insert_str   ;    /*!< string representation of the key+modifier */
-
-  int     exec_key   ;       /*!< key used to exec a program */
-  int     exec_mod   ;       /*!< modifier used to exec a program */
-  char   *exec_str   ;      /*!< string representation of the key+modifier */
-  char   *exec_prog  ;      /*!< string representation of the key+modifier */
+  xnee_action_key action_keys[XNEE_GRAB_LAST];
 
 } xnee_grab_keys;
 
@@ -756,7 +751,7 @@ struct buffer_meta_data
  */
 typedef struct
 {
-
+  char    *program_name;    /*!< name of the program currently using libxnee */
   char    *out_name    ;    /*!< name of output file (e.g stdout, /tmp/xnee.log*/
   char    *err_name    ;    /*!< name of error file  (e.g stdout, /tmp/xnee.log*/
   char    *rc_name     ;    /*!< name of resource file (e.g netscape.xns, /tmp/xterm.xns*/
@@ -801,14 +796,15 @@ typedef struct
   int first_replayed_event; /*!< True if the event to replay is the first one. 
                                  Needed to set the start time of the first event to 0 */
   int     cont         ;    /*!< A simple flag telling Xnee wether to keep 
-			         recording/replaying or top quit. */
+			         recording/replaying or to quit. */
   xnee_distr *distr_list ;  /*!< array of displays to distribute events to */
   int     distr_list_size ; /*!< size of array of displays to distribute events to */
   sem_t   *buf_sem     ;    /*!< semaphore to protect the replay buffer */
   long first_read_time ;    /*!< server time of the first read from recorded file */
   int     force_replay ;    /*!< Keep replaying even if we are out of sync .... dangerous */
-  XKeyboardState kbd_orig;  /*!< User keyboard stare before Xnee */
-  int     glob_autorepeat ; /*!< Current global autorepeat state */
+
+  XKeyboardState kbd_orig;  /*!< User keyboard state before Xnee messes is up */
+  int     autorepeat_saved; /*!< Flag indicating if we have a stored keyboard state */
 
   xnee_record_init_data    xnee_info ; 
   xnee_recordext_setup     *record_setup;
@@ -824,6 +820,10 @@ typedef struct
   
   xnee_resolution_info   res_info; 
   xnee_resource_meta     xrm;
+
+  XModifierKeymap *map ;
+  
+
 } xnee_data ; 
 
 
@@ -1118,7 +1118,7 @@ int
 xnee_reset_autorepeat (xnee_data *xd);
 
 KeyCode
-xnee_str2keycode(xnee_data* xd, char *str );
+xnee_str2keycode(xnee_data* xd, char *str, xnee_key_code *kc);
 
 KeyCode
 xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc);

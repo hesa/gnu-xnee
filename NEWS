@@ -6,8 +6,10 @@ Xnee / NEWS
   For more information about Xnee, http://www.gnu.org
 
 
+
+
 Changes in 1......
-	- new options:
+	New options:
 	   '--data-to-record'
 	   '--events-to-record'
 	   '--seconds-to-record'
@@ -19,7 +21,16 @@ Changes in 1......
 	   '--feedback-none'
 	   '--feedback-xosd'
 	   '--feedback-stderr'
-	- deleted options:
+	   '--store-mouse-pos'
+
+	Options with new interpretation:
+	   '--stop-key'
+	   '--pause-key'
+	   '--resume-key'
+	   '--exec-key'
+	   '--insert-key'
+	
+	Obsoleted options:
 	   '--out'
 	   '--err'
 	   '--binary'
@@ -40,9 +51,16 @@ Changes in 1......
 	   '--extension_request_minor_range'
 	   '--extension_reply_major_range'
 	   '--extension_reply_minor_range'
-	- to be deleted options:
 	   '--loops'
-        Obsoleted code removed from the sources.
+	   '--all-events'
+	   '--no-expose'
+	   '--everything'
+
+
+	Key grabbed (by Xnee) resulting in a successful grab isn't printed to the recorded file.
+	
+
+
 
 Changes in 1.08
 	- new options:

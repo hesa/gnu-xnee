@@ -205,50 +205,32 @@ xnee_is_retyper (xnee_data *xd);
 
  
 
-
-int
-xnee_set_km (xnee_data *xd, int mode, char* km );
-
-char *
-xnee_get_km (xnee_data *xd, int mode);
-
-int
-xnee_set_stop_km (xnee_data *xd, char* stop_km);
-
-char *
-xnee_get_stop_km (xnee_data *xd);
-
-int
-xnee_set_pause_km (xnee_data *xd, char *pause_km);
-
-char *
-xnee_get_pause_km (xnee_data *xd);
-
-int
-xnee_set_resume_km (xnee_data *xd, char *resume_km);
-
-char*
-xnee_get_resume_km (xnee_data *xd);
-
-int
-xnee_set_insert_km (xnee_data *xd, char  *insert_km);
-
-char*
-xnee_get_insert_km (xnee_data *xd);
-
-int
-xnee_set_exec_km (xnee_data *xd, char *exec_km);
-
-char*
-xnee_get_exec_km (xnee_data *xd);
- 
-int
-xnee_set_exec_prog (xnee_data *xd, char *prog);
-
 char*
 xnee_get_exec_prog (xnee_data *xd);
 
+int
+xnee_set_key (xnee_data *xd, int mode, char* key );
 
+char *
+xnee_get_key (xnee_data *xd, int mode);
+
+char *
+xnee_get_key_str (xnee_data *xd, int mode);
+
+char*
+xnee_get_extra_str (xnee_data *xd, int idx);
+
+#define xnee_get_stop_key(xd)        xnee_get_key_str(xd, XNEE_GRAB_EXEC)
+#define xnee_get_pause_key(xd)       xnee_get_key_str(xd, XNEE_GRAB_PAUSE)
+#define xnee_get_resume_key(xd)      xnee_get_key_str(xd, XNEE_GRAB_RESUME)
+#define xnee_get_insert_key(xd)      xnee_get_key_str(xd, XNEE_GRAB_INSERT)
+#define xnee_get_exec_key(xd)        xnee_get_key_str(xd, XNEE_GRAB_EXEC)
+
+#define xnee_set_stop_key(xd, key)        xnee_set_key_str(xd, XNEE_GRAB_STOP, key)
+#define xnee_set_pause_key(xd, key)       xnee_set_key_str(xd, XNEE_GRAB_PAUSE, key)
+#define xnee_set_resume_key(xd, key)      xnee_set_key_str(xd, XNEE_GRAB_RESUME, key)
+#define xnee_set_insert_key(xd, key)      xnee_set_key_str(xd, XNEE_GRAB_INSERT, key)
+#define xnee_set_exec_key(xd, key)        xnee_set_key_str(xd, XNEE_GRAB_EXEC, key)
 
  
 int
@@ -342,12 +324,6 @@ int
 xnee_get_interval (xnee_data *xd);
 
 int 
-xnee_set_all_events (xnee_data *xd);
-
-int 
-xnee_is_all_events (xnee_data *xd);
-
-int 
 xnee_get_interval (xnee_data *xd);
 
 
@@ -410,6 +386,27 @@ xnee_get_time_left (xnee_data *xd);
 #define xnee_inc_time_recorded(xd)   xd->xnee_info.time_recorded++;
 #define xnee_dec_time_recorded(xd)   xd->xnee_info.time_recorded--;
 #define xnee_zero_time_recorded(xd)   xd->xnee_info.time_recorded=0;
+
+int
+xnee_set_store_mouse_pos(xnee_data *xd);
+
+Bool
+xnee_is_store_mouse_pos(xnee_data *xd);
+
+int
+xnee_set_program_name(xnee_data *xd, char* name);
+
+char *
+xnee_get_program_name(xnee_data *xd);
+
+int
+xnee_get_new_project(xnee_data *xd);
+
+int
+xnee_set_new_project(xnee_data *xd);
+
+int
+xnee_unset_new_project(xnee_data *xd);
 
 
 #endif /* XNEE_SETGET_H */ 

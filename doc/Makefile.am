@@ -66,7 +66,7 @@ ps:   xnee.ps
 
 
 # HTML
-xnee.html: xnee.texi 
+xnee.html: xnee.texi images
 	$(TEXI2HTML) $(TEXI2HTML_FLAGS) $(srcdir)/xnee.texi
 
 
@@ -80,7 +80,7 @@ xnee.pdf: xnee.ps
 
 
 # DVI
-xnee.dvi:
+xnee.dvi: images
 	$(TEXI2DVI) --batch $(srcdir)/xnee.texi
 
 
@@ -92,7 +92,8 @@ xnee.dvi:
 xnee.ps: xnee.dvi
 	$(DVI2PS) -c xnee.ps $(srcdir)/xnee.dvi
 
-
+xnee.1: ../cnee/src/cnee
+	../cnee/src/cnee --manpage > $@
 
 
 api-doc: xnee.dox 

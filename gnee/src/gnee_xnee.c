@@ -207,8 +207,6 @@ gx_set_record_display(xnee_data *xd, gnee_xnee *gx)
 	}
       else
 	{
-	  
-
 	  xnee_verbose((xd, "set record display to %s\n", 
 			gtk_entry_get_text((GtkEntry*)rec_disp_text)));
 	  xnee_set_display_name(ext_xd, 
@@ -249,6 +247,10 @@ gx_set_replay_display(xnee_data *xd, gnee_xnee *gx)
 int 
 gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
 {
+
+  /*
+   * Set display (record or replay)
+   */
   if (xnee_is_recorder(xd))
     {
       gx_set_record_display(xd, gx);
@@ -257,6 +259,10 @@ gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
     {
       gx_set_replay_display(xd, gx);
     }
+
+  
+
+
   return GNEE_OK;
 }
 
@@ -513,20 +519,23 @@ gx_start_recording(xnee_data* xd)
 {
   int ret;
   printf ("gx_start_recorder 1\n");
-  gx_set_variable_data(xd, ext_gx);
   
   GNEE_DEBUG(("Starting recorder\n"));
 
   xnee_set_recorder (xd);
-  printf ("gx_start_recorder 2\n");
 
+  GNEE_DEBUG(("preparing\n"));
+  ret = xnee_prepare(xd);
+  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
+
+  GNEE_DEBUG(("setting variable data\n"));
+  ret = gx_set_variable_data(xd, ext_gx);
+  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
+
+  GNEE_DEBUG(("start recording\n"));
   ret = xnee_start(xd);
-  GNEE_DEBUG(("checking recorde return val\n"));
-  if (ret != XNEE_OK) 
-    {
-      gtk_widget_show_all(ext_gnee_window);
-      gx_display_errror(ret);
-    }
+  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
+
   printf ("gx_start_recorder 3\n");
   GNEE_DEBUG((" recorder stopped\n"));
   return 0;
@@ -549,12 +558,20 @@ gx_start_replaying(xnee_data* xd)
 
   xnee_set_replayer(xd);
 
+  GNEE_DEBUG(("preparing\n"));
+  ret = xnee_prepare(xd);
+  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
+
+  GNEE_DEBUG(("setting variable data\n"));
+  ret = gx_set_variable_data(xd, ext_gx);
+  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
+
+  GNEE_DEBUG(("start recplatying\n"));
   ret = xnee_start(xd);
-  if (ret != XNEE_OK) 
-    {
-      gtk_widget_show_all(ext_gnee_window);
-      gx_display_errror(ret);
-    }
+  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
+
+  printf ("gx_start_replayer 3\n");
+  GNEE_DEBUG((" replayer stopped\n"));
   return 0;
 }
 
@@ -580,6 +597,10 @@ static char *gx_modifiers[] = {
 
 static char *gx_keys[] = {
   "None", 
+  "space", 
+  "F1", "F2",  "F3",  "F4", 
+  "F5", "F6",  "F7",  "F8", 
+  "F9", "F10",  "F11",  "F12", 
   "a", "b", "c", "d", "e",
   "f", "g", "h", "i", "j", 
   "k", "l", "m", "n", "o", 

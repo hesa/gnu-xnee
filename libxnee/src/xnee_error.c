@@ -34,7 +34,7 @@
 
 static char *latest_error = NULL ;
 
-char *error_descr_solut[] = 
+char error_descr_solut[256][256] = 
   {
     /* XNEE_OK */            
     "OK", 
@@ -107,7 +107,7 @@ char *error_descr_solut[] =
 
     /* XNEE_NO_MAIN_DATA */   
     "xnee_data structure missing",
-    "This is a major error, please report the error"
+    "This is a major error, please report the error "
     "with all the information you have: project file, session file, comand"
     "line options etc",
 
@@ -152,21 +152,41 @@ char *error_descr_solut[] =
     "Bad context",
     "Internal state, report if you receive this",
 
+    /* XNEE_BLANK_LINE */
+    "Blank line",
+    "",
+
+    /* XNEE_XOSD_FAILURE */
+    "xosd failure",
+    "Could not load xosd library",
+
+    /* XNEE_FEEDBACK_FAILURE */
+    "Feedback failure",
+    "Could not give feedback",
+
+    /* XNEE_MODE_NOT_SET */
+    "No mode set",
+    "You have to specify a mode (record/replay/retype)",
+
+    /* XNEE_GRAB_MEM_FAILURE */
+    "Grab memory failure",
+    "The memory used to save lines during grabs is exceeded. Report it",
+
     /* XNEE_LAST_ERROR */
     "Last error",
     "Internal state, report if you receive this",
+
   };
 
 
 const char *
 xnee_get_err_description (int error)
 {
-  printf (" %.2d < %.2d < %.2d: ", 
-	  XNEE_OK,
-	  error,
-	  XNEE_LAST_ERROR);
+  int i ; 
   if ( (error<XNEE_OK) || (error>XNEE_LAST_ERROR))
     return NULL;
+
+
   return error_descr_solut[error*2];
 }
 

@@ -432,7 +432,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
       /* If there is a '0', we should not read it */
       if (!xnee_check_false(range))
 	{
-	  ret = xnee_grab_key (xd, XNEE_GRAB_STOP, range);
+	  ret = xnee_set_key (xd, XNEE_GRAB_STOP, range);
 	}
       else
 	{
@@ -443,7 +443,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
     {
       /* If there is a '0', we should not read it */
       if (!xnee_check_false(range))
-	ret = xnee_grab_key (xd, XNEE_GRAB_PAUSE, range);
+	ret = xnee_set_key (xd, XNEE_GRAB_PAUSE, range);
       else
 	{
 	  ret = XNEE_OK;
@@ -452,7 +452,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   else if (!strncmp(XNEE_RESUME_KEY,tmp,strlen(XNEE_RESUME_KEY)))
     {
       if (!xnee_check_false(range))
-	  ret = xnee_grab_key (xd, XNEE_GRAB_RESUME, range);
+	  ret = xnee_set_key (xd, XNEE_GRAB_RESUME, range);
       else
 	{
 	  ret = XNEE_OK;
@@ -461,7 +461,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   else if (!strncmp(XNEE_INSERT_KEY,tmp,strlen(XNEE_INSERT_KEY)))
     {
       if (!xnee_check_false(range))
-	  ret = xnee_grab_key (xd, XNEE_GRAB_INSERT, range);
+	  ret = xnee_set_key (xd, XNEE_GRAB_INSERT, range);
       else
 	{
 	  ret = XNEE_OK;
@@ -470,7 +470,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   else if (!strncmp(XNEE_EXEC_KEY,tmp,strlen(XNEE_EXEC_KEY)))
     {
       if (!xnee_check_false(range))
-	ret = xnee_grab_key (xd, XNEE_GRAB_EXEC, range);
+	ret = xnee_set_key (xd, XNEE_GRAB_EXEC, range);
       else
 	{
 	  ret = XNEE_OK;
@@ -495,6 +495,10 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
    *  Don't use
    *
    */
+   else if (!strncmp(XNEE_STORE_MOUSE_POS,tmp,strlen(XNEE_STORE_MOUSE_POS)))  
+     {	  
+       xnee_set_store_mouse_pos(xd);
+     } 
 /*   else if (!strncmp(XNEE_KEYBOARD,tmp,strlen(XNEE_KEYBOARD)))  */
 /*     {	  */
 /*       ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT,  */
@@ -640,13 +644,82 @@ xnee_expression_handle_mark(xnee_data *xd, char *tmp)
 
 
 
+static char *
+xnee_expr_get_proj_value (char *var_and_val)
+{
+  char *tmp;
+  printf ("1\n");
+
+  tmp = strstr(var_and_val, ":");
+  if (tmp==NULL)
+    return NULL;
+  tmp++;
+
+  while ( (tmp!=NULL) && ( (*tmp==' ') || (*tmp=='\t') )) 
+    {
+      tmp++;
+    }
+  
+  if (tmp==NULL)
+    return NULL;
+
+  if (tmp==NULL)
+    return NULL;
+
+  if (tmp[strlen(tmp)-1]=='\n')
+    tmp[strlen(tmp)-1]='\0';
+
+  return tmp;
+}
+
 
 
 static int
 xnee_expression_handle_projinfo(xnee_data *xd, char *tmp)
 {
+#define XNEE_IS_STR_SAME(a,b)			\
+  ( strncmp(a,b, strlen(a))==0)
+
+
       xnee_verbose ((xd, "handling project: %s\n", tmp));
-      if (strncmp("P",tmp,1)==0)  /* Action data */
+
+      /*
+       *  creation 
+       */
+      if (XNEE_IS_STR_SAME(XNEE_RES_CREAT_PROGRAM,tmp))
+	{
+	  xnee_set_creat_program(xd, xnee_expr_get_proj_value(tmp));
+	  return XNEE_PROJECT_INFORMATION_DATA;
+	}
+      else if (XNEE_IS_STR_SAME(XNEE_RES_CREAT_PROG_VER,tmp))
+	{
+	  xnee_set_creat_prog_vers(xd, xnee_expr_get_proj_value(tmp));
+	  return XNEE_PROJECT_INFORMATION_DATA;
+	}
+      else if (XNEE_IS_STR_SAME(XNEE_RES_CREAT_DATE,tmp)  )
+	{
+	  xnee_set_creat_date(xd, xnee_expr_get_proj_value(tmp));
+	  return XNEE_PROJECT_INFORMATION_DATA;
+	}
+      /*
+       *  last change
+       */
+      else if (XNEE_IS_STR_SAME(XNEE_RES_LASTCHANGE_PROGRAM,tmp))
+	{
+	  xnee_set_last_program(xd, xnee_expr_get_proj_value(tmp));
+	  return XNEE_PROJECT_INFORMATION_DATA;
+	}
+      else if (XNEE_IS_STR_SAME(XNEE_RES_LASTCHANGE_PROG_VER,tmp))
+	{
+	  xnee_set_last_prog_vers(xd, xnee_expr_get_proj_value(tmp));
+	  return XNEE_PROJECT_INFORMATION_DATA;
+	}
+      else if (XNEE_IS_STR_SAME(XNEE_RES_LASTCHANGE_DATE,tmp)  )
+	{
+	  xnee_set_last_date(xd, xnee_expr_get_proj_value(tmp));
+	  return XNEE_PROJECT_INFORMATION_DATA;
+	}
+      else if (strncmp("P",tmp,1)==0)  /* Action data */
 	{
 	  return XNEE_PROJECT_INFORMATION_DATA;
 	}
@@ -889,7 +962,6 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
     {
       xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
       xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
-
     }
   else
     ;  
