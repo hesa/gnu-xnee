@@ -60,6 +60,87 @@ int gx_is_using_rec_display(gnee_xnee *gx)  { return gx->use_rec_display; }
 int gx_is_using_rep_display(gnee_xnee *gx)  { return gx->use_rep_display; }
 int gx_is_using_speed(gnee_xnee *gx)        { return gx->use_speed;}
 
+#define gnee_set_record_display()  gnee_set_various_display(0)
+#define gnee_set_replay_display()  gnee_set_various_display(1)
+
+
+#define gnee_set_verbose()   gnee_set_verbosity(1)
+#define gnee_unset_verbose() gnee_set_verbosity(0)
+
+int 
+gnee_set_interval()
+{
+  GtkSpinButton *spin=NULL;
+  GtkToggleButton *togglebutton;
+
+  spin = (GtkSpinButton*)lookup_widget (ext_gnee_window, 
+					  "wait_spinbutton");
+  togglebutton = (GtkToggleButton*)lookup_widget (ext_gnee_window, 
+					  "wait_checkbox");
+
+  printf ("##############################\n");
+  if (spin!=NULL)
+    {
+      printf ("Setting spin to %d\n", xnee_get_interval(ext_xd));
+      gtk_spin_button_set_value(spin,
+				xnee_get_interval(ext_xd));
+      
+    }
+  if (togglebutton!=NULL)
+    {
+      printf ("Setting spin box to true\n");
+      gtk_toggle_button_set_active(togglebutton, 1);
+    }
+
+  
+
+  return GNEE_OK;
+}
+
+static int
+gnee_set_verbosity(int on_or_off)
+{
+  GtkWidget   *verbose_cb;
+  
+  verbose_cb = (GtkWidget*)lookup_widget (ext_gnee_window, 
+					  "verbose_logging_checkbox");
+  if (verbose_cb!=NULL)
+    {
+      printf ("Setting verboose toggle to %d\n", on_or_off);
+      gtk_toggle_button_set_active((GtkToggleButton *)verbose_cb, on_or_off);
+    }
+}
+
+static int 
+gnee_set_various_display(int use_recording_display)
+{
+  GtkWidget   *disp_text;
+  char        *disp_to; 
+ 
+  if (use_recording_display)
+    {
+      disp_text = (GtkWidget*) 
+	lookup_widget (ext_gnee_window, "rec_disp_text");
+    }
+  else
+    {
+      disp_text = (GtkWidget*) 
+	lookup_widget (ext_gnee_window, "rep_disp_text");
+    }
+
+  if (disp_text==NULL)
+    {
+      ;
+    }
+  else
+    {
+      disp_to = xnee_get_display_name(ext_xd);
+
+      gtk_entry_set_text((GtkEntry*)disp_text,
+			 disp_to);
+    }
+  return GNEE_OK; 
+}
 
 
 int 
@@ -117,9 +198,14 @@ gx_set_replay_display(xnee_data *xd, gnee_xnee *gx)
 int 
 gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
 {
-  gx_set_replay_display(xd, gx);
-  gx_set_record_display(xd, gx);
-
+  if (xnee_is_recorder(xd))
+    {
+      gx_set_record_display(xd, gx);
+    }
+  else if (xnee_is_recorder(xd))
+    {
+      gx_set_replay_display(xd, gx);
+    }
 }
 
 
@@ -265,6 +351,16 @@ gx_set_xd_settings()
     {
       gnee_set_ranges(i);
     }
+
+  gnee_set_record_display();
+  gnee_set_replay_display();
+  
+  if (xnee_is_verbose(ext_xd))
+    gnee_set_verbose();
+  else
+    gnee_unset_verbose();
+
+  gnee_set_interval();
 }
 
 

@@ -57,7 +57,7 @@ static char *help[] = {
   "--loops <n>, -l                ", "Intercept n numbers of events ( n<0 means forever)",
   "--events-to-record <n>, -etr   ", "Intercept n numbers of events ( n<0 means forever)",
   "--data-to-record <n>, -dtr     ", "Intercept n numbers of data ( n<0 means forever)",
-  "--time-to-record <n>, -ttr     ", "Intercept for n seconds ( n<0 means forever)",
+  "--seconds-to-record <n>, -str  ", "Intercept for n seconds ( n<0 means forever)",
   "--verbose, -v                  ", "Verbose printout",
   "--buffer-verbose, -bv          ", "Verbose printout of replay buffer",
   "--time, -t  <secs>             ", "Delay start of application for <secs> seconds. Used to prevent recording of KeyRelease when starting Xnee from terminal",
@@ -101,14 +101,14 @@ static char *help[] = {
   "--retype, -rt                  ", "Types (fakes) the content of the file as specified by --file",
   "--type-help, -tp               ", "Type this help message using faked keys (used to test xnee itself)",
   "--force-replay, -fp            ", "Keep replaying even if we are out of sync .... dangerous",
-  "--max-threshold, -map <nr>      ", "Set the maximum threshold for sync to nr",
-  "--min-threshold, -mip <nr>      ", "Set the minimum threshold for sync to nr",
-  "--total-threshold, -tip <nr>    ", "Set the total threshold for sync to nr",
+  "--max-threshold, -mat <nr>      ", "Set the maximum threshold for sync to nr",
+  "--min-threshold, -mit <nr>      ", "Set the minimum threshold for sync to nr",
+  "--total-threshold, -tit <nr>    ", "Set the total threshold for sync to nr",
   NULL 
 };
 
 static char *explain[] = {
-  "file_name" , "Name of a file (e.g /tmp/user1_session.xnee)" ,
+  "file_name" , "Name of a file (e.g /tmp/user1_session)" ,
   "display_name" , "Name of a display (e.g 192.168.1.12:0" ,
   "secs" , "Seconds (e.g 10)" ,
   "n" , "Integer number (e.g 100)" ,
@@ -119,10 +119,10 @@ static char *explain[] = {
 
 
 static char *examples[] = {
-  "" PACKAGE "  --k_log -devera 2-6 -o /tmp/xnee.rec -e /tmp/xnee.log -v ", 
-  "Writes 1000 data to file /tmp/xnee.rec and dumps the verbose printout to /tmp/xnee.log",
-  "" PACKAGE " -rep -f /tmp/xnee.rec -v -e /tmp/xnee.log --no-sync",
-  "Read data from /tmp/xnee.rec, replay it and verbose print to file /tmp/xnee.log",
+  "" PACKAGE "  --k_log -devera 2-6 -o /tmp/xnee.xns -e /tmp/xnee.log -v ", 
+  "Writes 1000 data to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log",
+  "" PACKAGE " -rep -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
+  "Read data from /tmp/xnee.xns, replay it and verbose print to file /tmp/xnee.log",
   "For more examples, read the Xnee manual",
   NULL 
 };
@@ -546,9 +546,9 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --data-to-record\n"));
 	  xnee_set_data_max (xd, atoi(argv[++i]));
 	}
-      else if(xnee_check(argv[i], "--time-to-record", "-ttr")) 
+      else if(xnee_check(argv[i], "--seconds-to-record", "-ttr")) 
 	{
-	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --time-to-record\n"));
+	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --seconds-to-record\n"));
 	  xnee_set_time_max (xd, atoi(argv[++i]));
 	}
       else if(xnee_check(argv[i], "--stop-key", "-sk")) 

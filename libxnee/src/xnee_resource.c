@@ -351,13 +351,13 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_verbose((xd, "file \"%s\"\n", range));
-      xnee_set_out_byname (xd, range);
+      xnee_set_out_name (xd, range);
     }
   else if (!strncmp(XNEE_ERR_FILE,tmp,8))  
     {
       range=strstr (tmp, ":");
       range += 1 ;
-      xnee_set_err_byname (xd, range);
+      xnee_set_err_name (xd, range);
     }
   else if (!strncmp(XNEE_DISTRIBUTE,tmp,strlen(XNEE_DISTRIBUTE)))
     {

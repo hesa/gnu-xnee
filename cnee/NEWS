@@ -19,7 +19,7 @@ Changes in
 	- new options:
 	   '--data-to-record'
 	   '--events-to-record'
-	   '--time-to-record'
+	   '--seconds-to-record'
 	   '--event-range'
 	   '--out-file'
 	   '--err-file'

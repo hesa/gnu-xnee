@@ -163,26 +163,6 @@ xnee_get_err_name (xnee_data *xd)
   return xd->err_name;
 }
 
-int
-xnee_set_err_byname (xnee_data *xd, char *err_name)
-{
-  if (err_name!=NULL)
-    {
-      xnee_set_err_name (xd, err_name);
-    }
-  else
-    {
-      return XNEE_OK;
-    }
-
-  if (!xnee_check (err_name, "stderr", "STDERR"))
-    {
-      XNEE_FCLOSE_IF_NOT_NULL(xd->err_file);
-      xd->err_file = fopen (xd->err_name,"w");
-    }
-  return XNEE_OK;
-}
-
 
 
 int
@@ -826,6 +806,7 @@ xnee_get_time_left (xnee_data *xd)
 int 
 xnee_set_interval (xnee_data *xd, int interval)
 {
+  printf ("set interval = %d\n", interval); 
   xd->xnee_info.interval = interval ;
   return XNEE_OK;
 }
@@ -833,6 +814,7 @@ xnee_set_interval (xnee_data *xd, int interval)
 int 
 xnee_get_interval (xnee_data *xd)
 {
+  printf ("get interval = %d\n",xd->xnee_info.interval ); 
   return xd->xnee_info.interval;
 }
 
@@ -886,7 +868,7 @@ xnee_set_replay_speed_str (xnee_data *xd, char *speed_str)
 int
 xnee_set_replay_speed (xnee_data *xd, int speed)
 {
-  xnee_verbose ((xd, "Setting replay speed = %d \n", speed));
+  xnee_verbose ((xd, "xnee_set_replay_speed = %d \n", speed));
   xd->speed_percent=speed;
   return XNEE_OK;
 }

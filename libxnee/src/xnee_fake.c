@@ -83,6 +83,7 @@ xnee_replay_event_handler( xnee_data* xd,
   int screen;
   int x ;
   int y ; 
+  int speed ; 
 
   Time saved_time = 0 ; /* used to restore time of last replayable event */
 
@@ -121,7 +122,9 @@ xnee_replay_event_handler( xnee_data* xd,
 		     ));
       record_last_diff = 10 ; 
     }
-  if (xnee_get_speed(xd)==100)
+  speed = xnee_get_speed(xd); 
+
+  if (speed==100)
     {
       sleep_amt = 
 	xnee_calc_sleep_amount( xd, 
@@ -130,7 +133,7 @@ xnee_replay_event_handler( xnee_data* xd,
 				record_last_diff, 
 				record_first_diff ) ; 
     } 
-  else  if (xnee_get_speed(xd)>100)
+  else  if (speed>100)
     {
       sleep_amt = 
 	xnee_calc_sleep_amount_fast( xd, 
@@ -149,8 +152,7 @@ xnee_replay_event_handler( xnee_data* xd,
 				record_first_diff ) ; 
     }
 
-
-
+  
 
   xnee_verbose((xd, "---  xnee_replay_event_handler \n "));
   

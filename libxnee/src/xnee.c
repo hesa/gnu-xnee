@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -280,38 +280,6 @@ xnee_free_file (xnee_data *xd, char *file_name, FILE* file)
   return XNEE_OK;
 }
 
-
-/**************************************************************
- *                                                            *
- * xnee_reopen_descriptors                                    *
- *                                                            *
- *                                                            *
- **************************************************************/
-int
-xnee_reopen_descriptors(xnee_data* xd) 
-{
-  int ret = XNEE_OK ; 
-  char *tmp;
-
-/*   printf ("REOPEN ...\n"); */
-/*   ret = xnee_set_display_name (xd, xnee_get_display_name(xd)); */
-/*   if (ret != XNEE_OK) return ret ;  */
-    
-  ret = xnee_set_out_byname (xd, 
-			     xnee_get_out_name(xd));
-  if (ret != XNEE_OK) return ret ; 
-    
-  ret = xnee_set_err_byname (xd, xnee_get_err_name(xd));
-  if (ret != XNEE_OK) return ret ; 
-    
-  ret = xnee_set_data_name_byname (xd, xnee_get_data_name(xd));
-  if (ret != XNEE_OK) return ret ; 
-    
-  ret = xnee_set_rc_byname (xd, xnee_get_rc_name(xd));
-  if (ret != XNEE_OK) return ret ; 
-    
-  return XNEE_OK;
-}
 
 
 /**************************************************************
@@ -1488,6 +1456,60 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
 }
 
 
+static int
+xnee_open_files(xnee_data *xd)
+{
+  char *file_name;
+
+  xnee_verbose((xd, "---> xnee_open_files\n"));
+  file_name = xnee_get_err_name(xd);
+  if (file_name!=NULL)
+    {
+      xnee_verbose((xd, "---  xnee_open_files: handling err\n"));
+      if (!xnee_check (file_name, "stderr", "STDERR"))
+	{
+	  xnee_verbose((xd, "---  xnee_open_files: opening err: %s\n", 
+			xd->err_name));
+	  XNEE_FCLOSE_IF_NOT_NULL(xd->err_file); 
+	  xd->err_file = fopen (xd->err_name,"w");
+	}
+    }
+
+  if (xnee_is_recorder(xd))
+    {
+      xnee_verbose((xd, "---  xnee_open_files: is recorder\n"));
+      file_name = xnee_get_out_name(xd);
+      if (file_name!=NULL)
+	{
+	  xnee_verbose((xd, "---  xnee_open_files: handling out\n"));
+	  if (!xnee_check (file_name, "stdout", "STDOUT"))
+	    {
+	      xnee_verbose((xd, "---  xnee_open_files: opening out: %s\n", 
+			    xd->out_name));
+	      XNEE_FCLOSE_IF_NOT_NULL(xd->out_file); 
+	      xd->out_file = fopen (xd->out_name,"w");
+	    }
+	}
+    }
+  else if (xnee_is_replayer(xd))
+    {
+      xnee_verbose((xd, "---  xnee_open_files: is replayer\n"));
+      file_name = xnee_get_data_name(xd);
+      if (file_name!=NULL)
+	{
+	  xnee_verbose((xd, "---  xnee_open_files: handling data (in)\n"));
+	  if (!xnee_check (file_name, "stdin", "STDIN"))
+	    {
+	      xnee_verbose((xd, "---  xnee_open_files: opening data: %s\n", 
+			    xd->data_name));
+	      XNEE_FCLOSE_IF_NOT_NULL(xd->data_file); 
+	      xd->data_file = fopen (xd->data_name,"r");
+	    }
+	}
+    }
+  return XNEE_OK;
+}
+
 
 
 
@@ -1495,6 +1517,10 @@ int
 xnee_prepare(xnee_data *xd)
 {
    int ret;
+
+
+
+   xnee_open_files(xd);
 
   /* 
    * Print settings 
@@ -1698,7 +1724,6 @@ xnee_start(xnee_data *xd)
    xnee_ungrab_keys (xd);
    
    xnee_renew_xnee_data(xd);
-/*    xnee_reopen_descriptors(xd) ; */
    return (XNEE_OK);
 }
 

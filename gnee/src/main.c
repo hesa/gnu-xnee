@@ -131,9 +131,8 @@ main (int argc, char *argv[])
 
 
     /* TEST */
-    xnee_set_verbose(xd);
-    gx_add_event (gnee_window,"MotionNotify");
 
+    gx_add_event (gnee_window,"MotionNotify");
     /* END OF TEST */
 
 

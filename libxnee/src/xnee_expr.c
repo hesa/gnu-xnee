@@ -116,7 +116,7 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp)
 
   /* Is it a meta string */
   do_continue = xnee_expression_handle_meta(xd, tmp);
-  if (do_continue==XNEE_OK) { return (do_continue); }
+  if (do_continue==XNEE_META_DATA) { return (do_continue); }
   
   /* Is it a setting expression*/
   do_continue = xnee_expression_handle_settings(xd, tmp);
@@ -294,7 +294,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
     }
   else if (!strncmp(XNEE_VERBOSE,tmp,strlen(XNEE_VERBOSE)))  
     {
-      if (strncmp(range,"0",1)==0)
+      if ( (strncmp(range,"1",1)==0) || (strncmp(range,"true",4)==0) )
 	xnee_set_verbose(xd);
       else
 	xnee_unset_verbose(xd);
@@ -303,9 +303,10 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
     {
       xd->buf_verbose = True;
     }
-  else if (!strncmp(XNEE_LOOPS,tmp,strlen(XNEE_LOOPS))) 
+  else if (!strncmp("time",tmp,strlen("time"))) 
     {
-      xnee_set_events_max(xd, atoi(range));
+      printf ("time: %s %s\n", tmp, range);
+      xnee_set_interval(xd, atoi(range));
     }
   else if (!strncmp(XNEE_LOOPS,tmp,strlen(XNEE_LOOPS))) 
     {
@@ -365,12 +366,12 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
     }
   else if (!strncmp(XNEE_OUT_FILE,tmp,strlen(XNEE_OUT_FILE))) 
     {
-      xnee_set_out_byname (xd, range);
+      xnee_set_out_name (xd, range);
     }
   else if (XNEE_CHECK_SESS_EXPR(XNEE_ERR_FILE,tmp))
     {
       printf ("ERROR %s\n", tmp); sleep (10);
-      xnee_set_err_byname (xd, range);
+      xnee_set_err_name (xd, range);
     }
   else if (!strncmp(XNEE_DISTRIBUTE,tmp,strlen(XNEE_DISTRIBUTE)))
     {

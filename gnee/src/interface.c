@@ -1340,9 +1340,9 @@ create_gnee_window (void)
   g_signal_connect ((gpointer) open_project_file2, "activate",
                     G_CALLBACK (on_open_project_file2_activate),
                     NULL);
-  g_signal_connect ((gpointer) about1, "activate",
-                    G_CALLBACK (on_about1_activate),
-                    NULL);
+  g_signal_connect_swapped ((gpointer) about1, "activate",
+                            G_CALLBACK (on_about1_activate),
+                            GTK_OBJECT (gnee_window));
   g_signal_connect ((gpointer) open_button, "clicked",
                     G_CALLBACK (on_open_button_clicked),
                     NULL);

@@ -381,11 +381,14 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
 {
   GtkWidget          *about_box;
 
+  printf ("on_about1_activate 1\n");
   about_box      = lookup_widget(GTK_WIDGET(user_data),
 				 "about_window");
 
+  printf ("on_about1_activate 1\n");
   if (about_box==NULL)
     about_box = create_about_window();
+  printf ("on_about1_activate 1\n");
 
   gtk_widget_show (about_box);
 }
@@ -419,7 +422,7 @@ on_record                              (GtkButton       *button,
       if (ext_xd != NULL)
         {
 	  gx_set_variable_data(ext_xd, ext_gx);
-
+	  
 	  gx_start_recording(ext_xd);
         }
       
@@ -493,9 +496,15 @@ on_wait_checkbox_toggled               (GtkToggleButton *togglebutton,
   if (ext_xd != NULL)
     {
       if (use_delay)
-	gx_set_interval (ext_xd, delay); 
+	{
+	  printf ("using delay... setting to %d\n", delay);
+	  gx_set_interval (ext_xd, delay); 
+	}
       else
-	gx_set_interval (ext_xd, 0); 
+	{
+	  printf ("NOT using delay... setting to %d\n", 0);
+	  gx_set_interval (ext_xd, 0); 
+	}
     }
 }
 
@@ -528,8 +537,6 @@ void
 on_wait_spinbutton_change_value        (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-    GtkToggleButton *togglebutton=NULL;
-
     delay = gtk_spin_button_get_value_as_int(spinbutton);
     
     if (ext_xd != NULL)
@@ -553,12 +560,10 @@ on_verbose_logging_checkbox_toggled    (GtkToggleButton *togglebutton,
     {
       if (gtk_toggle_button_get_active(togglebutton))
 	{
-	  printf ("verbose\n");
 	  gx_set_verbose(ext_xd); 
 	}
       else
 	{
-	  printf ("no verbose\n");
 	  gx_unset_verbose(ext_xd); 
 	}
     }
@@ -649,9 +654,10 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	  fclose (file);
 	  file_choosen = 0;
 	  file_action  = 0;
+
+	  gx_set_xd_settings();
 	  
 	  gx_set_xd_settings();
-
 	}
       else 
 	{
@@ -745,9 +751,10 @@ on_about_ok_button_clicked             (GtkButton       *button,
 {
   GtkWidget          *about_box;
 
+  printf ("on_about1 \n" );
   about_box      = lookup_widget(GTK_WIDGET(user_data),
 				 "about_window");
-
+  
   printf ("on_about1 %d \n", (int) about_box);
 
   if (about_box==NULL)

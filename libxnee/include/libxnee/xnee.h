@@ -291,7 +291,7 @@ enum cont_proc_commands
 #define XNEE_DIMENSION            "Dimension"
 #define XNEE_EVENT_MAX            "events-to-record"
 #define XNEE_DATA_MAX             "data-to-record"
-#define XNEE_TIME_MAX             "time-left-to-record"
+#define XNEE_TIME_MAX             "seconds-to-record"
 #define XNEE_LOOPS_LEFT           "loops-left"
 #define XNEE_STOP_KEY             "stop-key"
 #define XNEE_PAUSE_KEY            "pause-key"
