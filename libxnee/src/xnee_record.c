@@ -225,20 +225,6 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   xd = (xnee_data *) (xpoint_xnee_data) ;
   xrec_data = (XRecordDatum *) (data->data) ;
 
-  /*
-   *
-   * This flag is used to prevent recording of KeyRelease when starting
-   * the app. Solve the problem ASAP!!!
-   *
-   */
-  if (xd->first_replayed_event==1) 
-    {
-      XRecordFreeData(data);
-      xd->first_replayed_event=0;
-      XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
-      return ; 
-  }
- 
 
   if (xd->grab!=NULL)
     {
@@ -319,8 +305,8 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
     } 
   XRecordFreeData(data);
   XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
-} 
- 
+    } 
+  
 
 
 
@@ -935,6 +921,14 @@ xnee_record_loop(xnee_data *xd)
 {
   xnee_verbose((xd, " ---> xnee_record_loop()\n"));
   
+  /* 
+   * In case the key pressed to invoke Xnee is not released
+   * we wait 1/2 of a second and hopefully it is. If not
+   * the user is holding it pressed for "TOO" long.
+   */
+#define XNEE_DELAY_RECORDING 1000*500
+  usleep ( XNEE_DELAY_RECORDING );
+
   XRecordEnableContext(xd->data, 
 		       xd->record_setup->rContext, 
 		       xd->rec_callback, 
