@@ -18,7 +18,8 @@ libxnee_a_SOURCES = xnee.c  \
 	xnee_time.c \
 	xnee_callback.c \
 	xnee_buffer.c   \
-	xnee_threshold.c 
+	xnee_threshold.c \
+	feedback.c 
 
 EXTRA_DIST = ../include/libxnee/xnee.h     \
 	../include/libxnee/print.h         \
@@ -37,7 +38,8 @@ EXTRA_DIST = ../include/libxnee/xnee.h     \
 	../include/libxnee/xnee_buffer.h   \
 	../include/libxnee/xnee_fake.h     \
 	../include/libxnee/xnee_grab.h     \
-	../include/libxnee/xnee_threshold.h 
+	../include/libxnee/xnee_threshold.h \
+	../include/libxnee/feedback.h 
 
 
 if VERBOSE
