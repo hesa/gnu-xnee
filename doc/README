@@ -1,0 +1,26 @@
+Xnee / README
+-------------
+
+Xnee is a GNU package. For more information about GNU, please visit 
+	http://www.gnu.org
+
+
+
+
+The following files contains information about Xnee
+
+Name		Description
+---------------------------
+AUTHORS		List of authors, contributors etc 
+BUGS		Known bugs and limitations
+Changelog	Log of source code changes
+COPYING		Contains the Xnee license
+DESCRIPTION	Obsolete*
+DEVELOPMENT	Obsolete*
+EXAMPLES	Obsolete*
+FAQ		Obsolete*
+INSTALL		Contains information about how to build and install Xnee
+NEWS		Contains information about what is new in "this" release
+README		This file
+TODO		List of features, fixes, docs,  ... to implement 
+USAGE		A printout of Xnee's built in doc, 'xnee --help'
