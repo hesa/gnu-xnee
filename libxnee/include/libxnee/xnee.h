@@ -199,7 +199,8 @@ enum return_values
   XNEE_GRAB_DATA         ,
   XNEE_BAD_LOG_FILE      ,
   XNEE_BAD_SPEED         ,
-  XNEE_BAD_RESOLTION
+  XNEE_BAD_RESOLTION     ,
+  XNEE_BAD_CONTEXT
 } _return_values;
   
 

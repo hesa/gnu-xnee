@@ -15,7 +15,6 @@ Version:
 
 
 
-
 Action: Follow GNU Coding Standards
 Status: begun
 	* Comment return values

@@ -85,19 +85,6 @@ function check_intervals()
 }
 
 
-function move_mouse()
-{
-    TMP=0
-    PIX=$2
-    DIR=$1
-    while [ "$TMP" != "$PIX" ];
-    do
-      echo "$DIR" > $MOUSE_DEVICE
-      TMP=`expr $TMP + 1 `
-    done
-}
-
-
 function test_mouse()
 {
     DIRECTION=$1

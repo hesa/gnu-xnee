@@ -37,42 +37,6 @@ KEYBOARD_DEVICE=/dev/swkeybd
 
 
 
-
-function press_key()
-{
-    KEY=$1
-    verbose "faking key $KEY"
-    echo "$KEY" > $KEYBOARD_DEVICE
-    sleep 0
-}
-
-function fake_controld()
-{
-    sleep 1
-    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
-    sleep 1
-    echo "d"              > $KEYBOARD_DEVICE
-    sleep 1
-    echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
-}
-
-function fake_controlc()
-{
-    sleep 1
-    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
-    sleep 1
-    echo "c"              > $KEYBOARD_DEVICE
-    sleep 1
-    echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
-    sleep 1
-}
-
-
-function fake_enter()
-{
-    echo "[ENTER]"   > $KEYBOARD_DEVICE
-}
-
 function replay_file()
 {
     RECORDED_FILE=$1

@@ -95,7 +95,7 @@ static char *help[] = {
   "--extension-request-mainor-range, -erqmir  <X_LIST> ", "Set extension request minor range to X_LIST", 
   "--extension-reply-major-range, -erpmar  <X_LIST>    ","Set extension reply major range to X_LIST", 
   "--extension-reply-mainor-range, -erpmir  <X_LIST>   ","Set extension reply minor range to X_LIST",
-  "--retype-file <file>, -rf      ", "Types (fakes) the content of the specified file",
+  "--retype, -rt                  ", "Types (fakes) the content of the file as specified by --file",
   "--type-help, -tp               ", "Type this help message using faked keys (used to test xnee itself)",
   "--force-replay, -fp            ", "Keep replaying even if we are out of sync .... dangerous",
   NULL 
@@ -349,23 +349,9 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_print_error ("Unable to open plugin file (%s)\n", argv[i]);
 	    }
 	}
-      else if(xnee_check(argv[i], "--retype-file", "-rf" )) 
+      else if(xnee_check(argv[i], "--retype", "-rt" )) 
 	{
-	  if (++i >= argc)
-	    {
-	      xnee_usage(stderr);
-	      xnee_close_down(xd);
-	      exit(XNEE_WRONG_PARAMS);
-	    }
-	  else
-	    {
-	      xnee_set_retyper(xd);
-	    }
-	  if ( xnee_type_file(xd, argv[i]) != 0 )
-	    {
-	      xnee_print_error ("Unable to open file \"%s\" for retyping \n", 
-				argv[i]);
-	    }
+	  xnee_set_retyper(xd);
 	}
       else if(xnee_check(argv[i], "--all-clients", "-ac" )) 
 	{

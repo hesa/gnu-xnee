@@ -623,9 +623,9 @@ xnee_setup_rep_recording(xnee_data *xd)
 			    2);
 
   if(!XRecordGetContext(xd->control, xrs->rContext, (XRecordState **) xrs->rState))
-  {
+    {
     xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
-    exit(1);
+    exit(XNEE_BAD_CONTEXT);
   }
   
   xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n", 
@@ -643,12 +643,6 @@ xnee_setup_rep_recording(xnee_data *xd)
   */
 
   
-  if (xd->xnee_info->interval != 0)
-    {
-      xnee_delay (xd->xnee_info->interval, "" );
-    }
-
-
   /* Enable context for async interception */
   XRecordEnableContextAsync (xd->data, 
 			     xrs->rContext, 
@@ -658,7 +652,7 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "finished setting up record for replaying\n"));
   xnee_verbose((xd, "<---xnee_setup_rep_recording\n"));             
   
-  return (0);
+  return (XNEE_OK);
 }
 
 
@@ -802,72 +796,3 @@ xnee_replay_init          (xnee_data* xd)
     xnee_set_default_rep_resolution (xd);
 }
 
-
-
-
-
-
-
-
-
-
-  /* else
-    {
-      time_outs -= 1;
-      if (time_outs<=0)
-	time_outs = 0;
-  }
-*/
-
-  /*  xnee_verbose((xd," --- xnee_replay_synchronize: sleeping %d\n", 
-      XNEE_MISSING_DATA_DELAY));;
-      usleep (XNEE_MISSING_DATA_DELAY);
-      xnee_verbose((xd," --- xnee_replay_synchronize: .... awoke \n"));;
-      xnee_process_replies(xd); 
-  */
-  /* 
-   * Check to see if we are totally out of sync 
-   */
-
-  /*if (counter == (MAX_UNSYNC_LOOPS))
-    {
-    time_outs++;
-    if (time_outs>=MAX_SKIPPED_UNSYNC)
-    {
-    printf ("Error: Xnee can't synchronize anymore. Assuming replay error\n");
-    printf ("   timeouts: %d\n", time_outs);
-    printf ("   counter : %d\n", counter);
-    if (!xd->force_replay)
-    {
-    xnee_close_down (xd);
-    exit (XNEE_SYNCH_FAULT);
-    }
-    }
-    else if (time_outs >= (MAX_SKIPPED_UNSYNC - 10))
-    {
-    int delay=XNEE_MISSING_DATA_DELAY;
-    xnee_process_replies (xd);
-    xnee_verbose((xd," --- xnee_replay_synchronize: .... awoke \n"));
-    
-    if (!xd->force_replay)
-    {
-    xnee_verbose ((xd, "xnee: increasing timeouts\n"));
-    if ( time_outs > ( MAX_SKIPPED_UNSYNC - 2 ))
-    {
-    delay = XNEE_MISSING_DATA_DELAY * 1000 ;
-    }
-    if ( time_outs > ( MAX_SKIPPED_UNSYNC - 3 ))
-    {
-    delay = XNEE_MISSING_DATA_DELAY * 100 ;
-    }
-    else if ( time_outs > ( MAX_SKIPPED_UNSYNC - 5 ))
-    {
-    delay = XNEE_MISSING_DATA_DELAY * 100 ;
-    }
-    }
-    xnee_verbose((xd," --- xnee_replay_synchronize: sleeping %d\n", 
-    delay));
-    usleep (delay);
-    }
-    }    
-  */

@@ -4,7 +4,8 @@ export VERBOSE_MODE=false
 export LOG=./xnee_test.log
 export ERR_LOG=./xnee_test.err
 
-
+export MOUSE_DEVICE=/dev/swmouse
+export KEYBOARD_DEVICE=/dev/swmouse
 
 
 function init_test()
@@ -436,4 +437,134 @@ save_pointer()
     SAVE_XPOS=`$getx`
     SAVE_YPOS=`$gety`
 }
+
+
+function press_key()
+{
+    KEY=$1
+    verbose "faking key $KEY"
+    echo "$KEY" > $KEYBOARD_DEVICE
+    sleep 0
+}
+
+function fake_controld()
+{
+    sleep 1
+    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
+    sleep 1
+    echo "d"              > $KEYBOARD_DEVICE
+    sleep 1
+    echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
+}
+
+function fake_control_()
+{
+    KEY=$1
+    sleep 1
+    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
+    sleep 1
+    echo "$1"             > $KEYBOARD_DEVICE
+    sleep 1
+    echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
+}
+
+function fake_alt_()
+{
+    KEY=$1
+    sleep 1
+    echo "[ALT_DOWN]" > $KEYBOARD_DEVICE
+    sleep 1
+    echo "$1"         > $KEYBOARD_DEVICE
+    sleep 1
+    echo "[ALT_UP]"   > $KEYBOARD_DEVICE
+    sleep 1
+}
+
+function fake_control_press()
+{
+    sleep 0
+    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
+    sleep 0
+}
+
+function fake_control_release()
+{
+    sleep 0
+    echo "[CONTROL_UP]" > $KEYBOARD_DEVICE
+    sleep 0
+}
+
+function fake_controlc()
+{
+    sleep 1
+    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
+    sleep 1
+    echo "c"              > $KEYBOARD_DEVICE
+    sleep 1
+    echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
+    sleep 1
+}
+
+
+function fake_enter()
+{
+    echo "[ENTER]"   > $KEYBOARD_DEVICE
+}
+
+
+function move_mouse()
+{
+    TMP=0
+    PIX=$2
+    DIR=$1
+    while [ "$TMP" != "$PIX" ];
+    do
+      echo "$DIR" > $MOUSE_DEVICE
+      TMP=`expr $TMP + 1 `
+      sleep 0
+    done
+}
+
+#start with the mouse in such a position that in can move around enough
+function get_in_position()
+{
+    fast_move_mouse  u 1000
+    fast_move_mouse  l 1000
+    sleep 0
+    fast_move_mouse  u 1000
+    fast_move_mouse  l 1000
+    sleep 0
+    fast_move_mouse  d 100
+    fast_move_mouse  r 100
+    sleep 3
+}
+
+
+function slow_move_mouse()
+{
+    TMP=0
+    PIX=$2
+    DIR=$1
+    while [ "$TMP" != "$PIX" ];
+    do
+      echo "$DIR" > $MOUSE_DEVICE
+      TMP=`expr $TMP + 1 `
+#      echo "TMP=$TMP"
+      sleep 1
+    done
+}
+
+function fast_move_mouse()
+{
+    DIR=$1
+    PIX=$2
+    echo "$DIR$PIX" > $MOUSE_DEVICE
+}
+
+
+function zero_mouse()
+{
+    echo "0" > $MOUSE_DEVICE
+}
+
 

@@ -188,6 +188,7 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
       XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 7  \n"  ));
 
     }
+  fflush (out);
   if (((event_type==KeyPress) || (event_type==KeyRelease)
        || (event_type==ButtonPress) || (event_type==ButtonRelease)) 
       && (xd->xnee_info->last_motion) )
@@ -890,12 +891,6 @@ xnee_setup_recording(xnee_data *xd)
   xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n", 
 		xd->record_setup->rContext, 
 		(int) ( (xd->record_setup->rState) - (xd->record_setup->nclients) )));   
-  
-  if (xd->xnee_info->interval != 0)
-    {
-      xnee_delay (xd->xnee_info->interval, "xnee:" );
-    }
-  
   
   /* Enable context for async interception 
   XSynchronize(xd->data, True);  

@@ -148,6 +148,12 @@ int main(int argc,char *argv[])
   xnee_set_autorepeat (xd);
   
 
+  if (xd->xnee_info->interval != 0)
+    {
+      xnee_delay (xd->xnee_info->interval, "xnee:" );
+    }
+  
+  
 
   /*
    * are we recording or are we replaying
@@ -190,7 +196,7 @@ int main(int argc,char *argv[])
 	  xnee_record_async(xd);
 	}
     }
-  else 
+  else if (xnee_is_replayer(xd))
     {
       xnee_verbose((xd, " (replayer)\n"));
       /*
@@ -226,7 +232,16 @@ int main(int argc,char *argv[])
       xnee_verbose((xd, "Entering main loop (replayer)\n"));
       xnee_replay_main_loop(xd);
     }
-  
+  else if (xnee_is_retyper(xd))
+    {
+      xnee_type_file(xd);
+    }
+  else
+    {
+      fprintf (stderr, 
+	       "No mode specified... leaving\n"
+	       "You can use either of record/replay/retype\n");
+    }
   /*
    * Close everything down .... free memory, tell X server we are leaving ...
   if ( xd->recorder || xd->sync )

@@ -360,7 +360,7 @@ xnee_fake_motion_event (xnee_data* xd,
 int 
 xnee_type_file(xnee_data *xd, char *str )
 {
-  FILE *file ;
+  FILE *file = xd->data_file;
   
 
   char tmp[256] ;
@@ -372,27 +372,15 @@ xnee_type_file(xnee_data *xd, char *str )
   KeyCode alt_kc ;
   KeyCode alt_gr_kc ;
   
-  if (xnee_check(str,"-", "stdin"))
-    {
-      xnee_verbose ((xd, "using stdin as file to retype\n"));
-      file = stdin;
-    }
-  else
-    {
-      xnee_verbose ((xd, "using file \"%s\" as file to retype\n", str));
-      file = fopen (str,"r");
-      if (file==NULL)
-	return -1;
-    }
 
-
+  
   xnee_verbose ((xd,"---> xnee_type_file\n"));
   xnee_setup_display (xd);
   xnee_replay_init (xd);   
   xnee_set_autorepeat (xd);
   if (!xnee_has_xtest_extension(xd))
     exit(XNEE_NO_TEST_EXT);
-
+  
   shift_kc  = xnee_str2keycode (xd, "Shift_L");
   return_kc = xnee_str2keycode (xd, "Return");
   alt_kc  = xnee_str2keycode (xd, "Alt_L");

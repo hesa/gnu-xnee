@@ -37,55 +37,6 @@ parse_me "$*"
 MOUSE_DEVICE=/dev/swmouse
 
 
-#start with the mouse in such a position that in can move around enough
-function get_in_position()
-{
-    fast_move_mouse  u 1000
-    fast_move_mouse  l 1000
-    sleep 0
-    fast_move_mouse  u 1000
-    fast_move_mouse  l 1000
-    sleep 0
-    fast_move_mouse  d 100
-    fast_move_mouse  r 100
-    sleep 3
-}
-
-
-function move_mouse()
-{
-    TMP=0
-    DIR=$1
-    PIX=$2
-    while [ "$TMP" != "$PIX" ];
-    do
-      echo "$DIR" > $MOUSE_DEVICE
-      TMP=`expr $TMP + 1 `
-      sleep 0
-    done
-}
-
-function slow_move_mouse()
-{
-    TMP=0
-    PIX=$2
-    DIR=$1
-    while [ "$TMP" != "$PIX" ];
-    do
-      echo "$DIR" > $MOUSE_DEVICE
-      TMP=`expr $TMP + 1 `
-      echo "TMP=$TMP"
-      sleep 1
-    done
-}
-
-function fast_move_mouse()
-{
-    PIX=$2
-    DIR=$1
-    echo "$DIR$PIX" > $MOUSE_DEVICE
-}
-
 
 
 #
