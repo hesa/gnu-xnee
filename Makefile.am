@@ -1,4 +1,4 @@
-SUBDIRS = libxnee cnee gnee 
+SUBDIRS = libxnee cnee gnee doc
 
 AUTOMAKE_OPTIONS = gnu
 

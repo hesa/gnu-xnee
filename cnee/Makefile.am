@@ -1,4 +1,8 @@
+LIBSEMA=${LIBSEMA}
+
+
 SUBDIRS = src 
+
 
 EXTRA_DIST = Makefile.cnee Makefile.cvs autotools/install-sh \
     test/bin/new_script.sh \

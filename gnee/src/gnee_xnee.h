@@ -1,7 +1,7 @@
 #ifndef  GNEE_XNEE__H
 #define  GNEE_XNEE__H
 
-#include <config.h>
+#include "config.h"
 #include <recordables.h>
 #include <libxnee/xnee.h>
 #include <libxnee/print.h>

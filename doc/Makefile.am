@@ -27,9 +27,9 @@ IMAGES = xndetail.eps xngener.eps xnrec.eps xnrep.eps xnswinp.eps \
 ##	
 ##  ALL
 ##
-all: doc 
 
 doc:  images html info txt pdf ps
+
 
 images: ${IMAGES}
 
@@ -107,3 +107,4 @@ xnee.txt:
 	makeinfo -o xnee.txt --no-headers --no-split --no-validate xnee.texi
 
 
+all: doc 

@@ -1,7 +1,9 @@
-AC_INIT(Xnee,2.0,bug-xnee@gnu.org)
+AC_INIT(xnee,2.0,bug-xnee@gnu.org)
 
 AC_CONFIG_AUX_DIR(./autotools/)
-AM_INIT_AUTOMAKE(Xnee,20040118)
+
+AM_INIT_AUTOMAKE(xnee,2.0)
+
 
 AC_PROG_INSTALL
 AC_PROG_CC
@@ -13,11 +15,27 @@ AC_PATH_XTRA
 AC_FUNC_VPRINTF
 AC_CHECK_HEADERS(stdarg.h varargs.h, break)
 
-
 AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")])
 AC_CHECK_LIB(c, sem_init, LIBSEMA="", [AC_CHECK_LIB(pthread, sem_init, LIBSEMA="-lpthread")])
 
+X11_LIBS="-lX11 -lXtst"
 
+
+AC_ARG_ENABLE(gui,
+[  --enable-gui       build the GUI frontend to Xnee],
+[case "${enableval}" in
+  yes) buildgui=true ;;
+  no)  buildgui=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --disable-gui) ;;
+esac],[buildgui=true])
+
+AC_ARG_ENABLE(doc,
+[  --enable-gui       build Xnee documentation],
+[case "${enableval}" in
+  yes) builddoc=true ;;
+  no)  builddoc=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --disable-doc) ;;
+esac],[builddoc=false])
 
 AC_ARG_ENABLE(xosd,
 [  --enable-xosd       build Xnee with no verbose mode support],
@@ -67,6 +85,14 @@ AC_ARG_ENABLE(pedantic,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-pedantic) ;;
 esac],[pedantic=false])
 
+AC_ARG_ENABLE(paranoid-pedantic,
+[  --enable-paranoid-pedantic          build xnee with support for paranoid pedantic compiling],
+[case "${enableval}" in
+  yes) para_pedantic=true ;;
+  no)  para_pedantic=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-paranoid-pedantic) ;;
+esac],[para_pedantic=false])
+
 AM_CONDITIONAL(VERBOSE, test x$verbose = xtrue)
 AM_CONDITIONAL(GCOV, test x$gcov = xtrue)
 AM_CONDITIONAL(GPROF, test x$gprof = xtrue)
@@ -74,13 +100,109 @@ AM_CONDITIONAL(PEDANTIC,    test x$pedantic = xtrue)
 AM_CONDITIONAL(BUF_VERBOSE, test x$buffer_verbose = xtrue)
 AM_CONDITIONAL(XOSD, test x$xosd = xtrue)
 
+if test x$verbose = xtrue ;
+then
+	VERBOSE_FLAG=-DUSE_VERBOSE
+else
+	VERBOSE_FLAG=-DNO_VERBOSE
+fi
+
+if test x$gcov = xtrue ;
+then
+	GCOV_FLAG=-fprofile-arcs -ftest-coverage 
+else
+	GCOV_FLAG=
+fi
+
+if test x$gprof = xtrue ;
+then
+	GPROF_FLAG=-pg
+else
+	GPROF_FLAG=
+fi
+
+if test x$buffer_verbose = xtrue ;
+then
+	BUF_VERBOSE_FLAG=-DUSE_BUF_VERBOSE
+else
+	BUF_VERBOSE_FLAG=-DNO_BUF_VERBOSE
+fi
+
+if test x$pedantic = xtrue ;
+then
+	PEDANTIC_FLAGS= -W -Wall -pedantic -pedantic-errors  -Werror
+else
+	PEDANTIC_FLAGS=
+fi
+
+if test x$para_pedantic = xtrue ;
+then
+	PEDANTIC_FLAGS=
+else
+	PEDANTIC_FLAGS=
+fi
+
+dnl Forward some variables to the makefiles
+AC_SUBST(LIBDL)
+AC_SUBST(LIBSEMA)
+AC_SUBST(X11_LIBS)
+
+AM_MAINTAINER_MODE
+AM_CONFIG_HEADER(config.h)
+
+if test x$buildgui = xtrue ; 
+then
+
+	AC_ISC_POSIX
+	AC_PROG_CC
+	AM_PROG_CC_STDC
+	AC_HEADER_STDC
+	AC_PATH_XTRA
+
+	pkg_modules="gtk+-2.0 >= 2.0.0"
+	PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
+	AC_SUBST(PACKAGE_CFLAGS)
+	AC_SUBST(PACKAGE_LIBS)
+
+dnl	GETTEXT_PACKAGE=gnee
+dnl	AC_SUBST(GETTEXT_PACKAGE)
+dnl	AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [The gettext package])
+
+	dnl Add the languages which your application supports here.
+dnl	ALL_LINGUAS=""
+dnl	AM_GLIB_GNU_GETTEXT
+
+
+fi
+
+AC_OUTPUT([
+Makefile \
+libxnee/Makefile \
+libxnee/src/Makefile \
+cnee/Makefile    \
+cnee/src/Makefile    \
+])
 
 
 
-AC_OUTPUT(Makefile \
-	libxnee/Makefile \
-	cnee/Makefile    \
+if test x$buildgui = xtrue ; 
+then
+	AC_OUTPUT([
 	gnee/Makefile    \
-	libxnee/src/Makefile \
-	cnee/src/Makefile    \
-	gnee/src/Makefile )
+	gnee/src/Makefile \
+])
+
+dnl	gnee/po/Makefile.in 
+fi
+
+
+if test x$builddoc = xtrue ; 
+then
+	AC_OUTPUT([
+	doc/Makefile    \
+])
+
+dnl	gnee/po/Makefile.in 
+fi
+
+

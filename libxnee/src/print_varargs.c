@@ -22,13 +22,14 @@
  * MA  02111-1307, USA.                                              
  ****/
 
+#include "libxnee/xnee.h"
+
 
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>
 #else
 #include <varargs.h> 
 #endif
-#include "libxnee/xnee.h"
 
 /**************************************************************
  *                                                            *
