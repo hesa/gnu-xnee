@@ -32,9 +32,11 @@ EXTRA_DIST = ../include/libxnee/xnee.h \
 	../include/libxnee/xnee_resource.h   \
 	../include/libxnee/xnee_time.h  \
 	../include/libxnee/xnee_km.h  \
-	../include/libxnee/xnee_callbcak.h \
-	../include/libxnee/xnee_buffer.h  \
-	../include/libxnee/xnee_
+	../include/libxnee/xnee_callback.h \
+	../include/libxnee/xnee_buffer.h   \
+	../include/libxnee/xnee_fake.h   \
+	../include/libxnee/xnee_grab.h 
+
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE
