@@ -17,11 +17,16 @@ static int need_init=1;
 typedef int (* feedback_fptr) (char*); 
 static feedback_fptr feedback_fp ; 
 
+
+#define HAVE_XOSD
+
+
 #ifdef  HAVE_XOSD
 #include "xosd.h"
 int  osd_feedback (char *str);
 void osd_printerror(void);
-int  init_osd();
+int  init_osd(void);
+  static xosd *osd;
 #endif
 int 
 err_feedback (char *str);
@@ -33,6 +38,9 @@ feedback_init()
     {
       need_init=0;
       feedback_fp = err_feedback;
+#ifdef  HAVE_XOSD
+      init_osd ();
+#endif
     }
   return XNEE_OK;
 }
@@ -41,6 +49,7 @@ feedback_init()
 int 
 feedback(char *str, ... )
 {
+
    va_list ap;
    char buf[200];
    int conv;
@@ -76,15 +85,14 @@ err_feedback (char *str)
 
 #ifdef  HAVE_XOSD
 
-static xosd *osd;
-
 int 
 osd_feedback (char *str );
 void
 osd_printerror(void)
 {
-  fprintf (stderr, "ERROR: %s\n", xosd_error);
+  fprintf (stderr, "ERROR: \n");
 }
+
 int 
 init_osd()
 {
@@ -104,27 +112,11 @@ init_osd()
      {
        osd_printerror ();
     }
-   if (0 != xosd_set_shadow_colour (osd, "blue1"))
-     {
-       osd_printerror ();
-     }
-   if (0 != xosd_set_outline_offset (osd, 1))
-     {
-       osd_printerror ();
-     }
    if (0 != xosd_set_colour (osd, "yellow"))
      {
        osd_printerror ();
      }
-  printf ("--- init xosd\n");
-   if (0 != xosd_set_outline_colour (osd, "blue4"))
-     {
-       osd_printerror ();
-     }
-   if (0 != xosd_set_font (osd, (char *) osd_default_font))
-     {
-       osd_printerror ();
-    }
+   printf ("--- init xosd\n");
   printf ("--- init xosd\n");
    if (0 != xosd_set_timeout (osd, FEEDBACK_TIMEOUT))
      {
@@ -138,6 +130,8 @@ init_osd()
 int 
 osd_feedback (char *str)
 {
+  if (need_init)
+      init_osd ();
   printf ("--->display xosd\n");
   sleep (1);
   xosd_display (osd, 0, XOSD_string, str);

@@ -740,6 +740,9 @@ xnee_record_async(xnee_data *xd)
   usleep ( XNEE_DELAY_RECORDING );
 
 
+  feedback ("hejsan\n");
+
+
   XRecordEnableContextAsync(xd->data, 
 			    xd->record_setup->rContext, 
 			    xd->rec_callback, 

@@ -80,6 +80,9 @@ int main(int argc,char *argv[])
   max = xnee_get_max_range(xd);
   
   
+  xnee_set_ranges(xd);
+
+  
   /*
    * Check if default ranges was choosen
    *
