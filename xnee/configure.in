@@ -5,8 +5,6 @@ AM_INIT_AUTOMAKE(xnee,1.08d)
 AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")])
 AC_CHECK_LIB(xosd, xosd_create, HAVE_XOSD_SUB=true,HAVE_XOSD_SUB=false)
 
-AM_INIT_AUTOMAKE(xnee,1.08)
-
 AC_ARG_ENABLE(verbose,
 [  --enable-verbose       build Xnee with no verbose mode support],
 [case "${enableval}" in
