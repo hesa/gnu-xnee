@@ -223,6 +223,8 @@ xnee_setup_recording(xnee_data *xd);
 int 
 xnee_record_loop(xnee_data *xd);
 
+int 
+xnee_record_async(xnee_data *xd);
 
 
 /**

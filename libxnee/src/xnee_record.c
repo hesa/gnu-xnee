@@ -775,23 +775,23 @@ int
 xnee_setup_recordext (xnee_data *xd)
 {
   int ret=XNEE_OK;
-  xnee_verbose((xd, "xnee_setup_recordext 1   max=%d\n",xnee_get_max_range(xd)));
 
+  xnee_verbose((xd, " ---> xnee_setup_recordext\n"));
   xd->record_setup->data_flags = XRecordFromServerTime 
     | XRecordFromClientTime  
     | XRecordFromClientSequence; 
-  xnee_verbose((xd, "xnee_setup_recordext 2   max=%d\n",xnee_get_max_range(xd)));
-  xnee_verbose((xd, "xnee_setup_recordext 3   max=%d\n",xnee_get_max_range(xd)));
-  xnee_verbose((xd, "xnee_setup_recordext 4   max=%d\n",xnee_get_max_range(xd)));
   ret = xnee_get_max_range(xd) ;
-  xnee_verbose((xd, "xnee_setup_recordext 4   max=%d\n",ret));
   if (ret==0)
     {
-      xnee_verbose((xd, " Nothing to record .... "));
+      xnee_verbose((xd, " --- xnee_setup_recordext Nothing to record .... "));
       ret = XNEE_NO_PROT_CHOOSEN;
-    } ;
-  xnee_verbose((xd, "xnee_setup_recordext 4\n"));
+    } 
+  else
+    {
+      ret = XNEE_OK;
+    }
 
+  xnee_verbose((xd, " <--- xnee_setup_recordext %d\n", ret));
   return (ret);
 }
 
@@ -934,6 +934,40 @@ xnee_record_loop(xnee_data *xd)
 		       (XPointer) (xd) /* closure passed to Dispatch */);
       
   xnee_verbose((xd, " <--- xnee_record_loop()\n"));
+  /*  while (1) 
+    {
+      XRecordProcessReplies (xd->data); 
+    }
+  */
+  return (0);
+}
+
+
+/**************************************************************
+ *                                                            *
+ * xnee_record_loop                                           *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int 
+xnee_record_async(xnee_data *xd)
+{
+  xnee_verbose((xd, " ---> xnee_record_async()\n"));
+  
+  /* 
+   * In case the key pressed to invoke Xnee is not released
+   * we wait 1/2 of a second and hopefully it is. If not
+   * the user is holding it pressed for "TOO" long.
+   */
+  usleep ( XNEE_DELAY_RECORDING );
+
+
+  XRecordEnableContextAsync(xd->data, 
+		       xd->record_setup->rContext, 
+		       xd->rec_callback, 
+		       (XPointer) (xd) /* closure passed to Dispatch */);
+      
+  xnee_verbose((xd, " <--- xnee_record_async()\n"));
   /*  while (1) 
     {
       XRecordProcessReplies (xd->data); 

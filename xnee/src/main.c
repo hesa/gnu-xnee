@@ -183,6 +183,7 @@ int main(int argc,char *argv[])
       if (xnee_get_loops_left(xd)!=0)
 	{
 	  xnee_verbose ((xd, "Entering main loop( recorder)\n"));
+
 	  xnee_record_loop(xd);
 	}
     }

@@ -1328,7 +1328,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
   int ret=1;  
   char *range;
   int len=0;
-
+  
   len=strlen(tmp);
   
   if ( tmp == NULL)
@@ -1342,130 +1342,112 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       return -1;
     }
   xnee_verbose((xd, "   adding (2) \"%s\"  \n", tmp));
-
+  
   if (!strncmp("#",tmp,1))  /* # META data */
     {
       ; /* for now ..... do nothing */
     }
-  else if (!strncmp("display",tmp,7))  /* # META data */
+  else if (!strncmp(XNEE_DISPLAY,tmp,strlen(XNEE_DISPLAY)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
-      /* MEMORY LEAK ....... FIX ME  */
-      xd->display = (char *)strdup (range);
+      xnee_set_display_name (xd, range) ;
     }
-  else if (!strncmp(XNEE_FIRST_LAST,tmp,strlen(XNEE_FIRST_LAST)))  /* # META data */
+  else if (!strncmp(XNEE_FIRST_LAST,tmp,strlen(XNEE_FIRST_LAST)))
     {
       xd->xnee_info->first_last = True;
     }
-  else if (!strncmp(XNEE_NO_SYNC,tmp,strlen(XNEE_NO_SYNC)))  /* # META data */
+  else if (!strncmp(XNEE_NO_SYNC,tmp,strlen(XNEE_NO_SYNC)))
     {
       xd->sync = False;
     }
-  else if (!strncmp(XNEE_FORCE_REPLAY,tmp,strlen(XNEE_FORCE_REPLAY)))  /* # META data */
+  else if (!strncmp(XNEE_FORCE_REPLAY,tmp,strlen(XNEE_FORCE_REPLAY)))
     {
       xd->force_replay = True;
     }
-  else if (!strncmp(XNEE_ALL_CLIENTS,tmp,strlen(XNEE_ALL_CLIENTS)))  /* # META data */
+  else if (!strncmp(XNEE_ALL_CLIENTS,tmp,strlen(XNEE_ALL_CLIENTS)))
     {
       xd->all_clients = True;
     }
-  else if (!strncmp("verbose",tmp,7))  /* # META data */
+  else if (!strncmp(XNEE_VERBOSE,tmp,strlen(XNEE_VERBOSE)))  
     {
       xd->verbose = True;
     }
-  else if (!strncmp("buffer-verbose",tmp,7))  /* # META data */
+  else if (!strncmp(XNEE_BUFFER_VERBOSE,tmp,strlen(XNEE_BUFFER_VERBOSE)))  
     {
       xd->buf_verbose = True;
     }
-  else if (!strncmp("loops",tmp,5))  /* # META data */
+  else if (!strncmp(XNEE_LOOPS,tmp,strlen(XNEE_LOOPS))) 
     {
       range=strstr (tmp, ":");
       range += 1 ;
-      /*	  range[strlen(range)-1]='\0';*/
-      
       xd->xnee_info->loops_left = atoi(range);
     }
-  else if (!strncmp(XNEE_STOP_KEY,tmp,strlen(XNEE_STOP_KEY)))  /* # META data */
+  else if (!strncmp(XNEE_STOP_KEY,tmp,strlen(XNEE_STOP_KEY)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
-      xnee_verbose((xd, "==================== Stop key :\"%s\"\n", range ));
+      xnee_verbose((xd, "Stop key :\"%s\"\n", range ));
       xnee_add_stop_key (xd, range);
-      xnee_verbose((xd, "==================== Stop key :\"%s\"\n", range ));
+      xnee_verbose((xd, "Stop key :\"%s\"\n", range ));
     }
-  else if (!strncmp(XNEE_KEYBOARD,tmp,strlen(XNEE_KEYBOARD)))  /* # META data */
+  else if (!strncmp(XNEE_KEYBOARD,tmp,strlen(XNEE_KEYBOARD))) 
     {	 
       xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 			"KeyPress-KeyRelease");
       
     }
-  else if (!strncmp(XNEE_MOUSE,tmp,strlen(XNEE_MOUSE)))  /* # META data */
+  else if (!strncmp(XNEE_MOUSE,tmp,strlen(XNEE_MOUSE)))
     {
       xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 			"ButtonPress-MotionNotify");
     }
-  else if (!strncmp(XNEE_OUT_FILE,tmp,3))  /* # META data */
+  else if (!strncmp(XNEE_OUT_FILE,tmp,3)) 
     {
       xnee_verbose((xd, "file \n" ));
       range=strstr (tmp, ":");
       range += 1 ;
-      /*	  range[strlen(range)-1]='\0';*/
-      /* MEMORY LEAK ....... FIX ME  */
-      
       xnee_verbose((xd, "file \"%s\"\n", range));
-      xd->out_name = (char *)strdup (range);
-      xd->out_file = fopen (range,"w");
+      xnee_set_out_byname (xd, range);
     }
-  else if (!strncmp(XNEE_ERR_FILE,tmp,8))  /* # META data */
+  else if (!strncmp(XNEE_ERR_FILE,tmp,8))  
     {
       range=strstr (tmp, ":");
       range += 1 ;
-      /*	  range[strlen(range)]='\0';
-		  range[strlen(range)-1]='\0';*/
-      /* MEMORY LEAK ....... FIX ME  */
-      xd->err_name = (char *)strdup (range);
-      xd->err_file = fopen (range,"w");
+      xnee_set_err_byname (xd, range);
     }
-  else if (!strncmp("display",tmp,7))  /* # META data */
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      /*	  range[strlen(range)-1]='\0';*/
-      /* MEMORY LEAK ....... FIX ME  */
-      xd->display = (char *)strdup (range);
-    }
-  else if (!strncmp("distribute",tmp,10))  /* # META data */
+  else if (!strncmp(XNEE_DISTRIBUTE,tmp,strlen(XNEE_DISTRIBUTE)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_add_display_list ( xd, range);
     }
-  else if (!strncmp(XNEE_DEVICE_EVENT_STR,tmp,strlen(XNEE_DEVICE_EVENT_STR)))  /* # META data */
+  else if (!strncmp(XNEE_DEVICE_EVENT_STR,tmp,strlen(XNEE_DEVICE_EVENT_STR)))
     {
       range=strstr (tmp, ":");
       range ++ ;
       xnee_parse_range ( xd, XNEE_DEVICE_EVENT, range);
     }
-  else if (!strncmp(XNEE_DELIVERED_EVENT_STR,tmp,strlen(XNEE_DELIVERED_EVENT_STR)))  /* # META data */
+  else if (!strncmp(XNEE_DELIVERED_EVENT_STR,
+		    tmp,strlen(XNEE_DELIVERED_EVENT_STR)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_DELIVERED_EVENT, range);
     }
-  else if (!strncmp(XNEE_ERROR_STR,tmp,strlen(XNEE_ERROR_STR)))  /* # META data */
+  else if (!strncmp(XNEE_ERROR_STR,tmp,strlen(XNEE_ERROR_STR))) 
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_ERROR, range);
     }
-  else if (!strncmp(XNEE_REQUEST_STR,tmp,strlen(XNEE_REQUEST_STR)))  /* # META data */
+  else if (!strncmp(XNEE_REQUEST_STR,tmp,strlen(XNEE_REQUEST_STR)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_REQUEST, range);
     }
-  else if (!strncmp(XNEE_REPLY_STR,tmp,strlen(XNEE_REPLY_STR)))  /* # META data */
+  else if (!strncmp(XNEE_REPLY_STR,tmp,strlen(XNEE_REPLY_STR)))  
     {
       range=strstr (tmp, ":");
       range += 1 ;
@@ -1503,19 +1485,19 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
    * ... UNTIL ???  
    */
   /* START OF OBSOLETE PARSING */
-  else if (!strncmp("first_last",tmp,7))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_FIRST_LAST,tmp,strlen(XNEE_OBSOLETE_FIRST_LAST)))
     {
       xd->xnee_info->first_last = True;
     }
-  else if (!strncmp("no_sync",tmp,7))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_NO_SYNC,tmp,strlen(XNEE_OBSOLETE_NO_SYNC)))  
     {
       xd->sync = False;
     }
-  else if (!strncmp("all_clients",tmp,11))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_ALL_CLIENTS,tmp,strlen(XNEE_OBSOLETE_ALL_CLIENTS)))
     {
       xd->all_clients = True;
     }
-  else if (!strncmp("stop_key",tmp,8))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_STOP_KEY,tmp,strlen(XNEE_OBSOLETE_STOP_KEY)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
@@ -1523,64 +1505,70 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       xnee_add_stop_key (xd, range);
       xnee_verbose((xd, "==================== Stop key :\"%s\"\n", range ));
     }
-  else if (!strncmp("err_file",tmp,8))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_ERROR_STR,tmp,strlen(XNEE_OBSOLETE_ERROR_STR)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
       if ( xnee_use_plugin(xd, range) != 0 )
 	{
-	  xnee_print_error ("Unable to open plugin file (%s)\n", range);
+	xnee_print_error ("Unable to open plugin file (%s)\n", range);
 	}
     }
-  else if (!strncmp(XNEE_OBSOLETE_DEVICE_EVENT_STR,tmp,strlen(XNEE_OBSOLETE_DEVICE_EVENT_STR)))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_DEVICE_EVENT_STR,tmp,
+		    strlen(XNEE_OBSOLETE_DEVICE_EVENT_STR)))
     {
       range=strstr (tmp, ":");
       range ++ ;
       xnee_parse_range ( xd, XNEE_DEVICE_EVENT, range);
     }
-  else if (!strncmp(XNEE_OBSOLETE_DELIVERED_EVENT_STR,tmp,strlen(XNEE_OBSOLETE_DELIVERED_EVENT_STR)))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_DELIVERED_EVENT_STR,tmp,
+		    strlen(XNEE_OBSOLETE_DELIVERED_EVENT_STR))) 
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_DELIVERED_EVENT, range);
     }
-  else if (!strncmp(XNEE_OBSOLETE_ERROR_STR,tmp,strlen(XNEE_OBSOLETE_ERROR_STR)))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_ERROR_STR,tmp,strlen(XNEE_OBSOLETE_ERROR_STR)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_ERROR, range);
     }
-  else if (!strncmp(XNEE_OBSOLETE_REQUEST_STR,tmp,strlen(XNEE_OBSOLETE_REQUEST_STR)))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_REQUEST_STR,tmp,strlen(XNEE_OBSOLETE_REQUEST_STR)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_REQUEST, range);
     }
-  else if (!strncmp(XNEE_OBSOLETE_REPLY_STR,tmp,strlen(XNEE_OBSOLETE_REPLY_STR)))  /* # META data */
+  else if (!strncmp(XNEE_OBSOLETE_REPLY_STR,tmp,strlen(XNEE_OBSOLETE_REPLY_STR))) 
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_REPLY, range);
     }
-  else if (!strncmp(XNEE_OBSOLETE_EXT_REQ_MAJ_STR,tmp,strlen(XNEE_OBSOLETE_EXT_REQ_MAJ_STR)))
+  else if (!strncmp(XNEE_OBSOLETE_EXT_REQ_MAJ_STR,tmp,
+		    strlen(XNEE_OBSOLETE_EXT_REQ_MAJ_STR)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_EXT_REQUEST_MAJOR, range);
     }
-  else if (!strncmp(XNEE_OBSOLETE_EXT_REQ_MIN_STR,tmp,strlen(XNEE_OBSOLETE_EXT_REQ_MIN_STR)))
+  else if (!strncmp(XNEE_OBSOLETE_EXT_REQ_MIN_STR,tmp,
+		    strlen(XNEE_OBSOLETE_EXT_REQ_MIN_STR)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_EXT_REQUEST_MINOR, range);
     }
-  else if (!strncmp(XNEE_OBSOLETE_EXT_REP_MAJ_STR,tmp,strlen(XNEE_OBSOLETE_EXT_REP_MAJ_STR))) 
+  else if (!strncmp(XNEE_OBSOLETE_EXT_REP_MAJ_STR,tmp,
+		    strlen(XNEE_OBSOLETE_EXT_REP_MAJ_STR))) 
     {
       range=strstr (tmp, ":");
       range += 1 ;
       xnee_parse_range ( xd, XNEE_EXT_REPLY_MAJOR, range);
     }
-  else if (!strncmp(XNEE_OBSOLETE_EXT_REP_MIN_STR,tmp,strlen(XNEE_OBSOLETE_EXT_REP_MIN_STR))) 
+  else if (!strncmp(XNEE_OBSOLETE_EXT_REP_MIN_STR,tmp,
+		    strlen(XNEE_OBSOLETE_EXT_REP_MIN_STR))) 
     {
       range=strstr (tmp, ":");
       range ++ ;
