@@ -1,6 +1,7 @@
 #ifndef  GNEE_XNEE__H
 #define  GNEE_XNEE__H
 
+#include <config.h>
 #include <libxnee/xnee.h>
 
 int

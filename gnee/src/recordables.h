@@ -2,6 +2,7 @@
 #define  MODELS__H
 
 #include <gtk/gtk.h>
+#include <config.h>
 #include <libxnee/xnee.h>
 
 void 

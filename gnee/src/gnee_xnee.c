@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef          
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -47,16 +47,22 @@ gnee_xnee_init_xnee (xnee_data *xd)
   static int need_init = 1;
 
   if (xd==NULL)
-    return 1;
+    {
+      printf (" 1\n");
+      return 1;
+    }
 
-  if (! need_init)
-    return 0;
+  if (need_init!=1)
+    {
+      return 0;
+    }
 
   
   (void) signal (SIGINT, signal_handler);
-    
+  
   xd = xnee_new_xnee_data();
-
+  need_init=0;
+  return 0;
 }
 
 int
@@ -67,8 +73,6 @@ gnee_xnee_start_recording(xnee_data* xd)
   
   gnee_xnee_init_xnee (xd);
 
-  printf ("recording soon.......\n");
-
   /* This should be done elsewhere .... just to test */
 /*   xnee_set_verbose(xd); */
   xnee_parse_range (xd, XNEE_DEVICE_EVENT, "2-6");
@@ -78,7 +82,6 @@ gnee_xnee_start_recording(xnee_data* xd)
   xnee_set_out_byname (xd, "hesa.xlr"); 
   /* EO This should be done elsewhere .... just to test */
 
-  sleep (2);
   printf ("recording now.......\n");
 
   xnee_start(xd);
@@ -99,14 +102,19 @@ gnee_xnee_stop_recording(xnee_data* xd)
 int
 gnee_xnee_start_replaying(xnee_data* xd)
 {
-
-  xnee_renew_xnee_data(xd);
-  printf ("starting to replay soon ....\n");
-  xnee_set_data_name_byname (xd, "hesa.xlr"); 
+  printf ("start 1\n");
+  gnee_xnee_init_xnee (xd);
+  printf ("start 1 1\n");
   xnee_set_replayer (xd);
-  sleep (2);
+  printf ("start 1 2\n");
+  xnee_renew_xnee_data(xd);
+
+  printf ("start 2\n");
+  xnee_set_data_name_byname (xd, "hesa.xlr"); 
+  xnee_unset_sync (xd);
   printf ("starting to replay now ....\n");
 /*   xnee_set_verbose(xd);  */
+  printf ("starting \n");
   xnee_start(xd);
   return 0;
 }

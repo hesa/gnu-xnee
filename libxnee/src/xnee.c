@@ -567,8 +567,11 @@ xnee_free_recordext_setup(xnee_data* xd)
     }
   if (xd->control!=NULL)
   {
-    XRecordDisableContext (xd->control, xd->record_setup->rContext) ; 
-    XRecordFreeContext (xd->control, xd->record_setup->rContext) ; 
+    if ( xd->record_setup->rContext != 0)
+      {
+	XRecordDisableContext (xd->control, xd->record_setup->rContext) ; 
+	XRecordFreeContext (xd->control, xd->record_setup->rContext) ; 
+      }
   }
   free (xd->record_setup->xids);
   free (xd->record_setup->rState);

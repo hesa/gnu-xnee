@@ -27,6 +27,6 @@ gnee_SOURCES = \
 	gnee_xnee.c gnee_xnee.h
 
 gnee_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) \
-	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -lxnee \
+	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
 	 ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl -lxosd
 
