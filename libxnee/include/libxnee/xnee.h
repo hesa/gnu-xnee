@@ -92,6 +92,7 @@ enum _xnee_data_types {
   XNEE_SETTINGS_DATA     ,
   XNEE_MARK_DATA         ,
   XNEE_ACTION_DATA       ,
+  XNEE_PROJECT_INFORMATION_DATA,
   XNEE_NO_DATA          
 } xnee_data_types ;
 
@@ -220,6 +221,7 @@ enum return_values
   XNEE_BAD_RESOLUTION    ,
   XNEE_BAD_THRESHOLD     ,
   XNEE_BAD_CONTEXT       ,
+  XNEE_BLANK_LINE        ,
   XNEE_LAST_ERROR
 } _return_values;
   
@@ -298,10 +300,21 @@ enum cont_proc_commands
 #define XNEE_RESUME_KEY           "resume-key"
 #define XNEE_INSERT_KEY           "insert-key"
 #define XNEE_EXEC_KEY             "exec-key"
+#define XNEE_EXEC_PROGRAM         "exec-program"
+#define XNEE_EXEC_NO_PROG         "xnee-exec-no-program"
+#define XNEE_EXEC_MARK            "EXEC"
 #define XNEE_EVERYTHING           "everything"
+#define XNEE_DELAY_TIME           "time"
+#define XNEE_SPEED_PERCENT        "speed-percent"
+#define XNEE_RECORDED_RESOLUTION  "recorded-resolution"
+#define XNEE_REPLAY_RESOLUTION    "replay-resolution"
+#define XNEE_ADJUST_RESOLUTION    "resolution-adjustment"
 #define XNEE_DISTRIBUTE           "distribute"
 #define XNEE_NO_EXPOSE            "no-expose"
-#define XNEE_NO_SYNC              "no-sync"
+#define XNEE_NO_SYNC_MODE         "no-sync"
+#define XNEE_USE_SYNC             "sync"
+#define XNEE_SYNC_MODE            "synchronised-replay"
+#define XNEE_HUMAN_PRINTOUT       "human-printout"
 #define XNEE_LOOPS                "loops"
 #define XNEE_FORCE_REPLAY         "force-replay"
 #define XNEE_RESOURCE             "resource"
@@ -324,6 +337,10 @@ enum cont_proc_commands
 #define XNEE_EXT_REP_MIN_STR      "extension-reply-minor-range"
 #define XNEE_META_END		  "META-END"  /* Marks the end of the META DATA in the recorded file*/ 
 
+#define XNEE_MAX_THRESHOLD        "max-threshold"
+#define XNEE_MIN_THRESHOLD        "min-threshold"
+#define XNEE_TOT_THRESHOLD        "tot-threshold"
+
 #define XNEE_REPLAY_CALLBACK_NAME "xnee_replay_dispatch"
 #define XNEE_RECORD_CALLBACK_NAME "xnee_record_dispatch"
 #define XNEE_SYNC_FUNCTION_NAME   "xnee_sync_fun"
@@ -332,69 +349,11 @@ enum cont_proc_commands
 #define RECORD_CALLBACK 2
 #define SYNC_CALLBACK   3
 
-/* 
- * TO KEEP COMPATIBILITY WITH OLD 
- * - SCRIPTS USING XNEE
- * - XNEE PLUGINS
- * THE OLD SYNTAX IS ALLOWED 
- * ... UNTIL ???  
- */
-/* START OF OBSOLETE  */
-#define XNEE_OBSOLETE_FIRST_LAST           "first_last"
-#define XNEE_OBSOLETE_ALL_EVENTS           "all_events"
-#define XNEE_OBSOLETE_ALL_CLIENTS          "all_clients"
-#define XNEE_OBSOLETE_LOOPS_LEFT           "loops_left"
-#define XNEE_OBSOLETE_STOP_KEY             "stop_key"
-#define XNEE_OBSOLETE_EVERYTHING           "everything"
-#define XNEE_OBSOLETE_NO_EXPOSE            "no_expose"
-#define XNEE_OBSOLETE_NO_SYNC              "no_sync"
-#define XNEE_OBSOLETE_ERR_FILE             "err_file"
-#define XNEE_OBSOLETE_OUT_FILE             "out_file"
 
-#define XNEE_OBSOLETE_REQUEST_STR          "core-requests"
-#define XNEE_OBSOLETE_DEVICE_EVENT_STR     "device_events"
-#define XNEE_OBSOLETE_DELIVERED_EVENT_STR  "delivered_events"
-#define XNEE_OBSOLETE_ERROR_STR            "errors"
-#define XNEE_OBSOLETE_REPLY_STR            "core_replies"
-#define XNEE_OBSOLETE_EXT_REQ_MAJ_STR      "ext_requests.ext_major"
-#define XNEE_OBSOLETE_EXT_REQ_MIN_STR      "ext_requests.ext_minor"
-#define XNEE_OBSOLETE_EXT_REP_MAJ_STR      "ext_replies.ext_major"
-#define XNEE_OBSOLETE_EXT_REP_MIN_STR      "ext_replies.ext_minor"
-
-/* END OF OBSOLETE */
-
-
-/**
- * String representation of Xnee's error codes
- *
- *
-static char *err_codes[] = { 
-  "Exited without error", 
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "",
-  "Memory fault",                 
-  "File not found",               
-  "Time out reached",             
-  "Signal interrupted"            
-  "Synchronisation failure",      
-  "Wrong parameters",             
-  "X11 Record extension missing", 
-  "X11 Test extension missing"    
-  "No protocol choosen"           
-  "Could not open Display"        
-  "Ambigious command"             
-  "Out of sync"                   
-  "Not syncing"                   
-  "Could not find resource file"  
-};
-*/
+#define XNEE_TRUE_STRING          "true"
+#define XNEE_1_STRING             "1"
+#define XNEE_FALSE_STRING         "false"
+#define XNEE_0_STRING             "0"
 
 /** 
  * \brief simply an X event. 
@@ -677,6 +636,7 @@ typedef struct
   int     exec_key   ;       /*!< key used to exec a program */
   int     exec_mod   ;       /*!< modifier used to exec a program */
   char   *exec_str   ;      /*!< string representation of the key+modifier */
+  char   *exec_prog  ;      /*!< string representation of the key+modifier */
 
 } xnee_grab_keys;
 
@@ -756,6 +716,7 @@ typedef struct
   Bool     mode        ;    /*!< Xnee's current mode (RECORDER/REPLAY...)  */
 
   void *plugin_handle  ;        /*!< Handle for the plugin file */
+  char *plugin_name    ;        /*!< Name of the plugin file */
   callback_ptr rec_callback ;   /*!< recording callback function  */
   callback_ptr rep_callback ;   /*!< replaying callback function  */
   callback_ptr sync_fun     ;   /*!< synchronisation function     */
@@ -1009,7 +970,7 @@ xnee_zero_sync_data (xnee_data* xd);
 
 
 /**
- * Opens the plugin file (pl_name). Xnee will use the function in this file instead of the built in
+ * Opens the plugin file (pl_name). Xnee will use the functions in this file instead of the built in
  * @param xd       xnee's main structure
  * @param pl_name  name of the plugin file
  * @return int     0 means OK.
@@ -1017,6 +978,16 @@ xnee_zero_sync_data (xnee_data* xd);
 int
 xnee_use_plugin(xnee_data *xd, char *pl_name);
 
+
+/**
+ * Closes the previoulsy opened plugin file (pl_name). 
+ * Xnee will use the defaults functions as callbacks again
+ * @param xd       xnee's main structure
+ * @param pl_name  name of the plugin file
+ * @return int     0 means OK.
+ */
+int
+xnee_unuse_plugin(xnee_data *xd);
 
 /**
  * Removes XNEE_COMMENT_START from the argument
@@ -1106,14 +1077,15 @@ int
 xnee_err_handler(Display* dpy, XErrorEvent* ev);
 
 
-const char *
-xnee_get_err_description (int error);
-
-const char *
-xnee_get_err_solution (int error);
-
 int
 xnee_reopen_descriptors(xnee_data* xd) ;
+
+
+int 
+xnee_check_true(char *expr);
+
+int 
+xnee_check_false(char *expr);
 
 #endif /*   XNEE_XNEE_H */
 

@@ -1,3 +1,6 @@
+
+
+
 libxnee / NEWS 
 ----------------------------
   This file contains major news about cnee which is a part
@@ -12,7 +15,7 @@ All text below concerns the old structure of Xnee
 
 
 
-xnee / NEWS 
+cnee / NEWS 
 ----------------------------
 
 Changes in 
@@ -23,10 +26,36 @@ Changes in
 	   '--event-range'
 	   '--out-file'
 	   '--err-file'
+	   '--exec-key'
+	   '--exec-program'
 	- deleted options:
 	   '--out'
 	   '--err'
+	   '--binary'
+	   '--everything'
+	   '--no-expose'
+	   '--all_events'
+	   '--print_settings'
+	   '--first_last'
+	   '--no_expose'
+	   '--stop_key'
+	   '--human_printout'
+	   '--delivered_event_range'
+	   '--device_event_range'
+	   '--error_range'
+	   '--request_range'
+	   '--reply_range'
+	   '--extension_request_major_range'
+	   '--extension_request_minor_range'
+	   '--extension_reply_major_range'
+	   '--extension_reply_minor_range'
+	- to be deleted options:
+	   '--loops'
 
+        Obsoleted code removed from the sources.
+	
+
+--- The below notes refer to thw whole project Xnee ------
 
 Changes in 1.08
 	- new options:

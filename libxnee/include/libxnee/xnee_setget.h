@@ -58,10 +58,6 @@ char *
 xnee_get_out_name (xnee_data *xd);
 
 
-int
-xnee_set_out_byname (xnee_data *xd, char* out_name);
-
-
 
 int
 xnee_set_err_file (xnee_data *xd, FILE* err);
@@ -77,10 +73,6 @@ xnee_set_err_name (xnee_data *xd, char* err_name);
 char *
 xnee_get_err_name (xnee_data *xd);
 
-int
-xnee_set_err_byname (xnee_data *xd, char *err_name);
-
-
 
 int
 xnee_set_rc_file (xnee_data *xd, FILE* rc);
@@ -92,11 +84,11 @@ xnee_get_rc_file (xnee_data *xd);
 int
 xnee_set_rc_name (xnee_data *xd, char* rc_name);
  
+int
+xnee_set_rc_byname (xnee_data *xd, char* rc_name);
+ 
 char *
 xnee_get_rc_name (xnee_data *xd);
-
-int
-xnee_set_rc_byname (xnee_data *xd, char *rc_name);
 
 
 
@@ -111,12 +103,6 @@ xnee_set_data_name (xnee_data *xd, char* data);
 
 char *
 xnee_get_data_name (xnee_data *xd);
-
-
-
-int
-xnee_set_data_name_byname (xnee_data *xd, char* data_name);
- 
 
 
  
@@ -243,6 +229,11 @@ xnee_set_exec_km (xnee_data *xd, char *exec_km);
 char*
 xnee_get_exec_km (xnee_data *xd);
  
+int
+xnee_set_exec_prog (xnee_data *xd, char *prog);
+
+char*
+xnee_get_exec_prog (xnee_data *xd);
 
 
 
@@ -353,6 +344,9 @@ xnee_set_human_printout (xnee_data *xd);
 int 
 xnee_set_xnee_printout (xnee_data *xd);
 
+#define xnee_is_human_printout(xd) (xd->rec_callback == xnee_human_dispatch)
+#define xnee_is_xnee_printout(xd)  (xd->rec_callback == xnee_record_dispatch)
+
 int
 xnee_set_replay_speed_str (xnee_data *xd, char *speed_str);
 
@@ -385,6 +379,9 @@ xnee_get_data_left (xnee_data *xd);
 
 int 
 xnee_set_time_max (xnee_data *xd, int time);
+
+int 
+xnee_get_time_max (xnee_data *xd);
 
 int 
 xnee_get_time_left (xnee_data *xd);

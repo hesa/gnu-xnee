@@ -20,4 +20,21 @@ gnee_recordables_exclude(GtkTreeView* source_list,
                          xnee_data* xd,
                          int type);
 
-#endif //MODELS__H
+void
+gnee_move_recordable(GtkWidget* gnee_window,
+		     char* data_name,
+		     char* exclude_store_name,
+		     char* include_store_name,
+		     int   type, 
+		     int   delete);
+
+
+void
+gnee_recordable2xd(GtkWidget* gnee_window,
+		   char* include_store_name,
+		   int   type);
+
+void
+gnee_remove_all_recordables();
+
+#endif /* MODELS__H */

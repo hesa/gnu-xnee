@@ -28,19 +28,19 @@ main (int argc, char *argv[])
 
     GtkWidget          *exclude_list;
     GtkTreeStore       *exclude_store;
-    GtkTreeIter         exclude_iterator; 
+/*     GtkTreeIter         exclude_iterator;  */
     GtkCellRenderer    *exclude_list_renderer;
     GtkTreeViewColumn  *exclude_list_column;
 
     GtkWidget          *include_list;
     GtkTreeStore       *include_store;
-    GtkTreeIter         include_iterator; 
+/*     GtkTreeIter         include_iterator;  */
     GtkCellRenderer    *include_list_renderer;
     GtkTreeViewColumn  *include_list_column;
 
     GList              *combo_list = NULL;
     GtkWidget          *event_group_combo;
-    int i ; 
+    char *default_tmp_file;
 
     xnee_data   *xd;
     gnee_xnee    gx; 
@@ -48,7 +48,6 @@ main (int argc, char *argv[])
     ext_gx = &gx;
     gx_init_gx(ext_gx);
 
-    //gnee_settings      *gnee_settings;
 
 #ifdef ENABLE_NLS
     bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
@@ -69,13 +68,13 @@ main (int argc, char *argv[])
     gnee_window = create_gnee_window ();
     ext_gnee_window = gnee_window;
 
-    //gnee_settings = gnee_settings_new();
+/*     gnee_settings = gnee_settings_new(); */
 
     gnee_recordables_create(gnee_window);
 
 
     exclude_list  = lookup_widget(gnee_window, "exclude_list");
-    //exclude_store = gnee_settings->record_settings->events->exclude_store;
+/*     exclude_store = gnee_settings->record_settings->events->exclude_store; */
     exclude_store = gtk_tree_store_new(1, G_TYPE_STRING);
 
     exclude_list_renderer = gtk_cell_renderer_text_new ();
@@ -94,7 +93,7 @@ main (int argc, char *argv[])
 
 
     include_list  = lookup_widget(gnee_window, "include_list");
-    //include_store = gnee_settings->record_settings->events->exclude_store;
+/*  include_store = gnee_settings->record_settings->events->exclude_store; */
     include_store = gtk_tree_store_new(1, G_TYPE_STRING);
 
     include_list_renderer = gtk_cell_renderer_text_new ();
@@ -131,7 +130,6 @@ main (int argc, char *argv[])
 
 
     /* TEST */
-
     gx_add_event (gnee_window,"MotionNotify");
     /* END OF TEST */
 
@@ -142,18 +140,27 @@ main (int argc, char *argv[])
     (void) signal (SIGINT, signal_handler);
 
     /* set gnee default settings */
-    gx_set_events_max (xd, 12);
-    gnee_set_events_max (12);
+    gx_set_events_max (xd, 10);
+    gnee_set_events_max (10);
 
-    gx_set_data_max (xd, 123);
-    gnee_set_data_max (123);
+    gx_set_data_max (xd, 100);
+    gnee_set_data_max (100);
 
-    gx_set_time_max (xd, 19);
-    gnee_set_time_max (19);
+    gx_set_time_max (xd, -1);
+    gnee_set_time_max (-1);
+
+    gnee_set_sync();
+    
+    
+    default_tmp_file=gx_get_default_filename();
+    gnee_set_rec_file (default_tmp_file);
+    gnee_set_rep_file (default_tmp_file);
+    free (default_tmp_file);
+
 
     g_object_set_data(G_OBJECT(gnee_window), "xd", xd);
 
-    gx_create_km_lists(gnee_window);
+    gx_create_km_lists();
     
     gtk_main();
 

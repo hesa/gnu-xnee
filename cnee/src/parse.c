@@ -38,6 +38,7 @@
 #include "parse.h"
 #include "libxnee/print.h"
 #include "libxnee/xnee_range.h"
+#include "libxnee/xnee_error.h"
 
 
 
@@ -48,12 +49,10 @@ static char *help[] = {
   "--file, -f <file_name>         ", "Read data from file file_name (default is stdin)", 
   "--out-file, -o <file_name>     ", "Redirect all Xnee data to file_name (default is stdout)", 
   "--err-file, -e <file_name>     ", "Redirect all Xnee verbose output file_name (default is stderr)", 
-  "--resource ,-r <file_name>     ", "Use resource file file_name",
+  "--project ,-pr <file_name>     ", "Use project file file_name",
   "--plugin ,-p <name     >       ", "Use the plugin name name",
   "--all-events, -ae              ", "Intercept all events",
-  "--no-expose, -ne               ", "Do not intercept (print) Expose NoExpose",
   "--first-last, -fl              ", "Print only first and last of multiple successive MotionEvent ",
-  "--everything                   ", "Intercept all X11 Protocol .... beware, your computer may crash !",
   "--loops <n>, -l                ", "Intercept n numbers of events ( n<0 means forever)",
   "--events-to-record <n>, -etr   ", "Intercept n numbers of events ( n<0 means forever)",
   "--data-to-record <n>, -dtr     ", "Intercept n numbers of data ( n<0 means forever)",
@@ -61,19 +60,19 @@ static char *help[] = {
   "--verbose, -v                  ", "Verbose printout",
   "--buffer-verbose, -bv          ", "Verbose printout of replay buffer",
   "--time, -t  <secs>             ", "Delay start of application for <secs> seconds. Used to prevent recording of KeyRelease when starting Xnee from terminal",
-  "--binary, -b                   ", "Obsolete option, don't use this",
-  "--text, -t                     ", "Store data output in text format (default)",
   "--version, -V                  ", "Print product information",
   "--all-clients, -ac             ", "Record all client's data (default)" , 
   "--future-clients, -fc          ", "Record future client's data" , 
-  "--human-printouts, -hp         ", "Prints human readable" , 
+  "--human-printout, -hp          ", "Prints human readable" , 
   "--record, -rec                 ", "Set recording mode (default)" , 
   "--replay, -rep                 ", "Set replaying mode" , 
   "--speed-percent, -sp           ", "Set replaying speed (percentage)",
+  "--exec-key mod,key, -ek        ", "When pressing modifier mod and key key Xnee inserts a exec mark into the session file" , 
+  "--exec-program s, -ep          ", "Program to start when replaying" , 
   "--stop-key mod,key, -sk        ", "When pressing modifier mod and key key Xnee exits" , 
   "--pause-key mod,key, -pk       ", "When pressing modifier mod and key key Xnee pauses its current action" , 
   "--resume-key mod,key, -rk      ", "When pressing modifier mod and key key Xnee resumes its paused action" , 
-  "--insert-key mod,key, -ik      ", "When pressing modifier mod and key key Xnee inserts a META mark in the log file" , 
+  "--insert-key mod,key, -ik      ", "When pressing modifier mod and key key Xnee inserts a META mark in the session file" , 
   "--write-settings file          ", "Writes settings to a resource file",
   "--print-settings, -ps          ", "Prints Xnee settings and waits (for <ENTER>)", 
   "--print-event-names, -pens     ", "Prints X11 event number and name ", 
@@ -119,9 +118,9 @@ static char *explain[] = {
 
 
 static char *examples[] = {
-  "" PACKAGE "  --k_log -devera 2-6 -o /tmp/xnee.xns -e /tmp/xnee.log -v ", 
+  "" PACKAGE "  --record --events-to-record 1000 -devera 2-6 -o /tmp/xnee.xns -e /tmp/xnee.log -v ", 
   "Writes 1000 data to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log",
-  "" PACKAGE " -rep -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
+  "" PACKAGE " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
   "Read data from /tmp/xnee.xns, replay it and verbose print to file /tmp/xnee.log",
   "For more examples, read the Xnee manual",
   NULL 
@@ -135,56 +134,6 @@ static char *description[] = {
 };
 
 
-
-
-/*
-static char *obsolete_help[] = {
-  "--help, -h                     ", "Print this message", 
-  "--display,d  displayname       ", "X server to contact (default is localhost)", 
-  "--flags, -flags                ", "Prints all flags/options xnee accepts",
-  "--file, -f <file_name>         ", "Read data from file file_name (default is stdin)", 
-  "--out, -o <file_name>          ", "Redirect all Xnee data to file_name (default is stdout)", 
-  "--err, -e <file_name>          ", "Redirect all Xnee verbose output file_name (default is stderr)", 
-  "--resource ,-p <file_name>       ", "Use resource file file_name",
-  "--all_events, -ae              ", "Intercept all events",
-  "--no-expose, -ne               ", "Do not intercept (print) Expose NoExpose",
-  "--first_last, -fl              ", "Print only first and last of multiple successive MotionEvent ",
-  "--everything                   ", "Intercept all X11 Protocol .... beware, your computer may crash !",
-  "--loops <n>, -l                ", "Intercept n numbers of data ( n<0 means forever)",
-  "--k-log                        ", "Intercept 1000     (one thousand) data",
-  "--10k-log                      ", "Intercept 10 000   (ten thousand) data",
-  "--100k-log                     ", "Intercept 100 000  (one hundred thousand) data",
-  "--m-log                        ", "Intercept 1000 000 (one million) data",
-  "--k_log                        ", "Intercept 1000     (one thousand) data",
-  "--10k_log                      ", "Intercept 10 000   (ten thousand) data",
-  "--100k_log                     ", "Intercept 100 000  (one hundred thousand) data",
-  "--m_log                        ", "Intercept 1000 000 (one million) data",
-  "--verbose, -v                  ", "Verbose printout",
-  "--time, -t  <secs>             ", "Delay start of application for <secs> seconds. Used to prevent recording of KeyRelease when starting Xnee from terminal",
-  "--binary, -b                   ", "Obsolete option, don't use this",
-  "--text, -t                     ", "Store data output in text format (default)",
-  "--version, -V                  ", "Print product information",
-  "--all_clients, -ac             ", "Record all client's data (default)" , 
-  "--future_clients, -fc          ", "Record future client's data" , 
-  "--human_printouts, -hp         ", "Prints human readable" , 
-  "--record, -rec                 ", "Set recording mode (default)" , 
-  "--replay, -rep                 ", "Set replaying mode" , 
-  "--stop_key mod,key, -sk        ", "When pressing modifier mod and key key Xnee exits" , 
-  "--print_settings, -ps          ", "Prints Xnee settings and waits (for <ENTER>)", 
-  "--manpage                      ", "Prints Xnee help text in format as used when generating man page", 
-  "--distribute, -di <LIST>       ", "Distribute recorded or replayed events to LIST where LIST is comma separated list of displays",
-  "--device_event_range, -devera  <X_LIST> ", "Set device event range to X_LIST", 
-  "--delivered_event_range, -devra    <X_LIST>", "Set delivered event range to X_LIST", 
-  "--error_range, -erra    <X_LIST>", "Set error range to X_LIST", 
-  "--request_range, -reqra <X_LIST>","Set request range to X_LIST", 
-  "--reply_range, -repra   <X_LIST>","Set reply range to X_LIST", 
-  "--extension_request_major_range, -erqmar  <X_LIST>  ","Set extension request major range to X_LIST", 
-  "--extension_request_mainor_range, -erqmir  <X_LIST> ", "Set extension request minor range to X_LIST", 
-  "--extension_reply_major_range, -erpmar  <X_LIST>    ","Set extension reply major range to X_LIST", 
-  "--extension_reply_mainor_range, -erpmir  <X_LIST>   ","Set extension reply minor range to X_LIST",
-  NULL 
-};
-*/
 
 
 static int
@@ -351,7 +300,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    }
 	  continue; 
 	}
-      else if(xnee_check(argv[i], "--resource", "-r" )) 
+      else if(xnee_check(argv[i], "--project", "-pr" )) 
 	{
 	  int ret;
 	  if (++i >= argc)
@@ -362,12 +311,11 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    }
 
 	  ret = xnee_set_rc_byname (xd, argv[i]);
-	  
 	  if ( ret != XNEE_OK) 
 	    {
 	      char buf [200]; 
-	      xnee_verbose((xd, "Could not open resource file %s\n", argv[i]));
-
+	      xnee_verbose((xd, "Could not open project file %s\n", argv[i]));
+	      
 	      if ( (strlen(argv[i]) + strlen (XNEE_RESOURCE_DIR) + 2 ) > 200)
 		{
 		  xnee_verbose ((xd, "ERROR: Filename too big\n"));
@@ -379,11 +327,26 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      strcat ( buf , "/");
 	      strcat ( buf , argv[i]);
 	      xnee_verbose((xd, "\ttryingresource file %s\n", buf));
-	      ret = xnee_set_rc_byname (xd, buf);
+	      ret = xnee_set_rc_name (xd, buf);
 	    }
+	  
 	  if ( xnee_get_rc_file (xd) != NULL) 
 	    {
-	      xnee_add_resource (xd );
+	      ret = xnee_add_resource (xd );
+	      
+	      if (ret!=XNEE_OK)
+		{
+		  xnee_verbose ((xd, "project file read: return value %d\n", 
+				 ret));
+		  if (ret == XNEE_SYNTAX_ERROR)
+		    {
+		      char *tmp_str;
+		      xnee_verbose ((xd, "project file read: SYNTAX ERROR\n"));
+		      tmp_str = xnee_get_err_string();
+		      fprintf (stderr,"%s", tmp_str);
+		      xnee_free_err_string(tmp_str);
+		    }
+		}
 	    }
 	  else
 	    {
@@ -394,7 +357,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      exit(XNEE_WRONG_PARAMS);
 	    }
 	}
-      else if(xnee_check(argv[i], "--plugin", "-p" )) 
+      else if(xnee_check(argv[i], "--plugin", "-pl" )) 
 	{
 	  if (++i >= argc)
 	    {
@@ -452,35 +415,11 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	{
 	  xnee_set_replayer (xd);
 	}
-      else if(xnee_check(argv[i], "--everything", "--everything")) 
-	{
-	  /* TO BE OBSOLETED */
-	  xd->xnee_info.everything = True;
-	  continue;
-	}
       else if(xnee_check(argv[i], "--all-events", "-ae" )) 
 	{
 	  xnee_set_all_events (xd);
 	  continue;
 	}
-/*       else if(xnee_check(argv[i], "--k-log", "--k-log"))  */
-/* 	{ */
-/* 	  /\* TO BE OBSOLETED *\/ */
-/* 	  xd->xnee_info->loops_left = 1000; */
-/* 	  continue; */
-/* 	} */
-/*       else if(xnee_check(argv[i], "--10k-log", "--10k-log"))  */
-/* 	{ */
-/* 	  /\* TO BE OBSOLETED *\/ */
-/* 	  xd->xnee_info->loops_left = 10000; */
-/* 	  continue; */
-/* 	} */
-/*       else if(xnee_check(argv[i], "--100k-log", "--100k-log"))  */
-/* 	{ */
-/* 	  /\* TO BE OBSOLETED *\/ */
-/* 	  xd->xnee_info->loops_left = 100000; */
-/* 	  continue; */
-/* 	} */
       else if(xnee_check(argv[i], "--print-settings", "-ps")) 
 	{
 	  xnee_print_xnee_settings (xd, xnee_get_err_file(xd)) ;
@@ -489,19 +428,9 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  getchar();
 	  continue;
 	}
-/*       else if(xnee_check(argv[i], "--m-log", "--m-log"))  */
-/* 	{ */
-/* 	  /\* TO BE OBSOLETED *\/ */
-/* 	  xd->xnee_info->loops_left = 1000000; */
-/* 	  continue; */
-/* 	} */
       else if(xnee_check(argv[i], "--first-last", "-fl")) 
 	{
 	  xnee_set_first_last (xd);
-	}
-      else if(xnee_check(argv[i], "--no-expose", "-ne")) 
-	{
-	  xnee_set_no_expose (xd);
 	}
       else if(xnee_check(argv[i], "--mouse", "--mouse")) 
 	{
@@ -521,7 +450,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  if ( xnee_set_out_byname (xd, argv[i]) != XNEE_OK)
+	  if ( xnee_set_out_name (xd, argv[i]) != XNEE_OK)
 	    {
 	      xnee_print_error ("Unable to open output file\n");
 	      xnee_verbose ((xd, "Could not open output file\n"));
@@ -534,6 +463,9 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--loops", "-l")) 
 	{
 	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --loops\n"));
+	  fprintf (stderr, "--loops / -l is OBSOLETED" 
+		   "in this release of Xnee/cnee\n"
+		   "use '--events-to-record' or '--data-to-record' instead\n");
 	  xnee_set_events_max (xd, atoi(argv[++i]));
 	}
       else if(xnee_check(argv[i], "--events-to-record", "-etr")) 
@@ -576,6 +508,11 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  xnee_verbose ((xd, "Found -ek/--exec ... : %s\n", argv[i]));
 	  xnee_set_km (xd, XNEE_GRAB_EXEC, argv[++i]);
 	}
+      else if(xnee_check(argv[i], "--exec-program", "-ep")) 
+	{
+	  xnee_verbose ((xd, "Found -ep/--exec--program : %s\n", argv[i]));
+	  xnee_set_exec_prog (xd, argv[++i]);
+	}
       else if(xnee_check(argv[i], "--time", "-t")) 
 	{
 	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --loops\n"));
@@ -596,18 +533,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit (XNEE_WRONG_PARAMS);
 	    }
-	  /*	  xnee_verbose((xd, "Setting up timer ---> \n"));
-		  setup_timer(xd, xd->xnee_info->interval);
-		  xnee_verbose((xd, "Setting up timer <--- \n"));
-	  */
 	  continue;
-	}
-      else if(xnee_check(argv[i], "--binary", "-b")) 
-	{
-	  /* xnee_info->no_expose = True; */
-	  fprintf (stderr, "********* OBSOLETE OPTION **************\n\n");
-	  fprintf (stderr, "*** Binary printout will not be      *** \n");
-	  fprintf (stderr, "*** implemented                      *** \n");
 	}
       else if(xnee_check(argv[i], "--manpage", "--manpage")) 
 	{
@@ -775,8 +701,15 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  ret=xnee_parse_range (xd, XNEE_EVENT, argv[++i]);
 	  continue;
 	}
-      else if(xnee_check(argv[i], "--remove_event", "-rev")) 
+      else if(xnee_check(argv[i], "--remove-event", "-rev")) 
       {
+	/* This is not a öublic option, but used to test libxnee
+	 * However, it does nothing harmful so we keep it here
+	 * and don't "#ifdef" it away since it may come in use
+	 *
+	 * And why not present it to the user.?
+	 * I figure a 'normal user' will be confused by this option
+	 */
          ret=xnee_rem_data_from_range_str (xd, 
                                            XNEE_DEVICE_EVENT, 
                                            argv[++i]) ;
@@ -840,7 +773,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  if ( xnee_set_data_name_byname (xd, argv[i]) != XNEE_OK)
+	  if ( xnee_set_data_name (xd, argv[i]) != XNEE_OK)
 	    {
 	      xnee_print_error ("Unable to open data file\n");
 	      xnee_verbose ((xd, "Could not open file %s\n", argv[i]));
@@ -875,131 +808,6 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    }
 	  exit(XNEE_OK);
 	}
-      /* 
-       * TO KEEP COMPATIBILITY WITH OLD 
-       * - SCRIPTS USING XNEE
-       * - XNEE PLUGINS
-       * THE OLD SYNTAX IS ALLOWED 
-       * ... UNTIL ???  
-       */
-      /* START OF OBSOLETE PARSING */
-      else if(xnee_check(argv[i], "--all_events", "-ae" )) 
-	{
-	  xnee_print_obsolete_mess (("OBSOLETE: --all_events\nUSE:--all-events\n"));
-	  xd->xnee_info.all_events = True;
-	  continue;
-	}
-/*       else if(xnee_check(argv[i], "--k_log", "--k_log"))  */
-/* 	{ */
-/* 	  xnee_print_obsolete_mess ( ("OBSOLETE: --k_log\nUSE:--k_log\n")); */
-/* 	  xd->xnee_info->loops_left = 1000; */
-/* 	  continue; */
-/* 	} */
-/*       else if(xnee_check(argv[i], "--10k_log", "--10k_log"))  */
-/* 	{ */
-/* 	  xnee_print_obsolete_mess ( ("OBSOLETE: --10k_log\nUSE:--10k-log\n")); */
-/* 	  xd->xnee_info->loops_left = 10000; */
-/* 	  continue; */
-/* 	} */
-/*       else if(xnee_check(argv[i], "--100k_log", "--100k_log"))  */
-/* 	{ */
-/* 	  xnee_print_obsolete_mess ( ("OBSOLETE: --100k_log\nUSE:--100k-log\n")); */
-/* 	  xd->xnee_info->loops_left = 100000; */
-/* 	  continue; */
-/* 	} */
-      else if(xnee_check(argv[i], "--print_settings", "-ps")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --print_settings\nUSE:--print-settings\n"));
-	  xnee_print_xnee_settings (xd, xd->err_file) ;
-	  xnee_record_print_record_range (xd, xd->err_file) ;
-	  fprintf (stderr, "Press enter to continue:\n");
-	  getchar();
-	  continue;
-	}
-/*       else if(xnee_check(argv[i], "--m_log", "--m_log"))  */
-/* 	{ */
-/* 	  xnee_print_obsolete_mess ( ("OBSOLETE: --m_log\nUSE:--m-log\n")); */
-/* 	  xd->xnee_info->loops_left = 1000000; */
-/* 	  continue; */
-/* 	} */
-      else if(xnee_check(argv[i], "--first_last", "-fl")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --first_last\nUSE:--first-last\n"));
-	  xd->xnee_info.first_last = True;
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--no_expose", "-ne")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --no_expose\nUSE:--no-expose\n"));
-	  xd->xnee_info.no_expose = True;
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--stop_key", "-sk")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --stop_key\nUSE:--stop-key\n"));
-	  xnee_grab_key (xd, XNEE_GRAB_STOP, argv[++i]);
-	}
-      else if(xnee_check(argv[i], "--human_printout", "-hp")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --human_printout\nUSE:--human-printout\n"));
-	  xd->rec_callback = xnee_human_dispatch;
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--delivered_event_range", "-devra")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --delivered_event_range\nUSE:--delivered-event-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_DELIVERED_EVENT, argv[++i]);
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--device_event_range", "-devera")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --device_event_range\nUSE:--device-event-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, argv[++i]);
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--error_range", "-erra")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --error_range\nUSE:--error-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_ERROR, argv[++i]);
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--request_range", "-reqra")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --request_range\nUSE:--request-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_REQUEST, argv[++i]);
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--reply_range", "-repra")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --reply_range\nUSE:--reply-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_REPLY, argv[++i]);
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--extension_request_major_range", "-erqmar")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --extension_request_major_range\nUSE:--extension-request-major-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_EXT_REQUEST_MAJOR, argv[++i]);
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--extension_request_minor_range", "-erqmir")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --extension_request_minor_range\nUSE:--extension-request-minor-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_EXT_REQUEST_MINOR, argv[++i]);
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--extension_reply_major_range", "-erpmar")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --extension_reply_major_range\nUSE:--extension-reply-major-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_EXT_REPLY_MAJOR, argv[++i]);
-	  continue;
-	}
-      else if(xnee_check(argv[i], "--extension_reply_minor_range", "-erpmir")) 
-	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --extension_reply_minor_range\nUSE:--extension-reply-minor-range\n"));
-	  ret=xnee_parse_range (xd, XNEE_EXT_REPLY_MINOR, argv[++i]);
-	  continue;
-	}
-      /* END OF OBSOLETE PARSING */
       else 
 	{
 	  fprintf (stderr, "Could not parse \"%s\"\n", argv[i]);

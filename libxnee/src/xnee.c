@@ -1006,8 +1006,8 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
   xnee_verbose ((xd, "Using plugin file: %s\n", pl_name));
   strcpy (lib_name, "lib");
   strcat (lib_name, pl_name);
-  
 
+  xd->plugin_name=strdup(pl_name);
   xd->plugin_handle = (void*) xnee_dlopen (xd, lib_name, RTLD_LAZY );
   if (!xd->plugin_handle) 
     {
@@ -1054,6 +1054,24 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
     }
   
    return XNEE_OK;
+}
+
+/**************************************************************
+ *                                                            *
+ * xnee_unuse_plugin                                            *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int
+xnee_unuse_plugin(xnee_data *xd)
+{
+  XNEE_FREE_IF_NOT_NULL(xd->plugin_name);
+  xnee_dlclose (xd, xd->plugin_handle);
+  xd->plugin_handle = NULL;
+
+  xd->rec_callback     = xnee_record_dispatch ;
+  xd->rep_callback     = xnee_replay_dispatch ;
+  return XNEE_OK;
 }
 
 
@@ -1472,6 +1490,8 @@ xnee_open_files(xnee_data *xd)
 			xd->err_name));
 	  XNEE_FCLOSE_IF_NOT_NULL(xd->err_file); 
 	  xd->err_file = fopen (xd->err_name,"w");
+	  if (xd->err_file==NULL)
+	    return XNEE_FILE_NOT_FOUND;
 	}
     }
 
@@ -1488,6 +1508,8 @@ xnee_open_files(xnee_data *xd)
 			    xd->out_name));
 	      XNEE_FCLOSE_IF_NOT_NULL(xd->out_file); 
 	      xd->out_file = fopen (xd->out_name,"w");
+	      if (xd->out_file==NULL)
+		return XNEE_FILE_NOT_FOUND;
 	    }
 	}
     }
@@ -1504,6 +1526,8 @@ xnee_open_files(xnee_data *xd)
 			    xd->data_name));
 	      XNEE_FCLOSE_IF_NOT_NULL(xd->data_file); 
 	      xd->data_file = fopen (xd->data_name,"r");
+	      if (xd->data_file==NULL)
+		return XNEE_FILE_NOT_FOUND;
 	    }
 	}
     }
@@ -1520,8 +1544,9 @@ xnee_prepare(xnee_data *xd)
 
 
 
-   xnee_open_files(xd);
-
+   ret = xnee_open_files(xd);
+   if (ret != XNEE_OK)
+     return ret;
   /* 
    * Print settings 
    * only done if verbose mode  
@@ -1608,7 +1633,7 @@ xnee_start(xnee_data *xd)
 
    if (xnee_get_interval (xd) != 0)
    {
-      xnee_delay (xnee_get_interval (xd), "xnee:" );
+     xnee_delay (xnee_get_interval (xd), "xnee:" );
    }
    
    /*
@@ -1696,9 +1721,7 @@ xnee_start(xnee_data *xd)
       ret = xnee_replay_main_loop(xd);
       if (ret != XNEE_OK)
 	{
-	  xnee_verbose((xd, "Leaving replay, "));
-	  xnee_verbose((xd, "since some error was found (%d)\n", ret));
-	  return ret;
+	  ;
 	}
     }
   else if (xnee_is_retyper(xd))
@@ -1747,6 +1770,7 @@ xnee_refresh_xnee_data(xnee_data *xd)
 }
 
 
+
 int
 xnee_more_to_record(xnee_data *xd)
 {
@@ -1764,5 +1788,21 @@ xnee_more_to_record(xnee_data *xd)
   if (tims<0) tims = 1;
 
   return ( evs && dats && tims );
+}
+
+int 
+xnee_check_true(char *expr)
+{
+  return  ( (strncmp(expr,XNEE_TRUE_STRING,strlen(XNEE_TRUE_STRING))==0)
+	    ||
+	    (strncmp(expr,XNEE_1_STRING,strlen(XNEE_1_STRING))==0) );
+}
+
+int 
+xnee_check_false(char *expr)
+{
+  return  ( (strncmp(expr,XNEE_FALSE_STRING,strlen(XNEE_FALSE_STRING))==0)
+	    ||
+	    (strncmp(expr,XNEE_0_STRING,strlen(XNEE_0_STRING))==0) );
 }
 

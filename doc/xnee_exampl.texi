@@ -1,4 +1,4 @@
-@node Examples, Protocol, Installation, top
+@node Examples, Usage, Installation, top
 @chapter Examples
 
 @section Recorder
@@ -19,7 +19,7 @@ after having record 100 events (this is the default behaviour).
 @cindex     Record keyboard 
 Record keyboard events only and save log to kbd-rec.xnl. 
 @example
-   @code{xnee --record --mouse --out kbd-rec.xnl}
+   @code{xnee --record --keyboard --out kbd-rec.xnl}
 @end example
 After having typed this Xnee records all your keyboard actions. After Xnee 
 has exited you will be able to replay your keyboard actions. Xnee will stop
@@ -41,7 +41,7 @@ will stop after having record 100 events (this is the default behaviour).
 
 @subsection Record a gnumeric session
 @cindex     Record a gnumeric session
-Record a galeon session. Record 400 events. Save output in file galeon.xnl
+Record a gnumeric session. Record 400 events. Save output in file gnumeric.xnl
 Start a terminal emulator (e.g xterm)
 @example
 @code{xterm&}
@@ -52,7 +52,7 @@ Start Xnee
    @code{xnee --record --keyboard --mouse --loops 400 --out gnumeric.xnl&}
 @end example
 
-Start galeon
+Start gnumeric
 @example
 @code{gnumeric&}
 @end example
@@ -76,7 +76,7 @@ Start Xnee
 @end example
 
 @*
-Start galeon
+Start gnumeric
 @code{gnumeric&}
 Start using gnumeric. Browse the menus above, reset the fonts etc.
 
@@ -168,8 +168,8 @@ no way of knowing if it is in sync with the recorded session.
 
 
 
-@subsection Replay a galeon session with synchronisation data
-@cindex     Replay a galeon session with synchronisation data
+@subsection Replay a gnumeric session with synchronisation data
+@cindex     Replay a gnumeric session with synchronisation data
 Replay the second gnumeric session above.
 @*
 Start a terminal emulator (e.g xterm)
@@ -190,8 +190,8 @@ a short while. All recorded user actions should have occured the same way
 as when recording.
 
 
-@subsection Replay a galeon session with synchronisation data setting threshold
-@cindex     Replay a galeon session with synchronisation data setting threshold
+@subsection Replay a gnumeric session with synchronisation data setting threshold
+@cindex     Replay a gnumeric session with synchronisation data setting threshold
 Replay the second gnumeric session above.
 @*
 Start a terminal emulator (e.g xterm)

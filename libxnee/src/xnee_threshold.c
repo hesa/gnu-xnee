@@ -44,8 +44,6 @@ static int
 xnee_set_threshold_str (char *thresh_str, int *threshold)
 {
   int ret;
-
-  
   
   if (thresh_str == NULL)
     return XNEE_BAD_RESOLUTION;
@@ -59,8 +57,6 @@ xnee_set_threshold_str (char *thresh_str, int *threshold)
     }
   return XNEE_BAD_THRESHOLD;
 }
-
-
 
 
 
@@ -102,24 +98,25 @@ xnee_set_tot_threshold (xnee_data *xd, int thresh)
   return xnee_set_threshold (thresh, &xd->meta_data.tot_diff_threshold);
 } 
 
-/* implemented as defines in the heder file
 int
 xnee_get_max_threshold (xnee_data *xd)
 {
+  printf ("TH MAX %d\n", xd->meta_data.sum_max_threshold);
   return xd->meta_data.sum_max_threshold;
 }
 
 int
 xnee_get_min_threshold (xnee_data *xd)
 {
+  printf ("TH MIN %d\n", xd->meta_data.sum_min_threshold);
   return xd->meta_data.sum_min_threshold;
 }
 
 int
 xnee_get_tot_threshold (xnee_data *xd)
 {
+  printf ("TH TOT %d\n", xd->meta_data.tot_diff_threshold);
   return xd->meta_data.tot_diff_threshold;
 }
 
 
-*/

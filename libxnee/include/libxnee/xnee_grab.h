@@ -41,6 +41,9 @@ xnee_free_grab_keys(xnee_data *xd);
 int
 xnee_grab_keys_init(xnee_data *xd);
 
+int 
+xnee_grab_all_keys (xnee_data* xd);
+
 #endif /* XNEE_GRAB_H */
 
 

@@ -304,3 +304,7 @@ on_xnee_format_rb_toggled              (GtkToggleButton *togglebutton,
 void
 on_human_format_rb_toggled             (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_gnee_window_destroy                 (GtkObject       *object,
+                                        gpointer         user_data);

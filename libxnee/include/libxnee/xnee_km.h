@@ -58,6 +58,8 @@ int
 xnee_handle_rep_km(xnee_data *xd);
 
 
+int
+xnee_km_check(xnee_data *xd);
 
 
 #endif /* XNEE_KM_H */

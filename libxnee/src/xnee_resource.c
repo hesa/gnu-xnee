@@ -241,7 +241,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
     {
       xd->xnee_info.first_last = True;
     }
-  else if (!strncmp(XNEE_NO_SYNC,tmp,strlen(XNEE_NO_SYNC)))
+  else if (!strncmp(XNEE_NO_SYNC_MODE,tmp,strlen(XNEE_NO_SYNC_MODE)))
     {
       xd->sync = False;
     }
@@ -420,104 +420,6 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       range ++ ;
       xnee_parse_range ( xd, XNEE_EXT_REPLY_MINOR, range);
     }
-  /* 
-   * TO KEEP COMPATIBILITY WITH OLD 
-   * - SCRIPTS USING XNEE
-   * - XNEE PLUGINS
-   * THE OLD SYNTAX IS ALLOWED 
-   * ... UNTIL ???  
-   */
-  /* START OF OBSOLETE PARSING */
-  else if (!strncmp(XNEE_OBSOLETE_FIRST_LAST,tmp,strlen(XNEE_OBSOLETE_FIRST_LAST)))
-    {
-      xd->xnee_info.first_last = True;
-    }
-  else if (!strncmp(XNEE_OBSOLETE_NO_SYNC,tmp,strlen(XNEE_OBSOLETE_NO_SYNC)))  
-    {
-      xd->sync = False;
-    }
-  else if (!strncmp(XNEE_OBSOLETE_ALL_CLIENTS,tmp,strlen(XNEE_OBSOLETE_ALL_CLIENTS)))
-    {
-      xd->all_clients = True;
-    }
-  else if (!strncmp(XNEE_OBSOLETE_STOP_KEY,tmp,strlen(XNEE_OBSOLETE_STOP_KEY)))
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      xnee_verbose((xd, "==================== Stop key :\"%s\"\n", range ));
-      xnee_grab_key (xd, XNEE_GRAB_STOP, range);
-      xnee_verbose((xd, "==================== Stop key :\"%s\"\n", range ));
-    }
-  else if (!strncmp(XNEE_OBSOLETE_ERROR_STR,tmp,strlen(XNEE_OBSOLETE_ERROR_STR)))
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      if ( xnee_use_plugin(xd, range) != 0 )
-	{
-	xnee_print_error ("Unable to open plugin file (%s)\n", range);
-	}
-    }
-  else if (!strncmp(XNEE_OBSOLETE_DEVICE_EVENT_STR,tmp,
-		    strlen(XNEE_OBSOLETE_DEVICE_EVENT_STR)))
-    {
-      range=strstr (tmp, ":");
-      range ++ ;
-      xnee_parse_range ( xd, XNEE_DEVICE_EVENT, range);
-    }
-  else if (!strncmp(XNEE_OBSOLETE_DELIVERED_EVENT_STR,tmp,
-		    strlen(XNEE_OBSOLETE_DELIVERED_EVENT_STR))) 
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      xnee_parse_range ( xd, XNEE_DELIVERED_EVENT, range);
-    }
-  else if (!strncmp(XNEE_OBSOLETE_ERROR_STR,tmp,strlen(XNEE_OBSOLETE_ERROR_STR)))
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      xnee_parse_range ( xd, XNEE_ERROR, range);
-    }
-  else if (!strncmp(XNEE_OBSOLETE_REQUEST_STR,tmp,strlen(XNEE_OBSOLETE_REQUEST_STR)))
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      xnee_parse_range ( xd, XNEE_REQUEST, range);
-    }
-  else if (!strncmp(XNEE_OBSOLETE_REPLY_STR,tmp,strlen(XNEE_OBSOLETE_REPLY_STR))) 
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      xnee_parse_range ( xd, XNEE_REPLY, range);
-    }
-  else if (!strncmp(XNEE_OBSOLETE_EXT_REQ_MAJ_STR,tmp,
-		    strlen(XNEE_OBSOLETE_EXT_REQ_MAJ_STR)))
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      xnee_parse_range ( xd, XNEE_EXT_REQUEST_MAJOR, range);
-    }
-  else if (!strncmp(XNEE_OBSOLETE_EXT_REQ_MIN_STR,tmp,
-		    strlen(XNEE_OBSOLETE_EXT_REQ_MIN_STR)))
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      xnee_parse_range ( xd, XNEE_EXT_REQUEST_MINOR, range);
-    }
-  else if (!strncmp(XNEE_OBSOLETE_EXT_REP_MAJ_STR,tmp,
-		    strlen(XNEE_OBSOLETE_EXT_REP_MAJ_STR))) 
-    {
-      range=strstr (tmp, ":");
-      range += 1 ;
-      xnee_parse_range ( xd, XNEE_EXT_REPLY_MAJOR, range);
-    }
-  else if (!strncmp(XNEE_OBSOLETE_EXT_REP_MIN_STR,tmp,
-		    strlen(XNEE_OBSOLETE_EXT_REP_MIN_STR))) 
-    {
-      range=strstr (tmp, ":");
-      range ++ ;
-      xnee_parse_range ( xd, XNEE_EXT_REPLY_MINOR, range);
-    }
-  /* END OF OBSOLETE PARSING */
   else 
     {
       xnee_verbose((xd,"Corrupt line: \"%s\"\n", tmp)); 
@@ -542,7 +444,7 @@ xnee_add_resource(xnee_data *xd)
   int read_more  = 1 ;
   
   strcpy(tmp,"");
-
+  
 
   while (read_more!=0)
     {
@@ -552,9 +454,14 @@ xnee_add_resource(xnee_data *xd)
        * Hey, I __know__ we'll keep the char array....
        * as long as we need... 
        */
-      xnee_verbose((xd,"  adding : \"%s\"\n", tmp));
       /*       read_more=xnee_add_resource_syntax(xd, tmp); */
       read_more=xnee_expression_handle_project(xd, tmp); 
+
+      xnee_verbose((xd,"  adding : \"%s\" \t-----------------returned %d\n", 
+		    tmp, read_more));
+      if (read_more==XNEE_SYNTAX_ERROR)
+	return read_more;
+
     }
   return read_more;
 }

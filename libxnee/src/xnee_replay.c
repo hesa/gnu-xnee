@@ -389,15 +389,10 @@ xnee_replay_main_loop(xnee_data *xd)
   static int last_logread=1;
   int last_elapsed = 0;
   int ret = XNEE_OK ; 
-  static int in_pause_mode = 0 ; 
-
+/*   static int in_pause_mode = 0 ;  */
 
   xindata.oldtime = xindata.newtime ;
   
-  printf ("1\n");
-  rewind (xd->data_file);
-  printf ("1\n");
-
   /* First of all ... read up the META DATA 
    * so we know our settings */
   while (logread && xd->cont) 
@@ -442,8 +437,6 @@ xnee_replay_main_loop(xnee_data *xd)
 	   */
 	  last_elapsed = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
 	}
-      logread = xnee_replay_read_protocol(xd, &xindata);
-
       if ( logread == XNEE_META_DATA )
 	{
 	  xnee_verbose((xd, "META DATA read ... should be handled in the future... eg script ????\n"));
@@ -561,6 +554,7 @@ xnee_replay_main_loop(xnee_data *xd)
       XFlush(xd->control);
       xnee_verbose((xd, "  <-- Flushed after handled event\n"));
       last_logread = 0;
+      logread = xnee_replay_read_protocol(xd, &xindata);
     }
   return XNEE_OK;
 }

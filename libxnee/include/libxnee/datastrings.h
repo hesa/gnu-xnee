@@ -129,3 +129,6 @@ xnee_get_request_names();
 
 struct data_description*
 xnee_get_reply_names();
+
+char*
+xnee_int2data(int type, int dat);

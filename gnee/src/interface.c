@@ -43,15 +43,6 @@ create_gnee_window (void)
   GtkWidget *menuitem3;
   GtkWidget *menuitem3_menu;
   GtkWidget *log_window;
-  GtkWidget *replay_menu;
-  GtkWidget *replay_menu_menu;
-  GtkWidget *rep_menu_open;
-  GtkWidget *image18;
-  GtkWidget *record_menu;
-  GtkWidget *record_menu_menu;
-  GtkWidget *set_session_file1;
-  GtkWidget *open_project_file2;
-  GtkWidget *image19;
   GtkWidget *menuitem4;
   GtkWidget *menuitem4_menu;
   GtkWidget *about1;
@@ -108,8 +99,8 @@ create_gnee_window (void)
   GtkWidget *repl_file_box;
   GtkWidget *label61;
   GtkWidget *hbox30;
-  GtkWidget *rec_file_sel;
   GtkWidget *rec_file_text;
+  GtkWidget *rec_file_sel;
   GtkWidget *table1;
   GtkWidget *vbox8;
   GtkWidget *label21;
@@ -174,8 +165,8 @@ create_gnee_window (void)
   GtkWidget *vbox29;
   GtkWidget *label75;
   GtkWidget *hbox31;
-  GtkWidget *button11;
   GtkWidget *rep_file_text;
+  GtkWidget *button11;
   GtkWidget *spin_boxes;
   GtkWidget *threshold_box;
   GtkWidget *threshold_label;
@@ -304,43 +295,6 @@ create_gnee_window (void)
   gtk_widget_show (log_window);
   gtk_container_add (GTK_CONTAINER (menuitem3_menu), log_window);
 
-  replay_menu = gtk_menu_item_new_with_mnemonic (_("Replay"));
-  gtk_widget_show (replay_menu);
-  gtk_container_add (GTK_CONTAINER (menubar1), replay_menu);
-
-  replay_menu_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (replay_menu), replay_menu_menu);
-
-  rep_menu_open = gtk_image_menu_item_new_with_mnemonic (_("Set Session file"));
-  gtk_widget_show (rep_menu_open);
-  gtk_container_add (GTK_CONTAINER (replay_menu_menu), rep_menu_open);
-  gtk_tooltips_set_tip (tooltips, rep_menu_open, _("Set the session file to replay"), NULL);
-
-  image18 = gtk_image_new_from_stock ("gtk-open", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image18);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (rep_menu_open), image18);
-
-  record_menu = gtk_menu_item_new_with_mnemonic (_("Record"));
-  gtk_widget_show (record_menu);
-  gtk_container_add (GTK_CONTAINER (menubar1), record_menu);
-
-  record_menu_menu = gtk_menu_new ();
-  gtk_menu_item_set_submenu (GTK_MENU_ITEM (record_menu), record_menu_menu);
-
-  set_session_file1 = gtk_menu_item_new_with_mnemonic (_("Set session file"));
-  gtk_widget_show (set_session_file1);
-  gtk_container_add (GTK_CONTAINER (record_menu_menu), set_session_file1);
-  gtk_tooltips_set_tip (tooltips, set_session_file1, _("Set the file to save the recorded data (session file)"), NULL);
-
-  open_project_file2 = gtk_image_menu_item_new_with_mnemonic (_("Open project file"));
-  gtk_widget_show (open_project_file2);
-  gtk_container_add (GTK_CONTAINER (record_menu_menu), open_project_file2);
-  gtk_tooltips_set_tip (tooltips, open_project_file2, _("Open an Xnee Project File"), NULL);
-
-  image19 = gtk_image_new_from_stock ("gtk-open", GTK_ICON_SIZE_MENU);
-  gtk_widget_show (image19);
-  gtk_image_menu_item_set_image (GTK_IMAGE_MENU_ITEM (open_project_file2), image19);
-
   menuitem4 = gtk_menu_item_new_with_mnemonic (_("_Help"));
   gtk_widget_show (menuitem4);
   gtk_container_add (GTK_CONTAINER (menubar1), menuitem4);
@@ -363,7 +317,7 @@ create_gnee_window (void)
 
   new_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
                                 "gtk-new",
-                                _("New"),
+                                _("Create new Xnee Project File"),
                                 NULL, NULL, NULL, -1);
   gtk_widget_show (new_button);
 
@@ -375,7 +329,7 @@ create_gnee_window (void)
 
   save_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
                                 "gtk-save",
-                                _("Save"),
+                                _("Save settings to Xnee Project File"),
                                 NULL, NULL, NULL, -1);
   gtk_widget_show (save_button);
 
@@ -389,7 +343,7 @@ create_gnee_window (void)
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Record"),
-                                _("Record"), NULL,
+                                _("Start recording"), NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (action_toolbar)->children)->data))->label), TRUE);
   gtk_widget_show (record_button);
@@ -399,7 +353,7 @@ create_gnee_window (void)
                                 GTK_TOOLBAR_CHILD_BUTTON,
                                 NULL,
                                 _("Replay"),
-                                _("Replay"), NULL,
+                                _("Start replay "), NULL,
                                 tmp_toolbar_icon, NULL, NULL);
   gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (action_toolbar)->children)->data))->label), TRUE);
   gtk_widget_show (replay_button);
@@ -445,12 +399,13 @@ create_gnee_window (void)
   verbose_logging_checkbox = gtk_check_button_new_with_mnemonic (_("Verbose logging"));
   gtk_widget_show (verbose_logging_checkbox);
   gtk_box_pack_start (GTK_BOX (verbose_logging_box), verbose_logging_checkbox, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, verbose_logging_checkbox, _("Turn on verbose printout (to stderr)"), NULL);
 
   time_settings_box = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (time_settings_box);
   gtk_box_pack_start (GTK_BOX (hbox21), time_settings_box, TRUE, TRUE, 0);
 
-  label11 = gtk_label_new (_("<b>Timing</b>"));
+  label11 = gtk_label_new (_("<b>Delayed start</b>"));
   gtk_widget_show (label11);
   gtk_box_pack_start (GTK_BOX (time_settings_box), label11, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label11), TRUE);
@@ -461,9 +416,10 @@ create_gnee_window (void)
   gtk_box_pack_start (GTK_BOX (time_settings_box), timeout_box, FALSE, FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (timeout_box), 4);
 
-  wait_checkbox = gtk_check_button_new_with_mnemonic (_("Seconds to wait before starting to record/replay"));
+  wait_checkbox = gtk_check_button_new_with_mnemonic (_("Seconds "));
   gtk_widget_show (wait_checkbox);
   gtk_box_pack_start (GTK_BOX (timeout_box), wait_checkbox, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, wait_checkbox, _("Delay start of recording/replaying"), NULL);
 
   wait_spinbutton_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
   wait_spinbutton = gtk_spin_button_new (GTK_ADJUSTMENT (wait_spinbutton_adj), 1, 0);
@@ -596,10 +552,10 @@ create_gnee_window (void)
   gtk_box_pack_start (GTK_BOX (vbox30), hbox32, FALSE, FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbox32), 4);
 
-  checkbutton10 = gtk_check_button_new_with_mnemonic (_("Replay to display:"));
+  checkbutton10 = gtk_check_button_new_with_mnemonic (_("Record from display:"));
   gtk_widget_show (checkbutton10);
   gtk_box_pack_start (GTK_BOX (hbox32), checkbutton10, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, checkbutton10, _("Enables replay on a different display (default localhost:0)"), NULL);
+  gtk_tooltips_set_tip (tooltips, checkbutton10, _("Set the display to record (default :0)"), NULL);
 
   rec_disp_text = gtk_entry_new ();
   gtk_widget_show (rec_disp_text);
@@ -620,14 +576,16 @@ create_gnee_window (void)
   gtk_widget_show (hbox30);
   gtk_box_pack_start (GTK_BOX (repl_file_box), hbox30, TRUE, TRUE, 0);
 
-  rec_file_sel = gtk_button_new_with_mnemonic (_("..."));
-  gtk_widget_show (rec_file_sel);
-  gtk_box_pack_start (GTK_BOX (hbox30), rec_file_sel, FALSE, FALSE, 0);
-
   rec_file_text = gtk_entry_new ();
   gtk_widget_show (rec_file_text);
   gtk_box_pack_start (GTK_BOX (hbox30), rec_file_text, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, rec_file_text, _("Set the file to store the recorded data in"), NULL);
   gtk_editable_set_editable (GTK_EDITABLE (rec_file_text), FALSE);
+
+  rec_file_sel = gtk_button_new_with_mnemonic (_("..."));
+  gtk_widget_show (rec_file_sel);
+  gtk_box_pack_start (GTK_BOX (hbox30), rec_file_sel, FALSE, FALSE, 0);
+  gtk_widget_set_size_request (rec_file_sel, -1, 20);
 
   table1 = gtk_table_new (1, 3, TRUE);
   gtk_widget_show (table1);
@@ -656,12 +614,14 @@ create_gnee_window (void)
   gtk_widget_show (radiobutton1);
   gtk_box_pack_start (GTK_BOX (record_clients_box), radiobutton1, FALSE, FALSE, 0);
   gtk_widget_set_size_request (radiobutton1, 72, -1);
+  gtk_tooltips_set_tip (tooltips, radiobutton1, _("Record all clients (current and present)"), NULL);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton1), radiobutton1_group);
   radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton1));
 
   radiobutton2 = gtk_radio_button_new_with_mnemonic (NULL, _("Record only future clients"));
   gtk_widget_show (radiobutton2);
   gtk_box_pack_start (GTK_BOX (record_clients_box), radiobutton2, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, radiobutton2, _("Record only future clients (not present)"), NULL);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton1_group);
   radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton2));
 
@@ -687,7 +647,7 @@ create_gnee_window (void)
   human_format_rb = gtk_radio_button_new_with_mnemonic (NULL, _("human"));
   gtk_widget_show (human_format_rb);
   gtk_box_pack_start (GTK_BOX (printout_box), human_format_rb, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, human_format_rb, _("A bit more easy friendly print format"), NULL);
+  gtk_tooltips_set_tip (tooltips, human_format_rb, _("A (bit) more friendly print format"), NULL);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (human_format_rb), xnee_format_rb_group);
   xnee_format_rb_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (human_format_rb));
 
@@ -719,12 +679,13 @@ create_gnee_window (void)
   gtk_misc_set_alignment (GTK_MISC (label71), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label71), 4, 0);
 
-  spinbutton11_adj = gtk_adjustment_new (0, -1, 100000, 1, 10, 10);
+  spinbutton11_adj = gtk_adjustment_new (-1, -1, 1e+06, 1, 10, 10);
   spinbutton11 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton11_adj), 1, 0);
   gtk_widget_show (spinbutton11);
   gtk_table_attach (GTK_TABLE (table7), spinbutton11, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_tooltips_set_tip (tooltips, spinbutton11, _("Limit the number of events to record (-1 for no limit)"), NULL);
 
   label72 = gtk_label_new (_("Data to record:"));
   gtk_widget_show (label72);
@@ -734,12 +695,13 @@ create_gnee_window (void)
   gtk_misc_set_alignment (GTK_MISC (label72), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label72), 4, 0);
 
-  spinbutton12_adj = gtk_adjustment_new (-1, -1, 100000, 1, 10, 10);
+  spinbutton12_adj = gtk_adjustment_new (-1, -1, 1e+06, 1, 10, 10);
   spinbutton12 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton12_adj), 1, 0);
   gtk_widget_show (spinbutton12);
   gtk_table_attach (GTK_TABLE (table7), spinbutton12, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_tooltips_set_tip (tooltips, spinbutton12, _("Limit the total number of data (events, requests, errors, replies) to record (-1 means no limit)"), NULL);
 
   label73 = gtk_label_new (_("Time (secs):"));
   gtk_widget_show (label73);
@@ -755,6 +717,7 @@ create_gnee_window (void)
   gtk_table_attach (GTK_TABLE (table7), spinbutton13, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_tooltips_set_tip (tooltips, spinbutton13, _("Limit the time to record (NOT IMPLEMENTED YET!!!!)"), NULL);
 
   vbox6 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox6);
@@ -894,7 +857,7 @@ create_gnee_window (void)
   rep_disp_cb = gtk_check_button_new_with_mnemonic (_("Replay to display:"));
   gtk_widget_show (rep_disp_cb);
   gtk_box_pack_start (GTK_BOX (hbox26), rep_disp_cb, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, rep_disp_cb, _("Enables replay on a different display (default localhost:0)"), NULL);
+  gtk_tooltips_set_tip (tooltips, rep_disp_cb, _("Set the display to replay to (default localhost:0)"), NULL);
 
   rep_disp_text = gtk_entry_new ();
   gtk_widget_show (rep_disp_text);
@@ -923,12 +886,15 @@ create_gnee_window (void)
   speed_spin = gtk_spin_button_new (GTK_ADJUSTMENT (speed_spin_adj), 1, 0);
   gtk_widget_show (speed_spin);
   gtk_box_pack_start (GTK_BOX (hbox24), speed_spin, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, speed_spin, _("Set replay speed (in percent)"), NULL);
   gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (speed_spin), TRUE);
 
   vbox29 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox29);
   gtk_box_pack_start (GTK_BOX (replay_display_box), vbox29, TRUE, TRUE, 0);
+  gtk_widget_set_size_request (vbox29, -1, 13);
   gtk_container_set_border_width (GTK_CONTAINER (vbox29), 4);
+  GTK_WIDGET_SET_FLAGS (vbox29, GTK_CAN_DEFAULT);
 
   label75 = gtk_label_new (_("<b>Replay from session file</b>"));
   gtk_widget_show (label75);
@@ -940,14 +906,16 @@ create_gnee_window (void)
   gtk_widget_show (hbox31);
   gtk_box_pack_start (GTK_BOX (vbox29), hbox31, TRUE, TRUE, 0);
 
-  button11 = gtk_button_new_with_mnemonic (_("..."));
-  gtk_widget_show (button11);
-  gtk_box_pack_start (GTK_BOX (hbox31), button11, FALSE, FALSE, 0);
-
   rep_file_text = gtk_entry_new ();
   gtk_widget_show (rep_file_text);
   gtk_box_pack_start (GTK_BOX (hbox31), rep_file_text, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, rep_file_text, _("Set the file to use to read recorded data from"), NULL);
   gtk_editable_set_editable (GTK_EDITABLE (rep_file_text), FALSE);
+
+  button11 = gtk_button_new_with_mnemonic (_("..."));
+  gtk_widget_show (button11);
+  gtk_box_pack_start (GTK_BOX (hbox31), button11, FALSE, FALSE, 0);
+  gtk_widget_set_size_request (button11, -1, 20);
 
   spin_boxes = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (spin_boxes);
@@ -1027,11 +995,13 @@ create_gnee_window (void)
   gtk_widget_show (skip_sync_cb);
   gtk_box_pack_start (GTK_BOX (replay_error_handling_box), skip_sync_cb, FALSE, FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (skip_sync_cb), 4);
+  gtk_tooltips_set_tip (tooltips, skip_sync_cb, _("Synchronisation is used to make sure that the replaying is in sync with the recorded session (read the manual)"), NULL);
 
   force_rep_cb = gtk_check_button_new_with_mnemonic (_("Force replay even when not synchronized"));
   gtk_widget_show (force_rep_cb);
   gtk_box_pack_start (GTK_BOX (replay_error_handling_box), force_rep_cb, FALSE, FALSE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (force_rep_cb), 4);
+  gtk_tooltips_set_tip (tooltips, force_rep_cb, _("If Xnee considers the replaying to be out of sync you can force Xnee to continue anyway"), NULL);
 
   vbox12 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox12);
@@ -1096,6 +1066,7 @@ create_gnee_window (void)
 
   stop_m_combo = GTK_COMBO (combo1)->entry;
   gtk_widget_show (stop_m_combo);
+  gtk_tooltips_set_tip (tooltips, stop_m_combo, _("Sets the stop modifier"), NULL);
 
   combo2 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo2)->popwin),
@@ -1107,6 +1078,7 @@ create_gnee_window (void)
 
   stop_k_combo = GTK_COMBO (combo2)->entry;
   gtk_widget_show (stop_k_combo);
+  gtk_tooltips_set_tip (tooltips, stop_k_combo, _("Set the stop key"), NULL);
 
   label33 = gtk_label_new (_("<b>Action</b>"));
   gtk_widget_show (label33);
@@ -1175,6 +1147,7 @@ create_gnee_window (void)
 
   pause_m_combo = GTK_COMBO (combo3)->entry;
   gtk_widget_show (pause_m_combo);
+  gtk_tooltips_set_tip (tooltips, pause_m_combo, _("Set the pause modifier"), NULL);
 
   combo4 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo4)->popwin),
@@ -1186,6 +1159,7 @@ create_gnee_window (void)
 
   resume_m_combo = GTK_COMBO (combo4)->entry;
   gtk_widget_show (resume_m_combo);
+  gtk_tooltips_set_tip (tooltips, resume_m_combo, _("Set the resume modifier"), NULL);
 
   combo5 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo5)->popwin),
@@ -1197,6 +1171,7 @@ create_gnee_window (void)
 
   mark_m_combo = GTK_COMBO (combo5)->entry;
   gtk_widget_show (mark_m_combo);
+  gtk_tooltips_set_tip (tooltips, mark_m_combo, _("Set the insert mark modifier"), NULL);
 
   combo6 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo6)->popwin),
@@ -1208,6 +1183,7 @@ create_gnee_window (void)
 
   exec_m_combo = GTK_COMBO (combo6)->entry;
   gtk_widget_show (exec_m_combo);
+  gtk_tooltips_set_tip (tooltips, exec_m_combo, _("Set the exec modifier"), NULL);
 
   combo7 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo7)->popwin),
@@ -1219,6 +1195,7 @@ create_gnee_window (void)
 
   pause_k_combo = GTK_COMBO (combo7)->entry;
   gtk_widget_show (pause_k_combo);
+  gtk_tooltips_set_tip (tooltips, pause_k_combo, _("Set the pause key"), NULL);
 
   combo8 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo8)->popwin),
@@ -1230,6 +1207,7 @@ create_gnee_window (void)
 
   resume_k_combo = GTK_COMBO (combo8)->entry;
   gtk_widget_show (resume_k_combo);
+  gtk_tooltips_set_tip (tooltips, resume_k_combo, _("Set the resume key"), NULL);
 
   combo9 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo9)->popwin),
@@ -1241,6 +1219,7 @@ create_gnee_window (void)
 
   mark_k_combo = GTK_COMBO (combo9)->entry;
   gtk_widget_show (mark_k_combo);
+  gtk_tooltips_set_tip (tooltips, mark_k_combo, _("Set the insert mark key "), NULL);
 
   combo10 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo10)->popwin),
@@ -1252,6 +1231,7 @@ create_gnee_window (void)
 
   exec_k_combo = GTK_COMBO (combo10)->entry;
   gtk_widget_show (exec_k_combo);
+  gtk_tooltips_set_tip (tooltips, exec_k_combo, _("Set the exec key"), NULL);
 
   test_km_label = gtk_label_new (_("<b>Grab status</b>"));
   gtk_widget_show (test_km_label);
@@ -1313,6 +1293,9 @@ create_gnee_window (void)
   gtk_widget_show (project_tab);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 5), project_tab);
 
+  g_signal_connect_swapped ((gpointer) gnee_window, "destroy",
+                            G_CALLBACK (on_gnee_window_destroy),
+                            GTK_OBJECT (gnee_window));
   g_signal_connect ((gpointer) new1, "activate",
                     G_CALLBACK (on_new1_activate),
                     NULL);
@@ -1331,18 +1314,9 @@ create_gnee_window (void)
   g_signal_connect ((gpointer) log_window, "activate",
                     G_CALLBACK (on_log_window_activate),
                     NULL);
-  g_signal_connect ((gpointer) rep_menu_open, "activate",
-                    G_CALLBACK (on_rep_menu_open_activate),
+  g_signal_connect ((gpointer) about1, "activate",
+                    G_CALLBACK (on_about1_activate),
                     NULL);
-  g_signal_connect ((gpointer) set_session_file1, "activate",
-                    G_CALLBACK (on_set_session_file1_activate),
-                    NULL);
-  g_signal_connect ((gpointer) open_project_file2, "activate",
-                    G_CALLBACK (on_open_project_file2_activate),
-                    NULL);
-  g_signal_connect_swapped ((gpointer) about1, "activate",
-                            G_CALLBACK (on_about1_activate),
-                            GTK_OBJECT (gnee_window));
   g_signal_connect ((gpointer) open_button, "clicked",
                     G_CALLBACK (on_open_button_clicked),
                     NULL);
@@ -1489,15 +1463,6 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, menuitem3, "menuitem3");
   GLADE_HOOKUP_OBJECT (gnee_window, menuitem3_menu, "menuitem3_menu");
   GLADE_HOOKUP_OBJECT (gnee_window, log_window, "log_window");
-  GLADE_HOOKUP_OBJECT (gnee_window, replay_menu, "replay_menu");
-  GLADE_HOOKUP_OBJECT (gnee_window, replay_menu_menu, "replay_menu_menu");
-  GLADE_HOOKUP_OBJECT (gnee_window, rep_menu_open, "rep_menu_open");
-  GLADE_HOOKUP_OBJECT (gnee_window, image18, "image18");
-  GLADE_HOOKUP_OBJECT (gnee_window, record_menu, "record_menu");
-  GLADE_HOOKUP_OBJECT (gnee_window, record_menu_menu, "record_menu_menu");
-  GLADE_HOOKUP_OBJECT (gnee_window, set_session_file1, "set_session_file1");
-  GLADE_HOOKUP_OBJECT (gnee_window, open_project_file2, "open_project_file2");
-  GLADE_HOOKUP_OBJECT (gnee_window, image19, "image19");
   GLADE_HOOKUP_OBJECT (gnee_window, menuitem4, "menuitem4");
   GLADE_HOOKUP_OBJECT (gnee_window, menuitem4_menu, "menuitem4_menu");
   GLADE_HOOKUP_OBJECT (gnee_window, about1, "about1");
@@ -1551,8 +1516,8 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, repl_file_box, "repl_file_box");
   GLADE_HOOKUP_OBJECT (gnee_window, label61, "label61");
   GLADE_HOOKUP_OBJECT (gnee_window, hbox30, "hbox30");
-  GLADE_HOOKUP_OBJECT (gnee_window, rec_file_sel, "rec_file_sel");
   GLADE_HOOKUP_OBJECT (gnee_window, rec_file_text, "rec_file_text");
+  GLADE_HOOKUP_OBJECT (gnee_window, rec_file_sel, "rec_file_sel");
   GLADE_HOOKUP_OBJECT (gnee_window, table1, "table1");
   GLADE_HOOKUP_OBJECT (gnee_window, vbox8, "vbox8");
   GLADE_HOOKUP_OBJECT (gnee_window, label21, "label21");
@@ -1611,8 +1576,8 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, vbox29, "vbox29");
   GLADE_HOOKUP_OBJECT (gnee_window, label75, "label75");
   GLADE_HOOKUP_OBJECT (gnee_window, hbox31, "hbox31");
-  GLADE_HOOKUP_OBJECT (gnee_window, button11, "button11");
   GLADE_HOOKUP_OBJECT (gnee_window, rep_file_text, "rep_file_text");
+  GLADE_HOOKUP_OBJECT (gnee_window, button11, "button11");
   GLADE_HOOKUP_OBJECT (gnee_window, spin_boxes, "spin_boxes");
   GLADE_HOOKUP_OBJECT (gnee_window, threshold_box, "threshold_box");
   GLADE_HOOKUP_OBJECT (gnee_window, threshold_label, "threshold_label");

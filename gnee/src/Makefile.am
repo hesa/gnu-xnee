@@ -33,7 +33,15 @@ gnee_SOURCES = \
 	recordables.c recordables.h \
 	gnee_xnee.c gnee_xnee.h 
 
-gnee_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) \
+if PEDANTIC
+PEDANTIC_FLAGS =  -W -Wall
+else
+PEDANTIC_FLAGS = 
+endif
+
+gnee_CFLAGS = ${PEDANTIC_FLAGS}
+
+gnee_LDADD = @PACKAGE_LIBS@ $(INTLLIBS)  \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
 	${XOSD_LIBS} \
 	 ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl 

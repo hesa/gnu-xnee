@@ -39,6 +39,7 @@ int err_continue_clicked=0;
 int err_quit_clicked=0;
 
 
+
 int
 read_session_file()
 {
@@ -49,6 +50,7 @@ read_session_file()
   file_action=FILE_TO_OPEN;
 
   gtk_widget_show (fs);
+  return GNEE_OK;
 }
 
 int
@@ -60,6 +62,7 @@ write_session_file()
   file_action=FILE_TO_SAVE;
 
   gtk_widget_show (fs);
+  return GNEE_OK;
 }
 
 int
@@ -71,6 +74,7 @@ read_project_file()
   file_action=FILE_TO_OPEN;
 
   gtk_widget_show (fs);
+  return GNEE_OK;
 }
 
 int
@@ -82,12 +86,13 @@ write_project_file()
   file_action=FILE_TO_SAVE;
 
   gtk_widget_show (fs);
+  return GNEE_OK;
 }
 
 
 int get_type(GtkWidget* combo_label)
 {
-    int   type;
+    int   type = 0 ;
     gchar *selection;
 
     selection = gtk_editable_get_chars
@@ -335,8 +340,7 @@ void
 on_quit1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  printf ("quit1\n");
-
+  gnee_close_down();
 }
 
 
@@ -344,8 +348,6 @@ void
 on_cut1_activate                       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  printf ("cut1\n");
-
 }
 
 
@@ -421,14 +423,19 @@ on_record                              (GtkButton       *button,
       
       if (ext_xd != NULL)
         {
+	  xnee_set_verbose(ext_xd);
+ 	  gnee_recordable2xd(ext_gnee_window,  
+			     "include_event_store" , 
+ 			  XNEE_EVENT); 
+	  xnee_unset_verbose(ext_xd);
+
 	  gx_set_variable_data(ext_xd, ext_gx);
 	  
 	  gx_start_recording(ext_xd);
         }
       
     }
-
-    gtk_widget_show_all(window);
+    gtk_widget_show_all(window); 
 }
 
 
@@ -438,6 +445,7 @@ on_replay                              (GtkButton       *button,
 {
     GtkWidget   *window;
 
+    printf ("on_replay 1\n");
     window = lookup_widget(user_data, "gnee_window");
     
     if (window != NULL)
@@ -471,7 +479,7 @@ on_spinbutton3_change_value            (GtkSpinButton   *spinbutton,
     
     if (ext_xd != NULL)
       {
-	gx_set_speed (ext_xd, speed); 
+	gx_set_speed (speed); 
       }
 }
 
@@ -607,6 +615,7 @@ on_spinbutton6_change_value            (GtkSpinButton   *spinbutton,
 }
 
 
+
 void
 on_ok_button1_clicked                  (GtkButton       *button,
                                         gpointer         user_data)
@@ -626,7 +635,6 @@ on_ok_button1_clicked                  (GtkButton       *button,
       printf ("project file: %s\n", filename);
       if ( file_action  == FILE_TO_SAVE )
 	{
-	  printf (" SAVE\n");
 	  gx_set_rc_byname (ext_xd, filename);
 	  file = fopen (filename, "w");
 	  gx_write_settings_to_file (ext_xd, file) ;
@@ -637,15 +645,14 @@ on_ok_button1_clicked                  (GtkButton       *button,
       else if ( file_action  == FILE_TO_OPEN)
 	{
 	  int ret;
-	  printf (" OPEN\n");
 	  file = fopen (filename, "rw");
-	  
+	  xnee_refresh_ranges(ext_xd);
+	  gnee_remove_all_recordables();
 	  ret = gx_set_rc_byname (ext_xd, filename);
-	  g_print (" ret=%d\n", ret);
 
 	  if ( gx_get_rc_file (ext_xd) != NULL) 
 	    {
-	      gx_add_resource (ext_xd );
+ 	      gx_add_resource (ext_xd ); 
 	    }
 	  else
 	    g_print (" Could not open project file %s\n", filename);
@@ -655,9 +662,7 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	  file_choosen = 0;
 	  file_action  = 0;
 
-	  gx_set_xd_settings();
-	  
-	  gx_set_xd_settings();
+ 	  gx_set_xd_settings(); 
 	}
       else 
 	{
@@ -665,7 +670,6 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	}
       break;
     case CHOOSE_XNEE_SESSION_FILE:
-      printf ("session file: %s\n", filename);
       if ( file_action  == FILE_TO_SAVE )
 	{
 	  file_text = (GtkEntry*) lookup_widget(GTK_WIDGET(ext_gnee_window),
@@ -673,11 +677,10 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	  
 	  gtk_entry_set_text (file_text, 
 			      filename);
-	  xnee_set_out_byname (ext_xd, filename);
+	  xnee_set_out_name (ext_xd, filename);
 	}
       else if ( file_action  == FILE_TO_OPEN)
 	{
-	  printf (" read from it\n");
 
 	  file_text = (GtkEntry*) lookup_widget(GTK_WIDGET(ext_gnee_window),
 						    "rep_file_text");
@@ -685,7 +688,7 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	  gtk_entry_set_text (file_text, 
 			      filename);
 	  
-	  xnee_set_data_name_byname(ext_xd, filename);
+	  xnee_set_data_name(ext_xd, filename);
 	}
       
       file_choosen=0;
@@ -733,10 +736,11 @@ on_save_button_clicked                 (GtkButton       *button,
 
       if (fname == NULL)
 	{
-	  printf ("Implement me... no file to save\n");
+	  write_project_file();
 	}
       else
 	{
+	  printf ("Saving settings to proj file:%s\n", fname);
 	  file = fopen (fname, "w");
 	  gx_write_settings_to_file (ext_xd, file) ;
 	  fclose (file);
@@ -772,10 +776,10 @@ combo_change_helper(gpointer gw,
 		    int mod_or_key, 
 		    int grab_action)
 {
-  gchar *k_selection;
-  gchar *m_selection;
-  GtkWidget          *m_combo;
-  GtkWidget          *k_combo;
+  gchar *k_selection = NULL;
+  gchar *m_selection = NULL;
+  GtkWidget          *m_combo = NULL;
+  GtkWidget          *k_combo = NULL;
   char  m_combo_name[50] ;
   char  k_combo_name[50] ;
 
@@ -991,7 +995,7 @@ void
 on_err_quit_button_clicked             (GtkButton       *button,
                                         gpointer         user_data)
 {
-  
+  printf ("quit..... hey now\n");
 }
 
 
@@ -1103,7 +1107,7 @@ on_max_thresh_sb_value_changed         (GtkSpinButton   *spinbutton,
 {
   if (ext_xd != NULL)
     {
-      gx_set_min_threshold(ext_xd,
+      gx_set_max_threshold(ext_xd,
 			   gtk_spin_button_get_value_as_int(spinbutton)); 
     }
 }
@@ -1323,5 +1327,14 @@ on_human_format_rb_toggled             (GtkToggleButton *togglebutton,
 	  gx_set_human_printout();
 	}
     }
+}
+
+
+void
+on_gnee_window_destroy                 (GtkObject       *object,
+                                        gpointer         user_data)
+{
+  printf ("destroy.... and search\n");
+  gnee_close_down();
 }
 

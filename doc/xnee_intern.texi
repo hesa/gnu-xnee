@@ -1,4 +1,4 @@
-@node Internals, Requirements, Protocol, top
+@node Internals, Requirements, File format, top
 
 @chapter Xnee Internals
 @cindex  Xnee Internals
@@ -7,182 +7,15 @@ Hopefully this will lead to a better understanding of how to use Xnee
 and why some features exists and why some doesn't. 
 
 
-@section Project file
-@cindex  Project file
-Xnee can be set either using command line options (when using xnee) or by
-clicking the correct buttons etc in the GUI (using gnee). Instead of setting 
-the same settings over and over again, you can use the Xnee Project File. 
 
 
-@subsection  Create a project file
-@cindex      Create a project file
-You can create a project by yourself. This can be done using 
-the @code{write-settings} option in xnee or the ``save settings to file'' 
-when using gnee or you can use the Xnee GUI (gnee) to write one.
-You can also
-write one by yourself in your favorite editor. Just make sure you follow the XNee protocol. For information and specification on this protocol read the Xnee Protocol chapter.
-
-
-
-
-@section Xnee Session file
-@cindex  Session file
-The Xnee session files are the printouts from a recorded session following the Xnee protocol. For information and specification on this protocol read the Xnee Protocol chapter.
-
-
-
-
-@section Key and modifier
-@cindex  Key and modifier
-When wanting to interupt Xnee from its current action it may sometimes be hard to 
-send a signal. Because of this Xnee has been added support to grab key and modifiers
-that can be bound to various xnee actions. You can specify a key + modifier 
-combination and bind that to either one of the following actions:
-@table @samp
-@item  stop
-@item  pause
-@item  resume
-@item  insert mark
-@end table
-
-@subsection  Stop Xnee with key+modifier combination
-@cindex      Stop Xnee with key+modifier combination
-Xnee stops its current action when the user presses the key+modifier
-combination as specified during setup. Xnee will be shut gracefully.
-
-@subsection  Pause Xnee with key+modifier combination
-@cindex      Pause Xnee with key+modifier combination
-Xnee pause its current action when the user presses the key+modifier
-combination as specified during setup. Xnee will be in paused mode until
-the user stops or resumes Xnee.
-
-@subsection  Pause Xnee with key+modifier combination
-@cindex      Pause Xnee with key+modifier combination
-Xnee resumes its current paused action when the user presses the key+modifier
-combination as specified during setup. Xnee will continue where it was
-paused.
-
-@subsection  Insert marks Xnee with key+modifier combination
-@cindex      Insert marks Xnee with key+modifier combination
-When the user presses the key+modifier combination as specified during setup Xnee will 
-print a mark in the session file containing a time stamp. This feature is intended be used
-when you want to mark an interresting time/event during recording. 
-After recording has finished you can add Xnee scripting calls to Xnee which will be 
-interpreted and executed as if they were recorded.
-
-
-@subsection  Stop key and modifier syntax
-@cindex      Stop key and modifier syntax
-Setting stop key and modifier is done using the @code{--stop-key} option.
-@example
-@code{xnee --record --mouse --stop-key Control,e}
-@end example
-This will make Xnee stop its current action when the user presses Control and e.
-
-@subsection  Pause key and modifier syntax
-@cindex      Pause key and modifier syntax
-Setting pause key and modifier is done using the @code{--pause-key} option.
-@example
-@code{xnee --record --mouse --pause-key Control,p}
-@end example
-This will make Xnee pause its current action when the user presses Control and p.
-
-@subsection  Resume key and modifier syntax
-@cindex      Resume key and modifier syntax
-Setting stop resume and modifier is done using the @code{--resume-key} option.
-@example
-@code{xnee --record --mouse --resume-key Control,r}
-@end example
-This will make Xnee resume its paused action when the user presses Control and r.
-
-
-@subsection  Insert key and modifier syntax
-@cindex      Insert key and modifier syntax
-Setting insert key and modifier is done using the @code{--insert-key} option.
-@example
-@code{xnee --record --mouse --insert-key Control,i}
-@end example
-This will make Xnee insert a mark in the session file when the user presses Control and i.
-
-
-
-@subsection  Key syntax
-@cindex      Key syntax
-You can set the key by entering one character or the keycode for the 
-character you wish to use. 
-
-@subsection  Modifier syntax
-@cindex      Modifier syntax
-
-Modifiers can be set to a '+' separated list of any of the following.
-@table @samp
-@item  Shift or Shift
-        Modifier is set to the Shift key
-@item  LockMask or Lock
-        Modifier is set to the Lock key
-@item  Control or ctrl
-        Modifier is set to the Control key
-@item  Mod1Mask or m1m
-        Modifier is set to 
-@item  Mod2Mask or m2m
-        Modifier is set to 
-@item  Mod3Mask or m3m
-        Modifier is set to 
-@item  Mod4Mask or m4m
-        Modifier is set to 
-@item  Mod5Mask or m5m
-        Modifier is set to 
-@item  Alt_L
-        Modifier is set to Alt_L
-@item  Alt_L
-        Modifier is set to Alt_R
-@item  Alt 
-        Modifier is set to be any of Alt_L and Alt_R
-@item  Shift_R
-        Modifier is set to Shift_R
-@item  Shift_L
-        Modifier is set to Shift_L
-@item  Shift
-        Modifier is set to be any of Shift_L and Shift_R
-@item  Control_R
-        Modifier is set to Control_R
-@item  Control_L
-        Modifier is set to Control_L
-@item  Control
-        Modifier is set to be any of Control_L and Control_R
-@item  Scroll
-        Modifier is set Scroll
-@item  Caps_Lock
-        Modifier is set Caps Lock
-@item  AnyModifier or any
-        Modifier is set to any of the modifier
-@item  none or 0
-        No modifier is used
-@end table
-
-You can also specify the keycode for the modifier you wish to use
-
-@section Modifier+key examples
-@cindex  Modifier+key  examples
-
-If you want to set the modifier to be a combination of Control, Alt and Shift you
-spearate them with a @code{+} sign.
-@example
-@code{Control+Alt+Shift}
-@end example
-
-If you want to make Xnee stop when pressing the above modifier combination and the key
-y, you type 
-@example
-@code{--stop-key Control+Alt+Shift,y} 
-@end example
 
 
 
 @section Synchronisation
 @cindex Synchronisation
-We will try to go through the basics of how Xnee implememnts synchronisation and 
-try to tell you, by using examples, why synhronisation is important.
+We will try to go through the basics of how Xnee implememnts synchronisation 
+and try to tell you, by using examples, why synhronisation is important.
 
 @subsection Why synchronise
 @cindex why synchronise

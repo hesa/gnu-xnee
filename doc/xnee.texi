@@ -64,8 +64,9 @@
 * Getting started::      Getting started
 * General ideas::        General ideas
 * Installation::         Installation
-* Examples::             Usage examples
-* Protocol::             Protocol
+* Examples::             examples
+* Usage::                usage
+* File format::          File format
 * Internals::            Internals
 * Requirements::         Requirements
 * FAQ::                  FAQ
@@ -176,6 +177,7 @@ Introduction.
 @include xnee_general.texi
 @include xnee_install.texi
 @include xnee_exampl.texi
+@include xnee_usage.texi
 @include xnee_prot.texi
 @include xnee_intern.texi
 @include xnee_req.texi

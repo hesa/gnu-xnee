@@ -23,7 +23,15 @@
  ****/
 
 
+#ifdef HAVE_STDARG_H
+#include <stdarg.h>
+#else
+#include <varargs.h> 
+#endif
 #include <libxnee/xnee.h>
+
+
+static char *latest_error = NULL ;
 
 char *error_descr_solut[] = 
   {
@@ -169,3 +177,49 @@ xnee_get_err_solution (int error)
   return error_descr_solut[error*2+1];
 }
 
+
+char *
+xnee_get_err_string ()
+{
+  return latest_error;
+}
+
+void
+xnee_free_err_string ()
+{
+  XNEE_FREE_IF_NOT_NULL(latest_error);
+  return ;
+}
+
+#ifdef HAVE_STDARG_H
+char *
+xnee_set_err_string (char *new_error, ...)
+{
+#define ERROR_STRING_SIZE 100
+  va_list ap;
+
+  char buf[ERROR_STRING_SIZE];
+  va_start(ap, new_error);
+
+  vsnprintf (buf,ERROR_STRING_SIZE,
+	     new_error, ap );
+  latest_error = strdup(new_error);
+  return latest_error;
+}
+#else
+char *
+xnee_set_err_string (char *new_error, ...);
+{
+  char *fmt;
+  char buf[100];
+  va_list ap;
+
+  va_start(ap);
+  fmt = va_arg(argp, char *);
+
+  vsnprintf ( buf, ERROR_STRING_SIZE,
+	    new_error, ap );
+  latest_error = strdup(new_error);
+  return latest_error;
+}
+#endif

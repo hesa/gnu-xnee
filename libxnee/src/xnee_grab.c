@@ -152,14 +152,16 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
   xnee_verbose((xd, "----> xnee_grab_key\n"));
   if (mod_key==NULL)
     {
-      return XNEE_OK;
+      return XNEE_BAD_GRAB_DATA;
     }
 
   xnee_get_km_tuple (xd, &km, mod_key);
   xnee_verbose((xd, "----  xnee_grab_key mod_key=%s\n", mod_key));
   xnee_verbose((xd, "----  xnee_grab_key mod=%d\n", km.modifier));
+  xnee_verbose((xd, "----  xnee_grab_key key=%d\n", km.key));
+
   if (km.key==0) 
-    return XNEE_OK;
+    return XNEE_BAD_GRAB_DATA;
 
   
   /* get the key+modifier from xd
@@ -170,8 +172,6 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
       xd->grab_keys->grab=XNEE_GRAB_SET;
       xd->grab_keys->stop_key=km.key;
       xd->grab_keys->stop_mod=km.modifier;
-      strcpy(xd->grab_keys->stop_str, mod_key);
-
       xnee_verbose((xd, "----  xnee_grab_key STOP mode\n"));
       break;
     case XNEE_GRAB_PAUSE:
@@ -190,6 +190,12 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
       xd->grab_keys->grab=XNEE_GRAB_SET;
       xd->grab_keys->insert_key=km.key;
       xd->grab_keys->insert_mod=km.modifier;
+      xnee_verbose((xd, "----  xnee_grab_key RESUME mode\n"));
+      break;
+    case XNEE_GRAB_EXEC:
+      xd->grab_keys->grab=XNEE_GRAB_SET;
+      xd->grab_keys->exec_key=km.key;
+      xd->grab_keys->exec_mod=km.modifier;
       xnee_verbose((xd, "----  xnee_grab_key RESUME mode\n"));
       break;
     default:
@@ -253,6 +259,12 @@ xnee_get_grab_mode (xnee_data *xd, int key, int modifier)
     {
       xnee_verbose ((xd, "xnee_get_grab_mode: RESUME \n"));
       return XNEE_GRAB_RESUME;
+    }
+  else if ( (key==xd->grab_keys->exec_key) && 
+	    (modifier==xd->grab_keys->exec_mod) )
+    {
+      xnee_verbose ((xd, "xnee_get_grab_mode: EXEC \n"));
+      return XNEE_GRAB_EXEC;
     }
   else 
    {
@@ -444,8 +456,8 @@ xnee_grab_all_keys (xnee_data* xd)
     {
       xnee_verbose((xd, "----  xnee_grab_all_keys EXEC\n"));
       xd->grab_keys->grab=XNEE_GRAB_SET;
-      xd->grab_keys->insert_key=km.key;
-      xd->grab_keys->insert_mod=km.modifier;
+      xd->grab_keys->exec_key=km.key;
+      xd->grab_keys->exec_mod=km.modifier;
       XGrabKey (xd->grab,  
 		km.key,            
 		km.modifier,
@@ -481,5 +493,7 @@ xnee_grab_keys_init(xnee_data *xd)
   xd->grab_keys->exec_key       = 0 ; 
   xd->grab_keys->exec_mod       = 0 ; 
   xd->grab_keys->exec_str       = NULL ; 
+  xd->grab_keys->exec_prog      = NULL ; 
+  return XNEE_OK;
 }
 

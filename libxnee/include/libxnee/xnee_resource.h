@@ -43,18 +43,20 @@
 #ifndef XNEE_RESOURCE_H
 #define XNEE_RESOURCE_H
 
-#define XNEE_RES_PROJECT             "Project"
+#define XNEE_RES_PROJECT                 "ProjectName"
+#define XNEE_RES_DESCRIPTION             "ProjectDescription"
+#define XNEE_RES_CREAT_DATE              "ProjectCreationDate"
+#define XNEE_RES_CREAT_PROGRAM           "ProjectCreationProgram"
+#define XNEE_RES_CREAT_PROG_VER          "ProjectCreationProgVersion"
+#define XNEE_RES_LASTCHANGE_DATE         "ProjectLastChangeDate"
+#define XNEE_RES_LASTCHANGE_PROGRAM      "ProjectLastChangeProgram"
+#define XNEE_RES_LASTCHANGE_PROG_VER     "ProjectLastChangeProgVersion"
+#define XNEE_RES_CURRENT_CHANGE_DATE     "ProjectCurrentChangeDate"
+#define XNEE_RES_CURRENT_CHANGE_PROGRAM  "ProjectCurrentChangeProgram"
+#define XNEE_RES_CURRENT_CHANGE_PROG_VER "ProjectCurrentChangeProgVersion"
 
-#define XNEE_RES_DESCRIPTION         "Description"
-#define XNEE_RES_CREAT_DATE          "CreationDate"
-#define XNEE_RES_CREAT_PROGRAM       "CreationProgram"
-#define XNEE_RES_CREAT_PROG_VER      "CreationProgVersion"
-#define XNEE_RES_LASTCHANGE_DATE     "LastChangeDate"
-#define XNEE_RES_LASTCHANGE_PROGRAM  "LastChangeProgram"
-#define XNEE_RES_LASTCHANGE_PROG_VER "LastChangeProgVersion"
-
-#define XNEE_RES_AUTHOR_NAME      "Author"
-#define XNEE_RES_AUTHOR_EMAIL     "Email"
+#define XNEE_RES_AUTHOR_NAME              "Author"
+#define XNEE_RES_AUTHOR_EMAIL             "Email"
 
  
 

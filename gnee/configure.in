@@ -5,6 +5,8 @@ AC_INIT(configure.in)
 AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")])
 AC_CHECK_LIB(c, pthread_init, LIBDL="", [AC_CHECK_LIB(rt, pthread_init, LIBDL="-lrt")])
 
+
+
 AM_INIT_AUTOMAKE(gnee, 0.1)
 AM_CONFIG_HEADER(config.h)
 AM_MAINTAINER_MODE
@@ -46,9 +48,19 @@ AC_ARG_ENABLE(xosd,
   *) AC_MSG_ERROR(bad value ${enableval} for --disable-xosd) ;;
 esac],[xosd=false])
 
-AM_CONDITIONAL(XOSD, test x$xosd = xtrue)
-AM_CONDITIONAL(HAVE_LIBXNEE_DIR, test x${libxnee_dir} != x)
+AC_ARG_ENABLE(pedantic,
+[  --enable-pedantic          build gnee with support for pedantic compiling],
+[case "${enableval}" in
+  yes) pedantic=true ;;
+  no)  pedantic=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-pedantic) ;;
+esac],[pedantic=false])
 
+
+
+AM_CONDITIONAL(XOSD, test x$xosd = xtrue)
+AM_CONDITIONAL(HAVE_LIBXNEE_DIR, test x${libxnee_dir} != xtrue)
+AM_CONDITIONAL(PEDANTIC,    test x$pedantic = xtrue)
 
 
 dnl Add the languages which your application supports here.

@@ -8,6 +8,7 @@
   g_object_set_data (G_OBJECT (component), name, widget)
 
 extern xnee_data   *ext_xd;
+extern GtkWidget   *ext_gnee_window;
 
 
 
@@ -75,7 +76,7 @@ move_between_lists(GtkTreeView* source_list,
     GtkTreeModel       *model;
     GtkTreeIter         iterator;
     GtkTreeStore       *store;
-    gint                new_order;
+/*     gint                new_order; */
     
     selection = gtk_tree_view_get_selection(source_list);
     
@@ -153,7 +154,7 @@ create_recordable_list(GtkWidget* gnee_window,
 
 
 void
-move_recordable(GtkWidget* gnee_window,
+gnee_move_recordable(GtkWidget* gnee_window,
 		char* data_name,
 		char* exclude_store_name,
 		char* include_store_name,
@@ -170,8 +171,6 @@ move_recordable(GtkWidget* gnee_window,
   gint row_count=0;
 
 
-  GNEE_DEBUG(("    move_recordable (,%s,..);\n", data_name));
-  
   excl_store = 
     g_object_get_data (G_OBJECT(gnee_window), exclude_store_name);
   
@@ -187,21 +186,38 @@ move_recordable(GtkWidget* gnee_window,
   while (valid)
     {
       gchar *str_data;
+      gchar *str_data2;
       
       gtk_tree_model_get (GTK_TREE_MODEL(excl_store), &iter, 
 			  0, &str_data,
 			  -1);
       
-      
+      GNEE_DEBUG(("      comparing '%s' '%s'\n", 
+		  data_name,
+		  str_data));
       if (strncmp(str_data, data_name, strlen(str_data))==0)
 	{
 	  gtk_tree_store_remove(GTK_TREE_STORE(excl_store), &iter);
+	  GNEE_DEBUG(("   EXCL move_recordable %s %s;\n", 
+		      data_name,
+		      str_data));
+  
 	  
 	  while (valid)
 	    {
 	      valid = 
 		gtk_tree_model_iter_next (GTK_TREE_MODEL(incl_store), 
 					  &incl_iter);
+
+	    }
+	  if (delete)
+	    {
+	      gtk_tree_model_get (GTK_TREE_MODEL(incl_store), 
+				  &incl_iter, 
+				  0, &str_data2,
+				  -1);
+	      
+	      GNEE_DEBUG(("   INCL move_recordable %s \n", str_data2)); 
 	    }
 	  gtk_tree_store_append(GTK_TREE_STORE(incl_store), 
 				&incl_iter, 
@@ -225,6 +241,150 @@ move_recordable(GtkWidget* gnee_window,
       row_count++;
       valid = gtk_tree_model_iter_next (GTK_TREE_MODEL(excl_store), &iter);
     } 
+}
+
+
+void
+gnee_recordable2xd(GtkWidget* gnee_window,
+		   char* include_store_name,
+		   int   type)
+{
+  GtkTreeStore       *incl_store;
+  GtkTreeIter         incl_iter; 
+  
+  int valid = 1 ;
+  int incl_valid = 0;
+  gint row_count=0;
+
+  xnee_verbose((ext_xd,"    read_recordable (,,..);\n")); 
+  
+  incl_store = 
+    g_object_get_data (G_OBJECT(gnee_window), include_store_name);
+  
+  incl_valid = 
+    gtk_tree_model_get_iter_first (GTK_TREE_MODEL(incl_store), &incl_iter);
+  
+  
+  while (valid)
+    {
+      gchar *str_data;
+      
+      gtk_tree_model_get (GTK_TREE_MODEL(incl_store), 
+			  &incl_iter, 
+			  0, &str_data,
+			  -1);
+      xnee_verbose((ext_xd,"Found a string: %s\n", str_data));
+      xnee_add_range_str (ext_xd, type, str_data); 
+      g_free (str_data);
+      
+      row_count++;
+      valid = gtk_tree_model_iter_next (GTK_TREE_MODEL(incl_store), &incl_iter);
+    } 
+}
+
+
+
+void
+gnee_remove_type(GtkWidget* gnee_window,
+		 char* exclude_store_name,
+		 char* include_store_name,
+		 int   type)
+{
+  GtkTreeStore       *excl_store;
+  GtkTreeStore       *incl_store;
+  GtkTreeIter         iter; 
+  GtkTreeIter         incl_iter; 
+  
+  int valid;
+  int incl_valid;
+  gint row_count=0;
+
+
+  excl_store = 
+    g_object_get_data (G_OBJECT(gnee_window), exclude_store_name);
+  
+  incl_store = 
+    g_object_get_data (G_OBJECT(gnee_window), include_store_name);
+  
+  incl_valid = 
+    gtk_tree_model_get_iter_first (GTK_TREE_MODEL(incl_store), &incl_iter);
+  
+  
+  valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL(excl_store), &iter);
+  
+  while (valid)
+    {
+      gchar *str_data;
+      gchar *str_data2;
+      
+      gtk_tree_model_get (GTK_TREE_MODEL(excl_store), &iter, 
+			  0, &str_data,
+			  -1);
+      
+      GNEE_DEBUG(("      REMOVING '%s' '%s'\n", str_data));
+      gtk_tree_store_remove(GTK_TREE_STORE(excl_store), &iter);
+
+
+      /* find last pos in resulting tree */
+      incl_valid = 
+	gtk_tree_model_get_iter_first (GTK_TREE_MODEL(incl_store), &incl_iter);
+      while (valid)
+	{
+	  valid = 
+	    gtk_tree_model_iter_next (GTK_TREE_MODEL(incl_store), 
+				      &incl_iter);
+	  
+	}
+      gtk_tree_model_get (GTK_TREE_MODEL(incl_store), 
+			  &incl_iter, 
+			  0, &str_data2,
+			  -1);
+      
+      GNEE_DEBUG(("   INCL move_recordable %s \n", str_data2)); 
+
+      gtk_tree_store_append(GTK_TREE_STORE(incl_store), 
+			    &incl_iter, 
+			    NULL);
+      gtk_tree_store_set(GTK_TREE_STORE(incl_store), 
+			 &incl_iter, 
+			     0, str_data, 
+			     -1);
+      g_free (str_data);
+      g_free (str_data2);
+
+      row_count++;
+      valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL(excl_store), &iter);
+    } 
+
+
+}
+
+
+void
+gnee_remove_all_recordables()
+{
+  GNEE_DEBUG(("Removing events **************** \n"));
+  gnee_remove_type(ext_gnee_window,
+		   "include_event_store",
+		   "exclude_event_store",
+		   XNEE_EVENT);
+  xnee_verbose((ext_xd, "removing request\n"));
+  gnee_remove_type(ext_gnee_window,
+		   "include_request_store",
+		   "exclude_request_store",
+		   XNEE_REQUEST);
+
+  xnee_verbose((ext_xd, "removing error\n"));
+  gnee_remove_type(ext_gnee_window,
+		   "include_error_store",
+		   "exclude_error_store",
+		   XNEE_ERROR);
+
+  xnee_verbose((ext_xd, "removing reply\n"));
+  gnee_remove_type(ext_gnee_window,
+		   "include_reply_store",
+		   "exclude_reply_store",
+		   XNEE_REPLY);
 }
 
 

@@ -52,15 +52,9 @@ int
 xnee_set_tot_threshold (xnee_data *xd, int thresh);
 
 
-#define xnee_get_max_threshold(xd) xd->meta_data.sum_max_threshold
-
-#define xnee_get_min_threshold(xd) xd->meta_data.sum_min_threshold
-
-#define xnee_get_tot_threshold(xd) xd->meta_data.tot_diff_threshold
 
 
 
-/* implemented as defines above
 int
 xnee_get_max_threshold (xnee_data *xd);
 
@@ -69,6 +63,5 @@ xnee_get_min_threshold (xnee_data *xd);
 
 int
 xnee_get_tot_threshold (xnee_data *xd);
-*/
 
 

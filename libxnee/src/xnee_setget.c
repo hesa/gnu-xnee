@@ -106,26 +106,6 @@ xnee_get_out_name (xnee_data *xd)
 }
 
 
-int
-xnee_set_out_byname (xnee_data *xd, char* out_name)
-{
-  if (out_name!=NULL)
-    {
-      xnee_set_out_name (xd, out_name);
-    }
-  else
-    {
-      return XNEE_OK;
-    }
-
-  if (!xnee_check (out_name, "stdout", "STDOUT"))
-    {
-      XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
-      xd->out_file = fopen (xd->out_name,"w");
-    }
-  return XNEE_OK;
-}
-
 
 
 int
@@ -199,6 +179,7 @@ xnee_get_rc_name (xnee_data *xd)
   return xd->rc_name;
 }
 
+
 int
 xnee_set_rc_byname (xnee_data *xd, char *rc_name)
 {
@@ -224,7 +205,6 @@ xnee_set_rc_byname (xnee_data *xd, char *rc_name)
 }
 
 
-
 int
 xnee_set_data_file (xnee_data *xd, FILE* data_file)
 {
@@ -242,7 +222,6 @@ xnee_get_data_file (xnee_data *xd)
 int
 xnee_set_data_name (xnee_data *xd, char* data)
 {
-
   XNEE_FREE_IF_NOT_NULL(xd->data_name);
   xd->data_name=strdup(data);
   return XNEE_OK;
@@ -256,30 +235,6 @@ xnee_get_data_name (xnee_data *xd)
 
 
 
-int
-xnee_set_data_name_byname (xnee_data *xd, char* data_name)
-{
-  if (data_name!=NULL)
-    {
-      xnee_set_data_name (xd, data_name);
-    }
-  else
-    {
-      return XNEE_OK;
-    }
-
-  XNEE_FCLOSE_IF_NOT_NULL(xd->data_file);
-  xd->data_file = fopen (data_name,"r");
-
-  if (xd->data_file == NULL)
-    {
-      XNEE_FREE_IF_NOT_NULL (xd->data_name);
-      return XNEE_FILE_NOT_FOUND;
-    }
-
-  return XNEE_OK;
-}
- 
 
 
  
@@ -516,6 +471,7 @@ xnee_set_km (xnee_data *xd, int mode, char* km)
       xnee_print_error ("Unknown grab mode\n");
       return XNEE_UNKNOWN_GRAB_MODE;
     }
+      return XNEE_OK;
 }
 
 char*
@@ -542,6 +498,7 @@ xnee_get_km (xnee_data *xd, int mode)
       xnee_print_error ("Unknown grab mode\n");
       return NULL;
     }
+    return XNEE_OK;
 }
 
 int
@@ -613,10 +570,24 @@ xnee_set_exec_km (xnee_data *xd, char *exec_km)
   return XNEE_OK;
 }
 
+int
+xnee_set_exec_prog (xnee_data *xd, char *prog)
+{
+  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->exec_prog);
+  xd->grab_keys->exec_prog=strdup(prog);
+  return XNEE_OK;
+}
+
 char*
 xnee_get_exec_km (xnee_data *xd)
 {
   return xd->grab_keys->exec_str;
+}
+
+char*
+xnee_get_exec_prog (xnee_data *xd)
+{
+  return xd->grab_keys->exec_prog;
 }
 
  
@@ -814,7 +785,6 @@ xnee_set_interval (xnee_data *xd, int interval)
 int 
 xnee_get_interval (xnee_data *xd)
 {
-  printf ("get interval = %d\n",xd->xnee_info.interval ); 
   return xd->xnee_info.interval;
 }
 
@@ -829,7 +799,7 @@ xnee_set_human_printout (xnee_data *xd)
 int 
 xnee_set_xnee_printout (xnee_data *xd)
 {
-  xd->rec_callback = xnee_replay_dispatch;
+  xd->rec_callback = xnee_record_dispatch;
   return XNEE_OK;
 }
 

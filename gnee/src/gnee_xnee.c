@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef          
+ *   Copyright (C) 2003, 2004 Henrik Sandklef and Jon-Erling Dahl
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -25,6 +25,7 @@
 #include <gtk/gtk.h>
 
 #include <pthread.h>
+#include <support.h>
 
 
 #include "gnee_xnee.h"
@@ -35,10 +36,13 @@
 #include <libxnee/xnee_setget.h>
 #include <libxnee/datastrings.h>
 #include <libxnee/xnee_range.h>
+#include <libxnee/xnee_threshold.h>
+#include <libxnee/xnee_setget.h>
+#include <libxnee/xnee_error.h>
 
 
-static gnee_xnee gx ; 
-static pthread_t action_thread;
+/* static gnee_xnee gx ;  */
+/* static pthread_t action_thread; */
 
 
 extern  xnee_data   *ext_xd;
@@ -47,7 +51,11 @@ extern  GtkWidget   *ext_gnee_window;
 static  GtkWidget   *err_win=NULL;
 
 
-void gx_init_gx(gnee_xnee *gx) 
+
+
+
+void 
+gx_init_gx(gnee_xnee *gx) 
 {
   gx->use_rec_display = 0 ; 
   gx->use_rep_display = 0 ; 
@@ -56,23 +64,15 @@ void gx_init_gx(gnee_xnee *gx)
   gx->speed = 100 ; 
 }
 
-int gx_is_using_rec_display(gnee_xnee *gx)  { return gx->use_rec_display; }
-int gx_is_using_rep_display(gnee_xnee *gx)  { return gx->use_rep_display; }
-int gx_is_using_speed(gnee_xnee *gx)        { return gx->use_speed;}
+static int 
+gx_is_using_rec_display(gnee_xnee *gx)  { return gx->use_rec_display; }
 
+static int 
+gx_is_using_rep_display(gnee_xnee *gx)  { return gx->use_rep_display; }
 
-#define gnee_set_record_display()  gnee_set_various_display(0)
-#define gnee_set_replay_display()  gnee_set_various_display(1)
+static int 
+gx_is_using_speed(gnee_xnee *gx)        { return gx->use_speed;}
 
-
-#define gnee_set_verbose()   gnee_set_verbosity(1)
-#define gnee_unset_verbose() gnee_set_verbosity(0)
-
-#define gnee_set_sync()      gnee_set_cb("skip_sync_cb",1)
-#define gnee_unset_sync()    gnee_set_cb("skip_sync_cb",0)
-
-#define gnee_set_force()     gnee_set_cb("force_rep_cb",1)
-#define gnee_unset_force()   gnee_set_cb("force_rep_cb",0)
 
 
 
@@ -91,24 +91,23 @@ gnee_set_cb(char * cb_name, int on_or_off)
   return GNEE_OK;
 }
 
-
-
-int
-gnee_set_sync_mode(int on_or_off)
+void
+gnee_set_sb(char *sb_name, int val)
 {
-  GtkToggleButton *togglebutton;
-
-  togglebutton = (GtkToggleButton*)lookup_widget (ext_gnee_window, 
-						  "skip_sync_cb");
-  if (togglebutton!=NULL)
+  GtkSpinButton   *spinbutton;
+  spinbutton = (GtkSpinButton *) 
+    lookup_widget (ext_gnee_window, sb_name);
+  if (spinbutton!=NULL)
     {
-      gtk_toggle_button_set_active(togglebutton, on_or_off);
+      gtk_spin_button_set_value(spinbutton, val); 
     }
-  return GNEE_OK;
 }
 
 
-int 
+
+
+
+static int 
 gnee_set_interval()
 {
   GtkSpinButton *spin=NULL;
@@ -119,17 +118,14 @@ gnee_set_interval()
   togglebutton = (GtkToggleButton*)lookup_widget (ext_gnee_window, 
 					  "wait_checkbox");
 
-  printf ("##############################\n");
   if (spin!=NULL)
     {
-      printf ("Setting spin to %d\n", xnee_get_interval(ext_xd));
       gtk_spin_button_set_value(spin,
 				xnee_get_interval(ext_xd));
       
     }
   if (togglebutton!=NULL)
     {
-      printf ("Setting spin box to true\n");
       gtk_toggle_button_set_active(togglebutton, 1);
     }
 
@@ -147,9 +143,9 @@ gnee_set_verbosity(int on_or_off)
 					  "verbose_logging_checkbox");
   if (verbose_cb!=NULL)
     {
-      printf ("Setting verboose toggle to %d\n", on_or_off);
       gtk_toggle_button_set_active((GtkToggleButton *)verbose_cb, on_or_off);
     }
+  return GNEE_OK;
 }
 
 static int 
@@ -188,6 +184,7 @@ int
 gx_set_record_display(xnee_data *xd, gnee_xnee *gx)
 {
   GtkWidget   *rec_disp_text;
+  
 
   if (gx_is_using_rec_display(gx))
     {
@@ -200,8 +197,10 @@ gx_set_record_display(xnee_data *xd, gnee_xnee *gx)
 	}
       else
 	{
-	  printf ("new display to record from is: %s\n", 
-		  gtk_entry_get_text((GtkEntry*)rec_disp_text));
+	  
+
+	  xnee_verbose((xd, "set record display to %s\n", 
+			gtk_entry_get_text((GtkEntry*)rec_disp_text)));
 	  xnee_set_display_name(ext_xd, 
 				(char*)
 				gtk_entry_get_text((GtkEntry*)rec_disp_text));
@@ -226,8 +225,8 @@ gx_set_replay_display(xnee_data *xd, gnee_xnee *gx)
 	}
       else
 	{
-	  printf ("new display to replay to is: %s\n", 
-		  gtk_entry_get_text((GtkEntry*)rep_disp_text));
+	  xnee_verbose((xd, "set replay display to %s\n", 
+			gtk_entry_get_text((GtkEntry*)rep_disp_text)));
 	  xnee_set_display_name(ext_xd, 
 				(char*)
 				gtk_entry_get_text((GtkEntry*)rep_disp_text));
@@ -235,6 +234,7 @@ gx_set_replay_display(xnee_data *xd, gnee_xnee *gx)
     }
   return GNEE_OK; 
 }
+
 
 int 
 gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
@@ -247,6 +247,7 @@ gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
     {
       gx_set_replay_display(xd, gx);
     }
+  return GNEE_OK;
 }
 
 
@@ -260,6 +261,24 @@ gnee_set_events_max(int val)
   spinbutton = (GtkSpinButton *) 
     lookup_widget (ext_gnee_window, "spinbutton11");
   gtk_spin_button_set_value(spinbutton, val); 
+}
+
+void
+gnee_set_max_thresh(int val)
+{
+  gnee_set_sb("max_thresh_sb", val);
+}
+
+void
+gnee_set_min_thresh(int val)
+{
+  gnee_set_sb("min_thresh_sb", val);
+}
+
+void
+gnee_set_tot_thresh(int val)
+{
+  gnee_set_sb("tot_thresh_sb", val);
 }
 
 void
@@ -332,7 +351,6 @@ gnee_set_ranges(int type)
   for (i=0;i<len;i++)
     {
       name = (char*) xnee_int2data(type, data[i]);
-      GNEE_DEBUG(("  ... trying %s \n", name));
 
       if ( (type==XNEE_DEVICE_EVENT)
 	   || (type==XNEE_DELIVERED_EVENT)
@@ -374,7 +392,7 @@ gx_set_xd_settings()
   int val;
   int i ;
 
-  if (ext_gnee_window != NULL)
+  if (ext_gnee_window == NULL)
     {
       printf ("Aint got no window\n");
     }
@@ -387,6 +405,37 @@ gx_set_xd_settings()
 
   val = xnee_get_time_max(ext_xd);
   gnee_set_time_max(val);
+
+
+  printf ("GX %d %d %d\n",
+	  ext_xd->meta_data.sum_max_threshold,
+	  ext_xd->meta_data.sum_min_threshold,
+	  ext_xd->meta_data.tot_diff_threshold);
+	  
+  val = xnee_get_max_threshold(ext_xd); 
+  printf ("GX MAX %d \n", val );
+  gnee_set_max_thresh(val);  
+
+  printf ("GX %d %d %d\n",
+	  ext_xd->meta_data.sum_max_threshold,
+	  ext_xd->meta_data.sum_min_threshold,
+	  ext_xd->meta_data.tot_diff_threshold);
+  val = xnee_get_min_threshold(ext_xd);
+  printf ("GX MIN %d \n", val );
+  gnee_set_min_thresh(val);
+
+  printf ("GX %d %d %d\n",
+	  ext_xd->meta_data.sum_max_threshold,
+	  ext_xd->meta_data.sum_min_threshold,
+	  ext_xd->meta_data.tot_diff_threshold);
+  val = xnee_get_tot_threshold(ext_xd);
+  printf ("GX TOT %d\n", val);
+  gnee_set_tot_thresh(val);
+
+  printf ("GX %d %d %d\n",
+	  ext_xd->meta_data.sum_max_threshold,
+	  ext_xd->meta_data.sum_min_threshold,
+	  ext_xd->meta_data.tot_diff_threshold);
 
   for (i=1;i<XNEE_NR_OF_TYPES;i++)
     {
@@ -414,7 +463,6 @@ gx_set_xd_settings()
     gnee_set_force();
   else
     gnee_unset_force();
-
 }
 
 
@@ -442,51 +490,68 @@ gx_init_xnee (xnee_data *xd)
   return 0;
 }
 
+
+void
+gnee_reset_gnee()
+{
+  
+}
+
+
 int
 gx_start_recording(xnee_data* xd)
 {
   int ret;
-  static int ev_save = 0;
-  static int dat_save = 0;
-  static int tim_save = 0;
-
+  printf ("gx_start_recorder 1\n");
   gx_set_variable_data(xd, ext_gx);
   
   GNEE_DEBUG(("Starting recorder\n"));
 
   xnee_set_recorder (xd);
+  printf ("gx_start_recorder 2\n");
 
   ret = xnee_start(xd);
+  GNEE_DEBUG(("checking recorde return val\n"));
   if (ret != XNEE_OK) 
     {
       gtk_widget_show_all(ext_gnee_window);
       gx_display_errror(ret);
-      printf ("\n\nfailed to start gnee... cause: %d\n", ret);
     }
-  
+  printf ("gx_start_recorder 3\n");
+  GNEE_DEBUG((" recorder stopped\n"));
   return 0;
 }
 
 int
 gx_stop_recording(xnee_data* xd)
 {
+  xnee_verbose((xd, "stop recording\n"));
   return 0;
 }
 
 int
 gx_start_replaying(xnee_data* xd)
 {
+  int ret ; 
 
-  gx_init_xnee(xd);
+/*   gx_init_xnee(xd); */
+  GNEE_DEBUG(("Starting replayer\n"));
+
   xnee_set_replayer(xd);
 
-  xnee_start(xd);
+  ret = xnee_start(xd);
+  if (ret != XNEE_OK) 
+    {
+      gtk_widget_show_all(ext_gnee_window);
+      gx_display_errror(ret);
+    }
   return 0;
 }
 
 int
 gx_stop_replaying(xnee_data* xd)
 {
+  xnee_verbose((xd, "stop replaying\n"));
   return 0;
 }
 
@@ -504,15 +569,18 @@ static char *gx_modifiers[] = {
   NULL };
 
 static char *gx_keys[] = {
-  "None", "a", "b", "c" , "d" , "e" ,
-  "f", "g", "h", "i" , "j", "k", "l", "m",
-  "n" , "o" , "p", "q", "r", "s", "t", "u", 
-  "v", "x", "y", "z", 
-  "0", "1", "2", "3", "4", "5", "6", "7", "8", "9", 
+  "None", 
+  "a", "b", "c", "d", "e",
+  "f", "g", "h", "i", "j", 
+  "k", "l", "m", "n", "o", 
+  "p", "q", "r", "s", "t", 
+  "u", "v", "x", "y", "z", 
+  "0", "1", "2", "3", "4", 
+  "5", "6", "7", "8", "9", 
   NULL };
 
 
-void
+static void
 create_km_list(GtkWidget *m_combo,GtkWidget *k_combo)
 {
   int i = 0 ; 
@@ -544,8 +612,8 @@ create_km_list(GtkWidget *m_combo,GtkWidget *k_combo)
 }
 
 
-void
-create_km_lists_sub(GtkWidget* gnee_window, char *mod_c, char *key_c)
+static void
+create_km_lists_sub(char *mod_c, char *key_c)
 {
   GtkWidget *m_entry;
   GtkWidget *k_entry;
@@ -556,7 +624,7 @@ create_km_lists_sub(GtkWidget* gnee_window, char *mod_c, char *key_c)
 }
 
 void
-gx_create_km_lists(GtkWidget* gnee_window)
+gx_create_km_lists()
 {
   /****************************************************
    * combo#     
@@ -571,11 +639,11 @@ gx_create_km_lists(GtkWidget* gnee_window)
      9       mark   key
      10      exec   key
   ******************************************************/
-  create_km_lists_sub ( gnee_window, "combo1", "combo2");
-  create_km_lists_sub ( gnee_window, "combo3", "combo7");
-  create_km_lists_sub ( gnee_window, "combo4", "combo8");
-  create_km_lists_sub ( gnee_window, "combo5", "combo9");
-  create_km_lists_sub ( gnee_window, "combo6", "combo10");
+  create_km_lists_sub ( "combo1", "combo2");
+  create_km_lists_sub ( "combo3", "combo7");
+  create_km_lists_sub ( "combo4", "combo8");
+  create_km_lists_sub ( "combo5", "combo9");
+  create_km_lists_sub ( "combo6", "combo10");
 }
 
 
@@ -593,7 +661,6 @@ gx_display_errror(int err_nr)
   gchar buf[4];
   const char *str_ptr = NULL;
   int i ;
-  char *tmp_str ; 
 
   if (err_win == NULL)
     {
@@ -649,12 +716,10 @@ gx_display_errror(int err_nr)
 int 
 gx_set_use_speed (int val) 
 {
-  printf ("Setting USE speed to %d\n", val);
   ext_gx->use_speed=val;
 
   if (val==0)
     {
-      printf ("Setting default speed\n");
       gx_set_replay_speed(ext_xd, 100);
     }
   else
@@ -665,9 +730,9 @@ gx_set_use_speed (int val)
       spinbutton = (GtkSpinButton *) 
 	lookup_widget (ext_gnee_window, "speed_spin");
       val = gtk_spin_button_get_value_as_int(spinbutton); 
-      printf ("Setting set speed %d\n", val);
       gx_set_replay_speed(ext_xd, val);
     }
+  return GNEE_OK;
 }
 
 int 
@@ -678,6 +743,85 @@ gx_set_speed (int val)
       gx_set_replay_speed(ext_xd, val);
     }
   ext_gx->speed = val ; 
+  return GNEE_OK;
 }
 
+
+void 
+gnee_set_rec_file(char *filename)
+{
+  GtkEntry *file_text ; 
+  
+  file_text = (GtkEntry*) lookup_widget(GTK_WIDGET(ext_gnee_window),
+					"rec_file_text");
+  
+  gtk_entry_set_text (file_text, 
+		      filename);
+  xnee_set_out_name (ext_xd, filename);
+}
+
+void 
+gnee_set_rep_file(char *filename)
+{
+  GtkEntry *file_text ; 
+  
+  file_text = (GtkEntry*) lookup_widget(GTK_WIDGET(ext_gnee_window),
+					"rep_file_text");
+  
+  gtk_entry_set_text (file_text, 
+		      filename);
+
+  xnee_set_data_name (ext_xd, filename);
+}
+
+
+void
+gnee_close_down()
+{
+  xnee_close_down(ext_xd);
+  exit(GNEE_OK);
+}
+
+
+char *
+gx_get_default_filename()
+{
+  char *tmp_dir = NULL;
+  char *user_name = NULL;
+  char *default_tmp_dir   = "/tmp/";
+  char *default_user_name = "user";
+  char *file_prefix = "gnee_";
+  char *file_suffix = ".xns";
+  char *ret_str;
+  int   size = 0 ; 
+
+  /* set the dir */
+  tmp_dir = getenv("TMPIR");
+  if (tmp_dir==NULL)
+    {
+      tmp_dir=default_tmp_dir;
+    }
+
+  /* set the user name */
+  user_name = getlogin();
+  if (user_name==NULL)
+    {
+      user_name = default_user_name; 
+    }
+  
+  size = strlen (tmp_dir) + 
+    strlen (user_name) + 
+    strlen (file_prefix) + 
+    strlen (file_suffix) ;
+  
+  ret_str = (char*) malloc (size*sizeof(char));
+  if (ret_str==NULL)
+    return NULL;
+  
+  strcpy (ret_str, tmp_dir);
+  strcat (ret_str, file_prefix);
+  strcat (ret_str, user_name);
+  strcat (ret_str, file_suffix);
+  return ret_str;
+}
 

@@ -396,29 +396,40 @@ xnee_check_km(xnee_data *xd)
 	  xnee_verbose ((xd, "mode     = %d\n", mode));
 	  
 	  
-	  xnee_verbose((xd, "\n\n\tUSER PUSHED MOD + KEY ... leaving\n\n\n"));
 	  if ( ( tmp_modifier == xd->grab_keys->stop_mod ) &&
 	       ( tmp_code == xd->grab_keys->stop_key ) )
 	    {
+	      xnee_verbose((xd, "\n\n\tUSER PUSHED MOD + KEY ... STOP\n\n\n"));
 	      xd->grab_keys->grabbed_action=XNEE_GRAB_STOP;
 	    }
 	  else if ( ( tmp_modifier == xd->grab_keys->pause_mod ) &&
 	       ( tmp_code == xd->grab_keys->pause_key ) )
 	    {
+	      xnee_verbose((xd,"\n\n\tUSER PUSHED MOD + KEY ... PAUSE\n\n\n"));
 	      xd->grab_keys->grabbed_action=XNEE_GRAB_PAUSE;
 	    }
 	  else if ( ( tmp_modifier == xd->grab_keys->resume_mod ) &&
 	       ( tmp_code == xd->grab_keys->resume_key ) )
 	    {
+	      xnee_verbose((xd,"\n\n\tUSER PUSHED MOD + KEY ... RESUME\n\n\n"));
 	      xd->grab_keys->grabbed_action=XNEE_GRAB_RESUME;
 	    }
 	  else if ( ( tmp_modifier == xd->grab_keys->insert_mod ) &&
 	       ( tmp_code == xd->grab_keys->insert_key ) )
 	    {
+
+	      xnee_verbose((xd, "\n\n\tUSER PUSHED MOD + KEY ... INSERT\n\n\n"));
 	      xd->grab_keys->grabbed_action=XNEE_GRAB_INSERT;
+	    }
+	  else if ( ( tmp_modifier == xd->grab_keys->exec_mod ) &&
+	       ( tmp_code == xd->grab_keys->exec_key ) )
+	    {
+	      xnee_verbose((xd, "\n\n\tUSER PUSHED MOD + KEY ... EXEC\n\n\n"));
+	      xd->grab_keys->grabbed_action=XNEE_GRAB_EXEC;
 	    }
 	  else 
 	    {
+	      xnee_verbose((xd, "\n\n\tUSER PUSHED MOD + KEY ... NO\n\n\n"));
 	      xd->grab_keys->grabbed_action=XNEE_GRAB_NODATA;
 	    }
 	  return XNEE_GRAB_DATA;
@@ -467,9 +478,14 @@ xnee_handle_rec_km(xnee_data *xd)
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_EXEC)
     {
+      char *exec_prog;
       xnee_verbose ((xd, " ---  xnee_handle_rec_km: EXEC \n"));
       feedback ("Xnee exec received");
-      system ("xterm&");
+      exec_prog = xnee_get_exec_prog(xd);
+      if (exec_prog==NULL)
+	fprintf (xd->out_file, XNEE_EXEC_MARK"   \n");
+      else
+	fprintf (xd->out_file, XNEE_EXEC_MARK"    %s\n", exec_prog);
       ret=XNEE_GRAB_EXEC;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_INSERT)
@@ -481,7 +497,7 @@ xnee_handle_rec_km(xnee_data *xd)
       xnee_verbose ((xd, " ---  xnee_handle_rec_km: MARK \n"));
       time ( &rawtime );
       timeinfo = localtime ( &rawtime );
-      fprintf (xd->out_file, "#XNEE INSERT MARK:%.4d-%.2d-%.2d:%.2d.%.2d.%.2d\n",
+      fprintf (xd->out_file, "M MARK:%.4d-%.2d-%.2d:%.2d.%.2d.%.2d\n",
 	       timeinfo->tm_year + 1900 , 
 	       timeinfo->tm_mon + 1 , 
 	       timeinfo->tm_mday  ,
@@ -568,7 +584,6 @@ xnee_get_km_tuple (xnee_data     *xd,
   int idx=-1;
   int len=strlen(mod_and_key);
 
-  printf ("km=%s\n", mod_and_key);
   if (mod_and_key==NULL)
     {
       km->key=0;
