@@ -7,30 +7,23 @@ Hopefully this will lead to a better understanding of how to use Xnee
 and why some features exists and why some doesn't. 
 
 
-@chapter Projects files
-@cindex  Projects files
+@section Project file
+@cindex  Project file
 Xnee can be set either using command line options (when using xnee) or by
 clicking the correct buttons etc in the GUI (using gnee). Instead of setting 
 the same settings over and over again, you can use the Xnee Project File. 
 
 
-@subsection  Create a projects file
-@cindex      Create a projects file
-You can create a project by either
-@*
-using the @{write-settings} option in xnee. For information about how to do this, 
-read the Xnee man pages.
-
-@*
-save settins to file when using gnee
-
-@*
-write on for your self in your favorite editor.  For information about how to 
-do this, read the chapter 'Projects file syntax'.
+@subsection  Create a project file
+@cindex      Create a project file
+You can create a project by yourself. This can be done using the @code{write-settings} 
+option in xnee or the ``save settings to file'' when using gnee. You can also
+write one by yourself in your favorite editor.  For information about how to 
+do this, read the chapter 'Project file syntax'.
 
 
-@subsection  Projects file syntax
-@cindex      Projects file syntax
+@subsection  Project file syntax
+@cindex      Project file syntax
 
 @table @samp
 @item display displayname	
@@ -71,7 +64,16 @@ do this, read the chapter 'Projects file syntax'.
 	Pauses Xnee for secs seconds
  @item stop-key modifier key
 	Recording/replaying stops when pressing modifier + key. @*
-        See chapter "Stop key syntax" and "Stop modifier syntax" for syntax
+        See chapter "Key and modifier syntax" for syntax
+ @item pause-key modifier key
+	Recording/replaying pauses when pressing modifier + key. @*
+        See chapter "Key and modifier syntax" for syntax
+ @item resume-key modifier key
+	Recording/replaying resumes when pressing modifier + key. @*
+        See chapter "Key and modifier syntax" for syntax
+ @item insert-key modifier key
+  A mark is inserted into the session file.
+        See chapter "Key and modifier syntax" for syntax
  @item future-clients
 	TO BE DOCUMNETED
  @item all-clients
@@ -104,24 +106,36 @@ do this, read the chapter 'Projects file syntax'.
 	Sets the list of extension reply minor to record to <X-LIST>
 @end table
 
- 
-LIST is a comma separated list if displays, e.g @code{192.168.1.2:9,10.0.0.2:1}
+@* 
+LIST is a comma separated list if displays, e.g 
+@example
+@code{192.168.1.2:9,10.0.0.2:1}
+@end example
 @*
 RANGE is either a single data name or number or a range between two such 
 (seperated with a ``-'')
 @*
 X-LIST is a comma separated list of RANGE, e.g 
 @*
+@example
 @code{12-15,17,22-29,KeyPress-MotionNotify,ButtonPress}
+@end example
 
 
 
-@chapter Session files
-@cindex  Session files
+@section Session file
+@cindex  Session file
+The Xnee session files are the printouts from a recorded session. The file 
+starts with META information from .........
 
-@chapter Key and modifier syntax
+@section Key and modifier
+@cindex Key and modifier
+
+
+@subsection  Key and modifier syntax
+@cindex      Key and modifier syntax
 You can set the key by entering one character or the keycode for the 
-character you wish to use.
+character you wish to use. 
 
 Modifiers can be any of the following.
 @table @samp
@@ -146,19 +160,19 @@ Modifiers can be any of the following.
 @item  Alt_L
         Modifier is set to Alt_R
 @item  Alt 
-        Modifier is set to Alt_L and Alt_R
+        Modifier is set to be any of Alt_L and Alt_R
 @item  Shift_R
         Modifier is set to Shift_R
 @item  Shift_L
         Modifier is set to Shift_L
 @item  Shift
-        Modifier is set to Shift_L and Shift_R
+        Modifier is set to be any of Shift_L and Shift_R
 @item  Control_R
         Modifier is set to Control_R
 @item  Control_L
         Modifier is set to Control_L
 @item  Control
-        Modifier is set to Control_L and Control_R
+        Modifier is set to be any of Control_L and Control_R
 @item  Scroll
         Modifier is set Scroll
 @item  Caps_Lock
@@ -171,6 +185,8 @@ Modifiers can be any of the following.
 
 You can also specify the keycode for the modifier you wish to use
 
+@section Modifier examples
+@cindex  Modifier examples
 
 
 
@@ -274,7 +290,7 @@ The solve to the the problem of finding out what data to use as synchronisation 
 
 
 @subsection Slow replay session due to too many synchronise data 
-The synchronisation itself doesn't take much time but there are timeouts that makes Xnee paues for a short while (see above). If there are many such timeouts it will lead to a slow or shaking replaying session.
+The synchronisation itself doesn't take much time but there are timeouts that makes Xnee paues for a short while (see above). If there are many such timeouts it will lead to a slow or shaky replaying session.
 
 @subsection X protocol is rich
 For an end user (with no X expertise) it is hard to read the X protocol specification and make assumptions on what data to use.

@@ -1,88 +1,151 @@
 @node Installation, Examples, General ideas, top
-@chapter Xnee Installation
+@chapter Installation
 
 @section Installation from source with the configure script
 To unpack, build and install Xnee from the sourcefiles do the following:
-@table @samp
-@item Download the source files into a directory
+Download the source files into a directory
 
-@item Unzip the source file
+@*
+Unzip the source file
+@example
 @code{gunzip xnee-1.0.tar.gz}
+@end example
 
-@item Untar the source file
-@code{gunzip xnee-1.0.tar}
+@*
+Untar the source file
+@example
+@code{tar xvf xnee-1.0.tar}
+@end example
 
-@item Enter the Xnee directory
-@code{gunzip cd xnee-1.0}
+@*
+Enter the Xnee directory
+@example
+@code{cd xnee-1.0}
+@end example
 
-@item Generate the makefiles
+@*
+Generate the makefiles
+@example
 @code{./configure}
+@end example
+@*
 or if you want to specify which directory to install xnee to 
+@example
 @code{./configure --prefix=<PATH TO INSTALLATION DIR>}
+@end example
 
-@item Build Xnee
+@*
+Build Xnee
+@example
 @code{make clean all}
+@end example
 
-@item Install (as root)
+@*
+Install (as root)
+@example
 @code{make install}
-@end table
+@end example
 
 
 @section Installation from source with default Makefile
 To unpack, build and install Xnee from the sourcefiles do the following:
-@table @samp
-@item Download the source files into a directory
+@*
+Download the source files into a directory
 
-@item Unzip the source file
+@*
+Unzip the source file
+@example
 @code{gunzip xnee-1.0.tar.gz}
+@end example
 
-@item Untar the source file
-@code{gunzip xnee-1.0.tar}
+Untar the source file
+@example
+@code{tar xvf xnee-1.0.tar}
+@end example
 
-@item Enter the Xnee directory
-@code{gunzip cd xnee-1.0}
+Enter the Xnee directory
+@example
+@code{cd xnee-1.0}
+@end example
 
-@item Build Xnee
+Build Xnee
+@example
 @code{make -f Makefile.xnee clean all}
+@end example
 
-@item Copy the Xnee binary (xnee/src/xnee) to a directory
-E.g 
+Copy the Xnee binary (xnee/src/xnee) to a directory
+@example
 @code{cp xnee/src/xnee /usr/local/bin}
-
-@end table
+@end example
 
 
 
 
 
 @section Installation from SOURCE RPM
-Use the rpm command.
-E.g
+Use the rpm command, e.g
+@example
 @code{rpm --install xnee-0.9-1.i386.srpm}
-
+@end example
 
 
 @section Installation from RPM
-Use the rpm command.
-E.g
+Use the rpm command, e.g 
+@example
 @code{rpm --install xnee-0.9-1.i386.rpm}
+@end example
 
 
 @section Installation from CVS
-Download the xnee source coe from the CVS repository at 
+@*
+Download the xnee source code from the CVS repository at 
 @url{http://savannah.gnu.org}. Instructions on how to do 
-this can be found there as well. After have downloaded the sources
-do the following.
+this can be found there as well. 
+
+@*
+Genereate the configure script
+@example
 @code{make -f Makefile.cvs}
+@end example
+
+Generate the Makefiles
+@example
 @code{./configure}
+@end example
+
+Compile the binaries
+@example
 @code{make}
-@code{make install}
+@end example
+
+Install the binaries
+@example
+@code{make install} (as root)
+@end example
 
 
-@chapter Deinstallation
 
-@section Denstallation from SOURCE RPM
-Use the rpm command.
-E.g
+
+@chapter Uninstallation
+
+@section Uninstallation from SOURCE RPM
+Use the rpm command, e.g
+@example
 @code{rpm --erase xnee}
+@end example
+
+@section Uninstallation from RPM
+Use the rpm command, e.g
+@example
+@code{rpm --erase xnee}
+@end example
+
+@section Uninstallation from source installation
+Remove the Xnee binaries
+@example
+@code{rm /usr/local/bin/xnee}
+@code{rm /usr/local/bin/gnee}
+@code{rm /usr/local/lib/libxnee*}
+@end example
+
 

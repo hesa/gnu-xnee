@@ -1,13 +1,12 @@
-@node    Get started, Genereal ideas, Introduction, top
+@node    Getting started, General ideas, Introduction, top
 @chapter Getting started
 
-@section Getting started with Xnee
-@cindex Getting started
-To get the first feel of Xnee four examples are presented.
+@section Getting started 
+@cindex  Getting started 
+To get the first feel of Xnee some simple examples are presented. 
 
 @subsection Simple replay
-Start one terminal emulator (e.g xterm).
-Start Xnee, 
+Start a terminal emulator (e.g xterm) and then start Xnee, 
 @example
    @code{xnee --replay --file example1.xnr &}
 @end example
@@ -39,7 +38,7 @@ Let Xnee repeat the stuff you did in the example above.
 Undo all changes in the editor that was made in the previous example.
 Move the pointer to one of the terminal windows and start Xnee.
 @example
-   @code{xnee -rep -f exmaple2.xnr --time 5}
+   @code{xnee --replay -f exmaple2.xnr --time 5}
 @end example
 Move the pointer to the editor and get focus (e.g click the 
 window frame). After 5 seconds you will see your typings in the example 
@@ -59,7 +58,7 @@ After 5 seconds you can move the pointer around (20 motion events are recorded).
 Let Xnee repeat the stuff you did in the example above.. 
 Move the pointer to the terminal window and start Xnee.
 @example
-   @code{xnee -rep -f exmaple3.xnr --time 5}
+   @code{xnee --replay -f exmaple3.xnr --time 5}
 @end example
 After 5 seconds you will see your mouse motions in the example above being 
 repplayed.
@@ -67,19 +66,19 @@ repplayed.
 @subsection Simple retyping of a text file
 Let Xnee retype (type again) the text in a text file.
 Move the pointer to the terminal window and create a text file containing
-the command @{ls -l}. 
+the command @code{ls -l}. 
 @example
    @code{echo "ls -l" > ./mytext.txt}
 @end example
 And after that you start Xnee.
 @example
-   @code{xnee --retype  ./mytext.txt --time 5}
+   @code{xnee --retype-file  ./mytext.txt --time 5}
 @end example
 After 5 seconds you will see Xnee type @code{ls -l}, which probably will 
 list the files in the current directory.
 
-@subsection Example Xnee Project  files
-@cindex Example Xnee Project files
+@subsection Example Xnee Session files
+@cindex     Example Xnee Session files
 The example file above (example1.xnr) is a session file that has been 
 delivered with the sources (allthough not installed), rpm and with the 
 Xnee Documentation Package. The file(s) can be found:
@@ -90,15 +89,15 @@ Xnee Documentation Package. The file(s) can be found:
 
 @item
 @tab RPM
-@tab /usr/lib/xnee/projects
+@tab /usr/lib/xnee/session
 
 @item
 @tab Source
-@tab ./projects/
+@tab ./sessions/
 
 @item
 @tab Document Package
-@tab ./projects/
+@tab ./sessions/
 @end multitable
 
 

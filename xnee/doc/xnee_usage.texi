@@ -9,10 +9,10 @@ To get the first feel of Xnee four examples are presented.
 Start one terminal emulator (e.g xterm)
 Start Xnee, 
 @example
-   @code{xnee --replay --file example1.xnr &}
+   @code{xnee --replay --file example1.xns &}
 @end example
 ....dont forget '&'.
-The file example1.xnr contains keyboard events recorded during development of this manual. 
+The file example1.xns contains keyboard events recorded during development of this manual. 
 When replayed you'll what was typed and of course more important yu'll get i first glimpse 
 of Xnee and its capabilities. For information on where to find the example files, see below.
 
@@ -21,7 +21,7 @@ We move on to a (very) simple recording session.
 Start a terminal emulator (e.g xterm) and your favorite editor.
 Move the pointer to one of the terminal windows and start Xnee.
 @example
-   @code{xnee -o exmaple2.xnr --device-event-range 2-3 --time 5 --loops 20}
+   @code{xnee -o exmaple2.xns --device-event-range 2-3 --time 5 --loops 20}
 @end example
 Move the pointer to the other terminal windows and get focus (e.g click the window frame)
 After 5 seconds you can type whatever you want to record (20 press/relase of the keyboard are recorded).
@@ -33,7 +33,7 @@ Let Xnee repeat the stuff you did in the example above.
 Undo all changes in the editor that was made in the previous example.
 Move the pointer to one of the terminal windows and start Xnee.
 @example
-   @code{xnee -rep -f exmaple2.xnr --time 5}
+   @code{xnee -rep -f exmaple2.xns --time 5}
 @end example
 Move the pointer to the other terminal windows and get focus (e.g click the window frame)
 After 5 seconds you will see your typings in the example above being repeated.
@@ -43,7 +43,7 @@ We move on to another simple recording session.
 Start a terminal emulator (e.g xterm).
 Move the pointer to one of the terminal windows and start Xnee.
 @example
-   @code{xnee -o exmaple3.xnr --device-event-range 5-6 --time 5 --loops 20}
+   @code{xnee -o exmaple3.xns --device-event-range 5-6 --time 5 --loops 20}
 @end example
 Move the pointer to the other terminal windows and get focus (e.g click the window frame)
 After 5 seconds you can move the pointer around (20 motion events are recorded).
@@ -52,7 +52,7 @@ After 5 seconds you can move the pointer around (20 motion events are recorded).
 Let Xnee repeat the stuff you did in the example above.. 
 Move the pointer to a terminal windows and start Xnee.
 @example
-   @code{xnee -rep -f exmaple3.xnr --time 5}
+   @code{xnee -rep -f exmaple3.xns --time 5}
 @end example
 After 5 seconds you will see your mouse motions in the example above being repeated.
 
@@ -70,8 +70,9 @@ After 5 seconds you will see Xnee type @code{ls -l}, which probably will list th
 
 @subsection Example session files
 @cindex Example session file
-The example file above (example1.xnr) is a session file that has been delivered with the sources 
-(allthough not installed), rpm and with the Xnee Documentation Package. The file(s) can be found:
+The example file above (example1.xns) is a session file that has been 
+delivered with the sources (allthough not installed), rpm and with the 
+Xnee Documentation Package. The file(s) can be found:
 @multitable  @columnfractions .30 .30 .30 
 @item
 @tab @b{Distribution}
@@ -338,7 +339,8 @@ To get information about how to use Xnee's command line options please use the m
 To use a resource file use the @code{--resource} option,  e.g @code{xnee --resource xnee/resources/netscape.xns}
 
 @subsection  Recorded file
-To use a recorded file use the @code{--file} option,  e.g @code{xnee --file user1_session.xnee}
+To use a recorded file use the @code{--file} option,  e.g 
+@code{xnee --file user1_session.xnee}
 
 
 @section  Interupting Xnee

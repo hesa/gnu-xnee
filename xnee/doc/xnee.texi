@@ -43,7 +43,9 @@
 @page
 @vskip 0pt plus 1filll
 @title Xnee Manual 
-@subtitle a recorder, replayer and sistributor for X Window System
+@subtitle Xnee is a suite of programs which can,
+@subtitle record, replay and 'distribute'
+@subtitle X11 (X Window System) applications
 @subtitle version @value{VERSION} @value{UPDATED} 
 @author Henrik Sandklef
 @include xnee_copying
@@ -59,8 +61,8 @@
 
 @menu
 * Introduction::         Introduction
-* Get started::          Get started
-* Genereal ideas::       Genereal ideas
+* Getting started::      Getting started
+* General ideas::        General ideas
 * Installation::         Installation
 * Examples::             Usage examples
 * Internals::            Internals
@@ -73,7 +75,7 @@
 
 @shortcontents
 
-@node Introduction, Get started, top, top
+@node Introduction, Getting started, top, top
 @include xnee_intro.texi
 @include xnee_start.texi
 @include xnee_general.texi

@@ -11,7 +11,7 @@
 @item Where do I send bugs?
 @cindex Report bugs?
 Turn on verbose mode @code{xnee --verbose} and save the printouts. 
-Include all printouts and log files in the mail. 
+Include all printouts and log files in the mail which is sent to
 @email{xnee-bug@@gnu.org}
 @*
 
@@ -35,7 +35,7 @@ print-xxx-name options.
 No, but we are considering adding the functionality (see the TODO file)
 
 @item Where is the CVS repository?
- You can find a CVS tree (soon) at savannah.gnu.org.
+ You can find a CVS tree at @url{http://savannah.gnu.org}.
  You are more than welcome to join
 
 @item Is there a GUI frontend for Xnee ?
@@ -44,13 +44,12 @@ Yes! Gnee.
 
 @item What license is Xnee released under ?
 @cindex license
- GPL  @url{http://www.gnu.org/copyleft/gpl.html}
+ GPL. Which can be found at @url{http://www.gnu.org/copyleft/gpl.html}
 
 
 @item Why the name Xnee?
 @cindex why name it Xnee
-  We wanted to use a recursive acronym, as GNU (``GNU's Not Unix'). After having read the Wine documentation, I thought that Xnee is not an Event Emulator would work fine. Since Xnee is Not an Event Emulator but rather a XEvent generator. Emulation is not part of the game here.... 
-  .... it just sounds nice! 
+  We wanted to use a recursive acronym, as GNU (``GNU's Not Unix'). After having read the Wine documentation, I thought that Xnee is not an Event Emulator would work fine. Since Xnee is Not an Event Emulator but rather a event generator. 
 
 @item What does the name Gnee mean?
 @cindex  What does the name Gnee mean?
@@ -153,7 +152,7 @@ Specifically, the following dir,
 @code{make World |& tee LOG}
 @*
 @*
-Verify the build bu running @code{xdpyinfo} in an xterm in the vncserver 
+Verify the build by running @code{xdpyinfo} in an xterm in the vncserver 
 and verify that RECORD and XTEST extensions are loaded.
 
 
