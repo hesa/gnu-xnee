@@ -3,12 +3,13 @@ Xnee / NEWS
 
 Changes in 1.08
 	- new options:
-	   '--write-settings'   writes a resource file from settings done
-	   '--mouse'            sets up ranges for all mouse events
-	   '--keyboard'         sets up ranges for all keynoard events
+	   '--write-settings'      writes a resource file from settings done
+	   '--mouse'               sets up ranges for all mouse events
+	   '--keyboard'            sets up ranges for all keynoard events
 	   '--recorded-resolution' resolution used when recording
 	   '--replay-resolution'   resolution to use when replaying
-	   '--speed-adjust [percent]'   change the replaying speed
+	   '--no-resolution-adjustment'   Don't use resolution adjustment
+	   '--speed-percent [percent]'   change the replaying speed
 
         - synchronisation rewritten 
 
