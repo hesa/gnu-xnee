@@ -1,3 +1,10 @@
+2003-12-26  Henrik Sandklef  <hesa@laphroaig>
+
+	* include/libxnee/xnee.h: moved NEED_REPLIES, NEED_EVENTS
+
+	**************************************************
+	
+
 2003-04-15  Henrik Sandklef  <hesa@sandklef.com>
 
 	* src/*/*.c "plugin -> resource"

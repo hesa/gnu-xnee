@@ -15,6 +15,7 @@ CFLAGS = -W -Wall -pedantic -pedantic-errors  -Werror \
   -I./include/ -I./src -I./src/feedback \
   ${XOSD_FLAGS}  \
   -g -DHAVE_STDARG_H=1 
+# -DXNEE_WANT_DEBUG
 
 
 COMM_OBJS = src/xnee.o src/xnee_record.o \
@@ -36,6 +37,7 @@ COMM_OBJS = src/xnee.o src/xnee_record.o \
   src/xnee_time.o \
   src/xnee_threshold.o \
   src/xnee_range.o \
+  src/xnee_expr.o \
   src/feedback.o 
 
 

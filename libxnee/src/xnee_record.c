@@ -793,10 +793,10 @@ xnee_record_async(xnee_data *xd)
       usleep (100*100);
     }
 
-  XRecordDisableContext(xd->control, 
-			xd->record_setup->rContext);
-  XRecordFreeContext(xd->control, 
-			xd->record_setup->rContext);
+/*   XRecordDisableContext(xd->control,  */
+/* 			xd->record_setup->rContext); */
+/*   XRecordFreeContext(xd->control,  */
+/* 			xd->record_setup->rContext); */
   xnee_stop_session(xd);
 
   xnee_verbose((xd, " <--- xnee_record_async()\n"));

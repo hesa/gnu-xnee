@@ -261,15 +261,19 @@ xnee_open_display(xnee_data* xd)
 int  
 xnee_free_file (xnee_data *xd, char *file_name, FILE* file)
 {
-  
-  printf("Closing file=%s fd=%d\n", file_name, (int)file);
   if ( file_name != NULL) 
     {
-      xnee_verbose((xd, "Closing file=%s fd=%d\n", file_name, file));
-      XNEE_FREE (file_name); 
-      if ( file != 0) 
+      xnee_verbose((xd, "Closing file=%s fd=%d\n", 
+		    file_name, 
+		    (int)file));
+      
+      if ( ( file_name != NULL) && ( strlen(file_name)!=0))
 	{
-	  XNEE_FCLOSE (file); 
+	  XNEE_FREE (file_name); 
+	  if ( file != 0) 
+	    {
+	      XNEE_FCLOSE (file); 
+	    }
 	}
     }
   return XNEE_OK;
@@ -287,7 +291,6 @@ xnee_close_down(xnee_data* xd)
 {
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0 \n"  ));
 
-  printf ("cl\n");
   xnee_verbose((xd, "Freeing context "));
 
   xnee_ungrab_keys(xd_global);
@@ -305,8 +308,6 @@ xnee_close_down(xnee_data* xd)
       xnee_verbose((xd, "Destroying buffer semaphore "));
       sem_destroy (xd->buf_sem);
     }
-
-  printf ("cl middle\n");
 
 
   xnee_verbose((xd, "Closing displays on host "));
@@ -329,8 +330,6 @@ xnee_close_down(xnee_data* xd)
       /*      XCloseDisplay ( xd->control );*/
     }
 
-  printf ("cl middle 2\n");
-
   if ( xd->fake!=NULL)  
     {
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3 \n"  ));
@@ -346,27 +345,19 @@ xnee_close_down(xnee_data* xd)
       /*      XCloseDisplay ( xd->data );*/
     }
   
-  printf ("cl middle 3\n");
-
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.5 \n"  ));
   xnee_verbose((xd, "closing fds\n"));
   
   
-  printf ("cl middle 4\n");
-
   xnee_free_file (xd, xd->data_name, xd->data_file);
-  printf ("cl middle 4 2\n");
   xnee_free_file (xd, xd->rc_name,   xd->rc_file);
-
-  printf ("cl middle 5\n");
 
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.6 \n"  ));
   xnee_verbose((xd, "Freeeing data "));
   xnee_free_xnee_data(xd);
 
-/*   xnee_free_file (xd, xd->out_name,  xd->out_file); */
+  xnee_free_file (xd, xd->out_name,  xd->out_file);
   xnee_free_file (xd, xd->err_name,  xd->err_file); 
-  printf ("cl end\n");
 }
 
 
@@ -572,6 +563,15 @@ xnee_free_recordext_setup(xnee_data* xd)
   int max=xnee_get_max_range(xd);
 
   XNEE_DEBUG ( (stderr ," -->xnee_free_recordext_data()  \n"  ));
+  if (xd->control!=NULL)
+  {
+    if ( xd->record_setup->rContext != 0)
+      {
+	xnee_unsetup_recording(xd);
+      }
+  }
+
+
   if (max>0)
     {
       for ( i=0 ; i<max ; i++ )
@@ -580,14 +580,7 @@ xnee_free_recordext_setup(xnee_data* xd)
 	  free (xd->record_setup->range_array[i]);
 	}
     }
-  if (xd->control!=NULL)
-  {
-    if ( xd->record_setup->rContext != 0)
-      {
-	XRecordDisableContext (xd->control, xd->record_setup->rContext) ; 
-	XRecordFreeContext (xd->control, xd->record_setup->rContext) ; 
-      }
-  }
+
   free (xd->record_setup->xids);
   free (xd->record_setup->rState);
   free (xd->record_setup);
@@ -629,14 +622,14 @@ xnee_free_dyn_data(xnee_data *xd)
 {
    xnee_verbose((xd, "---> xnee_free_dyn_data\n"));
 
+   xnee_verbose((xd, " --- xnee_free_dyn_data: record_ext\n"));
+   xnee_free_recordext_setup ( xd);
+
    xnee_verbose((xd, " --- xnee_free_dyn_data: grab_keys\n"));
    xnee_free_grab_keys(xd);
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: resource_meta\n"));
    xnee_free_xnee_resource_meta(&xd->xrm);
-
-   xnee_verbose((xd, " --- xnee_free_dyn_data: record_ext\n"));
-   xnee_free_recordext_setup ( xd);
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: replay_setup\n"));
    free ( xd->replay_setup);
