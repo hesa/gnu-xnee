@@ -612,22 +612,22 @@ static char *gx_keys[] = {
 
 
 static void
-create_km_list(GtkWidget *m_combo,GtkWidget *k_combo)
+create_km_list(GtkWidget *k_combo)
 {
   int i = 0 ; 
-  GList *m_items = NULL;
+/*   GList *m_items = NULL; */
   GList *k_items = NULL;
 
 /*   GNEE_DEBUG(("Add modifiers\n")); */
   i=0;
-  while (gx_modifiers[i]!=NULL)
-    {
+/*   while (gx_modifiers[i]!=NULL) */
+/*     { */
 /*       GNEE_DEBUG(("Adding modifier: %s\n", gx_modifiers[i])); */
-      m_items = g_list_append (m_items, gx_modifiers[i]);
-      i++;
-    }
+/*       m_items = g_list_append (m_items, gx_modifiers[i]); */
+/*       i++; */
+/*     } */
 /*   GNEE_DEBUG(("Adding modifiers to popdown\n")); */
-  gtk_combo_set_popdown_strings (GTK_COMBO (m_combo), m_items);
+/*   gtk_combo_set_popdown_strings (GTK_COMBO (m_combo), m_items); */
 
   
   
@@ -644,14 +644,15 @@ create_km_list(GtkWidget *m_combo,GtkWidget *k_combo)
 
 
 static void
-create_km_lists_sub(char *mod_c, char *key_c)
+create_km_lists_sub(char *key_c)
 {
-  GtkWidget *m_entry;
+/*   GtkWidget *m_entry; */
   GtkWidget *k_entry;
 
-  m_entry = (GtkWidget *) lookup_widget (ext_gnee_window, mod_c);
+/*   m_entry = (GtkWidget *) lookup_widget (ext_gnee_window, mod_c); */
   k_entry = (GtkWidget *) lookup_widget (ext_gnee_window, key_c);
-  create_km_list(m_entry,k_entry);
+/*   create_km_list(m_entry,k_entry); */
+  create_km_list(k_entry);
 }
 
 void
@@ -670,11 +671,11 @@ gx_create_km_lists()
      9       mark   key
      10      exec   key
   ******************************************************/
-  create_km_lists_sub ( "combo1", "combo2");
-  create_km_lists_sub ( "combo3", "combo7");
-  create_km_lists_sub ( "combo4", "combo8");
-  create_km_lists_sub ( "combo5", "combo9");
-  create_km_lists_sub ( "combo6", "combo10");
+  create_km_lists_sub ("combo2");
+  create_km_lists_sub ("combo7");
+  create_km_lists_sub ("combo8");
+  create_km_lists_sub ("combo9");
+  create_km_lists_sub ("combo10");
 }
 
 

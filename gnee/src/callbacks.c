@@ -20,7 +20,7 @@ static int          use_delay = 0;
 static gint         delay = 0 ; 
 extern xnee_data   *ext_xd;
 extern gnee_xnee   *ext_gx;
-extern  GtkWidget   *ext_gnee_window;
+extern GtkWidget   *ext_gnee_window;
 
 
 
@@ -427,7 +427,6 @@ on_record                              (GtkButton       *button,
  	  gnee_recordable2xd(ext_gnee_window,  
 			     "include_event_store" , 
  			  XNEE_EVENT); 
-	  xnee_unset_verbose(ext_xd);
 
 	  gx_set_variable_data(ext_xd, ext_gx);
 	  
@@ -566,12 +565,15 @@ on_verbose_logging_checkbox_toggled    (GtkToggleButton *togglebutton,
 {
   if (ext_xd != NULL)
     {
+      printf (" verbose: ");
       if (gtk_toggle_button_get_active(togglebutton))
 	{
+      printf (" set\n");
 	  gx_set_verbose(ext_xd); 
 	}
       else
 	{
+      printf (" unset\n");
 	  gx_unset_verbose(ext_xd); 
 	}
     }
@@ -777,12 +779,8 @@ combo_change_helper(gpointer gw,
 		    int grab_action)
 {
   gchar *k_selection = NULL;
-  gchar *m_selection = NULL;
-
-  GtkWidget          *m_combo = NULL;
   GtkWidget          *k_combo = NULL;
 
-  char  m_combo_name[50] ;
   char  k_combo_name[50] ;
 
 
@@ -793,51 +791,37 @@ combo_change_helper(gpointer gw,
     {
     case XNEE_GRAB_STOP:
       GNEE_DEBUG((" stop \n"));
-      strcpy (m_combo_name, "stop_m_combo");
       strcpy (k_combo_name, "stop_k_combo");
       break;
     case XNEE_GRAB_PAUSE:
       GNEE_DEBUG((" pause \n"));
-      strcpy (m_combo_name, "pause_m_combo");
       strcpy (k_combo_name, "pause_k_combo");
       break;
     case XNEE_GRAB_RESUME:
       GNEE_DEBUG((" resume \n"));
-      strcpy (m_combo_name, "resume_m_combo");
       strcpy (k_combo_name, "resume_k_combo");
       break;
     case XNEE_GRAB_INSERT:
       GNEE_DEBUG((" insert \n"));
-      strcpy (m_combo_name, "mark_m_combo");
       strcpy (k_combo_name, "mark_k_combo");
       break;
     case XNEE_GRAB_EXEC:
       GNEE_DEBUG((" exec \n"));
-      strcpy (m_combo_name, "exec_m_combo");
       strcpy (k_combo_name, "exec_k_combo");
       break;
     default:
       GNEE_DEBUG(("NO action choosen\n"));
-      strcpy (m_combo_name, "");
       strcpy (k_combo_name, "");
     }
 
-  if (strlen (m_combo_name) != 0)
+  if (strlen (k_combo_name) != 0)
     {
       k_combo      = lookup_widget(GTK_WIDGET(gw),
 				   k_combo_name);
-      m_combo      = lookup_widget(GTK_WIDGET(gw),
-				   m_combo_name);
-
-      m_selection = gtk_editable_get_chars
-	(GTK_EDITABLE(m_combo), 0, -1);
       k_selection = gtk_editable_get_chars
 	(GTK_EDITABLE(k_combo), 0, -1);
     }
       
-  if ( (m_combo==NULL) || (m_combo==0) )
-    return ;
-
   
   if (strlen(k_selection)!=0)
     {
@@ -845,16 +829,10 @@ combo_change_helper(gpointer gw,
 	{
 	  GNEE_DEBUG((" combo no 1 \n"));
 	}
-      else if (strcmp (m_selection, "None")==0)
-	{
-	  GNEE_DEBUG((" combo no 1 \n"));
-	}
       else
 	{
 	  char mod_key[120];
-	  strcpy (mod_key, m_selection);
-	  strcat (mod_key, ",");
-	  strcat (mod_key, k_selection);
+	  strcpy (mod_key, k_selection);
 
 	  GNEE_DEBUG(("combo_change_helper: mod/key=%d   type=%.2d  %s \n", 
 		      mod_or_key,

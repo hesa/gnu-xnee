@@ -537,7 +537,6 @@ xnee_stop_session( xnee_data* xd)
 {
   xnee_verbose((xd, " ---> xnee_stop_session\n" ));
   xnee_verbose((xd, "xnee_stop_session : ungrab -----> \n"));
-  xnee_ungrab_keys (xd);
   xnee_verbose((xd, "xnee_stop_session : ungrab <---- \n"));
   xnee_reset_autorepeat (xd);
   xnee_verbose((xd, " <--- xnee_stop_session\n" ));
@@ -1910,6 +1909,7 @@ xnee_start(xnee_data *xd)
    
    xnee_verbose((xd, "xnee_start : ungrab -----> \n"));
    xnee_ungrab_keys (xd);
+
    xnee_verbose((xd, "xnee_start : ungrab <---- \n"));
    xnee_reset_autorepeat (xd); 
    

@@ -220,7 +220,7 @@ xnee_get_key_str (xnee_data *xd, int mode);
 char*
 xnee_get_extra_str (xnee_data *xd, int idx);
 
-#define xnee_get_stop_key(xd)        xnee_get_key_str(xd, XNEE_GRAB_EXEC)
+#define xnee_get_stop_key(xd)        xnee_get_key_str(xd, XNEE_GRAB_STOP)
 #define xnee_get_pause_key(xd)       xnee_get_key_str(xd, XNEE_GRAB_PAUSE)
 #define xnee_get_resume_key(xd)      xnee_get_key_str(xd, XNEE_GRAB_RESUME)
 #define xnee_get_insert_key(xd)      xnee_get_key_str(xd, XNEE_GRAB_INSERT)

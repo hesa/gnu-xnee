@@ -58,14 +58,15 @@ xnee_ungrab_key (xnee_data* xd, int mode)
     }
 
   xnee_verbose((xd, " ---  xnee_ungrab_key we have a grab struct allocated\n"));
-
-  xd->grab_keys->action_keys[mode].key;
-  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[mode].str);
+/*   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[mode].str); */
 
 
   if (xd->grab_keys->action_keys[mode].key==0) 
     {
       xnee_verbose((xd, "---  xnee_ungrab_key key==0\n"));
+
+      printf (" (((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((((( \n");
+
       return XNEE_OK;
     }
 
@@ -86,6 +87,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
 		  AnyModifier,
 		  window);
       xd->grab_keys->grab=1;
+      xd->grab_keys->action_keys[mode].key=0;
     }
   return XNEE_OK;
 }
@@ -99,7 +101,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
 int 
 xnee_ungrab_keys (xnee_data* xd)
 {
-  xnee_verbose((xd, "---> xnee_ungrab_keys\n"));
+  xnee_verbose((xd, "---> xnee_ungrab_keys\n")); 
 
   xnee_ungrab_key ( xd, XNEE_GRAB_STOP);
   xnee_ungrab_key ( xd, XNEE_GRAB_PAUSE);
@@ -265,7 +267,6 @@ xnee_grab_all_keys (xnee_data* xd)
   xnee_action_key ak;
 
   xnee_verbose((xd, "----> xnee_grab_all_keys\n"));
-
   /* check validity on the k+m combinations */
   ret = xnee_key_check(xd);
   if (ret != XNEE_OK)

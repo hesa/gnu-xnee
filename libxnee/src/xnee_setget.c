@@ -492,55 +492,70 @@ xnee_is_cont (xnee_data *xd)
 int
 xnee_set_key (xnee_data *xd, int mode, char* km)
 {
+  xnee_verbose((xd, "---> xnee_set_key\n"));
   switch (mode)
     {
     case XNEE_GRAB_STOP:
+      xnee_verbose((xd, " --- xnee_set_key stop to %s\n", km));
       xnee_set_stop_key(xd, km);
       break;
     case XNEE_GRAB_PAUSE:
+      xnee_verbose((xd, " --- xnee_set_key pause to %s\n", km));
       xnee_set_pause_key(xd, km);
       break;
     case XNEE_GRAB_RESUME:
+      xnee_verbose((xd, " --- xnee_set_key resume to %s\n", km));
       xnee_set_resume_key(xd, km);
       break;
     case XNEE_GRAB_INSERT:
+      xnee_verbose((xd, " --- xnee_set_key insert to %s\n", km));
       xnee_set_insert_key(xd, km);
       break;
     case XNEE_GRAB_EXEC:
+      xnee_verbose((xd, " --- xnee_set_key exec to %s\n", km));
       xnee_set_exec_key(xd, km);
       break;
     default:
       xnee_print_error ("Unknown grab mode\n");
       return XNEE_UNKNOWN_GRAB_MODE;
     }
+  xnee_verbose((xd, "<--- xnee_set_key\n"));
   return XNEE_OK;
 }
 
 char*
 xnee_get_key (xnee_data *xd, int mode)
 {
+  char *ret;
+  xnee_verbose((xd, "---> xnee_get_key %d\n", mode));
     switch (mode)
     {
     case XNEE_GRAB_STOP:
-      xnee_get_stop_key(xd);
+      xnee_verbose((xd, " --- xnee_get_key stop \n"));
+      ret = xnee_get_stop_key(xd);
       break;
     case XNEE_GRAB_PAUSE:
-      xnee_get_pause_key(xd);
+      xnee_verbose((xd, " --- xnee_get_key pause \n"));
+      ret = xnee_get_pause_key(xd);
       break;
     case XNEE_GRAB_RESUME:
-      xnee_get_resume_key(xd);
+      xnee_verbose((xd, " --- xnee_get_key resume \n"));
+      ret = xnee_get_resume_key(xd);
       break;
     case XNEE_GRAB_INSERT:
-      xnee_get_insert_key(xd);
+      xnee_verbose((xd, " --- xnee_get_key insert \n"));
+      ret = xnee_get_insert_key(xd);
       break;
     case XNEE_GRAB_EXEC:
-      xnee_get_exec_key(xd);
+      xnee_verbose((xd, " --- xnee_get_key exec \n"));
+      ret = xnee_get_exec_key(xd);
       break;
     default:
       xnee_print_error ("Unknown grab mode\n");
       return NULL;
     }
-    return XNEE_OK;
+    xnee_verbose((xd, "<--- xnee_get_key '%s'\n", ret));
+    return ret;
 }
 
 
@@ -581,6 +596,7 @@ xnee_get_key_str (xnee_data *xd, int idx)
 {
   if ( (idx<0) && (idx>XNEE_GRAB_LAST) )
     return NULL;
+
   return xd->grab_keys->action_keys[idx].str;
 }
 

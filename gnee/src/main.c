@@ -127,8 +127,6 @@ main (int argc, char *argv[])
 
 
     
-
-
     xd = xnee_new_xnee_data();
     ext_xd = xd;
 
@@ -147,14 +145,9 @@ main (int argc, char *argv[])
 	  }
       }
 
-
-
-
     /* TEST */
-    gx_add_event (gnee_window,"MotionNotify");
+     gx_add_event (gnee_window,"MotionNotify"); 
     /* END OF TEST */
-
-
 
     
     /* Set the signal handler the libxnee's built in */ 

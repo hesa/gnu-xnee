@@ -46,16 +46,13 @@ create_gnee_window (void)
   GtkWidget *menuitem4;
   GtkWidget *menuitem4_menu;
   GtkWidget *about1;
-  GtkWidget *hbox9;
-  GtkWidget *file_toolbar;
-  GtkWidget *new_button;
-  GtkWidget *open_button;
-  GtkWidget *save_button;
-  GtkWidget *action_toolbar;
-  GtkWidget *tmp_toolbar_icon;
-  GtkWidget *record_button;
-  GtkWidget *replay_button;
-  GtkWidget *stop_button;
+  GtkWidget *hbox34;
+  GtkWidget *new2_button;
+  GtkWidget *open2_button;
+  GtkWidget *save2_button;
+  GtkWidget *record2_button;
+  GtkWidget *replay2_button;
+  GtkWidget *stop2_button;
   GtkWidget *notebook;
   GtkWidget *general_settings_box;
   GtkWidget *hbox21;
@@ -196,25 +193,12 @@ create_gnee_window (void)
   GtkWidget *label2;
   GtkWidget *km_table;
   GtkWidget *label32;
-  GtkWidget *combo1;
-  GtkWidget *stop_m_combo;
-  GtkWidget *combo2;
-  GtkWidget *stop_k_combo;
   GtkWidget *label33;
-  GtkWidget *label34;
-  GtkWidget *label35;
   GtkWidget *label36;
   GtkWidget *label37;
   GtkWidget *label38;
   GtkWidget *label39;
-  GtkWidget *combo3;
-  GtkWidget *pause_m_combo;
-  GtkWidget *combo4;
-  GtkWidget *resume_m_combo;
-  GtkWidget *combo5;
-  GtkWidget *mark_m_combo;
-  GtkWidget *combo6;
-  GtkWidget *exec_m_combo;
+  GtkWidget *label35;
   GtkWidget *combo7;
   GtkWidget *pause_k_combo;
   GtkWidget *combo8;
@@ -223,12 +207,16 @@ create_gnee_window (void)
   GtkWidget *mark_k_combo;
   GtkWidget *combo10;
   GtkWidget *exec_k_combo;
-  GtkWidget *test_km_label;
-  GtkWidget *test_stop_km_b;
-  GtkWidget *test_pause_km_b;
-  GtkWidget *test_resume_km_b;
-  GtkWidget *test_mark_km_b;
-  GtkWidget *test_exec_km_b;
+  GtkWidget *combo2;
+  GtkWidget *stop_k_combo;
+  GtkWidget *label80;
+  GtkWidget *hbox35;
+  GtkWidget *label81;
+  GtkWidget *entry1;
+  GtkWidget *label82;
+  GtkWidget *label83;
+  GtkWidget *label84;
+  GtkWidget *label85;
   GtkWidget *keymodifierpane;
   GtkWidget *label74;
   GtkWidget *resolution;
@@ -307,64 +295,46 @@ create_gnee_window (void)
   gtk_widget_show (about1);
   gtk_container_add (GTK_CONTAINER (menuitem4_menu), about1);
 
-  hbox9 = gtk_hbox_new (FALSE, 0);
-  gtk_widget_show (hbox9);
-  gtk_box_pack_start (GTK_BOX (vbox1), hbox9, FALSE, TRUE, 0);
+  hbox34 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox34);
+  gtk_box_pack_start (GTK_BOX (vbox1), hbox34, FALSE, TRUE, 0);
 
-  file_toolbar = gtk_toolbar_new ();
-  gtk_widget_show (file_toolbar);
-  gtk_box_pack_start (GTK_BOX (hbox9), file_toolbar, FALSE, FALSE, 0);
-  gtk_toolbar_set_style (GTK_TOOLBAR (file_toolbar), GTK_TOOLBAR_BOTH);
+  new2_button = gtk_button_new_from_stock ("gtk-new");
+  gtk_widget_show (new2_button);
+  gtk_box_pack_start (GTK_BOX (hbox34), new2_button, FALSE, FALSE, 0);
+  GTK_WIDGET_UNSET_FLAGS (new2_button, GTK_CAN_FOCUS);
+  gtk_tooltips_set_tip (tooltips, new2_button, _("Create new Xnee Project File"), NULL);
 
-  new_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
-                                "gtk-new",
-                                _("Create new Xnee Project File"),
-                                NULL, NULL, NULL, -1);
-  gtk_widget_show (new_button);
+  open2_button = gtk_button_new_from_stock ("gtk-open");
+  gtk_widget_show (open2_button);
+  gtk_box_pack_start (GTK_BOX (hbox34), open2_button, FALSE, FALSE, 0);
+  GTK_WIDGET_UNSET_FLAGS (open2_button, GTK_CAN_FOCUS);
+  gtk_tooltips_set_tip (tooltips, open2_button, _("Open Xnee Project File"), NULL);
 
-  open_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
-                                "gtk-open",
-                                _("Open Xnee Project File"),
-                                NULL, NULL, NULL, -1);
-  gtk_widget_show (open_button);
+  save2_button = gtk_button_new_from_stock ("gtk-save");
+  gtk_widget_show (save2_button);
+  gtk_box_pack_start (GTK_BOX (hbox34), save2_button, FALSE, FALSE, 0);
+  GTK_WIDGET_UNSET_FLAGS (save2_button, GTK_CAN_FOCUS);
+  gtk_tooltips_set_tip (tooltips, save2_button, _("Save settings to Xnee Project File"), NULL);
 
-  save_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
-                                "gtk-save",
-                                _("Save settings to Xnee Project File"),
-                                NULL, NULL, NULL, -1);
-  gtk_widget_show (save_button);
+  record2_button = gtk_button_new_with_mnemonic (_("Record"));
+  gtk_widget_show (record2_button);
+  gtk_box_pack_start (GTK_BOX (hbox34), record2_button, FALSE, FALSE, 0);
+  GTK_WIDGET_UNSET_FLAGS (record2_button, GTK_CAN_FOCUS);
+  gtk_tooltips_set_tip (tooltips, record2_button, _("Start recording"), NULL);
 
-  action_toolbar = gtk_toolbar_new ();
-  gtk_widget_show (action_toolbar);
-  gtk_box_pack_start (GTK_BOX (hbox9), action_toolbar, FALSE, FALSE, 0);
-  gtk_toolbar_set_style (GTK_TOOLBAR (action_toolbar), GTK_TOOLBAR_BOTH);
+  replay2_button = gtk_button_new_with_mnemonic (_("Replay"));
+  gtk_widget_show (replay2_button);
+  gtk_box_pack_start (GTK_BOX (hbox34), replay2_button, FALSE, FALSE, 0);
+  GTK_WIDGET_UNSET_FLAGS (replay2_button, GTK_CAN_FOCUS);
+  gtk_tooltips_set_tip (tooltips, replay2_button, _("Start replay "), NULL);
 
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-no", gtk_toolbar_get_icon_size (GTK_TOOLBAR (action_toolbar)));
-  record_button = gtk_toolbar_append_element (GTK_TOOLBAR (action_toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("Record"),
-                                _("Start recording"), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (action_toolbar)->children)->data))->label), TRUE);
-  gtk_widget_show (record_button);
-
-  tmp_toolbar_icon = gtk_image_new_from_stock ("gtk-yes", gtk_toolbar_get_icon_size (GTK_TOOLBAR (action_toolbar)));
-  replay_button = gtk_toolbar_append_element (GTK_TOOLBAR (action_toolbar),
-                                GTK_TOOLBAR_CHILD_BUTTON,
-                                NULL,
-                                _("Replay"),
-                                _("Start replay "), NULL,
-                                tmp_toolbar_icon, NULL, NULL);
-  gtk_label_set_use_underline (GTK_LABEL (((GtkToolbarChild*) (g_list_last (GTK_TOOLBAR (action_toolbar)->children)->data))->label), TRUE);
-  gtk_widget_show (replay_button);
-
-  stop_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (action_toolbar),
-                                "gtk-stop",
-                                _("Stop"),
-                                NULL, NULL, NULL, -1);
-  gtk_widget_show (stop_button);
-  gtk_widget_set_sensitive (stop_button, FALSE);
+  stop2_button = gtk_button_new_from_stock ("gtk-stop");
+  gtk_widget_show (stop2_button);
+  gtk_box_pack_start (GTK_BOX (hbox34), stop2_button, FALSE, FALSE, 0);
+  gtk_widget_set_sensitive (stop2_button, FALSE);
+  GTK_WIDGET_UNSET_FLAGS (stop2_button, GTK_CAN_FOCUS);
+  gtk_tooltips_set_tip (tooltips, stop2_button, _("Stop"), NULL);
 
   notebook = gtk_notebook_new ();
   gtk_widget_show (notebook);
@@ -1053,7 +1023,7 @@ create_gnee_window (void)
   gtk_widget_show (label2);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label2);
 
-  km_table = gtk_table_new (6, 4, FALSE);
+  km_table = gtk_table_new (6, 3, FALSE);
   gtk_widget_show (km_table);
   gtk_container_add (GTK_CONTAINER (notebook), km_table);
 
@@ -1065,54 +1035,13 @@ create_gnee_window (void)
   gtk_label_set_use_markup (GTK_LABEL (label32), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label32), 0, 0.5);
 
-  combo1 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo1)->popwin),
-                     "GladeParentKey", combo1);
-  gtk_widget_show (combo1);
-  gtk_table_attach (GTK_TABLE (km_table), combo1, 1, 2, 1, 2,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  stop_m_combo = GTK_COMBO (combo1)->entry;
-  gtk_widget_show (stop_m_combo);
-  gtk_tooltips_set_tip (tooltips, stop_m_combo, _("Sets the stop modifier"), NULL);
-
-  combo2 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo2)->popwin),
-                     "GladeParentKey", combo2);
-  gtk_widget_show (combo2);
-  gtk_table_attach (GTK_TABLE (km_table), combo2, 2, 3, 1, 2,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  stop_k_combo = GTK_COMBO (combo2)->entry;
-  gtk_widget_show (stop_k_combo);
-  gtk_tooltips_set_tip (tooltips, stop_k_combo, _("Set the stop key"), NULL);
-
   label33 = gtk_label_new (_("<b>Action</b>"));
   gtk_widget_show (label33);
   gtk_table_attach (GTK_TABLE (km_table), label33, 0, 1, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-  gtk_widget_set_size_request (label33, 65, -1);
   gtk_label_set_use_markup (GTK_LABEL (label33), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label33), 0, 0.5);
-
-  label34 = gtk_label_new (_("<b>Modifier</b>"));
-  gtk_widget_show (label34);
-  gtk_table_attach (GTK_TABLE (km_table), label34, 1, 2, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_use_markup (GTK_LABEL (label34), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label34), 0, 0.5);
-
-  label35 = gtk_label_new (_("<b>Key</b>"));
-  gtk_widget_show (label35);
-  gtk_table_attach (GTK_TABLE (km_table), label35, 2, 3, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_label_set_use_markup (GTK_LABEL (label35), TRUE);
-  gtk_misc_set_alignment (GTK_MISC (label35), 0, 0.5);
 
   label36 = gtk_label_new (_("Pause"));
   gtk_widget_show (label36);
@@ -1146,59 +1075,20 @@ create_gnee_window (void)
   gtk_label_set_use_markup (GTK_LABEL (label39), TRUE);
   gtk_misc_set_alignment (GTK_MISC (label39), 0, 0.5);
 
-  combo3 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo3)->popwin),
-                     "GladeParentKey", combo3);
-  gtk_widget_show (combo3);
-  gtk_table_attach (GTK_TABLE (km_table), combo3, 1, 2, 2, 3,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+  label35 = gtk_label_new (_("<b>Key</b>"));
+  gtk_widget_show (label35);
+  gtk_table_attach (GTK_TABLE (km_table), label35, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
-
-  pause_m_combo = GTK_COMBO (combo3)->entry;
-  gtk_widget_show (pause_m_combo);
-  gtk_tooltips_set_tip (tooltips, pause_m_combo, _("Set the pause modifier"), NULL);
-
-  combo4 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo4)->popwin),
-                     "GladeParentKey", combo4);
-  gtk_widget_show (combo4);
-  gtk_table_attach (GTK_TABLE (km_table), combo4, 1, 2, 3, 4,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  resume_m_combo = GTK_COMBO (combo4)->entry;
-  gtk_widget_show (resume_m_combo);
-  gtk_tooltips_set_tip (tooltips, resume_m_combo, _("Set the resume modifier"), NULL);
-
-  combo5 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo5)->popwin),
-                     "GladeParentKey", combo5);
-  gtk_widget_show (combo5);
-  gtk_table_attach (GTK_TABLE (km_table), combo5, 1, 2, 4, 5,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  mark_m_combo = GTK_COMBO (combo5)->entry;
-  gtk_widget_show (mark_m_combo);
-  gtk_tooltips_set_tip (tooltips, mark_m_combo, _("Set the insert mark modifier"), NULL);
-
-  combo6 = gtk_combo_new ();
-  g_object_set_data (G_OBJECT (GTK_COMBO (combo6)->popwin),
-                     "GladeParentKey", combo6);
-  gtk_widget_show (combo6);
-  gtk_table_attach (GTK_TABLE (km_table), combo6, 1, 2, 5, 6,
-                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-
-  exec_m_combo = GTK_COMBO (combo6)->entry;
-  gtk_widget_show (exec_m_combo);
-  gtk_tooltips_set_tip (tooltips, exec_m_combo, _("Set the exec modifier"), NULL);
+  gtk_widget_set_size_request (label35, 20, -1);
+  gtk_label_set_use_markup (GTK_LABEL (label35), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label35), 0, 0.5);
 
   combo7 = gtk_combo_new ();
   g_object_set_data (G_OBJECT (GTK_COMBO (combo7)->popwin),
                      "GladeParentKey", combo7);
   gtk_widget_show (combo7);
-  gtk_table_attach (GTK_TABLE (km_table), combo7, 2, 3, 2, 3,
+  gtk_table_attach (GTK_TABLE (km_table), combo7, 1, 2, 2, 3,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
@@ -1210,7 +1100,7 @@ create_gnee_window (void)
   g_object_set_data (G_OBJECT (GTK_COMBO (combo8)->popwin),
                      "GladeParentKey", combo8);
   gtk_widget_show (combo8);
-  gtk_table_attach (GTK_TABLE (km_table), combo8, 2, 3, 3, 4,
+  gtk_table_attach (GTK_TABLE (km_table), combo8, 1, 2, 3, 4,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
@@ -1222,7 +1112,7 @@ create_gnee_window (void)
   g_object_set_data (G_OBJECT (GTK_COMBO (combo9)->popwin),
                      "GladeParentKey", combo9);
   gtk_widget_show (combo9);
-  gtk_table_attach (GTK_TABLE (km_table), combo9, 2, 3, 4, 5,
+  gtk_table_attach (GTK_TABLE (km_table), combo9, 1, 2, 4, 5,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
@@ -1234,7 +1124,7 @@ create_gnee_window (void)
   g_object_set_data (G_OBJECT (GTK_COMBO (combo10)->popwin),
                      "GladeParentKey", combo10);
   gtk_widget_show (combo10);
-  gtk_table_attach (GTK_TABLE (km_table), combo10, 2, 3, 5, 6,
+  gtk_table_attach (GTK_TABLE (km_table), combo10, 1, 2, 5, 6,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
@@ -1242,45 +1132,67 @@ create_gnee_window (void)
   gtk_widget_show (exec_k_combo);
   gtk_tooltips_set_tip (tooltips, exec_k_combo, _("Set the exec key"), NULL);
 
-  test_km_label = gtk_label_new (_("<b>Grab status</b>"));
-  gtk_widget_show (test_km_label);
-  gtk_table_attach (GTK_TABLE (km_table), test_km_label, 3, 4, 0, 1,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
-  gtk_widget_set_size_request (test_km_label, 65, -1);
-  gtk_label_set_use_markup (GTK_LABEL (test_km_label), TRUE);
-  gtk_label_set_justify (GTK_LABEL (test_km_label), GTK_JUSTIFY_CENTER);
-  gtk_misc_set_alignment (GTK_MISC (test_km_label), 0, 0.5);
-
-  test_stop_km_b = gtk_button_new_with_mnemonic (_("Press to test"));
-  gtk_widget_show (test_stop_km_b);
-  gtk_table_attach (GTK_TABLE (km_table), test_stop_km_b, 3, 4, 1, 2,
-                    (GtkAttachOptions) (GTK_FILL),
+  combo2 = gtk_combo_new ();
+  g_object_set_data (G_OBJECT (GTK_COMBO (combo2)->popwin),
+                     "GladeParentKey", combo2);
+  gtk_widget_show (combo2);
+  gtk_table_attach (GTK_TABLE (km_table), combo2, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  test_pause_km_b = gtk_button_new_with_mnemonic (_("Press to test"));
-  gtk_widget_show (test_pause_km_b);
-  gtk_table_attach (GTK_TABLE (km_table), test_pause_km_b, 3, 4, 2, 3,
-                    (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+  stop_k_combo = GTK_COMBO (combo2)->entry;
+  gtk_widget_show (stop_k_combo);
+  gtk_tooltips_set_tip (tooltips, stop_k_combo, _("Set the stop key"), NULL);
 
-  test_resume_km_b = gtk_button_new_with_mnemonic (_("Press to test"));
-  gtk_widget_show (test_resume_km_b);
-  gtk_table_attach (GTK_TABLE (km_table), test_resume_km_b, 3, 4, 3, 4,
+  label80 = gtk_label_new (_("<b>Extra parameter</b>"));
+  gtk_widget_show (label80);
+  gtk_table_attach (GTK_TABLE (km_table), label80, 2, 3, 0, 1,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_label_set_use_markup (GTK_LABEL (label80), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (label80), 0, 0.5);
 
-  test_mark_km_b = gtk_button_new_with_mnemonic (_("Press to test"));
-  gtk_widget_show (test_mark_km_b);
-  gtk_table_attach (GTK_TABLE (km_table), test_mark_km_b, 3, 4, 4, 5,
+  hbox35 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox35);
+  gtk_table_attach (GTK_TABLE (km_table), hbox35, 2, 3, 5, 6,
                     (GtkAttachOptions) (GTK_FILL),
-                    (GtkAttachOptions) (0), 0, 0);
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
 
-  test_exec_km_b = gtk_button_new_with_mnemonic (_("Press to test"));
-  gtk_widget_show (test_exec_km_b);
-  gtk_table_attach (GTK_TABLE (km_table), test_exec_km_b, 3, 4, 5, 6,
+  label81 = gtk_label_new (_("Execute string:"));
+  gtk_widget_show (label81);
+  gtk_box_pack_start (GTK_BOX (hbox35), label81, FALSE, FALSE, 0);
+
+  entry1 = gtk_entry_new ();
+  gtk_widget_show (entry1);
+  gtk_box_pack_start (GTK_BOX (hbox35), entry1, TRUE, TRUE, 0);
+
+  label82 = gtk_label_new (_("Unused"));
+  gtk_widget_show (label82);
+  gtk_table_attach (GTK_TABLE (km_table), label82, 2, 3, 1, 2,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label82), 0, 0.5);
+
+  label83 = gtk_label_new (_("Unused"));
+  gtk_widget_show (label83);
+  gtk_table_attach (GTK_TABLE (km_table), label83, 2, 3, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label83), 0, 0.5);
+
+  label84 = gtk_label_new (_("Unused"));
+  gtk_widget_show (label84);
+  gtk_table_attach (GTK_TABLE (km_table), label84, 2, 3, 3, 4,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label84), 0, 0.5);
+
+  label85 = gtk_label_new (_("Unused"));
+  gtk_widget_show (label85);
+  gtk_table_attach (GTK_TABLE (km_table), label85, 2, 3, 4, 5,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label85), 0, 0.5);
 
   keymodifierpane = gtk_label_new (_("Key bindings"));
   gtk_widget_show (keymodifierpane);
@@ -1326,16 +1238,16 @@ create_gnee_window (void)
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about1_activate),
                     NULL);
-  g_signal_connect ((gpointer) open_button, "clicked",
+  g_signal_connect ((gpointer) open2_button, "clicked",
                     G_CALLBACK (on_open_button_clicked),
                     NULL);
-  g_signal_connect ((gpointer) save_button, "clicked",
+  g_signal_connect ((gpointer) save2_button, "clicked",
                     G_CALLBACK (on_save_button_clicked),
                     NULL);
-  g_signal_connect_swapped ((gpointer) record_button, "clicked",
+  g_signal_connect_swapped ((gpointer) record2_button, "clicked",
                             G_CALLBACK (on_record),
                             GTK_OBJECT (gnee_window));
-  g_signal_connect_swapped ((gpointer) replay_button, "clicked",
+  g_signal_connect_swapped ((gpointer) replay2_button, "clicked",
                             G_CALLBACK (on_replay),
                             GTK_OBJECT (gnee_window));
   g_signal_connect_swapped ((gpointer) verbose_logging_checkbox, "toggled",
@@ -1434,25 +1346,6 @@ create_gnee_window (void)
   g_signal_connect_swapped ((gpointer) force_rep_cb, "toggled",
                             G_CALLBACK (on_force_rep_cb_toggled),
                             GTK_OBJECT (force_rep_cb));
-  g_signal_connect_data ((gpointer) stop_m_combo, "changed",
-                         G_CALLBACK (on_stop_m_combo_changed),
-                         GTK_OBJECT (gnee_window),
-                         NULL, G_CONNECT_AFTER | G_CONNECT_SWAPPED);
-  g_signal_connect_swapped ((gpointer) stop_k_combo, "changed",
-                            G_CALLBACK (on_stop_k_combo_changed),
-                            GTK_OBJECT (gnee_window));
-  g_signal_connect_swapped ((gpointer) pause_m_combo, "changed",
-                            G_CALLBACK (on_pause_m_combo_changed),
-                            GTK_OBJECT (gnee_window));
-  g_signal_connect_swapped ((gpointer) resume_m_combo, "changed",
-                            G_CALLBACK (on_resume_m_combo_changed),
-                            GTK_OBJECT (gnee_window));
-  g_signal_connect_swapped ((gpointer) mark_m_combo, "changed",
-                            G_CALLBACK (on_mark_m_combo_changed),
-                            GTK_OBJECT (gnee_window));
-  g_signal_connect_swapped ((gpointer) exec_m_combo, "changed",
-                            G_CALLBACK (on_exec_m_combo_changed),
-                            GTK_OBJECT (gnee_window));
   g_signal_connect_swapped ((gpointer) pause_k_combo, "changed",
                             G_CALLBACK (on_pause_k_combo_changed),
                             GTK_OBJECT (gnee_window));
@@ -1464,6 +1357,9 @@ create_gnee_window (void)
                             GTK_OBJECT (gnee_window));
   g_signal_connect_swapped ((gpointer) exec_k_combo, "changed",
                             G_CALLBACK (on_exec_k_combo_changed),
+                            GTK_OBJECT (gnee_window));
+  g_signal_connect_swapped ((gpointer) stop_k_combo, "changed",
+                            G_CALLBACK (on_stop_k_combo_changed),
                             GTK_OBJECT (gnee_window));
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
@@ -1484,15 +1380,13 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, menuitem4, "menuitem4");
   GLADE_HOOKUP_OBJECT (gnee_window, menuitem4_menu, "menuitem4_menu");
   GLADE_HOOKUP_OBJECT (gnee_window, about1, "about1");
-  GLADE_HOOKUP_OBJECT (gnee_window, hbox9, "hbox9");
-  GLADE_HOOKUP_OBJECT (gnee_window, file_toolbar, "file_toolbar");
-  GLADE_HOOKUP_OBJECT (gnee_window, new_button, "new_button");
-  GLADE_HOOKUP_OBJECT (gnee_window, open_button, "open_button");
-  GLADE_HOOKUP_OBJECT (gnee_window, save_button, "save_button");
-  GLADE_HOOKUP_OBJECT (gnee_window, action_toolbar, "action_toolbar");
-  GLADE_HOOKUP_OBJECT (gnee_window, record_button, "record_button");
-  GLADE_HOOKUP_OBJECT (gnee_window, replay_button, "replay_button");
-  GLADE_HOOKUP_OBJECT (gnee_window, stop_button, "stop_button");
+  GLADE_HOOKUP_OBJECT (gnee_window, hbox34, "hbox34");
+  GLADE_HOOKUP_OBJECT (gnee_window, new2_button, "new2_button");
+  GLADE_HOOKUP_OBJECT (gnee_window, open2_button, "open2_button");
+  GLADE_HOOKUP_OBJECT (gnee_window, save2_button, "save2_button");
+  GLADE_HOOKUP_OBJECT (gnee_window, record2_button, "record2_button");
+  GLADE_HOOKUP_OBJECT (gnee_window, replay2_button, "replay2_button");
+  GLADE_HOOKUP_OBJECT (gnee_window, stop2_button, "stop2_button");
   GLADE_HOOKUP_OBJECT (gnee_window, notebook, "notebook");
   GLADE_HOOKUP_OBJECT (gnee_window, general_settings_box, "general_settings_box");
   GLADE_HOOKUP_OBJECT (gnee_window, hbox21, "hbox21");
@@ -1622,25 +1516,12 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, label2, "label2");
   GLADE_HOOKUP_OBJECT (gnee_window, km_table, "km_table");
   GLADE_HOOKUP_OBJECT (gnee_window, label32, "label32");
-  GLADE_HOOKUP_OBJECT (gnee_window, combo1, "combo1");
-  GLADE_HOOKUP_OBJECT (gnee_window, stop_m_combo, "stop_m_combo");
-  GLADE_HOOKUP_OBJECT (gnee_window, combo2, "combo2");
-  GLADE_HOOKUP_OBJECT (gnee_window, stop_k_combo, "stop_k_combo");
   GLADE_HOOKUP_OBJECT (gnee_window, label33, "label33");
-  GLADE_HOOKUP_OBJECT (gnee_window, label34, "label34");
-  GLADE_HOOKUP_OBJECT (gnee_window, label35, "label35");
   GLADE_HOOKUP_OBJECT (gnee_window, label36, "label36");
   GLADE_HOOKUP_OBJECT (gnee_window, label37, "label37");
   GLADE_HOOKUP_OBJECT (gnee_window, label38, "label38");
   GLADE_HOOKUP_OBJECT (gnee_window, label39, "label39");
-  GLADE_HOOKUP_OBJECT (gnee_window, combo3, "combo3");
-  GLADE_HOOKUP_OBJECT (gnee_window, pause_m_combo, "pause_m_combo");
-  GLADE_HOOKUP_OBJECT (gnee_window, combo4, "combo4");
-  GLADE_HOOKUP_OBJECT (gnee_window, resume_m_combo, "resume_m_combo");
-  GLADE_HOOKUP_OBJECT (gnee_window, combo5, "combo5");
-  GLADE_HOOKUP_OBJECT (gnee_window, mark_m_combo, "mark_m_combo");
-  GLADE_HOOKUP_OBJECT (gnee_window, combo6, "combo6");
-  GLADE_HOOKUP_OBJECT (gnee_window, exec_m_combo, "exec_m_combo");
+  GLADE_HOOKUP_OBJECT (gnee_window, label35, "label35");
   GLADE_HOOKUP_OBJECT (gnee_window, combo7, "combo7");
   GLADE_HOOKUP_OBJECT (gnee_window, pause_k_combo, "pause_k_combo");
   GLADE_HOOKUP_OBJECT (gnee_window, combo8, "combo8");
@@ -1649,12 +1530,16 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, mark_k_combo, "mark_k_combo");
   GLADE_HOOKUP_OBJECT (gnee_window, combo10, "combo10");
   GLADE_HOOKUP_OBJECT (gnee_window, exec_k_combo, "exec_k_combo");
-  GLADE_HOOKUP_OBJECT (gnee_window, test_km_label, "test_km_label");
-  GLADE_HOOKUP_OBJECT (gnee_window, test_stop_km_b, "test_stop_km_b");
-  GLADE_HOOKUP_OBJECT (gnee_window, test_pause_km_b, "test_pause_km_b");
-  GLADE_HOOKUP_OBJECT (gnee_window, test_resume_km_b, "test_resume_km_b");
-  GLADE_HOOKUP_OBJECT (gnee_window, test_mark_km_b, "test_mark_km_b");
-  GLADE_HOOKUP_OBJECT (gnee_window, test_exec_km_b, "test_exec_km_b");
+  GLADE_HOOKUP_OBJECT (gnee_window, combo2, "combo2");
+  GLADE_HOOKUP_OBJECT (gnee_window, stop_k_combo, "stop_k_combo");
+  GLADE_HOOKUP_OBJECT (gnee_window, label80, "label80");
+  GLADE_HOOKUP_OBJECT (gnee_window, hbox35, "hbox35");
+  GLADE_HOOKUP_OBJECT (gnee_window, label81, "label81");
+  GLADE_HOOKUP_OBJECT (gnee_window, entry1, "entry1");
+  GLADE_HOOKUP_OBJECT (gnee_window, label82, "label82");
+  GLADE_HOOKUP_OBJECT (gnee_window, label83, "label83");
+  GLADE_HOOKUP_OBJECT (gnee_window, label84, "label84");
+  GLADE_HOOKUP_OBJECT (gnee_window, label85, "label85");
   GLADE_HOOKUP_OBJECT (gnee_window, keymodifierpane, "keymodifierpane");
   GLADE_HOOKUP_OBJECT (gnee_window, label74, "label74");
   GLADE_HOOKUP_OBJECT (gnee_window, resolution, "resolution");

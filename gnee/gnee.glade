@@ -142,46 +142,18 @@
       </child>
 
       <child>
-	<widget class="GtkHBox" id="hbox9">
+	<widget class="GtkHBox" id="hbox34">
 	  <property name="visible">True</property>
 	  <property name="homogeneous">False</property>
 	  <property name="spacing">0</property>
 
 	  <child>
-	    <widget class="GtkToolbar" id="file_toolbar">
+	    <widget class="GtkButton" id="new2_button">
 	      <property name="visible">True</property>
-	      <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
-	      <property name="toolbar_style">GTK_TOOLBAR_BOTH</property>
-	      <property name="tooltips">True</property>
-
-	      <child>
-		<widget class="button" id="new_button">
-		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Create new Xnee Project File</property>
-		  <property name="label">gtk-new</property>
-		  <property name="use_stock">True</property>
-		</widget>
-	      </child>
-
-	      <child>
-		<widget class="button" id="open_button">
-		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Open Xnee Project File</property>
-		  <property name="label">gtk-open</property>
-		  <property name="use_stock">True</property>
-		  <signal name="clicked" handler="on_open_button_clicked" last_modification_time="Sun, 14 Dec 2003 00:22:47 GMT"/>
-		</widget>
-	      </child>
-
-	      <child>
-		<widget class="button" id="save_button">
-		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Save settings to Xnee Project File</property>
-		  <property name="label">gtk-save</property>
-		  <property name="use_stock">True</property>
-		  <signal name="clicked" handler="on_save_button_clicked" last_modification_time="Fri, 19 Dec 2003 23:27:04 GMT"/>
-		</widget>
-	      </child>
+	      <property name="tooltip" translatable="yes">Create new Xnee Project File</property>
+	      <property name="label">gtk-new</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
@@ -191,43 +163,77 @@
 	  </child>
 
 	  <child>
-	    <widget class="GtkToolbar" id="action_toolbar">
+	    <widget class="GtkButton" id="open2_button">
 	      <property name="visible">True</property>
-	      <property name="orientation">GTK_ORIENTATION_HORIZONTAL</property>
-	      <property name="toolbar_style">GTK_TOOLBAR_BOTH</property>
-	      <property name="tooltips">True</property>
+	      <property name="tooltip" translatable="yes">Open Xnee Project File</property>
+	      <property name="label">gtk-open</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <signal name="clicked" handler="on_open_button_clicked" last_modification_time="Sun, 14 Dec 2003 00:22:47 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
 
-	      <child>
-		<widget class="button" id="record_button">
-		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Start recording</property>
-		  <property name="label" translatable="yes">Record</property>
-		  <property name="use_underline">True</property>
-		  <property name="stock_pixmap">gtk-no</property>
-		  <signal name="clicked" handler="on_record" object="gnee_window" last_modification_time="Sun, 27 Jul 2003 18:50:11 GMT"/>
-		</widget>
-	      </child>
+	  <child>
+	    <widget class="GtkButton" id="save2_button">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Save settings to Xnee Project File</property>
+	      <property name="label">gtk-save</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <signal name="clicked" handler="on_save_button_clicked" last_modification_time="Fri, 19 Dec 2003 23:27:04 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
 
-	      <child>
-		<widget class="button" id="replay_button">
-		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Start replay </property>
-		  <property name="label" translatable="yes">Replay</property>
-		  <property name="use_underline">True</property>
-		  <property name="stock_pixmap">gtk-yes</property>
-		  <signal name="clicked" handler="on_replay" object="gnee_window" last_modification_time="Sun, 27 Jul 2003 18:49:33 GMT"/>
-		</widget>
-	      </child>
+	  <child>
+	    <widget class="GtkButton" id="record2_button">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Start recording</property>
+	      <property name="label" translatable="yes">Record</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <signal name="clicked" handler="on_record" object="gnee_window" last_modification_time="Sun, 27 Jul 2003 18:50:11 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
 
-	      <child>
-		<widget class="button" id="stop_button">
-		  <property name="visible">True</property>
-		  <property name="sensitive">False</property>
-		  <property name="tooltip" translatable="yes">Stop</property>
-		  <property name="label">gtk-stop</property>
-		  <property name="use_stock">True</property>
-		</widget>
-	      </child>
+	  <child>
+	    <widget class="GtkButton" id="replay2_button">
+	      <property name="visible">True</property>
+	      <property name="tooltip" translatable="yes">Start replay </property>
+	      <property name="label" translatable="yes">Replay</property>
+	      <property name="use_underline">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
+	      <signal name="clicked" handler="on_replay" object="gnee_window" last_modification_time="Sun, 27 Jul 2003 18:49:33 GMT"/>
+	    </widget>
+	    <packing>
+	      <property name="padding">0</property>
+	      <property name="expand">False</property>
+	      <property name="fill">False</property>
+	    </packing>
+	  </child>
+
+	  <child>
+	    <widget class="GtkButton" id="stop2_button">
+	      <property name="visible">True</property>
+	      <property name="sensitive">False</property>
+	      <property name="tooltip" translatable="yes">Stop</property>
+	      <property name="label">gtk-stop</property>
+	      <property name="use_stock">True</property>
+	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	    </widget>
 	    <packing>
 	      <property name="padding">0</property>
@@ -2402,7 +2408,7 @@
 	    <widget class="GtkTable" id="km_table">
 	      <property name="visible">True</property>
 	      <property name="n_rows">6</property>
-	      <property name="n_columns">4</property>
+	      <property name="n_columns">3</property>
 	      <property name="homogeneous">False</property>
 	      <property name="row_spacing">0</property>
 	      <property name="column_spacing">0</property>
@@ -2432,90 +2438,7 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkCombo" id="combo1">
-		  <property name="visible">True</property>
-		  <property name="value_in_list">False</property>
-		  <property name="allow_empty">True</property>
-		  <property name="case_sensitive">False</property>
-		  <property name="enable_arrow_keys">True</property>
-		  <property name="enable_arrows_always">False</property>
-
-		  <child internal-child="entry">
-		    <widget class="GtkEntry" id="stop_m_combo">
-		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Sets the stop modifier</property>
-		      <property name="can_focus">True</property>
-		      <property name="editable">True</property>
-		      <property name="visibility">True</property>
-		      <property name="max_length">0</property>
-		      <property name="text" translatable="yes"></property>
-		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
-		      <property name="activates_default">False</property>
-		      <signal name="changed" handler="on_stop_m_combo_changed" after="yes" object="gnee_window" last_modification_time="Sun, 28 Dec 2003 17:36:08 GMT"/>
-		    </widget>
-		  </child>
-
-		  <child internal-child="list">
-		    <widget class="GtkList" id="combo-list2">
-		      <property name="visible">True</property>
-		      <property name="selection_mode">GTK_SELECTION_BROWSE</property>
-		    </widget>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">1</property>
-		  <property name="right_attach">2</property>
-		  <property name="top_attach">1</property>
-		  <property name="bottom_attach">2</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkCombo" id="combo2">
-		  <property name="visible">True</property>
-		  <property name="value_in_list">False</property>
-		  <property name="allow_empty">True</property>
-		  <property name="case_sensitive">False</property>
-		  <property name="enable_arrow_keys">True</property>
-		  <property name="enable_arrows_always">False</property>
-
-		  <child internal-child="entry">
-		    <widget class="GtkEntry" id="stop_k_combo">
-		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Set the stop key</property>
-		      <property name="can_focus">True</property>
-		      <property name="editable">True</property>
-		      <property name="visibility">True</property>
-		      <property name="max_length">0</property>
-		      <property name="text" translatable="yes"></property>
-		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
-		      <property name="activates_default">False</property>
-		      <signal name="changed" handler="on_stop_k_combo_changed" object="gnee_window" last_modification_time="Sun, 28 Dec 2003 17:36:15 GMT"/>
-		    </widget>
-		  </child>
-
-		  <child internal-child="list">
-		    <widget class="GtkList" id="combo-list3">
-		      <property name="visible">True</property>
-		      <property name="selection_mode">GTK_SELECTION_BROWSE</property>
-		    </widget>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">2</property>
-		  <property name="right_attach">3</property>
-		  <property name="top_attach">1</property>
-		  <property name="bottom_attach">2</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
 		<widget class="GtkLabel" id="label33">
-		  <property name="width_request">65</property>
 		  <property name="visible">True</property>
 		  <property name="label" translatable="yes">&lt;b&gt;Action&lt;/b&gt;</property>
 		  <property name="use_underline">False</property>
@@ -2531,54 +2454,6 @@
 		<packing>
 		  <property name="left_attach">0</property>
 		  <property name="right_attach">1</property>
-		  <property name="top_attach">0</property>
-		  <property name="bottom_attach">1</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkLabel" id="label34">
-		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;Modifier&lt;/b&gt;</property>
-		  <property name="use_underline">False</property>
-		  <property name="use_markup">True</property>
-		  <property name="justify">GTK_JUSTIFY_LEFT</property>
-		  <property name="wrap">False</property>
-		  <property name="selectable">False</property>
-		  <property name="xalign">0</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">1</property>
-		  <property name="right_attach">2</property>
-		  <property name="top_attach">0</property>
-		  <property name="bottom_attach">1</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkLabel" id="label35">
-		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;Key&lt;/b&gt;</property>
-		  <property name="use_underline">False</property>
-		  <property name="use_markup">True</property>
-		  <property name="justify">GTK_JUSTIFY_LEFT</property>
-		  <property name="wrap">False</property>
-		  <property name="selectable">False</property>
-		  <property name="xalign">0</property>
-		  <property name="yalign">0.5</property>
-		  <property name="xpad">0</property>
-		  <property name="ypad">0</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">2</property>
-		  <property name="right_attach">3</property>
 		  <property name="top_attach">0</property>
 		  <property name="bottom_attach">1</property>
 		  <property name="x_options">fill</property>
@@ -2683,165 +2558,26 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkCombo" id="combo3">
+		<widget class="GtkLabel" id="label35">
+		  <property name="width_request">20</property>
 		  <property name="visible">True</property>
-		  <property name="value_in_list">False</property>
-		  <property name="allow_empty">True</property>
-		  <property name="case_sensitive">False</property>
-		  <property name="enable_arrow_keys">True</property>
-		  <property name="enable_arrows_always">False</property>
-
-		  <child internal-child="entry">
-		    <widget class="GtkEntry" id="pause_m_combo">
-		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Set the pause modifier</property>
-		      <property name="can_focus">True</property>
-		      <property name="editable">True</property>
-		      <property name="visibility">True</property>
-		      <property name="max_length">0</property>
-		      <property name="text" translatable="yes"></property>
-		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
-		      <property name="activates_default">False</property>
-		      <signal name="changed" handler="on_pause_m_combo_changed" object="gnee_window" last_modification_time="Sun, 28 Dec 2003 22:12:00 GMT"/>
-		    </widget>
-		  </child>
-
-		  <child internal-child="list">
-		    <widget class="GtkList" id="combo-list4">
-		      <property name="visible">True</property>
-		      <property name="selection_mode">GTK_SELECTION_BROWSE</property>
-		    </widget>
-		  </child>
+		  <property name="label" translatable="yes">&lt;b&gt;Key&lt;/b&gt;</property>
+		  <property name="use_underline">False</property>
+		  <property name="use_markup">True</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">0</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
 		</widget>
 		<packing>
 		  <property name="left_attach">1</property>
 		  <property name="right_attach">2</property>
-		  <property name="top_attach">2</property>
-		  <property name="bottom_attach">3</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkCombo" id="combo4">
-		  <property name="visible">True</property>
-		  <property name="value_in_list">False</property>
-		  <property name="allow_empty">True</property>
-		  <property name="case_sensitive">False</property>
-		  <property name="enable_arrow_keys">True</property>
-		  <property name="enable_arrows_always">False</property>
-
-		  <child internal-child="entry">
-		    <widget class="GtkEntry" id="resume_m_combo">
-		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Set the resume modifier</property>
-		      <property name="can_focus">True</property>
-		      <property name="editable">True</property>
-		      <property name="visibility">True</property>
-		      <property name="max_length">0</property>
-		      <property name="text" translatable="yes"></property>
-		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
-		      <property name="activates_default">False</property>
-		      <signal name="changed" handler="on_resume_m_combo_changed" object="gnee_window" last_modification_time="Sun, 28 Dec 2003 22:12:22 GMT"/>
-		    </widget>
-		  </child>
-
-		  <child internal-child="list">
-		    <widget class="GtkList" id="combo-list5">
-		      <property name="visible">True</property>
-		      <property name="selection_mode">GTK_SELECTION_BROWSE</property>
-		    </widget>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">1</property>
-		  <property name="right_attach">2</property>
-		  <property name="top_attach">3</property>
-		  <property name="bottom_attach">4</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkCombo" id="combo5">
-		  <property name="visible">True</property>
-		  <property name="value_in_list">False</property>
-		  <property name="allow_empty">True</property>
-		  <property name="case_sensitive">False</property>
-		  <property name="enable_arrow_keys">True</property>
-		  <property name="enable_arrows_always">False</property>
-
-		  <child internal-child="entry">
-		    <widget class="GtkEntry" id="mark_m_combo">
-		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Set the insert mark modifier</property>
-		      <property name="can_focus">True</property>
-		      <property name="editable">True</property>
-		      <property name="visibility">True</property>
-		      <property name="max_length">0</property>
-		      <property name="text" translatable="yes"></property>
-		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
-		      <property name="activates_default">False</property>
-		      <signal name="changed" handler="on_mark_m_combo_changed" object="gnee_window" last_modification_time="Sun, 28 Dec 2003 22:12:49 GMT"/>
-		    </widget>
-		  </child>
-
-		  <child internal-child="list">
-		    <widget class="GtkList" id="combo-list6">
-		      <property name="visible">True</property>
-		      <property name="selection_mode">GTK_SELECTION_BROWSE</property>
-		    </widget>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">1</property>
-		  <property name="right_attach">2</property>
-		  <property name="top_attach">4</property>
-		  <property name="bottom_attach">5</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkCombo" id="combo6">
-		  <property name="visible">True</property>
-		  <property name="value_in_list">False</property>
-		  <property name="allow_empty">True</property>
-		  <property name="case_sensitive">False</property>
-		  <property name="enable_arrow_keys">True</property>
-		  <property name="enable_arrows_always">False</property>
-
-		  <child internal-child="entry">
-		    <widget class="GtkEntry" id="exec_m_combo">
-		      <property name="visible">True</property>
-		      <property name="tooltip" translatable="yes">Set the exec modifier</property>
-		      <property name="can_focus">True</property>
-		      <property name="editable">True</property>
-		      <property name="visibility">True</property>
-		      <property name="max_length">0</property>
-		      <property name="text" translatable="yes"></property>
-		      <property name="has_frame">True</property>
-		      <property name="invisible_char" translatable="yes">*</property>
-		      <property name="activates_default">False</property>
-		      <signal name="changed" handler="on_exec_m_combo_changed" object="gnee_window" last_modification_time="Sun, 28 Dec 2003 22:13:07 GMT"/>
-		    </widget>
-		  </child>
-
-		  <child internal-child="list">
-		    <widget class="GtkList" id="combo-list7">
-		      <property name="visible">True</property>
-		      <property name="selection_mode">GTK_SELECTION_BROWSE</property>
-		    </widget>
-		  </child>
-		</widget>
-		<packing>
-		  <property name="left_attach">1</property>
-		  <property name="right_attach">2</property>
-		  <property name="top_attach">5</property>
-		  <property name="bottom_attach">6</property>
+		  <property name="top_attach">0</property>
+		  <property name="bottom_attach">1</property>
+		  <property name="x_options">fill</property>
 		  <property name="y_options"></property>
 		</packing>
 	      </child>
@@ -2879,8 +2615,8 @@
 		  </child>
 		</widget>
 		<packing>
-		  <property name="left_attach">2</property>
-		  <property name="right_attach">3</property>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">2</property>
 		  <property name="top_attach">2</property>
 		  <property name="bottom_attach">3</property>
 		  <property name="y_options"></property>
@@ -2920,8 +2656,8 @@
 		  </child>
 		</widget>
 		<packing>
-		  <property name="left_attach">2</property>
-		  <property name="right_attach">3</property>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">2</property>
 		  <property name="top_attach">3</property>
 		  <property name="bottom_attach">4</property>
 		  <property name="y_options"></property>
@@ -2961,8 +2697,8 @@
 		  </child>
 		</widget>
 		<packing>
-		  <property name="left_attach">2</property>
-		  <property name="right_attach">3</property>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">2</property>
 		  <property name="top_attach">4</property>
 		  <property name="bottom_attach">5</property>
 		  <property name="y_options"></property>
@@ -3002,8 +2738,8 @@
 		  </child>
 		</widget>
 		<packing>
-		  <property name="left_attach">2</property>
-		  <property name="right_attach">3</property>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">2</property>
 		  <property name="top_attach">5</property>
 		  <property name="bottom_attach">6</property>
 		  <property name="y_options"></property>
@@ -3011,13 +2747,53 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkLabel" id="test_km_label">
-		  <property name="width_request">65</property>
+		<widget class="GtkCombo" id="combo2">
 		  <property name="visible">True</property>
-		  <property name="label" translatable="yes">&lt;b&gt;Grab status&lt;/b&gt;</property>
+		  <property name="value_in_list">False</property>
+		  <property name="allow_empty">True</property>
+		  <property name="case_sensitive">False</property>
+		  <property name="enable_arrow_keys">True</property>
+		  <property name="enable_arrows_always">False</property>
+
+		  <child internal-child="entry">
+		    <widget class="GtkEntry" id="stop_k_combo">
+		      <property name="visible">True</property>
+		      <property name="tooltip" translatable="yes">Set the stop key</property>
+		      <property name="can_focus">True</property>
+		      <property name="editable">True</property>
+		      <property name="visibility">True</property>
+		      <property name="max_length">0</property>
+		      <property name="text" translatable="yes"></property>
+		      <property name="has_frame">True</property>
+		      <property name="invisible_char" translatable="yes">*</property>
+		      <property name="activates_default">False</property>
+		      <signal name="changed" handler="on_stop_k_combo_changed" object="gnee_window" last_modification_time="Sun, 28 Dec 2003 17:36:15 GMT"/>
+		    </widget>
+		  </child>
+
+		  <child internal-child="list">
+		    <widget class="GtkList" id="combo-list3">
+		      <property name="visible">True</property>
+		      <property name="selection_mode">GTK_SELECTION_BROWSE</property>
+		    </widget>
+		  </child>
+		</widget>
+		<packing>
+		  <property name="left_attach">1</property>
+		  <property name="right_attach">2</property>
+		  <property name="top_attach">1</property>
+		  <property name="bottom_attach">2</property>
+		  <property name="y_options"></property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="label80">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">&lt;b&gt;Extra parameter&lt;/b&gt;</property>
 		  <property name="use_underline">False</property>
 		  <property name="use_markup">True</property>
-		  <property name="justify">GTK_JUSTIFY_CENTER</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
 		  <property name="wrap">False</property>
 		  <property name="selectable">False</property>
 		  <property name="xalign">0</property>
@@ -3026,8 +2802,8 @@
 		  <property name="ypad">0</property>
 		</widget>
 		<packing>
-		  <property name="left_attach">3</property>
-		  <property name="right_attach">4</property>
+		  <property name="left_attach">2</property>
+		  <property name="right_attach">3</property>
 		  <property name="top_attach">0</property>
 		  <property name="bottom_attach">1</property>
 		  <property name="x_options">fill</property>
@@ -3036,16 +2812,78 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkButton" id="test_stop_km_b">
+		<widget class="GtkHBox" id="hbox35">
 		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">Press to test</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="homogeneous">False</property>
+		  <property name="spacing">0</property>
+
+		  <child>
+		    <widget class="GtkLabel" id="label81">
+		      <property name="visible">True</property>
+		      <property name="label" translatable="yes">Execute string:</property>
+		      <property name="use_underline">False</property>
+		      <property name="use_markup">False</property>
+		      <property name="justify">GTK_JUSTIFY_LEFT</property>
+		      <property name="wrap">False</property>
+		      <property name="selectable">False</property>
+		      <property name="xalign">0.5</property>
+		      <property name="yalign">0.5</property>
+		      <property name="xpad">0</property>
+		      <property name="ypad">0</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">False</property>
+		      <property name="fill">False</property>
+		    </packing>
+		  </child>
+
+		  <child>
+		    <widget class="GtkEntry" id="entry1">
+		      <property name="visible">True</property>
+		      <property name="can_focus">True</property>
+		      <property name="editable">True</property>
+		      <property name="visibility">True</property>
+		      <property name="max_length">0</property>
+		      <property name="text" translatable="yes"></property>
+		      <property name="has_frame">True</property>
+		      <property name="invisible_char" translatable="yes">*</property>
+		      <property name="activates_default">False</property>
+		    </widget>
+		    <packing>
+		      <property name="padding">0</property>
+		      <property name="expand">True</property>
+		      <property name="fill">True</property>
+		    </packing>
+		  </child>
 		</widget>
 		<packing>
-		  <property name="left_attach">3</property>
-		  <property name="right_attach">4</property>
+		  <property name="left_attach">2</property>
+		  <property name="right_attach">3</property>
+		  <property name="top_attach">5</property>
+		  <property name="bottom_attach">6</property>
+		  <property name="x_options">fill</property>
+		  <property name="y_options">fill</property>
+		</packing>
+	      </child>
+
+	      <child>
+		<widget class="GtkLabel" id="label82">
+		  <property name="visible">True</property>
+		  <property name="label" translatable="yes">Unused</property>
+		  <property name="use_underline">False</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">0</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
+		</widget>
+		<packing>
+		  <property name="left_attach">2</property>
+		  <property name="right_attach">3</property>
 		  <property name="top_attach">1</property>
 		  <property name="bottom_attach">2</property>
 		  <property name="x_options">fill</property>
@@ -3054,16 +2892,22 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkButton" id="test_pause_km_b">
+		<widget class="GtkLabel" id="label83">
 		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">Press to test</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="label" translatable="yes">Unused</property>
+		  <property name="use_underline">False</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">0</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
 		</widget>
 		<packing>
-		  <property name="left_attach">3</property>
-		  <property name="right_attach">4</property>
+		  <property name="left_attach">2</property>
+		  <property name="right_attach">3</property>
 		  <property name="top_attach">2</property>
 		  <property name="bottom_attach">3</property>
 		  <property name="x_options">fill</property>
@@ -3072,16 +2916,22 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkButton" id="test_resume_km_b">
+		<widget class="GtkLabel" id="label84">
 		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">Press to test</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="label" translatable="yes">Unused</property>
+		  <property name="use_underline">False</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">0</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
 		</widget>
 		<packing>
-		  <property name="left_attach">3</property>
-		  <property name="right_attach">4</property>
+		  <property name="left_attach">2</property>
+		  <property name="right_attach">3</property>
 		  <property name="top_attach">3</property>
 		  <property name="bottom_attach">4</property>
 		  <property name="x_options">fill</property>
@@ -3090,36 +2940,24 @@
 	      </child>
 
 	      <child>
-		<widget class="GtkButton" id="test_mark_km_b">
+		<widget class="GtkLabel" id="label85">
 		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">Press to test</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
+		  <property name="label" translatable="yes">Unused</property>
+		  <property name="use_underline">False</property>
+		  <property name="use_markup">False</property>
+		  <property name="justify">GTK_JUSTIFY_LEFT</property>
+		  <property name="wrap">False</property>
+		  <property name="selectable">False</property>
+		  <property name="xalign">0</property>
+		  <property name="yalign">0.5</property>
+		  <property name="xpad">0</property>
+		  <property name="ypad">0</property>
 		</widget>
 		<packing>
-		  <property name="left_attach">3</property>
-		  <property name="right_attach">4</property>
+		  <property name="left_attach">2</property>
+		  <property name="right_attach">3</property>
 		  <property name="top_attach">4</property>
 		  <property name="bottom_attach">5</property>
-		  <property name="x_options">fill</property>
-		  <property name="y_options"></property>
-		</packing>
-	      </child>
-
-	      <child>
-		<widget class="GtkButton" id="test_exec_km_b">
-		  <property name="visible">True</property>
-		  <property name="can_focus">True</property>
-		  <property name="label" translatable="yes">Press to test</property>
-		  <property name="use_underline">True</property>
-		  <property name="relief">GTK_RELIEF_NORMAL</property>
-		</widget>
-		<packing>
-		  <property name="left_attach">3</property>
-		  <property name="right_attach">4</property>
-		  <property name="top_attach">5</property>
-		  <property name="bottom_attach">6</property>
 		  <property name="x_options">fill</property>
 		  <property name="y_options"></property>
 		</packing>
