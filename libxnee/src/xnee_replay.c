@@ -41,13 +41,13 @@
 #include "libxnee/xnee_expr.h"
 
 
-
-void 
+#ifdef USE_OBSOLETE
+static void 
 xnee_replay_m_delay (unsigned long usecs)
 {
   usleep ( usecs ) ;
 }
-
+#endif
 
 
 /*
@@ -179,7 +179,7 @@ xnee_replay_synchronize (xnee_data* xd)
 }
 
 
-
+#ifdef USE_OBSOLETE
 /**************************************************************
  *                                                            *
  * xnee_replay_read_protocol                                  *
@@ -215,7 +215,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
   */
   return eofile;
 }
-
+#endif
 
 
 
@@ -226,7 +226,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
  *                                                            *
  *                                                            *
  **************************************************************/
-void
+static void
 xnee_handle_meta_data_sub1(int *dest, char *src_str, int comp_str_size)
 {
   int val;
@@ -345,16 +345,16 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
 }
 
 
-
-int
-print_time()
+#ifdef USE_OBSOLETE
+static int
+print_time(void)
 {
   struct timeval tv;
   gettimeofday(&tv, NULL); 
   printf ("%lu:%lu\n", tv.tv_sec, tv.tv_usec);
   return XNEE_OK;
 }
-
+#endif
 
 /**************************************************************
  *                                                            *
@@ -377,14 +377,16 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 
   xindata.oldtime = 0 ;
   xindata.newtime = 0 ;
-  
+
   if ( xd->data_file == NULL)
     {
       xnee_verbose((xd, "Using stdin as file\n"));
       xd->data_file=stdin;
     }
   
-  if ( (read_mode==XNEE_REPLAY_READ_META_DATA) || (read_mode==XNEE_REPLAY_READ_ALL_DATA))
+  if ( (read_mode==XNEE_REPLAY_READ_META_DATA) || 
+       (read_mode==XNEE_REPLAY_READ_ALL_DATA)
+       )
     {
       while (logread && xd->cont) 
 	{
@@ -406,9 +408,9 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    }
 	  else 
 	    {
-	      ret = xnee_expression_handle_session(xd, ret_str, &xindata);
-	      
-	      if ( (ret == XNEE_REPLAY_DATA) || (ret == XNEE_PRIMITIVE_DATA) )
+	      ret = xnee_expression_handle_project(xd, ret_str);
+
+	      if ( (ret == XNEE_REPLAY_DATA) || (ret == XNEE_PRIMITIVE_DATA) || ( ret == XNEE_SYNTAX_ERROR) )
 		{
 		  xnee_verbose((xd, 
 				"We are finished reading settings"
@@ -422,11 +424,13 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 				ret_str));
 		  break ; 
 		}
-	      
 	    }
 	}
     }
-  if ( (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || (read_mode==XNEE_REPLAY_READ_ALL_DATA))
+
+  if ( 
+      (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || 
+      (read_mode==XNEE_REPLAY_READ_ALL_DATA))
     {
       /* REMOVE ME... after testing.
 	 rep_prepare is done in xnee_prepare */
@@ -446,8 +450,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	{
 	  xnee_print_sys_info(xd , xd->out_file);
 	}
-      ret = XNEE_REPLAY_DATA ; 
-      
+
+      ret = xnee_expression_handle_session(xd, tmp, &xindata);
    
       /**
        * all META DATA setting up our sessions is read ...
@@ -458,11 +462,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        */
       while  ( (ret!=XNEE_SYNTAX_ERROR) && xd->cont ) 
 	{
-	  
-	  ret_str = fgets(tmp, 256, xd->data_file);
-	  if (ret_str == NULL)
-	    break;
-	  
+
 	  xnee_verbose((xd, "REPLAY str = '%s' ret=%d (last_log_read=%d) \n",
 			ret_str, ret, last_logread));
 	  if (last_logread)
@@ -593,8 +593,16 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	  xnee_verbose((xd, "Flushing after handled event\n"));
 	  XFlush(xd->control);
 	  xnee_verbose((xd, "  <-- Flushed after handled event\n"));
+
+	  ret_str = fgets(tmp, 256, xd->data_file);
+
+	  if (ret_str == NULL)
+	    break;
+
+	  ret = xnee_expression_handle_session(xd, tmp, &xindata);
+
 	  last_logread = 0;
-	  ret = xnee_expression_handle_session(xd, ret_str, &xindata);
+
 	}
     }
   return XNEE_OK;

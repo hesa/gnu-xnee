@@ -49,7 +49,9 @@ function check_version()
     EXPECTED=`echo $1 | sed 's/[ \t]*//g'`
     ERR_MESS=$2
     verbose "Checking version on $2"
-    RECEIVED=`./xnee/src/xnee --version 2>&1 | grep  '^xnee [0-9\. a-zA-Z]*$'| awk '{print $2}' `
+
+    
+    RECEIVED=`./cnee/src/cnee --version 2>&1 | grep  '^cnee part of Xnee [0-9\. a-zA-Z]*$'| awk '{print $5}' `
     
     if [ "$EXPECTED" != "$RECEIVED" ] ;
     then
@@ -112,8 +114,8 @@ perl -i -p -s -e 's/VERSION\=\\\"[a-zA-Z_0-9\.]*\\\"/VERSION\=\\\"$ENV{"XNEE_VER
 #  ATUTO
 #
 verbose "Doing some autstuff"
-make -f Makefile.cvs 
-check_status "$?" "autoconf"
+###make -f Makefile.cvs 
+###check_status "$?" "autoconf"
 
 
 #
@@ -121,8 +123,8 @@ check_status "$?" "autoconf"
 #
 verbose "Configuring"
 verbose "   configure"
-./configure 
-check_status "$?" "configure"
+###./configure 
+###check_status "$?" "configure"
 
 
 #
@@ -130,35 +132,35 @@ check_status "$?" "configure"
 #
 verbose "Making ...."
 verbose "    make clean all text html man info"
-make clean all text html man info txt 
+##make clean all manual
 check_status "$?" "make"
 check_version $XNEE_VERSION "xnee from configure && make"
-cp xnee/src/xnee ./xnee.makefile_configure
+cp cnee/src/cnee ./cnee.makefile_configure
 
 #
 #  SOURCE DIST
 #
 verbose "Generating dist"
 verbose "    make dist"
-make dist
+###make dist
 check_status "$?" "make dist"
 
 
 #
 #  GNU/Linux binary
 #
-cp xnee/src/xnee ./xnee.configure
+cp cnee/src/cnee ./cnee.configure
 
 
 
 
 
 #
-#  RedHat RPM
+#   RPM
 #
 if [ "$BUILD_RPM" == "true" ] ;
 then
-    verbose "RedHat RPM"
+    verbose " RPM"
     verbose "   checking that we are allowed to do root stuff"
     sudo ls -l /proc 
     if [ "$STATUS" == "1" ];
@@ -169,15 +171,15 @@ then
 	echo "ENTER PASSWORD"
 	read PASSWD
 	verbose "  removing old SPEC file"
-	RPM_BUILD_DIR=/usr/src/redhat
+	RPM_BUILD_DIR=/usr/src/rpm
 	XNEE_SPEC=${RPM_BUILD_DIR}/SPECS/xnee.spec
 	echo $PASSWD | sudo -S rm -f ${XNEE_SPEC}
 	
-	cat redhat/SPECS/xnee.spec.tmpl | perl -i -p -s -e 's/XNEE_VERSION/$ENV{"XNEE_VERSION"}/g' | perl -i -p -s -e 's/XNEE_RELEASE/$ENV{"XNEE_RELEASE"}/g' > /tmp/xnee.spec
+	cat build/SPECS/xnee.spec.tmpl | perl -i -p -s -e 's/XNEE_VERSION/$ENV{"XNEE_VERSION"}/g' | perl -i -p -s -e 's/XNEE_RELEASE/$ENV{"XNEE_RELEASE"}/g' > /tmp/xnee.spec
 	echo $PASSWD | sudo -S mv /tmp/xnee.spec ${XNEE_SPEC}
 	check_status "$?" "  making spec file"
 	verbose "   found $XNEE_VERSION"
-	export XNEE_TAR_GZ=xnee-${XNEE_VERSION}.tar.gz
+	export XNEE_TAR_GZ=Xnee-${XNEE_VERSION}.tar.gz
 	verbose "   about to copy ${XNEE_TAR_GZ} ---> ${RPM_BUILD_DIR}/SOURCES"
 	echo "   PASSWD=$PASSWD"
 	verbose "    ls  ${RPM_BUILD_DIR}/SOURCES   -> `ls -l ${RPM_BUILD_DIR}/SOURCES`"
@@ -195,17 +197,17 @@ then
 	echo $PASSWD | sudo -S  rpm -ba `basename ${XNEE_SPEC}`
 	check_status "$?" "  building RPM "
 	
-	XNEE_RPM=`find ${RPM_BUILD_DIR}/RPMS -type f -name "xnee*.rpm"`
-	check_status "$?" "  finding redhat binary rpm"
-	XNEE_SRPM=`find ${RPM_BUILD_DIR}/SRPMS -type f -name "xnee*.rpm"`
-	check_status "$?" "  finding redhat source rpm"
+	XNEE_RPM=`find ${RPM_BUILD_DIR}/RPMS -type f -name "Xnee*.rpm"`
+	check_status "$?" "  finding  binary rpm"
+	XNEE_SRPM=`find ${RPM_BUILD_DIR}/SRPMS -type f -name "Xnee*.rpm"`
+	check_status "$?" "  finding  source rpm"
 	    
 	    
 	popd
 	
 	echo $PASSWD | sudo -S cp $XNEE_RPM $XNEE_SRPM ./
 	echo $PASSWD | sudo -S chown ${USER} ./*.rpm
-	check_status "$?" "  copying source and binary redhat rpms"
+	check_status "$?" "  copying source and binary rpms"
     fi
 fi
 
@@ -225,10 +227,10 @@ fi
 
 make -f Makefile.xnee clean all
 check_version $XNEE_VERSION "xnee from Makefile.xnee"
-mv xnee/src/xnee ./xnee.makefile_xnee
+mv cnee/src/cnee ./cnee.makefile_xnee
 
 
 verbose "Putting back configure binary"
-cp ./xnee.makefile_configure xnee/src/xnee
+cp ./cnee.makefile_configure cnee/src/cnee
 
 

@@ -33,7 +33,7 @@ int
 xnee_ungrab_keys (xnee_data* xd);
 
 xnee_grab_keys*
-xnee_new_grab_keys();
+xnee_new_grab_keys(void);
 
 int
 xnee_free_grab_keys(xnee_data *xd);

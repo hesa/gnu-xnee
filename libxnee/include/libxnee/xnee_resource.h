@@ -189,4 +189,7 @@ xnee_get_author_email_str(xnee_data *xd);
 char *
 xnee_get_char_str(xnee_data *xd);
 
+int
+xnee_handle_resource_meta (xnee_data *xd, char *meta_str);
+
 #endif  /* XNEE_RESOURCE_H */

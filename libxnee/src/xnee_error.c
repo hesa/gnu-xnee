@@ -23,6 +23,7 @@
  ****/
 
 #include "libxnee/xnee.h"
+#include "libxnee/xnee_error.h"
 
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>
@@ -182,11 +183,8 @@ char error_descr_solut[256][256] =
 const char *
 xnee_get_err_description (int error)
 {
-  int i ; 
   if ( (error<XNEE_OK) || (error>XNEE_LAST_ERROR))
     return NULL;
-
-
   return error_descr_solut[error*2];
 }
 
@@ -200,13 +198,13 @@ xnee_get_err_solution (int error)
 
 
 char *
-xnee_get_err_string ()
+xnee_get_err_string (void)
 {
   return latest_error;
 }
 
 void
-xnee_free_err_string ()
+xnee_free_err_string (void)
 {
   XNEE_FREE_IF_NOT_NULL(latest_error);
   return ;

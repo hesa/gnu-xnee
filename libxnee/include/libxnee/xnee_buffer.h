@@ -32,9 +32,8 @@
 #include "libxnee/xnee_sem.h"
 #include "libxnee/xnee_resolution.h"
 
-
-int
-xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
+#ifndef XNEE_XNEE_BUFFER_H
+#define XNEE_XNEE_BUFFER_H
 
 int
 xnee_replay_buffer_max_diff (xnee_data* xd, int type);
@@ -76,3 +75,6 @@ xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
 int 
 xnee_update_buffer_cache(xnee_data *xd);
 
+
+
+#endif /* XNEE_XNEE_BUFFER_H */

@@ -59,6 +59,10 @@ Changes in 1......
 
 	Key grabbed (by Xnee) resulting in a successful grab isn't printed to the recorded file.
 	
+	Characters supported by '--retype--file' option
+		a-z,A-Z,0-9,
+		, ,\,#,$,!,&,(,),{,},+,-,,,.:,;,<,>,@
+		_,|
 
 
 

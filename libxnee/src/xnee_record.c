@@ -36,6 +36,8 @@
 #include "libxnee/feedback.h"
 #include "libxnee/xnee_range.h"
 
+
+#ifdef DEBUG_DISPATCHER
 /**************************************************************
  *                                                            *
  * xnee_record_dispatch2                                      *
@@ -64,7 +66,7 @@ xnee_record_dispatch2 (XPointer xpoint_xnee_data,
   XRecordFreeData(data);
   return;
 }
-
+#endif
 
 
 
@@ -80,9 +82,6 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           event_type = xrec_data->type ;
   FILE *out = xd->out_file;
-  int i ; 
-  int ret ;
-  int release_ret ;
   KeyCode kc;
   int do_print = 1;
 
@@ -229,20 +228,6 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
   XNEE_DEBUG ( (stderr ," <-- xnee_record_handle_event()  \n"  ));
 }
 
-
-int
-handle_xerr(Display *dpy, XErrorEvent *errevent)
-{
-  int protocol_error;	        /* error code of error caught by error handler */
-  int protocol_error_major;	/* major op code of error caught */
-  int protocol_error_minor;	/* minor op code of error caught */
-  
-  protocol_error = errevent->error_code;
-  protocol_error_major = errevent->request_code;
-  protocol_error_minor = errevent->minor_code;
-  printf ("Error recevied.... on display=%d\n", (int)dpy);
-  return 1;
-}
 
 
 

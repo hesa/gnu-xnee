@@ -167,7 +167,6 @@ xnee_resolution_differs (xnee_data *xd)
       /* no diff */
       return 0;
     }
-  return XNEE_RESOLUTION_UNSET;
 }
 
 

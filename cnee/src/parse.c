@@ -39,6 +39,8 @@
 #include "libxnee/print.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_error.h"
+#include "libxnee/xnee_keysym.h"
+#include "libxnee/feedback.h"
 
 
 
@@ -140,7 +142,7 @@ static char *description[] = {
 
 
 static int
-xnee_type_help (xnee_data *xd);
+xnee_type_help (xnee_data *xd) __attribute__ ((noreturn)) ;
 
 
 /**************************************************************
@@ -347,7 +349,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 		      xnee_verbose ((xd, "project file read: SYNTAX ERROR\n"));
 		      tmp_str = xnee_get_err_string();
 		      fprintf (stderr,"%s", tmp_str);
-		      xnee_free_err_string(tmp_str);
+		      XNEE_FREE_IF_NOT_NULL(tmp_str);
 		    }
 		}
 	    }
@@ -415,7 +417,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--feedback-xosd", "-fx" )) 
 	{
-	  xnee_set_xosd_feedback(xd);
+           xnee_set_xosd_feedback(xd);
 	}
       else if(xnee_check(argv[i], "--feedback-stderr", "-fs" )) 
 	{
@@ -1023,10 +1025,6 @@ xnee_type_help (xnee_data *xd)
 
   char my_string[500];
   char **cpp;
-  int  switcher = 1 ;
-
-  KeyCode shift_kc ;
-  KeyCode return_kc ;
 
   xnee_verbose ((xd,"---> xnee_type_help\n"));
   xnee_setup_display (xd);
@@ -1046,20 +1044,8 @@ xnee_type_help (xnee_data *xd)
 	  xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS,  CurrentTime);
 	  usleep (1000*10);
 	  xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE,  CurrentTime);
-
-	    
 	}
       usleep(1000*200);
-
-      if ( switcher= !switcher )
-	{
-	  my_string[0]='\n';
-	  my_string[1]='\0';
-	  xnee_char2keycode(xd, my_string[i], &xss.kc); 
-	  xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS,  CurrentTime);
-	  usleep (1000*100);
-	  xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE,  CurrentTime);
-	}
 
       xnee_char2keycode(xd, my_string[0], &xss.kc); 
       xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS,  CurrentTime);

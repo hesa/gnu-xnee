@@ -118,6 +118,8 @@ function result_log()
 {
     STOP=`date '+%s'`
     result_log_ $*
+    result_log_simple $*
+	
 }
 
 

@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef     
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -34,6 +34,7 @@
 #include "libxnee/xnee_resolution.h"
 #include "libxnee/xnee_time.h"
 #include "libxnee/xnee_fake.h"
+#include "libxnee/xnee_keysym.h"
 
 
 
@@ -285,8 +286,10 @@ xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
 
   if (!xnee_is_recorder (xd))
     {
-      for (mods=0;(mods<8)&(xss->kc.mod_keycodes[mods]!=0);mods++)
+
+      for (mods=0;(mods<8)&&(xss->kc.mod_keycodes[mods]!=0);mods++)
 	{
+	  xnee_fake_sleep (dtime);
 	  xnee_verbose((xd, "XTestFakeKeyEvent modifier \n"));
 	  xnee_fake_key_event (xd,
 			       xss->kc.mod_keycodes[mods], 
@@ -306,7 +309,7 @@ xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
   for (i=0; i<size ; i++)
     {
       XTestGrabControl (xd->distr_list[i].dpy, True); 
-      for (mods=0;(mods<8)&(xss->kc.mod_keycodes[mods]!=0);mods++)
+      for (mods=0;(mods<8)&&(xss->kc.mod_keycodes[mods]!=0);mods++)
 	{
 	  xnee_verbose((xd, "XTestFakeKeyEvent modifier \n"));
 	  xnee_fake_key_event (xd,
@@ -487,8 +490,9 @@ xnee_fake_relative_motion_event (xnee_data* xd,
 int 
 xnee_type_file(xnee_data *xd)
 {
-  char tmp[256] ;
+  char tmp[256]="" ;
   int i;
+
   
   xnee_script_s xss;
 
@@ -505,6 +509,7 @@ xnee_type_file(xnee_data *xd)
   xnee_verbose ((xd,"--- xnee_type_file\n"));
 
   xnee_verbose ((xd,"---> xnee_type_file loop\n"));
+
   while (fgets(tmp, 256, xd->rt_file)!=NULL)
     {
       xnee_verbose ((xd,"  xnee_type_file loop read size=%d \"%s\"\n", 

@@ -25,6 +25,7 @@
 #include <dlfcn.h>
 #include <libxnee/xnee.h>
 #include <libxnee/print.h>
+#include <libxnee/xnee_dl.h>
 
 
 /**************************************************************
@@ -78,7 +79,7 @@ xnee_dlclose (xnee_data *xd, void* handle)
  *                                                            *
  *                                                            *
  **************************************************************/
-char* 
+const char* 
 xnee_dlerror (xnee_data *xd)
 {
   xnee_verbose ((xd, " ---> xnee_dlerror\n"));

@@ -163,16 +163,6 @@ xnee_is_all_clients (xnee_data *xd);
 
  
 int
-xnee_set_sync (xnee_data *xd);
-
-int
-xnee_unset_sync (xnee_data *xd);
- 
-int
-xnee_get_sync (xnee_data *xd);
-
- 
-int
 xnee_set_recorder (xnee_data *xd);
 
 int
@@ -220,6 +210,16 @@ xnee_get_key_str (xnee_data *xd, int mode);
 char*
 xnee_get_extra_str (xnee_data *xd, int idx);
 
+int
+xnee_set_key_str (xnee_data *xd, int idx, char *str);
+
+int
+xnee_set_extra_str (xnee_data *xd, int idx, char *str);
+
+int
+xnee_set_exec_prog (xnee_data *xd, char *prog);
+
+
 #define xnee_get_stop_key(xd)        xnee_get_key_str(xd, XNEE_GRAB_STOP)
 #define xnee_get_pause_key(xd)       xnee_get_key_str(xd, XNEE_GRAB_PAUSE)
 #define xnee_get_resume_key(xd)      xnee_get_key_str(xd, XNEE_GRAB_RESUME)
@@ -242,6 +242,9 @@ xnee_get_sync (xnee_data *xd);
 int
 xnee_is_sync (xnee_data *xd);
 
+int
+xnee_unset_sync (xnee_data *xd);
+ 
 
 
 
@@ -319,9 +322,6 @@ xnee_is_no_expose (xnee_data *xd);
 
 int 
 xnee_set_interval (xnee_data *xd, int interval);
-
-int 
-xnee_get_interval (xnee_data *xd);
 
 int 
 xnee_get_interval (xnee_data *xd);

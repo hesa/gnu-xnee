@@ -2,8 +2,11 @@ SUBDIRS = libxnee cnee gnee doc
 
 AUTOMAKE_OPTIONS = gnu
 
-EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/install-sh 
+EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/install-sh projects/test.xnp sessions/example1.xns
 
-doc: html man pdf ps text info xnee.1 
+
+
+
+manual: 
 	cd ./doc/ && $(MAKE) $(AM_MAKEFLAGS) $@
 

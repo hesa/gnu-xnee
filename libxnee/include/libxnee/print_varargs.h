@@ -28,6 +28,26 @@
 
 #include "xnee.h"
 
+/**
+ * Verbose prints to specified file
+ *
+ * @param xd     xnee's main structure
+ * @param str    formatted string 
+ * @param ....   extra parameters to string
+ * @return void  
+ */
+void
+xnee_verbosef (xnee_data* xd, char * str, ...);
+
+#ifdef HAVE_STDARG_H
+void 
+xnee_print_error (char * error, ...) __attribute__ (( format (printf, 1, 2)));
+#else
+void
+xnee_print_error (char * error, ...)  __attribute__ (( format (printf, 1, 2)));
+#endif /* HAVE_STDARG_H */
+
+
 
 #ifdef NO_VERBOSE
 #define xnee_verbose(a)
@@ -35,8 +55,6 @@
 #define xnee_verbose(a) xnee_verbosef a
 #endif /* NO_VERBOSE */
 
-void
-xnee_verbosef (xnee_data *xd, char * msg, ...);
 
 
 #endif /*  XNEE_PRINT_VARARGS_H */

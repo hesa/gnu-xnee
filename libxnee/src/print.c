@@ -253,7 +253,7 @@ void xnee_human_print_error (xnee_data *xd, XRecordInterceptData *xrecintd )
 }
 
 
-
+#ifdef USE_OBSOLETE
 /*
  *
  *    xnee_record_print_record_range.  
@@ -336,7 +336,7 @@ old_xnee_record_print_record_range (xnee_data *xd, FILE* out)
 	       xd->record_setup->range_array[i]->errors.last      );
     }
 }
-
+#endif
 
 
 
@@ -695,8 +695,6 @@ xnee_print_xnee_resource_settings (xnee_data* xd, FILE* out)
 }
 
 
-
-
 /*
  *
  *    xnee_print_xnee_settings.  
@@ -753,6 +751,10 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
 	   ? xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str: XNEE_EXEC_NO_PROG );
   
   /* Limits */
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Recording limits                      #\n");
+  fprintf (out,  "##############################################\n");
   fprintf (out,  "\n# Recording limits\n");
   fprintf (out,  "%s        %d\n",
 	   XNEE_EVENT_MAX,xnee_get_events_max(xd) );
@@ -764,6 +766,24 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
 	   xd->xnee_info.first_last ); 
   
   
+  
+  /* Resolution */
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Resolution                            #\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "\n# Resolution\n");
+  fprintf (out,  XNEE_RECORDED_RESOLUTION"  %dx%d\n",
+	   xnee_get_rec_resolution_x(xd),
+	   xnee_get_rec_resolution_y(xd)  ); 
+  fprintf (out,  XNEE_REPLAY_RESOLUTION"  %dx%d\n",
+	   xnee_get_rep_resolution_x(xd),
+	   xnee_get_rep_resolution_y(xd)  ); 
+  fprintf (out,  XNEE_ADJUST_RESOLUTION"  %d\n",
+	   xnee_get_resolution_used (xd));
+
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Various                               #\n");
+  fprintf (out,  "##############################################\n");
   /* Plugin */
   fprintf (out,  "\n# Plugin file (0 means none)\n");
   fprintf (out,  XNEE_PLUGIN"       %s\n",
@@ -777,18 +797,6 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
 
   fprintf (out,  XNEE_HUMAN_PRINTOUT"  %d\n",
 	   xnee_is_human_printout(xd)); 
-  
-  /* Resolution */
-  fprintf (out,  "\n# Resolution\n");
-  fprintf (out,  XNEE_RECORDED_RESOLUTION"  %dx%d\n",
-	   xnee_get_rec_resolution_x(xd),
-	   xnee_get_rec_resolution_y(xd)  ); 
-  fprintf (out,  XNEE_REPLAY_RESOLUTION"  %dx%d\n",
-	   xnee_get_rep_resolution_x(xd),
-	   xnee_get_rep_resolution_y(xd)  ); 
-  fprintf (out,  XNEE_ADJUST_RESOLUTION"  %d\n",
-	   xnee_get_resolution_used (xd));
-
   /* Various */
   fprintf (out,  "\n# Speed\n");
   if (xnee_get_replay_speed(xd)==100)

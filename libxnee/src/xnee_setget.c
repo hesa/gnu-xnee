@@ -32,6 +32,7 @@
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
+#include "libxnee/xnee_setget.h"
 
 
 
@@ -143,6 +144,7 @@ xnee_get_rt_name (xnee_data *xd)
 }
 
 
+int
 xnee_set_err_file (xnee_data *xd, FILE* err)
 {
   XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
@@ -821,7 +823,6 @@ xnee_set_replay_speed_str (xnee_data *xd, char *speed_str)
       xnee_verbose ((xd, "Failed to set replay speed\n"));
       return XNEE_BAD_SPEED;
     }
-  return XNEE_OK;
 }
 
 int
@@ -844,6 +845,7 @@ int
 xnee_set_store_mouse_pos(xnee_data *xd)
 {
   xd->xnee_info.store_mouse_pos = True ; 
+  return XNEE_OK;
 }
 
 Bool

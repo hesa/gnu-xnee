@@ -53,7 +53,7 @@ xnee_replay_synchronize (xnee_data *xd) ;
 
 
 
-
+#ifdef USE_OBSOLETE
 /**
  * Reads from file (or stdin) an X11 protocol data and places it in xid.
  * If no X11 data was found it calls xnee_handle_meta_data to handle the data.
@@ -65,7 +65,7 @@ xnee_replay_synchronize (xnee_data *xd) ;
  */
 int   
 xnee_replay_read_protocol (xnee_data *xd, xnee_intercept_data *xid);
-
+#endif
 
 
 
@@ -221,14 +221,6 @@ void
 xnee_replay_select_protocol (XRecordRange *) ;
 */
 
-
-/**
- * Returns the clients id of the display
- * @param dpy    The display 
- * @return XID   The clients X id
- */
-XID   
-xnee_client_id (Display *dpy); 
 
 
 

@@ -31,6 +31,7 @@
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_sem.h"
 #include "libxnee/xnee_resolution.h"
+#include "libxnee/xnee_threshold.h"
 
 
 static int 

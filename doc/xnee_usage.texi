@@ -122,17 +122,17 @@ To use a recorded file use the @code{--file} option,  e.g
 @cindex  interupting xnee
 Interupting Xnee when recording or replaying can be done as follows
 @itemize @bullet
-@item	user specified modifier and key
+@item	user specified key
 @item	number of data to record
 @item	sending a SIGTERM signal (e.g pressing Control-c in a terminal window)
 @end itemize
 
-@subsection User specified modifier and key
-@cindex modifier and key
-@cindex key and modifier
-It is possible to specify a modifier (e.g Control button) and a key (e.g 'a') 
-that will stop the Xnee session. When using this option make sure that the 
-modifier/key is not used in any way by the applications you are recording. 
+@subsection User specified key
+@cindex key
+@cindex key 
+It is possible to specify key (e.g 'a' of 'F1') that will stop the Xnee session. 
+When using this option make sure that the key is not used in any way by the 
+applications you are recording. 
 It is possible to stop,pasue, resume Xnee from recording or replaying. One
 can also insert a mark in the recorded session file. Furthermore one can, 
 during replay, execute a given command/program using the exec mark.
@@ -142,97 +142,40 @@ during replay, execute a given command/program using the exec mark.
 You can set the key by entering one character or the keycode for the 
 character you wish to use. 
 
-@subsection  Modifier syntax
-@cindex      Modifier syntax
-
-Modifiers can be set to a '+' separated list of any of the following.
-@table @samp
-@item  Shift or Shift
-        Modifier is set to the Shift key
-@item  LockMask or Lock
-        Modifier is set to the Lock key
-@item  Control or ctrl
-        Modifier is set to the Control key
-@item  Mod1Mask or m1m
-        Modifier is set to 
-@item  Mod2Mask or m2m
-        Modifier is set to 
-@item  Mod3Mask or m3m
-        Modifier is set to 
-@item  Mod4Mask or m4m
-        Modifier is set to 
-@item  Mod5Mask or m5m
-        Modifier is set to 
-@item  Alt_L
-        Modifier is set to Alt_L
-@item  Alt_L
-        Modifier is set to Alt_R
-@item  Alt 
-        Modifier is set to be any of Alt_L and Alt_R
-@item  Shift_R
-        Modifier is set to Shift_R
-@item  Shift_L
-        Modifier is set to Shift_L
-@item  Shift
-        Modifier is set to be any of Shift_L and Shift_R
-@item  Control_R
-        Modifier is set to Control_R
-@item  Control_L
-        Modifier is set to Control_L
-@item  Control
-        Modifier is set to be any of Control_L and Control_R
-@item  Scroll
-        Modifier is set Scroll
-@item  Caps_Lock
-        Modifier is set Caps Lock
-@item  AnyModifier or any
-        Modifier is set to any of the modifier
-@item  none or 0
-        No modifier is used
-@end table
-
-You can also specify the keycode for the modifier you wish to use
 
 
-@subsection  Stop Xnee with key+modifier combination
-@cindex      Stop Xnee with key+modifier combination
-Xnee stops its current action when the user presses the key+modifier
+@subsection  Stop Xnee with key combination
+@cindex      Stop Xnee with key combination
+Xnee stops its current action when the user presses the key
 combination as specified during setup. Xnee will be shut gracefully.
 
-@subsection  Pause Xnee with key+modifier combination
-@cindex      Pause Xnee with key+modifier combination
-Xnee pause its current action when the user presses the key+modifier
+@subsection  Pause Xnee with key combination
+@cindex      Pause Xnee with key combination
+Xnee pause its current action when the user presses the key
 combination as specified during setup. Xnee will be in paused mode until
 the user stops or resumes Xnee.
 
-@subsection  Pause Xnee with key+modifier combination
-@cindex      Pause Xnee with key+modifier combination
-Xnee resumes its current paused action when the user presses the key+modifier
+@subsection  Pause Xnee with key combination
+@cindex      Pause Xnee with key combination
+Xnee resumes its current paused action when the user presses the key
 combination as specified during setup. Xnee will continue where it was
 paused.
 
-@subsection  Insert marks Xnee with key+modifier combination
-@cindex      Insert marks Xnee with key+modifier combination
-When the user presses the key+modifier combination as specified during setup 
+@subsection  Insert marks Xnee with key combination
+@cindex      Insert marks Xnee with key combination
+When the user presses the key combination as specified during setup 
 Xnee will print a mark in the session file containing a time stamp. This 
 feature is intended be used when you want to mark an interresting time/event 
 during recording. After recording has finished you can add Xnee scripting 
 calls to Xnee which will be interpreted and executed as if they were recorded.
 
 
-@subsection Modifier+key examples
-@cindex  Modifier+key  examples
+@subsection key examples
+@cindex  key examples
 
-If you want to set the modifier to be a combination of Control, Alt and Shift 
-you spearate them with a @code{+} sign.
+If you want to make Xnee stop when pressing the key 'y', you type 
 @example
-@code{Control+Alt+Shift}
-@end example
-
-If you want to make Xnee stop when pressing the above modifier combination 
-and the key, you type 
-@example
-@code{--stop-key Control+Alt+Shift,y} 
+@code{--stop-key y} 
 @end example
 
 

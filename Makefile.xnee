@@ -1,34 +1,59 @@
-PACKAGE=\"xnee\"
-VERSION=\"1.07\"
+PACKAGE=\"Xnee\"
+VERSION=\"1.08.94g\"
+
+PEDANTIC_FLAGS =  -W -Wall -pedantic -Werror \
+	-Wpointer-arith -Wcast-qual \
+	-Wstrict-prototypes -Wmissing-prototypes \
+	-Wmissing-declarations -Wmissing-noreturn \
+	-Wmissing-format-attribute -Wredundant-decls \
+	-Wnested-externs -Wunreachable-code \
+        -Wformat=2 -Wimplicit -Wmain \
+        -Wcomment -Wformat-nonliteral \
+        -Wmissing-braces -Wparentheses -Wreturn-type \
+        -Wswitch -Wswitch-default -Wswitch-enum \
+        -Wunused \
+        -Wendif-labels -Wundef \
+        -Wbad-function-cast -Wcast-qual -Wcast-align \
+        -Wredundant-decls -Wnested-externs 
+        
+
+##XOSD_LIB=-lxosd
+XOSD_LIB=
+
+# These flags seem to break compilation due to cygwin 
+# use on non-cygwin platform only
+SEMI_FLAGS = \
+        -pedantic-errors  
 
 CC=gcc
-CFLAGS = -W -Wall -pedantic -pedantic-errors  -Werror -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src -g -DHAVE_STDARG_H=1 
+CFLAGS =  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -DHAVE_STDARG_H=1 \
+        -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src -g \
+        ${PEDANTIC_FLAGS}
 
 
 LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib
 
-LIBS = -lX11 -lXext -lXtst -lpthread -lxosd
+LIBS = -lX11 -lXext -lXtst -lpthread ${XOSD_LIB}
 
-CLI_OBJS =  xnee/src/parse.o  xnee/src/main.o  
-COMM_OBJS = libxnee/src/xnee.o libxnee/src/xnee_record.o  libxnee/src/xnee_replay.o  libxnee/src/print.o libxnee/src/print_varargs.o libxnee/src/datastrings.o libxnee/src/xnee_dl.o  libxnee/src/xnee_sem.o  libxnee/src/xnee_setget.o libxnee/src/xnee_fake.o libxnee/src/xnee_km.o libxnee/src/xnee_resolution.o  libxnee/src/xnee_resource.o  libxnee/src/xnee_buffer.o  libxnee/src/xnee_callback.o  libxnee/src/xnee_km.o  libxnee/src/xnee_grab.o  libxnee/src/xnee_time.o libxnee/src/xnee_threshold.o libxnee/src/xnee_range.o libxnee/src/feedback.o
+CLI_OBJS =  cnee/src/parse.o  cnee/src/main.o  
+COMM_OBJS = libxnee/src/xnee.o libxnee/src/xnee_record.o  libxnee/src/xnee_replay.o  libxnee/src/print.o libxnee/src/print_varargs.o libxnee/src/datastrings.o libxnee/src/xnee_dl.o  libxnee/src/xnee_sem.o  libxnee/src/xnee_setget.o libxnee/src/xnee_fake.o libxnee/src/xnee_km.o libxnee/src/xnee_resolution.o  libxnee/src/xnee_resource.o  libxnee/src/xnee_buffer.o  libxnee/src/xnee_callback.o  libxnee/src/xnee_km.o  libxnee/src/xnee_grab.o  libxnee/src/xnee_time.o libxnee/src/xnee_threshold.o libxnee/src/xnee_range.o libxnee/src/feedback.o libxnee/src/xnee_keysym.o libxnee/src/xnee_error.o libxnee/src/xnee_expr.o
 
-
+${COMM_OBJS}: Makefile.xnee
 
 OBJS = ${COMM_OBJS} 
 
-.c.o:
+.c.o: 
 	${CC} -g ${CFLAGS} -c $< -o $@
 
-	
 
 XNEELIB = libxnee.a
 
-XNEE_CLI= xnee/src/xnee  
+XNEE_CLI= cnee/src/cnee  
 
 all : ${XNEE_CLI}
 
 clean:
-	\rm -fr ${OBJS} ${XNEE_CLI} ${XNEELIB} src/*/*~ *~ src/*/*.o */a.out core 
+	\rm -fr ${OBJS} ${CLI_OBJS} ${XNEE_CLI} ${XNEELIB} src/*/*~ *~ src/*/*.o */a.out core 
 
 lib : ${XNEELIB}
 

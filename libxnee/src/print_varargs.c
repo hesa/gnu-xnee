@@ -23,6 +23,8 @@
  ****/
 
 #include "libxnee/xnee.h"
+#include "libxnee/print.h"
+#include "libxnee/print_varargs.h"
 
 
 #ifdef HAVE_STDARG_H

@@ -26,6 +26,8 @@
 #include <libxnee/xnee.h>
 #include <libxnee/print.h>
 
+#ifndef XNEE_DL_H
+#define XNEE_DL_H
 
 void*
 xnee_dlopen (xnee_data *xd, char *dl, int flag);
@@ -38,3 +40,6 @@ xnee_dlclose (xnee_data *xd, void* handle);
 
 const char* 
 xnee_dlerror (xnee_data *xd);
+
+
+#endif /* XNEE_DL_H */

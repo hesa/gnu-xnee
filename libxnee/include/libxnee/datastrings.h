@@ -29,8 +29,11 @@
 #include <X11/X.h>
 #include <X11/Xproto.h>
 
+#ifndef XNEE_DATASTRINGS_H 
+#define XNEE_DATASTRINGS_H 
+
 void 
-xnee_init_names();
+xnee_init_names(void);
 
 
 /**
@@ -117,16 +120,19 @@ xnee_int2error(int err);
 
 
 struct data_description*
-xnee_get_event_names();
+xnee_get_event_names(void);
 
 struct data_description*
-xnee_get_error_names();
+xnee_get_error_names(void);
 
 struct data_description*
-xnee_get_request_names();
+xnee_get_request_names(void);
 
 struct data_description*
-xnee_get_reply_names();
+xnee_get_reply_names(void);
 
 char*
 xnee_int2data(int type, int dat);
+
+
+#endif /*  XNEE_DATASTRINGS_H  */

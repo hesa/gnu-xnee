@@ -3,7 +3,7 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ * Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -31,8 +31,40 @@
 #include "libxnee/xnee_km.h"
 #include "libxnee/feedback.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_grab.h"
+#include "libxnee/xnee_grab.h"
+#include "libxnee/feedback.h"
 
 
+int xkm_rem_blanks (char *array);
+
+const char *
+xnee_symbolic_modifier2modifier (xnee_data *xd, const char *mod_str)
+{
+   xnee_verbose((xd, "--- xnee_symbolic_modifier2modifier\n"));
+   if (xnee_check(mod_str, XNEE_SYMBOLIC_ALT, XNEE_SYMBOLIC_ALT))
+    {
+      return XNEE_REAL_ALT;
+    }
+  else if (xnee_check(mod_str, XNEE_SYMBOLIC_SHIFT, XNEE_SYMBOLIC_SHIFT))
+    {
+      return XNEE_REAL_SHIFT;
+    }
+  else if (xnee_check(mod_str, XNEE_SYMBOLIC_CONTROL, XNEE_SYMBOLIC_CONTROL))
+    {
+      return XNEE_REAL_CONTROL;
+    }
+  else if (xnee_check(mod_str, XNEE_SYMBOLIC_CAPS, XNEE_SYMBOLIC_CAPS))
+    {
+      return XNEE_REAL_CAPS;
+    }
+  else if (xnee_check(mod_str, XNEE_SYMBOLIC_SCROLL, XNEE_SYMBOLIC_SCROLL))
+    {
+      return XNEE_REAL_SCROLL;
+    }
+  else 
+    return NULL;
+}
 
 int
 xkm_rem_blanks (char *array)
@@ -222,6 +254,7 @@ get_modifier_sub(xnee_data *xd,  char *mod_str, xnee_km_tuple *km)
 
 
 
+#ifdef USE_OBSOLETE
 static int 
 is_last (xnee_data *xd,  char *mod_strs) 
 {
@@ -243,7 +276,6 @@ is_last (xnee_data *xd,  char *mod_strs)
   return 1;
 }
 
-#ifdef USE_OBSOLETE
 xnee_keymask
 get_modifier(xnee_data *xd,  char *mod_strs, xnee_km_tuple *km) 
 {
@@ -315,6 +347,10 @@ get_modifier(xnee_data *xd,  char *mod_strs, xnee_km_tuple *km)
  *                                                            *
  *                                                            *
  **************************************************************/
+/* 
+ *  OBSOLETE 
+ *
+ *
 xnee_keymask
 xget_modifier(xnee_data *xd, char *mod_str) 
 {
@@ -368,7 +404,7 @@ xget_modifier(xnee_data *xd, char *mod_str)
   return ret;
 }
 
-
+*/
 
 int
 xnee_check_key(xnee_data *xd)
@@ -441,13 +477,12 @@ xnee_handle_rec_key(xnee_data *xd)
 {
   int ret=XNEE_OK;
   xnee_verbose ((xd, " ---> xnee_handle_rec_km\n"));
-  int i ;
 
 
   switch ( xd->grab_keys->grabbed_action )
     {
     case XNEE_GRAB_STOP :
-      feedback (xd, "Xnee stop received");
+       feedback (xd, "Xnee stop received");
       break;
 
     case XNEE_GRAB_PAUSE :
@@ -599,9 +634,6 @@ xnee_get_action_key (xnee_data     *xd,
 		     xnee_action_key *ak, 
 		     char          *key)
 {
-  int i=0;
-  int idx=-1;
-  int len=strlen(key);
   KeySym ks;
 
   if (key==NULL)
@@ -634,7 +666,6 @@ xnee_km_check_not_same(xnee_data *xd, char *str, int start)
 {
   int ret  = 0 ;
   char *tmp_ptr = NULL ; 
-  int i;
   
   if (str==NULL)
     return XNEE_OK;

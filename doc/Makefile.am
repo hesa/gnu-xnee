@@ -37,7 +37,7 @@ SRC_IMAGES = ${IMG_DIA}
 ##  ALL
 ##
 
-doc:  ${DOC_TARGETS}
+doc: html man pdf ps
 
 
 images: ${SRC_IMAGES} ${GEN_IMAGES}
@@ -111,6 +111,7 @@ xnee.txt:
 
 
 all: doc
+manual: all
 
 #all: ${SRC_IMAGES} ${GEN_IMAGES}
 

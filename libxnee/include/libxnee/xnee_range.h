@@ -130,7 +130,7 @@ int *
 xnee_get_data (int type);
 
 int 
-xnee_print_list();
+xnee_print_list(void);
 
 int 
 xnee_set_ranges(xnee_data *xd);

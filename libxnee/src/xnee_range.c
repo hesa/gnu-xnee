@@ -103,7 +103,7 @@ xnee_bsort(int *numbers, int size)
 }
 
 static int 
-xnee_bsort_all()
+xnee_bsort_all(void)
 {
    int i ; 
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
@@ -121,8 +121,8 @@ xnee_init_list(struct xnee_range *xr, int size)
    return XNEE_OK;
 }
 
-int 
-xnee_free_lists()
+static int 
+xnee_free_lists(void)
 {
    int i ; 
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
@@ -134,7 +134,7 @@ xnee_free_lists()
 }
 
 static int 
-xnee_init_lists()
+xnee_init_lists(void)
 {
    int i ; 
    xrs->alloc_size = 5;
@@ -183,7 +183,7 @@ xnee_print_list(void)
 }
 
 
-int 
+static int 
 xnee_add_to_list2(int type, int ev)
 {
    int i ;

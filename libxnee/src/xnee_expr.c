@@ -37,6 +37,8 @@
 #include "libxnee/datastrings.h"
 #include "libxnee/xnee_threshold.h"
 #include "libxnee/xnee_error.h"
+#include "libxnee/xnee_keysym.h"
+#include "libxnee/xnee_fake.h"
 
 
 
@@ -119,7 +121,6 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp)
       /* if not, return -1 .... */
       return -1;
     }
-
   len = strlen (tmp);
 
   /* OK the string passed the first tests */
@@ -648,7 +649,6 @@ static char *
 xnee_expr_get_proj_value (char *var_and_val)
 {
   char *tmp;
-  printf ("1\n");
 
   tmp = strstr(var_and_val, ":");
   if (tmp==NULL)
@@ -734,17 +734,13 @@ xnee_expression_handle_projinfo(xnee_data *xd, char *tmp)
 static int
 xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 {
-  char buf[BUF_SIZE];
   char var[BUF_SIZE];
   char val[BUF_SIZE];
   char *str = arg;
   char *tmpp = NULL;
-  char *varp = NULL;
   char *valp = NULL;
   int len       = 0 ;
-  int more_vars = 1 ;
   int i ; 
-  int ret;
 
   if (arg == NULL)
     return XNEE_SYNTAX_ERROR;
@@ -830,16 +826,25 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 	    }
 	  xss->valid = sscanf (valp, "%d", &xss->y);
 	}
-      /* key=12 etc */
+      /* key=a key=shift etc */
       else if (strncmp(var,XNEE_FAKE_KEY_ARG,strlen(XNEE_FAKE_KEY_ARG))==0)
 	{
-	  valp = &val[0];
-	  valp++;
-	  if (val[0]=='\0')
-	    val[0]=' ';
+ 	  if (strlen(val)==1) 
+	    {
+	      valp = &val[0];
+	      valp++;
 
-	  xss->valid = sscanf (val, "%d", &xss->key);
-	  xss->key = xnee_char2keycode (xd,val[0],&xss->kc);
+	      if (val[0]=='\0')
+		val[0]=' ';
+	      
+	      xss->valid = sscanf (val, "%d", &xss->key);
+	      xss->key = xnee_char2keycode (xd,val[0],&xss->kc);
+	    }
+	  else
+	    {
+ 	      xss->valid = 1; 
+	      xss->key = xnee_str2keycode (xd,val,&xss->kc); 
+	    }
 	}
       /* button=12 etc */
       else if (strncmp(var,
@@ -863,7 +868,7 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 
       str=strstr(str," ");
     }
-
+  return XNEE_OK;
 }
 
 static int
@@ -876,7 +881,6 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
   xnee_script_s xss ;
   
   xnee_verbose ((xd, "handling primitive: %s\n", str));
-
   prim_args = strstr(str," ");
 
   if (prim_args==NULL)
@@ -922,50 +926,24 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY_PRESS))
     {
-      int mods;
-      for (mods=0;(mods<8)&(xss.kc.mod_keycodes[mods]!=0);mods++)
-	{
-	  xnee_fake_key_event (xd,
-			       xss.kc.mod_keycodes[mods], 
-			       XNEE_PRESS, 
-			       0);
-	  
-	  ret = XNEE_PRIMITIVE_DATA ;
-	}
-      xnee_fake_key_event (xd,
-			   xss.kc.kc, 
-			   XNEE_PRESS, 
-			   0);
-      
+      xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY_RELEASE))
     {
-      int mods;
-      for (mods=0;(mods<8)&(xss.kc.mod_keycodes[mods]!=0);mods++)
-	{
-	  xnee_fake_key_event (xd,
-			       xss.kc.mod_keycodes[mods], 
-			       XNEE_RELEASE, 
-			       0);
-	  
-	  ret = XNEE_PRIMITIVE_DATA ;
-	}
-      xnee_fake_key_event (xd,
-			   xss.kc.kc, 
-			   XNEE_RELEASE, 
-			   0);
-      
+      xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY))
     {
       xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
       xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
+      ret = XNEE_PRIMITIVE_DATA ;
     }
   else
-    ;  
-  
+  {
+     xnee_verbose((xd, "  else branch reached in xnee_expression_handle_prim\n"));  
+  }
 
 
   return ret;

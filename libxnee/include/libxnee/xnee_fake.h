@@ -100,5 +100,8 @@ xnee_fake_relative_motion_event (xnee_data* xd,
 int 
 xnee_type_file(xnee_data *xd );
 
+int
+xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime);
+
 
 #endif /* XNEE_FAKE_H */

@@ -29,13 +29,16 @@
 
 
 const char *
-xnee_get_err_description (int error);
+xnee_get_err_description (int error) ;
 
 const char *
 xnee_get_err_solution (int error);
 
 char *
-xnee_get_err_string ();
+xnee_get_err_string (void);
 
 char *
-xnee_set_err_string (char *new_error, ...);
+xnee_set_err_string (char *new_error, ...) __attribute__ ((format (printf, 1 ,2)));
+
+void
+xnee_free_err_string (void);

@@ -29,6 +29,7 @@
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_fake.h"
+#include "libxnee/xnee_error.h"
 #include "parse.h"
 
 

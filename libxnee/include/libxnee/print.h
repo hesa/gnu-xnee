@@ -76,17 +76,6 @@ void
 xnee_print_data_info (xnee_data *xd);
 
 
-/**
- * Verbose prints to specified file
- *
- * @param xd     xnee's main structure
- * @param str    formatted string 
- * @param ....   extra parameters to string
- * @return void  
- */
-void
-xnee_verbosef (xnee_data* xd, char * str, ...);
-
 
 
 int
@@ -102,11 +91,6 @@ void
 xnee_verbose_event (xnee_data *, int ev ) ;
 
 
-/*
- * Print an error message
- */
-void
-xnee_print_error (char *, ...);
 
 
 
@@ -326,4 +310,6 @@ xnee_print_ranges (xnee_data *xd, FILE *fp);
 void 
 xnee_print_xnee_resource_settings (xnee_data* xd, FILE* out) ;
 
+void 
+xnee_store_mouse_pos (xnee_data* xd );
 #endif /* XNEE_PRINT_H */

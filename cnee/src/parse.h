@@ -54,7 +54,7 @@ xnee_usage (FILE* fd);
 void  
 xnee_parse_args (xnee_data* xd, 
 		 int argc, 
-		 char **argv);
+		 char **argv) ;
 
 
 

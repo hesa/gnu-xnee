@@ -35,6 +35,7 @@
 #include "libxnee/xnee_buffer.h"
 #include "libxnee/xnee_resolution.h"
 #include "libxnee/xnee_dl.h"
+#include "libxnee/xnee_callback.h"
 
 
 /**************************************************************
@@ -48,7 +49,7 @@ xnee_set_callback (xnee_data *xd,
 		   callback_ptrptr dest, 
 		   char *sym_name)
 {
-  char *error;
+  const char *error;
   callback_ptr saved;
   xnee_verbose ((xd, "\nTrying to set \"%s\" as callback\n", sym_name));
 
@@ -63,7 +64,8 @@ xnee_set_callback (xnee_data *xd,
       *dest = (callback_ptr) xnee_dlsym(xd, 
 					 xd->plugin_handle,
 					 sym_name);
-      if ((error = (char*)xnee_dlerror(xd)) != NULL)  
+      error = xnee_dlerror(xd) ;
+      if ( error != NULL)  
 	{
 	  xnee_verbose ((xd, "Failed to set \"%s\" from plugin\n", sym_name));
 	  *dest = saved ;
@@ -91,7 +93,7 @@ xnee_set_synchronize (xnee_data *xd,
 		      char *sym_name)
 {
 
-  char *error;
+   const char *error;
   synch_ptr saved;
   xnee_verbose ((xd, "\nTrying to set \"%s\" as callback\n", sym_name));
 
@@ -107,7 +109,7 @@ xnee_set_synchronize (xnee_data *xd,
 				     xd->plugin_handle, 
 				     sym_name);
       
-      if ((error = (char*)xnee_dlerror(xd)) != NULL)  
+      if ((error = xnee_dlerror(xd)) != NULL)  
 	{
 	  xnee_verbose ((xd, "Failed to set \"%s\" from plugin\n", sym_name));
 	  *dest = saved ;

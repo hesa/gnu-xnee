@@ -34,24 +34,6 @@
 #include "libxnee/xnee_resolution.h"
 
 
-/* 
- * internal use only 
- */
-/**************************************************************
- *                                                            *
- * xnee_replay_buffer_status                                  *
- *                                                            *
- *                                                            *
- **************************************************************/
-int
-xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
-int
-xnee_replay_buffer_max_diff (xnee_data* xd, int type);
-int
-xnee_replay_buffer_min_diff (xnee_data* xd, int type);
-int
-xnee_replay_buffer_tot_diff (xnee_data* xd, int type);
-
 
 /**************************************************************
  *                                                            *

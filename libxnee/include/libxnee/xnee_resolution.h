@@ -57,9 +57,6 @@ int
 xnee_res_cmp(xnee_res *xr1, xnee_res *xr2);
 
 int 
-xnee_res_cmp(xnee_res *xr1, xnee_res *xr2);
-
-int 
 xnee_resolution_differs (xnee_data *xd);
 
 int 
@@ -73,9 +70,6 @@ xnee_set_default_rep_resolution (xnee_data *xd);
 
 int
 xnee_no_rep_resolution (xnee_data *xd);
-
-int 
-xnee_res_cmp(xnee_res *xr1, xnee_res *xr2);
 
 int 
 xnee_is_resolution_used (xnee_data *xd);

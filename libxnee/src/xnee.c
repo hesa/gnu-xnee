@@ -47,6 +47,7 @@
 #include "libxnee/xnee_dl.h"
 #include "libxnee/xnee_sem.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_fake.h"
 #include "libxnee/datastrings.h"
 #include "libxnee/xnee_grab.h"
 #include "libxnee/xnee_km.h"
@@ -59,19 +60,6 @@
 
 
 xnee_data *xd_global;
-int masks[] =
-  {
-    0,
-    ShiftMask,
-    ControlMask,
-    LockMask,
-    Mod1Mask,
-    Mod2Mask,
-    Mod3Mask,
-    Mod4Mask,
-    Mod5Mask,
-    -1
-  } ;
 
 /**************************************************************
  *                                                            *
@@ -199,7 +187,7 @@ xnee_delay (int secs, char *mess)
  *                                                            *
  **************************************************************/
 int 
-xnee_check ( char *arg, char *long_arg , char *short_arg ) 
+xnee_check ( const char *arg, const char *long_arg , const char *short_arg ) 
 {
   /* returns 1 if arg was equal to any of long_arg or short_arg, 
      else it returns 0*/
@@ -207,7 +195,7 @@ xnee_check ( char *arg, char *long_arg , char *short_arg )
 }
 
 
-
+#ifdef USE_OBSOLETE
 /**************************************************************
  *                                                            *
  * xnee_check_begin                                           *
@@ -227,7 +215,7 @@ xnee_check_begin ( char *arg, char *long_arg , char *short_arg )
   
   return XNEE_FALSE;
 }
-
+#endif
 
 
 
@@ -273,7 +261,7 @@ xnee_open_display(xnee_data* xd)
 
 
 
-int  
+static int  
 xnee_free_file (xnee_data *xd, char *file_name, FILE* file)
 {
   if ( file_name != NULL) 
@@ -442,7 +430,7 @@ xnee_init(xnee_data* xd)
   xd->out_file      = stdout ;
   xd->err_file      = stderr ;
   xd->rc_file       = NULL   ;
-  xd->rt_file       = NULL   ;
+  xd->rt_file       = stdin  ;
   xd->buffer_file   = stderr ;
 
   xd->data_name     = NULL  ;
@@ -561,16 +549,19 @@ signal_handler(int sig)
       xnee_ungrab_keys(xd_global);
       xnee_reset_autorepeat (xd_global);
       exit (sig);
+      break;
     case SIGINT:
       fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
       xnee_ungrab_keys(xd_global);
       xnee_reset_autorepeat (xd_global);
       exit (sig);
+      break;
     default:
       fprintf (stderr, 
 	       "signal_handler error. Unxpected signal (%d)\n .... leaving",
 	       sig);
       exit (sig);
+      break;
     }
 }
 
@@ -642,7 +633,7 @@ xnee_free_recordext_setup(xnee_data* xd)
 }
 
 
-int
+static int
 xnee_new_dyn_data(xnee_data *xd)
 {
    xnee_verbose((xd, "---> xnee_new_dyn_data\n"));
@@ -668,7 +659,7 @@ xnee_new_dyn_data(xnee_data *xd)
 }
 
 
-int 
+static int 
 xnee_reset_xnee_info(xnee_data *xd)
 {
   int i ; 
@@ -680,7 +671,7 @@ xnee_reset_xnee_info(xnee_data *xd)
 }
 
 
-int
+static int
 xnee_free_dyn_data(xnee_data *xd)
 {
    xnee_verbose((xd, "---> xnee_free_dyn_data\n"));
@@ -944,8 +935,8 @@ xnee_add_display (Display *dpy, xnee_data* xd)
 			   &xtest_version_major,
 			   &xtest_version_minor) )
     {
-      xnee_print_error ("XTest extension missing on display %d \n", dpy);
-      return (XNEE_NO_TEST_EXT);
+       xnee_print_error ("XTest extension missing on display %d \n", (int)dpy);
+       return (XNEE_NO_TEST_EXT);
     }
   xnee_verbose ((xd, "  XTest  Release on \"%d\"         %d.%d\n", 
 		dpy,
@@ -1220,14 +1211,14 @@ rem_all_blanks (char *array, int size)
 
 
 
-
+#ifdef USE_OBSOLETE
 /**************************************************************
  *                                                            *
  * xnee_get_record_config                                     *
  *                                                            *
  *                                                            *
  **************************************************************/
-int 
+static int 
 xnee_get_record_config (xnee_data* xd) 
 {
   char tmp[256] ;
@@ -1258,6 +1249,8 @@ xnee_get_record_config (xnee_data* xd)
     }
   return 1;
 }
+
+
 /**************************************************************
  *                                                            *
  * xnee_check_inSync                                          *
@@ -1293,7 +1286,7 @@ xnee_check_inSync (xnee_data *xd )
   return XNEE_TRUE;
 }
 
-
+#endif
 
 
 
@@ -1363,9 +1356,6 @@ xnee_process_replies(xnee_data *xd)
 int
 xnee_set_autorepeat (xnee_data *xd)
 {
-  int i ;
-  int j;
-
   if (xd->autorepeat_saved==1)
     {
       return XNEE_OK;
@@ -1436,161 +1426,6 @@ xnee_reset_autorepeat (xnee_data *xd)
      before we close down the display */
   XFlush (xd->fake);
   xd->autorepeat_saved=0;  
-  return XNEE_OK;
-}
-
-
-KeyCode
-xnee_str2keycode(xnee_data* xd, char *str, xnee_key_code *kc)
-{
-  if (xd->fake==NULL)
-    return -1;
-  kc->kc = XKeysymToKeycode(xd->fake,XStringToKeysym(str));
-  if (kc!=NULL)
-    xnee_token_to_km (xd,kc->kc, str,kc);
-  return kc->kc;
-}
-
-
-KeyCode
-xnee_keysym2keycode(xnee_data* xd, KeySym ks, char * str, xnee_key_code *kc)
-{
-  if (xd->fake==NULL)
-    return -1;
-
-  kc->kc = XKeysymToKeycode(xd->fake, ks);
-  xnee_token_to_km (xd,kc->kc,str,kc);
-  return kc->kc;
-}
-
-
-int
-xnee_token_to_km (xnee_data *xd,
-		  int keycode,
-		  char *str,
-		  xnee_key_code *kc)
-{
-  XEvent event;
-  int size;
-  int i ;
-  int k ;
-  int ret=-1;
-  char string[20];
-  KeySym keysym;
-  Display *dpy = xd->fake;
-  
-  for (i=0;masks[i]!=-1;i++)
-    {
-      event.xkey.type    = KeyPress;
-      event.xkey.display = dpy ;
-      event.xkey.time    = CurrentTime;
-      event.xkey.x       = event.xkey.y = 0;
-      event.xkey.x_root  = event.xkey.y_root = 0;
-      event.xkey.state   = masks[i];
-      event.xkey.keycode = keycode;
-      
-      size = XLookupString ((XKeyEvent *) &event, string, 20, &keysym, 0);
-      string [size] = 0;
-
-      if (strcmp(str,string)==0)
-	{
-	  KeySym ks ;
-	  char *nm ;
-	  k = (i-1)*xd->map->max_keypermod ;
-	  ks = XKeycodeToKeysym(dpy,
-				xd->map->modifiermap[k],
-				0);
-	  nm = XKeysymToString(ks);
-	  
-	  
-	  
-	  kc->mod_keycodes[0] = xd->map->modifiermap[k];
-	  ret = XNEE_OK ;
-	  break;
-       }
-   }
-
-  return ret;
-}
-
-
-
-
-
-KeyCode
-xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
-{
-  char buf[2];
-  if (xd->fake==NULL)
-    return -1;
-
-  KeySym ks = 0 ;
-  
-  memset(kc,0,sizeof(xnee_key_code));
-  buf[0]=token;
-  buf[1]=0;
-
-  switch( token)
-    {
-    case ' ':
-      ks = XK_space ;
-    case '$':
-      break;
-    case '%':
-      break;
-    case '&':
-      ks = XK_ampersand ;
-      break;
-    case '-':
-      ks = XK_minus ;
-      break;
-    case '\n':
-      ks = XK_Return ;
-    case '\0':
-      break;
-    case '(':
-      break;
-    case ')':
-      break;
-    case '/':
-      ks = XK_slash;
-      break;
-    case '\\':
-      ks = XK_backslash;
-      break;
-    case ',':
-      break;
-    case '.':
-      break;
-    case '#':
-      break;
-    case '"':
-      break;
-    case '?':
-      break;
-    case '@':
-      break;
-    case '!':
-      break;
-    default:
-      /*    a-z, 0-9   */
-      ks = 0 ;
-      break;
-    }
-
-  if ( ks != 0)
-    {
-      xnee_keysym2keycode(xd, ks, buf, kc);
-    }
-  else
-    {
-      xnee_str2keycode(xd, buf, kc);
-    }
-    
-  if ((token >= 'A') && (token <='Z'))
-    /*     kc->shift_press=1; */
-    ;
-
   return XNEE_OK;
 }
 
@@ -1680,14 +1515,12 @@ xnee_rep_prepare(xnee_data *xd)
 {
   int ret ; 
 
-
   xnee_verbose((xd, "--> xnee_rep_prepare\n"));
   /* 
    * Print settings 
    * only done if verbose mode  
    */
   xnee_print_distr_list(xd, NULL);
-
   xnee_set_ranges(xd);
 
   ret=xnee_setup_recordext (xd);
@@ -1711,6 +1544,7 @@ xnee_rep_prepare(xnee_data *xd)
    * Test Displays and Extensions  
    *
    */
+
   ret = xnee_setup_display (xd);
   if (ret!=XNEE_OK)
     {
@@ -1928,6 +1762,7 @@ xnee_renew_xnee_data(xnee_data *xd)
 }
 
 
+#ifdef USE_OBSOLETE
 int 
 xnee_refresh_xnee_data(xnee_data *xd)
 {
@@ -1935,7 +1770,7 @@ xnee_refresh_xnee_data(xnee_data *xd)
    xnee_new_dyn_data(xd);
    return (XNEE_OK);
 }
-
+#endif
 
 
 int
@@ -1971,5 +1806,19 @@ xnee_check_false(char *expr)
   return  ( (strncmp(expr,XNEE_FALSE_STRING,strlen(XNEE_FALSE_STRING))==0)
 	    ||
 	    (strncmp(expr,XNEE_0_STRING,strlen(XNEE_0_STRING))==0) );
+}
+
+int
+handle_xerr(Display *dpy, XErrorEvent *errevent)
+{
+  int protocol_error;	        /* error code of error caught by error handler */
+  int protocol_error_major;	/* major op code of error caught */
+  int protocol_error_minor;	/* minor op code of error caught */
+  
+  protocol_error = errevent->error_code;
+  protocol_error_major = errevent->request_code;
+  protocol_error_minor = errevent->minor_code;
+  printf ("Error recevied.... on display=%d\n", (int)dpy);
+  return 1;
 }
 

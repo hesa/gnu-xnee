@@ -34,6 +34,7 @@
 #endif
 
 
+int  xnee_xosd_close(xnee_data *xd);
 
 
 /* xosd fun/lib pointers */
@@ -41,16 +42,22 @@ static void   *xosd_lib = NULL ;
 static void   *osd;
 static int     feedback_used      = XNEE_UNDEFINED_FEEDBACK;
 static int     feedback_requested = XNEE_XOSD_FEEDBACK;
-static void* (*xosd_print)(void*, int, int, char *) = NULL ; 
 
+
+ 
+typedef  void* (*xosd_create_fun) (int)           ; 
+typedef  void* (*xosd_int_fun)    (void*, int)    ; 
+typedef  void* (*xosd_char_fun)   (void*, char*)  ; 
+typedef  void* (*xosd_print_fun) (void*, int, int, char *) ; 
+
+static xosd_print_fun xosd_print ;
 
 static int
 xnee_setup_xosd(xnee_data *xd)
 {
-  void* (*xosd_create)(int) = NULL ; 
-  void* (*xosd_int)(void*, int) = NULL ; 
-  void* (*xosd_char)(void*, char*) = NULL ; 
-  int ret;
+  xosd_create_fun  xosd_create = NULL ; 
+  xosd_int_fun     xosd_int    = NULL ; 
+  xosd_char_fun    xosd_char   = NULL ; 
 
 
   xosd_lib = xnee_dlopen (xd, "libxosd.so", RTLD_LAZY);
@@ -60,7 +67,7 @@ xnee_setup_xosd(xnee_data *xd)
       return XNEE_XOSD_FAILURE ; 
     }
   
-  xosd_create = xnee_dlsym(xd, xosd_lib, "xosd_create");
+  xosd_create = (xosd_create_fun) xnee_dlsym(xd, xosd_lib, "xosd_create");
   if (xosd_create==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -75,7 +82,7 @@ xnee_setup_xosd(xnee_data *xd)
     }
   
 
-  xosd_int = xnee_dlsym(xd, xosd_lib, "xosd_set_shadow_offset");
+  xosd_int = (xosd_int_fun)xnee_dlsym(xd, xosd_lib, "xosd_set_shadow_offset");
   if (xosd_int==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -86,7 +93,7 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_int(osd, 2);
 
   
-  xosd_int = xnee_dlsym(xd, xosd_lib, "xosd_set_timeout");
+  xosd_int =  (xosd_int_fun) xnee_dlsym(xd, xosd_lib, "xosd_set_timeout");
   if (xosd_int==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -97,7 +104,7 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_int(osd, FEEDBACK_TIMEOUT);
 
   
-  xosd_char = xnee_dlsym(xd, xosd_lib, "xosd_set_font");
+  xosd_char = (xosd_char_fun) xnee_dlsym(xd, xosd_lib, "xosd_set_font");
   if (xosd_char==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -107,7 +114,7 @@ xnee_setup_xosd(xnee_data *xd)
     }
   xosd_char(osd, "-adobe-helvetica-bold-r-normal-*-*-320-*-*-p-*-iso8859-1");
 
-  xosd_char = xnee_dlsym(xd, xosd_lib, "xosd_set_colour");
+  xosd_char = (xosd_char_fun) xnee_dlsym(xd, xosd_lib, "xosd_set_colour");
   if (xosd_char==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -118,7 +125,7 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_char(osd, "yellow");
 
 
-  xosd_print= xnee_dlsym(xd, xosd_lib, "xosd_display");
+  xosd_print= (xosd_print_fun) xnee_dlsym(xd, xosd_lib, "xosd_display");
   if (xosd_print==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -130,8 +137,8 @@ xnee_setup_xosd(xnee_data *xd)
   return XNEE_OK;
 }
 
-int static 
-feedback_init(xnee_data *xd, char *str)
+static int
+feedback_init(xnee_data *xd)
 {
   int ret ;
 
@@ -156,7 +163,7 @@ feedback_init(xnee_data *xd, char *str)
   /* is the current XOSD? .. then close it */
   if ( feedback_used==XNEE_XOSD_FEEDBACK )
     {
-      xnee_xosd_close(xd);
+       xnee_xosd_close(xd);
     }
   else if ( feedback_used==XNEE_STDERR_FEEDBACK )
     {
@@ -192,9 +199,13 @@ feedback_init(xnee_data *xd, char *str)
 int 
 xnee_xosd_close(xnee_data *xd)
 {
-  XNEE_FREE_IF_NOT_NULL(osd);
-  if (xosd_lib!=NULL)
-    xnee_dlclose(xd, xosd_lib);
+   xnee_verbose((xd, "xnee_xosd_close\n"));
+   XNEE_FREE_IF_NOT_NULL(osd);
+   if (xosd_lib!=NULL)
+   {
+      xnee_dlclose(xd, xosd_lib);
+   }
+   return XNEE_OK;
 }
 
 int 
@@ -207,17 +218,16 @@ xnee_feedback_close(xnee_data *xd)
 
 #ifdef HAVE_STDARG_H
 int 
-feedback(xnee_data *xd, char *str, ... )
+feedback(xnee_data *xd, char *str, ... ) 
 {
   
-  va_list ap;
-  static char buf[200];
-  int conv;
-  int ret;
+   va_list ap;
+   static char buf[200];
+   int conv;
+   int ret;
 #else
 int 
-feedback(xnee_data *xd, valist)
-  va_dcl
+feedback(xnee_data *xd, char *str, va_dcl  valist)
 {
   char *str;
   va_list ap;
@@ -226,17 +236,15 @@ feedback(xnee_data *xd, valist)
   va_start(argp);
   str = va_arg(argp, char *);
 #endif
-
-
-  conv = vsnprintf ((char*) buf, 
-		    200, 
-		    str, 
-		    ap );
+  if (str==NULL)
+     return XNEE_SYNTAX_ERROR;
+  
+  conv = vsnprintf (buf, 200, str, ap );
   if (conv>=200)
     conv=199;
   buf[conv]='\0';
   
-  feedback_init(xd, NULL); 
+  feedback_init(xd); 
   if (feedback_used==XNEE_XOSD_FEEDBACK)
     {
       xosd_print(osd, 0, XOSD_string, buf); 
@@ -244,7 +252,7 @@ feedback(xnee_data *xd, valist)
     }
   else if (feedback_used==XNEE_STDERR_FEEDBACK)
     {
-      fprintf (stderr,buf);
+       fprintf (stderr,"%s", buf);
       ret = XNEE_OK;
     }
   else
@@ -261,42 +269,39 @@ feedback(xnee_data *xd, valist)
 int 
 xnee_set_stderr_feedback(xnee_data *xd)
 {
-  int ret ;
-
+   xnee_verbose((xd, "xnee_set_stderr_feedback\n"));
   feedback_requested=XNEE_STDERR_FEEDBACK;
-  
   return XNEE_OK;
 }
 
 int 
 xnee_set_no_feedback(xnee_data *xd)
 {
-  int ret ;
-
-  feedback_requested=XNEE_NO_FEEDBACK;
-  
-  return XNEE_OK;
+   xnee_verbose((xd, "xnee_set_no_stderr_feedback\n"));
+   feedback_requested=XNEE_NO_FEEDBACK;
+   return XNEE_OK;
 }
 
 int 
 xnee_set_xosd_feedback(xnee_data *xd)
 {
-  int ret ;
-  
-  feedback_requested=XNEE_XOSD_FEEDBACK;
-  return ret;
+   xnee_verbose((xd, "xnee_set_xosd_feedback\n"));
+   feedback_requested=XNEE_XOSD_FEEDBACK;
+   return XNEE_OK;
 }
 
 
 int 
 xnee_is_xosd_feedback(xnee_data *xd)
 {
+   xnee_verbose((xd, "xnee_is_xosd_feedback\n"));
   return (feedback_used==XNEE_XOSD_FEEDBACK);
 }
 
 int 
 xnee_is_stderr_feedback(xnee_data *xd)
 {
+   xnee_verbose((xd, "xnee_is_stderr_feedback\n"));
   return (feedback_used==XNEE_STDERR_FEEDBACK);
 }
 

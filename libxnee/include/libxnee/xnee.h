@@ -42,6 +42,10 @@
 #endif
 
 
+/* If not using GNU C skip: __attribute__ */
+#ifndef __GNUC__
+#  define  __attribute__(x)  /*NOTHING AT ALL*/
+#endif
 
 #include <stdio.h>
 #include <unistd.h>
@@ -156,6 +160,8 @@ typedef int xnee_keymask;
 				  before exit  */
 #define MAX_SKIPPED_UNSYNC  10 /* number of times to ignore unsync state  */
 #define XNEE_NOT_REPLAYABLE 13
+
+#define XNEE_NR_OF_MODIFIERS 8
 
 #define XNEE_DEFAULT_MAX_THRESHOLD  10
 #define XNEE_DEFAULT_MIN_THRESHOLD  -10
@@ -516,13 +522,14 @@ typedef struct
 
 } old_xnee_key_code;
 
+
 /*! \brief Holds information about keycodes needed to fake a letter press
  *
  */
 typedef struct
 {
   KeyCode kc ;       /*!< key to fake */ 
-  KeyCode mod_keycodes[8];
+  KeyCode mod_keycodes[XNEE_NR_OF_MODIFIERS];
 } xnee_key_code;
 
 
@@ -846,7 +853,7 @@ xnee_get_max_range (xnee_data *xd);
 
 /* internal use */
 void 
-signal_handler(int sig) ;
+signal_handler(int sig)  __attribute__ ((noreturn));
 
 
 /**
@@ -944,7 +951,7 @@ void xnee_delay (int , char *) ;
  * @return int      1 if arg was equal to any of long_arg or short_arg, else it returns 0  
  */
 int 
-xnee_check ( char *arg, char *long_arg , char *short_arg );
+xnee_check ( const char *arg, const char *long_arg , const char *short_arg );
 
 
 
@@ -990,7 +997,7 @@ xnee_set_default_display (xnee_data *xd);
  * @return xnee_data * NULL if alloc failed
  */
 xnee_data*
-xnee_new_xnee_data();
+xnee_new_xnee_data(void);
 
 
 
@@ -1010,7 +1017,7 @@ xnee_free_xnee_data(xnee_data* xd );
  * @return xnee_recordext_setup *  NULL if alloc failed
  */
 xnee_recordext_setup*
-xnee_new_recordext_setup();
+xnee_new_recordext_setup(void);
 
 
 /**
@@ -1117,11 +1124,6 @@ xnee_set_autorepeat (xnee_data *xd);
 int
 xnee_reset_autorepeat (xnee_data *xd);
 
-KeyCode
-xnee_str2keycode(xnee_data* xd, char *str, xnee_key_code *kc);
-
-KeyCode
-xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc);
 
 int
 xnee_write_settings_to_file (xnee_data *xd, FILE *fp);
@@ -1156,6 +1158,8 @@ xnee_rep_prepare(xnee_data *xd);
 int
 xnee_prepare(xnee_data *xd);
 
+int
+handle_xerr(Display *dpy, XErrorEvent *errevent);
 
 #endif /*   XNEE_XNEE_H */
 
