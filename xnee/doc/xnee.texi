@@ -5,10 +5,7 @@
 @setchapternewpage off
 @c %**end o
 
-
-
 @include version.texi
-
 
 @dircategory Miscellaneous
 @direntry
@@ -35,12 +32,12 @@
 
 
 @titlepage
-@sp 10
+@c sp 10
 @c omment The title is printed in a large font
-@center @titlefont{Xnee Manual}
+@c center @titlefont{Xnee Manual}
 
 @c The following two commands start the copyright page.
-@page
+@c page
 @vskip 0pt plus 1filll
 @title Xnee Manual 
 @subtitle a recorder, replayer and sistributor for X Window System

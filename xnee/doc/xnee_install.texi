@@ -16,7 +16,7 @@ To unpack, build and install Xnee from the sourcefiles do the following:
 @code{gunzip cd xnee-1.0}
 
 @item Generate the makefiles
-@code{./configure --prefix=<PATH TO INSTALLATION DIR>}
+@code{./configure [--prefix=<PATH TO INSTALLATION DIR>]}
 
 @item Build Xnee
 @code{make clean all}
@@ -24,8 +24,6 @@ To unpack, build and install Xnee from the sourcefiles do the following:
 @item Install (as root)
 @code{make install}
 @end table
-
-
 
 
 @section Installation from source (tar.gz) with default Makefile
@@ -45,27 +43,21 @@ To unpack, build and install Xnee from the sourcefiles do the following:
 @item Build Xnee
 @code{make -f Makefile.xnee clean all}
 
-@item Copy the Xnee binary (src/cli/xnee) to a directory
+@item Copy the Xnee binary (xnee/src/xnee) to a directory
 E.g 
-@code{cp src/cli/xnee /usr/local/bin}
+@code{cp xnee/src/xnee /usr/local/bin}
 
 @end table
-
-
 
 
 
 @section Installation from SOURCE RPM
 
 
-
-
 @section Installation from RPM
 Use the rpm command.
 E.g
 @code{rpm --install xnee-0.9-1.i386.rpm}
-
-
 
 @section Installation from CVS
 See the Xnee Developer Manual

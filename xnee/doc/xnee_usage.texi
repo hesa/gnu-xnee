@@ -12,8 +12,9 @@ Start Xnee,
    @code{xnee -rep -f example1.xnr &}
 @end example
 ....dont forget '&'.
-The file example1.xnr contains keyboard events recorded during development of this manual. 
-When replayed you'll what was typed and of course more important yu'll get i first glimpse 
+This command makes xnee replay a record session stored in the file example1.xnr. The file 
+example1.xnr contains keyboard events recorded during development of this manual. 
+When replayed you'll see what was typed and of course more important yu'll get i first glimpse 
 of Xnee and its capabilities. For information on where to find the example files, see below.
 
 @subsection Simple recording of Key presses
@@ -35,7 +36,7 @@ Move the pointer to one of the terminal windows and start Xnee.
 @example
    @code{xnee -rep -f exmaple2.xnr --time 5}
 @end example
-Move the pointer to the other terminal windows and get focus (e.g click the window frame)
+Move the pointer to the editor window and get focus (e.g click the window frame)
 After 5 seconds you will see your typings in the example above being repeated.
 
 @subsection Simple recording of mouse motions
@@ -45,12 +46,11 @@ Move the pointer to one of the terminal windows and start Xnee.
 @example
    @code{xnee -o exmaple3.xnr --device-event-range 5-6 --time 5 --loops 20}
 @end example
-Move the pointer to the other terminal windows and get focus (e.g click the window frame)
 After 5 seconds you can move the pointer around (20 motion events are recorded).
 
 @subsection Simple replaying of your recorded file
-Let Xnee repeat the stuff you did in the example above.. 
-Move the pointer to a terminal windows and start Xnee.
+Let Xnee repeat the stuff you did in the example above. Move the pointer to a 
+terminal windows and start Xnee.
 @example
    @code{xnee -rep -f exmaple3.xnr --time 5}
 @end example
@@ -88,7 +88,7 @@ Xnee has three modes:
 @item	replay
 @item	distribute
 @end itemize
-The distributiion mechanism can be used together with the other two.
+The distribution mechanism can be used together with the other two.
 
 
 @subsection  Record
@@ -98,7 +98,7 @@ When record mode is used Xnee receives a copy of the data sent to and from the X
 
 @subsection  Replay
 @cindex replaying
-When replay mode is used Xnee reads data from a file or stdin. These data is either sent to the server (if it is a keyboard or a mouse event) or used to synchronise with (if any of the other data).
+When replay mode is used Xnee reads data from a file or stdin. These data are either sent to the server (if they are a keyboard or a mouse events) or used to synchronise with.
 
 
 @subsection  Distribution
@@ -152,21 +152,64 @@ What data to record is specified using ranges. Ranges has a start value and a st
 @tab Extension Reply
 
 @end multitable
-To find out what number belongs to what data name, you can use the @code{--print-data-name'} option. For an explanation on the X protocol data, please read the "X Record Extension Library" or the "Record Extension Protocol Specification".
+You can specify either the name of the data (e.g MotionNotify) or the number. To find 
+out what number belongs to what data name, you can use the @code{--print-data-name'} 
+option. For an explanation on the X protocol data, ead the 
+"X Record Extension Library" or the "Record Extension Protocol Specification". 
 
 
 @section  First and last motion event
-Xnee has the ability to skip recording of succesive motion events with no other data in between. This option is intended to reduce the number of data recorded by leaving out unnecessary data. This feature can be invoked with the --first-last flag.
+Xnee has the ability to skip recording of succesive motion events with no other data 
+in between. This option is intended to reduce the number of data recorded by leaving 
+out the unnecessary. This feature is invoked with the @code{--first-last} flag.
 
 @section  Delay
-Sometimes when Xnee starts recording data, the keyrelease (due to pressing and releasing RETURN to execute the Xnee command line) is recorded. This single keyrelease (with no corresponding keypress) might confuse the X server. With the --time <secs> option Xnee can be paused for secs seconds.
+Sometimes when Xnee starts recording data, the keyrelease (due to pressing and releasing 
+RETURN to execute the Xnee command line) is recorded. This single keyrelease 
+(with no corresponding keypress) might confuse the X server. With the @code{--time <secs>} option 
+Xnee can be paused for secs seconds.
 
 
-@section  Verbose
-When enabling verbose mode (--verbose) Xnee prints a lot of information about it's state. This option is only intended for debugging. 
+@section  Verbose printout
+When enabling verbose mode (@code{--verbose}) Xnee prints a lot of information about it's state. This option is only intended for debugging. 
 
 @section  Human printouts
-Sometimes it's hard to decide what data to use when synchronising. To do this you simply have to see what data is printed out when recording. Instead of reading the data number, s tring representation of the data is printed out. To enable this option, use the "--human-printouts"
+Sometimes it's hard to decide what data to use when synchronising. To do this you simply have to see what data is printed out when recording. Instead of reading the data number, string representation of the data is printed out. To enable this option, use the @code{--human-printouts}"
+
+@section  Invoking Xnee
+The mode(s) Xnee shall use and the ranges to use can be set by either:
+@itemize @bullet
+@item	command line options
+@item	resource file
+@item	recorded file (only apllicable when in replay mode)
+@end itemize
+The three can be used together or alone. However, when given multiple specifications to a setting that can take one value (e.g printout redirection, number of data to record) the latest specification is used.
+
+@subsection  Command line syntax
+@cindex command line syntax
+To get information about how to use Xnee's command line options please use the man page(s).
+
+@section  Stopping Xnee
+@cindex stopping xnee
+Stopping Xnee when recording or replaying can be done as follows
+@itemize @bullet
+@item	user specified modifier and key
+@item	limit the number of data to record
+@item	sending a SIGTERM signal (e.g pressing Control-c in a terminal window)
+@end itemize
+
+@subsection	user specified modifier and key
+@cindex stop modifier
+@cindex stop key
+It is possible to specify a modifier (e.g Control button) and a key (e.g 'a') that will stop the Xnee session. When using this option make sure that the modifier/key is not used in any way by the applications you recording.
+@subsection	number of data to record
+By specifying the number of data to record Xnee stops when this number number of data is received from the server. When replaying the same amount of data is replayed. 
+@subsection	sending a SIGTERM signal (e.g pressing CTRL-C in a terminal window)
+@cindex SIGTERM
+The easiest way to send a signal to a process is by launching Xnee from a terminal window (e.g xterm). By pressing Control-c xterm sends the SIGTERM signal to Xnee. When replaying it can sometimes be hard to move the pointer into the terminal window (e.g if a lot of motion events were recorded that will let you compete with Xnee on where the mouse pointer shall be located. Beleive me, you'll end up lossing that battle).  
+
+@subsection  Resource file
+To use a resource file use the @code{--resource} option,  e.g @code{xnee --resource xnee/resources/netscape.xns}
 
 @section  Resource file
 Xnee's behaviour can be set using a prepared file containing the settings to be used.
@@ -254,7 +297,7 @@ You can set the key by entering one character or the keycode for the character y
 @subsection Stop modifier syntax
 You can set the modifier to any of the following
 @table @samp
-@item  Shift or Shift
+@item  Shift
         Modifier is set to the Shift key
 @item  LockMask or Lock
         Modifier is set to the Lock key
@@ -301,44 +344,9 @@ You can set the modifier to any of the following
 You can also specify the keycode for the modifier you wish to use
 
 
-@section  Invoking Xnee
-The mode(s) Xnee shall use and the ranges to use can be set by either:
-@itemize @bullet
-@item	command line options
-@item	resource file
-@item	recorded file (only apllicable when in replay mode)
-@end itemize
-The three can be used together or alone. However, when given multiple specifications to a setting that can take one value (e.g printout redirection, number of data to record) the latest specification is used.
-
-@subsection  Command line syntax
-@cindex command line syntax
-To get information about how to use Xnee's command line options please use the man page(s).
-
-@subsection  Resource file
-To use a resource file use the @code{--resource} option,  e.g @code{xnee --resource xnee/resources/netscape.xns}
-
 @subsection  Recorded file
 To use a recorded file use the @code{--file} option,  e.g @code{xnee --file user1_session.xnee}
 
-
-@section  Stopping Xnee
-@cindex stopping xnee
-Stopping Xnee when recording or replaying can be done as follows
-@itemize @bullet
-@item	user specified modifier and key
-@item	number of data to record
-@item	sending a SIGTERM signal (e.g pressing Control-c in a terminal window)
-@end itemize
-
-@subsection	user specified modifier and key
-@cindex stop modifier
-@cindex stop key
-It is possible to specify a modifier (e.g Control button) and a key (e.g 'a') that will stop the Xnee session. When using this option make sure that the modifier/key is not used in any way by the applications you recording.
-@subsection	number of data to record
-By specifying the number of data to record Xnee stops when this number num,ber of data is received from the server. When replaying the same amount of data is replayed. 
-@subsection	sending a SIGTERM signal (e.g pressing CTRL-C in a terminal window)
-@cindex SIGTERM
-The easiest way to send a signal to a process is by launching Xnee from a terminal window (e.g xterm). By pressing Control-c xterm sends the SIGTERM signal to Xnee. When replaying it can sometimes be hard to move the pointer into the terminal window (e.g if a lot of motion events were recorded that will let you compete with Xnee on where the mouse pointer shall be located. Beleive me, you'll end up lossing that battle).  
 
 @section  Using Xnee plugins 
 @cindex plugins
