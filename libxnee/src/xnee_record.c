@@ -31,7 +31,6 @@
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
 
-
 /**************************************************************
  *                                                            *
  * xnee_record_dispatch2                                      *
@@ -42,10 +41,23 @@ void
 xnee_record_dispatch2 (XPointer xpoint_xnee_data,
 		       XRecordInterceptData *data )
 {
-  xnee_data           *xd ;
-  xd = (xnee_data *) (xpoint_xnee_data) ;
-  xd->data_fp (xd->out_file, "."); fflush (stdout);
+
+  if ( (!data->data) || (data==NULL) )
+    {
+      XRecordFreeData(data);
+      XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
+      xnee_process_count(NULL, XNEE_PROCESS_RESET);
+      return;
+    } 
+
+  /*increment the process reply counter*/
+  xnee_process_count(NULL, XNEE_PROCESS_INC);
+  
+  printf( "."); 
+
+  fflush (stdout);
   XRecordFreeData(data);
+  return;
 }
 
 
@@ -213,52 +225,41 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   int                  data_type = 0;  
 
   XNEE_DEBUG ( (stderr ," --> xnee_record_dispatch()  \n"  ));
-
-  if (!data->data)
+  
+  if ( (!data->data) || (data==NULL) )
     {
       XRecordFreeData(data);
-      XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
+      XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
+      xnee_process_count(xd, XNEE_PROCESS_RESET);
       return;
+    } 
+  else
+    {
+      /*increment the process reply counter*/
+      xnee_process_count(xd, XNEE_PROCESS_INC);
     }
-  
   
   /* fix by Ton van Vliet */
   xd = (xnee_data *) (xpoint_xnee_data) ;
   xrec_data = (XRecordDatum *) (data->data) ;
 
-  /* make sure we haven't been interupted by a
-     a key + modifier combination */
-  if (xnee_check_km(xd)==XNEE_GRAB_DATA)
-    {
-      XRecordFreeData(data);
-      XRecordDisableContext(xd->control, 
-			    xd->record_setup->rContext);
-      xnee_stop_session(xd);
-      return ;
-    }
 
-  
+
   if ( xd->xnee_info->loops_left == 0 ) 
     {
       XRecordFreeData(data);
-      XRecordDisableContext(xd->control, 
-			    xd->record_setup->rContext);
-      xnee_stop_session(xd);
       return ;
     } 
-  
-  XNEE_DEBUG ( (stderr ,"  -- xnee_record_dispatch() at 2 \n"  ));
-  
+  else
+    {
+      xd->xnee_info->loops_left--;
+    }
+
+ 
   /* if NOT XRECORDEndOffData or XRECORDClientDied  set data_type */  
   if(data->data_len) 
     {
       data_type = xrec_data->type;
-    }
-  XNEE_DEBUG ( (stderr ,"  -- xnee_record_dispatch() at 3 \n"  ));
-  
-  if ( xd->xnee_info->loops_left > 0 )
-    {
-      xd->xnee_info->loops_left--;
     }
   
   
@@ -314,38 +315,42 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
   
   XNEE_DEBUG ( (stderr ," --> xnee_human_dispatch()  \n"  ));
   
-  if (!data->data)
+  if ( (!data->data) || (data==NULL) )
     {
+      XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
+      xnee_process_count(xd, XNEE_PROCESS_RESET);
       return;
+    } 
+  else
+    {
+      /*increment the process reply counter*/
+      xnee_process_count(xd, XNEE_PROCESS_INC);
     }
-  
   
   /* fix by Ton van Vliet */
   xd = (xnee_data *) (xpoint_xnee_data) ;
   xrec_data = (XRecordDatum *) (data->data) ;
   
- 
-  if (xd->xnee_info->loops_left == 0 ) 
+  if ( xd->xnee_info->loops_left == 0 ) 
     {
-      XNEE_DEBUG ( (stderr ,"  -- xnee_human_dispatch() at 0.1 \n"  ));
-      xnee_close_down(xd);
-      exit(XNEE_OK);
+      XRecordFreeData(data);
+      return ;
+    } 
+  else
+    {
+      xd->xnee_info->loops_left--;
     }
- 
-  XNEE_DEBUG ( (stderr ,"  -- xnee_human_dispatch() at 2 \n"  ));
 
+ 
   /* if NOT XRECORDEndOffData or XRECORDClientDied  set data_type */  
   if(data->data_len) 
     {
       data_type = xrec_data->type;
     }
-  XNEE_DEBUG ( (stderr ,"  -- xnee_human_dispatch() at 3 \n"  ));
+
   
-  if ( xd->xnee_info->loops_left > 0 )
-    {
-      xd->xnee_info->loops_left--;
-    }
+
 
   switch(data->category)
     {
@@ -729,9 +734,6 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
   int ret=0;
   int range_len=strlen(range);
 
-  printf ("error file=%s\n", xd->err_name);
-  printf ("error file=%d\n", xd->err_file);
-
   xnee_verbose ((xd,"int arg=%d\n", xd));
   xnee_verbose ((xd, "nt arg=%d\n", type));
   xnee_verbose ((xd, "string arg=%s\n", range));
@@ -941,7 +943,7 @@ xnee_record_loop(xnee_data *xd)
 
 /**************************************************************
  *                                                            *
- * xnee_record_loop                                           *
+ * xnee_record_async                                          *
  *                                                            *
  *                                                            *
  **************************************************************/
@@ -963,12 +965,33 @@ xnee_record_async(xnee_data *xd)
 		       xd->rec_callback, 
 		       (XPointer) (xd) /* closure passed to Dispatch */);
       
-  xnee_verbose((xd, " <--- xnee_record_async()\n"));
-  /*  while (1) 
+  while (1) 
     {
-      XRecordProcessReplies (xd->data); 
+      /* handle data in the RECORD buffer */
+      xnee_process_replies(xd);
+      
+      /* has the user pressed a modifier+key */
+      if (xnee_check_km (xd)==XNEE_GRAB_DATA)
+	{
+	  xnee_handle_km(xd);
+	}
+      
+      if ( xd->xnee_info->loops_left == 0 ) 
+	{
+	  printf (" closing down while loop in async loop\n");
+	  break ; 
+	}
+      /* sleep for a little while 
+       * there might be someone wanting the CPU
+       */  
+      usleep (100*1000);
     }
-  */
+
+  XRecordDisableContext(xd->control, 
+			xd->record_setup->rContext);
+  xnee_stop_session(xd);
+
+  xnee_verbose((xd, " <--- xnee_record_async()\n"));
   return (0);
 }
 

@@ -299,5 +299,14 @@ xnee_fake_motion_event (xnee_data* xd,
 int
 xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
 
+
+
+int 
+xnee_update_buffer_cache(xnee_data *xd);
+
+int
+xnee_check_buffer_limits(xnee_data *xd);
+
+
 #endif   /* XNEE_REPLAY_H */
 

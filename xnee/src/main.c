@@ -140,6 +140,15 @@ int main(int argc,char *argv[])
   xnee_setup_display (xd);
   
 
+
+  /*
+   * Save repeat mode so we can reset it after we are done
+   *
+   */
+  xnee_set_autorepeat (xd);
+  
+
+
   /*
    * are we recording or are we replaying
    */
@@ -178,7 +187,7 @@ int main(int argc,char *argv[])
 	{
 	  xnee_verbose ((xd, "Entering main loop( recorder)\n"));
 
-	  xnee_record_loop(xd);
+	  xnee_record_async(xd);
 	}
     }
   else 
@@ -225,6 +234,8 @@ int main(int argc,char *argv[])
       xnee_record_close_down(xd);
     }
    */
+
+  xnee_reset_autorepeat (xd);
 
   xnee_close_down(xd);
   

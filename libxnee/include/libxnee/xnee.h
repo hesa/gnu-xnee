@@ -96,12 +96,21 @@ enum _xnee_mode {
    .. don't use when incrementing variables (e.g i++) */
 #define XNEE_ABS(x)   ((x)>0?(x):(0-(x)))
 
-#define XNEE_MAX_SYNCH      100           /* buffer size */
-#define XNEE_MOTION_DELAY   21 
-#define MAX_NOT_IN_SYNC     10
-#define MAX_OUT_OF_SYNC     10    /* number of data that is allowed to be out of sync */
-#define MAX_UNSYNC_LOOPS     5    /* number check-loops when out of sync before exit  */
-#define MAX_SKIPPED_UNSYNC  10    /* number of times to ignore unsync state  */
+#define XNEE_MAX_SYNCH     100 /* buffer size */
+#define XNEE_MOTION_DELAY   21 /* default value for delay during synch */
+
+#define XNEE_BUFFER_MAX       2 /* */
+#define XNEE_BUFFER_MIN      -2 /* */
+#define XNEE_BUFFER_SUM_MAX  2 /* */
+#define XNEE_BUFFER_SUM_MIN -2 /* */
+#define XNEE_BUFFER_TOT_MAX  20 /* */
+
+#define MAX_OUT_OF_SYNC      2 /* number of data allowed to be out of sync */
+#define MAX_NOT_IN_SYNC      2
+#define MAX_OUT_OF_SYNC      2 /* number of data allowed to be out of sync */
+#define MAX_UNSYNC_LOOPS     2 /* number check-loops when out of sync 
+				  before exit  */
+#define MAX_SKIPPED_UNSYNC   2 /* number of times to ignore unsync state  */
 #define XNEE_NOT_REPLAYABLE 13
 
 
@@ -167,7 +176,8 @@ enum return_values
   XNEE_SYNTAX_ERROR      , 
   XNEE_UNKNOWN_GRAB_MODE ,
   XNEE_NO_GRAB_DATA      ,
-  XNEE_GRAB_DATA
+  XNEE_GRAB_DATA         ,
+  XNEE_BAD_LOG_FILE
 } _return_values;
   
 
@@ -175,13 +185,24 @@ enum return_values
  * Grab modes 
  */
 enum xnee_grab_modes 
-{
-  XNEE_GRAB_UNKOWN = 0,
-  XNEE_GRAB_STOP    ,
-  XNEE_GRAB_PAUSE   ,
-  XNEE_GRAB_RESUME  
-} _xnee_grab_modes;
+  {
+    XNEE_GRAB_UNKOWN = 0,
+    XNEE_GRAB_STOP    ,
+    XNEE_GRAB_PAUSE   ,
+    XNEE_GRAB_RESUME  
+  } _xnee_grab_modes;
 
+
+/*
+ *  continue_process commnd enum
+ */
+enum cont_proc_commands
+  {
+    XNEE_PROCESS_RESET = 0 ,
+    XNEE_PROCESS_INC       ,
+    XNEE_PROCESS_DEC       ,
+    XNEE_PROCESS_GET
+  } _cont_proc_commands;
 
 #define XNEE_HOME_URL     "http://www.gnu.org/software/xnee/"
 #define XNEE_MAIL         "info-xnee@gnu.org"
@@ -454,6 +475,8 @@ typedef struct
 typedef struct
 {
 
+  int     grab         ;    /*!< true if any key+mod is grabbed */
+
   int     stop_key     ;    /*!< key used to stop Xnee */
   int     stop_mod     ;    /*!< modifier used to stop Xnee */
 
@@ -489,10 +512,22 @@ typedef struct
 
 struct buffer_meta_data
 {
-  int total_diff  ;      /*!< the total sum of positive values in the buffer                            */
-  int cached_max  ;      /*!< a cached value of the maximum value in the buffer. (-1 for unknown state) */
-  int cached_min  ;      /*!< a cached value of the minimum value in the buffer. (-1 for unknown state) */
+  int sum_max  ;      
+  /*!< sum of the maximum in the buffer. */
 
+  int sum_min  ;      
+  /*!< sum of the minimum values in the buffer. */
+
+  int total_diff ; 
+  /*!< the total sum of positive values in the buffer  */
+  
+  int cached_max  ;      
+  /*!< a cached value of the maximum value in the buffer. 
+    (-1 for unknown state) */
+  
+  int cached_min  ;      
+  /*!< a cached value of the minimum value in the buffer. 
+    (-1 for unknown state) */
 } ;
 
 
@@ -550,16 +585,19 @@ typedef struct
   sem_t   *buf_sem     ;    /*!< semaphore to protect the replay buffer */
   long first_read_time ;    /*!< server time of the first read from recorded file */
   int     force_replay ;    /*!< Keep replaying even if we are out of sync .... dangerous */
-
+  XKeyboardState kbd_orig;  /*!< User keyboard stare before Xnee */
+  int     glob_autorepeat ; /*!< Current global autorepeat state */
 
   xnee_record_init_data    *xnee_info ; 
   xnee_recordext_setup     *record_setup;
   xnee_testext_setup       *replay_setup;
   
-  int data_buffer[4][XNEE_REPLAY_BUFFER_SIZE];
-  struct buffer_meta_data meta_data[4];
+  int                      data_buffer[4][XNEE_REPLAY_BUFFER_SIZE];
+  struct buffer_meta_data  meta_data;
   
   xnee_grab_keys           *grab_keys;
+
+  int     button_pressed ;
 
 } xnee_data ; 
 
@@ -1004,6 +1042,25 @@ xnee_get_grab_mode ( xnee_data *xd, int key, int modifier);
 
 int
 xnee_check_km(xnee_data *xd);
+
+
+
+int 
+xnee_process_count(xnee_data *xd, int mode);
+
+int 
+xnee_handle_km(xnee_data *xd);
+
+
+int 
+xnee_process_replies(xnee_data *xd);
+
+
+int
+xnee_set_autorepeat (xnee_data *xd);
+
+int
+xnee_reset_autorepeat (xnee_data *xd);
 
 #endif /*   XNEE_XNEE_H */
 

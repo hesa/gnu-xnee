@@ -396,6 +396,8 @@ xnee_init(xnee_data* xd, char *name)
   xd->buf_sem = (sem_t *) malloc (sizeof(sem_t));
   xnee_sem_init (xd, xd->buf_sem, 0, 1);
 
+
+  xd->button_pressed=0;
   /*  Not done until needed
       xnee_init_names();
   */
@@ -846,8 +848,13 @@ int
 xnee_check_km(xnee_data *xd)
 {
   XEvent ev;
-  if (xd->grab!=NULL)
+  if ( (xd->grab!=NULL)
+       &&
+       ( xd->grab_keys->grab))
     {
+      
+
+
       /*
        * Has the user pressed STOP (mod + key) 
        */
@@ -857,12 +864,15 @@ xnee_check_km(xnee_data *xd)
 		    CurrentTime);
       XFlush (xd->grab);
       
+
       if ( !XCheckMaskEvent ( xd->grab, 0xffffffff , &ev) == False)
 	{
 	  XEvent my_event ;
 	  int    tmp_code;
 	  int    tmp_modifier;
 	  int    mode;
+
+
 	  XNextEvent (xd->grab, &my_event);
 	  if (my_event.xkey.send_event==1) 
 	    { 
@@ -948,6 +958,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
 		  key,            
 		  modifier,
 		  window);
+      xd->grab_keys->grab=1;
     }
 }
 
@@ -1035,6 +1046,7 @@ xnee_new_grab_keys()
   xgk->resume_key   = 0 ;
   xgk->resume_mod   = 0 ;
 
+  xgk->grab = 0;
 
   return xgk;
 }
@@ -1496,7 +1508,8 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
   int len=0;
   
   len=strlen(tmp);
-  
+
+
   if ( tmp == NULL)
     {
       return -1;
@@ -1844,11 +1857,9 @@ xnee_get_km_tuple (xnee_data     *xd,
   int i=0;
   int idx=-1;
   int len=strlen(mod_and_key);
-
   xnee_verbose((xd, " ---> xnee_get_km_tuple_key %s \n", mod_and_key));
   strcpy (mod_buf, mod_and_key);
   rem_all_blanks (mod_buf, strlen(mod_and_key));
-
 
   /* make sure we have a display to grab on */
   if ( xd->grab == NULL)
@@ -1885,7 +1896,6 @@ xnee_get_km_tuple (xnee_data     *xd,
     }
 
   xnee_verbose((xd, " ---  xnee_get_km_tuple_key mod=\"%s\"   key=\"%s\"\n", mod_buf, key_buf));
-
   /* Is it a modifier in alias form (e.g Control, Shift....)
      or is it a number */
   i=get_modifier(xd, mod_buf);
@@ -1900,10 +1910,9 @@ xnee_get_km_tuple (xnee_data     *xd,
       return ( XNEE_SYNTAX_ERROR);
     }
 
-  
   /* Is it a Key in letter form (e.g a,b)
      or is it a number */
-  if ( sscanf ( key_buf, "%d", km->key) <= 0 )
+  if ( sscanf ( key_buf, "%d", &km->key) <= 0 )
     {
       if (strlen(key_buf)!=1)
 	{
@@ -1925,7 +1934,7 @@ xnee_get_km_tuple (xnee_data     *xd,
 	  km->key = XKeysymToKeycode (xd->grab, km->key);
 	}
     } 
-  xnee_verbose((xd, " <--- xnee_add_stop_key \n"));
+  xnee_verbose((xd, " <--- xnee_get_km_tuple_key %s \n", mod_and_key));
   return XNEE_OK;
 }
 
@@ -2264,5 +2273,139 @@ xnee_set_synchronize (xnee_data *xd,
 	}
     }
   return XNEE_OK;
+}
+
+
+
+int 
+xnee_process_count(xnee_data *xd, int mode)
+{
+  static int continue_process = 0;
+
+  /* if we are to use make sure 
+     xd != NULL */
+
+  if (mode == XNEE_PROCESS_RESET )
+    continue_process=0;
+  else if (mode == XNEE_PROCESS_INC )
+    continue_process++;
+  else if (mode == XNEE_PROCESS_DEC )
+    continue_process--;
+  /* we need not care about XNEE_PROCESS_GET */
+
+  
+
+  return continue_process;
+}
+
+int 
+xnee_handle_km(xnee_data *xd)
+{
+  printf ("key + modifier received\n");
+  return ;
+}
+
+
+int 
+xnee_process_replies(xnee_data *xd)
+{
+
+  int last_count;
+  int count; 
+  last_count=xnee_process_count (xd, XNEE_PROCESS_GET);
+  xnee_process_count (xd, XNEE_PROCESS_RESET);
+
+  /* it is more important to handle all data
+     in the data display than to check for 
+     grabbed key+modifier */
+  while ( 1 )
+    {
+      XRecordProcessReplies (xd->data); 
+      /* XX reasons to stop calling RECORD to check buffer
+       *    1) no data in buffer
+       *    2) no data in buffer
+       *    3) we have received XX data .. it is time to check if 
+       *       user has presed any modifier+key
+       *    4) number of data to record exceeded
+       */
+      count=xnee_process_count (xd, XNEE_PROCESS_GET);
+      if ( 
+	  ( count <= 0) 
+	  || 
+	  ( last_count==count)
+	  || 
+	  ( count > 20 )
+	  )
+	{
+	  break;
+	}
+      last_count=count;
+    }
+  xnee_process_count (xd, XNEE_PROCESS_RESET);
+  return XNEE_OK;
+}
+
+
+int
+xnee_set_autorepeat (xnee_data *xd)
+{
+  int i ;
+  int j;
+
+  XGetKeyboardControl (xd->fake, &xd->kbd_orig);
+  
+  xnee_verbose ((xd," key_click_percent  %d \n", 
+		 xd->kbd_orig.key_click_percent));
+  xnee_verbose ((xd," bell_percent       %d\n", 
+		 xd->kbd_orig.bell_percent));
+  xnee_verbose ((xd," bell_pitch         %d\n", 
+		 xd->kbd_orig.bell_pitch));
+  xnee_verbose ((xd," bell_duration      %d\n", 
+		 xd->kbd_orig.bell_duration));
+  xnee_verbose ((xd," led_mask           %d\n",  
+		 xd->kbd_orig.led_mask));
+  xnee_verbose ((xd," global_auto_repeat %d\n", 
+		 xd->kbd_orig.global_auto_repeat));
+
+  xnee_verbose((xd,"Auto repeat:\n"));
+  for (i=0;i<32;i++)
+    {
+      xnee_verbose((xd,"Key\t"));
+      for (j=1;j<=8;j++)
+	xnee_verbose((xd,"%03d ", (i*8)+j )); 
+      xnee_verbose((xd,"\nValue\t"));
+      for (j=1;j<=8;j++)
+        {
+          xnee_verbose((xd,"  %d ", xd->kbd_orig.auto_repeats[i] && j));
+        }
+      xnee_verbose((xd,"\n\n"));
+    }
+
+
+  XAutoRepeatOff(xd->fake);
+  return xd->kbd_orig.global_auto_repeat;
+}
+
+
+int
+xnee_reset_autorepeat (xnee_data *xd)
+{  
+  xnee_verbose((xd,"Resetting autorepeat on (%d) to: ",
+		xd->fake));
+  if (xd->kbd_orig.global_auto_repeat==AutoRepeatModeOn)
+    {
+      xnee_verbose((xd,"AutoRepeatModeOn\n"));
+      XAutoRepeatOn(xd->fake);
+    }
+  else
+    {
+      xnee_verbose((xd,"AutoRepeatModeOff\n"));
+      XAutoRepeatOff(xd->fake);
+    }
+  /* make sure the resetting of autorepeat is handled
+     before we vlose down the diaplay */
+  XFlush (xd->fake);
+  
+  
 }
 

@@ -196,6 +196,7 @@ xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last
       XTEST_ERR_SLEEP ( sleep_amt );   
       XTestFakeButtonEvent (xd->fake, xindata->u.event.button, True, sleep_amt);
       xnee_fake_button_event (xd, xindata->u.event.button, True, CurrentTime);
+      printf ("\n\n\tPRESS\n\n\n");
       break;
     case ButtonRelease:
       xnee_verbose((xd, "XTestFakeButtonEvent (%d, %d, %d, %d))\n",
@@ -262,170 +263,55 @@ void
 xnee_replay_synchronize (xnee_data* xd)
 {
   int type;
-  int counter=0;
+  int i ; 
+  int diff;
+  int count = 0;
   static int time_outs;
 
   xnee_verbose((xd,"---> xnee_replay_synchronize \n"));;
-
   if ( xd->sync == False ) 
     {
       xnee_verbose((xd, "Xnee in NO SYNC mode\n"));
       return ;
     }
    
-
-
   /*
    *
    * Check to see if we are in sync
    *
    */
-  xnee_verbose ((xd, "   synchronize: entering sync test\n"));
+  xnee_verbose ((xd, "   synchronize: entering sync test loop\n"));
 
-
-  for (counter=0 ; counter<MAX_UNSYNC_LOOPS; counter++)
+  printf ("=========================================================\n");
+  while (1)
     {
-      int diff=0;
-      xnee_verbose((xd, "-----------------------------------------\n"));
-      for ( type=0 ; type< 2 ; type++) 
+      /*
+       * Handle all pending data from X/RECORD 
+       */
+      diff = xnee_process_replies(xd);
+
+      /* 
+       * make sure that the cached values are valid
+       */
+      diff=xnee_update_buffer_cache(xd);
+     
+      /*
+       * check the buffer limits ....
+       */
+      diff=xnee_check_buffer_limits(xd);
+      if (diff!=0)
 	{
-	  int real_min=0;
-	  int real_max=0;
-	  int total_diff=0;
-	  
-	  int counted_max=0;
-	  int counted_tot=0;
-	  
-	  xnee_verbose((xd, "     synchronize: checking type:%d\n", type));
-	  
-	  
-	  /*
-	   * protect the buffer by waiting for the buffer semaphore
-	   */
-	  xnee_sem_wait (xd, xd->buf_sem);
-	  real_min=xd->meta_data[type].cached_min;
-	  real_max=xd->meta_data[type].cached_max;
-	  total_diff=xd->meta_data[type].total_diff;
-
-	  /* The cached values might be invalid. 
-	   * If so, get fresh value and replace them */
-	  if (real_min==1)
-	    {
-	      xnee_replay_buffer_min_diff (xd,type);
-	      real_min = xnee_replay_buffer_min_diff (xd,type);
-	      xnee_verbose ((xd, "    cached min value invalid. refreshing to %d   old: %d\n", 
-			     real_min,
-			     xd->meta_data[type].cached_min));
-	      xd->meta_data[type].cached_min=real_min;
-	    }
-	    
-
-	  if (real_max==-1)
-	    {
-	      xnee_replay_buffer_max_diff (xd,type);
-	      real_max = xnee_replay_buffer_max_diff (xd,type);
-	      xnee_verbose ((xd, "  cached max value invalid. refreshing to %d   old: %d\n", 
-			     real_max,
-			     xd->meta_data[type].cached_max));
-	      xd->meta_data[type].cached_max=real_max;
-	    }
-	    
-	  counted_max = xnee_replay_buffer_max_diff(xd,type);
-	  counted_tot = xnee_replay_buffer_tot_diff(xd,type);
-	  
-	  /*
-	   * release the protecting semaphore the buffer
-	   */
-	  xnee_sem_post (xd, xd->buf_sem);
-
-
-
-/* 	  if ( (real_min < 0) || */
-/* 	       (real_max > 0) || */
-/* 	       (total_diff > 0) ) */
-
-	  if ( (real_max > MAX_OUT_OF_SYNC) ||
-	       (total_diff > ( MAX_OUT_OF_SYNC * 10) ) )
-	    {
-	      xnee_replay_printbuffer(xd); 
-	      xnee_verbose((xd, "real_min: %.2d real_max: %.2d  diff:%.2d \n\n", 
-			    real_min, real_max, total_diff));
-	      xnee_verbose((xd, "counter: %.2d time_outs: %.2d \n\n", 
-			    counter, time_outs));
-	      
-	      diff=1;
-	    }
-	  else
-	    {
-	      time_outs -= 1;
-	      if (time_outs<=0)
-		time_outs = 0;
-	    }
-	  
-	}
-      if (diff==1)
-	{
-	  
-	  XRecordProcessReplies(xd->data);
-	  xnee_verbose((xd," --- xnee_replay_synchronize: sleeping %d\n", XNEE_MISSING_DATA_DELAY));;
-	  usleep (XNEE_MISSING_DATA_DELAY);
-	  xnee_verbose((xd," --- xnee_replay_synchronize: .... awoke \n"));;
+	  printf ("\t\tdiff = %d  count=%03d  button %d\n", 
+		  diff , count++, xd->button_pressed) ; 
+	  if (xd->button_pressed)
+	    exit(0);
 	}
       else
-	{
-	  xnee_verbose((xd," --- xnee_replay_synchronize: breaking \n"));;
-	  break;
-	}
-      diff=0;
-    }
-  
-  /* 
-   * Check to see if we are totally out of sync 
-   */
-  if (counter == (MAX_UNSYNC_LOOPS))
-      {
-	time_outs++;
-	if (time_outs>=MAX_SKIPPED_UNSYNC)
-	  {
-	    printf ("Error: Xnee can't synchronize anymore. Assuming replay error\n");
-	    printf ("   timeouts: %d\n", time_outs);
-	    printf ("   counter : %d\n", counter);
-	    if (!xd->force_replay)
-	      {
-		xnee_close_down (xd);
-		exit (XNEE_SYNCH_FAULT);
-	      }
-	  }
-	else if (time_outs >= (MAX_SKIPPED_UNSYNC - 10))
-	  {
-	    int delay=XNEE_MISSING_DATA_DELAY;
-	    XRecordProcessReplies(xd->data);
-	    xnee_verbose((xd," --- xnee_replay_synchronize: .... awoke \n"));;
-	    
-	    /* if not in force replay mode...
-	     * increase the timeout as */
-	    if (!xd->force_replay)
-	      {
-		if ( time_outs > ( MAX_SKIPPED_UNSYNC - 2 ))
-		  {
-		    delay = XNEE_MISSING_DATA_DELAY * 1000 ;
-		  }
-		if ( time_outs > ( MAX_SKIPPED_UNSYNC - 3 ))
-		  {
-		    delay = XNEE_MISSING_DATA_DELAY * 100 ;
-		  }
-		else if ( time_outs > ( MAX_SKIPPED_UNSYNC - 5 ))
-		  {
-		    delay = XNEE_MISSING_DATA_DELAY * 100 ;
-		  }
-	      }
-	    xnee_verbose((xd," --- xnee_replay_synchronize: sleeping %d\n", delay));;
-	    usleep (delay);
-	}
-    }    
+	break;
+    }      
   
   xnee_replay_printbuffer(xd);
-  xnee_verbose((xd,"<--- xnee_replay_synchronize \n"));;
+  xnee_verbose((xd,"<--- xnee_replay_synchronize \n"));
 }
 
 
@@ -442,7 +328,11 @@ xnee_replay_buffer_handler (xnee_data* xd,
 			    int data_nr,
 			    Bool rec_or_rep)
 {
-  xnee_verbose((xd,"---> xnee_replay_buffer_handler \n"));;
+  xnee_verbose((xd,"---> xnee_replay_buffer_handler "));
+  if (rec_or_rep==XNEE_RECEIVED) 
+    xnee_verbose((xd," XNEE_RECEIVED \n"));
+  else
+    xnee_verbose((xd," XNEE_REPLAYED \n"));
 
   /*
    * protect the buffer by waiting for the buffer semaphore
@@ -453,58 +343,66 @@ xnee_replay_buffer_handler (xnee_data* xd,
   /*
    * From where did we get the data?
    * 
-   * If rec_or_rep equals XNEE_RECEIVED   we got it from the Xserver .... decrement
-   * If not (thats is if XNEE_REPLAYED )  we got it from file ..... increment 
+   * If rec_or_rep equals:
+   *    XNEE_RECEIVED     from the Xserver .... decrement
+   *    XNEE_REPLAYED     from file ..... increment 
    *
    */
   if (rec_or_rep==XNEE_RECEIVED) 
     {
-      if (!    (  
-		( data_type == XNEE_EVENT ) && 
-		( data_nr   <= ButtonRelease ) ))
+      if (!(  
+	    ( data_type == XNEE_EVENT ) && 
+	    ( data_nr   <= ButtonRelease ) ))
 	{
 	  if (data_nr==161)
 	    {
-	      fprintf (stderr, "161 received ... This is workaround for a bug in Xnee\n");
+	      fprintf (stderr, 
+		       "161 received:This is workaround for a bug in Xnee\n");
+	      
 	      /*
 	       * release the protecting semaphore the buffer
 	       */
 	      xnee_sem_post (xd, xd->buf_sem);
 	      return;
 	    }
+
 	  /* 
-	   * If we get a data such that its amount of unsynced data (xd->data_buffer[data_type][data_nr]) 
-	   * is the same as the cached maximum value for the buffer we can't assure that the cached
-	   * maximum value is valid, sice we are goinf to decrement the value. Set the cache to -1
+	   * If we get a data such that its amount of 
+	   * unsynced data (xd->data_buffer[data_type][data_nr]) 
+	   * is the same as the cached maximum value for 
+	   * the buffer we can't assure that the cached
+	   * maximum value is valid, since we are going to 
+	   * decrement the value. Set the cache to -1
 	   */
-	  if (xd->meta_data[data_type].cached_max == xd->data_buffer[data_type][data_nr])
-	    xd->meta_data[data_type].cached_max=-1;
-
-
+	  if (xd->meta_data.cached_max == 
+	      xd->data_buffer[data_type][data_nr])
+	    {
+	      /* don't get it .... please the above read again */
+	      xd->meta_data.cached_max=-1;
+	    }
+	  
 	  /*
-	   * Since we 
-	   *
-	   *
-	   */
-
-	  /*
-	   * decrement the data  buffer
+	   * decrement the data buffer
 	   * decrement the total buffer
 	   */
 	  xd->data_buffer[data_type][data_nr]--;
-	  xd->meta_data[data_type].total_diff--;
+	  xd->meta_data.total_diff--;
+	  xd->meta_data.sum_min--;
 
 	  /*
-	   * If the value for this data is smaller than the cached minimum value. Set this
-	   * value in the cache 
+	   * If the value for this data is smaller than the cached 
+	   * minimum value. Set this value in the cache 
 	   */
-	  if ( xd->data_buffer[data_type][data_nr] < xd->meta_data[data_type].cached_min)
+	  if ( xd->data_buffer[data_type][data_nr] < 
+	       xd->meta_data.cached_min)
 	    {
-	      xd->meta_data[data_type].cached_min = xd->data_buffer[data_type][data_nr] ;
+	      xd->meta_data.cached_min = 
+		xd->data_buffer[data_type][data_nr] ;
 	    }
 	  
 	  
-	  XNEE_SYNC_DEBUG ( (stdout, "--------       [%d][%d]    %d   \n", data_type, nr, nr_of_data))  ;
+	  XNEE_SYNC_DEBUG ( (stdout, "--------       [%d][%d]    %d   \n", 
+			     data_type, nr, nr_of_data))  ;
 	  xnee_verbose ((xd, "   buffer_handler  %d %d  to %d\n" ,
 			data_type,data_nr, xd->data_buffer[data_type][data_nr]));
 	}
@@ -513,13 +411,16 @@ xnee_replay_buffer_handler (xnee_data* xd,
     {
 
       /* 
-       * If we get a data such that its amount of unsynced data (xd->data_buffer[data_type][data_nr]) 
-       * is the same as the cached minimum value for the buffer we can't assure that the cached
-       * minimum value is valid, sice we are goinf to decrement the value. Set the cache to +1
+       * If we get a data such that its amount of unsynced data 
+       * (xd->data_buffer[data_type][data_nr]) is the same as the 
+       * cached minimum value for the buffer we can't assure that the cached
+       * minimum value is valid, sice we are going to decrement the value. 
+       * Set the cache to +1
        */
-      if (xd->meta_data[data_type].cached_min == xd->data_buffer[data_type][data_nr])
+      if (xd->meta_data.cached_min == 
+	  xd->data_buffer[data_type][data_nr])
 	{
-	  xd->meta_data[data_type].cached_min=+1;
+	  xd->meta_data.cached_min=+1;
 	}
       
       /*
@@ -527,21 +428,23 @@ xnee_replay_buffer_handler (xnee_data* xd,
        * increment the total buffer
        */
       xd->data_buffer[data_type][data_nr]++;
-      xd->meta_data[data_type].total_diff++;
+      xd->meta_data.total_diff++;
+      xd->meta_data.sum_max++;
       
       /*
-       * If the value for this data is bigger than the cached maximum value. Set this
-       * value in the cache 
+       * If the value for this data is bigger than the cached maximum value. 
+       * Set this value in the cache 
        */
-      if ( xd->data_buffer[data_type][data_nr] > xd->meta_data[data_type].cached_max)
+      if ( xd->data_buffer[data_type][data_nr] > 
+	   xd->meta_data.cached_max)
 	{
-	  xd->meta_data[data_type].cached_max = xd->data_buffer[data_type][data_nr] ;
+	  xd->meta_data.cached_max = 
+	    xd->data_buffer[data_type][data_nr] ;
 	}
       
       xnee_verbose ((xd, "   buffer_handler incremented   %d %d  to %d \n", 
-		     data_type, data_nr, xd->data_buffer[data_type][data_nr] ));
-
-
+		     data_type, data_nr, 
+		     xd->data_buffer[data_type][data_nr] ));
     }
   
   /*
@@ -576,6 +479,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
       xd->data_file=stdin;
     }
   fgets(tmp, 256, xd->data_file);
+
   if ( tmp == NULL) 
     {
       return XNEE_OK;
@@ -647,6 +551,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
       xnee_verbose((xd,"Corrupt line: \"%s\"\n", tmp)); 
       eofile=0;
    }      
+
   return eofile;
 }
 
@@ -756,6 +661,7 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
       xnee_verbose((xd, " Skipping :\"%s\"\n", str));
       ; /* TODO .... */
     }
+
   /*
   xnee_print_xnee_settings (xd, xd->err) ;
   xnee_record_print_record_range (xd, xd->err) ;
@@ -792,12 +698,48 @@ xnee_replay_main_loop(xnee_data *xd)
   static int last_logread=1;
   int last_elapsed = 0;
   XEvent ev;
-  static int button_pressed=0;
   xindata.oldtime = xindata.newtime ;
 
-  /*  XRecordProcessReplies(xd->data);*/
+  /* First of all ... read up the META DATA 
+   * so we know our settings */
   while (logread && xd->cont) 
     {
+      logread = xnee_replay_read_protocol(xd, &xindata);
+
+      if (!logread)
+	{
+	  fprintf (stderr, "Could not read data from file\n");
+	  xnee_close_down (xd);
+	}	
+      else if ( logread != XNEE_META_DATA )
+	{
+	  xnee_record_print_record_range (xd, NULL);
+	  xnee_print_xnee_settings       (xd, NULL); 
+	  
+	  if (xd->sync)
+	    {
+	      xnee_setup_rep_recording(xd);
+	    }
+	  xnee_print_sys_info(xd , xd->out_file);
+	  xnee_verbose((xd, "META DATA finished .... \n"));
+	  break ; 
+	}
+    }
+	 
+
+
+
+  
+  /**
+   * all META DATA setting up our sessions is read ...
+   * go on replaying
+   *
+   * 
+   *       Think of this as the main loop
+   */
+  while (logread && xd->cont) 
+    {
+      static int hesa=0;
       if (!last_logread==XNEE_META_DATA)
 	{
 	  /* 
@@ -810,83 +752,81 @@ xnee_replay_main_loop(xnee_data *xd)
 
       if ( logread == XNEE_META_DATA )
 	{
-	  xnee_verbose((xd, "META DATA read\n"));
+	  xnee_verbose((xd, "META DATA read ... should be handled in the future... eg script ????\n"));
 	}
       else if (logread)
 	{
-	  /* Are we fininshed reading META DATA setting up ranges? */
-	  if (last_logread==XNEE_META_DATA)
+	  
+	  if (xnee_check_km (xd)==XNEE_GRAB_DATA)
 	    {
-	      /* 
-	       * Print settings 
-	       * if verbose mode that is 
-	       */
-	      xnee_record_print_record_range (xd, NULL);
-	      xnee_print_xnee_settings       (xd, NULL); 
-
-	      if (xd->sync)
-		{
-		  xnee_setup_rep_recording(xd);
-		}
-	      xnee_print_sys_info(xd , xd->out_file);
+	      printf ("\n\nsomeone grabbed us\n\n");
 	    }
-	  if (xd->grab!=NULL)
-	    {
-	      /*
-	       * Has the user pressed STOP (mod + key) 
-	       */
-	      XFlush (xd->grab);
-	      XAllowEvents (xd->grab,
-			    AsyncKeyboard,
-			    CurrentTime);
-	      
-	      if ( !XCheckMaskEvent ( xd->grab, 0xffffffff , &ev) == False)
-		{
-		  xnee_verbose((xd, "\n\n\tUSER PUSHED MOD + KEY ... leaving\n\n\n"));
-		  xnee_stop_session(xd);
-		}
-	    }
-
+	    
 	  switch (xindata.type)
 	    {
 	    case XNEE_EVENT:
-	      if ( ( xindata.u.event.type >= KeyPress ) && (xindata.u.event.type <= MotionNotify) )
+
+	      if ( ( xindata.u.event.type >= KeyPress ) 
+		   && (xindata.u.event.type <= MotionNotify) )
 		{
+		  
+		  xnee_replay_synchronize (xd);
+
 		  if ( xindata.u.event.type == ButtonPress )
 		    {
-		      button_pressed++;
+		      xd->button_pressed++;
 		    }
-		  if ( xindata.u.event.type == ButtonRelease )
+		  else if ( xindata.u.event.type == ButtonRelease )
 		    {
-		      button_pressed--;
+		      xd->button_pressed--;
 		    }
-		  if (button_pressed==0)
+		  if (xd->button_pressed==0)
 		    {
 		      xnee_replay_synchronize (xd);
 		    }
-		  replayable = xnee_replay_event_handler(xd, &xindata, last_elapsed);
+		  replayable = 
+		    xnee_replay_event_handler(xd, 
+					      &xindata, last_elapsed);
+		  
 		}
 	      else
 		{
-		  XNEE_SYNC_DEBUG ( (stderr, "SYNC     EVENT   %d\n", xindata.u.event.type ) );
-		  xnee_replay_buffer_handler ( xd, XNEE_EVENT, xindata.u.event.type, XNEE_REPLAYED);
+		  XNEE_SYNC_DEBUG ( (stderr, 
+				     "SYNC     EVENT   %d\n", 
+				     xindata.u.event.type ) );
+		  xnee_replay_buffer_handler ( 
+					      xd, 
+					      XNEE_EVENT, 
+					      xindata.u.event.type, 
+					      XNEE_REPLAYED);
 		}
 	      break;
 	    case XNEE_REQUEST:
 	      xnee_verbose((xd, "READ A REQUEST, %d\n", xindata)); 
-	      xnee_replay_buffer_handler ( xd, XNEE_REQUEST, xindata.u.request.type, XNEE_REPLAYED);
+	      xnee_replay_buffer_handler ( xd, 
+					   XNEE_REQUEST, 
+					   xindata.u.request.type, 
+					   XNEE_REPLAYED);
 	    case XNEE_REPLY:
 	      xnee_verbose((xd, "READ A REPLY, %d\n", xindata)); 
-	      xnee_replay_buffer_handler ( xd, XNEE_REPLY, xindata.u.reply.type, XNEE_REPLAYED);
+	      xnee_replay_buffer_handler ( 
+					  xd, 
+					  XNEE_REPLY, 
+					  xindata.u.reply.type, 
+					  XNEE_REPLAYED);
 	      break;
 	    default:
-	      xnee_verbose((xd, "xnee_replay_MainReplayLoop: Unknown type \n"));
+	      xnee_verbose((xd, 
+			    "xnee_replay_MainReplayLoop: Unknown type \n"));
 	      break;
 	    }
 	}
-      else {
-	break;
-      }
+      else 
+	{
+	  break;
+	}
+
+
       XSync(xd->control, False);
       xnee_verbose((xd, "Flushing after handled event\n"));
       XFlush(xd->control);
@@ -1147,6 +1087,8 @@ xnee_replay_buffer_tot_diff (xnee_data* xd, int type)
 int
 xnee_replay_buffer_handle (xnee_data* xd, int data_type, int nr, Bool rec_or_rep)
 {
+
+
   /*
    *  int i,j;
    */
@@ -1161,8 +1103,8 @@ xnee_replay_buffer_handle (xnee_data* xd, int data_type, int nr, Bool rec_or_rep
   /*
    * From where did we get the data?
    * 
-   * If rec_or_rep equals XNEE_RECEIVED   we got it from the Xserver .... decrement
-   * If not (thats is if XNEE_REPLAYED )  we got it from file ..... increment 
+   * If rec_or_rep equals XNEE_RECEIVED  from the Xserver .... decrement
+   * If not (thats is if XNEE_REPLAYED ) from file ..... increment 
    *
    */
   if (rec_or_rep==XNEE_RECEIVED) 
@@ -1172,10 +1114,9 @@ xnee_replay_buffer_handle (xnee_data* xd, int data_type, int nr, Bool rec_or_rep
 		( nr <= ButtonRelease ) ))
 	{
 	  xd->data_buffer[data_type][nr]--;
-	  nr_of_data=xd->data_buffer[data_type][nr];
-	  XNEE_SYNC_DEBUG ( (stdout, "--------       [%d][%d]    %d   \n", data_type, nr, nr_of_data))  ;
-	  xnee_verbose ((xd, "xnee_replay_buffer_handle decremented  %d %d  to %d\n" ,
-			data_type,nr, nr_of_data));
+	  xnee_verbose ((xd, 
+			 "xnee_replay_buffer_handle decremented %d %d to %d\n",
+			 data_type,nr,xd->data_buffer[data_type][nr] ));
 	}
     }
   else 
@@ -1185,25 +1126,12 @@ xnee_replay_buffer_handle (xnee_data* xd, int data_type, int nr, Bool rec_or_rep
 	     ( nr <= ButtonRelease) ))
 	{
 	  xd->data_buffer[data_type][nr]++;
-	  nr_of_data=xd->data_buffer[data_type][nr];
-	  xnee_verbose ((xd, "xnee_replay_buffer_handle incremented   %d %d  to %d \n", 
-			data_type, nr, nr_of_data ));
+	  xnee_verbose ((xd, 
+			 "xnee_replay_buffer_handle incremented %d %d to %d\n",
+			 data_type, nr, xd->data_buffer[data_type][nr] ));
 	}
     }
 
-
-  if ( nr_of_data > MAX_OUT_OF_SYNC )
-    {
-      xnee_verbose((xd, "Too many (%d) unsynced %d  %d in buffer\n", nr_of_data, data_type, nr));
-      xnee_sem_post (xd, xd->buf_sem);
-      return XNEE_OUT_OF_SYNC;
-    }
-  else if ( nr_of_data < (-MAX_OUT_OF_SYNC) )
-    {
-      xnee_verbose((xd, "Too less (%d) unsynced %d  %d in buffer\n", nr_of_data, data_type, nr));
-      xnee_sem_post (xd, xd->buf_sem);
-      return XNEE_OUT_OF_SYNC;
-    }
 
   /*
    * release the protecting semaphore the buffer
@@ -1267,13 +1195,19 @@ xnee_replay_init          (xnee_data* xd, char * name)
       for ( j=0 ; j<XNEE_REPLAY_BUFFER_SIZE ; j++) 
 	{
 	  xd->data_buffer[i][j]=0;
-	  /*	  xnee_verbose((xd, "xnee_replay_init %d x %d  =%d\n", i , j, xd->data_buffer[i][j]));
+	  /*	  
+		 xnee_verbose((
+		 xd, 
+		 "xnee_replay_init %d x %d  =%d\n", 
+		 i , j, xd->data_buffer[i][j]));
 	   */
 	}
-      xd->meta_data[i].total_diff=0;
-      xd->meta_data[i].cached_max=0;
-      xd->meta_data[i].cached_min=0;
+      xd->meta_data.cached_max=0;
+      xd->meta_data.cached_min=0;
     }
+  xd->meta_data.total_diff=0;
+  xd->meta_data.sum_max=0;
+  xd->meta_data.sum_min=0;
 }
 
 
@@ -1394,3 +1328,211 @@ xnee_zero_sync_data (xnee_data* xd)
 {
   ;
 }
+
+
+
+
+int 
+xnee_update_buffer_cache(xnee_data *xd)
+{
+  int type ; 
+  int counter ; 
+  
+  
+  /*
+   * protect the buffer by waiting for the buffer semaphore
+   */
+  xnee_sem_wait (xd, xd->buf_sem);
+  
+  for (counter=0 ; counter < MAX_UNSYNC_LOOPS; counter++)
+    {
+      int diff=0;
+      xnee_verbose((xd, "-----------------------------------------\n"));
+      for ( type=0 ; type< 2 ; type++) 
+	{
+	  int real_min=0;
+	  int real_max=0;
+	  int total_diff=0;
+	  
+	  xnee_verbose((xd, "     synchronize: checking type:%d\n", type));
+	  
+	  real_min=xd->meta_data.cached_min;
+	  real_max=xd->meta_data.cached_max;
+	  
+	  
+	  /* The cached values might be invalid. 
+	   * If so, get fresh value and replace them */
+	  if (real_min==1)
+	    {
+	      xnee_replay_buffer_min_diff (xd,type);
+	      real_min = xnee_replay_buffer_min_diff (xd,type);
+	      xnee_verbose ((xd, 
+			     " cached min value invalid. refreshing to %d   old: %d\n", 
+			     real_min,
+			     xd->meta_data.cached_min));
+	      xd->meta_data.cached_min=real_min;
+	    }
+	  
+	  
+	  if (real_max==-1)
+	    {
+	      xnee_replay_buffer_max_diff (xd,type);
+	      real_max = xnee_replay_buffer_max_diff (xd,type);
+	      xnee_verbose ((xd, "  cached max value invalid. refreshing to %d   old: %d\n", 
+			     real_max,
+			     xd->meta_data.cached_max));
+	      xd->meta_data.cached_max=real_max;
+	    }
+	    
+
+	}
+    }
+  /*
+   * release the protecting semaphore the buffer
+   */
+  xnee_sem_post (xd, xd->buf_sem);
+  
+  return XNEE_OK;
+}
+
+
+
+
+int
+xnee_check_buffer_limits (xnee_data *xd)
+{
+  int cached_min = 0 ;
+  int cached_max = 0 ;
+  int sum_max    = 0 ;
+  int sum_min    = 0 ;
+  int tot_diff   = 0 ;
+  int diff       = 0 ;
+
+  
+  cached_max = xd->meta_data.cached_max;
+  cached_min = xd->meta_data.cached_min;
+  sum_max    = xd->meta_data.sum_max;
+  sum_min    = xd->meta_data.sum_min;
+  tot_diff   = xd->meta_data.total_diff;
+
+
+  xnee_verbose ((xd, "---> xnee_check_buffer_limits  %d\n", 
+		 xd->button_pressed));
+
+  if (xd->button_pressed!=0)
+    {
+      return diff; exit(0);
+    }
+  xnee_verbose ((xd, "---  %02d %02d %02d %02d %02d \n",
+		 cached_max ,
+		 cached_min ,
+		 sum_max    ,
+		 sum_min    ,
+		 tot_diff   ));
+  
+
+  if ( cached_max > XNEE_BUFFER_MAX) 
+    {
+      xnee_verbose ((xd, "cached_max %d > XNEE_BUFFER_MAX %d\n",
+		     cached_max , XNEE_BUFFER_MAX));
+      xnee_replay_printbuffer(xd); 
+      diff=1;
+    }
+  else if ( cached_min < XNEE_BUFFER_MIN) 
+    {
+      xnee_verbose ((xd, "cached_min %d < XNEE_BUFFER_MIN %d\n",
+		     cached_min , XNEE_BUFFER_MIN));
+      xnee_replay_printbuffer(xd); 
+      diff=1;
+    }
+  else if ( sum_max > XNEE_BUFFER_SUM_MAX )
+    {
+      xnee_verbose ((xd, "sum_max %d > XNEE_BUFFER_SUM_MAX %d\n",
+		     sum_max , XNEE_BUFFER_SUM_MAX));
+      xnee_replay_printbuffer(xd); 
+      diff=1;
+    }
+  else if ( sum_min < XNEE_BUFFER_SUM_MIN )
+    {
+      xnee_verbose ((xd, "sum_min %d < XNEE_BUFFER_SUM_MIN %d\n",
+		     sum_min , XNEE_BUFFER_SUM_MIN));
+      xnee_replay_printbuffer(xd); 
+      diff=1;
+    }
+  else if ( tot_diff > XNEE_BUFFER_TOT_MAX )
+    {
+      xnee_verbose ((xd, "tot_diff %d > XNEE_BUFFER_TOT_MAX %d\n",
+		     tot_diff , XNEE_BUFFER_TOT_MAX));
+      xnee_replay_printbuffer(xd); 
+      diff=1;
+    }
+
+  xnee_verbose ((xd, "<--- xnee_check_buffer_limits diff=%d\n", diff));
+
+  usleep (XNEE_MISSING_DATA_DELAY);
+  return diff;
+}
+
+
+
+
+  /* else
+    {
+      time_outs -= 1;
+      if (time_outs<=0)
+	time_outs = 0;
+  }
+*/
+
+  /*  xnee_verbose((xd," --- xnee_replay_synchronize: sleeping %d\n", 
+      XNEE_MISSING_DATA_DELAY));;
+      usleep (XNEE_MISSING_DATA_DELAY);
+      xnee_verbose((xd," --- xnee_replay_synchronize: .... awoke \n"));;
+      xnee_process_replies(xd); 
+  */
+  /* 
+   * Check to see if we are totally out of sync 
+   */
+
+  /*if (counter == (MAX_UNSYNC_LOOPS))
+    {
+    time_outs++;
+    if (time_outs>=MAX_SKIPPED_UNSYNC)
+    {
+    printf ("Error: Xnee can't synchronize anymore. Assuming replay error\n");
+    printf ("   timeouts: %d\n", time_outs);
+    printf ("   counter : %d\n", counter);
+    if (!xd->force_replay)
+    {
+    xnee_close_down (xd);
+    exit (XNEE_SYNCH_FAULT);
+    }
+    }
+    else if (time_outs >= (MAX_SKIPPED_UNSYNC - 10))
+    {
+    int delay=XNEE_MISSING_DATA_DELAY;
+    xnee_process_replies (xd);
+    xnee_verbose((xd," --- xnee_replay_synchronize: .... awoke \n"));
+    
+    if (!xd->force_replay)
+    {
+    xnee_verbose ((xd, "xnee: increasing timeouts\n"));
+    if ( time_outs > ( MAX_SKIPPED_UNSYNC - 2 ))
+    {
+    delay = XNEE_MISSING_DATA_DELAY * 1000 ;
+    }
+    if ( time_outs > ( MAX_SKIPPED_UNSYNC - 3 ))
+    {
+    delay = XNEE_MISSING_DATA_DELAY * 100 ;
+    }
+    else if ( time_outs > ( MAX_SKIPPED_UNSYNC - 5 ))
+    {
+    delay = XNEE_MISSING_DATA_DELAY * 100 ;
+    }
+    }
+    xnee_verbose((xd," --- xnee_replay_synchronize: sleeping %d\n", 
+    delay));
+    usleep (delay);
+    }
+    }    
+  */
