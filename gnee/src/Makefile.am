@@ -1,8 +1,19 @@
 ## Process this file with automake to produce Makefile.in
 
+
+if HAVE_LIBXNEE_DIR
+LIBXNEE_DIR=@libxnee_dir@
+else
+LIBXNEE_DIR="./"
+endif
+
+
+
+
 INCLUDES = \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
+	-I${LIBXNEE_DIR}/include \
 	@PACKAGE_CFLAGS@
 
 bin_PROGRAMS = gnee
@@ -15,7 +26,7 @@ gnee_SOURCES = \
 	recordables.c recordables.h \
 	gnee_xnee.c gnee_xnee.h
 
-CFLAGS = -I/home/joda/src/xnee/libxnee/include
-LDFLAGS = -L/home/joda/src/xnee/libxnee/src
-gnee_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) ../../libxnee/libxnee.a -lpthread ${X_LIBS} -lXext  -lXtst
+gnee_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) \
+	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -lxnee \
+	 ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl -lxosd
 

@@ -15,10 +15,28 @@ pkg_modules="gtk+-2.0 >= 2.0.0"
 PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
 AC_SUBST(PACKAGE_CFLAGS)
 AC_SUBST(PACKAGE_LIBS)
+AC_CHECK_LIB(xosd, xosd_create, HAVE_XOSD_SUB=true,HAVE_XOSD_SUB=false)
 
 GETTEXT_PACKAGE=gnee
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE")
+
+
+# Process the option "--with-libxnee-dir="
+AC_ARG_WITH(libxnee-dir,
+	 [  --with-libxnee-dir   Specify the installation directory for libxnee ],
+	 [case "${withval}" in
+	  yes) AC_MSG_ERROR(Missing directory for --with-libxnee-dir);;
+	  no) libxnee-dir=;;
+	  *) if test -d "${withval}"; then libxnee_dir=${withval}; \
+		  else AC_MSG_ERROR(invalid directory \"${withval}\" for --with-libxnee-dir); fi;;
+	 esac],
+	 libxnee_dir=)
+AC_SUBST(libxnee_dir)
+AM_CONDITIONAL(HAVE_LIBXNEE_DIR, test x${libxnee_dir} != x)
+AM_CONDITIONAL(HAVE_XOSD,   test x$HAVE_XOSD_SUB = xtrue)
+
+
 
 dnl Add the languages which your application supports here.
 ALL_LINGUAS=""
