@@ -903,10 +903,10 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"Henrik Sandklef.\n");
 
   fprintf (fd ,".SH \"REPORTING BUGS\"\n");
-  fprintf (fd ,"Report bugs in the program to "XNEE_MAIL". \n");
+  fprintf (fd ,"Report bugs in the program to "XNEE_BUG_MAIL". \n");
 
   fprintf (fd ,".SH \"COPYRIGHT\"\n");
-  fprintf (fd ,"Copyright (C) 2002 Henrik Sandklef.\n");
+  fprintf (fd ,"Copyright (C) 1999,2000,2001,2002,2003 Henrik Sandklef.\n");
   fprintf (fd ,"This  is  free  software;  see the source for copying conditions. ");
   fprintf (fd ,"There is NO warranty;");
   fprintf (fd ,"not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
@@ -920,7 +920,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,".SH \"NOTES\"\n");
   fprintf (fd ,"This page describes\n");
   fprintf (fd ,".B Xnee.\n");
-  fprintf (fd ,"Mail corrections and additions to xnee@sandklef.com.\n");
+  fprintf (fd ,"Mail corrections and additions to XNEE_DEV_MAIL.\n");
 }
 
 

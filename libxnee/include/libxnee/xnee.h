@@ -160,6 +160,8 @@ enum return_values {
   
 #define XNEE_HOME_URL     "http://www.gnu.org/software/xnee/"
 #define XNEE_MAIL         "info-xnee@gnu.org"
+#define XNEE_BUG_MAIL     "bug-xnee@gnu.org"
+#define XNEE_DEVEL_MAIL   "xnee-devel@gnu.org"
 #define GNU_HOME_URL      "http://www.gnu.org/"
 #define FSF_HOME_URL      "http://www.fsf.org/"
 #define XNEE_PLUGIN_DIR   "/usr/local/lib/xnee/plugins" 
