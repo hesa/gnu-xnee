@@ -201,20 +201,18 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
     }
   ret = fgets(tmp, 256, xd->data_file);
 
-  if (ret == NULL )
-    {
-      return 0;
-    }
-  
   if ( tmp == NULL) 
     {
-      return XNEE_OK;
+      return -1;
     }
-  eofile = xnee_expression_handle_session(xd,
-					  tmp,
-					  xindata);
 
-  xnee_verbose((xd,"replay data handled (or perhaps not) '%s'\n", tmp)); 
+  /*
+    eofile = xnee_expression_handle_project(xd,
+    tmp,
+    xindata);
+    
+    xnee_verbose((xd,"replay data handled (or perhaps not) '%s'\n", tmp)); 
+  */
   return eofile;
 }
 
@@ -384,64 +382,112 @@ int
 xnee_replay_main_loop(xnee_data *xd)
 {
   xnee_intercept_data xindata ;
-  int logread = 1 ;
+  int logread = -1 ;
   int replayable ;
   static int last_logread=1;
   int last_elapsed = 0;
   int ret = XNEE_OK ; 
+  char tmp[256] ;
+  char *ret_str;
 /*   static int in_pause_mode = 0 ;  */
 
-  xindata.oldtime = xindata.newtime ;
+  xindata.oldtime = 0 ;
+  xindata.newtime = 0 ;
+  
+  if ( xd->data_file == NULL)
+    {
+      xnee_verbose((xd, "Using stdin as file\n"));
+      xd->data_file=stdin;
+    }
+  
   
   /* First of all ... read up the META DATA 
    * so we know our settings */
   while (logread && xd->cont) 
     {
-      logread = xnee_replay_read_protocol(xd, &xindata);
-      if (!logread)
+      ret_str = strcpy(tmp,"");
+      ret_str = fgets(tmp, 256, xd->data_file);
+      
+      if ( ret_str == NULL)
+	ret = -1;
+      else
+	ret = strlen (ret_str);
+
+      if ( ret == -1 )
 	{
 	  fprintf (stderr, "Could not read data from file\n");
 	  xnee_close_down (xd);
 	}	
-      else if ( logread == XNEE_REPLAY_DATA )
+      else if ( ret == 0 )
 	{
-	  /* since NULL arg printing is done when in verbose mode */
-	  xnee_record_print_record_range (xd, NULL);
-	  xnee_print_xnee_settings       (xd, NULL); 
-	  
-	  if (xd->sync)
+	  xnee_verbose((xd, "Empty line in data file\n"));
+	}
+      else 
+	{
+	  ret = xnee_expression_handle_session(xd, ret_str, &xindata);
+	  if (ret == XNEE_REPLAY_DATA)
 	    {
-	      xnee_setup_rep_recording(xd);
+	      xnee_verbose((xd, 
+			    "We are finished reading settings"
+			    " etc from data file\n"));
+	      
+	      /* since NULL arg printing is done when in verbose mode */
+	      xnee_record_print_record_range (xd, NULL);
+	      xnee_print_xnee_settings       (xd, NULL); 
+	      
+	      if (xd->sync)
+		{
+		  xnee_setup_rep_recording(xd);
+		}
+	      if (xnee_is_verbose(xd))
+		{
+		  xnee_print_sys_info(xd , xd->out_file);
+		}
+	      xnee_verbose((xd, "REPLAY DATA coming up .... %s \n",
+			    ret_str));
+	      break ; 
 	    }
-	  if (xnee_is_verbose(xd))
-	    xnee_print_sys_info(xd , xd->out_file);
-	  xnee_verbose((xd, "REPLAY DATA coming up .... \n"));
-	  break ; 
+
 	}
     }
-	 
-  /**
-   * all META DATA setting up our sessions is read ...
+
+   ret = xnee_rep_prepare(xd);
+   if (ret!=XNEE_OK)
+     {
+       xnee_verbose((xd, "xnee_prepare failed (%d)....checking\n", ret));
+       xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
+       return ret;
+     }
+
+   ret = XNEE_REPLAY_DATA ; 
+   
+   /**
+    * all META DATA setting up our sessions is read ...
    * go on replaying
    *
    * 
    *       Think of this as the main loop
    */
-  while (logread && xd->cont) 
+   while  ( (ret!=XNEE_SYNTAX_ERROR) && xd->cont ) 
     {
+      xnee_verbose((xd, "REPLAY str = '%s' ret=%d (last_log_read=%d) \n",
+		    ret_str, ret, last_logread));
       if (last_logread)
 	{
 	  /* 
 	   * set value for forthcoming time calculations 
 	   * Now replay starts off
 	   */
+	  xnee_verbose((xd, " -->  xnee_get_elapsed_time\n"));
 	  last_elapsed = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
+	  xnee_verbose((xd, " <--  xnee_get_elapsed_time\n"));
 	}
-      if ( logread == XNEE_META_DATA )
+      if ( ret == XNEE_META_DATA )
 	{
-	  xnee_verbose((xd, "META DATA read ... should be handled in the future... eg script ????\n"));
+	  xnee_verbose((xd, "META DATA read ... should be "
+			"handled in the future... eg script ????\n"));
 	}
-      else if (logread)
+      else if (ret)
 	{
 	  if (xd->first_read_time==0)
             xd->first_read_time = xindata.newtime;
@@ -505,6 +551,7 @@ xnee_replay_main_loop(xnee_data *xd)
 		    }
 		  /*		  */
 		  /*		    }*/
+		  xnee_verbose((xd," replay MAIN  new %lu   old %lu\n",xindata.newtime , xindata.oldtime ));
 		  replayable = 
 		    xnee_replay_event_handler(xd, 
 					      &xindata, last_elapsed);
@@ -554,7 +601,7 @@ xnee_replay_main_loop(xnee_data *xd)
       XFlush(xd->control);
       xnee_verbose((xd, "  <-- Flushed after handled event\n"));
       last_logread = 0;
-      logread = xnee_replay_read_protocol(xd, &xindata);
+      ret = xnee_expression_handle_session(xd, ret_str, &xindata);
     }
   return XNEE_OK;
 }
@@ -578,7 +625,6 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "--->xnee_setup_rep_recording :)\n"));             
   nr_of_ranges=xnee_get_max_range(xd);
 
-  xnee_verbose((xd, "--- xnee_setup_rep_recording \n"));             
   if (xd->all_clients)
     {
       xrs->xids[0] = XRecordAllClients;
@@ -777,7 +823,9 @@ void
 xnee_replay_init          (xnee_data* xd)
 {
   int i, j;
-  xd->first_replayed_event=1;
+  xd->first_replayed_event=XNEE_TRUE;
+
+  xnee_verbose((xd, "---> xnee_replay_init\n"));
   for ( i=0 ; i<4 ; i++) 
     {
       for ( j=0 ; j<XNEE_REPLAY_BUFFER_SIZE ; j++) 
@@ -798,5 +846,7 @@ xnee_replay_init          (xnee_data* xd)
   xd->meta_data.sum_min=0;
   if (xnee_no_rep_resolution(xd))
     xnee_set_default_rep_resolution (xd);
+  
+  xnee_verbose((xd, "<--- xnee_replay_init\n")); 
 }
 

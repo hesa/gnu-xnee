@@ -295,7 +295,14 @@ xnee_close_down(xnee_data* xd)
 
   xnee_verbose((xd, "Freeing context "));
 
-  xnee_ungrab_keys(xd_global);
+  if (xd->grab_keys==NULL)
+      xnee_verbose((xd, " ---  xnee_close_down the grab data seem to have been freed already\n"));
+  else
+      xnee_verbose((xd, " ---  xnee_close_down the grab exists.....\n"));
+    
+  xnee_verbose((xd, "xnee_close_down : ungrab -----> \n"));
+  xnee_ungrab_keys (xd);
+  xnee_verbose((xd, "xnee_clos_down : ungrab <---- \n"));
   xnee_reset_autorepeat (xd_global);
   
 
@@ -348,18 +355,34 @@ xnee_close_down(xnee_data* xd)
     }
   
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.5 \n"  ));
+
   xnee_verbose((xd, "closing fds\n"));
-  
-  
+
+  xnee_verbose((xd ," --  xnee_close_down() free data_file \n"  ));
   xnee_free_file (xd, xd->data_name, xd->data_file);
+
+  xnee_verbose((xd ," --  xnee_close_down() free rc_file \n"  ));
   xnee_free_file (xd, xd->rc_name,   xd->rc_file);
+
+  if (xd->err_file!=stdout)
+    {
+      xnee_verbose((xd ," --  xnee_close_down() free out_file \n"  ));
+      xnee_free_file (xd, xd->out_name,  xd->out_file);
+    }
+
+  if (xd->err_file!=stderr)
+    {
+      xnee_verbose((xd ," --  xnee_close_down() free err_file\n"  ));
+      xnee_free_file (xd, xd->err_name,  xd->err_file); 
+    }
+
+  xnee_verbose((xd, "finished closing fds\n"));
+
 
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.6 \n"  ));
   xnee_verbose((xd, "Freeeing data "));
   xnee_free_xnee_data(xd);
 
-  xnee_free_file (xd, xd->out_name,  xd->out_file);
-  xnee_free_file (xd, xd->err_name,  xd->err_file); 
 }
 
 
@@ -433,12 +456,14 @@ xnee_init(xnee_data* xd)
    * meta data */
   xd->meta_data.sum_max    = 0;
   xd->meta_data.sum_min    = 0;
+
   xd->meta_data.total_diff = 0;
   xd->meta_data.cached_max = 0;
   xd->meta_data.cached_min = 0;
-  xd->meta_data.sum_max_threshold  = 0;
-  xd->meta_data.sum_min_threshold  = 0;
-  xd->meta_data.tot_diff_threshold = 0;
+
+  xd->meta_data.sum_max_threshold  = XNEE_DEFAULT_MAX_THRESHOLD;
+  xd->meta_data.sum_min_threshold  = XNEE_DEFAULT_MIN_THRESHOLD;
+  xd->meta_data.tot_diff_threshold = XNEE_DEFAULT_TOT_THRESHOLD;
 
   /* Init Recording variables
    * Since those are used when recording and replaying. */
@@ -487,7 +512,9 @@ int
 xnee_stop_session( xnee_data* xd)
 {
   xnee_verbose((xd, " ---> xnee_stop_session\n" ));
-  xnee_ungrab_keys(xd);
+  xnee_verbose((xd, "xnee_stop_session : ungrab -----> \n"));
+  xnee_ungrab_keys (xd);
+  xnee_verbose((xd, "xnee_stop_session : ungrab <---- \n"));
   xnee_reset_autorepeat (xd);
   xnee_verbose((xd, " <--- xnee_stop_session\n" ));
   return (0);
@@ -655,7 +682,6 @@ xnee_free_dyn_data(xnee_data *xd)
 /*    xnee_verbose((xd, " --- xnee_free_dyn_data: xnee_info\n"));  */
 /*    free (xd->xnee_info);  */
    xnee_reset_xnee_info(xd);
-
 
    xnee_verbose((xd, "<--- xnee_free_dyn_data\n"));
    return XNEE_OK;
@@ -1538,15 +1564,11 @@ xnee_open_files(xnee_data *xd)
 
 
 int
-xnee_prepare(xnee_data *xd)
+xnee_rep_prepare(xnee_data *xd)
 {
-   int ret;
+  int ret ; 
 
 
-
-   ret = xnee_open_files(xd);
-   if (ret != XNEE_OK)
-     return ret;
   /* 
    * Print settings 
    * only done if verbose mode  
@@ -1592,6 +1614,18 @@ xnee_prepare(xnee_data *xd)
   return XNEE_OK;
 }
 
+int
+xnee_prepare(xnee_data *xd)
+{
+   int ret;
+
+   ret = xnee_open_files(xd);
+   if (ret != XNEE_OK)
+     return ret;
+
+   return xnee_rep_prepare(xd);
+}
+
 
 
 int
@@ -1600,28 +1634,25 @@ xnee_start(xnee_data *xd)
    int ret ;
 
    ret = xnee_prepare(xd);
-
    if (ret!=XNEE_OK)
-   {
-      xnee_verbose((xd, "xnee_prepare failed (%d)....checking\n", ret));
-      if ( xnee_is_recorder(xd) )
-      {
-         if (ret==XNEE_NO_PROT_CHOOSEN)
-         {
-            xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
-            return ret;
-         }
-         xnee_verbose((xd, "xnee_prepare failed.... it was not OK\n"));
-         return ret;
-         
-      }
+     {
+       xnee_verbose((xd, "xnee_prepare failed (%d)....checking\n", ret));
+       if ( xnee_is_recorder(xd) )
+	 {
+	   if (ret==XNEE_NO_PROT_CHOOSEN)
+	     {
+	       xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
+	       return ret;
+	     }
+	   xnee_verbose((xd, "xnee_prepare failed.... it was not OK\n"));
+	   return ret;
+	 }
       else
       {
          xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
          return ret;
       }
    }
-
    /* grab all keys that have been specified */
    ret = xnee_grab_all_keys (xd);
    if (ret != XNEE_OK)
@@ -1642,6 +1673,18 @@ xnee_start(xnee_data *xd)
    if (xnee_is_recorder(xd)) 
    {
       
+     ret = xnee_prepare(xd);
+     if (ret!=XNEE_OK)
+       {
+	 if (ret==XNEE_NO_PROT_CHOOSEN)
+	   {
+	     xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
+	     return ret;
+	   }
+	 xnee_verbose((xd, "xnee_prepare failed.... it was not OK\n"));
+	 return ret;
+       }
+     
       /* 
        * Print settings 
        * if verbose mode that is 
@@ -1743,8 +1786,10 @@ xnee_start(xnee_data *xd)
     }
    */
    
-   xnee_reset_autorepeat (xd);
+   xnee_verbose((xd, "xnee_start : ungrab -----> \n"));
    xnee_ungrab_keys (xd);
+   xnee_verbose((xd, "xnee_start : ungrab <---- \n"));
+   xnee_reset_autorepeat (xd);
    
    xnee_renew_xnee_data(xd);
    return (XNEE_OK);

@@ -1,13 +1,8 @@
 bin_PROGRAMS = cnee
 cnee_SOURCES = main.c parse.c parse.h 
 
-if HAVE_LIBXNEE_DIR
-LIBXNEE_DIR=@libxnee_dir@
-else
 LIBXNEE_DIR="../../libxnee"
-endif
 
-cnee_LDADD =  -L${LIBXNEE_DIR}/src  -lxnee ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE
@@ -27,12 +22,6 @@ else
 GPROF_FLAG = 
 endif
 
-if XOSD
-XOSD_FLAGS = -DHAVE_XOSD
-else
-XOSD_FLAGS = -DNO_XOSD
-endif
-
 if BUF_VERBOSE
 BUF_VERBOSE_FLAG = -DUSE_BUF_VERBOSE
 else
@@ -45,5 +34,9 @@ else
 PEDANTIC_FLAGS = 
 endif
 
+X11_LIB = -lX11 -lXtst
 
-cnee_CFLAGS = -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS} ${USER_CFLAGS}
+
+cnee_CFLAGS = -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${USER_CFLAGS} ${LIBDL} ${LIBSEMA}
+
+cnee_LDADD = -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIB} 

@@ -360,13 +360,10 @@ xnee_update_buffer_cache(xnee_data *xd)
   
   for (counter=0 ; counter < MAX_UNSYNC_LOOPS; counter++)
     {
-      xnee_verbose((xd, "-----------------------------------------\n"));
       for ( type=0 ; type< 2 ; type++) 
 	{
 	  int real_min=0;
 	  int real_max=0;
-	  
-	  xnee_verbose((xd, "     synchronize: checking type:%d\n", type));
 	  
 	  real_min=xd->meta_data.cached_min;
 	  real_max=xd->meta_data.cached_max;
@@ -426,7 +423,6 @@ xnee_hard_update_buffer_cache(xnee_data *xd)
   
   for (counter=0 ; counter < MAX_UNSYNC_LOOPS; counter++)
     {
-      xnee_verbose((xd, "-----------------------------------------\n"));
       for ( type=0 ; type< 2 ; type++) 
 	{
 	  

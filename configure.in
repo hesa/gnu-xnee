@@ -1,0 +1,86 @@
+AC_INIT(Xnee,2.0,bug-xnee@gnu.org)
+
+AC_CONFIG_AUX_DIR(./autotools/)
+AM_INIT_AUTOMAKE(Xnee,20040118)
+
+AC_PROG_INSTALL
+AC_PROG_CC
+AC_LANG_C
+AC_PROG_MAKE_SET
+AC_PROG_RANLIB
+AC_PATH_X
+AC_PATH_XTRA
+AC_FUNC_VPRINTF
+AC_CHECK_HEADERS(stdarg.h varargs.h, break)
+
+
+AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")])
+AC_CHECK_LIB(c, sem_init, LIBSEMA="", [AC_CHECK_LIB(pthread, sem_init, LIBSEMA="-lpthread")])
+
+
+
+AC_ARG_ENABLE(xosd,
+[  --enable-xosd       build Xnee with no verbose mode support],
+[case "${enableval}" in
+  yes) xosd=true ;;
+  no)  xosd=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --disable-xosd) ;;
+esac],[xosd=false])
+
+AC_ARG_ENABLE(verbose,
+[  --enable-verbose       build Xnee with no verbose mode support],
+[case "${enableval}" in
+  yes) verbose=true ;;
+  no)  verbose=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --disable-verbose) ;;
+esac],[verbose=true])
+
+AC_ARG_ENABLE(buffer_verbose,
+[  --enable-buffer_verbose  build xnee without support for buffer printouts],
+[case "${enableval}" in
+  yes) buffer_verbose=true ;;
+  no)  buffer_verbose=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --disable-buffer_verbose) ;;
+esac],[buffer_verbose=false])
+
+AC_ARG_ENABLE(gcov,
+[  --enable-gcov           build xnee with support for gcov],
+[case "${enableval}" in
+  yes) gcov=true ;;
+  no)  gcov=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-gcov) ;;
+esac],[gcov=false])
+
+AC_ARG_ENABLE(gprof,
+[  --enable-gprof          build xnee with support for gprof],
+[case "${enableval}" in
+  yes) gprof=true ;;
+  no)  gprof=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-gprof) ;;
+esac],[gprof=false])
+
+AC_ARG_ENABLE(pedantic,
+[  --enable-pedantic          build xnee with support for pedantic compiling],
+[case "${enableval}" in
+  yes) pedantic=true ;;
+  no)  pedantic=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-pedantic) ;;
+esac],[pedantic=false])
+
+AM_CONDITIONAL(VERBOSE, test x$verbose = xtrue)
+AM_CONDITIONAL(GCOV, test x$gcov = xtrue)
+AM_CONDITIONAL(GPROF, test x$gprof = xtrue)
+AM_CONDITIONAL(PEDANTIC,    test x$pedantic = xtrue)
+AM_CONDITIONAL(BUF_VERBOSE, test x$buffer_verbose = xtrue)
+AM_CONDITIONAL(XOSD, test x$xosd = xtrue)
+
+
+
+
+AC_OUTPUT(Makefile \
+	libxnee/Makefile \
+	cnee/Makefile    \
+	gnee/Makefile    \
+	libxnee/src/Makefile \
+	cnee/src/Makefile    \
+	gnee/src/Makefile )

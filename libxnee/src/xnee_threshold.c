@@ -101,21 +101,18 @@ xnee_set_tot_threshold (xnee_data *xd, int thresh)
 int
 xnee_get_max_threshold (xnee_data *xd)
 {
-  printf ("TH MAX %d\n", xd->meta_data.sum_max_threshold);
   return xd->meta_data.sum_max_threshold;
 }
 
 int
 xnee_get_min_threshold (xnee_data *xd)
 {
-  printf ("TH MIN %d\n", xd->meta_data.sum_min_threshold);
   return xd->meta_data.sum_min_threshold;
 }
 
 int
 xnee_get_tot_threshold (xnee_data *xd)
 {
-  printf ("TH TOT %d\n", xd->meta_data.tot_diff_threshold);
   return xd->meta_data.tot_diff_threshold;
 }
 

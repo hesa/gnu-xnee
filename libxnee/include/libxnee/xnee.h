@@ -66,10 +66,10 @@
 
 
 #define XNEE_FREE(a)               free(a);   a=NULL; 
-#define XNEE_FCLOSE(a)             fclose(a); a=0; 
-#define XNEE_FREE_IF_NOT_NULL(a)   if (a!=NULL) XNEE_FREE(a)
-#define XNEE_FCLOSE_IF_NOT_NULL(a) if(a!=0) XNEE_FCLOSE(a)
-#define XNEE_CLOSE_DISPLAY_IF_NOT_NULL(a) if(a!=NULL) XCloseDisplay(a); a=NULL;
+#define XNEE_FCLOSE(a)             fclose(a); a=NULL; 
+#define XNEE_FREE_IF_NOT_NULL(a)   if (a!=NULL) { XNEE_FREE(a);   }
+#define XNEE_FCLOSE_IF_NOT_NULL(a) if (a!=NULL) { XNEE_FCLOSE(a); }
+#define XNEE_CLOSE_DISPLAY_IF_NOT_NULL(a) if(a!=NULL) { XCloseDisplay(a); a=NULL; }
 
 
 #define XNEE_RANGE_STRING_SIZE 512
@@ -142,6 +142,9 @@ enum _xnee_mode {
 #define MAX_SKIPPED_UNSYNC  10 /* number of times to ignore unsync state  */
 #define XNEE_NOT_REPLAYABLE 13
 
+#define XNEE_DEFAULT_MAX_THRESHOLD  10
+#define XNEE_DEFAULT_MIN_THRESHOLD  -10
+#define XNEE_DEFAULT_TOT_THRESHOLD  30
 
 #define XNEE_USEC_PER_SEC        1000000
 #define XNEE_MSEC_PER_SEC        1000
@@ -1088,6 +1091,14 @@ xnee_check_true(char *expr);
 
 int 
 xnee_check_false(char *expr);
+
+
+int
+xnee_rep_prepare(xnee_data *xd);
+
+int
+xnee_prepare(xnee_data *xd);
+
 
 #endif /*   XNEE_XNEE_H */
 

@@ -1,17 +1,6 @@
 
 
 
-libxnee / NEWS 
-----------------------------
-  This file contains major news about cnee which is a part
-  of the Xnee project.
-
-  For more information about Xnee, http://www.gnu.org
-
-
-
-All text below concerns the old structure of Xnee
-------------------------------------------------------------------------------
 
 
 
@@ -28,6 +17,9 @@ Changes in
 	   '--err-file'
 	   '--exec-key'
 	   '--exec-program'
+	   '--feedback-none'
+	   '--feedback-xosd'
+	   '--feedback-stderr'
 	- deleted options:
 	   '--out'
 	   '--err'

@@ -87,7 +87,9 @@ static char *help[] = {
   "--replay-resolution res        ", "Resolution to use when replaying",
   "--no-resolution-adjustment     ", "Don't use resolution adjustment",
   "--no-sync, -ns                 ", "Don't use synchornisation during replay",
-  "--no-xosd, -nx                 ", "Don't use xosd to feedback",
+  "--feedback-xosd, -fx           ", "Use xosd to feedback",
+  "--feedback-stderr, -fs         ", "Use stderr to feedback",
+  "--feedback-none, -fn           ", "Dont' use feedback",
   "--manpage                      ", "Prints Xnee help text in format as used when generating man page", 
   "--distribute, -di <LIST>       ", "Distribute recorded or replayed events to LIST where LIST is comma separated list of displays",
   "--device-event-range, -devera  <X_LIST> ", "Set device event range to X_LIST", 
@@ -409,13 +411,17 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	{
 	  xnee_unset_sync(xd);
 	}
-      else if(xnee_check(argv[i], "--no-xosd", "-nx" )) 
+      else if(xnee_check(argv[i], "--feedback-xosd", "-fx" )) 
+	{
+	  xnee_set_xosd_feedback(xd);
+	}
+      else if(xnee_check(argv[i], "--feedback-stderr", "-fs" )) 
 	{
 	  xnee_set_stderr_feedback(xd);
 	}
-      else if(xnee_check(argv[i], "--use-xosd", "-ux" )) 
+      else if(xnee_check(argv[i], "--feedback-none", "-fn" )) 
 	{
-	  xnee_set_xosd_feedback(xd);
+	  xnee_set_no_feedback(xd);
 	}
       else if(xnee_check(argv[i], "--force-replay", "-fp" )) 
 	{

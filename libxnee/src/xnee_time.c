@@ -136,8 +136,10 @@ xnee_calc_sleep_amount(xnee_data *xd,
   float tmp;
 
   
-  xnee_verbose ((xd, "xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\n",  
+  xnee_verbose ((xd, "xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff:" 
+		 "%lu recordFirst_diff: %lu\n",  
 		 last_diff, first_diff, record_last_diff, recordFirst_diff )); 
+
   /*  printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",  
 	  last_diff, first_diff, record_last_diff, recordFirst_diff ); 
   */

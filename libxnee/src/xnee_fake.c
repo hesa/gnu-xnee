@@ -74,11 +74,13 @@ xnee_replay_event_handler( xnee_data* xd,
 			   xnee_intercept_data* xindata, 
 			   int last_elapsed)
 {
+  static int loop_nr = 0;
+  
   int           return_value=0;
-  unsigned long last_diff ;
-  unsigned long first_diff; 
-  unsigned long record_last_diff; 
-  unsigned long sleep_amt; 
+  unsigned long last_diff = 0;
+  unsigned long first_diff = 0 ; 
+  unsigned long record_last_diff = 0 ; 
+  unsigned long sleep_amt = 0; 
   unsigned long record_first_diff =0 ;
   int screen;
   int x ;
@@ -101,6 +103,7 @@ xnee_replay_event_handler( xnee_data* xd,
   saved_time = xindata->oldtime ;
   
   /* Synchronise the time */
+  xnee_verbose((xd,"ev handler  new %lu   old %lu\n",xindata->newtime , xindata->oldtime ));
   record_last_diff = xnee_delta_time(xindata) ; 
   record_first_diff = ( xindata->newtime - xd->first_read_time ) ;
   
@@ -111,19 +114,30 @@ xnee_replay_event_handler( xnee_data* xd,
   /* get the actual elapsed time from the start of the read */
   first_diff = xnee_get_elapsed_time(xd, XNEE_FROM_FIRST_READ );
   
-  
+  if (loop_nr==0)
+    {
+      record_last_diff = 0 ;
+      record_first_diff = 0 ;
+      loop_nr=1;
+    }
+  else if (loop_nr==1)
+    {
+      record_last_diff = 0 ;
+      record_first_diff = 0 ;
+      loop_nr=2;
+    }
   /* if the first event is also the 1st entry from recorded file 
      - reset time - should seldom happen */
-  if (xd->first_replayed_event==1 && last_elapsed == 0 ) 
+  if ( (xd->first_replayed_event==XNEE_TRUE) && (last_elapsed == 0 )) 
     {
-      xd->first_replayed_event=0;
+      xd->first_replayed_event=XNEE_FALSE;
       xnee_verbose ((xd, 
-		     "\txd->first_replayed_event==1  ----> dtime1=10 ; \n"
+		     "\txd->first_replayed_event==%d  ----> dtime1=10 ; \n", XNEE_TRUE
 		     ));
       record_last_diff = 10 ; 
     }
   speed = xnee_get_speed(xd); 
-
+  
   if (speed==100)
     {
       sleep_amt = 
@@ -137,31 +151,29 @@ xnee_replay_event_handler( xnee_data* xd,
     {
       sleep_amt = 
 	xnee_calc_sleep_amount_fast( xd, 
-				last_diff, 
-				first_diff, 
-				record_last_diff, 
-				record_first_diff ) ; 
+				     last_diff, 
+				     first_diff, 
+				     record_last_diff, 
+				     record_first_diff ) ; 
     }
   else  
     {
       sleep_amt = 
 	xnee_calc_sleep_amount_slow( xd, 
-				last_diff, 
-				first_diff, 
-				record_last_diff, 
-				record_first_diff ) ; 
+				     last_diff, 
+				     first_diff, 
+				     record_last_diff, 
+				     record_first_diff ) ; 
     }
-
   
-
+  
   xnee_verbose((xd, "---  xnee_replay_event_handler \n "));
   
 
-  xnee_verbose ((xd, "switching type: %d sleep_amt: %d\n", 
+  xnee_verbose ((xd, "   switching type: %d sleep_amt: %d\n", 
 		 xindata->u.event.type, sleep_amt ));
+
   fflush( NULL );
-  xnee_verbose((xd, "---> xnee_replay_event_handler switching type%d\n", 
-		xindata->u.event.type));
   
   /* If we use the last args to the XTestFakexxx functions
    * it is harder to synchronize .... 

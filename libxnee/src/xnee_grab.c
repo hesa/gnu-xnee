@@ -43,8 +43,16 @@ xnee_ungrab_key (xnee_data* xd, int mode)
   int window;
   int screen;
 
+  xnee_verbose((xd, "--->  xnee_ungrab_key\n"));
   
-  
+  if (xd->grab_keys==NULL)
+    {
+      xnee_verbose((xd, " ---  xnee_ungrab_key the data seem to have been freed already\n"));
+      return XNEE_OK;
+    }
+
+  xnee_verbose((xd, " ---  xnee_ungrab_key we have a grab struct allocated\n"));
+	
   switch (mode)
     {
     case XNEE_GRAB_STOP:
@@ -52,8 +60,9 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       modifier = xd->grab_keys->stop_mod;
       xd->grab_keys->stop_key=0;
       xd->grab_keys->stop_mod=0;
+
       XNEE_FREE_IF_NOT_NULL(xd->grab_keys->stop_str);
-      xnee_verbose((xd, "----  xnee_grab_key STOP mode\n"));
+
       break;
     case XNEE_GRAB_PAUSE:
       key      = xd->grab_keys->pause_key;
@@ -84,7 +93,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       modifier = xd->grab_keys->exec_mod;
       xd->grab_keys->exec_key=0;
       xd->grab_keys->exec_mod=0;
-      XNEE_FREE_IF_NOT_NULL(xd->grab_keys->exec_str);
+	XNEE_FREE_IF_NOT_NULL(xd->grab_keys->exec_str);
       xnee_verbose((xd, "----  xnee_grab_key EXEC mode\n"));
       break;
     default:
@@ -93,13 +102,18 @@ xnee_ungrab_key (xnee_data* xd, int mode)
     }
 
   if (key==0) 
-    return XNEE_OK;
+    {
+      xnee_verbose((xd, "---  xnee_ungrab_key key==0\n"));
+      return XNEE_OK;
+    }
+
   if ( xd->grab != 0 )
     {
+      xnee_verbose((xd, "---  xnee_ungrab_key get screen\n"));
       screen = DefaultScreen (xd->grab);
-      xnee_verbose((xd, "---  xnee_ungrab_stop_key\n"));
+      xnee_verbose((xd, "---  xnee_ungrab_key get window\n"));
       window = RootWindow(xd->grab, screen );
-      xnee_verbose((xd, "---  xnee_ungrab_stop_key\n"));
+      xnee_verbose((xd, "---  xnee_ungrab_key\n"));
       xnee_verbose((xd, "window   %d\n", window));
       xnee_verbose((xd, "screen   %d\n", screen));
       xnee_verbose((xd, "data     %d\n", xd->grab));
@@ -123,14 +137,15 @@ xnee_ungrab_key (xnee_data* xd, int mode)
 int 
 xnee_ungrab_keys (xnee_data* xd)
 {
-  xnee_verbose((xd, "---> xnee_ungrab_stop_key\n"));
+  xnee_verbose((xd, "---> xnee_ungrab_keys\n"));
+
   xnee_ungrab_key ( xd, XNEE_GRAB_STOP);
   xnee_ungrab_key ( xd, XNEE_GRAB_PAUSE);
   xnee_ungrab_key ( xd, XNEE_GRAB_RESUME);
   xnee_ungrab_key ( xd, XNEE_GRAB_INSERT);
   xnee_ungrab_key ( xd, XNEE_GRAB_EXEC);
   
-  xnee_verbose((xd, "<--- xnee_ungrab_stop_key\n"));
+  xnee_verbose((xd, "<--- xnee_ungrab_keys\n"));
   return XNEE_OK;
 }
 
@@ -293,15 +308,23 @@ xnee_new_grab_keys()
 
   xgk->stop_key     = 0 ;
   xgk->stop_mod     = 0 ;
+  xgk->stop_str     = NULL ;
 
   xgk->pause_key    = 0 ;
   xgk->pause_mod    = 0 ;
+  xgk->pause_str    = NULL ;
 
   xgk->resume_key   = 0 ;
   xgk->resume_mod   = 0 ;
+  xgk->resume_str   = NULL ;
 
   xgk->insert_key   = 0 ;
   xgk->insert_mod   = 0 ;
+  xgk->insert_str   = NULL ;
+
+  xgk->exec_key   = 0 ;
+  xgk->exec_mod   = 0 ;
+  xgk->exec_str   = NULL ;
 
   xgk->grab = XNEE_GRAB_NODATA;
   xgk->grabbed_action = XNEE_GRAB_NODATA;
@@ -319,10 +342,14 @@ xnee_new_grab_keys()
 int
 xnee_free_grab_keys(xnee_data *xd)
 {
-  
-
-
-  free (xd->grab_keys);
+  xnee_verbose((xd, "--->  xnee_free_grab\n"));
+  XNEE_FREE_IF_NOT_NULL (xd->grab_keys);
+  if (xd->grab_keys==NULL)
+    {
+      xnee_verbose((xd, "---  xnee_free_grab  .... yes, we are NULL\n"));
+      return XNEE_OK;
+    }
+  xnee_verbose((xd, "<---  xnee_free_grab\n"));
   return XNEE_OK;
 }
 
