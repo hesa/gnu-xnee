@@ -221,22 +221,32 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
   int i ; 
   xnee_verbose((xd, " --> add_range_str (%d, %d, %s)\n", xd,type, range));
   str_len=strspn(range, "1234567890-");
+
+  if ( str_len > XNEE_RANGE_STRING_SIZE )
+    {
+      fprintf (stderr, "The string you wanted to add is too long\n");
+      fprintf (stderr, "Ranges can't be longer then %d characters\n",
+	       XNEE_RANGE_STRING_SIZE);
+      xnee_stop_session(xd);
+      exit(stop);
+    }
+
   if (str_len==0)
     {
       str_len=
 	strspn(range, 
 	       "1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
-      strncpy(start_str,range,str_len);
-      start_str[str_len]='\0';
-      start=xnee_data2int (type, start_str);
-      if (start==-1)
-	{
-	  fprintf(stderr, 
-		  "Could not convert \"%s\" to an integer\nleaving", 
-		  start_str); 
-	  xnee_stop_session(xd);
-	  exit(stop);
-	}
+	  strncpy(start_str,range,str_len);
+	  start_str[str_len]='\0';
+	  start=xnee_data2int (type, start_str);
+	  if (start==-1)
+	    {
+	      fprintf(stderr, 
+		      "Could not convert \"%s\" to an integer\nleaving", 
+		      start_str); 
+	      xnee_stop_session(xd);
+	      exit(stop);
+	    }
     }
   else
     {
@@ -248,7 +258,7 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 		" --  add_range_str first string=\"%s\" (%d)\n", 
 		start_str, start));
   
-
+  
   second=strchr ( range, '-' ) ;
   if (second) 
     {

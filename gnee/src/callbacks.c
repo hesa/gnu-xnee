@@ -321,16 +321,19 @@ on_record                              (GtkButton       *button,
     
     if (window != NULL)
     {
-
-        gtk_widget_hide(window);
-        while (gtk_events_pending ())
-            gtk_main_iteration ();
-
-        xd = (xnee_data*) g_object_get_data(G_OBJECT(window), "xd");
-        if (xd != NULL)
+      
+      gtk_widget_hide(window);
+      while (gtk_events_pending ())
+	{
+	  gtk_main_iteration ();
+	}
+      
+      xd = (xnee_data*) g_object_get_data(G_OBJECT(window), "xd");
+      if (xd != NULL)
         {
-            gnee_xnee_start_recording(xd);
+	  gnee_xnee_start_recording(xd);
         }
+      
     }
 
     gtk_widget_show_all(window);
@@ -341,6 +344,28 @@ void
 on_replay                              (GtkButton       *button,
                                         gpointer         user_data)
 {
+    GtkWidget   *window;
+    xnee_data   *xd;
 
+    window = lookup_widget(user_data, "gnee_window");
+    
+    if (window != NULL)
+    {
+      
+      gtk_widget_hide(window);
+      while (gtk_events_pending ())
+	{
+	  gtk_main_iteration ();
+	}
+      
+      xd = (xnee_data*) g_object_get_data(G_OBJECT(window), "xd");
+      if (xd != NULL)
+        {
+	  gnee_xnee_start_replaying(xd);
+        }
+    }
+
+    gtk_widget_show_all(window);
+  
 }
 

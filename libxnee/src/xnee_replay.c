@@ -604,9 +604,10 @@ xnee_setup_rep_recording(xnee_data *xd)
   int nr_of_ranges=0;
   xnee_recordext_setup  *xrs       = xd->record_setup;
 
-  xnee_verbose((xd, "--->xnee_setup_rep_recording\n"));             
+  xnee_verbose((xd, "--->xnee_setup_rep_recording :)\n"));             
   nr_of_ranges=xnee_get_max_range(xd);
 
+  xnee_verbose((xd, "--- xnee_setup_rep_recording \n"));             
   if (xd->all_clients)
     {
       xrs->xids[0] = XRecordAllClients;
@@ -615,9 +616,9 @@ xnee_setup_rep_recording(xnee_data *xd)
     {
       xrs->xids[0] = XRecordFutureClients; 
     }
-
   xnee_verbose((xd, "\t  CreateContext   nr_of_ranges=%d\n", nr_of_ranges));  
 
+  xnee_verbose ((xd, "creating context .... on control = %d\n", xd->control));
   xrs->rContext = XRecordCreateContext(xd->control, 
 				       xrs->data_flags, 
 				       xrs->xids, 1, 
@@ -630,24 +631,38 @@ xnee_setup_rep_recording(xnee_data *xd)
 			    xrs->xids,1,
 			    xrs->range_array,nr_of_ranges);    
 
+  xnee_verbose((xd, "--- xnee_setup_rep_recording setting xids \n"));             
+
   xrs->xids[0] = xnee_client_id (xd->control);
   xrs->xids[1] = xnee_client_id (xd->data);
+
+  xnee_verbose((xd, "--- xnee_setup_rep_recording unregistring \n"));             
 
   XRecordUnregisterClients( xd->control, 
 			    xrs->rContext,
 			    xrs->xids,
 			    2);
 
+  xnee_verbose((xd, "--- xnee_setup_rep_recording getting context \n"));             
+  xnee_verbose((xd, "--- \t %d\n", xd->control));             
+  xnee_verbose((xd, "--- \t %d\n", xrs));             
+  xnee_verbose((xd, "--- \t %d\n", xrs->rContext));             
+  xnee_verbose((xd, "--- \t %d\n", xrs->rState));             
+
   if(!XRecordGetContext(xd->control, xrs->rContext, (XRecordState **) xrs->rState))
     {
-    xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
-    exit(XNEE_BAD_CONTEXT);
-  }
+      xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
+      exit(XNEE_BAD_CONTEXT);
+    }
   
   xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n", 
 		xrs->rContext, (int) ( (xrs->rState) - (xrs->nclients) ) ));   
   
+  xnee_verbose((xd, "--- xnee_setup_rep_recording  freeing state \n"));             
+
   XRecordFreeState(xrs->rState); 
+
+  xnee_verbose((xd, "--- xnee_setup_rep_recording  setting rstate \n"));             
   xd->record_setup->rState=NULL; 
 
   /*
@@ -659,6 +674,8 @@ xnee_setup_rep_recording(xnee_data *xd)
   */
 
   
+  xnee_verbose((xd, "--- xnee_setup_rep_recording enabling async \n"));             
+
   /* Enable context for async interception */
   XRecordEnableContextAsync (xd->data, 
 			     xrs->rContext, 

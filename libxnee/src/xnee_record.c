@@ -607,7 +607,6 @@ xnee_setup_recording(xnee_data *xd)
       xd->record_setup->xids[0] = XRecordFutureClients; 
     }
   
-  
   xd->record_setup->rContext = 
     XRecordCreateContext(xd->control, 
 			 xd->record_setup->data_flags, 

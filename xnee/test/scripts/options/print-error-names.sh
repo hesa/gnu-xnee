@@ -33,7 +33,7 @@ else
     . etc/base_funs
 fi 
  
-#init_test $MYNAME
+init_test $MYNAME
 parse_me "$*"
 
 #######################################################################

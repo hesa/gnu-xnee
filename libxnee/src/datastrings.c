@@ -200,6 +200,7 @@ struct data_description request_field[]=
 
 struct data_description error_field[]=
 {
+   {Success,"Success", ""}, 
    {BadRequest,"BadRequest", ""}, 
    {BadValue,"BadValue", ""}, 
    {BadWindow,"BadWindow", ""}, 

@@ -28,11 +28,6 @@
 #define XNEE_RECORD_H
 
 
-#include "xnee.h"
-
-
-
-
 /* Standard includes */
 #include <stdio.h>
 
@@ -51,7 +46,9 @@
 /* 
  * Xnee includes 
  */
-#include "xnee.h"
+#include "libxnee/xnee.h"
+
+
 
 
 

@@ -78,7 +78,8 @@ static char *help[] = {
   "--print-settings, -ps          ", "Prints Xnee settings and waits (for <ENTER>)", 
   "--print-event-names, -pens     ", "Prints X11 event number and name ", 
   "--print-event-name, -pen <ev>  ", "Prints X11 event number or name coresponding to ev", 
-  "--print-error-names, -pern     ", "Prints X11 error number and name ", 
+  "--print-error-names, -perns    ", "Prints X11 error number and name ", 
+  "--print-error-names, -pern <er>", "Prints X11 error number or name coresponding to er ", 
   "--print-reply-names, -pren     ", "Prints X11 reply number and name ", 
   "--print-request-names, -prns   ", "Prints X11 request number and name ", 
   "--print-request-name, -prn <req> ", "Prints X11 request number or name  coresponding to req", 
@@ -641,9 +642,41 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    }
 	  exit(XNEE_OK);
 	}
-      else if(xnee_check(argv[i], "--print-error-name", "-pern")) 
+      else if(xnee_check(argv[i], "--print-error-names", "-perns")) 
 	{
 	  xnee_print_error_info (xd) ;
+	  exit(XNEE_OK);
+	}
+      else if(xnee_check(argv[i], "--print-error-name", "-pern")) 
+	{
+	  char *er;
+	  int er_nr;
+	  if ( (argv[i+1][0] >= '0') && (argv[i+1][0] <= '9') )
+	    {
+	      er_nr=atoi(argv[i+1]);
+	      er = (char*) xnee_int2error (er_nr);
+	      if (er==NULL)
+		{
+		  exit (XNEE_WRONG_PARAMS);
+		}
+	      else
+		{
+		  fprintf (stdout, "%s\n", er);
+		}
+	    }
+	  else
+	    {
+	      er = argv[i+1]; 
+	      er_nr = xnee_error2int (er);
+	      if ( er_nr == -1)
+		{
+		  exit (XNEE_WRONG_PARAMS);
+		}
+	      else
+		{
+		  fprintf (stdout, "%d\n", er_nr);
+		}
+	    }
 	  exit(XNEE_OK);
 	}
       else if(xnee_check(argv[i], "--print-request-names", "-prns")) 
