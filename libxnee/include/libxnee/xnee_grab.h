@@ -3,7 +3,7 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef   
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -32,12 +32,14 @@ xnee_ungrab_key (xnee_data* xd, int mode);
 int 
 xnee_ungrab_keys (xnee_data* xd);
 
-xnee_grab_keys  *
+xnee_grab_keys*
 xnee_new_grab_keys();
 
 int
 xnee_free_grab_keys(xnee_data *xd);
 
+int
+xnee_grab_keys_init(xnee_data *xd);
 
 #endif /* XNEE_GRAB_H */
 

@@ -134,3 +134,84 @@ on_sfile_activate                      (GtkMenuItem     *menuitem,
 void
 on_save_button_clicked                 (GtkButton       *button,
                                         gpointer         user_data);
+
+void
+on_about_ok_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_about1_activate                     (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_stop_m_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_stop_k_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+
+void
+on_pause_m_combo_changed               (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_resume_m_combo_changed              (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_mark_m_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_exec_m_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_pause_k_combo_changed               (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_resume_k_combo_changed              (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_mark_k_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_exec_k_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_err_cont_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_err_quit_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_cancelbutton1_clicked               (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_okbutton1_clicked                   (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_rep_menu_open_activate              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_sfile_activate                      (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_open_project_file2_activate         (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_set_session_file1_activate          (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);

@@ -1,5 +1,5 @@
 ###info_TEXINFOS=xnee.texi
-xnee_TEXINFOS=xnee_error.texi version.texi  xnee_error.texi xnee_exampl.texi xnee_faq.texi xnee_install.texi xnee_intro.texi xnee_req.texi xnee_synch.texi xnee_usage.texi xnee_general.texi xnee_start.texi  xnee_intern.texi xnee_copying fdl.texi
+xnee_TEXINFOS=xnee_error.texi xnee_prot.texi version.texi  xnee_error.texi xnee_exampl.texi xnee_faq.texi xnee_install.texi xnee_intro.texi xnee_req.texi xnee_synch.texi xnee_usage.texi xnee_general.texi xnee_start.texi  xnee_intern.texi xnee_copying fdl.texi
 
 EXTRA_DIST = xnee_copying fdl.texi pics/*.dia pics/*.sh 
 
@@ -33,14 +33,16 @@ doc:  images html info txt pdf ps
 
 images: ${IMAGES}
 
+DOC_DELIV=xnee-doc-${VERSION}
+
 ${IMAGES}: pics/xndetail.dia pics/xngener.dia pics/xnrec.dia pics/xnrep.dia pics/xnswinp.dia
 	echo "Creating pics"
 	( cd pics ; ./dia_gen.sh ; cp *.png *.pdf *.eps ../ )
 
 doc-deliv: doc
-	-rm xnee-documents.tar.gz
-	tar cvf xnee-documents.tar *.png xnee.pdf xnee.ps xnee.html xnee.txt
-	gzip xnee-documents.tar
+	-rm ${DOC_DELIV}.tar.gz
+	tar cvf ${DOC_DELIV}.tar *.png xnee.pdf xnee.ps xnee.html xnee.txt
+	gzip ${DOC_DELIV}.tar
 
 
 ## ----------------------------- ##

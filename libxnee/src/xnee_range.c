@@ -287,17 +287,20 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
                     second, ret));
     }
 
+  xnee_verbose((xd, " --  add_range_str 1 %d %d \n" , 
+		start, stop));
   if ( (start>=0) && (stop>=0) )
     {
-      if ( (start!=stop) && (stop!=0) )
+      if ( (start!=stop) && (start<stop) )
 	{
 	  for (i=start;i<=stop;i++)
 	    {
 	      ret = xnee_add_to_list2(type, i);
 	    }
 	}
-      else if (stop!=0)
+      else if (start!=0)
 	{
+	  xnee_verbose((xd, " --  add_range_str 4\n" ));
 	  ret = xnee_add_to_list2(type, start);
 	}
     }

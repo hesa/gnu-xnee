@@ -58,10 +58,6 @@ static char *help[] = {
   "--events-to-record <n>, -etr   ", "Intercept n numbers of events ( n<0 means forever)",
   "--data-to-record <n>, -dtr     ", "Intercept n numbers of data ( n<0 means forever)",
   "--time-to-record <n>, -ttr     ", "Intercept for n seconds ( n<0 means forever)",
-  "--k-log                        ", "Intercept 1000     (one thousand) data",
-  "--10k-log                      ", "Intercept 10 000   (ten thousand) data",
-  "--100k-log                     ", "Intercept 100 000  (one hundred thousand) data",
-  "--m-log                        ", "Intercept 1000 000 (one million) data",
   "--verbose, -v                  ", "Verbose printout",
   "--buffer-verbose, -bv          ", "Verbose printout of replay buffer",
   "--time, -t  <secs>             ", "Delay start of application for <secs> seconds. Used to prevent recording of KeyRelease when starting Xnee from terminal",
@@ -127,7 +123,7 @@ static char *examples[] = {
   "Writes 1000 data to file /tmp/xnee.rec and dumps the verbose printout to /tmp/xnee.log",
   "" PACKAGE " -rep -f /tmp/xnee.rec -v -e /tmp/xnee.log --no-sync",
   "Read data from /tmp/xnee.rec, replay it and verbose print to file /tmp/xnee.log",
-  "For more examples, look at the EXAMPLES file",
+  "For more examples, read the Xnee manual",
   NULL 
 };
 
@@ -155,6 +151,10 @@ static char *obsolete_help[] = {
   "--first_last, -fl              ", "Print only first and last of multiple successive MotionEvent ",
   "--everything                   ", "Intercept all X11 Protocol .... beware, your computer may crash !",
   "--loops <n>, -l                ", "Intercept n numbers of data ( n<0 means forever)",
+  "--k-log                        ", "Intercept 1000     (one thousand) data",
+  "--10k-log                      ", "Intercept 10 000   (ten thousand) data",
+  "--100k-log                     ", "Intercept 100 000  (one hundred thousand) data",
+  "--m-log                        ", "Intercept 1000 000 (one million) data",
   "--k_log                        ", "Intercept 1000     (one thousand) data",
   "--10k_log                      ", "Intercept 10 000   (ten thousand) data",
   "--100k_log                     ", "Intercept 100 000  (one hundred thousand) data",
@@ -554,22 +554,27 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--stop-key", "-sk")) 
 	{
 	  xnee_verbose ((xd, "Found -sk/--stop ... : %s\n", argv[i]));
-	  xnee_grab_key (xd, XNEE_GRAB_STOP, argv[++i]);
+	  xnee_set_km (xd, XNEE_GRAB_STOP, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--pause-key", "-pk")) 
 	{
 	  xnee_verbose ((xd, "Found -pk/--pause ... : %s\n", argv[i]));
-	  xnee_grab_key (xd, XNEE_GRAB_PAUSE, argv[++i]);
+	  xnee_set_km (xd, XNEE_GRAB_PAUSE, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--resume-key", "-rk")) 
 	{
 	  xnee_verbose ((xd, "Found -rk/--resume ... : %s\n", argv[i]));
-	  xnee_grab_key (xd, XNEE_GRAB_RESUME, argv[++i]);
+	  xnee_set_km (xd, XNEE_GRAB_RESUME, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--insert-key", "-ik")) 
 	{
 	  xnee_verbose ((xd, "Found -ik/--insert ... : %s\n", argv[i]));
-	  xnee_grab_key (xd, XNEE_GRAB_INSERT, argv[++i]);
+	  xnee_set_km (xd, XNEE_GRAB_INSERT, argv[++i]);
+	}
+      else if(xnee_check(argv[i], "--exec-key", "-ek")) 
+	{
+	  xnee_verbose ((xd, "Found -ek/--exec ... : %s\n", argv[i]));
+	  xnee_set_km (xd, XNEE_GRAB_EXEC, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--time", "-t")) 
 	{

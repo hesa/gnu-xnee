@@ -461,102 +461,134 @@ xnee_is_cont (xnee_data *xd)
 
 
 
- 
+int
+xnee_set_km (xnee_data *xd, int mode, char* km)
+{
+    switch (mode)
+    {
+    case XNEE_GRAB_STOP:
+      xnee_set_stop_km(xd, km);
+      break;
+    case XNEE_GRAB_PAUSE:
+      xnee_set_pause_km(xd, km);
+      break;
+    case XNEE_GRAB_RESUME:
+      xnee_set_resume_km(xd, km);
+      break;
+    case XNEE_GRAB_INSERT:
+      xnee_set_insert_km(xd, km);
+      break;
+    case XNEE_GRAB_EXEC:
+      xnee_set_exec_km(xd, km);
+      break;
+    default:
+      xnee_print_error ("Unknown grab mode\n");
+      return XNEE_UNKNOWN_GRAB_MODE;
+    }
+}
+
+char*
+xnee_get_km (xnee_data *xd, int mode)
+{
+    switch (mode)
+    {
+    case XNEE_GRAB_STOP:
+      xnee_get_stop_km(xd);
+      break;
+    case XNEE_GRAB_PAUSE:
+      xnee_get_pause_km(xd);
+      break;
+    case XNEE_GRAB_RESUME:
+      xnee_get_resume_km(xd);
+      break;
+    case XNEE_GRAB_INSERT:
+      xnee_get_insert_km(xd);
+      break;
+    case XNEE_GRAB_EXEC:
+      xnee_get_exec_km(xd);
+      break;
+    default:
+      xnee_print_error ("Unknown grab mode\n");
+      return NULL;
+    }
+}
 
 int
-xnee_set_stop_key (xnee_data *xd, int stop_key)
+xnee_set_stop_km (xnee_data *xd, char* stop_km)
 {
-  xd->grab_keys->stop_key=stop_key;
+  XNEE_FREE_IF_NULL(xd->grab_keys->stop_str);
+  xd->grab_keys->stop_str=strdup(stop_km);
   return XNEE_OK;
 }
 
-int
-xnee_get_stop_key (xnee_data *xd)
+char *
+xnee_get_stop_km (xnee_data *xd)
 {
-  return xd->grab_keys->stop_key;
+  return xd->grab_keys->stop_str;
 }
 
  
+
+
 int
-xnee_set_stop_mod (xnee_data *xd, int stop_mod)
+xnee_set_pause_km (xnee_data *xd, char *pause_km)
 {
-  xd->grab_keys->stop_mod=stop_mod;
+  XNEE_FREE_IF_NULL(xd->grab_keys->pause_str);
+  xd->grab_keys->pause_str=strdup(pause_km);
   return XNEE_OK;
 }
 
-int
-xnee_get_stop_mod (xnee_data *xd)
+char *
+xnee_get_pause_km (xnee_data *xd)
 {
-  return xd->grab_keys->stop_mod;
+  return xd->grab_keys->pause_str;
 }
 
- 
-
-
-
 
 int
-xnee_set_pause_key (xnee_data *xd, int pause_key)
+xnee_set_resume_km (xnee_data *xd, char* resume_km)
 {
-  xd->grab_keys->pause_key=pause_key;
+  XNEE_FREE_IF_NULL(xd->grab_keys->resume_str);
+  xd->grab_keys->resume_str=strdup(resume_km);
   return XNEE_OK;
 }
 
-int
-xnee_get_pause_key (xnee_data *xd)
+char*
+xnee_get_resume_km (xnee_data *xd)
 {
-  return xd->grab_keys->pause_key;
+  return xd->grab_keys->resume_str;
 }
 
- 
+
 int
-xnee_set_pause_mod (xnee_data *xd, int pause_mod)
+xnee_set_insert_km (xnee_data *xd, char* insert_km)
 {
-  xd->grab_keys->pause_mod=pause_mod;
+  XNEE_FREE_IF_NULL(xd->grab_keys->insert_str);
+  xd->grab_keys->insert_str=strdup(insert_km);
   return XNEE_OK;
 }
 
-int
-xnee_get_pause_mod (xnee_data *xd)
+char*
+xnee_get_insert_km (xnee_data *xd)
 {
-  return xd->grab_keys->pause_mod;
+  return xd->grab_keys->insert_str;
 }
 
- 
-
-
-
-
 int
-xnee_set_resume_key (xnee_data *xd, int resume_key)
+xnee_set_exec_km (xnee_data *xd, char *exec_km)
 {
-  xd->grab_keys->resume_key=resume_key;
+  XNEE_FREE_IF_NULL(xd->grab_keys->exec_str);
+  xd->grab_keys->exec_str=strdup(exec_km);
   return XNEE_OK;
 }
 
-int
-xnee_get_resume_key (xnee_data *xd)
+char*
+xnee_get_exec_km (xnee_data *xd)
 {
-  return xd->grab_keys->resume_key;
+  return xd->grab_keys->exec_str;
 }
 
  
-int
-xnee_set_resume_mod (xnee_data *xd, int resume_mod)
-{
-  xd->grab_keys->resume_mod=resume_mod;
-  return XNEE_OK;
-}
-
-int
-xnee_get_resume_mod (xnee_data *xd)
-{
-  return xd->grab_keys->resume_mod;
-}
-
- 
-
-
 
 
 

@@ -52,6 +52,9 @@ int main(int argc,char *argv[])
   /* Set the signal handler the libxnee's built in */ 
   (void) signal (SIGINT, signal_handler);
   
+  /* Set the error handler the libxnee's built in */ 
+/*   (void) XSetErrorHandler (xnee_err_handler); */
+  
 
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();

@@ -60,8 +60,10 @@
 #define XNEE_REPLAY_BUFFER_SIZE ( XNEE_HIGHEST_DATA_NR  )
 
 
-#define XNEE_FREE(a)   { printf ("--> free %d\n", (int)a); free(a);   a=NULL; printf ("<-- free\n");}
-#define XNEE_FCLOSE(a) { printf ("--> close %d\n", (int)a); fclose(a); a=NULL; printf ("<-- close\n");}
+#define XNEE_FREE(a)           free(a);   a=NULL; 
+#define XNEE_FCLOSE(a)         fclose(a); a=NULL; 
+#define XNEE_FREE_IF_NULL(a)   if (a!=NULL) XNEE_FREE(a)
+#define XNEE_FCLOSE_IF_NULL(a) if(a!=0) XNEE_FCLOSE(a)
 
 #define XNEE_RANGE_STRING_SIZE 512
 
@@ -205,6 +207,7 @@ enum return_values
   XNEE_UNKNOWN_GRAB_MODE ,
   XNEE_NO_GRAB_DATA      ,
   XNEE_GRAB_DATA         ,
+  XNEE_BAD_GRAB_DATA     ,
   XNEE_BAD_LOG_FILE      ,
   XNEE_BAD_SPEED         ,
   XNEE_BAD_RESOLUTION    ,
@@ -235,8 +238,12 @@ enum xnee_grab_modes
     XNEE_GRAB_PAUSE   ,
     XNEE_GRAB_RESUME  ,
     XNEE_GRAB_INSERT  ,
+    XNEE_GRAB_EXEC    ,
     XNEE_GRAB_UNKOWN  = 15
   } _xnee_grab_modes;
+
+#define XNEE_GRAB_MODIFIER 1
+#define XNEE_GRAB_KEY      2
 
 
 /*
@@ -643,23 +650,23 @@ typedef struct
 
   int     stop_key     ;    /*!< key used to stop Xnee */
   int     stop_mod     ;    /*!< modifier used to stop Xnee */
-  char    stop_str[64];     /*!< string representation of the key+modifier */
+  char   *stop_str     ;     /*!< string representation of the key+modifier */
 
   int     pause_key    ;    /*!< key used to pause Xnee */
   int     pause_mod    ;    /*!< modifier used to pause Xnee */
-  char    pause_str[64];     /*!< string representation of the key+modifier */
+  char   *pause_str    ;     /*!< string representation of the key+modifier */
 
   int     resume_key   ;    /*!< key used to resume Xnee */
   int     resume_mod   ;    /*!< modifier used to resume Xnee */
-  char    resume_str[64];   /*!< string representation of the key+modifier */
+  char   *resume_str   ;   /*!< string representation of the key+modifier */
 
   int     insert_key   ;    /*!< key used to insert a mark in Xnee's log */
   int     insert_mod   ;    /*!< modifier used to insert a mark in Xnee's log */
-  char    insert_str[64];    /*!< string representation of the key+modifier */
+  char   *insert_str   ;    /*!< string representation of the key+modifier */
 
   int     exec_key   ;       /*!< key used to exec a program */
   int     exec_mod   ;       /*!< modifier used to exec a program */
-  char    exec_str[64];      /*!< string representation of the key+modifier */
+  char   *exec_str   ;      /*!< string representation of the key+modifier */
 
 } xnee_grab_keys;
 
@@ -1089,6 +1096,8 @@ xnee_start(xnee_data *xd);
 int
 xnee_more_to_record(xnee_data *xd);
 
+int
+xnee_err_handler(Display* dpy, XErrorEvent* ev);
 
 #endif /*   XNEE_XNEE_H */
 

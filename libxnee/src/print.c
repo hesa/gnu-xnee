@@ -845,7 +845,7 @@ xnee_version(xnee_data* xd)
   fprintf (stderr, "%s ",PACKAGE);
   fprintf (stderr, "%s\n",VERSION);
   fprintf (stderr, "Copyright (C) 2000-2003 Henrik Sandklef (%s)\n", XNEE_MAIL);
-  fprintf (stderr, "%s and all its included programs come with ", PACKAGE);
+  fprintf (stderr, "Xnee and all its included programs come with ");
   fprintf (stderr, "NO WARRANTY,\nto the extent permitted by law.\n" );
   fprintf (stderr, "This is free software, and you may redistribute\n");
   fprintf (stderr, "copies of it under terms of GNU Genreal Public License.\n");

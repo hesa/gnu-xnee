@@ -115,19 +115,25 @@ main (int argc, char *argv[])
 
     gtk_widget_show (gnee_window);
 
+
+
+
+
     xd = xnee_new_xnee_data();
     xnee_init(xd);
     xnee_record_init(xd);
     ext_xd = xd;
 
     /* test settings */
-    xnee_grab_key (xd, XNEE_GRAB_STOP, "Control+Shift,q");
+    xnee_grab_key (xd, XNEE_GRAB_PAUSE, "Control,p");
+    xnee_grab_key (xd, XNEE_GRAB_RESUME, "Control,r");
+    xnee_grab_key (xd, XNEE_GRAB_RESUME, "Control,q");
     printf ("FAKE..\n"); 
-
-      #define move_event(gw, ev)  \
+    
+#define move_event(gw, ev)  \
       move_recordable(gw, ev, "exclude_event_store","include_event_store")
     
-      move_event(gnee_window, "KeyPress");
+      move_event(gnee_window, "MotionNotify");
     /*
       move_event(gnee_window, "KeyRelease");
       
@@ -142,12 +148,17 @@ main (int argc, char *argv[])
     (void) signal (SIGINT, signal_handler);
 
 
+
+
     /* set gnee default settings */
     xnee_set_data_max (xd, -1);
     xnee_set_events_max (xd, -1);
 
     g_object_set_data(G_OBJECT(gnee_window), "xd", xd);
 
+
+    gx_create_km_lists(gnee_window);
+    
     gtk_main();
 
     return 0;

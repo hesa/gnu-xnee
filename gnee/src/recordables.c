@@ -1,5 +1,6 @@
 #include "recordables.h"
 #include "support.h"
+#include "gnee_xnee.h"
 #include "libxnee/xnee.h"
 #include "libxnee/datastrings.h"
 
@@ -123,7 +124,7 @@ void
 create_recordable_list(GtkWidget* gnee_window,
                        struct data_description* data_names,
                        char* exclude_store_name,
-                       char* include_store_name)
+		       char* include_store_name)
 {
 
     GtkTreeStore       *store;
@@ -165,7 +166,9 @@ move_recordable(GtkWidget* gnee_window,
   int valid;
   int incl_valid;
   gint row_count=0;
-  
+
+
+  GNEE_DEBUG(("    move_recordable (,%s,..);\n", data_name));
   
   excl_store = 
     g_object_get_data (G_OBJECT(gnee_window), exclude_store_name);
@@ -195,7 +198,7 @@ move_recordable(GtkWidget* gnee_window,
 	  while (valid)
 	    {
 	      valid = 
-		gtk_tree_model_iter_next (GTK_TREE_STORE(incl_store), 
+		gtk_tree_model_iter_next (GTK_TREE_MODEL(incl_store), 
 					  &incl_iter);
 	    }
 	  gtk_tree_store_append(GTK_TREE_STORE(incl_store), 
@@ -216,3 +219,8 @@ move_recordable(GtkWidget* gnee_window,
       valid = gtk_tree_model_iter_next (GTK_TREE_MODEL(excl_store), &iter);
     } 
 }
+
+
+
+
+

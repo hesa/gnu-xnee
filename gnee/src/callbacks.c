@@ -19,6 +19,10 @@
 static int          use_delay = 0;
 static gint         delay = 0 ; 
 extern xnee_data   *ext_xd;
+
+
+
+
 GtkWidget* fs;
 gchar *filename;
 #define  CHOOSE_XNEE_PROJECT_FILE 1
@@ -29,6 +33,8 @@ static int          file_choosen = 0;
 static int          file_action  = 0;
 
 
+int err_continue_clicked=0;
+int err_quit_clicked=0;
 
 
 int get_type(GtkWidget* combo_label)
@@ -278,22 +284,7 @@ void
 on_save1_activate                      (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  if (ext_xd != NULL)
-    {
-      FILE *file;
-      char *fname = xnee_get_rc_name(ext_xd);
-
-      if (fname == NULL)
-	{
-	  printf ("Implement me... no file to save\n");
-	}
-      else
-	{
-	  file = fopen (fname, "w");
-	  xnee_write_settings_to_file (ext_xd, file) ;
-	  fclose (file);
-	}
-    }
+  gx_save();
 }
 
 
@@ -359,8 +350,17 @@ void
 on_about1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
-  printf ("on_about1\n");
+  GtkWidget          *about_box;
 
+  about_box      = lookup_widget(GTK_WIDGET(user_data),
+				 "about_window");
+
+  printf ("on_about1 %d \n", (int) about_box);
+
+  if (about_box==NULL)
+    about_box = create_about_window();
+
+  gtk_widget_show (about_box);
 }
 
 
@@ -383,7 +383,7 @@ on_record                              (GtkButton       *button,
     if (window != NULL)
     {
       
-      gtk_widget_hide(window);
+      gtk_widget_hide(window); 
       while (gtk_events_pending ())
 	{
 	  gtk_main_iteration ();
@@ -391,7 +391,7 @@ on_record                              (GtkButton       *button,
       
       if (ext_xd != NULL)
         {
-	  gnee_xnee_start_recording(ext_xd);
+	  gx_start_recording(ext_xd);
         }
       
     }
@@ -419,7 +419,7 @@ on_replay                              (GtkButton       *button,
       
       if (ext_xd != NULL)
         {
-	  gnee_xnee_start_replaying(ext_xd);
+	  gx_start_replaying(ext_xd);
         }
     }
 
@@ -438,7 +438,7 @@ on_spinbutton3_change_value            (GtkSpinButton   *spinbutton,
     
     if (ext_xd != NULL)
       {
-	xnee_set_replay_speed (ext_xd, speed); 
+	gx_set_replay_speed (ext_xd, speed); 
       }
 }
 
@@ -463,9 +463,9 @@ on_wait_checkbox_toggled               (GtkToggleButton *togglebutton,
   if (ext_xd != NULL)
     {
       if (use_delay)
-	xnee_set_interval (ext_xd, delay); 
+	gx_set_interval (ext_xd, delay); 
       else
-	xnee_set_interval (ext_xd, 0); 
+	gx_set_interval (ext_xd, 0); 
     }
 }
 
@@ -506,13 +506,11 @@ on_wait_spinbutton_change_value        (GtkSpinButton   *spinbutton,
       {
 	if (use_delay)
 	  {
-	    printf ("Setting interval ... to %d\n", delay);
-	    xnee_set_interval (ext_xd, delay);
+	    gx_set_interval (ext_xd, delay);
 	  }
 	else
 	  {
-	    printf ("Setting interval NOT  ... to %d\n", delay);
-	    xnee_set_interval (ext_xd, 0);
+	    gx_set_interval (ext_xd, 0);
 	  }
       }
 }
@@ -527,9 +525,9 @@ on_verbose_logging_checkbox_toggled    (GtkToggleButton *togglebutton,
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
-	xnee_set_verbose (ext_xd); 
+	gx_set_verbose(ext_xd); 
       else
-	xnee_unset_verbose (ext_xd); 
+	gx_unset_verbose(ext_xd); 
     }
 }
 
@@ -540,11 +538,9 @@ void
 on_spinbutton5_change_value            (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-  printf ("5:: %d \n", gtk_spin_button_get_value_as_int(spinbutton));
   if (ext_xd != NULL)
     {
-      xnee_set_events_max (ext_xd, 
-			    gtk_spin_button_get_value_as_int(spinbutton)); 
+      gx_set_events_max(gtk_spin_button_get_value_as_int(spinbutton)); 
     }
 }
 
@@ -553,11 +549,9 @@ void
 on_spinbutton4_change_value            (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-  printf ("4:: %d \n", gtk_spin_button_get_value_as_int(spinbutton));
   if (ext_xd != NULL)
     {
-      xnee_set_data_max (ext_xd, 
-			  gtk_spin_button_get_value_as_int(spinbutton)); 
+      gx_set_data_max(gtk_spin_button_get_value_as_int(spinbutton)); 
     }
 
 }
@@ -567,11 +561,9 @@ void
 on_spinbutton6_change_value            (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-  printf ("6:: %d \n", gtk_spin_button_get_value_as_int(spinbutton));
   if (ext_xd != NULL)
     {
-      xnee_set_time_max (ext_xd, 
-			     gtk_spin_button_get_value_as_int(spinbutton)); 
+      gx_set_time_max(gtk_spin_button_get_value_as_int(spinbutton)); 
     }
 
 }
@@ -596,9 +588,9 @@ on_ok_button1_clicked                  (GtkButton       *button,
       if ( file_action  == FILE_TO_SAVE )
 	{
 	  printf (" SAVE\n");
-	  xnee_set_rc_byname (ext_xd, filename);
+	  gx_set_rc_byname (ext_xd, filename);
 	  file = fopen (filename, "w");
-	  xnee_write_settings_to_file (ext_xd, file) ;
+	  gx_write_settings_to_file (ext_xd, file) ;
 	  fclose (file);
 	  file_choosen = 0;
 	  file_action  = 0;
@@ -609,12 +601,12 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	  printf (" OPEN\n");
 	  file = fopen (filename, "rw");
 	  
-	  ret = xnee_set_rc_byname (ext_xd, filename);
+	  ret = gx_set_rc_byname (ext_xd, filename);
 	  g_print (" ret=%d\n", ret);
 
-	  if ( xnee_get_rc_file (ext_xd) != NULL) 
+	  if ( gx_get_rc_file (ext_xd) != NULL) 
 	    {
-	      xnee_add_resource (ext_xd );
+	      gx_add_resource (ext_xd );
 	    }
 	  else
 	    g_print (" Could not open project file %s\n", filename);
@@ -624,7 +616,7 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	  file_choosen = 0;
 	  file_action  = 0;
 	  
-	  gnee_set_xd_settings();
+	  gx_set_xd_settings();
 
 	}
       else 
@@ -634,7 +626,7 @@ on_ok_button1_clicked                  (GtkButton       *button,
       break;
     case CHOOSE_XNEE_SESSION_FILE:
       printf ("session file: %s\n", filename);
-      xnee_set_out_byname (ext_xd, filename); 
+      gx_set_out_byname (ext_xd, filename); 
       file_choosen=0;
       break;
     case 0:
@@ -690,7 +682,7 @@ on_save_button_clicked                 (GtkButton       *button,
   if (ext_xd != NULL)
     {
       FILE *file;
-      char *fname = xnee_get_rc_name(ext_xd);
+      char *fname = gx_get_rc_name(ext_xd);
 
       if (fname == NULL)
 	{
@@ -699,9 +691,305 @@ on_save_button_clicked                 (GtkButton       *button,
       else
 	{
 	  file = fopen (fname, "w");
-	  xnee_write_settings_to_file (ext_xd, file) ;
+	  gx_write_settings_to_file (ext_xd, file) ;
 	  fclose (file);
 	}
     }
+}
+
+
+void
+on_about_ok_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  GtkWidget          *about_box;
+
+  about_box      = lookup_widget(GTK_WIDGET(user_data),
+				 "about_window");
+
+  printf ("on_about1 %d \n", (int) about_box);
+
+  if (about_box==NULL)
+    about_box = create_about_window();
+
+  gtk_widget_hide (about_box);
+  
+}
+
+
+
+static void 
+combo_change_helper(gpointer gw, 
+		    char *combo_name, 
+		    int mod_or_key, 
+		    int grab_action)
+{
+  gchar *k_selection;
+  gchar *m_selection;
+  GtkWidget          *m_combo;
+  GtkWidget          *k_combo;
+  char  m_combo_name[50] ;
+  char  k_combo_name[50] ;
+
+
+  if ( (m_combo==NULL) || (m_combo==0) )
+    return ;
+
+  
+  
+  switch (grab_action)
+    {
+    case XNEE_GRAB_STOP:
+      GNEE_DEBUG((" stop \n"));
+      strcpy (m_combo_name, "stop_m_combo");
+      strcpy (k_combo_name, "stop_k_combo");
+      break;
+    case XNEE_GRAB_PAUSE:
+      GNEE_DEBUG((" pause \n"));
+      strcpy (m_combo_name, "pause_m_combo");
+      strcpy (k_combo_name, "pause_k_combo");
+      break;
+    case XNEE_GRAB_RESUME:
+      GNEE_DEBUG((" resume \n"));
+      strcpy (m_combo_name, "resume_m_combo");
+      strcpy (k_combo_name, "resume_k_combo");
+      break;
+    case XNEE_GRAB_INSERT:
+      GNEE_DEBUG((" insert \n"));
+      strcpy (m_combo_name, "mark_m_combo");
+      strcpy (k_combo_name, "mark_k_combo");
+      break;
+    case XNEE_GRAB_EXEC:
+      GNEE_DEBUG((" exec \n"));
+      strcpy (m_combo_name, "exec_m_combo");
+      strcpy (k_combo_name, "exec_k_combo");
+      break;
+    default:
+      strcpy (m_combo_name, "");
+      strcpy (k_combo_name, "");
+    }
+
+  if (strlen (m_combo_name) != 0)
+    {
+      k_combo      = lookup_widget(GTK_WIDGET(gw),
+				   k_combo_name);
+      m_combo      = lookup_widget(GTK_WIDGET(gw),
+				   m_combo_name);
+
+      m_selection = gtk_editable_get_chars
+	(GTK_EDITABLE(m_combo), 0, -1);
+      k_selection = gtk_editable_get_chars
+	(GTK_EDITABLE(k_combo), 0, -1);
+    }
+      
+  
+  if (strlen(k_selection)!=0)
+    {
+      if (strcmp (k_selection, "None")==0)
+	{
+	  ;
+	}
+      else if (strcmp (m_selection, "None")==0)
+	{
+	  ;
+	}
+      else
+	{
+	  char mod_key[120];
+	  strcpy (mod_key, m_selection);
+	  strcat (mod_key, ",");
+	  strcat (mod_key, k_selection);
+
+	  GNEE_DEBUG(("combo_change_helper: mod/key=%d   type=%.2d  %s \n", 
+		      mod_or_key,
+		      grab_action,
+		      mod_key));
+	  
+	  
+ 	  gx_set_km (ext_xd, grab_action, mod_key); 
+ 	  GNEE_DEBUG(("   ----> %s\n", 
+		  gx_get_km (ext_xd, grab_action))); 
+	}
+    }
+}
+
+void
+on_stop_m_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "stop_m_combo", 
+		      XNEE_GRAB_MODIFIER, 
+		      XNEE_GRAB_STOP );  
+}
+
+
+void
+on_stop_k_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "stop_k_combo", 
+		      XNEE_GRAB_KEY, 
+		      XNEE_GRAB_STOP );  
+}
+
+
+
+
+void
+on_pause_m_combo_changed               (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "pause_m_combo", 
+		      XNEE_GRAB_MODIFIER, 
+		      XNEE_GRAB_PAUSE );  
+
+}
+
+
+void
+on_resume_m_combo_changed              (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "resume_m_combo", 
+		      XNEE_GRAB_MODIFIER, 
+		      XNEE_GRAB_RESUME );  
+
+}
+
+
+void
+on_mark_m_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "mark_m_combo", 
+		      XNEE_GRAB_MODIFIER, 
+		      XNEE_GRAB_INSERT );  
+
+}
+
+
+void
+on_exec_m_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "exec_m_combo", 
+		      XNEE_GRAB_MODIFIER, 
+		      XNEE_GRAB_EXEC );  
+
+}
+
+
+void
+on_pause_k_combo_changed               (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "pause_k_combo", 
+		      XNEE_GRAB_KEY, 
+		      XNEE_GRAB_PAUSE );  
+
+}
+
+
+void
+on_resume_k_combo_changed              (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "resume_k_combo", 
+		      XNEE_GRAB_KEY, 
+		      XNEE_GRAB_RESUME );  
+
+}
+
+
+void
+on_mark_k_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "mark_k_combo", 
+		      XNEE_GRAB_KEY, 
+		      XNEE_GRAB_INSERT );  
+
+}
+
+
+void
+on_exec_k_combo_changed                (GtkEditable     *editable,
+                                        gpointer         user_data)
+{
+  combo_change_helper(user_data, 
+		      "exec_k_combo", 
+		      XNEE_GRAB_KEY, 
+		      XNEE_GRAB_EXEC );  
+}
+
+
+void
+on_err_cont_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data)
+{
+}
+
+
+void
+on_err_quit_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  
+}
+
+
+void
+on_cancelbutton1_clicked               (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  err_continue_clicked=1;
+  err_quit_clicked=0;
+  gx_undisplay_errror();
+}
+
+
+void
+on_okbutton1_clicked                   (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  err_continue_clicked=0;
+  err_quit_clicked=1;
+  gx_undisplay_errror();
+
+}
+
+
+void
+on_rep_menu_open_activate              (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+
+}
+
+
+
+
+void
+on_open_project_file2_activate         (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+
+}
+
+
+void
+on_set_session_file1_activate          (GtkMenuItem     *menuitem,
+                                        gpointer         user_data)
+{
+
 }
 

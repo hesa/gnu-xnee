@@ -31,7 +31,7 @@ gnee_SOURCES = \
 	interface.c interface.h \
 	callbacks.c callbacks.h \
 	recordables.c recordables.h \
-	gnee_xnee.c gnee_xnee.h
+	gnee_xnee.c gnee_xnee.h 
 
 gnee_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \

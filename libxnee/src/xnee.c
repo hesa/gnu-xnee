@@ -424,7 +424,8 @@ xnee_init(xnee_data* xd)
   
   xnee_set_resolution_used (xd);
   xnee_resolution_init (xd);
-  
+  xnee_grab_keys_init(xd);
+
 
   /* 
    * meta data */
@@ -469,7 +470,7 @@ xnee_err_handler(Display* dpy, XErrorEvent* ev)
   
   XGetErrorText (dpy, ev->error_code, tmp, len);
   printf ("   Message: %s\n", tmp);
-  return XNEE_OK;
+  return ev->type;
 }
 
 
@@ -1519,7 +1520,16 @@ xnee_start(xnee_data *xd)
          return ret;
       }
    }
+
+   /* grab all keys that have been specified */
+   ret = xnee_grab_all_keys (xd);
+   if (ret != XNEE_OK)
+     {
+       xnee_verbose((xd, "grab failure \n"));
+       return ret;
+     }
   
+
    if (xnee_get_interval (xd) != 0)
    {
       xnee_delay (xnee_get_interval (xd), "xnee:" );
@@ -1623,6 +1633,7 @@ xnee_start(xnee_data *xd)
    */
 
   xnee_reset_autorepeat (xd);
+  xnee_ungrab_keys (xd);
   
   return (XNEE_OK);
 }

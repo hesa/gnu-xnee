@@ -206,49 +206,43 @@ xnee_is_retyper (xnee_data *xd);
 
  
 
-int
-xnee_set_stop_key (xnee_data *xd, int stop_key);
 
 int
-xnee_get_stop_key (xnee_data *xd);
+xnee_set_km (xnee_data *xd, int mode, char* km );
 
+char *
+xnee_get_km (xnee_data *xd, int mode);
+
+int
+xnee_set_stop_km (xnee_data *xd, char* stop_km);
+
+char *
+xnee_get_stop_km (xnee_data *xd);
+
+int
+xnee_set_pause_km (xnee_data *xd, char *pause_km);
+
+char *
+xnee_get_pause_km (xnee_data *xd);
+
+int
+xnee_set_resume_km (xnee_data *xd, char *resume_km);
+
+char*
+xnee_get_resume_km (xnee_data *xd);
+
+int
+xnee_set_insert_km (xnee_data *xd, char  *insert_km);
+
+char*
+xnee_get_insert_km (xnee_data *xd);
+
+int
+xnee_set_exec_km (xnee_data *xd, char *exec_km);
+
+char*
+xnee_get_exec_km (xnee_data *xd);
  
-int
-xnee_set_stop_mod (xnee_data *xd, int stop_mod);
-
-int
-xnee_get_stop_mod (xnee_data *xd);
-
-
-
-int
-xnee_set_pause_key (xnee_data *xd, int pause_key);
-
-int
-xnee_get_pause_key (xnee_data *xd);
-
- 
-int
-xnee_set_pause_mod (xnee_data *xd, int pause_mod);
-
-int
-xnee_get_pause_mod (xnee_data *xd);
-
-
-
-int
-xnee_set_resume_key (xnee_data *xd, int resume_key);
-
-int
-xnee_get_resume_key (xnee_data *xd);
-
- 
-int
-xnee_set_resume_mod (xnee_data *xd, int resume_mod);
-
-int
-xnee_get_resume_mod (xnee_data *xd);
-
 
 
 
