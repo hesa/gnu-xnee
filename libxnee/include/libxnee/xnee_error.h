@@ -26,6 +26,8 @@
 #include <libxnee/xnee.h>
 
 
+
+
 const char *
 xnee_get_err_description (int error);
 
@@ -36,7 +38,4 @@ char *
 xnee_get_err_string ();
 
 char *
-xnee_set_err_string ();
-
-void
-xnee_free_err_string ();
+xnee_set_err_string (char *new_error, ...);

@@ -28,7 +28,7 @@
 
 
 int 
-feedback( char *str, ... );
+feedback( xnee_data *, char *str, ... );
 
 
 

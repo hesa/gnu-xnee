@@ -37,14 +37,20 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 int
 xnee_print_event_info (xnee_data *xd) 
 {
-  int i ; 
+  int i = 2 ; 
+  char *tmp = NULL; 
 
   fprintf (xd->out_file,"  X11 Event\n\n");
   fprintf (xd->out_file,"number\tname\n");
   fprintf (xd->out_file,"======\t====\n");
-  for (i=2;i<LASTEvent;i++)
+  
+  tmp = xnee_print_event(i) ; 
+  while (tmp!=NULL)
     {
-      fprintf (xd->out_file,"%.2d\t%s\n",i,xnee_print_event(i));
+      if (tmp!=NULL)
+	fprintf (xd->out_file,"%.2d\t%s\n",i,tmp);
+      i++;
+      tmp = xnee_print_event(i) ; 
     }
   return XNEE_OK;
 }
@@ -58,14 +64,18 @@ xnee_print_event_info (xnee_data *xd)
 void
 xnee_print_error_info (xnee_data *xd) 
 {
-  int i ; 
-
+  int i = 0 ; 
+  char *tmp = NULL; 
   fprintf (xd->out_file,"  X11 Error\n\n");
   fprintf (xd->out_file,"number\tname\n");
   fprintf (xd->out_file,"======\t====\n");
-  for (i=0;i<BadImplementation;i++)
+  tmp = xnee_print_error_code(i) ; 
+  while (tmp!=NULL)
     {
-      fprintf (xd->out_file,"%.2d\t%s\n",i,xnee_print_error_code(i));
+      if (tmp!=NULL)
+	fprintf (xd->out_file,"%.2d\t%s\n",i,tmp);
+      i++;
+      tmp = xnee_print_error_code(i) ; 
     }
 }
 
@@ -78,14 +88,19 @@ xnee_print_error_info (xnee_data *xd)
 void
 xnee_print_request_info (xnee_data *xd) 
 {
-  int i ; 
+  int i=1 ; 
+  char *tmp = NULL ; 
 
   fprintf (xd->out_file,"  X11 Request\n\n");
   fprintf (xd->out_file,"number\tname\n");
   fprintf (xd->out_file,"======\t====\n");
-  for (i=1;i<X_NoOperation;i++)
+  tmp = xnee_print_request(i); 
+  while (tmp!=NULL)
     {
-      fprintf (xd->out_file,"%.2d\t%s\n",i,xnee_print_request(i));
+      if (tmp!=NULL)
+	fprintf (xd->out_file,"%.2d\t%s\n",i,tmp);
+      i++;
+      tmp = xnee_print_request(i); 
     }
 }
 
@@ -773,10 +788,17 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
 	   xnee_get_resolution_used (xd));
 
   /* Various */
-  fprintf (out,  "\n# Various\n");
+  fprintf (out,  "\n# Speed\n");
+  if (xnee_get_replay_speed(xd)==100)
+    {
+      /* add a prepending '#' to disable the speed option */
+      fprintf (out, "#");
+    }
   fprintf (out,  XNEE_SPEED_PERCENT"  %d\n",
 	   xnee_get_replay_speed(xd)); 
   
+  /* Various */
+  fprintf (out,  "\n# Various\n");
   
   
 }

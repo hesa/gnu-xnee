@@ -222,6 +222,8 @@ enum return_values
   XNEE_BAD_THRESHOLD     ,
   XNEE_BAD_CONTEXT       ,
   XNEE_BLANK_LINE        ,
+  XNEE_XOSD_FAILURE      ,
+  XNEE_FEEDBACK_FAILURE  ,
   XNEE_LAST_ERROR
 } _return_values;
   

@@ -29,6 +29,7 @@ libxnee_a_SOURCES = xnee.c  \
 
 EXTRA_DIST = ../include/libxnee/xnee.h     \
 	../include/libxnee/print.h         \
+	../include/libxnee/xnee_error.h    \
 	../include/libxnee/print_varargs.h \
 	../include/libxnee/xnee_record.h   \
 	../include/libxnee/xnee_replay.h   \

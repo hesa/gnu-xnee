@@ -78,7 +78,7 @@ static char *help[] = {
   "--print-event-names, -pens     ", "Prints X11 event number and name ", 
   "--print-event-name, -pen <ev>  ", "Prints X11 event number or name coresponding to ev", 
   "--print-error-names, -perns    ", "Prints X11 error number and name ", 
-  "--print-error-names, -pern <er>", "Prints X11 error number or name coresponding to er ", 
+  "--print-error-name, -pern <er>", "Prints X11 error number or name coresponding to er ", 
   "--print-reply-names, -pren     ", "Prints X11 reply number and name ", 
   "--print-request-names, -prns   ", "Prints X11 request number and name ", 
   "--print-request-name, -prn <req> ", "Prints X11 request number or name  coresponding to req", 
@@ -86,6 +86,7 @@ static char *help[] = {
   "--recorded-resolution res      ", "Resolution used when recording",
   "--replay-resolution res        ", "Resolution to use when replaying",
   "--no-resolution-adjustment     ", "Don't use resolution adjustment",
+  "--no-sync, -ns                 ", "Don't use synchornisation during replay",
   "--manpage                      ", "Prints Xnee help text in format as used when generating man page", 
   "--distribute, -di <LIST>       ", "Distribute recorded or replayed events to LIST where LIST is comma separated list of displays",
   "--device-event-range, -devera  <X_LIST> ", "Set device event range to X_LIST", 
@@ -463,7 +464,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--loops", "-l")) 
 	{
 	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --loops\n"));
-	  fprintf (stderr, "--loops / -l is OBSOLETED" 
+	  fprintf (stderr, "--loops / -l is OBSOLETED " 
 		   "in this release of Xnee/cnee\n"
 		   "use '--events-to-record' or '--data-to-record' instead\n");
 	  xnee_set_events_max (xd, atoi(argv[++i]));
