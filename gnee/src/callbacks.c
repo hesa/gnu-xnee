@@ -223,57 +223,6 @@ on_combo_label1_changed                (GtkEditable     *editable,
 }
 
 void
-on_gnee_window_hide                    (GtkWidget       *widget,
-                                        gpointer         user_data)
-{
-
-    int         ret;
-    xnee_data   *xd;
-    GtkWidget   *window;
-
-    while (gtk_events_pending ())
-        gtk_main_iteration ();
-
-    ret    = -1;
-    window = lookup_widget(user_data, "gnee_window");
-    
-    if (window != NULL)
-    {
-        xd = (xnee_data*) g_object_get_data(window, "xd");
-        if (xd != NULL)
-        {
-            ret = gnee_xnee_start_recording(xd);
-        }
-    }
-
-    gtk_widget_show_all(GTK_WIDGET(user_data));
-
-/*     int          ret; */
-/*     gboolean     valid; */
-
-
-/*     GtkTreeStore *include_store; */
-/*     GtkTreeIter   iterator; */
-
-/*     GtkWidget* window = lookup_widget(user_data, "gnee_window"); */
-/*     if (window != NULL) */
-/*     { */
-/*         gtk_widget_hide(window); */
-/*         g_print("hiding gnee window\n"); */
-/*     } */
-/*     else */
-/*     { */
-/*         g_print("Unable to locate gnee_window\n"); */
-/*     } */
-
-/*     g_print("on_gnee_window_hide\n"); */
-/*     while (gtk_events_pending ()) */
-/*         gtk_main_iteration (); */
-
-}
-
-
-void
 on_new1_activate                       (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
@@ -365,17 +314,26 @@ void
 on_record                              (GtkButton       *button,
                                         gpointer         user_data)
 {
-    on_gnee_window_hide(button, user_data);
-    /*     GtkWidget* window = lookup_widget(user_data, "gnee_window"); */
-    /*     if (window != NULL) */
-    /*     { */
-    /*         gtk_widget_hide(window); */
-    /*         g_print("hiding gnee window\n"); */
-    /*     } */
-    /*     else */
-    /*     { */
-    /*         g_print("Unable to locate gnee_window\n"); */
-    /*     } */
+    GtkWidget   *window;
+    xnee_data   *xd;
+
+    window = lookup_widget(user_data, "gnee_window");
+    
+    if (window != NULL)
+    {
+
+        gtk_widget_hide(window);
+        while (gtk_events_pending ())
+            gtk_main_iteration ();
+
+        xd = (xnee_data*) g_object_get_data(G_OBJECT(window), "xd");
+        if (xd != NULL)
+        {
+            gnee_xnee_start_recording(xd);
+        }
+    }
+
+    gtk_widget_show_all(window);
 }
 
 

@@ -25,11 +25,6 @@ void
 on_combo_label1_changed                (GtkEditable     *editable,
                                         gpointer         user_data);
 
-
-void
-on_gnee_window_hide                    (GtkWidget       *widget,
-                                        gpointer         user_data);
-
 void
 on_new1_activate                       (GtkMenuItem     *menuitem,
                                         gpointer         user_data);
