@@ -4,7 +4,7 @@
 # This file is generated from new_script.sh
 # and updated by hand by hesa
 #
-# Filename:   opt_scripts/print-event-name.sh
+# Filename:   options/print-event-name.sh
 # Generated:  Sun Mar 16 21:57:36 CET 2003
 # 
 # Description:

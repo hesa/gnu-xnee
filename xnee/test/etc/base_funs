@@ -101,7 +101,7 @@ function result_log_()
 function result_log()
 {
     STOP=`date '+%s'`
-    result_log_ $*
+    result_log_simple $*
 }
 
 
@@ -278,4 +278,46 @@ function compare_data_false()
     
     verbose "success...."
     SUCC_TEST=`expr $SUCC_TEST + 1`
+}
+
+
+
+function verify_device()
+{
+    DEV=$1
+    cat /proc/misc | grep $DEV   2>/dev/null 1>/dev/null 
+    if [ "$?" != "0" ];
+	then
+	echo "Could not find device $DEV"
+	echo "...leaving"
+	exit 1
+    fi
+}
+
+
+function verify_same()
+{
+    EXP_VAL=$1
+    REAL_VAL=$2
+
+    MSG="$SCRIPT_NAME comparing : \"$EXP_VAL == $REAL_VAL\" $3"
+
+    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+
+    verbose "Comparing :"
+    verbose "  expected:  \"$EXP_VAL\""
+    verbose "  real    :  \"$REAL_VAL\""
+
+    if [ "$EXP_VAL" != "$REAL_VAL" ];
+	then
+	verbose " Data differs: $MSG"
+	error_log " Data differs: $MSG"
+	ERR_TEST=`expr $ERR_TEST + 1`
+	return 1
+    fi
+
+    verbose "success...."
+    SUCC_TEST=`expr $SUCC_TEST + 1`
+    
+
 }
