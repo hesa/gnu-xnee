@@ -236,7 +236,7 @@ if [ "$BUILD_RPM" != "true" ] ;
 #
     verbose "Configuring"
     verbose "   configure"
-    ./configure --enable-doc --enable-gui 
+    ./configure --enable-gui 
     check_status "$?" "configure"
     
 
