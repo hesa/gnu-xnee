@@ -404,7 +404,7 @@ xnee_fake_motion_event (xnee_data* xd,
 		    (int) screen, 
 		    (int) x,
 		    (int) y,
-		    dtime));
+		    0));
       XTestFakeMotionEvent(xd->fake, 
 			   screen, 
 			   x, 
