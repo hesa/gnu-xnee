@@ -1,32 +1,46 @@
-    xnee_data *xd;
-    int ret;
+#include "libxnee/xnee.h"
+#include "libxnee/print.h"
+#include "libxnee/xnee_record.h"
 
-    printf("on_action_button_clicked\n");
+int main()
+{
 
-    xd = xnee_new_xnee_data();
+  xnee_data *xd;
+  int ret;
+  
+  printf("on_action_button_clicked\n");
 
-    printf("1\n");
-    xnee_set_verbose(xd);
+  xd = xnee_new_xnee_data();
+  xnee_init(xd, PACKAGE);
+  
+  printf("1\n");
+  printf("1  %d\n", xd->verbose);
+  xnee_set_out_file (xd, stdout);
+  printf("1  %d  lll\n", xd->verbose);
+  xnee_set_verbose(xd);
+  
+  printf("1  %d\n", xd->verbose);
+  xnee_verbose ((xd, "test verbose mode \n"));
 
-    printf("2\n");
-    xnee_init(xd, PACKAGE);
-    printf("3\n");
-    xnee_record_init(xd);
-
-    ret = xnee_add_range_str(xd, XNEE_DELIVERED_EVENT, "KeyPress");
-    printf("ret=%d\n", ret);
-    ret = xnee_add_range_str(xd, XNEE_DELIVERED_EVENT, "KeyRelease");
-    printf("ret=%d\n", ret);
-    //ret = xnee_add_range_str(xd, XNEE_DELIVERED_EVENT, "ButtonPress");
-    printf("ret=%d\n", ret);
-    //ret = xnee_add_range_str(xd, XNEE_DELIVERED_EVENT, "ButtonRelease");
-    printf("ret=%d\n", ret);
-    //xnee_add_range_str(xd, XNEE_DELIVERED_EVENT, "MotionNotify");
-
-
-    xnee_set_loops_left (xd, 10);
-    printf("4\n");
-    xnee_set_out_byname (xd, "gnee.out");
+  printf("2\n");
+  printf("3\n");
+  xnee_record_init(xd);
+  
+  printf("::::   KeyPress=%s\n", "KeyPress");
+  ret = xnee_add_range_str(xd, XNEE_DEVICE_EVENT, "KeyPress");
+  printf("ret=%d\n", ret);
+  ret = xnee_add_range_str(xd, XNEE_DEVICE_EVENT, "KeyRelease");
+  printf("ret=%d\n", ret);
+  ret = xnee_add_range_str(xd, XNEE_DEVICE_EVENT, "ButtonPress");
+  printf("ret=%d\n", ret);
+  ret = xnee_add_range_str(xd, XNEE_DEVICE_EVENT, "ButtonRelease");
+  printf("ret=%d\n", ret);
+  xnee_add_range_str(xd, XNEE_DEVICE_EVENT, "MotionNotify");
+  
+  
+  xnee_set_loops_left (xd, 10);
+  printf("4\n");
+  xnee_set_out_byname (xd, "gnee.out");
 
     printf("5\n");
     xnee_setup_recordext(xd);
@@ -43,7 +57,7 @@
     xnee_setup_recording(xd);
 
     printf("10\n");
-    xnee_record_print_record_range(xd, 0);
+    xnee_record_print_record_range(xd, NULL);
 
     printf("11\n");
     xnee_record_loop(xd);
@@ -51,3 +65,4 @@
     printf("12\n");
     xnee_close_down(xd);
 
+}
