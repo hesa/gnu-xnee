@@ -101,7 +101,7 @@ cnee_check_protocol(xnee_data *xd)
    *
    * everything option is to be  OBSOLETED
    */
-  if ( xd->xnee_info->everything || xnee_is_all_events (xd)) 
+  if ( xd->xnee_info.everything || xnee_is_all_events (xd)) 
   {
      if ( max > 0 )
      {

@@ -350,6 +350,9 @@ xnee_get_interval (xnee_data *xd);
 int 
 xnee_set_human_printout (xnee_data *xd);
 
+int 
+xnee_set_xnee_printout (xnee_data *xd);
+
 int
 xnee_set_replay_speed_str (xnee_data *xd, char *speed_str);
 

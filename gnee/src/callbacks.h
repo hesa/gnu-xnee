@@ -288,3 +288,19 @@ on_okbutton2_clicked                   (GtkButton       *button,
 void
 on_speed_toggle_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_radiobutton1_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_radiobutton2_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_xnee_format_rb_toggled              (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_human_format_rb_toggled             (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

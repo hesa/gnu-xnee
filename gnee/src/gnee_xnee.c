@@ -44,7 +44,7 @@ static pthread_t action_thread;
 extern  xnee_data   *ext_xd;
 extern  gnee_xnee   *ext_gx;
 extern  GtkWidget   *ext_gnee_window;
-static GtkWidget *err_win=NULL;
+static  GtkWidget   *err_win=NULL;
 
 
 void gx_init_gx(gnee_xnee *gx) 
@@ -60,12 +60,53 @@ int gx_is_using_rec_display(gnee_xnee *gx)  { return gx->use_rec_display; }
 int gx_is_using_rep_display(gnee_xnee *gx)  { return gx->use_rep_display; }
 int gx_is_using_speed(gnee_xnee *gx)        { return gx->use_speed;}
 
+
 #define gnee_set_record_display()  gnee_set_various_display(0)
 #define gnee_set_replay_display()  gnee_set_various_display(1)
 
 
 #define gnee_set_verbose()   gnee_set_verbosity(1)
 #define gnee_unset_verbose() gnee_set_verbosity(0)
+
+#define gnee_set_sync()      gnee_set_cb("skip_sync_cb",1)
+#define gnee_unset_sync()    gnee_set_cb("skip_sync_cb",0)
+
+#define gnee_set_force()     gnee_set_cb("force_rep_cb",1)
+#define gnee_unset_force()   gnee_set_cb("force_rep_cb",0)
+
+
+
+
+int
+gnee_set_cb(char * cb_name, int on_or_off)
+{
+  GtkToggleButton *togglebutton;
+
+  togglebutton = (GtkToggleButton*)lookup_widget (ext_gnee_window, 
+						  cb_name);
+  if (togglebutton!=NULL)
+    {
+      gtk_toggle_button_set_active(togglebutton, on_or_off);
+    }
+  return GNEE_OK;
+}
+
+
+
+int
+gnee_set_sync_mode(int on_or_off)
+{
+  GtkToggleButton *togglebutton;
+
+  togglebutton = (GtkToggleButton*)lookup_widget (ext_gnee_window, 
+						  "skip_sync_cb");
+  if (togglebutton!=NULL)
+    {
+      gtk_toggle_button_set_active(togglebutton, on_or_off);
+    }
+  return GNEE_OK;
+}
+
 
 int 
 gnee_set_interval()
@@ -361,6 +402,19 @@ gx_set_xd_settings()
     gnee_unset_verbose();
 
   gnee_set_interval();
+
+  printf ("is replay synced = %d\n",xnee_is_sync(ext_xd)); 
+  if (xnee_is_sync(ext_xd))
+    gnee_set_sync();
+  else
+    gnee_unset_sync();
+
+  printf ("is replay forced = %d\n",xnee_is_force_replay(ext_xd)); 
+  if (xnee_is_force_replay(ext_xd))
+    gnee_set_force();
+  else
+    gnee_unset_force();
+
 }
 
 

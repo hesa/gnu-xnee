@@ -341,7 +341,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  if ( xnee_set_err_byname (xd, argv[i]) != XNEE_OK)
+	  if ( xnee_set_err_name (xd, argv[i]) != XNEE_OK)
 	    {
 	      xnee_print_error ("Unable to open error file\n");
 	      xnee_verbose ((xd, "Could not open file %s\n", argv[i]));
@@ -455,7 +455,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--everything", "--everything")) 
 	{
 	  /* TO BE OBSOLETED */
-	  xd->xnee_info->everything = True;
+	  xd->xnee_info.everything = True;
 	  continue;
 	}
       else if(xnee_check(argv[i], "--all-events", "-ae" )) 
@@ -886,7 +886,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--all_events", "-ae" )) 
 	{
 	  xnee_print_obsolete_mess (("OBSOLETE: --all_events\nUSE:--all-events\n"));
-	  xd->xnee_info->all_events = True;
+	  xd->xnee_info.all_events = True;
 	  continue;
 	}
 /*       else if(xnee_check(argv[i], "--k_log", "--k_log"))  */
@@ -925,13 +925,13 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--first_last", "-fl")) 
 	{
 	  xnee_print_obsolete_mess ( ("OBSOLETE: --first_last\nUSE:--first-last\n"));
-	  xd->xnee_info->first_last = True;
+	  xd->xnee_info.first_last = True;
 	  continue;
 	}
       else if(xnee_check(argv[i], "--no_expose", "-ne")) 
 	{
 	  xnee_print_obsolete_mess ( ("OBSOLETE: --no_expose\nUSE:--no-expose\n"));
-	  xd->xnee_info->no_expose = True;
+	  xd->xnee_info.no_expose = True;
 	  continue;
 	}
       else if(xnee_check(argv[i], "--stop_key", "-sk")) 

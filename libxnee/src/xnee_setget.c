@@ -826,6 +826,13 @@ xnee_set_human_printout (xnee_data *xd)
   return XNEE_OK;
 }
 
+int 
+xnee_set_xnee_printout (xnee_data *xd)
+{
+  xd->rec_callback = xnee_replay_dispatch;
+  return XNEE_OK;
+}
+
 
 
 

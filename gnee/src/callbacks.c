@@ -1267,3 +1267,61 @@ on_speed_toggle_toggled                (GtkToggleButton *togglebutton,
 
 }
 
+
+void
+on_radiobutton1_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  if (ext_xd != NULL)
+    {
+      if (gtk_toggle_button_get_active(togglebutton))
+	{
+	  gx_set_all_clients(); 
+	}
+    }
+}
+
+
+void
+on_radiobutton2_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  if (ext_xd != NULL)
+    {
+      if (gtk_toggle_button_get_active(togglebutton))
+	{
+	  gx_unset_all_clients(); 
+	}
+    }
+}
+
+
+void
+on_xnee_format_rb_toggled              (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  if (ext_xd != NULL)
+    {
+      if (gtk_toggle_button_get_active(togglebutton))
+	{
+	  printf ("xnee formatre\n");
+	  gx_set_xnee_printout();
+	}
+    }
+}
+
+
+void
+on_human_format_rb_toggled             (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  if (ext_xd != NULL)
+    {
+      if (gtk_toggle_button_get_active(togglebutton))
+	{
+	  printf ("humane\n");
+	  gx_set_human_printout();
+	}
+    }
+}
+

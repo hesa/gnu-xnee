@@ -369,7 +369,7 @@ create_gnee_window (void)
 
   open_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
                                 "gtk-open",
-                                _("Open"),
+                                _("Open Xnee Project File"),
                                 NULL, NULL, NULL, -1);
   gtk_widget_show (open_button);
 
@@ -1376,6 +1376,18 @@ create_gnee_window (void)
   g_signal_connect_swapped ((gpointer) rec_file_sel, "clicked",
                             G_CALLBACK (on_rec_file_sel_clicked),
                             GTK_OBJECT (gnee_window));
+  g_signal_connect_swapped ((gpointer) radiobutton1, "toggled",
+                            G_CALLBACK (on_radiobutton1_toggled),
+                            GTK_OBJECT (radiobutton1));
+  g_signal_connect_swapped ((gpointer) radiobutton2, "toggled",
+                            G_CALLBACK (on_radiobutton2_toggled),
+                            GTK_OBJECT (radiobutton2));
+  g_signal_connect_swapped ((gpointer) xnee_format_rb, "toggled",
+                            G_CALLBACK (on_xnee_format_rb_toggled),
+                            GTK_OBJECT (xnee_format_rb));
+  g_signal_connect_swapped ((gpointer) human_format_rb, "toggled",
+                            G_CALLBACK (on_human_format_rb_toggled),
+                            GTK_OBJECT (human_format_rb));
   g_signal_connect_swapped ((gpointer) spinbutton11, "value_changed",
                             G_CALLBACK (on_spinbutton11_change_value),
                             GTK_OBJECT (spinbutton11));

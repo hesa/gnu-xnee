@@ -235,7 +235,7 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   if ( (!data->data) || (data==NULL) )
     {
       XRecordFreeData(data);
-      XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
+      XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
       xnee_process_count(XNEE_PROCESS_RESET);
       return;
     } 
@@ -388,11 +388,6 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
       xnee_print_error( "Case: Default reached in Dispatch (...) \n");
       break;  
     } 
-  if ( xnee_more_to_record(xd)==0 ) 
-    {
-      xnee_close_down(xd);
-      exit(XNEE_OK);
-    }
   XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
   XRecordFreeData(data);
 } 

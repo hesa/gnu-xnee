@@ -26,6 +26,11 @@ typedef struct
   
 
 } gnee_xnee ;
+#define gx_set_all_clients()       xnee_set_all_clients(ext_xd)
+#define gx_unset_all_clients()     xnee_unset_all_clients(ext_xd)
+
+#define gx_set_human_printout()    xnee_set_human_printout(ext_xd)
+#define gx_set_xnee_printout()     xnee_set_human_printout(ext_xd)
 
 #define gx_add_event(gw, ev)  \
       move_recordable(gw, ev, \

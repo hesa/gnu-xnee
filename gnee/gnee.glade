@@ -245,7 +245,7 @@
 	      <child>
 		<widget class="button" id="open_button">
 		  <property name="visible">True</property>
-		  <property name="tooltip" translatable="yes">Open</property>
+		  <property name="tooltip" translatable="yes">Open Xnee Project File</property>
 		  <property name="label">gtk-open</property>
 		  <property name="use_stock">True</property>
 		  <signal name="clicked" handler="on_open_button_clicked" last_modification_time="Sun, 14 Dec 2003 00:22:47 GMT"/>
@@ -1061,6 +1061,7 @@
 				  <property name="active">False</property>
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
+				  <signal name="toggled" handler="on_radiobutton1_toggled" object="radiobutton1" last_modification_time="Tue, 06 Jan 2004 11:58:04 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1080,6 +1081,7 @@
 				  <property name="inconsistent">False</property>
 				  <property name="draw_indicator">True</property>
 				  <property name="group">radiobutton1</property>
+				  <signal name="toggled" handler="on_radiobutton2_toggled" object="radiobutton2" last_modification_time="Tue, 06 Jan 2004 11:58:23 GMT"/>
 				</widget>
 				<packing>
 				  <property name="padding">0</property>
@@ -1141,6 +1143,7 @@
 			      <property name="active">False</property>
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
+			      <signal name="toggled" handler="on_xnee_format_rb_toggled" object="xnee_format_rb" last_modification_time="Tue, 06 Jan 2004 12:08:20 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
@@ -1161,6 +1164,7 @@
 			      <property name="inconsistent">False</property>
 			      <property name="draw_indicator">True</property>
 			      <property name="group">xnee_format_rb</property>
+			      <signal name="toggled" handler="on_human_format_rb_toggled" object="human_format_rb" last_modification_time="Tue, 06 Jan 2004 12:08:41 GMT"/>
 			    </widget>
 			    <packing>
 			      <property name="padding">0</property>
