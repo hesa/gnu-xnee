@@ -27,15 +27,18 @@
 
 #include <X11/X.h>
 #include <X11/Xproto.h>
-
 #include <libxnee/datastrings.h>
 #include "libxnee/xnee.h"
 
 
 
 
-typedef char * DATA_STRING ;
+static  int data_names_init_mask=0;
+#define EVENT_NAME_MASK   1
+#define REQUEST_NAME_MASK 2
+#define ERROR_NAME_MASK   4
 
+typedef char * DATA_STRING ;
 static  DATA_STRING event_names[38];
 static  DATA_STRING request_names[140];
 static  DATA_STRING error_names[18];
@@ -63,6 +66,10 @@ int
 xnee_event2int(char *ev)
 {
   int i ; 
+
+  /* initialize the array (it can have done)  */
+  xnee_init_event_names ();
+
   for (i=2;event_names[i]!=NULL;i++)
     {
       if (strncmp(event_names[i], ev, strlen(event_names[i]))==0)
@@ -77,6 +84,9 @@ int
 xnee_request2int(char *req)
 {
   int i ; 
+
+  /* initialize the array (it can have done)  */
+  xnee_init_request_names ();
 
   for (i=1;i<=X_NoOperation;i++)
     {
@@ -102,6 +112,9 @@ xnee_error2int(char *ev)
 {
   int i ; 
 
+  /* initialize the array (it can have done)  */
+  xnee_init_error_names ();
+
   for (i=2;error_names[i]!=NULL;i++)
     {
       if (strncmp(error_names[i], ev, strlen(error_names[i]))==0)
@@ -125,6 +138,9 @@ xnee_error2int(char *ev)
 char *
 xnee_print_event (int ev) 
 {
+  /* initialize the array (it can have done)  */
+  xnee_init_event_names ();
+
   return event_names[ev];
 }
 
@@ -145,6 +161,8 @@ xnee_print_error_code ( int err)
     }
   else
     {
+      /* initialize the array (it can have done)  */
+      xnee_init_error_names ();
       return error_names[err];
     }
 }
@@ -160,6 +178,8 @@ xnee_print_error_code ( int err)
 char * 
 xnee_print_request ( int err)
 {
+  /* initialize the array (it can have done)  */
+  xnee_init_request_names ();
   return request_names[err];
 }
 
@@ -179,6 +199,8 @@ xnee_int2request(int req)
     }
   else 
     {
+      /* initialize the array (it can have done)  */
+      xnee_init_request_names ();
       return request_names[req];
     }
 }
@@ -203,6 +225,8 @@ xnee_int2event(int ev)
     }
   else 
     {
+      /* initialize the array (it can have done)  */
+      xnee_init_event_names ();
       return event_names[ev];
     }
 }
@@ -218,6 +242,8 @@ xnee_int2event(int ev)
 char *
 xnee_int2error(int err)
 {
+  /* initialize the array (it can have done)  */
+  xnee_init_error_names ();
   return error_names[err];
 }
 
@@ -240,9 +266,9 @@ xnee_data2int(int type, char *dat)
   else if (type==XNEE_ERROR)
     return xnee_error2int(dat);
   else if (type==XNEE_REPLY)
-    return 0;
+    return XNEE_OK;
   else 
-    return 0;
+    return XNEE_OK;
 }
 
 
@@ -256,19 +282,48 @@ xnee_add_to_list(char **arr, int pos, char *str)
 {
   if (str!=NULL)
     {
-      /*      arr[pos]=(char*) calloc(strlen(str)+2, sizeof(char));*/
       arr[pos]=strdup(str);
     }
   else
     {
       arr[pos]=NULL;
     }
+  return XNEE_OK;
+}
+
+
+
+int
+xnee_delete_name_list(char **arr)
+{
+  int i ;
+  for (i=2;error_names[i]!=NULL;i++)
+    {
+      free (error_names[i]);
+    }
+  for (i=1;i<=X_NoOperation;i++)
+    {
+      if (request_names[i]!=NULL)
+	{
+	  free (request_names[i]);
+	}
+    }
+  for (i=2;event_names[i]!=NULL;i++)
+    {
+	  free (event_names[i]);
+    }
+
+  return XNEE_OK;
 }
 
 
 void 
 xnee_init_event_names()
 {
+  if (data_names_init_mask & EVENT_NAME_MASK)
+    {
+      return ;
+    }
   xnee_add_to_list(event_names, 0, "0");
   xnee_add_to_list(event_names, 1, "1");
   xnee_add_to_list(event_names,KeyPress,"KeyPress"); 
@@ -305,11 +360,16 @@ xnee_init_event_names()
   xnee_add_to_list(event_names,ClientMessage,"ClientMessage"); 
   xnee_add_to_list(event_names,MappingNotify,"MappingNotify"); 
   xnee_add_to_list(event_names,LASTEvent,"LASTEvent"); 
+  data_names_init_mask |= EVENT_NAME_MASK ;
 }
 
 void 
 xnee_init_request_names()
 {
+  if (data_names_init_mask & REQUEST_NAME_MASK)
+    {
+      return ;
+    }
   xnee_add_to_list(request_names,X_CreateWindow,"X_CreateWindow");
   xnee_add_to_list(request_names,X_ChangeWindowAttributes,"X_ChangeWindowAttributes");
   xnee_add_to_list(request_names,X_GetWindowAttributes,"X_GetWindowAttributes");
@@ -431,11 +491,16 @@ xnee_init_request_names()
   xnee_add_to_list(request_names,X_GetModifierMapping	,"X_GetModifierMapping");
   xnee_add_to_list(request_names,X_NoOperation,"X_NoOperation");
   xnee_add_to_list(request_names,X_NoOperation+1,NULL); 
+  data_names_init_mask |= REQUEST_NAME_MASK ;
 }
 
 void 
 xnee_init_error_names()
 {
+  if (data_names_init_mask & ERROR_NAME_MASK)
+    {
+      return ;
+    }
   xnee_add_to_list(error_names,Success,"Success"); 
   xnee_add_to_list(error_names,BadRequest,"BadRequest"); 
   xnee_add_to_list(error_names,BadValue,"BadValue"); 
@@ -455,6 +520,7 @@ xnee_init_error_names()
   xnee_add_to_list(error_names,BadLength,"BadLength"); 
   xnee_add_to_list(error_names,BadImplementation,"BadImplementation"); 
   xnee_add_to_list(error_names,BadImplementation+1,NULL); 
+  data_names_init_mask |= ERROR_NAME_MASK ;
 }
 
 void 
@@ -465,6 +531,31 @@ xnee_init_names()
   xnee_init_error_names();
 }
 
+char ** 
+xnee_get_event_names()
+{
+  /* initialize the array (it can have done)  */
+  xnee_init_event_names ();
+  return event_names;
+}
+
+
+char ** 
+xnee_get_error_names()
+{
+  /* initialize the array (it can have done)  */
+  xnee_init_error_names ();
+  return error_names;
+}
+
+
+char ** 
+xnee_get_request_names()
+{
+  /* initialize the array (it can have done)  */
+  xnee_init_request_names ();
+  return request_names;
+}
 
 
 #ifdef DEBUG_NAMING_STUFF
@@ -472,14 +563,13 @@ int main ()
 {
   int nr;
   char tmp[32];
-  xnee_init_names();
-
+  char **tmp_ptr;
 
   nr = xnee_event2int("MappingNotify");
-  fprintf (stdout, "MappingNotify=%d \n", nr);
+  fprintf (stdout, "MappingNotify=%d <==> ", nr);
 
   strcpy(tmp,xnee_int2event(nr));
-  fprintf (stdout, "MappingNotify=%s \n", tmp);
+  fprintf (stdout, "%d=%s \n", nr, tmp);
 
 
   /*****************************************/
@@ -492,10 +582,19 @@ int main ()
   /*****************************************/
 
   nr = xnee_request2int("X_AllowEvents");
-  fprintf (stdout, "X_AllowEvents=%d \n", nr);
+  fprintf (stdout, "X_AllowEvents=%d <==>", nr);
 
-  strcpy(tmp,xnee_int2event(nr));
-  fprintf (stdout, "X_AllowEvents=%s \n", tmp);
+  strcpy(tmp,xnee_int2request(nr));
+  fprintf (stdout, " %d=%s \n", nr, tmp);
+
+
+
+  tmp_ptr = xnee_get_event_names();
+  for (nr=2;tmp_ptr[nr]!=NULL;nr++)
+    {
+      fprintf (stdout,"%.2d\t%s\n",nr,tmp_ptr[nr]);
+    }
+  
 
 }
 #endif /* DEBUG_NAMING_STUFF */

@@ -44,7 +44,7 @@ xnee_verbosef (xnee_data *xd, char * msg, ...)
   if (xd->verbose) 
     {
       va_start(ap, msg);
-      vfprintf ( xd->err, msg, ap );
+      vfprintf ( xd->err_file, msg, ap );
     }
 }
 
@@ -60,7 +60,7 @@ xnee_verbosef (xnee_data *xd, valist)
     {
       va_start(argp);
       fmt = va_arg(argp, char *);
-      vfprintf ( xd->err, msg, ap );
+      vfprintf ( xd->err_file, msg, ap );
     }
 }
 #endif

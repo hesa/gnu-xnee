@@ -30,9 +30,6 @@ int
 xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val);
 
 int 
-xnee_sem_getvalue(xnee_data *xd, sem_t *sem, int *ret_val);
-
-int 
 xnee_sem_wait(xnee_data *xd, sem_t *sem);
 
 int 

@@ -60,7 +60,7 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
 {
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           event_type = xrec_data->type ;
-  FILE *out = xd->out;
+  FILE *out = xd->out_file;
   
 
   XNEE_DEBUG ( (stderr ," -->xnee_record_handle_event()  \n"  ));
@@ -225,7 +225,6 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   xd = (xnee_data *) (xpoint_xnee_data) ;
   xrec_data = (XRecordDatum *) (data->data) ;
 
-
   if (xd->grab!=NULL)
     {
       /*
@@ -305,8 +304,8 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
     } 
   XRecordFreeData(data);
   XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
-    } 
-  
+} 
+ 
 
 
 
@@ -926,8 +925,8 @@ xnee_record_loop(xnee_data *xd)
    * we wait 1/2 of a second and hopefully it is. If not
    * the user is holding it pressed for "TOO" long.
    */
-#define XNEE_DELAY_RECORDING 1000*500
   usleep ( XNEE_DELAY_RECORDING );
+
 
   XRecordEnableContext(xd->data, 
 		       xd->record_setup->rContext, 

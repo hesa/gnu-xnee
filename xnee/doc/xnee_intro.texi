@@ -32,12 +32,11 @@ a user session and replay it later.
 In order to verify that a program does the job it's supposed to do, 
 certain tests have to be made. These tests are, IMHO, perhaps the most 
 boring things a programmer can do. With xnee the testcase(s) can be 
-recorded and later on replayed. Initially, Xnee was made to release the 
-programmer (that's me) from the burden of testing, who hopefully will 
-be writing free software instead (I am doing that).
+recorded and later on replayed. Xnee can also distribute events (both 
+when recording and replaying) to other displays.
 
-Xnee can also distribute events (both when recording and replaying) to other 
-displays.
+Initially, Xnee was made to release the programmer (that's me) from the burden of testing, who hopefully will be writing free software instead (I am doing that).
+
 
 @section How does it work
 @cindex how does xnee work
@@ -51,10 +50,9 @@ system, go to :
 
 Xnee receives X11 protocol data (e g XEvents) from an X server and prints
 them to a file (or stdout). Mouse and keyboard actions generate device events. 
-These events can be replayed. Other X11 data can also recorded to be to synchronise
-with when replaying. This is not only useful but essential.   
+These events can be relpayed. Other X11 data can also recorded. These data is 
+used when replaying to synchronise. This is not only useful but essential. 
 We can not replay or regenerate keyboard-events to a window before it's 
-ready to "receive" events. By recording data other than device events we can 
-reassure that the replayed session is behaving like the recorded did.
+ready to "receive" events. By recording data other than device events
 
 

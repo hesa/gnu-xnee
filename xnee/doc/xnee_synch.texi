@@ -77,7 +77,7 @@ During replay the following is done:
 
 
 @section Synchronisation is needed
-So by recording more data than just the events to be replayed we can synchornise what was recorded with what is going on when replaying. But the data has to be choosen carefully since synchronisation data:
+So by recording more data than just the events to be replayed we can synchornise what was recorded with what is going on when replaying. But the data has to be choosen with respect to that the data:
 @itemize @bullet
 @item    differs from different sessions (Gimp and Xterm are really different)
 @item    slows down the replay session if there are too many
@@ -87,7 +87,7 @@ So by recording more data than just the events to be replayed we can synchornise
 @end itemize
 
 @subsection Different data for different kind of sessions
-If we record an xterm session with all data being recorded and compare that to a recorded GIMP session with all data being recorded we can see that the data to use as synchronisation data differs. As an example there aren't so many windows created/destroyed during an xterm session as in a GIMP session.
+If we record an xterm session with all data being recorded and compare that to a recorded GIMP session with all data being recordr we can see that the data to use as synchronisation data differs. AS an example there aren't so many windows created/destryed during an xterm session.
 
 The solve to the the problem of finding out what data to use as synchronisation data one can:
 @itemize @bullet
@@ -97,7 +97,7 @@ The solve to the the problem of finding out what data to use as synchronisation 
 
 
 @subsection Slow replay session due to too many synchronise data 
-There are timeouts that can can make Xnee pause for a short while during synchronisation. If there are many such timeouts it will lead to a slow replaying session. To prevent this the data to use during synchronisation has to be choosen carefully.
+The synchronisation itself doesn't take much time but there are timeouts that makes Xnee paues for a short while (see above). If there are many such timeouts it will lead to a slow replaying session.
 
 @subsection X protocol is rich
 For an end user (with no X expertise) it is hard to read the X protocol specification and make assumptions on what data to use.
@@ -113,6 +113,6 @@ To enable synchronisation Xnee buffers data:
 @item    that was sent during replay but hasn't been seen in the recorded file 
 @end itemize
 
-For every data during replay that hasn't been sent (as when recorded) Xnee pauses for a short while. If the data is sent to Xnee, everything is fine. If the data isn't sent it is stored in the buffer of unsynchronised data. If the number of unsynchronised data is getting to high, Xnee will eventually exit with an error code (see man page(s)).
+For every data during replay that hasn't been sent (as when recorded) Xnee pauses for a short while. If the data is sent to Xnee, everything is fine. If the data isn't sent it is stored in the buffer of unsynchronised data. If the number of unsynchronise data is getting to high, Xnee will eventually exit with an error code (see man page(s)).
 
 

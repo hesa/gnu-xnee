@@ -27,6 +27,7 @@
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
+#include "libxnee/xnee_setget.h"
 #include "parse.h"
 
 
@@ -82,9 +83,9 @@ int main(int argc,char *argv[])
   /*
    * Check if default ranges was choosen
    *
-   *
+   * everything option is to be  OBSOLETED
    */
-  if ( xd->xnee_info->everything || xd->xnee_info->all_events ) 
+  if ( xd->xnee_info->everything || xnee_is_all_events (xd)) 
     {
       if ( max > 0 )
 	{
@@ -105,9 +106,9 @@ int main(int argc,char *argv[])
    * If no recording client, init xnee_sync 
    *
    */
-  if ( !xd->recorder )
+  if ( ! xnee_is_recorder(xd) )
     {
-      xnee_replay_init (xd,   argv[0]);   
+      xnee_replay_init (xd, argv[0]);   
     }
   
   
@@ -121,7 +122,7 @@ int main(int argc,char *argv[])
   
   ret=xnee_setup_recordext (xd);
 
-  if ( xd->recorder )
+  if ( xnee_is_recorder(xd) )
     {
       if (ret==XNEE_NO_PROT_CHOOSEN)
 	{
@@ -131,18 +132,18 @@ int main(int argc,char *argv[])
 	}
     }
   
-
+  
   /* 
    * Test Displays and Extensions  
    *
    */
   xnee_setup_display (xd);
-
+  
 
   /*
    * are we recording or are we replaying
    */
-  if (xd->recorder) 
+  if (xnee_is_recorder(xd)) 
     {
       
       /* 
@@ -165,9 +166,9 @@ int main(int argc,char *argv[])
 	}
       xnee_setup_recording(xd);
 
-      xnee_print_sys_info(xd, xd->out);
-      xnee_print_xnee_settings (xd, xd->out) ;
-      xnee_record_print_record_range (xd, xd->out) ;
+      xnee_print_sys_info(xd, xnee_get_out_file (xd));
+      xnee_print_xnee_settings (xd, xnee_get_out_file (xd)) ;
+      xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
 
       /*
        * Grab the stop stop key/mod (if any)
@@ -179,7 +180,7 @@ int main(int argc,char *argv[])
        * At last. Time to enter the main loop
        *
        */
-      if (xd->xnee_info->loops_left!=0)
+      if (xnee_get_loops_left(xd)!=0)
 	{
 	  xnee_verbose ((xd, "Entering main loop( recorder)\n"));
 	  xnee_record_loop(xd);
@@ -206,10 +207,12 @@ int main(int argc,char *argv[])
 	  xnee_verbose((xd, "I can't find Record extension\n"));
 	  xnee_verbose((xd, "Look in the README file how to enable it\n"));
 	  xnee_verbose((xd, "However, I continue without doing syncing\n"));
-	  xd->sync=False;
+	  /*	  xd->sync=False;*/
+	  xnee_unset_sync (xd);
 	}
-      XTestGrabControl (xd->control, True);
-      XTestGrabControl (xd->data, True);
+
+      XTestGrabControl (xnee_get_control_display(xd), True);
+      XTestGrabControl (xnee_get_data_display(xd), True);
 
       /*
        * At last. Time to enter the main loop

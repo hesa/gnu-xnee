@@ -24,8 +24,10 @@
 
 
 #include "libxnee/xnee.h"
+#include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
+#include "libxnee/datastrings.h"
 #include "parse.h"
 #include "libxnee/print.h"
 
@@ -175,7 +177,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
   for (i = 1; i < argc; i++) 
     {
       xnee_verbose ((xd, "##########  xnee_parse_args: %d / %d  \"%s\"\n", 
-		    i, argc, argv[i]));
+		     i, argc, argv[i]));
       if( xnee_check (argv[i], "--display", "-d"  ) )
 	{
 	  if (++i >= argc) 
@@ -184,8 +186,13 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  xd->display = argv[i];
-	  xnee_verbose((xd, "display=%s\n", xd->display ));
+	  if ( xnee_set_display_name (xd, argv[i]) != XNEE_OK)
+	    {
+	      xnee_print_error ("Unable to set the display name\n");
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  xnee_verbose((xd, "display=%s\n", xnee_get_display_name (xd)));
 	  continue;
 	}
       else if(xnee_check(argv[i], "--err", "-e" )) 
@@ -196,41 +203,57 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  /*
-	   *	  xd->std_err = True ;
-	   */
-	  xd->err_name = (char *) malloc ( strlen(argv[i])+1 );
-	  xd->err_name = argv[i];
-	  xd->err = fopen (argv[i],"w");
+	  if ( xnee_set_err_byname (xd, argv[i]) != XNEE_OK)
+	    {
+	      xnee_print_error ("Unable to open error file\n");
+	      xnee_verbose ((xd, "Could not open file %s\n", argv[i]));
+	      xnee_verbose ((xd, "... leaving\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
 	  continue; 
 	}
       else if(xnee_check(argv[i], "--resource", "-r" )) 
 	{
+	  int ret;
 	  if (++i >= argc)
 	    {
 	      xnee_usage(stderr);
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  xd->sf_name = argv[i];
-	  xd->sf = fopen (argv[i],"r");
-	  if ( xd->sf == NULL) 
+
+	  ret = xnee_set_rc_byname (xd, argv[i]);
+	  
+	  if ( ret != XNEE_OK) 
 	    {
-	      xnee_verbose((xd, "Could not open resource file %s\n", xd->sf_name));
-	      xd->sf_name = (char *) malloc ( strlen(argv[i]) + strlen (XNEE_RESOURCE_DIR) + 2 );
-	      strcpy ( xd->sf_name , XNEE_RESOURCE_DIR);
-	      strcat ( xd->sf_name , "/");
-	      strcat ( xd->sf_name , argv[i]);
-	      xnee_verbose((xd, "\ttryingresource file %s\n", xd->sf_name));
-	      xd->sf = fopen (xd->sf_name,"r");
+	      char buf [200]; 
+	      xnee_verbose((xd, "Could not open resource file %s\n", argv[i]));
+
+	      if ( (strlen(argv[i]) + strlen (XNEE_RESOURCE_DIR) + 2 ) > 200)
+		{
+		  xnee_verbose ((xd, "ERROR: Filename too big\n"));
+		  xnee_verbose ((xd, "... leaving.\n"));
+		  xnee_close_down(xd);
+		  exit(XNEE_WRONG_PARAMS);
+		}
+	      strcpy ( buf , XNEE_RESOURCE_DIR);
+	      strcat ( buf , "/");
+	      strcat ( buf , argv[i]);
+	      xnee_verbose((xd, "\ttryingresource file %s\n", buf));
+	      ret = xnee_set_rc_byname (xd, buf);
 	    }
-	  if ( xd->sf != NULL) 
+	  if ( xnee_get_rc_file (xd) != NULL) 
 	    {
 	      xnee_add_resource (xd );
 	    }
 	  else
 	    {
 	      xnee_print_error ("Unable to open resource file\n");
+	      xnee_verbose ((xd, "Could not open resource file\n"));
+	      xnee_verbose ((xd, "... leaving\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
 	    }
 	}
       else if(xnee_check(argv[i], "--plugin", "-p" )) 
@@ -248,79 +271,89 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--all-clients", "-ac" )) 
 	{
-	  xd->all_clients = True;
+	  xnee_set_all_clients(xd);
 	}
       else if(xnee_check(argv[i], "--future-clients", "-fc" )) 
 	{
-	  xd->all_clients = False;
-	  continue; 
+	  xnee_unset_all_clients(xd);
 	}
       else if(xnee_check(argv[i], "--record", "-rec" )) 
 	{
-	  xd->recorder = True;
-	  continue; 
+	  xnee_set_recorder (xd);
 	}
       else if(xnee_check(argv[i], "--no-sync", "-ns" )) 
 	{
-	  xd->sync = False;
-	  continue; 
+	  xnee_unset_sync(xd);
 	}
       else if(xnee_check(argv[i], "--force-replay", "-fp" )) 
 	{
-	  xd->force_replay = True;
-	  continue; 
+	  xnee_set_force_replay (xd);
 	}
       else if(xnee_check(argv[i], "--replay", "-rep" )) 
 	{
-	  xd->recorder = False;
-	  continue; 
+	  xnee_set_replayer (xd);
 	}
       else if(xnee_check(argv[i], "--everything", "--everything")) 
 	{
+	  /* TO BE OBSOLETED */
 	  xd->xnee_info->everything = True;
 	  continue;
 	}
       else if(xnee_check(argv[i], "--all-events", "-ae" )) 
 	{
-	  xd->xnee_info->all_events = True;
+	  xnee_set_all_events (xd);
 	  continue;
 	}
       else if(xnee_check(argv[i], "--k-log", "--k-log")) 
 	{
+	  /* TO BE OBSOLETED */
 	  xd->xnee_info->loops_left = 1000;
 	  continue;
 	}
       else if(xnee_check(argv[i], "--10k-log", "--10k-log")) 
 	{
+	  /* TO BE OBSOLETED */
 	  xd->xnee_info->loops_left = 10000;
 	  continue;
 	}
       else if(xnee_check(argv[i], "--100k-log", "--100k-log")) 
 	{
+	  /* TO BE OBSOLETED */
 	  xd->xnee_info->loops_left = 100000;
 	  continue;
 	}
       else if(xnee_check(argv[i], "--print-settings", "-ps")) 
 	{
-	  xnee_print_xnee_settings (xd, xd->err) ;
-	  xnee_record_print_record_range (xd, xd->err) ;
+	  xnee_print_xnee_settings (xd, xnee_get_err_file(xd)) ;
+	  xnee_record_print_record_range (xd, xnee_get_err_file(xd)) ;
 	  fprintf (stderr, "Press enter to continue:\n");
 	  getchar();
 	  continue;
 	}
       else if(xnee_check(argv[i], "--m-log", "--m-log")) 
 	{
+	  /* TO BE OBSOLETED */
 	  xd->xnee_info->loops_left = 1000000;
 	  continue;
 	}
       else if(xnee_check(argv[i], "--first-last", "-fl")) 
 	{
-	  xd->xnee_info->first_last = True;
-	  continue;
+	  xnee_set_first_last (xd);
 	}
       else if(xnee_check(argv[i], "--no-expose", "-ne")) 
 	{
-	  xd->xnee_info->no_expose = True;
+	  xnee_set_no_expose (xd);
+	}
+      else if(xnee_check(argv[i], "--mouse", "--mouse")) 
+	{
+	  ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
+				"ButtonPress-MotionNotify");
+	  continue;
+	}
+      else if(xnee_check(argv[i], "--keyboard", "--keyboard")) 
+	{
+	  ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
+				"KeyPress-KeyRelease");
 	  continue;
 	}
       else if(xnee_check(argv[i], "--out", "-o" )) 
@@ -331,17 +364,20 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  /*	
-	   *  xd->std_out = True ;
-	   */
-	  xd->out_name = (char *) malloc ( strlen(argv[i])+1 );
-	  xd->out_name = argv[i];
-	  xd->out = fopen (argv[i],"w");
+	  if ( xnee_set_out_byname (xd, argv[i]) != XNEE_OK)
+	    {
+	      xnee_print_error ("Unable to open output file\n");
+	      xnee_verbose ((xd, "Could not open output file\n"));
+	      xnee_verbose ((xd, "... leaving\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
 	  continue; 
 	}
       else if(xnee_check(argv[i], "--loops", "-l")) 
 	{
-	  xd->xnee_info->loops_left = atoi(argv[++i]) ;
+	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --loops\n"));
+	  xnee_set_loops_left (xd, atoi(argv[++i]));
 	}
       else if(xnee_check(argv[i], "--stop-key", "-sk")) 
 	{
@@ -349,15 +385,18 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--time", "-t")) 
 	{
-	  xd->xnee_info->interval = atoi(argv[++i]) ;
-	  if (xd->xnee_info->interval > XNEE_MAX_DELAY ) 
+	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --loops\n"));
+	  xnee_set_interval (xd, atoi(argv[++i])) ;
+	  if (xnee_get_interval (xd) > XNEE_MAX_DELAY ) 
 	    {
-	      fprintf (stderr, "Interval is more than %d seconds\n", XNEE_MAX_DELAY);
+	      fprintf (stderr, 
+		       "Interval is more than %d seconds\n", 
+		       XNEE_MAX_DELAY);
 	      xnee_usage(stderr); 
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  else if ( xd->xnee_info->interval <= 0 ) 
+	  else if ( xnee_get_interval (xd) <= 0 ) 
 	    {
 	      fprintf (stderr, "Interval is less than or equal to 0\n");
 	      xnee_usage(stderr); 
@@ -365,8 +404,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      exit (XNEE_WRONG_PARAMS);
 	    }
 	  /*	  xnee_verbose((xd, "Setting up timer ---> \n"));
-	  setup_timer(xd, xd->xnee_info->interval);
-	  xnee_verbose((xd, "Setting up timer <--- \n"));
+		  setup_timer(xd, xd->xnee_info->interval);
+		  xnee_verbose((xd, "Setting up timer <--- \n"));
 	  */
 	  continue;
 	}
@@ -394,8 +433,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--human-printout", "-hp")) 
 	{
-	  xd->rec_callback = xnee_human_dispatch;
-	  continue;
+	  xnee_set_human_printout (xd);
 	}
       else if(xnee_check(argv[i], "--print-event-names", "-pens")) 
 	{
@@ -554,46 +592,24 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  xnee_verbose((xd, "--distribute found \"%s\" finished \n", argv[i+1]));
 	}
       else if ( xnee_check (argv[i], "--file", "-f"))
-        {
-          if (++i >= argc)
+	{
+	  if (++i >= argc)
 	    {
 	      xnee_usage(stderr);
 	      xnee_close_down(xd);
-	      exit(XNEE_FILE_NOT_FOUND);
+	      exit(XNEE_WRONG_PARAMS);
 	    }
-          xd->data_file = fopen (argv[i],"rw");
+	  if ( xnee_set_data_name_byname (xd, argv[i]) != XNEE_OK)
+	    {
+	      xnee_print_error ("Unable to open data file\n");
+	      xnee_verbose ((xd, "Could not open file %s\n", argv[i]));
+	      xnee_verbose ((xd, "... leaving\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
 	  xnee_verbose((xd, "Reading replay data from %s (%d))\n", 
-			argv[i], xd->data_file));
-          continue;
-        }
-      else if(xnee_check(argv[i], "--all-clients", "-ac" )) 
-	{
-	  xd->all_clients = True;
-	  continue; 
-	}
-      else if(xnee_check(argv[i], "--future-clients", "-fc" )) 
-	{
-	  xd->all_clients = False;
-	  continue; 
-	}
-      else if(xnee_check(argv[i], "--record", "-rec" )) 
-	{
-	  xd->recorder = True;
-	  continue; 
-	}
-      else if(xnee_check(argv[i], "--no-sync", "-ns" )) 
-	{
-	  xd->sync = False;
-	  continue; 
-	}
-      else if(xnee_check(argv[i], "--replay", "-rep" )) 
-	{
-	  xd->recorder = False;
-	  continue; 
-	}
-      else if(xnee_check(argv[i], "--everything", "--everything")) 
-	{
-	  xd->xnee_info->everything = True;
+			xnee_get_data_name (xd), 
+			xnee_get_data_file (xd)));
 	  continue;
 	}
       /* 
@@ -606,7 +622,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       /* START OF OBSOLETE PARSING */
       else if(xnee_check(argv[i], "--all_events", "-ae" )) 
 	{
-	  xnee_print_obsolete_mess ( ("OBSOLETE: --all_events\nUSE:--all-events\n"));
+	  xnee_print_obsolete_mess (("OBSOLETE: --all_events\nUSE:--all-events\n"));
 	  xd->xnee_info->all_events = True;
 	  continue;
 	}
@@ -631,8 +647,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--print_settings", "-ps")) 
 	{
 	  xnee_print_obsolete_mess ( ("OBSOLETE: --print_settings\nUSE:--print-settings\n"));
-	  xnee_print_xnee_settings (xd, xd->err) ;
-	  xnee_record_print_record_range (xd, xd->err) ;
+	  xnee_print_xnee_settings (xd, xd->err_file) ;
+	  xnee_record_print_record_range (xd, xd->err_file) ;
 	  fprintf (stderr, "Press enter to continue:\n");
 	  getchar();
 	  continue;
@@ -733,7 +749,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  exit (ret);
 	}
     }
-  return;
+  return ;
 }
 
 
@@ -810,7 +826,7 @@ xnee_usage (FILE *fd)
 	    }
 	  
 	  if (descr!=NULL)
-	      fprintf (fd, "\t%s\n\n", *cpp);
+	    fprintf (fd, "\t%s\n\n", *cpp);
 	  else 
 	    ;
 	}
@@ -818,7 +834,7 @@ xnee_usage (FILE *fd)
 	;
     }
   fprintf (fd, "\n  Report bugs to %s\n", XNEE_MAIL);
-
+  
 }
 
 
@@ -891,7 +907,7 @@ xnee_manpage (FILE *fd)
 	    }
 	  
 	  if (descr!=NULL)
-	      fprintf (fd, "\n%s\n", *cpp);
+	    fprintf (fd, "\n%s\n", *cpp);
 	  else 
 	    ;
 	}
@@ -903,10 +919,10 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"Henrik Sandklef.\n");
 
   fprintf (fd ,".SH \"REPORTING BUGS\"\n");
-  fprintf (fd ,"Report bugs in the program to "XNEE_BUG_MAIL". \n");
+  fprintf (fd ,"Report bugs in the program to "XNEE_MAIL". \n");
 
   fprintf (fd ,".SH \"COPYRIGHT\"\n");
-  fprintf (fd ,"Copyright (C) 1999,2000,2001,2002,2003 Henrik Sandklef.\n");
+  fprintf (fd ,"Copyright (C) 2002 Henrik Sandklef.\n");
   fprintf (fd ,"This  is  free  software;  see the source for copying conditions. ");
   fprintf (fd ,"There is NO warranty;");
   fprintf (fd ,"not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
@@ -920,7 +936,6 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,".SH \"NOTES\"\n");
   fprintf (fd ,"This page describes\n");
   fprintf (fd ,".B Xnee.\n");
-  fprintf (fd ,"Mail corrections and additions to XNEE_DEV_MAIL.\n");
+  fprintf (fd ,"Mail corrections and additions to " XNEE_BUG_MAIL "\n");
 }
-
 

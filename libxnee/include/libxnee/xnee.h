@@ -73,6 +73,13 @@ enum _xnee_data_types {
   XNEE_NO_DATA          
 } xnee_data_types ;
 
+/* ** Do NOT edit ** */
+enum _xnee_mode {
+  XNEE_REPLAYER  = 0,
+  XNEE_RECORDER     ,
+  XNEE_DISTRIBUTOR          
+} xnee_mode ;
+
 #define xnee_delay_timeout 5000 
 #define XNEE_DELAY 10
 #define XNEE_MISSING_DATA_DELAY (100*100)
@@ -104,6 +111,7 @@ enum _xnee_data_types {
 #define XNEE_TOO_FAST_ADJ_PERCENTAGE		10
 
 
+#define XNEE_DELAY_RECORDING (1000*500)
 
 #define XNEE_RECEIVED   1
 #define XNEE_REPLAYED   2   
@@ -189,6 +197,8 @@ enum return_values {
 #define XNEE_RESOURCE             "resource"
 #define XNEE_PLUGIN               "plugin"
 #define XNEE_ERROR_FD             "stderr"
+#define XNEE_MOUSE                "mouse"
+#define XNEE_KEYBOARD             "keyboard"
 
 #define XNEE_REQUEST_STR          "request-range"
 #define XNEE_REPLIES_STR          "reply-range"
@@ -369,6 +379,15 @@ typedef union {
 } XRecordDatum ;
 
 
+                                                                      
+typedef void (*callback_ptr)( XPointer, XRecordInterceptData *); 
+typedef callback_ptr *callback_ptrptr;                                         
+
+typedef void (*synch_ptr)( XPointer, XRecordInterceptData *); 
+typedef synch_ptr *synch_ptrptr;                                         
+
+
+
 /**
  * Holds information about the xnee_record session
  */
@@ -432,23 +451,32 @@ typedef struct
 
   char    *out_name    ;    /*!< name of output file (e.g stdout, /tmp/xnee.log*/
   char    *err_name    ;    /*!< name of error file  (e.g stdout, /tmp/xnee.log*/
-  char    *sf_name     ;    /*!< name of resource file (e.g netscape.xns, /tmp/xterm.xns*/
+  char    *rc_name     ;    /*!< name of resource file (e.g netscape.xns, /tmp/xterm.xns*/
+  char    *data_name   ;    /*!< name of data file (e.g */
+
+  FILE    *data_file   ;    /*!< data input file descriptor */
+  FILE    *out_file    ;    /*!< output file descriptor */
+  FILE    *err_file    ;    /*!< error file descriptor */
+  FILE    *rc_file     ;    /*!< resource file descriptor */
+
   Bool     verbose     ;    /*!< true if verbose mode */
   Bool     buf_verbose ;    /*!< true if verbose mode for buffer printouts */
   Bool     all_clients ;    /*!< True if recording all clients 
 			        (else Xneee recods only future clients) */
   Bool     sync        ;    /*!< True if Record used when replaying */
-  Bool     recorder    ;    /*!< True if record mode, false if replay mode */
+  Bool     mode        ;    /*!< Xnee's current mode (RECORDER/REPLAY...)  */
 
-  void *plugin_handle  ;    /*!< Handle for the plugin file */
-  void (* rec_callback ) (XPointer , XRecordInterceptData *);  /*!< recording callback function  */
-  void (* rep_callback ) (XPointer , XRecordInterceptData *);  /*!< replaying callback function  */
-  void (* sync_fun     ) (XPointer , XRecordInterceptData *);  /*!< synchronisation function     */
+  void *plugin_handle  ;        /*!< Handle for the plugin file */
+  callback_ptr rec_callback ;   /*!< recording callback function  */
+  callback_ptr rep_callback ;   /*!< replaying callback function  */
+  callback_ptr sync_fun     ;   /*!< synchronisation function     */
 
-  FILE    *data_file   ;    /*!< data input file descriptor */
-  FILE    *out         ;    /*!< output file descriptor */
-  FILE    *err         ;    /*!< error file descriptor */
-  FILE    *sf          ;    /*!< resource file descriptor */
+  /* OLD VERSION
+    void (* rec_callback ) (XPointer , XRecordInterceptData *); 
+    void (* rep_callback ) (XPointer , XRecordInterceptData *); 
+    void (* sync_fun     ) (XPointer , XRecordInterceptData *); 
+  */
+
   char    *display     ;    /*!< char representation of the Display */
   Display *data        ;    /*!< used for sending recored data between Xnee and Xserver*/
   Display *control     ;    /*!< used for sending info between Xnee and Xserver  */
@@ -830,12 +858,20 @@ xnee_calc_sleep_amount(xnee_data *xd,
  */
 int
 xnee_set_callback (xnee_data *xd,
+		   callback_ptrptr, 
+		   char *sym_name);
+
+/* OLD VERSION
+  xnee_set_callback (xnee_data *xd,
 		   void (**dest) (XPointer , XRecordInterceptData *), 
 		   char *sym_name);
+*/
+
+
 /**
- * Sets the callback function for Xnee as located in the plugin 
- * previously loaded with xnee_dlopen. The function tries to 
- * resolve the name <sym_name> in the plugin lib.
+ * Sets the synchronising callback function for Xnee as located 
+ * in the plugin previously loaded with xnee_dlopen. The function 
+ * tries to resolve the name <sym_name> in the plugin lib.
  * 
  * If the funciton could not resolve the name the prevoius
  * is still used. It is up to the user to take action if 
@@ -850,8 +886,17 @@ xnee_set_callback (xnee_data *xd,
  */
 int
 xnee_set_synchronize (xnee_data *xd,
+		      synch_ptrptr dest, 
+		      char *sym_name);
+
+/* OLD VERSION
+xnee_set_synchronize (xnee_data *xd,
 		      void (**dest) (xnee_data *xd, int replayed_type, int replayed_nr), 
 		      char *sym_name);
+*/
+
+int
+rem_all_blanks (char *array, int size);
 
 #endif /*   XNEE_XNEE_H */
 

@@ -46,20 +46,6 @@ xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val)
 
 /**************************************************************
  *                                                            *
- * xnee_sem_getvalue                                          *
- *                                                            *
- *                                                            *
- **************************************************************/
-int 
-xnee_sem_getvalue(xnee_data *xd, sem_t *sem, int *ret_val)
-{ 
-  int ret = 0;
-  ret = sem_getvalue (sem, ret_val);
-  return ret;
-}
-
-/**************************************************************
- *                                                            *
  * xnee_sem_wait                                              *
  *                                                            *
  *                                                            *

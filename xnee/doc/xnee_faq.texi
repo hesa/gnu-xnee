@@ -3,7 +3,7 @@
 
 @table @samp
 
-@item When setting ranges, how do I know what numbers belong to X11 data?
+@item When setting ranges (integers), how do I know what numbers belong to X11 data?
 @cindex When setting ranges (integers), how do I know what numbers belong to X11 data?
 You can either type the name directly (e.g MotionNotify) or you can use the print-xxx-name options. 
 @itemize @bullet
@@ -24,15 +24,27 @@ You can either type the name directly (e.g MotionNotify) or you can use the prin
 
 @item Is there a GUI frontend for Xnee ?
 @cindex GUI frontend for Xnee
- No there isn't, however we will soon start developing qnee, knee or gnee.
+ No !
 
 @item Can I write a GUI frontend for you ?
 @cindex can Xnee record more than one display
- Yes! ...... join forces with us!
+ Yes !
 
 @item What license is Xnee released under ?
 @cindex license
  GPL  @url{http://www.gnu.org/copyleft/gpl.html}
+
+@item Why GPL?
+@cindex why gpl
+ We think:
+@itemize @bullet
+@item  programs shall be free
+@item  xnee is a fun way for me to (hopefully) become a better programmer
+@item  xnee is a small payback for our free operating systems (GNU/Linux and OpenBSD)
+@item  xnee is a way to make free operating systems better and more widely used than XXX
+@end itemize
+ And of course I think it would be a great kick for my ego to have other 
+ people using my programs (especially if the alternative is a non-free program on a non-free operating system).
 
 @item Why the name Xnee?
 @cindex why name it Xnee
@@ -40,7 +52,7 @@ You can either type the name directly (e.g MotionNotify) or you can use the prin
   .... it just sounds nice! 
 
 @item Can you add xxx functionality to Xnee
-  Send an email to @email{bug-xnee@@gnu.org} and we'll consider it.
+  Send an email to @email{xnee@@sandklef.com} and we'll consider it.
 
 
 @item When starting Xnee I get noticed that I am missing RECORD extension
@@ -77,7 +89,7 @@ Recompile and reinstall the Xserver and make sure that RECORD extension is built
 
 @item Where do I send questions?
 @cindex questions is sent where?
- @email{xnee-devel@@gnu.org}
+ @email{xnee@@sandklef.com}
 
 
 @end table

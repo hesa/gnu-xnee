@@ -29,12 +29,28 @@
 #include "libxnee/print.h"
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
+#include "libxnee/xnee_sem.h"
 
 
 
 /* 
  * internal use only 
  */
+/**************************************************************
+ *                                                            *
+ * xnee_replay_buffer_status                                  *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int
+xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
+int
+xnee_replay_buffer_max_diff (xnee_data* xd, int type);
+int
+xnee_replay_buffer_min_diff (xnee_data* xd, int type);
+int
+xnee_replay_buffer_tot_diff (xnee_data* xd, int type);
+
 void 
 xnee_replay_m_delay (unsigned long usecs)
 {
@@ -98,7 +114,6 @@ xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last
   int screen;
   int x ;
   int y ; 
-  static int replayed=0;
   
   Time saved_time = 0 ; /* used to restore time of last replayable event */
 
@@ -428,8 +443,6 @@ xnee_replay_buffer_handler (xnee_data* xd,
 			    int data_nr,
 			    Bool rec_or_rep)
 {
-  int nr_of_data=0;  /* buffer status of current data */
-
   xnee_verbose((xd,"---> xnee_replay_buffer_handler \n"));;
 
   /*
@@ -566,7 +579,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
   fgets(tmp, 256, xd->data_file);
   if ( tmp == NULL) 
     {
-      return 0;
+      return XNEE_OK;
     }
   if (!strncmp("0",tmp,1))  /* EVENT */
     {    
@@ -684,7 +697,7 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
 
   xnee_verbose((xd, "xnee_handle_meta_data (2) (xd, \"%s\");\n", str));
 
-  rem_all_blanks(str, strlen(str));
+  rem_all_blanks (str, strlen(str));
 
   xnee_verbose((xd, "xnee_handle_meta_data (3) (xd, \"%s\");\n", str));
 
@@ -732,7 +745,7 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
     }
   else if (strncmp (str, XNEE_DEVICE_EVENT_STR, strlen (XNEE_DEVICE_EVENT_STR)) == 0 )
     {
-      xnee_verbose((xd, " Skipping :\"\%s\"\n", str));
+      xnee_verbose((xd, " Skipping :\"%s\"\n", str));
     }
   else if ( strncmp (str, XNEE_META_END, strlen (XNEE_META_END)) == 0  )
     {
@@ -741,7 +754,7 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
     }
   else 
     {
-      xnee_verbose((xd, " Skipping :\"\%s\"\n", str));
+      xnee_verbose((xd, " Skipping :\"%s\"\n", str));
       ; /* TODO .... */
     }
   /*
@@ -761,6 +774,7 @@ print_time()
   struct timeval tv;
   gettimeofday(&tv, NULL); 
   printf ("%lu:%lu\n", tv.tv_sec, tv.tv_usec);
+  return XNEE_OK;
 }
 
 
@@ -815,7 +829,7 @@ xnee_replay_main_loop(xnee_data *xd)
 		{
 		  xnee_setup_rep_recording(xd);
 		}
-	      xnee_print_sys_info(xd , xd->out);
+	      xnee_print_sys_info(xd , xd->out_file);
 	    }
 	  if (xd->grab!=NULL)
 	    {
@@ -1138,8 +1152,6 @@ xnee_replay_buffer_handle (xnee_data* xd, int data_type, int nr, Bool rec_or_rep
    *  int i,j;
    */
   int nr_of_data=0;
-
-  static sem_t buf_sem;
 
 
   /*

@@ -94,3 +94,20 @@ xnee_print_event (int);
 char * 
 xnee_print_request ( int req);
 
+
+
+char *
+xnee_int2event(int ev);
+
+char *
+xnee_int2request(int req);
+
+
+char ** 
+xnee_get_event_names();
+
+char ** 
+xnee_get_error_names();
+
+char ** 
+xnee_get_request_names();

@@ -1,9 +1,9 @@
 AUTOMAKE_OPTIONS = gnu
 
 lib_LIBRARIES = libxnee.a
-libxnee_a_SOURCES = xnee.c print.c print_varargs.c xnee_record.c xnee_replay.c  datastrings.c xnee_sem.c xnee_dl.c
+libxnee_a_SOURCES = xnee.c print.c print_varargs.c xnee_record.c xnee_replay.c  datastrings.c xnee_sem.c xnee_dl.c xnee_setget.c
 
-EXTRA_DIST = ../include/libxnee/xnee.h ../include/libxnee/print.h ../include/libxnee/print_varargs.h ../include/libxnee/xnee_record.h ../include/libxnee/xnee_replay.h ../include/libxnee/datastrings.h ../include/libxnee/xnee_sem.h  ../include/libxnee/xnee_dl.h 
+EXTRA_DIST = ../include/libxnee/xnee.h ../include/libxnee/print.h ../include/libxnee/print_varargs.h ../include/libxnee/xnee_record.h ../include/libxnee/xnee_replay.h ../include/libxnee/datastrings.h ../include/libxnee/xnee_sem.h  ../include/libxnee/xnee_dl.h  ../include/libxnee/xnee_setget.h
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE
