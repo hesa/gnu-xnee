@@ -52,6 +52,7 @@
 #include "libxnee/xnee_km.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/datastrings.h"
+#include "libxnee/xnee_expr.h"
 
 
 
@@ -85,9 +86,10 @@ xnee_handle_resource_meta (xnee_data *xd, char *meta_str)
 {
   char *tmp = meta_str;
   char *value;
-  tmp++;
+  int len;
 
-  if ( strlen (tmp) <= 2)
+  len = strlen (tmp);
+  if ( len <= 2)
     {
       xnee_verbose ((xd,"skipping meta data: \"%s\" \n", tmp));
       return XNEE_OK;
@@ -95,17 +97,22 @@ xnee_handle_resource_meta (xnee_data *xd, char *meta_str)
   else
     tmp++;
 
-  if (strlen(tmp)>0)
+  if (len>0)
     XNEE_REMOVE_BEGINING_BLANKS(tmp);
 
   value=strstr (tmp, ":");
+
   if (value==NULL)
     return XNEE_OK;
-  value += 1 ;
+
+  value += 1 ;  
   
-  if (strlen(value)>2)
+  if (strlen(value)>2) 
     XNEE_REMOVE_BEGINING_BLANKS(value);
   XNEE_REMOVE_TRAILING_CRAP(value);
+
+  
+
   if (!XNEE_RESOURCE_CHECK(XNEE_RES_PROJECT,tmp))
     {
       xnee_verbose ((xd, 
@@ -210,8 +217,11 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
 
   if (!strncmp("#",tmp,1))  /* # META data */
     {
-      xnee_handle_resource_meta (xd, tmp);
-      return 1;
+/*       xnee_handle_resource_meta (xd, tmp); */
+      if (xnee_handle_meta_data (xd, tmp+1)!=-1) 
+	{ printf ("RETURN\n"); return 1; }
+      else
+	printf ("continue..with: %s\n", ++tmp);
     }
 
   rem_all_blanks (tmp, len);
@@ -220,7 +230,6 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
     {
       return -1;
     }
-  
   
   if (!strncmp(XNEE_DISPLAY,tmp,strlen(XNEE_DISPLAY)))
     {
@@ -270,7 +279,36 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
     {
       range=strstr (tmp, ":");
       range += 1 ;
-      xd->xnee_info->loops_left = atoi(range);
+      xnee_set_events_max(xd, atoi(range));
+    }
+  else if (!strncmp(XNEE_LOOPS,tmp,strlen(XNEE_LOOPS))) 
+    {
+      range=strstr (tmp, ":");
+      range += 1 ;
+      xnee_set_events_max(xd, atoi(range));
+    }
+  else if (!strncmp(XNEE_DATA_MAX,tmp,strlen(XNEE_DATA_MAX))) 
+    {
+      range=strstr (tmp, ":");
+      range += 1 ;
+      xnee_set_data_max(xd, atoi(range));
+    }
+  else if (!strncmp(XNEE_EVENT_MAX,tmp,strlen(XNEE_EVENT_MAX))) 
+    {
+      range=strstr (tmp, ":");
+      range += 1 ;
+      xnee_set_events_max(xd, atoi(range));
+    }
+  else if (!strncmp(XNEE_TIME_MAX,tmp,strlen(XNEE_TIME_MAX))) 
+    {
+      range=strstr (tmp, ":");
+      range += 1 ;
+      printf ("   time before %s   %s  : %d\n", 
+	      tmp,
+	      range,
+	      atoi(range));
+      xnee_set_time_max(xd, atoi(range));
+      printf ("   time after: %d\n", atoi(range));
     }
   else if (!strncmp(XNEE_STOP_KEY,tmp,strlen(XNEE_STOP_KEY)))
     {
@@ -483,7 +521,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
   else 
     {
       xnee_verbose((xd,"Corrupt line: \"%s\"\n", tmp)); 
-      ret=0;
+      ret=-1;
     }      
 
   return ret;
@@ -500,7 +538,7 @@ int
 xnee_add_resource(xnee_data *xd)
 {
 
-  static char tmp[1024] ;
+  static char tmp[256] ;
   int read_more  = 1 ;
   
   strcpy(tmp,"");
@@ -511,11 +549,12 @@ xnee_add_resource(xnee_data *xd)
       if ( fgets(tmp, 256, xd->rc_file) == NULL)
 	return XNEE_OK;
       /*
-       * Hey, I know we'll keep the char array....
-       * as long as we need... next call aint deep 
+       * Hey, I __know__ we'll keep the char array....
+       * as long as we need... 
        */
       xnee_verbose((xd,"  adding : \"%s\"\n", tmp));
-      read_more=xnee_add_resource_syntax(xd, tmp);
+      /*       read_more=xnee_add_resource_syntax(xd, tmp); */
+      read_more=xnee_expression_handle_project(xd, tmp); 
     }
   return read_more;
 }

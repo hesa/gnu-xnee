@@ -251,14 +251,14 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
 
 
 
-  if ( xd->xnee_info->loops_left == 0 ) 
+  if ( xnee_more_to_record(xd)==0 ) 
     {
       XRecordFreeData(data);
       return ;
     } 
   else
     {
-      xd->xnee_info->loops_left--;
+      xnee_inc_data_recorded(xd);
     }
 
  
@@ -277,6 +277,7 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
     case XRecordFromServer:
       if(data_type >  X_Reply )
 	{
+	  xnee_inc_events_recorded(xd);
 	  xnee_record_handle_event (xd, data) ;
 	}
       else
@@ -338,14 +339,14 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
   xd = (xnee_data *) (xpoint_xnee_data) ;
   xrec_data = (XRecordDatum *) (data->data) ;
   
-  if ( xd->xnee_info->loops_left == 0 ) 
+  if ( xnee_more_to_record(xd)==0 ) 
     {
       XRecordFreeData(data);
       return ;
     } 
   else
     {
-      xd->xnee_info->loops_left--;
+      xnee_inc_data_recorded(xd);
     }
 
  
@@ -366,6 +367,7 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
     case XRecordFromServer:
       if(data_type >  X_Reply )
 	{
+	  xnee_inc_events_recorded(xd);
 	  xnee_human_print_event (xd, data) ;
 	}
       else
@@ -386,7 +388,7 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
       xnee_print_error( "Case: Default reached in Dispatch (...) \n");
       break;  
     } 
-  if (xd->xnee_info->loops_left == 0) 
+  if ( xnee_more_to_record(xd)==0 ) 
     {
       xnee_close_down(xd);
       exit(XNEE_OK);
@@ -417,7 +419,17 @@ xnee_record_init (xnee_data *xd)
   xd->xnee_info->no_expose       = False  ; /* Do not Intercept Expose or NoExpose */
 
   xd->xnee_info->last_motion     = False  ; /* Used to record only first and last Motion in a row*/
-  xd->xnee_info->loops_left      = 100    ; /* Default 100 Datum, else if [-big_log] 1000 */
+  xd->xnee_info->events_recorded = 0    ; /* Default 100 Datum */
+   
+  xd->xnee_info->data_recorded   = 0    ; /* Default 500 Datum*/
+   
+  xd->xnee_info->time_recorded   = 0      ; /* Default 1*/
+   
+  xd->xnee_info->events_max      = 100    ; /* Default 100 Datum */
+   
+  xd->xnee_info->data_max        = 500    ; /* Default 500 Datum*/
+   
+  xd->xnee_info->time_max        = 1     ; /* Default 1*/
    
   xd->xnee_info->x               = 0      ; /* Need not to be set, anyhow last MotionNotify x=0*/
   xd->xnee_info->y               = 0      ; /* Need not to be set, anyhow last MotionNotify x=0*/
@@ -750,7 +762,6 @@ xnee_record_async(xnee_data *xd)
       /* has the user pressed a modifier+key */
       if (xnee_check_km (xd)==XNEE_GRAB_DATA)
 	{
-	  xnee_verbose  ((xd," HANDLING \n"));
 	  ret = xnee_handle_km(xd) ; 
 	  if (ret == XNEE_GRAB_STOP)
 	    {
@@ -770,7 +781,7 @@ xnee_record_async(xnee_data *xd)
       /* handle data in the RECORD buffer */
       xnee_process_replies(xd);
       
-      if ( xd->xnee_info->loops_left == 0 ) 
+      if ( xnee_more_to_record(xd) == 0 ) 
 	{
 	  xnee_verbose  ((xd," closing down while loop in async loop\n"));
 	  break ; 

@@ -509,6 +509,7 @@ xnee_get_km_tuple (xnee_data     *xd,
   int i=0;
   int idx=-1;
   int len=strlen(mod_and_key);
+
   xnee_verbose((xd, " ---> xnee_get_km_tuple_key %s \n", mod_and_key));
   strcpy (mod_buf, mod_and_key);
   rem_all_blanks (mod_buf, strlen(mod_and_key));
@@ -516,14 +517,13 @@ xnee_get_km_tuple (xnee_data     *xd,
   /* make sure we have a display to grab on */
   if ( xd->grab == NULL)
     {
-      xd->grab = XOpenDisplay (xd->display);
+      xd->grab = XOpenDisplay (NULL);
       if ( xd->grab == NULL)
 	{
 	  xnee_print_error ("Could not open display for grabbing\n");
 	  return (XNEE_NOT_OPEN_DISPLAY);
 	}
     }
-  
 
   for (i=0;i<len;i++)
     {
@@ -586,6 +586,7 @@ xnee_get_km_tuple (xnee_data     *xd,
 	  km->key = XKeysymToKeycode (xd->grab, km->key);
 	}
     } 
+  
   xnee_verbose((xd, " <--- xnee_get_km_tuple_key %s \n", mod_and_key));
   return XNEE_OK;
 }

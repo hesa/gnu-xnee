@@ -60,10 +60,11 @@
 
 #define XNEE_RESOURCE_CHECK(a,b) strncmp(a,b,strlen(a))
 #define XNEE_REMOVE_BEGINING_BLANKS(val) \
-  while( (val[0] == ' ') || (val[0] == '\t') )val++;
+  do  { val++ ;} while( (val[0] == ' ') || (val[0] == '\t') ); 
 #define XNEE_REMOVE_TRAILING_CRAP(a) \
-  while( (a[strlen(a)-1] == ' ') || (a[strlen(a)-1] == '\n') ) \
-  { a[strlen(a)-1]='\0'; a--; }
+  do { a[strlen(a)-1]='\0'; } \
+  while ( (a[strlen(a)-1] == ' ') || (a[strlen(a)-1] == '\n') ) ;
+
 
 int
 xnee_init_xnee_resource_meta(xnee_resource_meta* xrm);

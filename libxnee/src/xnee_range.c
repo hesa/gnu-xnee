@@ -147,7 +147,7 @@ xnee_init_lists()
 }
 
 int 
-xnee_print_list()
+xnee_print_list(void)
 {
    int i ; 
    int j ; 
@@ -159,11 +159,11 @@ xnee_print_list()
       for (j=0; j<xrs->type[i].index ;j++)
       {
          printf ("%.3d", xrs->type[i].data[j]);
+
          if (j!=xrs->type[i].index-1)
             printf (",");
-         else
-            printf ("]:");
       }
+      printf ("]\n");
    }
    printf ("\n");
    return XNEE_OK;
@@ -175,6 +175,15 @@ xnee_add_to_list2(int type, int ev)
 {
    int i ;
    struct xnee_range *xrp;
+
+   
+   if (type==XNEE_EVENT)
+     {
+       if ((ev>=KeyPress)&&(ev<=MotionNotify))
+	 type=XNEE_DEVICE_EVENT;
+       else
+	 type=XNEE_DELIVERED_EVENT;
+     }
    xrp = &xrs->type[type];
 
    if (need_init==1)
@@ -227,15 +236,14 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
       fprintf (stderr, "The string you wanted to add is too long\n");
       fprintf (stderr, "Ranges can't be longer then %d characters\n",
 	       XNEE_RANGE_STRING_SIZE);
-      xnee_stop_session(xd);
-      exit(stop);
+      return -1;
     }
 
   if (str_len==0)
     {
       str_len=
 	strspn(range, 
-	       "1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
+	       "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
 	  strncpy(start_str,range,str_len);
 	  start_str[str_len]='\0';
 	  start=xnee_data2int (type, start_str);
@@ -244,8 +252,7 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 	      fprintf(stderr, 
 		      "Could not convert \"%s\" to an integer\nleaving", 
 		      start_str); 
-	      xnee_stop_session(xd);
-	      exit(stop);
+	      return -1;
 	    }
     }
   else
@@ -273,28 +280,27 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 	      fprintf(stderr, 
 		      "Could not convert \"%s\" to an integer\nleaving", 
 		      second); 
-	      xnee_stop_session(xd);
-	      exit(stop);
+	      return -1;
 	    }
 	}
       xnee_verbose((xd, " --  add_range_str second string=\"%s\"   ret=%d\n", 
                     second, ret));
     }
 
-
-
-  if ( (start!=stop) && (stop!=0) )
-  {
-     for (i=start;i<=stop;i++)
-     {
-        ret = xnee_add_to_list2(type, i);
-     }
-  }
-  else
-  {
-     ret = xnee_add_to_list2(type, start);
-  }
-     
+  if ( (start>=0) && (stop>=0) )
+    {
+      if ( (start!=stop) && (stop!=0) )
+	{
+	  for (i=start;i<=stop;i++)
+	    {
+	      ret = xnee_add_to_list2(type, i);
+	    }
+	}
+      else if (stop!=0)
+	{
+	  ret = xnee_add_to_list2(type, start);
+	}
+    }
   /* ret=xnee_add_range (xd, type, start, stop); */
   
   
@@ -467,7 +473,7 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
   xnee_verbose((xd, "--> parse_range (%u, %d, %s)\n", (int) xd, type, range));
 
   while ( 1 ) {
-    next=strspn (range, "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ-");
+    next=strspn (range, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
     if (next==0) break; 
     strncpy(buf,range,next);
     buf[next]='\0';
@@ -475,6 +481,7 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
     range+=next+1;
     range_len=range_len - next - 1;
     xnee_verbose((xd, " -- calling xnee_add_range_str (%d, %d, %s) \n" , xd, type, buf));
+
     ret=xnee_add_range_str (xd, type, buf);
     if (range_len<=0) break;
     if (ret!=0) return (ret);
@@ -522,60 +529,74 @@ xnee_set_ranges(xnee_data *xd)
       int last  = -1;
       int this  ;
       for (i=0; i<xrs->type[j].index ;i++)
-      {
-         this = xrs->type[j].data[i] ;
-
-         if (first == -1)
-         {
-            first=this;
-            last=this;
-         }
-         else if ( this == last + 1 )
-         {
-            last = this;
-         }
-         else
-         {
-            xnee_add_range (xd, j, 
-                            first,
-                            last);
-            
-            first=this;
-            last=this;
-         }
-      }
+	{
+	  this = xrs->type[j].data[i] ;
+	  
+	  if (first == -1)
+	    {
+	      first=this;
+	      last=this;
+	    }
+	  else if ( this == last + 1 )
+	    {
+	      last = this;
+	    }
+	  else
+	    {
+	      xnee_add_range (xd, j, 
+			      first,
+			      last);
+	      
+	      first=this;
+	      last=this;
+	    }
+	}
       if (first!=-1)
-      {
-         if (last!=-1)
-         {
-            xnee_add_range (xd, j, 
-                            first,
-                            last);
-         }
-         else
-         {
-            xnee_add_range (xd, j, 
-                            first,
-                            first);
-         }
-      }
+	{
+	  if (last!=-1)
+	    {
+	      xnee_add_range (xd, j, 
+			      first,
+			      last);
+	    }
+	  else
+	    {
+	      xnee_add_range (xd, j, 
+			      first,
+			      first);
+	    }
+	}
    } 
    return XNEE_OK;
 }
+
+
 
 int 
 xnee_rem_from_list(int type, int ev)
 {
    int i ; 
    int j ; 
+
    struct xnee_range *xrp;
+
+   printf ("1 remo: %d %d   %d\n", type, ev, XNEE_DEVICE_EVENT);
       
    if (need_init==1)
       return 0;
    xrp = &xrs->type[type];
 
+   printf ("2 remo: %d %d     %d %d\n", 
+	   type, ev, xrp->index,
+	   xrs->type[type].index);
+
+
+   xnee_print_list();
+    
+
    for (i=0;i<xrp->index;i++)
    {
+     printf ("3   %d == %d ???\n", ev, xrp->data[i]);
       if ( xrp->data[i] == ev )
       {
          for (j=i;j<xrp->index;j++)
@@ -592,6 +613,9 @@ xnee_rem_from_list(int type, int ev)
          xrp->index--;
       }
    }
+   xnee_print_list();
+   printf ("-------------------------\n"); 
+
    return XNEE_OK;
 }
 
@@ -617,10 +641,19 @@ xnee_rem_data_from_range_str (xnee_data *xd,
                               char *name)
 {
    int rem_data ; 
-   int ret ;
+   int my_type;
 
-   ret = sscanf(name,"%d",&rem_data);
-   if (ret != 1)
+   if (type == -1)
+     {
+       rem_data = xnee_data2int_special(&my_type, name);
+       type = my_type ; 
+     }
+   else
+     {
+       rem_data = xnee_data2int(type, name);
+     }
+
+   if (rem_data == -1)
    {
       return -1;
    }

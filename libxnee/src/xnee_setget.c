@@ -35,6 +35,7 @@ int
 xnee_set_display_name (xnee_data *xd, char *disp)
 {
   xd->display=strdup(disp);
+
   if (xd->display==NULL)
     {
       return XNEE_MEMORY_FAULT;
@@ -103,7 +104,9 @@ int
 xnee_set_out_byname (xnee_data *xd, char* out_name)
 {
   xnee_set_out_name (xd, out_name);
-  xd->out_file = fopen (xd->out_name,"w");
+
+  if (!xnee_check (out_name, "stdout", "STDOUT"))
+    xd->out_file = fopen (xd->out_name,"w");
   return XNEE_OK;
 }
 
@@ -128,6 +131,7 @@ int
 xnee_set_err_name (xnee_data *xd, char* err_name)
 {
   xd->err_name=strdup(err_name);
+
   if (xd->err_name==NULL)
     {
       return XNEE_MEMORY_FAULT;
@@ -145,7 +149,9 @@ int
 xnee_set_err_byname (xnee_data *xd, char *err_name)
 {
   xnee_set_err_name (xd, err_name);
-  xd->err_file = fopen (xd->err_name,"w");
+
+  if (!xnee_check (err_name, "stderr", "STDERR"))
+    xd->err_file = fopen (xd->err_name,"w");
   return XNEE_OK;
 }
 
@@ -157,6 +163,7 @@ xnee_set_rc_file (xnee_data *xd, FILE* rc)
   xd->rc_file=rc;
   return XNEE_OK;
 }
+
 
 FILE*
 xnee_get_rc_file (xnee_data *xd)
@@ -186,9 +193,16 @@ int
 xnee_set_rc_byname (xnee_data *xd, char *rc_name)
 {
   xnee_set_rc_name (xd, rc_name);
+
   xd->rc_file = fopen (xd->rc_name,"r");
+
   if (xd->rc_file ==NULL)
-    return XNEE_FILE_NOT_FOUND;
+    {
+      free (xd->rc_name);
+      xd->rc_name=NULL;
+      return XNEE_FILE_NOT_FOUND;
+    }
+
   return XNEE_OK;
 }
 
@@ -210,11 +224,8 @@ xnee_get_data_file (xnee_data *xd)
 int
 xnee_set_data_name (xnee_data *xd, char* data)
 {
+
   xd->data_name=strdup(data);
-  if (xd->data_name==NULL)
-    {
-      return XNEE_MEMORY_FAULT;
-    }
   return XNEE_OK;
 }
 
@@ -230,9 +241,13 @@ int
 xnee_set_data_name_byname (xnee_data *xd, char* data_name)
 {
   xnee_set_data_name (xd, data_name);
+
   xd->data_file = fopen (data_name,"r");
   if (xd->data_file == NULL)
-    return XNEE_FILE_NOT_FOUND;
+    {
+      XNEE_FREE (xd->data_name);
+      return XNEE_FILE_NOT_FOUND;
+    }
   return XNEE_OK;
 }
  
@@ -654,17 +669,68 @@ xnee_unset_no_expose (xnee_data *xd)
 
 
 int 
-xnee_set_loops_left (xnee_data *xd, int loops)
+xnee_set_events_max (xnee_data *xd, int loops)
 {
-  xd->xnee_info->loops_left = loops;
+  xd->xnee_info->events_max = loops;
   return XNEE_OK;
 }
 
 
 int 
-xnee_get_loops_left (xnee_data *xd){
-  return xd->xnee_info->loops_left;
+xnee_get_events_max (xnee_data *xd)
+{
+  return xd->xnee_info->events_max;
 }
+
+
+int 
+xnee_get_events_left (xnee_data *xd){
+  return (xd->xnee_info->events_max - xd->xnee_info->events_recorded);
+}
+
+
+int 
+xnee_set_data_max (xnee_data *xd, int loops)
+{
+  xd->xnee_info->data_max = loops;
+  return XNEE_OK;
+}
+
+
+int 
+xnee_get_data_max (xnee_data *xd)
+{
+  return xd->xnee_info->data_max;
+}
+
+
+int 
+xnee_get_data_left (xnee_data *xd){
+  return (xd->xnee_info->data_max - xd->xnee_info->data_recorded);
+}
+
+
+int 
+xnee_set_time_max (xnee_data *xd, int time)
+{
+  printf ("time:    %d\n", time);
+  xd->xnee_info->time_max = time;
+  printf ("time:    %d\n", xd->xnee_info->time_max);
+  return XNEE_OK;
+}
+
+int 
+xnee_get_time_max (xnee_data *xd)
+{
+  return xd->xnee_info->time_max ;
+}
+
+
+int 
+xnee_get_time_left (xnee_data *xd){
+  return (xd->xnee_info->time_max - xd->xnee_info->time_recorded);
+}
+
 
 
 int 

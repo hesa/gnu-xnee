@@ -70,7 +70,9 @@ xnee_fake_sleep(unsigned long period)
  *                                                            *
  **************************************************************/
 int 
-xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last_elapsed)
+xnee_replay_event_handler( xnee_data* xd, 
+			   xnee_intercept_data* xindata, 
+			   int last_elapsed)
 {
   int           return_value=0;
   unsigned long last_diff ;
@@ -83,7 +85,6 @@ xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last
   int y ; 
 
   Time saved_time = 0 ; /* used to restore time of last replayable event */
-  
 
   xnee_verbose((xd, "---> xnee_replay_event_handler \n "));
   xnee_verbose((xd, "---  xnee_replay_event_handler fake=%d\n ", xd->fake));
@@ -92,7 +93,6 @@ xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last
   XFlush(xd->fake);                 
 
   xnee_verbose((xd, "---  xnee_replay_event_handler 1\n "));
-
 
   /* Get the recorded time difference. 
      Should be from previous read 
@@ -109,7 +109,6 @@ xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last
   
   /* get the actual elapsed time from the start of the read */
   first_diff = xnee_get_elapsed_time(xd, XNEE_FROM_FIRST_READ );
-  
   
   
   /* if the first event is also the 1st entry from recorded file 
@@ -314,6 +313,7 @@ xnee_fake_motion_event (xnee_data* xd,
 {
   int i=0;
   int size= xd->distr_list_size;
+
   x = xnee_resolution_newx(xd,x);
   y = xnee_resolution_newy(xd,y);
   

@@ -58,6 +58,8 @@
 #define NEED_EVENTS
 #define NEED_REPLIES
 
+#define XNEE_FREE(a)   { printf ("--> free %d\n", (int)a); free(a);   a=NULL; printf ("<-- free\n");}
+#define XNEE_FCLOSE(a) { printf ("--> close %d\n", (int)a); fclose(a); a=NULL; printf ("<-- close\n");}
 
 #define XNEE_RANGE_STRING_SIZE 512
 
@@ -75,6 +77,10 @@ enum _xnee_data_types {
   XNEE_EXT_REQUEST_MINOR ,
   XNEE_NR_OF_TYPES       ,
   XNEE_META_DATA         ,
+  XNEE_REPLAY_DATA       ,
+  XNEE_SETTINGS_DATA     ,
+  XNEE_MARK_DATA         ,
+  XNEE_ACTION_DATA       ,
   XNEE_NO_DATA          
 } xnee_data_types ;
 
@@ -266,6 +272,9 @@ enum cont_proc_commands
 #define XNEE_ALL_EVENTS           "all-events"
 #define XNEE_ALL_CLIENTS          "all-clients"
 #define XNEE_DIMENSION            "Dimension"
+#define XNEE_EVENT_MAX            "events-to-record"
+#define XNEE_DATA_MAX             "data-to-record"
+#define XNEE_TIME_MAX             "time-left-to-record"
 #define XNEE_LOOPS_LEFT           "loops-left"
 #define XNEE_STOP_KEY             "stop-key"
 #define XNEE_PAUSE_KEY            "pause-key"
@@ -448,8 +457,8 @@ typedef struct
  */
 typedef struct
 {
-  int	 key ;       /*!< key */
-  int    modifier ;  /*!< modifier key  */
+  int	 key ;             /*!< key */
+  int    modifier ;        /*!< modifier key  */
 } xnee_km_tuple;
 
 
@@ -605,7 +614,12 @@ typedef struct
   unsigned long   server_time    ;  /*!< when the X11 data did occur       /     */
   int             x              ;  /*!< last MotionNotify RootX-value      /   */
   int             y              ;  /*!< last MotionNotify RootY-value       / */
-  int             loops_left     ;  /*!< .. to Intercept                     / */
+  int             events_recorded;  /*!< .. to Intercept                     / */
+  int             data_recorded  ;  /*!< .. to Intercept                     / */
+  int             time_recorded  ;  /*!< .. to Intercept                     / */
+  int             events_max     ;  /*!< .. to Intercept                     / */
+  int             data_max       ;  /*!< .. to Intercept                     / */
+  int             time_max       ;  /*!< .. to Intercept                     / */
   unsigned int    interval       ;  /*!< how many seconds to record         /   */
   unsigned int    size           ;  /*!< max size of file                  /     */
 
@@ -623,19 +637,27 @@ typedef struct
 {
 
   int     grab         ;    /*!< true if any key+mod is grabbed */
-  int     grabbed_action ;    /*!< set to the action when grabbed */
+  int     grabbed_action ;  /*!< set to the action when grabbed */
 
   int     stop_key     ;    /*!< key used to stop Xnee */
   int     stop_mod     ;    /*!< modifier used to stop Xnee */
+  char    stop_str[64];     /*!< string representation of the key+modifier */
 
   int     pause_key    ;    /*!< key used to pause Xnee */
   int     pause_mod    ;    /*!< modifier used to pause Xnee */
+  char    pause_str[64];     /*!< string representation of the key+modifier */
 
   int     resume_key   ;    /*!< key used to resume Xnee */
   int     resume_mod   ;    /*!< modifier used to resume Xnee */
+  char    resume_str[64];   /*!< string representation of the key+modifier */
 
   int     insert_key   ;    /*!< key used to insert a mark in Xnee's log */
   int     insert_mod   ;    /*!< modifier used to insert a mark in Xnee's log */
+  char    insert_str[64];    /*!< string representation of the key+modifier */
+
+  int     exec_key   ;       /*!< key used to exec a program */
+  int     exec_mod   ;       /*!< modifier used to exec a program */
+  char    exec_str[64];      /*!< string representation of the key+modifier */
 
 } xnee_grab_keys;
 
@@ -1010,39 +1032,6 @@ int
 xnee_stop_session( xnee_data* xd);
 
 
-/**
- * Binds the string representation of modifier and key to 
- * call xnee_stop_session.
- * @param xd     xnee's main structure
- * @param km     key + modifier tuple
- * @return int  
- */
-int
-xnee_add_stop_km (xnee_data *xd, xnee_km_tuple km);
-
-/**
- * Binds the string representation of modifier and key to 
- * call xnee_pause_session.
- * @param xd     xnee's main structure
- * @param km     key + modifier tuple
- * @return int  
- */
-int
-xnee_add_pause_km (xnee_data *xd, xnee_km_tuple km);
-
-
-
-
-/**
- * Binds the string representation of modifier and key to 
- * call xnee_resume_session.
- * @param xd     xnee's main structure
- * @param km     key + modifier tuple
- * @return int  
- */
-int
-xnee_add_resume_km (xnee_data *xd, xnee_km_tuple km);
-
 
 
 
@@ -1053,6 +1042,13 @@ xnee_add_resume_km (xnee_data *xd, xnee_km_tuple km);
 
 int
 rem_all_blanks (char *array, int size);
+
+
+int
+rem_begin_blanks (char *array, int size);
+
+int
+rem_blanks (char *array, int size);
 
 
 
@@ -1087,6 +1083,9 @@ xnee_renew_xnee_data(xnee_data *xd);
 
 int
 xnee_start(xnee_data *xd);
+
+int
+xnee_more_to_record(xnee_data *xd);
 
 
 #endif /*   XNEE_XNEE_H */

@@ -44,6 +44,18 @@ xnee_init_names();
 int
 xnee_data2int(int type, char *dat);
 
+
+/**
+ * Get the integer value from X11 data dat
+ * @param dat
+ * @param type type is saved here
+ * @return int
+ */
+int
+xnee_data2int_special(int *type, char *dat);
+
+
+
 /**
  * Get the integer value from event ev
  * @param ev
@@ -102,9 +114,9 @@ xnee_int2event(int ev);
 char *
 xnee_int2request(int req);
 
-
 char *
 xnee_int2error(int err);
+
 
 struct data_description*
 xnee_get_event_names();
@@ -114,3 +126,6 @@ xnee_get_error_names();
 
 struct data_description*
 xnee_get_request_names();
+
+struct data_description*
+xnee_get_reply_names();

@@ -20,6 +20,7 @@ libxnee_a_SOURCES = xnee.c  \
 	xnee_buffer.c   \
 	xnee_threshold.c \
 	xnee_range.c \
+	xnee_expr.c \
 	feedback.c 
 
 EXTRA_DIST = ../include/libxnee/xnee.h     \
@@ -41,6 +42,7 @@ EXTRA_DIST = ../include/libxnee/xnee.h     \
 	../include/libxnee/xnee_grab.h     \
 	../include/libxnee/xnee_threshold.h \
 	../include/libxnee/xnee_range.h \
+	../include/libxnee/xnee_expr.h \
 	../include/libxnee/feedback.h 
 
 
@@ -62,6 +64,12 @@ else
 GPROF_FLAG = 
 endif
 
+if XOSD
+XOSD_FLAGS = -DHAVE_XOSD
+else
+XOSD_FLAGS = -DNO_XOSD
+endif
+
 if BUF_VERBOSE
 BUF_VERBOSE_FLAG = -DUSE_BUF_VERBOSE
 else
@@ -74,4 +82,5 @@ else
 PEDANTIC_FLAGS = 
 endif
 
-CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG} 
+CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS}  
+

@@ -38,6 +38,7 @@
 #include "libxnee/xnee_time.h"
 #include "libxnee/xnee_buffer.h"
 #include "libxnee/xnee_threshold.h"
+#include "libxnee/xnee_expr.h"
 
 
 
@@ -183,7 +184,6 @@ xnee_replay_synchronize (xnee_data* xd)
 
 
 
-
 /**************************************************************
  *                                                            *
  * xnee_replay_read_protocol                                  *
@@ -195,7 +195,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
 {
   char tmp[256] ;
   int eofile = 0 ;
-
+  char *ret;
 
   strcpy(tmp,"");
   if ( xd->data_file == NULL)
@@ -203,81 +203,24 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
       xnee_verbose((xd, "Using stdin as file\n"));
       xd->data_file=stdin;
     }
-  fgets(tmp, 256, xd->data_file);
+  ret = fgets(tmp, 256, xd->data_file);
+  printf ("String to handle: %s\n", tmp);
 
+  if (ret == NULL )
+    {
+      return 0;
+    }
+  
   if ( tmp == NULL) 
     {
       return XNEE_OK;
     }
-  if (!strncmp("0",tmp,1))  /* EVENT */
-    {    
-      xindata->oldtime = xindata->newtime ;
-      eofile = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu",
-		      &xindata->type, 
-		      &xindata->u.event.type, 
-		      &xindata->u.event.x,
-		      &xindata->u.event.y, 
-		      &xindata->u.event.button,
-		      &xindata->u.event.keycode, 
-		      &xindata->u.event.screen_nr,
-		      &xindata->newtime);
-      if (eofile < 8)    /* NUM ARGS */
-	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
-	  eofile = 0 ;
-	}   
-    }   
-  else if (!strncmp("1",tmp,1))  /* REQUEST */
-    {
-      xindata->oldtime = xindata->newtime ;
-      eofile = sscanf(tmp, "%d,%d,%lu",
-		      &xindata->type, 
-		      &xindata->u.request.type,
-		      &xindata->newtime);
-      if (eofile < 3)
-	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
-	  eofile = 0;
-	}   
-    }
-  else if (!strncmp("2",tmp,1)) /* REPLY */
-    {
-      xindata->oldtime = xindata->newtime ;
-      eofile = sscanf(tmp, "%d,%d,%lu",
-		      &xindata->type, 
-		      &xindata->u.reply.type,
-		      &xindata->newtime);
-      if (eofile < 3)
-	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
-	  eofile = 0;
-	}   
-    }
-  else if (!strncmp("3",tmp,1))  /* ERROR */
-    {
-      xindata->oldtime = xindata->newtime ;
-      eofile = sscanf(tmp, "%d,%d,%lu",
-		      &xindata->type, 
-		      &xindata->u.error.type,
-		      &xindata->newtime);
-      if (eofile < 3)
-	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
-	  eofile = 0;
-	} 
-    }  
-  else if (!strncmp("#",tmp,1))  /* # META data */
-    {
-      xnee_handle_meta_data(xd, tmp);
-      eofile=XNEE_META_DATA;
-    }
-  else 
-    {
-      xnee_verbose((xd,"Corrupt line: \"%s\"\n", tmp)); 
-      eofile=0;
-   }      
 
-  xnee_verbose((xd,"protocol read and handled\n", tmp)); 
+  eofile = xnee_expression_handle_session(xd,
+					  tmp,
+					  xindata);
+
+  xnee_verbose((xd,"replay data handled (or perhaps not)\n", tmp)); 
   return eofile;
 }
 
@@ -342,7 +285,19 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
     }
   else if (strncmp (str, XNEE_LOOPS_LEFT, strlen (XNEE_LOOPS_LEFT)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->loops_left, str,  strlen(XNEE_LOOPS_LEFT) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info->events_max, str,  strlen(XNEE_LOOPS_LEFT) );
+    }
+  else if (strncmp (str, XNEE_EVENT_MAX, strlen (XNEE_EVENT_MAX)) == 0  )
+    {
+      xnee_handle_meta_data_sub1 (&xd->xnee_info->events_max, str,  strlen(XNEE_EVENT_MAX) );
+    }
+  else if (strncmp (str, XNEE_DATA_MAX, strlen (XNEE_DATA_MAX)) == 0  )
+    {
+      xnee_handle_meta_data_sub1 (&xd->xnee_info->data_max, str,  strlen(XNEE_DATA_MAX) );
+    }
+  else if (strncmp (str, XNEE_TIME_MAX, strlen (XNEE_TIME_MAX)) == 0  )
+    {
+      xnee_handle_meta_data_sub1 (&xd->xnee_info->time_max, str,  strlen(XNEE_TIME_MAX) );
     }
   else if (strncmp (str, XNEE_NO_EXPOSE, strlen (XNEE_NO_EXPOSE)) == 0  )
     {
@@ -401,6 +356,7 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
     {
       xnee_verbose((xd, " Skipping :\"%s\"\n", str));
       ; /* TODO .... */
+      return -1;
     }
 
   /*
@@ -451,7 +407,7 @@ xnee_replay_main_loop(xnee_data *xd)
 	  fprintf (stderr, "Could not read data from file\n");
 	  xnee_close_down (xd);
 	}	
-      else if ( logread != XNEE_META_DATA )
+      else if ( logread == XNEE_REPLAY_DATA )
 	{
 	  /* since NULL arg printing is done when in verbose mode */
 	  xnee_record_print_record_range (xd, NULL);
@@ -463,7 +419,7 @@ xnee_replay_main_loop(xnee_data *xd)
 	    }
 	  if (xnee_is_verbose(xd))
 	    xnee_print_sys_info(xd , xd->out_file);
-	  xnee_verbose((xd, "META DATA finished .... \n"));
+	  xnee_verbose((xd, "REPLAY DATA coming up .... \n"));
 	  break ; 
 	}
     }
@@ -477,7 +433,7 @@ xnee_replay_main_loop(xnee_data *xd)
    */
   while (logread && xd->cont) 
     {
-      if (!last_logread==XNEE_META_DATA)
+      if (last_logread)
 	{
 	  /* 
 	   * set value for forthcoming time calculations 
@@ -504,7 +460,7 @@ xnee_replay_main_loop(xnee_data *xd)
 	  switch (xindata.type)
 	    {
 	    case XNEE_EVENT:
-
+	      
 	      /* is it a device event ? */
 	      if ( ( xindata.u.event.type >= KeyPress ) 
 		   && (xindata.u.event.type <= MotionNotify) )
@@ -535,7 +491,6 @@ xnee_replay_main_loop(xnee_data *xd)
 		  xnee_replay_synchronize (xd);
 		  /*		  */
 		  /*		    }*/
-		  
 		  replayable = 
 		    xnee_replay_event_handler(xd, 
 					      &xindata, last_elapsed);
@@ -584,7 +539,7 @@ xnee_replay_main_loop(xnee_data *xd)
       xnee_verbose((xd, "Flushing after handled event\n"));
       XFlush(xd->control);
       xnee_verbose((xd, "  <-- Flushed after handled event\n"));
-      last_logread = logread;
+      last_logread = 0;
     }
 }
 

@@ -262,14 +262,15 @@ int
 xnee_free_file (xnee_data *xd, char *file_name, FILE* file)
 {
   
-  xnee_verbose((xd, "Closing file=%s fd=%d\n", file_name, file));
+  printf("Closing file=%s fd=%d\n", file_name, (int)file);
   if ( file_name != NULL) 
     {
-      free (file_name);
-    }
-  if ( file != 0) 
-    {
-      fclose (file);
+      xnee_verbose((xd, "Closing file=%s fd=%d\n", file_name, file));
+      XNEE_FREE (file_name); 
+      if ( file != 0) 
+	{
+	  XNEE_FCLOSE (file); 
+	}
     }
   return XNEE_OK;
 }
@@ -286,7 +287,7 @@ xnee_close_down(xnee_data* xd)
 {
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0 \n"  ));
 
-  
+  printf ("cl\n");
   xnee_verbose((xd, "Freeing context "));
 
   xnee_ungrab_keys(xd_global);
@@ -304,6 +305,9 @@ xnee_close_down(xnee_data* xd)
       xnee_verbose((xd, "Destroying buffer semaphore "));
       sem_destroy (xd->buf_sem);
     }
+
+  printf ("cl middle\n");
+
 
   xnee_verbose((xd, "Closing displays on host "));
   if ( xd->display==NULL ) 
@@ -325,6 +329,8 @@ xnee_close_down(xnee_data* xd)
       /*      XCloseDisplay ( xd->control );*/
     }
 
+  printf ("cl middle 2\n");
+
   if ( xd->fake!=NULL)  
     {
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3 \n"  ));
@@ -340,18 +346,27 @@ xnee_close_down(xnee_data* xd)
       /*      XCloseDisplay ( xd->data );*/
     }
   
+  printf ("cl middle 3\n");
+
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.5 \n"  ));
   xnee_verbose((xd, "closing fds\n"));
   
+  
+  printf ("cl middle 4\n");
 
-  xnee_free_file (xd, xd->out_name,  xd->out_file);
-  xnee_free_file (xd, xd->err_name,  xd->err_file);
   xnee_free_file (xd, xd->data_name, xd->data_file);
+  printf ("cl middle 4 2\n");
   xnee_free_file (xd, xd->rc_name,   xd->rc_file);
+
+  printf ("cl middle 5\n");
 
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.6 \n"  ));
   xnee_verbose((xd, "Freeeing data "));
   xnee_free_xnee_data(xd);
+
+/*   xnee_free_file (xd, xd->out_name,  xd->out_file); */
+  xnee_free_file (xd, xd->err_name,  xd->err_file); 
+  printf ("cl end\n");
 }
 
 
@@ -819,6 +834,7 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
   xnee_verbose ((xd, "\t dpy \n"));
   xd->distr_list[xd->distr_list_size].dpy=dpy;
 
+
   xnee_verbose ((xd, "cheking if resolution differs\n"));
   if (xnee_res_cmp(&xd->distr_list[xd->distr_list_size].res,
 		   &xd->res_info.record)==0)
@@ -930,8 +946,14 @@ xnee_rem_comment_start(xnee_data *xd, char *str)
 {
   int i,j, comms=0, len  ;
 
+  if (str==NULL)
+    return 1;
+
   xnee_verbose ((xd," --> xnee_rem_comment_start \"%s\"\n", str));
+
+
   len = strlen (str);
+  
   /*
    * how many comments do we have  */
   for (i=0 ; i<=len ; i++)
@@ -949,7 +971,7 @@ xnee_rem_comment_start(xnee_data *xd, char *str)
 
   str[len-comms]='\0';
   xnee_verbose ((xd," <-- xnee_rem_comment_start \"%s\"\n", str));
-  return 1;
+  return 0;
 } 
 
 
@@ -1053,7 +1075,38 @@ rem_blanks (char *array, int size)
 
 /**************************************************************
  *                                                            *
- * rem_blanks                                                 *
+ * rem_begin_blanks                                           *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int
+rem_begin_blanks (char *array, int size)
+{
+  int i=0;
+  int j=0;
+  for (i=0;i<size;i++)
+    {
+      if ( (array[i]==' ') ||  (array[i]=='\t') ||  (array[i]=='\n') )
+	{
+	  for (j=i;j<size-1;j++)
+	    {
+	      array[j]=array[j+1];
+	    }
+	  i--;
+	  array[j]='\0';
+	}
+      else
+	{
+	  return 0;
+	}
+    }
+  return XNEE_OK;
+}
+
+
+/**************************************************************
+ *                                                            *
+ * rem_all_blanks                                             *
  *                                                            *
  *                                                            *
  **************************************************************/
@@ -1474,9 +1527,9 @@ xnee_start(xnee_data *xd)
       }
    }
   
-   if (xd->xnee_info->interval != 0)
+   if (xnee_get_interval (xd) != 0)
    {
-      xnee_delay (xd->xnee_info->interval, "xnee:" );
+      xnee_delay (xnee_get_interval (xd), "xnee:" );
    }
    
    /*
@@ -1491,7 +1544,6 @@ xnee_start(xnee_data *xd)
        */
       xnee_print_xnee_settings       (xd, NULL); 
       xnee_record_print_record_range (xd, NULL);
-      
       
       /*
        * Do we have XRecord extension on the display
@@ -1510,11 +1562,13 @@ xnee_start(xnee_data *xd)
        xnee_print_xnee_settings (xd, xnee_get_out_file (xd)) ;
        xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
        
+
+       
        /*
         * At last. Time to enter the main loop
         *
         */
-       if (xnee_get_loops_left(xd)!=0)
+       if (xnee_more_to_record(xd)!=0)
        {
           xnee_verbose((xd, "Entering main loop( recorder)\n"));
           xnee_record_async(xd);
@@ -1589,3 +1643,24 @@ xnee_renew_xnee_data(xnee_data *xd)
    xnee_new_dyn_data(xd);
    return (XNEE_OK);
 }
+
+
+int
+xnee_more_to_record(xnee_data *xd)
+{
+  int evs;
+  int dats;
+  int tims;
+
+  evs = xnee_get_events_left(xd);
+  if (evs<0) evs = 1;
+
+  dats = xnee_get_data_left(xd);
+  if (dats<0) dats = 1;
+
+  tims = xnee_get_time_left(xd);
+  if (tims<0) tims = 1;
+
+  return ( evs && dats && tims );
+}
+

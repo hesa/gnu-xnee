@@ -153,6 +153,8 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
       xd->grab_keys->grab=XNEE_GRAB_SET;
       xd->grab_keys->stop_key=km.key;
       xd->grab_keys->stop_mod=km.modifier;
+      strcpy(xd->grab_keys->stop_str, mod_key);
+
       xnee_verbose((xd, "----  xnee_grab_key STOP mode\n"));
       break;
     case XNEE_GRAB_PAUSE:

@@ -36,11 +36,11 @@
 
 struct data_description event_field[]=
 {
-   {KeyPress,"KeyPress", ""}, 
-   {KeyRelease,"KeyRelease", ""}, 
-   {ButtonPress,"ButtonPress", ""}, 
-   {ButtonRelease,"ButtonRelease", ""}, 
-   {MotionNotify,"MotionNotify", ""}, 
+   {KeyPress,"KeyPress", "Pressing a key"}, 
+   {KeyRelease,"KeyRelease", "Releasing a key"}, 
+   {ButtonPress,"ButtonPress", "Pressing a button"}, 
+   {ButtonRelease,"ButtonRelease", "Releasing a button"}, 
+   {MotionNotify,"MotionNotify", "Moving the pointer"}, 
    {EnterNotify,"EnterNotify", ""}, 
    {LeaveNotify,"LeaveNotify", ""}, 
    {FocusIn,"FocusIn", ""}, 
@@ -75,7 +75,7 @@ struct data_description event_field[]=
 
 struct data_description request_field[]=
 {
-   {X_CreateWindow,"X_CreateWindow", ""},
+   {X_CreateWindow,"X_CreateWindow", "Test description"},
    {X_ChangeWindowAttributes,"X_ChangeWindowAttributes", ""},
    {X_GetWindowAttributes,"X_GetWindowAttributes", ""},
    {X_DestroyWindow,"X_DestroyWindow", ""},
@@ -221,6 +221,12 @@ struct data_description error_field[]=
    {-1,NULL, NULL}
 };
 
+struct data_description reply_field[]=
+{
+   {sz_xGenericReply,"sz_xGenericReply", ""}, 
+   {-1,NULL, NULL}
+};
+
 
 int
 xnee_event2int(char *ev)
@@ -356,7 +362,7 @@ xnee_print_request (int req)
 char *
 xnee_int2request(int req)
 {
-   int i ;
+  int i ;
   if ( (req <= 0) || (req>X_NoOperation) )
     {
       return NULL;
@@ -367,7 +373,7 @@ xnee_int2request(int req)
        {
           if (request_field[i].data_nr == req)
           {
-             return request_field[i].data_name;
+	    return request_field[i].data_name;
           }
        }
     }
@@ -439,17 +445,76 @@ int
 xnee_data2int(int type, char *dat)
 {
   if (type==XNEE_DEVICE_EVENT)
-      return xnee_event2int(dat);
+    return xnee_event2int(dat);
+  else  if (type==XNEE_EVENT)
+    return xnee_event2int(dat);
   else  if (type==XNEE_DELIVERED_EVENT)
-      return xnee_event2int(dat);
+    return xnee_event2int(dat);
   else if (type==XNEE_REQUEST)
     return xnee_request2int(dat);
   else if (type==XNEE_ERROR)
     return xnee_error2int(dat);
   else if (type==XNEE_REPLY)
-    return XNEE_OK;
+    return -1;
   else 
-    return XNEE_OK;
+    return -1;
+}
+
+/**
+ * Get the integer value from X11 data dat
+ */
+char*
+xnee_int2data(int type, int dat)
+{
+  if (type==XNEE_DEVICE_EVENT)
+    return xnee_int2event(dat);
+  else  if (type==XNEE_EVENT)
+    return xnee_int2event(dat);
+  else  if (type==XNEE_DELIVERED_EVENT)
+    return xnee_int2event(dat);
+  else if (type==XNEE_REQUEST)
+    return xnee_int2request(dat);
+  else if (type==XNEE_ERROR)
+    return xnee_int2error(dat);
+  else if (type==XNEE_REPLY)
+    return NULL;
+  else 
+    return NULL;
+}
+
+/**
+ * Get the integer value from X11 data dat
+ */
+int
+xnee_data2int_special(int *type, char *dat)
+{
+  int i ; 
+  int ret;
+
+  for (i=0;i<XNEE_NR_OF_TYPES;i++)
+    {
+      if (i==XNEE_EVENT)
+      {
+	;
+      }
+      else 
+	{
+	  ret = xnee_data2int(i, dat);
+	  if (ret != -1)
+	    {
+	      if ( (i==XNEE_DEVICE_EVENT) && (ret > MotionNotify))
+		;
+	      else if ( (i==XNEE_DELIVERED_EVENT) && (ret <= MotionNotify))
+		;
+	      else
+		{
+		  *type = i;
+		  return ret;
+		}
+	    }
+	}
+    }
+  return -1;
 }
 
 
@@ -457,9 +522,8 @@ xnee_data2int(int type, char *dat)
 
 
 
-
 struct data_description*
-xnee_get_event_fields()
+xnee_get_event_names()
 {
   return event_field;
 }
@@ -476,6 +540,12 @@ struct data_description*
 xnee_get_request_names()
 {
   return request_field;
+}
+
+struct data_description*
+xnee_get_reply_names()
+{
+  return reply_field;
 }
 
 
