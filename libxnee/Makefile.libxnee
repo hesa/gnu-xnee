@@ -35,9 +35,8 @@ COMM_OBJS = src/xnee.o src/xnee_record.o \
   src/xnee_grab.o \
   src/xnee_time.o \
   src/xnee_threshold.o \
-  src/feedback/feedback.o \
-  src/feedback/xosd_fb.o \
-  src/feedback/stderr_fb.o 
+  src/xnee_range.o \
+  src/feedback.o 
 
 
 

@@ -29,6 +29,7 @@
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_km.h"
+#include "libxnee/feedback.h"
 #include "libxnee/xnee_setget.h"
 
 
@@ -446,18 +447,21 @@ xnee_handle_km(xnee_data *xd)
   if (xd->grab_keys->grabbed_action==XNEE_GRAB_STOP)
     {
       xnee_verbose ((xd, " ---  xnee_handle_km: STOP \n"));
-      ret=XNEE_GRAB_STOP;
       xnee_verbose ((xd, " <--- xnee_handle_km\n"));
+      feedback ("Xnee stop received");
+      ret=XNEE_GRAB_STOP;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_PAUSE)
     {
       xnee_verbose ((xd, " ---  xnee_handle_km: PAUSE \n"));
+      feedback ("Xnee pause received");
       xnee_unsetup_recording (xd);
       ret=XNEE_GRAB_PAUSE;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_RESUME)
     {
       xnee_verbose ((xd, " ---  xnee_handle_km: RESUME \n"));
+      feedback ("Xnee resume received");
       xnee_setup_recording (xd);
       ret=XNEE_GRAB_RESUME;
     }
@@ -466,6 +470,7 @@ xnee_handle_km(xnee_data *xd)
       time_t rawtime;
       struct tm * timeinfo;
 
+      feedback ("Xnee inserting mark in log file");
       xnee_verbose ((xd, " ---  xnee_handle_km: MARK \n"));
       time ( &rawtime );
       timeinfo = localtime ( &rawtime );

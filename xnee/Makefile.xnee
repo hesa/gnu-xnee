@@ -1,15 +1,14 @@
 PACKAGE=\"xnee\"
 VERSION=\"1.08\"
 
-XOSD_DEFINE=
-XOSD_PATH=
-XOSD_INC=
-XOSD_LIB=
-XOSD_FLAGS=
+XOSD_DEFINE=-DHAVE_XOSD
+XOSD_PATH=/home/hesa/xosd-2.2.5/
+XOSD_INC=-I${XOSD_PATH}/src -I${XOSD_PATH}/include
+XOSD_FLAGS=${XOSD_DEFINE} ${XOSD_INC} ${XOSD_LIB} -lxosd
 
 XNEE_PATH=../libxnee
 XNEE_INC=${XNEE_PATH}/include
-XNEE_LIB=${XNEE_PATH}/src/
+XNEE_LIB=${XNEE_PATH}/
 
 CC=gcc
 CFLAGS = -W -Wall -pedantic -pedantic-errors  -Werror \

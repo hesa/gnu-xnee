@@ -18,8 +18,6 @@ typedef int (* feedback_fptr) (char*);
 static feedback_fptr feedback_fp ; 
 
 
-#define HAVE_XOSD
-
 
 #ifdef  HAVE_XOSD
 #include "xosd.h"
@@ -107,17 +105,24 @@ init_osd()
        return 1;
      }
    
-  printf ("--- init xosd\n");
+   printf ("--- init xosd\n");
    if (0 != xosd_set_shadow_offset (osd, 2))
      {
        osd_printerror ();
     }
+   /*"-*-*-*-*-*-*-34-*-*-*-*-*-*-*"*/
+   if (xosd_set_font 
+       (osd, 
+	"-adobe-helvetica-bold-r-normal-*-*-320-*-*-p-*-iso8859-1"))
+     {
+        xosd_set_font (osd, "fixed");
+     }
    if (0 != xosd_set_colour (osd, "yellow"))
      {
        osd_printerror ();
      }
    printf ("--- init xosd\n");
-  printf ("--- init xosd\n");
+   printf ("--- init xosd\n");
    if (0 != xosd_set_timeout (osd, FEEDBACK_TIMEOUT))
      {
        osd_printerror ();
@@ -133,7 +138,6 @@ osd_feedback (char *str)
   if (need_init)
       init_osd ();
   printf ("--->display xosd\n");
-  sleep (1);
   xosd_display (osd, 0, XOSD_string, str);
   printf ("<---display xosd\n");
   return XNEE_OK;
