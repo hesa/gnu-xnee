@@ -101,7 +101,6 @@ static char *help[] = {
   "--extension-request-mainor-range, -erqmir  <X_LIST> ", "Set extension request minor range to X_LIST", 
   "--extension-reply-major-range, -erpmar  <X_LIST>    ","Set extension reply major range to X_LIST", 
   "--extension-reply-mainor-range, -erpmir  <X_LIST>   ","Set extension reply minor range to X_LIST",
-  "--retype, -rt                  ", "Types (fakes) the content of the file as specified by --file",
   "--type-help, -tp               ", "Type this help message using faked keys (used to test xnee itself)",
   "--force-replay, -fp            ", "Keep replaying even if we are out of sync .... dangerous",
   "--max-threshold, -mat <nr>      ", "Set the maximum threshold for sync to nr",
@@ -374,12 +373,9 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_print_error ("Unable to open plugin file (%s)\n", argv[i]);
 	    }
 	}
-      else if(xnee_check(argv[i], "--retype", "-rt" )) 
-	{
-	  xnee_set_retyper(xd);
-	}
       else if(xnee_check(argv[i], "--retype-file", "-rtf" )) 
 	{
+	  xnee_set_retyper(xd);
 	  if (++i >= argc)
 	    {
 	      xnee_usage(stderr);
@@ -775,9 +771,6 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--version", "-V")) 
 	{
-	  
-	  fprintf (stderr, "%s ",PACKAGE);
-	  fprintf (stderr, "%s     using ",VERSION);
 	  xnee_version(xd);
 	  exit(XNEE_OK);
 	}
@@ -1053,15 +1046,15 @@ xnee_type_help (xnee_data *xd)
       for (i=0;(size_t)i<strlen(my_string);i++)
 	{
 	  xnee_char2keycode(xd, my_string[i], &x_kc); 
-	  if (x_kc.shift_press)
-	    xnee_fake_key_event (xd, shift_kc, True,  CurrentTime);
+/* 	  if (x_kc.shift_press) */
+/* 	    xnee_fake_key_event (xd, shift_kc, True,  CurrentTime); */
 
 	  xnee_fake_key_event (xd, x_kc.kc, True,  CurrentTime);
 	  usleep (1000*100);
 	  xnee_fake_key_event (xd, x_kc.kc, False, CurrentTime);
 
-	  if (x_kc.shift_press)
-	      xnee_fake_key_event (xd, shift_kc, False,  CurrentTime);
+/* 	  if (x_kc.shift_press) */
+/* 	      xnee_fake_key_event (xd, shift_kc, False,  CurrentTime); */
 	    
 	}
       usleep(1000*200);

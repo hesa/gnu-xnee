@@ -6,8 +6,43 @@ Xnee / NEWS
   For more information about Xnee, http://www.gnu.org
 
 
-All text below concerns the old structure of Xnee
-------------------------------------------------------------------------------
+Changes in 1......
+	- new options:
+	   '--data-to-record'
+	   '--events-to-record'
+	   '--seconds-to-record'
+	   '--event-range'
+	   '--out-file'
+	   '--err-file'
+	   '--exec-key'
+	   '--exec-program'
+	   '--feedback-none'
+	   '--feedback-xosd'
+	   '--feedback-stderr'
+	- deleted options:
+	   '--out'
+	   '--err'
+	   '--binary'
+	   '--everything'
+	   '--no-expose'
+	   '--all_events'
+	   '--print_settings'
+	   '--first_last'
+	   '--no_expose'
+	   '--stop_key'
+	   '--human_printout'
+	   '--delivered_event_range'
+	   '--device_event_range'
+	   '--error_range'
+	   '--request_range'
+	   '--reply_range'
+	   '--extension_request_major_range'
+	   '--extension_request_minor_range'
+	   '--extension_reply_major_range'
+	   '--extension_reply_minor_range'
+	- to be deleted options:
+	   '--loops'
+        Obsoleted code removed from the sources.
 
 Changes in 1.08
 	- new options:

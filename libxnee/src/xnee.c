@@ -36,6 +36,8 @@
 
 #include <X11/Xproto.h>
 #include <X11/Xlib.h>
+#include <X11/keysym.h>
+#include <X11/keysymdef.h>
 
 #include <X11/extensions/record.h> 
 #include <X11/extensions/XTest.h> 
@@ -57,6 +59,20 @@
 
 
 xnee_data *xd_global;
+static XModifierKeymap *map = NULL;
+int masks[] =
+  {
+    0,
+    ShiftMask,
+    ControlMask,
+    LockMask,
+    Mod1Mask,
+    Mod2Mask,
+    Mod3Mask,
+    Mod4Mask,
+    Mod5Mask,
+    -1
+  } ;
 
 
 /**************************************************************
@@ -1351,8 +1367,6 @@ xnee_set_autorepeat (xnee_data *xd)
   int i ;
   int j;
 
-  printf ("set autorepeat\n");
-
   XGetKeyboardControl (xd->fake, &xd->kbd_orig);
   
   xnee_verbose ((xd," key_click_percent  %d \n", 
@@ -1369,6 +1383,7 @@ xnee_set_autorepeat (xnee_data *xd)
 		 xd->kbd_orig.global_auto_repeat));
 
   xnee_verbose((xd,"Auto repeat:\n"));
+  /*
   for (i=0;i<32;i++)
     {
       xnee_verbose((xd,"Key\t"));
@@ -1381,8 +1396,7 @@ xnee_set_autorepeat (xnee_data *xd)
         }
       xnee_verbose((xd,"\n\n"));
     }
-
-
+  */
   XAutoRepeatOff(xd->fake);
   return xd->kbd_orig.global_auto_repeat;
 }
@@ -1420,9 +1434,69 @@ xnee_str2keycode(xnee_data* xd, char *str )
 {
   if (xd->fake==NULL)
     return -1;
-
   return  XKeysymToKeycode(xd->fake,XStringToKeysym(str));
 }
+
+
+KeyCode
+xnee_keysym2keycode(xnee_data* xd, KeySym ks)
+{
+  if (xd->fake==NULL)
+    return -1;
+  return  XKeysymToKeycode(xd->fake,ks);
+}
+
+
+int
+xnee_token_to_km (Display *dpy,
+	      int keycode,
+	      char *str,
+	      xnee_key_code *kc)
+{
+  XEvent event;
+  int size;
+  int i ;
+  int k ;
+  int ret=-1;
+  char string[20];
+  KeySym keysym;
+  
+  for (i=0;masks[i]!=-1;i++)
+    {
+      event.xkey.type    = KeyPress;
+      event.xkey.display = dpy ;
+      event.xkey.time    = CurrentTime;
+      event.xkey.x       = event.xkey.y = 0;
+      event.xkey.x_root  = event.xkey.y_root = 0;
+      event.xkey.state   = masks[i];
+      event.xkey.keycode = keycode;
+      
+      size = XLookupString ((XKeyEvent *) &event, string, 20, &keysym, 0);
+      string [size] = 0;
+
+      if (strcmp(str,string)==0)
+	{
+	  KeySym ks ;
+	  char *nm ;
+	  k = (i-1)*map->max_keypermod ;
+	  ks = XKeycodeToKeysym(dpy,
+				map->modifiermap[k],
+				0);
+	  nm = XKeysymToString(ks);
+	  
+	  
+	  
+	  kc->mod_keycodes[0] = map->modifiermap[k];
+	  ret = XNEE_OK ;
+	  break;
+       }
+   }
+
+  return ret;
+}
+
+
+
 
 
 KeyCode
@@ -1432,80 +1506,71 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
   if (xd->fake==NULL)
     return -1;
   
-  kc->shift_press=0;
-  kc->alt_press=0;
-  kc->alt_gr_press=0;
+  if (map==NULL)
+    {
+      map = XGetModifierMapping(xd->fake);
+    }
+  
+  
+  memset(kc,0,sizeof(xnee_key_code));
+  buf[0]=token;
+  buf[1]=0;
+
   switch( token)
     {
     case ' ':
-      kc->kc = xnee_str2keycode(xd,"space");
-      kc->shift_press=1;
+      kc->kc = xnee_keysym2keycode(xd,XK_space);
+      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
       break;
     case '$':
-      kc->kc = xnee_str2keycode(xd,"dollar");
-      kc->shift_press=1;
       break;
     case '%':
-      kc->kc = xnee_str2keycode(xd,"percent");
-      kc->shift_press=1;
       break;
     case '&':
-      kc->kc = xnee_str2keycode(xd,"ampersand");
-      kc->shift_press=1;
+      kc->kc = xnee_keysym2keycode(xd,XK_ampersand);
+      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
       break;
     case '-':
-      kc->kc = xnee_str2keycode(xd,"minus");
+      kc->kc = xnee_keysym2keycode(xd,XK_minus);
+      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
       break;
     case '\n':
+      kc->kc = xnee_keysym2keycode(xd,XK_Return);
     case '\0':
-      kc->kc = xnee_str2keycode(xd,"Return");
       break;
     case '(':
-      kc->shift_press=1;
-      kc->kc = xnee_str2keycode(xd,"parenleft");
       break;
     case ')':
-      kc->shift_press=1;
-      kc->kc = xnee_str2keycode(xd,"parenright");
       break;
     case '/':
-      kc->shift_press=1;
-      kc->kc = xnee_str2keycode(xd,"slash");
+      kc->kc = xnee_keysym2keycode(xd,XK_slash);
+      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
+      break;
+    case '\\':
+      kc->kc = xnee_keysym2keycode(xd,XK_backslash);
+      xnee_token_to_km (xd->fake,kc->kc,buf,kc);
       break;
     case ',':
-      kc->kc = xnee_str2keycode(xd,"comma");
       break;
     case '.':
-      kc->kc = xnee_str2keycode(xd,"period");
       break;
     case '#':
-      kc->shift_press=1;
-      kc->kc = xnee_str2keycode(xd,"numbersign");
       break;
     case '"':
-      kc->shift_press=1;
-      kc->kc = xnee_str2keycode(xd,"quotedbl");
       break;
     case '?':
-      kc->shift_press=1;
-      kc->kc = xnee_str2keycode(xd,"question");
       break;
     case '@':
-      kc->alt_gr_press=1;
-      kc->kc = xnee_str2keycode(xd,"at");
       break;
     case '!':
-      kc->shift_press=1;
-      kc->kc = xnee_str2keycode(xd,"exclamdown");
       break;
     default:
-      buf[0]=token;
-      buf[1]='\0';
       kc->kc = xnee_str2keycode(xd,buf);
       break;
     }
   if ((token >= 'A') && (token <='Z'))
-    kc->shift_press=1;
+    /*     kc->shift_press=1; */
+    ;
   return XNEE_OK;
 }
 
@@ -1645,11 +1710,10 @@ int
 xnee_prepare(xnee_data *xd)
 {
    int ret;
-
    ret = xnee_open_files(xd);
    if (ret != XNEE_OK)
      return ret;
-
+   
    return xnee_rep_prepare(xd);
 }
 

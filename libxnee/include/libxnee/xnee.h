@@ -80,6 +80,10 @@
 
 #define XNEE_RANGE_STRING_SIZE 512
 
+
+#define XNEE_PRESS   True
+#define XNEE_RELEASE False
+
 /* ** Do NOT edit ** */
 enum _xnee_data_types {
   XNEE_EVENT  = 0,
@@ -492,7 +496,16 @@ typedef struct
   int alt_press   ;  /*!< is a ALT press needed */ 
   int alt_gr_press;  /*!< is a ALT GRAPH press needed */ 
   int ctrl_press  ;  /*!< is a CTRL press needed */ 
- 
+
+} old_xnee_key_code;
+
+/*! \brief Holds information about keycodes needed to fake a letter press
+ *
+ */
+typedef struct
+{
+  KeyCode kc ;       /*!< key to fake */ 
+  KeyCode mod_keycodes[8];
 } xnee_key_code;
 
 
@@ -578,6 +591,25 @@ typedef struct {
   Time oldtime ; /*!< Remember when the last data occured*/
 } xnee_intercept_data;
 
+typedef struct 
+{
+  /* Mouse */
+  int x ;  /* mouse position's X coord */
+  int y ;  /* mouse position's Y coord */
+  int x_rel  ; /* X coord is relative  */
+  int y_rel  ; /* Y coord is relative  */
+  int button ; /* nr of button to fake */
+  int button_state ; /* XNEE_PRESS or XNEE_RELEASE  */
+
+  /* Keyboard */
+  int key    ; /* nr of key to fake */
+  int key_state    ;  /* XNEE_PRESS or XNEE_RELEASE  */
+
+  int valid ; /* 1 if whole struct is valid, else 0 */
+
+  xnee_key_code kc;
+
+} xnee_script_s ;
 
 
 /* *

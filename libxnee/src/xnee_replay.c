@@ -453,13 +453,16 @@ xnee_replay_main_loop(xnee_data *xd)
 	}
     }
 
-   ret = xnee_rep_prepare(xd);
-   if (ret!=XNEE_OK)
-     {
-       xnee_verbose((xd, "xnee_prepare failed (%d)....checking\n", ret));
-       xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
-       return ret;
-     }
+
+  /* REMOVE ME... after testing.
+     rep_prepare is done in xnee_prepare */
+/*    ret = xnee_rep_prepare(xd); */
+/*    if (ret!=XNEE_OK) */
+/*      { */
+/*        xnee_verbose((xd, "xnee_prepare failed (%d)....checking\n", ret)); */
+/*        xnee_verbose((xd, "xnee_prepare failed.... failure\n")); */
+/*        return ret; */
+/*      } */
 
    ret = XNEE_REPLAY_DATA ; 
 

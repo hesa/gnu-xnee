@@ -38,25 +38,7 @@
 #include "libxnee/xnee_threshold.h"
 #include "libxnee/xnee_error.h"
 
-#define XNEE_PRESS   0  
-#define XNEE_RELEASE 1
 
-typedef struct 
-{
-  /* Mouse */
-  int x ;  /* mouse position's X coord */
-  int y ;  /* mouse position's Y coord */
-  int x_rel  ; /* X coord is relative  */
-  int y_rel  ; /* Y coord is relative  */
-  int button ; /* nr of button to fake */
-  int button_state ; /* XNEE_PRESS or XNEE_RELEASE  */
-
-  /* Keyboard */
-  int key    ; /* nr of key to fake */
-  int key_state    ;  /* XNEE_PRESS or XNEE_RELEASE  */
-
-  int valid ; /* 1 if whole struct is valid, else 0 */
-} xnee_script_s ;
 
 
 
@@ -780,18 +762,26 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 	{
 	  valp = &val[0];
 	  valp++;
+	  if (val[0]=='\0')
+	    val[0]=' ';
+
 	  xss->valid = sscanf (val, "%d", &xss->key);
-	  printf ("KEY found %d   %d  '%s' '%s'\n", 
-		  xss->key, xss->valid,
-		  valp,val);
+	  xss->key = xnee_char2keycode (xd,val[0],&xss->kc);
+	}
+      /* button=12 etc */
+      else if (strncmp(var,
+		       XNEE_FAKE_BUTTON_ARG,
+		       strlen(XNEE_FAKE_BUTTON_ARG))==0)
+	{
+	  valp = &val[0];
+	  xss->valid = sscanf (valp, "%d", &xss->button);
 	}
       else 
 	{
+	  fprintf (stderr, " keyword '%s' not yet handled\n", var);
 	}
 
       /* skip leading blanks */
-      if (str==NULL)
-	printf ("str == NULL\n");
       
       if (!xss->valid)
 	{
@@ -799,8 +789,6 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 	}
 
       str=strstr(str," ");
-      printf ("var='%s' val='%s'  ...  '%s",
-	      var, val, str);
     }
 
 }
@@ -820,7 +808,6 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
 
   if (prim_args==NULL)
   {
-    printf ("no args found ... leaving\n");
     return 0;
   }
 
@@ -828,53 +815,84 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
   strncpy(buf, str, prim_len);
   buf[prim_len]='\0';
   prim_args++;
-  
+
   xnee_expression_handle_prim_sub(xd, prim_args, &xss);
 
   if (CHECK_EQUALITY(buf, XNEE_FAKE_MOTION))
     {
-      printf ("Faking motion '%s'\n", prim_args);  
-      
-      xnee_fake_relative_motion_event (xd,
-				       xss.x, 
-				       xss.y, 
-				       0);
-      printf ("after the parse... x=%d  valid=%d  rel=%d\n", 
-	      xss.x,
-	      xss.valid,
-	      xss.x_rel);
-
+      if (xss.x_rel)
+	{
+	  xnee_fake_relative_motion_event (xd, xss.x, xss.y, 0);
+	}
+      else
+	{
+	  xnee_fake_motion_event (xd, 0, xss.x, xss.y, 0);
+	}
+      ret = XNEE_PRIMITIVE_DATA ;
+    }
+  else if (CHECK_EQUALITY(buf, XNEE_FAKE_BUTTON_PRESS))
+    {
+      xnee_fake_button_event (xd, xss.button, XNEE_PRESS, 0);
+      ret = XNEE_PRIMITIVE_DATA ;
+    }
+  else if (CHECK_EQUALITY(buf, XNEE_FAKE_BUTTON_RELEASE))
+    {
+      xnee_fake_button_event (xd, xss.button, XNEE_RELEASE, 0);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_BUTTON))
     {
-      printf ("Faking button\n");
-      
+      xnee_fake_button_event (xd, xss.button, XNEE_PRESS, 0);
+      usleep (100);
+      xnee_fake_button_event (xd, xss.button, XNEE_RELEASE, 0);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY_PRESS))
     {
-      printf ("Faking press %d\n", xss.key);
+      int mods;
+      for (mods=0;(mods<8)&(xss.kc.mod_keycodes[mods]!=0);mods++)
+	{
+	  xnee_fake_key_event (xd,
+			       xss.kc.mod_keycodes[mods], 
+			       XNEE_PRESS, 
+			       0);
+	  
+	  ret = XNEE_PRIMITIVE_DATA ;
+	}
       xnee_fake_key_event (xd,
-			   xss.key, 
-			   True, 
+			   xss.kc.kc, 
+			   XNEE_PRESS, 
 			   0);
       
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY_RELEASE))
     {
-      printf ("Faking release %d\n", xss.key);
+      int mods;
+      for (mods=0;(mods<8)&(xss.kc.mod_keycodes[mods]!=0);mods++)
+	{
+	  xnee_fake_key_event (xd,
+			       xss.kc.mod_keycodes[mods], 
+			       XNEE_RELEASE, 
+			       0);
+	  
+	  ret = XNEE_PRIMITIVE_DATA ;
+	}
       xnee_fake_key_event (xd,
-			   xss.key, 
-			   False, 
+			   xss.kc.kc, 
+			   XNEE_RELEASE, 
 			   0);
       
       ret = XNEE_PRIMITIVE_DATA ;
     }
+  else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY))
+    {
+      xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
+      xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
+
+    }
   else
-      printf ("Found crap \n");  
-  
+    ;  
   
 
 

@@ -885,11 +885,12 @@ xnee_version(xnee_data* xd)
   xnee_verbose ((xd, " --> xnee_version\n"));
   fprintf (stderr, "%s ",PACKAGE);
   fprintf (stderr, "%s\n",VERSION);
-  fprintf (stderr, "Copyright (C) 2000-2003 Henrik Sandklef (%s)\n", XNEE_MAIL);
+  fprintf (stderr, "Copyright (C) 2000,2001,2002,2003,2004 Henrik Sandklef \n");
   fprintf (stderr, "Xnee and all its included programs come with ");
   fprintf (stderr, "NO WARRANTY,\nto the extent permitted by law.\n" );
   fprintf (stderr, "This is free software, and you may redistribute\n");
   fprintf (stderr, "copies of it under terms of GNU Genreal Public License.\n");
+  fprintf (stderr, "For questions: %s  \n", XNEE_MAIL);
   fprintf (stderr, "Xnee: Xnee's not an Event Emulator %s \n", XNEE_HOME_URL);
   fprintf (stderr, "GPL:  Gnu General Public License   %s\n",  GNU_HOME_URL);
   fprintf (stderr, "FSF:  Free Software Foundation     %s\n",  FSF_HOME_URL);

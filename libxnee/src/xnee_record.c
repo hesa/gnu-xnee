@@ -548,7 +548,7 @@ xnee_setup_recordext (xnee_data *xd)
   ret = xnee_get_max_range(xd) ;
   if (ret==0)
     {
-      xnee_verbose((xd, " --- xnee_setup_recordext Nothing to record .... "));
+      xnee_verbose((xd, " --- xnee_setup_recordext Nothing to record \n"));
       ret = XNEE_NO_PROT_CHOOSEN;
     } 
   else

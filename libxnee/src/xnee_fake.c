@@ -269,6 +269,66 @@ xnee_fake_key_event  (xnee_data* xd, int keycode, Bool bo, int dtime)
 
 
 
+/**************************************************************
+ *                                                            *
+ * xnee_fake_key_event                                        *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int
+xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
+{
+  int i=0;
+  int size= xd->distr_list_size;
+  int mods=0;
+  
+
+  if (!xnee_is_recorder (xd))
+    {
+      for (mods=0;(mods<8)&(xss->kc.mod_keycodes[mods]!=0);mods++)
+	{
+	  xnee_verbose((xd, "XTestFakeKeyEvent modifier \n"));
+	  xnee_fake_key_event (xd,
+			       xss->kc.mod_keycodes[mods], 
+			       True, 
+			       0);
+	}
+      xnee_fake_sleep (dtime);
+      xnee_verbose((xd, "XTestFakeKeyEvent (%d, %d, %d, %d ))\n",
+		    (int) xd->fake, 
+		    (int) xss->kc.kc, 
+		    (int) bo, 
+		    (int) dtime));
+      XTestFakeKeyEvent (xd->fake, xss->kc.kc, bo, CurrentTime);
+      XFlush(xd->fake);
+    }
+
+  for (i=0; i<size ; i++)
+    {
+      XTestGrabControl (xd->distr_list[i].dpy, True); 
+      for (mods=0;(mods<8)&(xss->kc.mod_keycodes[mods]!=0);mods++)
+	{
+	  xnee_verbose((xd, "XTestFakeKeyEvent modifier \n"));
+	  xnee_fake_key_event (xd,
+			       xss->kc.mod_keycodes[mods], 
+			       True, 
+			       0);
+	}
+      xnee_verbose((xd, "XTestFakeKeyEvent (%d, %d, %d, %d )) **\n",
+		    (int) xd->distr_list[i].dpy, 
+		    (int) xss->kc.kc, 
+		    (int) bo, 
+		    (int) dtime));
+      XTestFakeKeyEvent (xd->distr_list[i].dpy, xss->kc.kc, bo, dtime);
+      XFlush (xd->distr_list[i].dpy);
+    }
+  
+  xnee_verbose((xd,"\n\n\n"));
+  return (XNEE_OK);
+}
+
+
+
 
 
 /**************************************************************
@@ -427,13 +487,9 @@ xnee_type_file(xnee_data *xd)
 {
   char tmp[256] ;
   int i;
-  xnee_key_code x_kc;
+  
+  xnee_script_s xss;
 
-  KeyCode shift_kc ;
-  KeyCode return_kc ;
-  KeyCode alt_kc ;
-  KeyCode alt_gr_kc ;
-    
   xnee_verbose ((xd,"---> xnee_type_file\n"));
 
   xnee_setup_display (xd);
@@ -446,11 +502,6 @@ xnee_type_file(xnee_data *xd)
   
   xnee_verbose ((xd,"--- xnee_type_file\n"));
 
-  shift_kc  = xnee_str2keycode (xd, "Shift_L");
-  return_kc = xnee_str2keycode (xd, "Return");
-  alt_kc  = xnee_str2keycode (xd, "Alt_L");
-  alt_gr_kc = xnee_str2keycode (xd, "Mode_switch");
-
   xnee_verbose ((xd,"---> xnee_type_file loop\n"));
   while (fgets(tmp, 256, xd->rt_file)!=NULL)
     {
@@ -459,28 +510,17 @@ xnee_type_file(xnee_data *xd)
       
       for ( i=0 ; (size_t)i<strlen(tmp) ; i++ )
 	{
-	  xnee_char2keycode(xd, tmp[i], &x_kc); 
-	  if (x_kc.shift_press)
-	    xnee_fake_key_event (xd, shift_kc, True,  CurrentTime);
-	  if (x_kc.alt_press)
-	    xnee_fake_key_event (xd, alt_kc, True,  CurrentTime);
-	  if (x_kc.alt_gr_press)
-	    xnee_fake_key_event (xd, alt_gr_kc, True,  CurrentTime);
-
-
+	  xnee_char2keycode(xd, tmp[i], &xss.kc); 
+	  
+	  
 	  xnee_verbose ((xd, "retyping key %c keycode %d\n", 
-			 tmp[i],x_kc.kc));
+			 tmp[i],xss.kc.kc));
 	  
-	  xnee_fake_key_event (xd, x_kc.kc, True,  CurrentTime);
+	  xnee_fake_key_mod_event (xd, &xss, True, 0);
 	  usleep (1000*100);
-	  xnee_fake_key_event (xd, x_kc.kc, False, CurrentTime);
+	  xnee_fake_key_mod_event (xd, &xss, False, 0);
 	  
-	  if (x_kc.shift_press)
-	    xnee_fake_key_event (xd, shift_kc, False,  CurrentTime);
-	  if (x_kc.alt_press)
-	    xnee_fake_key_event (xd, alt_kc, False,  CurrentTime);
-	  if (x_kc.alt_gr_press)
-	    xnee_fake_key_event (xd, alt_gr_kc, False,  CurrentTime);
+	  
 	}
     }
   xnee_verbose ((xd,"<--- xnee_type_file\n"));
