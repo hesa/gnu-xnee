@@ -267,7 +267,10 @@ xnee_set_force_replay (xnee_data *xd);
 int
 xnee_get_force_replay (xnee_data *xd);
 
- 
+int
+xnee_is_force_replay (xnee_data *xd);
+
+
  
 
 int
@@ -285,15 +288,6 @@ xnee_is_cont (xnee_data *xd);
 
 
  
-int
-set_force_replay (xnee_data *xd);
-
-int
-get_force_replay (xnee_data *xd);
-
-int
-is_force_replay (xnee_data *xd);
-
  
 int
 set_first_replayed_event (xnee_data *xd);

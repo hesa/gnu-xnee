@@ -1,6 +1,6 @@
-/*****
- *       Xnee's Not an Event Emulator                                
- *                                                                   
+/*****  
+ *       Xnee's Not an Event Emulator  
+ *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
@@ -22,41 +22,35 @@
  * MA  02111-1307, USA.                                              
  ****/
 
-#include <libxnee/xnee.h>
-#include <semaphore.h>
+#ifndef XNEE_KM_H
+#define XNEE_KM_H
 
-#ifdef XNEE_USE_SEMAPHORES
+/**
+ * Grabs the modifier and key as specified on xd. 
+ * These keys are mapped to call xnee_stop_session
+ * @param xd      xnee's main structure
+ * @param mode    action mode (stop, pause, resume)
+ * @param mod_key string representation of modifier + key
+ * @return int   XNEE_OK on success
+ */
 int 
-xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val);
+xnee_grab_key (xnee_data* xd , int mode, char *mod_key);
 
-int 
-xnee_sem_wait(xnee_data *xd, sem_t *sem);
 
-int 
-xnee_sem_trywait(xnee_data *xd, sem_t *sem);
+int
+xnee_get_grab_mode ( xnee_data *xd, int key, int modifier);
 
-int 
-xnee_sem_post(xnee_data *xd, sem_t *sem);
+int
+xnee_check_km(xnee_data *xd);
 
-int 
-xnee_sem_destroy(xnee_data *xd, sem_t *sem);
-#else
 
-#define xnee_sem_init(xd, sem, shared, val) 
 
-#define xnee_sem_wait(xd, sem) 
+int
+xnee_get_km_tuple (xnee_data     *xd, 
+		   xnee_km_tuple *km, 
+		   char          *mod_and_key);
 
-#define xnee_sem_trywait(xd, sem) 
 
-#define xnee_sem_post(xd, sem) 
 
-#define xnee_sem_destroy(xd, sem) 
 
-#endif /* XNEE_USE_SEMAPHORES*/
-
-#define XNEE_BUFFER_SEM_INIT    
-#define XNEE_BUFFER_SEM_GET      
-#define XNEE_BUFFER_SEM_WAIT     
-#define XNEE_BUFFER_SEM_POST    
-#define XNEE_BUFFER_SEM_DESTROY 
-
+#endif /* XNEE_KM_H */

@@ -1,6 +1,6 @@
-/*****
- *       Xnee's Not an Event Emulator                                
- *                                                                   
+/*****  
+ *       Xnee's Not an Event Emulator  
+ *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
@@ -22,41 +22,35 @@
  * MA  02111-1307, USA.                                              
  ****/
 
-#include <libxnee/xnee.h>
-#include <semaphore.h>
 
-#ifdef XNEE_USE_SEMAPHORES
-int 
-xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val);
 
-int 
-xnee_sem_wait(xnee_data *xd, sem_t *sem);
+/**
+ * Returns the elapsed time from either the 1st read or the last call to this f'n
+ * 
+ * @param xd         xnee's main structure
+ * @param type       char (f or l ) represents type of elapsed time 
+ * @return long      elapsed time. 
+ */
+long 
+xnee_get_elapsed_time(xnee_data *xd, char type );
 
-int 
-xnee_sem_trywait(xnee_data *xd, sem_t *sem);
 
-int 
-xnee_sem_post(xnee_data *xd, sem_t *sem);
 
-int 
-xnee_sem_destroy(xnee_data *xd, sem_t *sem);
-#else
+/**
+ * Returns the calculated sleep amount - attempts to keep timing the same as when recorded 
+ * 
+ * @param xd         		xnee's main structure
+ * @param last_diff   		amount of time elapsed since last read 
+ * @param first_diff  		amount of time elapsed since 1st read (ie how long playback has been running) 
+ * @param record_last_diff      recorded amount of time between last recorded entry and current entry
+ * @param record_first_diff      recorded amount of time between start of recording and current entry 
+ * @return long                 amount of time to sleep
+ */
+long 
+xnee_calc_sleep_amount(xnee_data *xd, 
+		       long last_diff, 
+		       long first_diff, 
+		       long record_last_diff, 
+		       long record_first_diff );
 
-#define xnee_sem_init(xd, sem, shared, val) 
-
-#define xnee_sem_wait(xd, sem) 
-
-#define xnee_sem_trywait(xd, sem) 
-
-#define xnee_sem_post(xd, sem) 
-
-#define xnee_sem_destroy(xd, sem) 
-
-#endif /* XNEE_USE_SEMAPHORES*/
-
-#define XNEE_BUFFER_SEM_INIT    
-#define XNEE_BUFFER_SEM_GET      
-#define XNEE_BUFFER_SEM_WAIT     
-#define XNEE_BUFFER_SEM_POST    
-#define XNEE_BUFFER_SEM_DESTROY 
 

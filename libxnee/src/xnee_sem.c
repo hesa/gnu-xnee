@@ -28,7 +28,7 @@
 #include <libxnee/print.h>
 #include <libxnee/xnee_sem.h>
 
-
+#ifdef XNEE_USE_SEMAPHORES
 
 /**************************************************************
  *                                                            *
@@ -103,3 +103,4 @@ xnee_sem_destroy(xnee_data *xd, sem_t *sem)
   return ret;
 }
 
+#endif /* XNEE_USE_SEMAPHORES*/

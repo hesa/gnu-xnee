@@ -32,6 +32,11 @@
 #include <stdlib.h>
 #include <signal.h>
 #include <semaphore.h>
+#ifdef HAVE_STDARG_H
+#include <stdarg.h>
+#else
+#include <varargs.h> 
+#endif
 
 #include <sys/utsname.h>
 
@@ -99,18 +104,18 @@ enum _xnee_mode {
 #define XNEE_MAX_SYNCH     100 /* buffer size */
 #define XNEE_MOTION_DELAY   21 /* default value for delay during synch */
 
-#define XNEE_BUFFER_MAX       2 /* */
-#define XNEE_BUFFER_MIN      -2 /* */
-#define XNEE_BUFFER_SUM_MAX  2 /* */
+#define XNEE_BUFFER_MAX      6  /* */
+#define XNEE_BUFFER_MIN      -6 /* */
+#define XNEE_BUFFER_SUM_MAX  20 /* */
 #define XNEE_BUFFER_SUM_MIN -2 /* */
 #define XNEE_BUFFER_TOT_MAX  20 /* */
 
 #define MAX_OUT_OF_SYNC      2 /* number of data allowed to be out of sync */
 #define MAX_NOT_IN_SYNC      2
 #define MAX_OUT_OF_SYNC      2 /* number of data allowed to be out of sync */
-#define MAX_UNSYNC_LOOPS     2 /* number check-loops when out of sync 
+#define MAX_UNSYNC_LOOPS    10 /* number check-loops when out of sync 
 				  before exit  */
-#define MAX_SKIPPED_UNSYNC   2 /* number of times to ignore unsync state  */
+#define MAX_SKIPPED_UNSYNC  10 /* number of times to ignore unsync state  */
 #define XNEE_NOT_REPLAYABLE 13
 
 
@@ -139,13 +144,18 @@ enum _xnee_mode {
 
 
 /* AIX's XTestFakeKeyEvent has a bug with the last argument 
-   requires 0 - so we use usleep instead */
+ * requires 0 - so we use usleep instead 
+ *  
+ *       OBSOLETE 
+ *
+ */
 #ifdef  AIX
 #define XTEST_ERR_SLEEP(per)  usleep (per*1000)
 #else
 #define XTEST_ERR_SLEEP(per)  
 #endif
 
+#define XNEE_FAKE_SLEEP(per)  usleep (per*1000)
 
 #define XNEE_TRUE  1
 #define XNEE_FALSE 0
@@ -177,9 +187,20 @@ enum return_values
   XNEE_UNKNOWN_GRAB_MODE ,
   XNEE_NO_GRAB_DATA      ,
   XNEE_GRAB_DATA         ,
-  XNEE_BAD_LOG_FILE
+  XNEE_BAD_LOG_FILE      ,
+  XNEE_BAD_RESOLTION
 } _return_values;
   
+
+/*
+ * Resolution states
+ *
+ */
+enum xnee_resolution_states
+  {
+    XNEE_RESOLUTION_UNSET = 0,
+    XNEE_RESOLUTION_SET
+  } _xnee_resolution_states;
 
 /* 
  * Grab modes 
@@ -227,6 +248,7 @@ enum cont_proc_commands
 #define XNEE_FIRST_LAST           "first-last"
 #define XNEE_ALL_EVENTS           "all-events"
 #define XNEE_ALL_CLIENTS          "all-clients"
+#define XNEE_DIMENSION            "Dimension"
 #define XNEE_LOOPS_LEFT           "loops-left"
 #define XNEE_STOP_KEY             "stop-key"
 #define XNEE_PAUSE_KEY            "pause-key"
@@ -301,7 +323,6 @@ enum cont_proc_commands
  * String representation of Xnee's error codes
  *
  *
- */
 static char *err_codes[] = { 
   "Exited without error", 
   "",
@@ -313,22 +334,22 @@ static char *err_codes[] = {
   "",
   "",
   "",
-  "Memory fault",                 /* XNEE_MEMORY_FAULT   */
-  "File not found",               /* XNEE_FILE_NOT_FOUND */
-  "Time out reached",             /* XNEE_TIMED_OUT      */
-  "Signal interrupted"            /* XNEE_USER_INTR      */
-  "Synchronisation failure",      /* XNEE_SYNCH_FAULT    */
-  "Wrong parameters",             /* XNEE_WRONG_PARAMS   */
-  "X11 Record extension missing", /* XNEE_NO_REC_EXT     */
-  "X11 Test extension missing"    /* XNEE_NO_TEST_EXT    */
-  "No protocol choosen"           /* XNEE_NO_PROT_CHOOSEN */
-  "Could not open Display"        /* XNEE_NOT_OPEN_DISPLAY */
-  "Ambigious command"             /* XNEE_AMBIGOUS_CMD    */
-  "Out of sync"                   /* XNEE_OUT_OF_SYNC     */
-  "Not syncing"                   /* XNEE_NOT_SYNCING     */ 
-  "Could not find resource file"    /* XNEE_NO_PLUGIN_FILE */
+  "Memory fault",                 
+  "File not found",               
+  "Time out reached",             
+  "Signal interrupted"            
+  "Synchronisation failure",      
+  "Wrong parameters",             
+  "X11 Record extension missing", 
+  "X11 Test extension missing"    
+  "No protocol choosen"           
+  "Could not open Display"        
+  "Ambigious command"             
+  "Out of sync"                   
+  "Not syncing"                   
+  "Could not find resource file"  
 };
-
+*/
 
 /** 
  * \brief simply an X event. 
@@ -394,6 +415,52 @@ typedef struct
 
 
 
+
+/*! \brief Resolution of X server
+ *
+ */
+typedef struct
+{
+  int	 x_res ;  /*!< Xserver resoluton:   x */
+  int    y_res ;  /*!< Xserver resoluton:   y */
+} xnee_res;
+
+
+/*! \brief Data needed for distribution 
+ *
+ */
+typedef struct
+{
+  xnee_res res      ;  /*!< resolution when replaying */
+  int      is_used  ;  /*!< flag to say if we should 
+			 convert resolution at all */
+  Display  *dpy     ; 
+} xnee_distr;
+
+
+/*! \brief Resolution of X server
+ *
+ */
+typedef struct
+{
+  xnee_res record ;  /*!< resolution when recorded   */
+  xnee_res replay ;  /*!< resolution when replaying */
+  int  is_used    ;  /*!< flag to say if we should convert resolution at all */
+} xnee_resolution_info;
+
+
+
+/*! \brief time scale settings for Xnee
+ *
+ */
+typedef struct
+{
+  int  percent    ;  /*!< percentage of the original time (0-10000)  */
+  int  is_used    ;  /*!< flag to say if we should scale time at all */
+} xnee_timescale_info;
+
+
+
 /** 
  * Used for holding data of what we've received 
  *
@@ -411,11 +478,10 @@ typedef struct {
     xnee_reply   reply ;
     xnee_error   error ; 
   } u ;  /*!< What have we got ... event, request, reply or error  */
-  int type ;       /*!< Type of event/request/error/reply... eg MotionNotify  */
-  Time newtime ;   /*!< Time when data (u.type) occured  */
-  Time oldtime ;   /*!< Remember when the last data occured*/
+  int type ;     /*!< Type of event/request/error/reply... eg MotionNotify  */
+  Time newtime ; /*!< Time when data (u.type) occured  */
+  Time oldtime ; /*!< Remember when the last data occured*/
 } xnee_intercept_data;
-
 
 
 
@@ -444,6 +510,7 @@ typedef synch_ptr *synch_ptrptr;
 
 typedef int (*print_fptr)  ( const char*, ... ); 
 typedef int (*fprint_fptr) (FILE*,  const char*, ... ); 
+typedef int (*vfprint_fptr) (FILE*,  const char*, va_list ap ); 
 
 
 
@@ -466,7 +533,7 @@ typedef struct
   Bool	everything       ; /*!< Intercept everything */
   Bool  no_expose        ; /*!< when true, no Expose or NoExpose will be printed out */
 
-  int data_ranges[XNEE_NR_OF_TYPES] ;       /*!< Count how many data ranges specified */
+  int data_ranges[XNEE_NR_OF_TYPES] ;  /*!< Count how many data ranges specified */
 
 } xnee_record_init_data ; 
 /**
@@ -568,7 +635,7 @@ typedef struct
   */
 
   fprint_fptr buffer_verbose_fp; /*!< pointer to buffer verbose fun */
-  fprint_fptr verbose_fp;        /*!< pointer to verbose fun */
+  vfprint_fptr verbose_fp;        /*!< pointer to verbose fun */
   fprint_fptr data_fp   ;        /*!< pointer to xnee protcol print fun */
 
   char    *display     ;    /*!< char representation of the Display */
@@ -580,7 +647,7 @@ typedef struct
                                  Needed to set the start time of the first event to 0 */
   int     cont         ;    /*!< A simple flag telling Xnee wether to keep 
 			         recording/replaying or top quit. */
-  Display **distr_list ;    /*!< array of displays to distribute events to */
+  xnee_distr *distr_list ;  /*!< array of displays to distribute events to */
   int     distr_list_size ; /*!< size of array of displays to distribute events to */
   sem_t   *buf_sem     ;    /*!< semaphore to protect the replay buffer */
   long first_read_time ;    /*!< server time of the first read from recorded file */
@@ -598,6 +665,9 @@ typedef struct
   xnee_grab_keys           *grab_keys;
 
   int     button_pressed ;
+  int     key_pressed ;
+  
+  xnee_resolution_info   res_info; 
 
 } xnee_data ; 
 
@@ -747,18 +817,6 @@ xnee_close_down(xnee_data *xd);
 
 
 
-
-/**
- * Print version information etc
- * 
- * @param xd      xnee's main structure
- * @return void  
- */
-void
-xnee_version(xnee_data *xd);
-
-
-
 /**
  *  Set xnee_data->display to the value as 
  *  specified in environment variable DISPLAY
@@ -828,26 +886,6 @@ int
 xnee_use_plugin(xnee_data *xd, char *pl_name);
 
 /**
- * Opens the resource file as specified in xd. Reads it and calls xnee_add_resource_syntax where applicable.
- * @param xd    xnee's main structure
- * @return int  0 means OK.
- */
-int
-xnee_add_resource(xnee_data *xd);
-
-/**
- * Takes a Xnee setting in form of a string (with the resource format).
- * @param xd  
- * @param tmp  
- * @return int  1 on success, 0 on failure.
- * \todo (return values need to be changed) 
- */
-int
-xnee_add_resource_syntax(xnee_data *xd, char *tmp);
-
-
-
-/**
  * Removes XNEE_COMMENT_START from the argument
  * and rmoves unnecessary allocated memory
  * @param xd     xnee's main structure
@@ -878,25 +916,6 @@ xnee_strip(xnee_data *xd, char *str) ;
  */
 int 
 xnee_stop_session( xnee_data* xd);
-
-
-
-/**
- * Grabs the modifier and key as specified on xd. 
- * These keys are mapped to call xnee_stop_session
- * @param xd      xnee's main structure
- * @param mode    action mode (stop, pause, resume)
- * @param mod_key string representation of modifier + key
- * @return int   XNEE_OK on success
- */
-int 
-xnee_grab_key (xnee_data* xd , int mode, char *mod_key);
-
-
-int 
-xnee_ungrab_key (xnee_data* xd, int mode);
-int 
-xnee_ungrab_keys (xnee_data* xd);
 
 
 /**
@@ -940,108 +959,8 @@ xnee_add_resume_km (xnee_data *xd, xnee_km_tuple km);
 
 
 
-/**
- * Returns the elapsed time from either the 1st read or the last call to this f'n
- * 
- * @param xd         xnee's main structure
- * @param type       char (f or l ) represents type of elapsed time 
- * @return long      elapsed time. 
- */
-long 
-xnee_get_elapsed_time(xnee_data *xd, char type );
-
-
-
-/**
- * Returns the calculated sleep amount - attempts to keep timing the same as when recorded 
- * 
- * @param xd         		xnee's main structure
- * @param last_diff   		amount of time elapsed since last read 
- * @param first_diff  		amount of time elapsed since 1st read (ie how long playback has been running) 
- * @param record_last_diff      recorded amount of time between last recorded entry and current entry
- * @param record_first_diff      recorded amount of time between start of recording and current entry 
- * @return long                 amount of time to sleep
- */
-long 
-xnee_calc_sleep_amount(xnee_data *xd, 
-		       long last_diff, 
-		       long first_diff, 
-		       long record_last_diff, 
-		       long record_first_diff );
-
-
-
-/**
- * Sets the callback function for Xnee as located in the plugin 
- * previously loaded with xnee_dlopen. The function tries to 
- * resolve the name <sym_name> in the plugin lib.
- * 
- * If the funciton could not resolve the name the prevoius
- * is still used. It is up to the user to take action if 
- * resolving the <sym_name> wasn't successfull.
- * 
- * @param xd          xnee's main structure
- * @param dest        where to store the function. 
- * @param sym_name    name of the function to find        
- * @return int        XNEE_OK if successful. 
- *                    XNEE_WRONG_PARAMS if type is wrong, 
- *                    XNEE_NO_MAIN_DATA if xd is null
- */
-int
-xnee_set_callback (xnee_data *xd,
-		   callback_ptrptr, 
-		   char *sym_name);
-
-/* OLD VERSION
-  xnee_set_callback (xnee_data *xd,
-		   void (**dest) (XPointer , XRecordInterceptData *), 
-		   char *sym_name);
-*/
-
-
-/**
- * Sets the synchronising callback function for Xnee as located 
- * in the plugin previously loaded with xnee_dlopen. The function 
- * tries to resolve the name <sym_name> in the plugin lib.
- * 
- * If the funciton could not resolve the name the prevoius
- * is still used. It is up to the user to take action if 
- * resolving the <sym_name> wasn't successfull.
- * 
- * @param xd          xnee's main structure
- * @param dest        where to store the function
- * @param sym_name    name of the function to find        
- * @return int        XNEE_OK if successful. 
- *                    XNEE_WRONG_PARAMS if type is wrong, 
- *                    XNEE_NO_MAIN_DATA if xd is null
- */
-int
-xnee_set_synchronize (xnee_data *xd,
-		      synch_ptrptr dest, 
-		      char *sym_name);
-
-/* OLD VERSION
-xnee_set_synchronize (xnee_data *xd,
-		      void (**dest) (xnee_data *xd, int replayed_type, int replayed_nr), 
-		      char *sym_name);
-*/
-
 int
 rem_all_blanks (char *array, int size);
-
-
-
-int
-xnee_get_km_tuple (xnee_data     *xd, 
-		   xnee_km_tuple *km, 
-		   char          *mod_and_key);
-
-
-int
-xnee_get_grab_mode ( xnee_data *xd, int key, int modifier);
-
-int
-xnee_check_km(xnee_data *xd);
 
 
 
@@ -1061,6 +980,7 @@ xnee_set_autorepeat (xnee_data *xd);
 
 int
 xnee_reset_autorepeat (xnee_data *xd);
+
 
 #endif /*   XNEE_XNEE_H */
 

@@ -1,6 +1,6 @@
-/*****
- *       Xnee's Not an Event Emulator                                
- *                                                                   
+/*****  
+ *       Xnee's Not an Event Emulator  
+ *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
@@ -22,41 +22,23 @@
  * MA  02111-1307, USA.                                              
  ****/
 
-#include <libxnee/xnee.h>
-#include <semaphore.h>
 
-#ifdef XNEE_USE_SEMAPHORES
-int 
-xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val);
+#ifndef XNEE_GRAB_H
+#define XNEE_GRAB_H
 
 int 
-xnee_sem_wait(xnee_data *xd, sem_t *sem);
+xnee_ungrab_key (xnee_data* xd, int mode);
 
 int 
-xnee_sem_trywait(xnee_data *xd, sem_t *sem);
+xnee_ungrab_keys (xnee_data* xd);
 
-int 
-xnee_sem_post(xnee_data *xd, sem_t *sem);
+xnee_grab_keys  *
+xnee_new_grab_keys();
 
-int 
-xnee_sem_destroy(xnee_data *xd, sem_t *sem);
-#else
+int
+xnee_free_grab_keys(xnee_data *xd);
 
-#define xnee_sem_init(xd, sem, shared, val) 
 
-#define xnee_sem_wait(xd, sem) 
+#endif /* XNEE_GRAB_H */
 
-#define xnee_sem_trywait(xd, sem) 
-
-#define xnee_sem_post(xd, sem) 
-
-#define xnee_sem_destroy(xd, sem) 
-
-#endif /* XNEE_USE_SEMAPHORES*/
-
-#define XNEE_BUFFER_SEM_INIT    
-#define XNEE_BUFFER_SEM_GET      
-#define XNEE_BUFFER_SEM_WAIT     
-#define XNEE_BUFFER_SEM_POST    
-#define XNEE_BUFFER_SEM_DESTROY 
 

@@ -23,6 +23,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "xnee_replay.h"
 #include "print_varargs.h"
 
+#ifndef XNEE_PRINT_H
+#define XNEE_PRINT_H
+
 /**
  * Prints number and name of X11 events
  *
@@ -305,3 +308,18 @@ xnee_print_data_range_count (xnee_data * xd);
 void  
 xnee_replay_printbuffer_impl (xnee_data *xd);
 
+
+/**
+ * Print version information etc
+ * 
+ * @param xd      xnee's main structure
+ * @return void  
+ */
+void
+xnee_version(xnee_data *xd);
+
+
+void
+xnee_print_ranges (xnee_data *xd, FILE *fp);
+
+#endif /* XNEE_PRINT_H */

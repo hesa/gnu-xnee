@@ -22,41 +22,44 @@
  * MA  02111-1307, USA.                                              
  ****/
 
-#include <libxnee/xnee.h>
-#include <semaphore.h>
 
-#ifdef XNEE_USE_SEMAPHORES
+#include <X11/extensions/XTest.h>
+
+#include "libxnee/xnee.h"
+#include "libxnee/print.h"
+#include "libxnee/xnee_record.h"
+#include "libxnee/xnee_replay.h"
+#include "libxnee/xnee_sem.h"
+#include "libxnee/xnee_resolution.h"
+
+
+int
+xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
+
+int
+xnee_replay_buffer_max_diff (xnee_data* xd, int type);
+
+int
+xnee_replay_buffer_min_diff (xnee_data* xd, int type);
+
+int
+xnee_replay_buffer_tot_diff (xnee_data* xd, int type);
+
+void 
+xnee_replay_buffer_handler (xnee_data* xd, 
+			    int data_type, 
+			    int data_nr,
+			    Bool rec_or_rep);
+
 int 
-xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val);
+xnee_update_buffer_cache(xnee_data *xd);
+
 
 int 
-xnee_sem_wait(xnee_data *xd, sem_t *sem);
+xnee_hard_update_buffer_cache(xnee_data *xd);
 
-int 
-xnee_sem_trywait(xnee_data *xd, sem_t *sem);
 
-int 
-xnee_sem_post(xnee_data *xd, sem_t *sem);
 
-int 
-xnee_sem_destroy(xnee_data *xd, sem_t *sem);
-#else
-
-#define xnee_sem_init(xd, sem, shared, val) 
-
-#define xnee_sem_wait(xd, sem) 
-
-#define xnee_sem_trywait(xd, sem) 
-
-#define xnee_sem_post(xd, sem) 
-
-#define xnee_sem_destroy(xd, sem) 
-
-#endif /* XNEE_USE_SEMAPHORES*/
-
-#define XNEE_BUFFER_SEM_INIT    
-#define XNEE_BUFFER_SEM_GET      
-#define XNEE_BUFFER_SEM_WAIT     
-#define XNEE_BUFFER_SEM_POST    
-#define XNEE_BUFFER_SEM_DESTROY 
+int
+xnee_check_buffer_limits (xnee_data *xd);
 

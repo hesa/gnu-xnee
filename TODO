@@ -14,7 +14,6 @@ Status:
 Version:
 
 
-
 Action: Follow GNU Coding Standards
 Status: begun
 	* Comment return values
@@ -29,7 +28,7 @@ Version:1.1
 
 Action: Add --force/-fo to force xnee to continue after sync fails
 	or name the option --try-sync
-Status: Nothing done yet
+Status: Almost done
 Version:1.1
 
 Action: The mouse seems to be unvisible when replaying using distribution option

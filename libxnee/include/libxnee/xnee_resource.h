@@ -1,6 +1,6 @@
-/*****
- *       Xnee's Not an Event Emulator                                
- *                                                                   
+/*****  
+ *       Xnee's Not an Event Emulator  
+ *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
@@ -22,41 +22,29 @@
  * MA  02111-1307, USA.                                              
  ****/
 
-#include <libxnee/xnee.h>
-#include <semaphore.h>
 
-#ifdef XNEE_USE_SEMAPHORES
-int 
-xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val);
+#ifndef XNEE_RESOURCE_H
+#define XNEE_RESOURCE_H
+/**
+ * Opens the resource file as specified in xd. Reads it and calls xnee_add_resource_syntax where applicable.
+ * @param xd    xnee's main structure
+ * @return int  0 means OK.
+ */
+int
+xnee_add_resource(xnee_data *xd);
 
-int 
-xnee_sem_wait(xnee_data *xd, sem_t *sem);
+/**
+ * Takes a Xnee setting in form of a string (with the resource format).
+ * @param xd  
+ * @param tmp  
+ * @return int  1 on success, 0 on failure.
+ * \todo (return values need to be changed) 
+ */
+int
+xnee_add_resource_syntax(xnee_data *xd, char *tmp);
 
-int 
-xnee_sem_trywait(xnee_data *xd, sem_t *sem);
 
-int 
-xnee_sem_post(xnee_data *xd, sem_t *sem);
 
-int 
-xnee_sem_destroy(xnee_data *xd, sem_t *sem);
-#else
 
-#define xnee_sem_init(xd, sem, shared, val) 
 
-#define xnee_sem_wait(xd, sem) 
-
-#define xnee_sem_trywait(xd, sem) 
-
-#define xnee_sem_post(xd, sem) 
-
-#define xnee_sem_destroy(xd, sem) 
-
-#endif /* XNEE_USE_SEMAPHORES*/
-
-#define XNEE_BUFFER_SEM_INIT    
-#define XNEE_BUFFER_SEM_GET      
-#define XNEE_BUFFER_SEM_WAIT     
-#define XNEE_BUFFER_SEM_POST    
-#define XNEE_BUFFER_SEM_DESTROY 
-
+#endif  /* XNEE_RESOURCE_H */

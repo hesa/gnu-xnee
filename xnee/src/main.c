@@ -53,19 +53,16 @@ int main(int argc,char *argv[])
     */
   xd = xnee_new_xnee_data();
 
-
   /*
    * Init the structs. Use PACKAGE as a name for the program
    */
   xnee_init(xd, PACKAGE);
-
   
   /*
    * Init Recording variables
    * Since those are used when recording and replaying we 
    */
   xnee_record_init (xd);
-
   
   /*
    * Well .... parse the args
@@ -102,16 +99,6 @@ int main(int argc,char *argv[])
     }
 
 
-  /*
-   * If no recording client, init xnee_sync 
-   *
-   */
-  if ( ! xnee_is_recorder(xd) )
-    {
-      xnee_replay_init (xd, argv[0]);   
-    }
-  
-  
   /* 
    * Print settings 
    * only done if verbose mode  
@@ -141,6 +128,16 @@ int main(int argc,char *argv[])
   
 
 
+  /*
+   * If no recording client, init xnee_sync 
+   *
+   */
+  if ( ! xnee_is_recorder(xd) )
+    {
+      xnee_replay_init (xd, argv[0]);   
+    }
+  
+  
   /*
    * Save repeat mode so we can reset it after we are done
    *

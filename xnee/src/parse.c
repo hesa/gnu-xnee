@@ -63,6 +63,7 @@ static char *help[] = {
   "--record, -rec                 ", "Set recording mode (default)" , 
   "--replay, -rep                 ", "Set replaying mode" , 
   "--stop-key mod,key, -sk        ", "When pressing modifier mod and key key Xnee exits" , 
+  "--write-settings file          ", "Writes settings to a resource file",
   "--print-settings, -ps          ", "Prints Xnee settings and waits (for <ENTER>)", 
   "--print-event-names, -pens     ", "Prints X11 event number and name ", 
   "--print-event-name, -pen <ev>  ", "Prints X11 event number or name coresponding to ev", 
@@ -71,6 +72,8 @@ static char *help[] = {
   "--print-request-names, -prns   ", "Prints X11 request number and name ", 
   "--print-request-name, -prn <req> ", "Prints X11 request number or name  coresponding to req", 
   "--print-data-names, -pdn       ", "Prints X11 data number and name ", 
+  "--recorded-resolution res      ", "Resolution used when recording",
+  "--replay-resolution res        ", "Resolution to use when replaying",
   "--manpage                      ", "Prints Xnee help text in format as used when generating man page", 
   "--distribute, -di <LIST>       ", "Distribute recorded or replayed events to LIST where LIST is comma separated list of displays",
   "--device-event-range, -devera  <X_LIST> ", "Set device event range to X_LIST", 
@@ -194,6 +197,44 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    }
 	  xnee_verbose((xd, "display=%s\n", xnee_get_display_name (xd)));
 	  continue;
+	}
+      else if (xnee_check (argv[i], "--recorded-resolution", "-rr"  ) )
+	{
+	  if (++i >= argc) 
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_set_rec_resolution (xd, argv[i]))
+	    {
+	      xnee_verbose ((xd, "failed to set recorded resolution\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_BAD_RESOLTION );
+	    }
+	  xnee_verbose ((xd, "recored resolution= %dx%d\n", 
+			 xnee_get_rec_resolution_x(xd),
+			 xnee_get_rec_resolution_y(xd)));
+ 	  continue;
+	}
+      else if (xnee_check (argv[i], "--replay-resolution", "-rr"  ) )
+	{
+	  if (++i >= argc) 
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_set_rep_resolution (xd, argv[i]))
+	    {
+	      xnee_verbose ((xd, "failed to set replay resolution\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_BAD_RESOLTION );
+	    }
+	  xnee_verbose ((xd, "replay resolution= %dx%d\n", 
+			 xnee_get_rep_resolution_x(xd),
+			 xnee_get_rep_resolution_y(xd)));
+ 	  continue;
 	}
       else if(xnee_check(argv[i], "--err", "-e" )) 
 	{
@@ -620,6 +661,20 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 			xnee_get_data_name (xd), 
 			xnee_get_data_file (xd)));
 	  continue;
+	}
+      else if ( xnee_check (argv[i], "--write-settings", "-ws"))
+	{
+	  if (++i >= argc)
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if (xnee_check (argv[i], "stdout", "STDOUT"))
+	    xnee_write_settings_to_file (xd, stdout);
+	  else if (xnee_check (argv[i], "stderr", "STDERR"))
+	    xnee_write_settings_to_file (xd, stderr);
+	  exit(0);
 	}
       /* 
        * TO KEEP COMPATIBILITY WITH OLD 

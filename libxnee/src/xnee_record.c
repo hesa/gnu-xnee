@@ -30,6 +30,8 @@
 #include "libxnee/print.h"
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
+#include "libxnee/xnee_km.h"
+#include "libxnee/xnee_setget.h"
 
 /**************************************************************
  *                                                            *

@@ -1,9 +1,40 @@
 AUTOMAKE_OPTIONS = gnu
 
 lib_LIBRARIES = libxnee.a
-libxnee_a_SOURCES = xnee.c print.c print_varargs.c xnee_record.c xnee_replay.c  datastrings.c xnee_sem.c xnee_dl.c xnee_setget.c
+libxnee_a_SOURCES = xnee.c  \
+	print.c  \
+	print_varargs.c  \
+	xnee_record.c  \
+	xnee_replay.c   \
+	datastrings.c  \
+	xnee_sem.c  \
+	xnee_dl.c \
+	xnee_setget.c \
+	xnee_resolution.c \
+	xnee_fake.c \
+	xnee_km.c \
+	xnee_grab.c \
+	xnee_resource.c \
+	xnee_time.c \
+	xnee_callback.c \
+	xnee_buffer.c 
 
-EXTRA_DIST = ../include/libxnee/xnee.h ../include/libxnee/print.h ../include/libxnee/print_varargs.h ../include/libxnee/xnee_record.h ../include/libxnee/xnee_replay.h ../include/libxnee/datastrings.h ../include/libxnee/xnee_sem.h  ../include/libxnee/xnee_dl.h  ../include/libxnee/xnee_setget.h
+EXTRA_DIST = ../include/libxnee/xnee.h \
+	../include/libxnee/print.h \
+	../include/libxnee/print_varargs.h  \
+	../include/libxnee/xnee_record.h  \
+	../include/libxnee/xnee_replay.h  \
+	../include/libxnee/datastrings.h  \
+	../include/libxnee/xnee_sem.h   \
+	../include/libxnee/xnee_dl.h   \
+	../include/libxnee/xnee_setget.h  \
+	../include/libxnee/xnee_resolution.h  \
+	../include/libxnee/xnee_resource.h   \
+	../include/libxnee/xnee_time.h  \
+	../include/libxnee/xnee_km.h  \
+	../include/libxnee/xnee_callbcak.h \
+	../include/libxnee/xnee_buffer.h  \
+	../include/libxnee/xnee_
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE

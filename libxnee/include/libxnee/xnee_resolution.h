@@ -21,42 +21,58 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston,            
  * MA  02111-1307, USA.                                              
  ****/
+#ifndef XNEE_RESOLUTION_H
+#define XNEE_RESOLUTION_H
 
-#include <libxnee/xnee.h>
-#include <semaphore.h>
+#include "libxnee/xnee.h"
+#include "libxnee/xnee_record.h"
+#include "libxnee/xnee_replay.h"
 
-#ifdef XNEE_USE_SEMAPHORES
+
+int
+xnee_set_rec_resolution (xnee_data *xd, char *str);
+ 
+int
+xnee_get_rec_resolution_x (xnee_data *xd);
+
+int
+xnee_get_rec_resolution_y (xnee_data *xd);
+
+int
+xnee_set_rep_resolution (xnee_data *xd, char *str);
+ 
+int
+xnee_get_rep_resolution_x (xnee_data *xd);
+ 
+int
+xnee_get_rep_resolution_y (xnee_data *xd);
+
 int 
-xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val);
+xnee_str_to_res(char *res_str, xnee_res *xr);
 
 int 
-xnee_sem_wait(xnee_data *xd, sem_t *sem);
+xnee_res_cmp(xnee_res *xr1, xnee_res *xr2);
 
 int 
-xnee_sem_trywait(xnee_data *xd, sem_t *sem);
+xnee_res_cmp(xnee_res *xr1, xnee_res *xr2);
 
 int 
-xnee_sem_post(xnee_data *xd, sem_t *sem);
+xnee_resolution_differs (xnee_data *xd);
 
 int 
-xnee_sem_destroy(xnee_data *xd, sem_t *sem);
-#else
+xnee_resolution_newx (xnee_data *xd, int xval);
 
-#define xnee_sem_init(xd, sem, shared, val) 
+int 
+xnee_resolution_newy (xnee_data *xd, int yval);
 
-#define xnee_sem_wait(xd, sem) 
+int
+xnee_set_default_rep_resolution (xnee_data *xd);
 
-#define xnee_sem_trywait(xd, sem) 
+int
+xnee_no_rep_resolution (xnee_data *xd);
 
-#define xnee_sem_post(xd, sem) 
+int 
+xnee_res_cmp(xnee_res *xr1, xnee_res *xr2);
 
-#define xnee_sem_destroy(xd, sem) 
-
-#endif /* XNEE_USE_SEMAPHORES*/
-
-#define XNEE_BUFFER_SEM_INIT    
-#define XNEE_BUFFER_SEM_GET      
-#define XNEE_BUFFER_SEM_WAIT     
-#define XNEE_BUFFER_SEM_POST    
-#define XNEE_BUFFER_SEM_DESTROY 
+#endif 
 

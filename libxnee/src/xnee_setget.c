@@ -542,25 +542,10 @@ xnee_get_force_replay (xnee_data *xd)
 }
 
  
- 
 
-
- 
-int
-set_force_replay (xnee_data *xd)
-{
-  xd->force_replay=XNEE_TRUE;
-  return XNEE_OK;
-}
 
 int
-get_force_replay (xnee_data *xd)
-{
-  return xd->force_replay;
-}
-
-int
-is_force_replay (xnee_data *xd)
+xnee_is_force_replay (xnee_data *xd)
 {
   return (xd->force_replay==XNEE_TRUE);
 }
