@@ -32,6 +32,7 @@
 #include "libxnee/xnee_sem.h"
 #include "libxnee/xnee_resolution.h"
 #include "libxnee/xnee_time.h"
+#include "libxnee/xnee_fake.h"
 
 
 
@@ -87,37 +88,56 @@ xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last
   XFlush(xd->fake);                 
 
   xnee_verbose((xd, "---  xnee_replay_event_handler 1\n "));
-  /* Get the recorded time difference. Should be from previous read 
-     X server time recorded in file*/
-  /* need to mult by 1000 to get microseconds */
-  saved_time = xindata->oldtime ;
-  record_last_diff = xnee_delta_time(xindata) * 1000; /* Synchronise the time */
-  record_first_diff = ( xindata->newtime - xd->first_read_time ) * 1000;
-
-  /* get the actual difference from last read - we may have had to wait/sleep */
-  last_diff = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
-
-  /* get the actual elapsed time from the start of the read */
-  first_diff = xnee_get_elapsed_time(xd, XNEE_FROM_FIRST_READ );
 
 
-  xnee_verbose((xd, "---  xnee_replay_event_handler \n "));
-
-
-  /* if the first event is also the 1st entry from recorded file 
-     - reset time - should seldom happen */
-  if (xd->first_replayed_event==1 && last_elapsed == 0 ) 
+  if (xnee_is_normal_speed(xd))
     {
-      xd->first_replayed_event=0;
-      xnee_verbose ((xd, 
-		     "\txd->first_replayed_event==1  ----> dtime1=10 ; \n"));
-      record_last_diff = 10 * 1000; 
+
+      /* Get the recorded time difference. Should be from previous read 
+	 X server time recorded in file*/
+      
+      saved_time = xindata->oldtime ;
+      
+      /* Synchronise the time */
+      /* need to mult by 1000 to get microseconds */
+      record_last_diff = xnee_delta_time(xindata) * 1000; 
+      record_first_diff = ( xindata->newtime - xd->first_read_time ) * 1000;
+      
+      /* get the actual difference from last read - 
+	 we may have had to wait/sleep */
+      last_diff = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
+      
+      /* get the actual elapsed time from the start of the read */
+      first_diff = xnee_get_elapsed_time(xd, XNEE_FROM_FIRST_READ );
+      
+      
+      xnee_verbose((xd, "---  xnee_replay_event_handler \n "));
+      
+      
+      /* if the first event is also the 1st entry from recorded file 
+	 - reset time - should seldom happen */
+      if (xd->first_replayed_event==1 && last_elapsed == 0 ) 
+	{
+	  xd->first_replayed_event=0;
+	  xnee_verbose ((xd, 
+			 "\txd->first_replayed_event==1  ----> dtime1=10 ; \n"
+			 ));
+	  record_last_diff = 10 * 1000; 
+	}
+      
+      sleep_amt = 
+	xnee_calc_sleep_amount( xd, 
+				last_diff, 
+				first_diff, 
+				record_last_diff, 
+				record_first_diff ) ; 
+      
     }
-
-  sleep_amt = xnee_calc_sleep_amount( xd, last_diff, first_diff, 
-				      record_last_diff, record_first_diff )  
-    / 1000 ; 
-
+  else
+    {
+      sleep_amt = ( xnee_delta_time(xindata) * 1000 * 
+	xnee_get_speed(xd) ) / 100 ; 
+    }
   xnee_verbose((xd, "---  xnee_replay_event_handler \n "));
 
 
@@ -134,16 +154,16 @@ xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last
   switch (xindata->u.event.type)
     {
     case KeyPress:
-      xnee_fake_key_event (xd, xindata->u.event.keycode, True, CurrentTime );
+      xnee_fake_key_event (xd, xindata->u.event.keycode, True, sleep_amt );
       break;
     case KeyRelease:
-      xnee_fake_key_event  (xd, xindata->u.event.keycode, False, CurrentTime);
+      xnee_fake_key_event  (xd, xindata->u.event.keycode, False, sleep_amt);
       break;
     case ButtonPress:
-      xnee_fake_button_event (xd, xindata->u.event.button, True, CurrentTime);
+      xnee_fake_button_event (xd, xindata->u.event.button, True, sleep_amt);
       break;
     case ButtonRelease:
-      xnee_fake_button_event (xd, xindata->u.event.button, False, CurrentTime);
+      xnee_fake_button_event (xd, xindata->u.event.button, False, sleep_amt);
       break;
     case MotionNotify:
       screen = xindata->u.event.screen_nr ; 
@@ -153,7 +173,7 @@ xnee_replay_event_handler( xnee_data* xd, xnee_intercept_data* xindata, int last
 			      0,
 			      x, 
 			      y, 
-			      CurrentTime);
+			      sleep_amt);
       break;
 
     default:                  /*  Do nothing  */
@@ -197,7 +217,8 @@ xnee_fake_key_event  (xnee_data* xd, int keycode, Bool bo, int dtime)
 		(int) bo, 
 		(int) dtime));
   XTestFakeKeyEvent (xd->fake, keycode, bo, CurrentTime);
-  XNEE_FAKE_SLEEP ( dtime);  
+  XNEE_FAKE_SLEEP ( dtime );  
+  XFlush(xd->fake);
 
   for (i=0; i<size ; i++)
     {
@@ -271,9 +292,8 @@ xnee_fake_motion_event (xnee_data* xd,
 {
   int i=0;
   int size= xd->distr_list_size;
-  
   x = xnee_resolution_newx(xd,x);
-  y = xnee_resolution_newx(xd,y);
+  y = xnee_resolution_newy(xd,y);
   
   xnee_correct_time((unsigned long *)&dtime);
   xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %lu))\n",
@@ -313,6 +333,46 @@ xnee_fake_motion_event (xnee_data* xd,
   return (XNEE_OK);
 }
 
+int 
+xnee_type_file(xnee_data *xd, char *str )
+{
+  FILE *file = fopen (str,"r");
+  char tmp[256] ;
+  int i;
+  xnee_key_code x_kc;
+  KeyCode shift_kc ;
+  KeyCode return_kc ;
 
+  xnee_verbose ((xd,"---> xnee_type_help\n"));
+  xnee_setup_display (xd);
+  xnee_replay_init (xd, PACKAGE);   
+  xnee_set_autorepeat (xd);
+  if (!xnee_has_xtest_extension(xd))
+    exit(XNEE_NO_TEST_EXT);
 
+  shift_kc  = xnee_str2keycode (xd, "Shift_L");
+  return_kc = xnee_str2keycode (xd, "Return");
+  
 
+  if (file==NULL)
+    return -1;
+
+  while (fgets(tmp, 256, file)!=NULL)
+    {
+      
+      for (i=0;i<strlen(tmp);i++)
+	{
+	  xnee_char2keycode(xd, tmp[i], &x_kc); 
+	  if (x_kc.shift_press)
+	    xnee_fake_key_event (xd, shift_kc, True,  CurrentTime);
+	  
+	  xnee_fake_key_event (xd, x_kc.kc, True,  CurrentTime);
+	  usleep (1000*100);
+	  xnee_fake_key_event (xd, x_kc.kc, False, CurrentTime);
+	  
+	  if (x_kc.shift_press)
+	    xnee_fake_key_event (xd, shift_kc, False,  CurrentTime);
+	}
+    }
+  exit(XNEE_OK);
+}

@@ -322,4 +322,8 @@ xnee_version(xnee_data *xd);
 void
 xnee_print_ranges (xnee_data *xd, FILE *fp);
 
+
+void 
+xnee_print_xnee_resource_settings (xnee_data* xd, FILE* out) ;
+
 #endif /* XNEE_PRINT_H */

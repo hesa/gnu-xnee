@@ -30,6 +30,9 @@
 
 
 int
+xnee_resolution_init (xnee_data *xd);
+ 
+int
 xnee_set_rec_resolution (xnee_data *xd, char *str);
  
 int
@@ -73,6 +76,18 @@ xnee_no_rep_resolution (xnee_data *xd);
 
 int 
 xnee_res_cmp(xnee_res *xr1, xnee_res *xr2);
+
+int 
+xnee_is_resolution_used (xnee_data *xd);
+
+int 
+xnee_set_resolution_used (xnee_data *xd);
+
+int 
+xnee_unset_resolution_used (xnee_data *xd);
+
+int 
+xnee_get_resolution_used (xnee_data *xd);
 
 #endif 
 

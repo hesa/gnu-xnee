@@ -101,6 +101,10 @@ enum _xnee_mode {
    .. don't use when incrementing variables (e.g i++) */
 #define XNEE_ABS(x)   ((x)>0?(x):(0-(x)))
 
+
+
+#define XNEE_FREE_AND_NULL(x) { free(x); x=NULL;}
+
 #define XNEE_MAX_SYNCH     100 /* buffer size */
 #define XNEE_MOTION_DELAY   21 /* default value for delay during synch */
 
@@ -154,8 +158,11 @@ enum _xnee_mode {
 #else
 #define XTEST_ERR_SLEEP(per)  
 #endif
+/* EO OBSOLETE */
 
-#define XNEE_FAKE_SLEEP(per)  usleep (per*1000)
+
+
+#define XNEE_FAKE_SLEEP(per)  usleep (per)
 
 #define XNEE_TRUE  1
 #define XNEE_FALSE 0
@@ -188,6 +195,7 @@ enum return_values
   XNEE_NO_GRAB_DATA      ,
   XNEE_GRAB_DATA         ,
   XNEE_BAD_LOG_FILE      ,
+  XNEE_BAD_SPEED         ,
   XNEE_BAD_RESOLTION
 } _return_values;
   
@@ -198,8 +206,9 @@ enum return_values
  */
 enum xnee_resolution_states
   {
-    XNEE_RESOLUTION_UNSET = 0,
-    XNEE_RESOLUTION_SET
+    XNEE_RESOLUTION_UNSET  = -1,
+    XNEE_RESOLUTION_USED   =  0,
+    XNEE_RESOLUTION_UNUSED =  1
   } _xnee_resolution_states;
 
 /* 
@@ -389,6 +398,20 @@ typedef struct {
 
 
 
+typedef struct 
+{
+  char * project_name ;
+  char * project_descr;
+  char * creat_date;
+  char * creat_prog;
+  char * creat_prog_vers;
+  char * last_date;
+  char * last_prog;
+  char * last_prog_vers;
+  char * author_name;
+  char * author_email;
+} xnee_resource_meta ; 
+
 
 /*! \brief Holds information about Record Extension setup
  *
@@ -412,6 +435,20 @@ typedef struct
   int	 key ;       /*!< key */
   int    modifier ;  /*!< modifier key  */
 } xnee_km_tuple;
+
+
+
+/*! \brief Holds information about keycodes needed to fake a letter press
+ *
+ */
+typedef struct
+{
+  KeyCode kc ;       /*!< key to fake */ 
+  int shift_press ;  /*!< is a SHIT press needed */ 
+  int alt_press   ;  /*!< is a ALT press needed */ 
+  int ctrl_press  ;  /*!< is a CTRL press needed */ 
+ 
+} xnee_key_code;
 
 
 
@@ -661,14 +698,14 @@ typedef struct
   
   int                      data_buffer[4][XNEE_REPLAY_BUFFER_SIZE];
   struct buffer_meta_data  meta_data;
-  
+  int                      speed_percent;
   xnee_grab_keys           *grab_keys;
 
   int     button_pressed ;
   int     key_pressed ;
   
   xnee_resolution_info   res_info; 
-
+  xnee_resource_meta     xrm;
 } xnee_data ; 
 
 
@@ -885,9 +922,10 @@ xnee_zero_sync_data (xnee_data* xd);
 int
 xnee_use_plugin(xnee_data *xd, char *pl_name);
 
+
 /**
  * Removes XNEE_COMMENT_START from the argument
- * and rmoves unnecessary allocated memory
+ * and removes unnecessary allocated memory
  * @param xd     xnee's main structure
  * @param str    string to clean up
  * @return int   1 on success
@@ -981,6 +1019,11 @@ xnee_set_autorepeat (xnee_data *xd);
 int
 xnee_reset_autorepeat (xnee_data *xd);
 
+KeyCode
+xnee_str2keycode(xnee_data* xd, char *str );
+
+KeyCode
+xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc);
 
 #endif /*   XNEE_XNEE_H */
 

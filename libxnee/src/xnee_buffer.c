@@ -471,7 +471,6 @@ xnee_check_buffer_limits (xnee_data *xd)
   sum_max    = xd->meta_data.sum_max;
   sum_min    = xd->meta_data.sum_min;
   tot_diff   = xd->meta_data.total_diff;
-  printf (":");
   xnee_verbose ((xd, "---> xnee_check_buffer_limits  button %d   key %d\n", 
 		 xd->button_pressed,
 		 xd->key_pressed
@@ -490,7 +489,6 @@ xnee_check_buffer_limits (xnee_data *xd)
 		     cached_max , XNEE_BUFFER_MAX));
       xnee_replay_printbuffer(xd); 
       diff=cached_max;
-      printf ("1");
     }
   else if ( cached_min < XNEE_BUFFER_MIN) 
     {
@@ -498,7 +496,6 @@ xnee_check_buffer_limits (xnee_data *xd)
 		     cached_min , XNEE_BUFFER_MIN));
       xnee_replay_printbuffer(xd); 
       diff=cached_min;
-      printf ("2");
     }
   /*
   else if ( sum_max > XNEE_BUFFER_SUM_MAX )
@@ -521,8 +518,6 @@ xnee_check_buffer_limits (xnee_data *xd)
 		     tot_diff , XNEE_BUFFER_TOT_MAX));
       xnee_replay_printbuffer(xd); 
       diff=tot_diff;
-      printf ("3");
-      
     }
   else
     {
@@ -530,10 +525,7 @@ xnee_check_buffer_limits (xnee_data *xd)
 		     tot_diff , XNEE_BUFFER_TOT_MAX));
       xnee_replay_printbuffer(xd); 
       diff=0;
-      printf ("4");
-      
     }
-      printf (": ");
   
   xnee_verbose ((xd, "<--- xnee_check_buffer_limits diff=%d\n", diff));
   return diff;

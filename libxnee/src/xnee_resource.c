@@ -47,9 +47,143 @@
 #include "libxnee/xnee_sem.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_resolution.h"
+#include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_grab.h"
 #include "libxnee/xnee_km.h"
 #include "libxnee/datastrings.h"
+
+
+
+int
+xnee_free_xnee_resource_meta(xnee_resource_meta* xrm)
+{
+  XNEE_FREE_AND_NULL (xrm->project_name);
+  XNEE_FREE_AND_NULL (xrm->project_descr);
+  XNEE_FREE_AND_NULL (xrm->creat_date);
+  XNEE_FREE_AND_NULL (xrm->creat_prog);
+  XNEE_FREE_AND_NULL (xrm->creat_prog_vers);
+  XNEE_FREE_AND_NULL (xrm->last_date);
+  XNEE_FREE_AND_NULL (xrm->last_prog);
+  XNEE_FREE_AND_NULL (xrm->last_prog_vers);
+  XNEE_FREE_AND_NULL (xrm->author_name);
+  XNEE_FREE_AND_NULL (xrm->author_email);
+  return XNEE_OK;
+}
+
+
+
+
+/**************************************************************
+ *                                                            *
+ * xnee_handle_resource_meta                                  *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int
+xnee_handle_resource_meta (xnee_data *xd, char *meta_str)
+{
+  char *tmp = meta_str;
+  char *value;
+  tmp++;
+
+  if ( strlen (tmp) <= 2)
+    {
+      xnee_verbose ((xd,"skipping meta data: \"%s\" \n", tmp));
+      return XNEE_OK;
+    }
+  else
+    tmp++;
+
+  if (strlen(tmp)>0)
+    XNEE_REMOVE_BEGINING_BLANKS(tmp);
+
+  value=strstr (tmp, ":");
+  if (value==NULL)
+    return XNEE_OK;
+  value += 1 ;
+  
+  if (strlen(value)>2)
+    XNEE_REMOVE_BEGINING_BLANKS(value);
+  XNEE_REMOVE_TRAILING_CRAP(value);
+  if (!XNEE_RESOURCE_CHECK(XNEE_RES_PROJECT,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_PROJECT "=\"%s\" \n", 
+		     value));
+      xnee_set_project_name(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_DESCRIPTION,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_DESCRIPTION "=\"%s\" \n", 
+		     value));
+      xnee_set_project_descr(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_CREAT_DATE,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_CREAT_DATE"=\"%s\" \n", 
+		     value));
+      xnee_set_creat_date(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_CREAT_PROGRAM,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_CREAT_PROGRAM"=\"%s\" \n", 
+		     value));
+      xnee_set_creat_program(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_CREAT_PROG_VER,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_CREAT_PROG_VER "=\"%s\" \n", 
+		     value));
+      xnee_set_creat_prog_vers(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_LASTCHANGE_DATE,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_LASTCHANGE_DATE "=\"%s\" \n", 
+		     value));
+      xnee_set_last_date(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_LASTCHANGE_PROGRAM,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: "XNEE_RES_LASTCHANGE_PROGRAM "=\"%s\" \n",
+		     value));
+      xnee_set_last_program(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_LASTCHANGE_PROG_VER,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_LASTCHANGE_PROG_VER"=\"%s\" \n",
+		     value));
+      xnee_set_last_prog_vers(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_AUTHOR_NAME,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_AUTHOR_NAME "=\"%s\" \n", 
+		     value));
+      xnee_set_author_name(xd, value);
+    }
+  else if (!XNEE_RESOURCE_CHECK(XNEE_RES_AUTHOR_EMAIL,tmp))
+    {
+      xnee_verbose ((xd, 
+		     "adding to xd: " XNEE_RES_AUTHOR_EMAIL"=\"%s\" \n", 
+		     value));
+      xnee_set_author_email(xd, value);
+    }
+  else 
+    {
+      xnee_verbose ((xd, 
+		     "Could not add to xd: \"%s\" \n", 
+		     value));
+    }
+  return XNEE_OK;
+}
+
 
 
 /**************************************************************
@@ -72,19 +206,22 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
     {
       return -1;
     }
+
+  if (!strncmp("#",tmp,1))  /* # META data */
+    {
+      xnee_handle_resource_meta (xd, tmp);
+      return 1;
+    }
+
   rem_all_blanks (tmp, len);
   len=strlen(tmp);
   if (len==0)
     {
       return -1;
     }
-  xnee_verbose((xd, "   adding (2) \"%s\"  \n", tmp));
   
-  if (!strncmp("#",tmp,1))  /* # META data */
-    {
-      ; /* for now ..... do nothing */
-    }
-  else if (!strncmp(XNEE_DISPLAY,tmp,strlen(XNEE_DISPLAY)))
+  
+  if (!strncmp(XNEE_DISPLAY,tmp,strlen(XNEE_DISPLAY)))
     {
       range=strstr (tmp, ":");
       range += 1 ;
@@ -119,8 +256,6 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       xnee_verbose ((xd, "recored resolution= %dx%d\n", 
 		     xnee_get_rec_resolution_x(xd),
 		     xnee_get_rec_resolution_y(xd)));
-      exit(0);
-      
     }
   else if (!strncmp(XNEE_VERBOSE,tmp,strlen(XNEE_VERBOSE)))  
     {
@@ -349,6 +484,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       xnee_verbose((xd,"Corrupt line: \"%s\"\n", tmp)); 
       ret=0;
     }      
+
   return ret;
 }
 
@@ -363,7 +499,7 @@ int
 xnee_add_resource(xnee_data *xd)
 {
 
-  char tmp[256] ;
+  static char tmp[1024] ;
   int read_more  = 1 ;
   
   strcpy(tmp,"");
@@ -384,4 +520,139 @@ xnee_add_resource(xnee_data *xd)
 }
 
 
+char *
+xnee_get_project_name(xnee_data *xd){
+  if (xd->xrm.project_name!=NULL)
+    return xd->xrm.project_name;
+  else
+    return "none";
+}
 
+char *
+xnee_get_project_descr(xnee_data *xd){
+  if (xd->xrm.project_descr!=NULL)
+    return xd->xrm.project_descr;
+  else
+    return "none";
+}
+
+char *
+xnee_get_creat_date(xnee_data *xd){
+  if (xd->xrm.creat_date!=NULL)  
+    return xd->xrm.creat_date;
+  else
+    return "none";
+}
+
+char *
+xnee_get_creat_program(xnee_data *xd){
+  if (xd->xrm.author_email!=NULL)  
+  return xd->xrm.creat_prog;
+  else
+    return "none";
+}
+
+char *
+xnee_get_creat_prog_vers(xnee_data *xd)
+{
+  if (xd->xrm.author_email!=NULL)  
+  return xd->xrm.creat_prog_vers;
+  else
+    return "none";
+}
+
+char *
+xnee_get_last_date(xnee_data *xd){
+  if (xd->xrm.author_email!=NULL)  
+  return xd->xrm.last_date;
+  else
+    return "none";
+}
+
+char *
+xnee_get_last_program(xnee_data *xd){
+  if (xd->xrm.author_email!=NULL)  
+  return xd->xrm.last_prog;
+  else
+    return "none";
+}
+
+char *
+xnee_get_last_prog_vers(xnee_data *xd){
+  if (xd->xrm.author_email!=NULL)  
+  return xd->xrm.last_prog_vers;
+  else
+    return "none";
+}
+
+char *
+xnee_get_author_name(xnee_data *xd){
+  if (xd->xrm.author_email!=NULL)  
+  return xd->xrm.author_name;
+  else
+    return "none";
+}
+
+char *
+xnee_get_author_email(xnee_data *xd){
+  if (xd->xrm.author_email!=NULL)  
+  return xd->xrm.author_email;
+  else
+    return "none";
+}
+
+
+int
+xnee_set_project_name(xnee_data *xd, char *str){
+ xd->xrm.project_name=strdup(str);
+ return XNEE_OK;
+}
+
+int
+xnee_set_project_descr(xnee_data *xd, char *str){
+ xd->xrm.project_descr=strdup(str);
+ return XNEE_OK;
+}
+int
+xnee_set_creat_date(xnee_data *xd, char *str){
+ xd->xrm.creat_date=strdup(str);
+ return XNEE_OK;
+}
+int
+xnee_set_creat_program(xnee_data *xd, char *str){
+ xd->xrm.creat_prog=strdup(str);
+ return XNEE_OK;
+}
+
+int
+xnee_set_creat_prog_vers(xnee_data *xd, char *str){
+  xd->xrm.creat_prog_vers=strdup(str);
+ return XNEE_OK;
+}
+
+int
+xnee_set_last_date(xnee_data *xd, char *str){
+ xd->xrm.last_date=strdup(str);
+ return XNEE_OK;
+}
+int
+xnee_set_last_program(xnee_data *xd, char *str){
+ xd->xrm.last_prog=strdup(str);
+ return XNEE_OK;
+}
+int
+xnee_set_last_prog_vers(xnee_data *xd, char *str){
+ xd->xrm.last_prog_vers=strdup(str);
+ return XNEE_OK;
+}
+int
+xnee_set_author_name(xnee_data *xd, char *str){
+ xd->xrm.author_name=strdup(str);
+ return XNEE_OK;
+}
+
+int
+xnee_set_author_email(xnee_data *xd, char *str){
+ xd->xrm.author_email=strdup(str);
+ return XNEE_OK;
+}

@@ -22,6 +22,8 @@
  * MA  02111-1307, USA.                                              
  ****/
 
+#ifndef XNEE_TIME_H
+#define XNEE_TIME_H
 
 
 /**
@@ -54,3 +56,7 @@ xnee_calc_sleep_amount(xnee_data *xd,
 		       long record_first_diff );
 
 
+#define xnee_is_normal_speed(xd)  (xd->speed_percent==100)
+#define xnee_get_speed(xd)  xd->speed_percent
+
+#endif /* XNEE_TIME_H */

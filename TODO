@@ -14,6 +14,8 @@ Status:
 Version:
 
 
+
+
 Action: Follow GNU Coding Standards
 Status: begun
 	* Comment return values
@@ -24,11 +26,6 @@ Status: begun
 	* don't use vprintf (or be aware of lacking such function)
 	* make sure Xnee returns with a correct return code
 	* Try to remove inclusion of string(s).h
-Version:1.1
-
-Action: Add --force/-fo to force xnee to continue after sync fails
-	or name the option --try-sync
-Status: Almost done
 Version:1.1
 
 Action: The mouse seems to be unvisible when replaying using distribution option
@@ -47,24 +44,10 @@ Action: Add more notes on how to specify modifier+key.
 Status: Nothing done yet
 Version:1.1
 
-Action: Translate between different resolutions 
-Status: Nothing done yet
-Version:1.1
-
-Action: Add a "monkey typewriter" mode that simpy types keys (as
-   specified) until the user paues.....
-Status: Nothing done yet
-Version:1.1
 
 
 
 
-
-
-
-Action: Make it possible to speed up or slow down replaying
-Status: Nothing done yet
-Version:After 1.1
 
 
 
@@ -101,6 +84,23 @@ Version:..... further on up the road
 
 
 
+Action: Add a "monkey typewriter" mode that simpy types keys (as
+   specified) until the user paues.....
+Status: Finished (added --type-help and --retype-file)
+Version:1.08
+
+Action: Make it possible to speed up or slow down replaying
+Status: Finished
+Version:1.08
+
+Action: Add --force/-fo to force xnee to continue after sync fails
+	or name the option --try-sync
+Status: Finished (--force-replay)
+Version:1.08
+
+Action: Translate between different resolutions 
+Status: Finished
+Version:1.08
 
 Action: Option for human readable output 				
 Status: events 		OK

@@ -35,7 +35,7 @@
 
 static char *help[] = {
   "--help, -h                     ", "Print this message", 
-  "--display,d  displayname       ", "X server to contact (default is localhost)", 
+  "--display,-d  displayname      ", "X server to contact (default is localhost)", 
   "--flags, -flags                ", "Prints all flags/options xnee accepts",
   "--file, -f <file_name>         ", "Read data from file file_name (default is stdin)", 
   "--out, -o <file_name>          ", "Redirect all Xnee data to file_name (default is stdout)", 
@@ -62,6 +62,7 @@ static char *help[] = {
   "--human-printouts, -hp         ", "Prints human readable" , 
   "--record, -rec                 ", "Set recording mode (default)" , 
   "--replay, -rep                 ", "Set replaying mode" , 
+  "--speed-adjust, -sa             ", "Adjust replaying speed (percentage)",
   "--stop-key mod,key, -sk        ", "When pressing modifier mod and key key Xnee exits" , 
   "--write-settings file          ", "Writes settings to a resource file",
   "--print-settings, -ps          ", "Prints Xnee settings and waits (for <ENTER>)", 
@@ -74,6 +75,7 @@ static char *help[] = {
   "--print-data-names, -pdn       ", "Prints X11 data number and name ", 
   "--recorded-resolution res      ", "Resolution used when recording",
   "--replay-resolution res        ", "Resolution to use when replaying",
+  "--no-resolution-adjustment     ", "Don't use resolution adjustment",
   "--manpage                      ", "Prints Xnee help text in format as used when generating man page", 
   "--distribute, -di <LIST>       ", "Distribute recorded or replayed events to LIST where LIST is comma separated list of displays",
   "--device-event-range, -devera  <X_LIST> ", "Set device event range to X_LIST", 
@@ -85,7 +87,9 @@ static char *help[] = {
   "--extension-request-mainor-range, -erqmir  <X_LIST> ", "Set extension request minor range to X_LIST", 
   "--extension-reply-major-range, -erpmar  <X_LIST>    ","Set extension reply major range to X_LIST", 
   "--extension-reply-mainor-range, -erpmir  <X_LIST>   ","Set extension reply minor range to X_LIST",
-  "--force-replay, -fp             ", "Keep replaying even if we are out of sync .... dangerous",
+  "--retype-file <file>, -rf      ", "Types (fakes) the content of the specified file",
+  "--type-help, -tp               ", "Type this help message using faked keys (used to test xnee itself)",
+  "--force-replay, -fp            ", "Keep replaying even if we are out of sync .... dangerous",
   NULL 
 };
 
@@ -163,7 +167,6 @@ static char *obsolete_help[] = {
   NULL 
 };
 
-
 /**************************************************************
  *                                                            *
  * xnee_parse_args                                            *
@@ -216,6 +219,28 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 			 xnee_get_rec_resolution_x(xd),
 			 xnee_get_rec_resolution_y(xd)));
  	  continue;
+	}
+      else if (xnee_check (argv[i], "--speed-adjust", "-sa"  ) )
+	{
+	  if (++i >= argc) 
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_set_replay_speed_str (xd, argv[i]))
+	    {
+	      xnee_verbose ((xd, "failed to set replay speed\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_BAD_RESOLTION );
+	    }
+	  xnee_verbose ((xd, "replaying speed= %d\n", 
+			 xnee_get_replay_speed(xd)));
+ 	  continue;
+	}
+      else if (xnee_check (argv[i], "--no-resolution-adjustment", "-rnra"  ) )
+	{
+	  xnee_unset_resolution_used (xd);
 	}
       else if (xnee_check (argv[i], "--replay-resolution", "-rr"  ) )
 	{
@@ -310,9 +335,26 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_print_error ("Unable to open plugin file (%s)\n", argv[i]);
 	    }
 	}
+      else if(xnee_check(argv[i], "--retype-file", "-rf" )) 
+	{
+	  if (++i >= argc)
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_type_file(xd, argv[i]) != 0 )
+	    {
+	      xnee_print_error ("Unable to open plugin file (%s)\n", argv[i]);
+	    }
+	}
       else if(xnee_check(argv[i], "--all-clients", "-ac" )) 
 	{
 	  xnee_set_all_clients(xd);
+	}
+      else if(xnee_check(argv[i], "--type-help", "-th" )) 
+	{
+	  xnee_type_help(xd);
 	}
       else if(xnee_check(argv[i], "--future-clients", "-fc" )) 
 	{
@@ -674,6 +716,14 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    xnee_write_settings_to_file (xd, stdout);
 	  else if (xnee_check (argv[i], "stderr", "STDERR"))
 	    xnee_write_settings_to_file (xd, stderr);
+	  else
+	    {
+	      FILE *file;
+	      file = fopen (argv[i],"w");
+	      xnee_write_settings_to_file (xd, 
+					   file);
+	      fclose(file);
+	    }
 	  exit(0);
 	}
       /* 
@@ -897,7 +947,7 @@ xnee_usage (FILE *fd)
       else 
 	;
     }
-  fprintf (fd, "\n  Report bugs to %s\n", XNEE_MAIL);
+  fprintf (fd, "\n  Report bugs to %s\n", XNEE_BUG_MAIL);
   
 }
 
@@ -983,7 +1033,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"Henrik Sandklef.\n");
 
   fprintf (fd ,".SH \"REPORTING BUGS\"\n");
-  fprintf (fd ,"Report bugs in the program to "XNEE_MAIL". \n");
+  fprintf (fd ,"Report bugs in the program to "XNEE_BUG_MAIL". \n");
 
   fprintf (fd ,".SH \"COPYRIGHT\"\n");
   fprintf (fd ,"Copyright (C) 2002 Henrik Sandklef.\n");
@@ -1003,3 +1053,57 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"Mail corrections and additions to " XNEE_BUG_MAIL "\n");
 }
 
+int
+xnee_type_help (xnee_data *xd)
+{
+  int i ;
+  xnee_key_code x_kc;
+
+  char my_string[500];
+  char **cpp;
+
+  KeyCode kc ;
+  KeyCode shift_kc ;
+  KeyCode return_kc ;
+
+  xnee_verbose ((xd,"---> xnee_type_help\n"));
+  xnee_setup_display (xd);
+  xnee_replay_init (xd, PACKAGE);   
+  xnee_set_autorepeat (xd);
+  if (!xnee_has_xtest_extension(xd))
+    exit(XNEE_NO_TEST_EXT);
+
+  shift_kc  = xnee_str2keycode (xd, "Shift_L");
+  return_kc = xnee_str2keycode (xd, "Return");
+  
+  for (cpp = help; *cpp; cpp+=1) 
+    {
+      xnee_verbose ((xd,"string to fake %s\n", *cpp));
+      strcpy(my_string,*cpp);
+      for (i=0;i<strlen(my_string);i++)
+	{
+	  xnee_char2keycode(xd, my_string[i], &x_kc); 
+	  if (x_kc.shift_press)
+	    xnee_fake_key_event (xd, shift_kc, True,  CurrentTime);
+
+	  xnee_fake_key_event (xd, x_kc.kc, True,  CurrentTime);
+	  usleep (1000*100);
+	  xnee_fake_key_event (xd, x_kc.kc, False, CurrentTime);
+
+	  if (x_kc.shift_press)
+	      xnee_fake_key_event (xd, shift_kc, False,  CurrentTime);
+	    
+	}
+      usleep(1000*200);
+
+      xnee_fake_key_event (xd, return_kc, True,  CurrentTime);
+      xnee_fake_key_event (xd, return_kc, False, 100000);
+      
+      
+    } 
+ xnee_reset_autorepeat (xd);
+ xnee_verbose ((xd,"<--- xnee_type_help\n"));
+ 
+ xnee_close_down(xd);
+ exit(XNEE_OK);
+}

@@ -30,6 +30,9 @@
 #include "libxnee/xnee_setget.h"
 #include "parse.h"
 
+int
+xnee_set_info(xnee_data *xd);
+
 
 /**************************************************************
  *                                                            *
@@ -87,8 +90,8 @@ int main(int argc,char *argv[])
       if ( max > 0 )
 	{
 	  xnee_print_error ("Error:\n%s, amibigous ranges\n", PACKAGE);
-	  xnee_print_error (" You can't use --all_events or --everything\n");
-	  xnee_print_error (" together with --event_ranges ..... \n");
+	  xnee_print_error (" You can't use --all-events or --everything\n");
+	  xnee_print_error (" together with --event-ranges ..... \n");
 	  xnee_print_error (" For syntax description type %s --help\n",
 			    PACKAGE);
 
@@ -114,7 +117,7 @@ int main(int argc,char *argv[])
       if (ret==XNEE_NO_PROT_CHOOSEN)
 	{
 	  xnee_print_error ("No protocol data choosen to record\n");
-	  xnee_print_error ("You can try out with xnee --all_events\n");
+	  xnee_print_error ("You can try out with xnee --all-events\n");
 	  exit(ret);
 	}
     }
@@ -156,8 +159,8 @@ int main(int argc,char *argv[])
        * Print settings 
        * if verbose mode that is 
        */
-      xnee_record_print_record_range (xd, NULL);
       xnee_print_xnee_settings       (xd, NULL); 
+      xnee_record_print_record_range (xd, NULL);
 
 
       /*

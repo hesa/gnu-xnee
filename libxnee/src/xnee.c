@@ -50,6 +50,7 @@
 #include "libxnee/xnee_grab.h"
 #include "libxnee/xnee_km.h"
 #include "libxnee/xnee_resolution.h"
+#include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_callback.h"
 
 
@@ -63,6 +64,7 @@
 int
 xnee_write_settings_to_file (xnee_data *xd, FILE *fp) 
 {
+  xnee_print_xnee_resource_settings (xd, fp) ;
   xnee_print_xnee_settings (xd, fp) ;
   xnee_print_ranges (xd, fp);
   return XNEE_OK;
@@ -102,9 +104,12 @@ xnee_get_max_range (xnee_data *xd)
 int 
 xnee_setup_display (xnee_data *xd)
 {
-  xd->data     = xnee_open_display (xd);
-  xd->control  = xnee_open_display (xd);
-  xd->fake     = xnee_open_display (xd);
+  if (xd->data==NULL)
+    xd->data     = xnee_open_display (xd);
+  if (xd->control==NULL)
+    xd->control  = xnee_open_display (xd);
+  if (xd->fake==NULL)
+    xd->fake     = xnee_open_display (xd);
   xnee_verbose((xd, "display data    %d\n" , (int) xd->data));
   xnee_verbose((xd, "display control %d\n" , (int) xd->control));
   xnee_verbose((xd, "display fake    %d\n" , (int) xd->fake));
@@ -378,7 +383,8 @@ xnee_init(xnee_data* xd, char *name)
   xd->distr_list_size = 0   ;
   xd->cont          = True ;
   xd->force_replay  = False;
-
+  
+  xd->speed_percent = 100 ; 
   xd->buf_sem = (sem_t *) malloc (sizeof(sem_t));
   xnee_sem_init (xd, xd->buf_sem, 0, 1);
 
@@ -388,13 +394,10 @@ xnee_init(xnee_data* xd, char *name)
       xnee_init_names();
   */
 
-  xd->res_info.is_used = XNEE_RESOLUTION_UNSET;
-  xd->res_info.record.x_res=0;
-  xd->res_info.record.y_res=0;
-  xd->res_info.replay.x_res=0;
-  xd->res_info.replay.y_res=0;
-
-
+  
+  xnee_set_resolution_used (xd);
+  xnee_resolution_init (xd);
+  
   xnee_verbose((xd, "<--- xnee_init\n"));
   return XNEE_OK;
 }
@@ -554,6 +557,8 @@ xnee_new_xnee_data()
   xd->record_setup  = xnee_new_recordext_setup(); 
 
   xd->grab_keys     = xnee_new_grab_keys();
+
+
   return xd;
 }
 
@@ -570,11 +575,12 @@ xnee_free_xnee_data(xnee_data* xd)
 
   xnee_free_recordext_setup ( xd);
   xnee_free_grab_keys(xd);
+  xnee_free_xnee_resource_meta(&xd->xrm);
+
   free (xd->xnee_info);
   free (xd->replay_setup );
   free (xd->buf_sem);
   free (xd);
-
   return XNEE_OK;
 }
 
@@ -1195,3 +1201,70 @@ xnee_reset_autorepeat (xnee_data *xd)
   return XNEE_OK;
 }
 
+KeyCode
+xnee_str2keycode(xnee_data* xd, char *str )
+{
+  if (xd->fake==NULL)
+    return -1;
+
+  return  XKeysymToKeycode(xd->fake,XStringToKeysym(str));
+}
+
+
+KeyCode
+xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
+{
+  char buf[2];
+  if (xd->fake==NULL)
+    return -1;
+  
+  kc->shift_press=0;
+  switch( token)
+    {
+    case ' ':
+      kc->kc = xnee_str2keycode(xd,"space");
+      break;
+    case '$':
+      kc->kc = xnee_str2keycode(xd,"dollar");
+      break;
+    case '%':
+      kc->kc = xnee_str2keycode(xd,"percent");
+      break;
+    case '&':
+      kc->kc = xnee_str2keycode(xd,"ampersand");
+      break;
+    case '-':
+      kc->kc = xnee_str2keycode(xd,"minus");
+      break;
+    case '\n':
+    case '\0':
+      kc->kc = xnee_str2keycode(xd,"Return");
+      break;
+    case '(':
+      kc->shift_press=1;
+      kc->kc = xnee_str2keycode(xd,"parenleft");
+      break;
+    case ')':
+      kc->shift_press=1;
+      kc->kc = xnee_str2keycode(xd,"parenright");
+      break;
+    case '/':
+      kc->shift_press=1;
+      kc->kc = xnee_str2keycode(xd,"slash");
+      break;
+    case ',':
+      kc->kc = xnee_str2keycode(xd,"comma");
+      break;
+    case '.':
+      kc->kc = xnee_str2keycode(xd,"period");
+      break;
+    default:
+      buf[0]=token;
+      buf[1]='\0';
+      kc->kc = xnee_str2keycode(xd,buf);
+      break;
+    }
+  if ((token >= 'A') && (token <='Z'))
+    kc->shift_press=1;
+  return XNEE_OK;
+}

@@ -31,6 +31,7 @@
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_sem.h"
 #include "libxnee/xnee_resolution.h"
+#include "libxnee/xnee_fake.h"
 #include "libxnee/xnee_km.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_resource.h"
@@ -114,19 +115,11 @@ xnee_replay_synchronize (xnee_data* xd)
        * check the buffer limits ....
        */
       diff = xnee_check_buffer_limits(xd);
-      printf ("got %d: ", diff);
       /*
        * handle diff in the buffers .....
        */
       if (diff!=0)
 	{
-	  printf ("diff: diff=%03d  diff_counter=%03d timeouts=%03d delay=%03d MAX=%d\n",
-		  diff,
-		  diff_counter,
-		  time_out_counter,
-		  XNEE_MISSING_DATA_DELAY,
-		  MAX_UNSYNC_LOOPS);
-
 	  diff_counter++;
 	  if (diff_counter >= MAX_UNSYNC_LOOPS)
 	    {
@@ -160,13 +153,6 @@ xnee_replay_synchronize (xnee_data* xd)
 	{
 	  if (diff_counter!=0)
 	    {
-	      printf ("Wooooops ...... shouldn't come here\n");
-	      printf ("diff: diff=%03d  diff_counter=%03d timeouts=%03d delay=%03d MAX=%d\n",
-		      diff,
-		      diff_counter,
-		      time_out_counter,
-		      XNEE_MISSING_DATA_DELAY * time_out_counter,
-		      MAX_UNSYNC_LOOPS);
 	      xd->buf_verbose=True;
 	      xnee_replay_printbuffer(xd); 
 	      exit(0);
@@ -226,7 +212,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
 		      &xindata->newtime);
       if (eofile < 8)    /* NUM ARGS */
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_file);
+	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
 	  eofile = 0 ;
 	}   
     }   
@@ -239,7 +225,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
 		      &xindata->newtime);
       if (eofile < 3)
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_file);
+	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
 	  eofile = 0;
 	}   
     }
@@ -252,7 +238,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
 		      &xindata->newtime);
       if (eofile < 3)
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_file);
+	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
 	  eofile = 0;
 	}   
     }
@@ -265,7 +251,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
 		      &xindata->newtime);
       if (eofile < 3)
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_file);
+	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
 	  eofile = 0;
 	} 
     }  
@@ -280,6 +266,7 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
       eofile=0;
    }      
 
+  xnee_verbose((xd,"protocol read and handled\n", tmp)); 
   return eofile;
 }
 
@@ -455,6 +442,7 @@ xnee_replay_main_loop(xnee_data *xd)
 	}	
       else if ( logread != XNEE_META_DATA )
 	{
+	  /* since NULL arg printing is done when in verbose mode */
 	  xnee_record_print_record_range (xd, NULL);
 	  xnee_print_xnee_settings       (xd, NULL); 
 	  
@@ -462,15 +450,13 @@ xnee_replay_main_loop(xnee_data *xd)
 	    {
 	      xnee_setup_rep_recording(xd);
 	    }
-	  xnee_print_sys_info(xd , xd->out_file);
+	  if (xnee_is_verbose(xd))
+	    xnee_print_sys_info(xd , xd->out_file);
 	  xnee_verbose((xd, "META DATA finished .... \n"));
 	  break ; 
 	}
     }
 	 
-
-
-
   
   /**
    * all META DATA setting up our sessions is read ...
@@ -500,7 +486,7 @@ xnee_replay_main_loop(xnee_data *xd)
 	  
 	  if (xnee_check_km (xd)==XNEE_GRAB_DATA)
 	    {
-	      printf ("\n\nsomeone grabbed us\n\n");
+	      xnee_verbose ((xd,"\n\nsomeone grabbed us\n\n"));
 	    }
 	    
 	  switch (xindata.type)
@@ -576,6 +562,7 @@ xnee_replay_main_loop(xnee_data *xd)
 	}
       else 
 	{
+	  xnee_verbose((xd, "Corrupt line ... skipped \n"));
 	  break;
 	}
 

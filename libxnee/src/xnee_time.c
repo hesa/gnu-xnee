@@ -35,6 +35,9 @@
 #include "libxnee/xnee_resolution.h"
 #include "libxnee/xnee_dl.h"
 
+
+
+
 /**************************************************************
  *                                                            *
  * xnee_get_elapsed_time                                      *
@@ -119,10 +122,16 @@ xnee_get_elapsed_time(xnee_data *xd, char type )
  *                                                            *
  **************************************************************/
 long 
-xnee_calc_sleep_amount(xnee_data *xd, long last_diff, long first_diff, long record_last_diff, long recordFirst_diff )
+xnee_calc_sleep_amount(xnee_data *xd, 
+		       long last_diff, 
+		       long first_diff, 
+		       long record_last_diff, 
+		       long recordFirst_diff )
 {
   long sleep_amt, out_of_wack_amt =0;
   float tmp;
+
+  
 
 /*   xnee_verbose ((xd, "xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\n",  */
 /* 		last_diff, first_diff, record_last_diff, recordFirst_diff )); */

@@ -24,6 +24,7 @@
 
 
 #include "libxnee/xnee.h"
+#include "libxnee/print.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
@@ -685,3 +686,41 @@ xnee_is_all_events (xnee_data *xd)
 {
   return (xd->xnee_info->all_events == XNEE_TRUE);
 }
+
+
+int
+xnee_set_replay_speed_str (xnee_data *xd, char *speed_str)
+{
+  int speed;
+  int ret  ; 
+  ret = sscanf(speed_str, "%d", &speed);
+  
+  if (ret == 1)
+    {
+      xnee_verbose ((xd, "Setting replay speed = \n", speed));
+      xnee_set_replay_speed (xd, speed);
+      return XNEE_OK;
+    }
+  else
+    {
+      xnee_verbose ((xd, "Failed to set replay speed\n"));
+      return XNEE_BAD_SPEED;
+    }
+  return XNEE_OK;
+}
+
+int
+xnee_set_replay_speed (xnee_data *xd, int speed)
+{
+  xnee_verbose ((xd, "Setting replay speed = \n", speed));
+  xd->speed_percent=speed;
+  return XNEE_OK;
+}
+
+
+int
+xnee_get_replay_speed(xnee_data *xd)
+{
+  return xd->speed_percent;
+}
+

@@ -31,6 +31,7 @@
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_km.h"
+#include "libxnee/xnee_fake.h"
 #include "libxnee/xnee_setget.h"
 
 /**************************************************************
@@ -963,10 +964,10 @@ xnee_record_async(xnee_data *xd)
 
 
   XRecordEnableContextAsync(xd->data, 
-		       xd->record_setup->rContext, 
-		       xd->rec_callback, 
-		       (XPointer) (xd) /* closure passed to Dispatch */);
-      
+			    xd->record_setup->rContext, 
+			    xd->rec_callback, 
+			    (XPointer) (xd) /* closure passed to Dispatch */);
+  
   while (1) 
     {
       /* handle data in the RECORD buffer */
@@ -980,7 +981,7 @@ xnee_record_async(xnee_data *xd)
       
       if ( xd->xnee_info->loops_left == 0 ) 
 	{
-	  printf (" closing down while loop in async loop\n");
+	  xnee_verbose  ((xd," closing down while loop in async loop\n"));
 	  break ; 
 	}
       /* sleep for a little while 

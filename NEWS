@@ -8,6 +8,8 @@ Changes in 1.08
 	   '--keyboard'         sets up ranges for all keynoard events
 	   '--recorded-resolution' resolution used when recording
 	   '--replay-resolution'   resolution to use when replaying
+	   '--speed-adjust [percent]'   change the replaying speed
+
         - synchronisation rewritten 
 
 Changes in 1.07

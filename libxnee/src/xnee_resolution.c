@@ -101,8 +101,11 @@ xnee_str_to_res(char *res_str, xnee_res *xr)
   ret = sscanf(res_str, "%dx%d",
 	       &xr->x_res, 
 	       &xr->y_res); 
+
   if ( ret == 2 ) 
-    return XNEE_OK;
+    {
+      return XNEE_OK;
+    }
   else if (xnee_check ("VGA", res_str, res_str))
     {
       xr->x_res = 800 ;
@@ -149,25 +152,28 @@ xnee_res_cmp(xnee_res *xr1, xnee_res *xr2)
   return ret;
 }
 
-int 
-xnee_resolution_differs_ (xnee_data *xd)
-{
-  return xnee_res_cmp ( &xd->res_info.record, &xd->res_info.replay);
-}
-
-
 
 int 
 xnee_resolution_differs (xnee_data *xd)
 {
-  static int res_diff = -1 ;
+  static int res_diff = XNEE_RESOLUTION_UNSET ;
   
-  if (res_diff==-1)
+  if (res_diff==XNEE_RESOLUTION_UNUSED)
+    {
+      return XNEE_RESOLUTION_UNUSED;
+    }
+  else if (res_diff==XNEE_RESOLUTION_UNSET)
     {
       if (xnee_res_cmp(&xd->res_info.record,&xd->res_info.replay)==1)
-	res_diff = 0;
+	{
+	  /* diff */
+	  res_diff = XNEE_RESOLUTION_USED;
+	}
       else
-	res_diff = 1;
+	{
+	  /* no diff */
+	  res_diff = XNEE_RESOLUTION_UNUSED;
+	}
     }
   return res_diff;
 }
@@ -176,12 +182,26 @@ xnee_resolution_differs (xnee_data *xd)
 int 
 xnee_resolution_newx (xnee_data *xd, int xval)
 {
-  static int diff = -1 ;
-  if (diff==-1)
+  static int diff = XNEE_RESOLUTION_UNSET ; 
+  if (diff==XNEE_RESOLUTION_UNSET)  
     {
-      diff = xnee_resolution_differs(xd);
+      if (xnee_is_resolution_used(xd))
+	{
+	  if (xnee_resolution_differs(xd))
+	    {
+	      diff = XNEE_RESOLUTION_USED;
+	    }
+	  else
+	    {
+	      diff = XNEE_RESOLUTION_UNUSED;
+	    }
+	}
+      else
+	{
+	  diff = XNEE_RESOLUTION_UNUSED;
+	}
     }
-  if (diff==1)
+  if (diff==XNEE_RESOLUTION_USED)
     {
       return ( ( xval * xnee_get_rep_resolution_x (xd) ) 
 	       / xnee_get_rec_resolution_x (xd));
@@ -192,15 +212,69 @@ xnee_resolution_newx (xnee_data *xd, int xval)
 int 
 xnee_resolution_newy (xnee_data *xd, int yval)
 {
-  static int diff = -1 ;
-  if (diff==-1)
+  static int diff = XNEE_RESOLUTION_UNSET ;
+  if (diff==XNEE_RESOLUTION_UNSET)
     {
-      diff = xnee_resolution_differs(xd);
+      if (xnee_is_resolution_used(xd))
+	{
+	  if (xnee_resolution_differs(xd))
+	    {
+	      diff = XNEE_RESOLUTION_USED;
+	    }
+	  else
+	    {
+	      diff = XNEE_RESOLUTION_UNUSED;
+	    }
+	}
+      else
+	{
+	  diff = XNEE_RESOLUTION_UNUSED;
+	}
     }
-  if (diff==1)
+  if (diff==XNEE_RESOLUTION_USED)
     {
       return ( ( yval * xnee_get_rep_resolution_y (xd) ) 
 	       / xnee_get_rec_resolution_y (xd));
     }
   return yval;
 }
+
+int
+xnee_is_resolution_used (xnee_data *xd)
+{
+  return xd->res_info.is_used==XNEE_RESOLUTION_USED;  
+}
+
+int 
+xnee_set_resolution_used (xnee_data *xd)
+{
+  xd->res_info.is_used=XNEE_RESOLUTION_USED;  
+  return XNEE_OK;
+}
+
+int 
+xnee_unset_resolution_used (xnee_data *xd)
+{
+  xd->res_info.is_used=XNEE_RESOLUTION_UNUSED;  
+  return XNEE_OK;
+}
+
+int 
+xnee_get_resolution_used (xnee_data *xd)
+{
+  return xd->res_info.is_used;  
+}
+
+int
+xnee_resolution_init (xnee_data *xd)
+{
+  xd->res_info.record.x_res=0;
+  xd->res_info.record.y_res=0;
+  xd->res_info.replay.x_res=0;
+  xd->res_info.replay.y_res=0;
+  xnee_set_resolution_used(xd);
+  return XNEE_OK;
+}
+ 
+
+

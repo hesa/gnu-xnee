@@ -364,9 +364,9 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
   xnee_verbose((xd, "----  xnee_grab_key mod_key=%s\n", mod_key));
   xnee_get_km_tuple (xd, &km, mod_key);
   xnee_verbose((xd, "----  xnee_grab_key mod=%d\n", km.modifier));
-  xnee_verbose((xd, "----  xnee_grab_key key=%d\n", km.key));
 
 
+  
   /* get the key+modifier from xd
    * corresponding to the mode given */
   switch (mode)
@@ -390,6 +390,7 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
       xnee_print_error ("Unknown grab mode\n");
       return XNEE_UNKNOWN_GRAB_MODE;
     }
+
 
   /* make sure we have a display to grab on*/
   if (xd->grab==NULL)

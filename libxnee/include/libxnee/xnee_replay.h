@@ -42,23 +42,6 @@ xnee_delta_time( xnee_intercept_data *);
 
 
 /**
- * Replays the event (if possible) and calls xnee_fake_** 
- * functions for distribution. <br>
- * If it wasn't poosible to replay the event XNEE_NOT_REPLAYABLE is returned.
- * 
- * @param xd   xnee's main structure
- * @param xid  the data to replay
- * @param last_elapsed 
- * @return 0   on success, XNEE_NOT_REPLAYABLE if failure
- *  
- */
-int 
-xnee_replay_event_handler (xnee_data *xd,  xnee_intercept_data* xid , int last_elapsed);  
-
-
-
-
-/**
  * Read the Xnee Manual and Xnee developer Manual for a more detailed description
  * on synchronisation. 
  *
@@ -247,45 +230,6 @@ xnee_replay_select_protocol (XRecordRange *) ;
  */
 XID   
 xnee_client_id (Display *dpy); 
-
-/**
- * Sends a faked key event to the display in the distribution list as found in xd.
- * @param xd       xnee's main structure
- * @param keycode  keycode of the event to be faked
- * @param bo       is it a press or a release
- * @param dtime    how long before the faking shall take place
- * @return int     XNEE_OK on success.
- */
-int 
-xnee_fake_key_event  (xnee_data* xd, int keycode, Bool bo, int dtime);
-
-/**
- * Sends a faked button event to the display in the distribution list as found in xd.
- * @param xd       xnee's main structure
- * @param button   the button to fake
- * @param bo       press or release
- * @param dtime    how long before the faking shall take place
- * @return int     XNEE_OK on success.
- */
-int
-xnee_fake_button_event (xnee_data* xd, int button, Bool bo , int dtime);
-
-
-/**
- * Sends a faked moton event to the display in the distribution list as found in xd.
- * @param xd       xnee's main structure
- * @param screen   the screen to send it to
- * @param x        x coordinate
- * @param y        y coordinate
- * @param dtime    how long before the faking shall take place
- * @return int     XNEE_OK on success.
- */
-int 
-xnee_fake_motion_event (xnee_data* xd,
-			int screen, 
-			int x, 
-			int y, 
-			int dtime);
 
 
 /**
