@@ -30,6 +30,7 @@
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_fake.h"
 #include "libxnee/xnee_error.h"
+#include "libxnee/xnee_session.h"
 #include "parse.h"
 
 

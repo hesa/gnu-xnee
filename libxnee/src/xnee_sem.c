@@ -22,13 +22,13 @@
  * MA  02111-1307, USA.                                              
  ****/
 
-#include <semaphore.h>
 
 #include <libxnee/xnee.h>
 #include <libxnee/print.h>
 #include <libxnee/xnee_sem.h>
 
 #ifdef XNEE_USE_SEMAPHORES
+#include <semaphore.h>
 
 /**************************************************************
  *                                                            *
@@ -102,5 +102,8 @@ xnee_sem_destroy(xnee_data *xd, sem_t *sem)
   ret = sem_destroy (sem);
   return ret;
 }
+
+#else
+
 
 #endif /* XNEE_USE_SEMAPHORES*/

@@ -43,12 +43,12 @@
 int
 xnee_set_callback (xnee_data *xd,
 		   callback_ptrptr, 
-		   char *sym_name);
+		   const char *sym_name);
 
 /* OLD VERSION
   xnee_set_callback (xnee_data *xd,
 		   void (**dest) (XPointer , XRecordInterceptData *), 
-		   char *sym_name);
+		   const char *sym_name);
 */
 
 
@@ -71,10 +71,10 @@ xnee_set_callback (xnee_data *xd,
 int
 xnee_set_synchronize (xnee_data *xd,
 		      synch_ptrptr dest, 
-		      char *sym_name);
+		      const char *sym_name);
 
 /* OLD VERSION
 xnee_set_synchronize (xnee_data *xd,
 		      void (**dest) (xnee_data *xd, int replayed_type, int replayed_nr), 
-		      char *sym_name);
+		      const char *sym_name);
 */

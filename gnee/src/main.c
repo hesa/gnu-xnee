@@ -14,6 +14,8 @@
 #include "recordables.h"
 
 #include <libxnee/xnee.h>
+#include <libxnee/xnee_alloc.h>
+#include <libxnee/xnee_session.h>
 #include <gnee_xnee.h>
 
 #define GNEE "gnee"

@@ -136,7 +136,7 @@ xnee_replay_buffer_handle (xnee_data* xd, int data_type, int nr, Bool rec_or_rep
   /*
    * protect the buffer by waiting for the buffer semaphore
    */
-  xnee_sem_wait (xd, xd->buf_sem);
+  xnee_sem_wait(xd, xd->buf_sem);
 
   /*
    * From where did we get the data?
@@ -203,7 +203,7 @@ xnee_replay_buffer_handler (xnee_data* xd,
   /*
    * protect the buffer by waiting for the buffer semaphore
    */
-  xnee_sem_wait (xd, xd->buf_sem);
+  xnee_sem_wait(xd, xd->buf_sem);
 
 
   /*
@@ -338,7 +338,7 @@ xnee_update_buffer_cache(xnee_data *xd)
   /*
    * protect the buffer by waiting for the buffer semaphore
    */
-  xnee_sem_wait (xd, xd->buf_sem);
+  xnee_sem_wait(xd, xd->buf_sem);
   
   for (counter=0 ; counter < MAX_UNSYNC_LOOPS; counter++)
     {
@@ -401,7 +401,7 @@ xnee_hard_update_buffer_cache(xnee_data *xd)
   /*
    * protect the buffer by waiting for the buffer semaphore
    */
-  xnee_sem_wait (xd, xd->buf_sem);
+  xnee_sem_wait(xd, xd->buf_sem);
   
   for (counter=0 ; counter < MAX_UNSYNC_LOOPS; counter++)
     {

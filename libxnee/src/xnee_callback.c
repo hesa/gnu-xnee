@@ -47,7 +47,7 @@
 int
 xnee_set_callback (xnee_data *xd, 
 		   callback_ptrptr dest, 
-		   char *sym_name)
+		   const char *sym_name)
 {
   const char *error;
   callback_ptr saved;
@@ -62,8 +62,8 @@ xnee_set_callback (xnee_data *xd,
   else
     {
       *dest = (callback_ptr) xnee_dlsym(xd, 
-					 xd->plugin_handle,
-					 sym_name);
+					xd->plugin_handle,
+					sym_name);
       error = xnee_dlerror(xd) ;
       if ( error != NULL)  
 	{
@@ -90,7 +90,7 @@ xnee_set_callback (xnee_data *xd,
 int
 xnee_set_synchronize (xnee_data *xd,
 		      synch_ptrptr dest, 
-		      char *sym_name)
+		      const char *sym_name)
 {
 
    const char *error;

@@ -24,14 +24,15 @@
 
 #include <stdio.h>
 
+#include "libxnee/xnee.h"
 #include "libxnee/xnee_dl.h"
 #include "libxnee/feedback.h"
-
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>
 #else
 #include <varargs.h> 
 #endif
+
 
 
 int  xnee_xosd_close(xnee_data *xd);

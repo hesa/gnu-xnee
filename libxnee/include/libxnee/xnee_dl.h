@@ -33,7 +33,7 @@ void*
 xnee_dlopen (xnee_data *xd, char *dl, int flag);
 
 void*
-xnee_dlsym (xnee_data *xd, void* handle, char *sym);
+xnee_dlsym (xnee_data *xd, void* handle, const char *sym);
 
 int 
 xnee_dlclose (xnee_data *xd, void* handle);

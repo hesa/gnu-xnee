@@ -25,19 +25,6 @@
 #ifndef XNEE_KM_H
 #define XNEE_KM_H
 
-#define XNEE_SYMBOLIC_ALT      "Alt"
-#define XNEE_SYMBOLIC_CONTROL  "Control"
-#define XNEE_SYMBOLIC_SCROLL   "Scroll"
-#define XNEE_SYMBOLIC_CAPS     "Caps"
-#define XNEE_SYMBOLIC_SHIFT    "Shift"
-
-#define XNEE_REAL_ALT      "Alt_L"
-#define XNEE_REAL_CONTROL  "Control_L"
-#define XNEE_REAL_SCROLL   "Scroll_L"
-#define XNEE_REAL_CAPS     "Caps_Lock"
-#define XNEE_REAL_SHIFT    "Shift_L"
-
-
 const char *
 xnee_symbolic_modifier2modifier (xnee_data *xd, const char *mod_str);
 

@@ -569,39 +569,48 @@ xnee_record_print_record_range (xnee_data *xd, /*@null@*/ FILE* out)
   for ( i=0 ; i<max ; i++ )
     {
       fprintf (out, "# RecordRange[%d]\n", i);
-      fprintf (out, XNEE_REQUEST_STR "           %u-%u\n", 
+      fprintf (out, "%s            %u-%u\n", 
+	       XNEE_REQUEST_STR,
 	       xd->record_setup->range_array[i]->core_requests.first,
 	       xd->record_setup->range_array[i]->core_requests.last       );
 
-      fprintf (out, XNEE_REPLY_STR  "                   %u-%u \n", 
+      fprintf (out, "%s                   %u-%u \n", 
+	       XNEE_REPLY_STR,
 	       xd->record_setup->range_array[i]->core_replies.first,
 	       xd->record_setup->range_array[i]->core_replies.last       );
 
-      fprintf (out, XNEE_EXT_REQ_MAJ_STR "  %u-%u \n", 
+      fprintf (out, "%s  %u-%u \n", 
+	       XNEE_EXT_REQ_MAJ_STR,
 	       xd->record_setup->range_array[i]->ext_requests.ext_major.first,
 	       xd->record_setup->range_array[i]->ext_requests.ext_major.last);
       
-      fprintf (out, XNEE_EXT_REQ_MIN_STR "  %u-%u \n", 
+      fprintf (out, "%s  %u-%u \n", 
+	       XNEE_EXT_REQ_MIN_STR,
 	       xd->record_setup->range_array[i]->ext_requests.ext_minor.first,
 	       xd->record_setup->range_array[i]->ext_requests.ext_minor.last);
 
-      fprintf (out, XNEE_EXT_REP_MAJ_STR "   %u-%u\n", 
+      fprintf (out, "%s   %u-%u\n", 
+	       XNEE_EXT_REP_MAJ_STR,
 	       xd->record_setup->range_array[i]->ext_replies.ext_major.first,
 	       xd->record_setup->range_array[i]->ext_replies.ext_major.last);
 
-      fprintf (out, XNEE_EXT_REP_MIN_STR "   %u-%u \n", 
+      fprintf (out, "%s   %u-%u \n", 
+	       XNEE_EXT_REP_MIN_STR,
 	       xd->record_setup->range_array[i]->ext_replies.ext_minor.first,
 	       xd->record_setup->range_array[i]->ext_replies.ext_minor.last );
 
-      fprintf (out, XNEE_DELIVERED_EVENT_STR"         %u-%u \n", 
+      fprintf (out, "%s         %u-%u \n", 
+	       XNEE_DELIVERED_EVENT_STR,
 	       xd->record_setup->range_array[i]->delivered_events.first,
 	       xd->record_setup->range_array[i]->delivered_events.last  );
 
-      fprintf (out, XNEE_DEVICE_EVENT_STR "            %u-%u \n", 
+      fprintf (out, "%s            %u-%u \n", 
+	       XNEE_DEVICE_EVENT_STR,
 	       xd->record_setup->range_array[i]->device_events.first,
 	       xd->record_setup->range_array[i]->device_events.last    );
 
-      fprintf (out, XNEE_ERROR_STR "                   %u-%u \n", 
+      fprintf (out, "%s                   %u-%u \n", 
+	       XNEE_ERROR_STR,
 	       xd->record_setup->range_array[i]->errors.first,
 	       xd->record_setup->range_array[i]->errors.last      );
     }
@@ -647,7 +656,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   &&
 	   ( (int)xd->record_setup->range_array[i]->core_requests.last != 0))
 	{
-	  fprintf (fp, XNEE_REQUEST_STR " %u-%u\n", 
+	  fprintf (fp,  "%s %u-%u\n", 
+		   XNEE_REQUEST_STR,
                    xd->record_setup->range_array[i]->core_requests.first,
                    xd->record_setup->range_array[i]->core_requests.last       );
 	}
@@ -655,7 +665,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   &&
 	   ( (int)xd->record_setup->range_array[i]->core_replies.last != 0))
 	{
-	  fprintf (fp, XNEE_REPLY_STR  "                   %u-%u \n",
+	  fprintf (fp,   "%s                   %u-%u \n",
+		   XNEE_REPLY_STR,
 		   xd->record_setup->range_array[i]->core_replies.first,
 		   xd->record_setup->range_array[i]->core_replies.last       );
 	}
@@ -663,7 +674,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   &&
 	   ( (int)xd->record_setup->range_array[i]->ext_requests.ext_major.last != 0))
 	{
-	  fprintf (fp, XNEE_EXT_REQ_MAJ_STR "  %u-%u \n", 
+	  fprintf (fp, "%s  %u-%u \n", 
+		   XNEE_EXT_REQ_MAJ_STR ,
 		   xd->record_setup->range_array[i]->ext_requests.ext_major.first,
 		   xd->record_setup->range_array[i]->ext_requests.ext_major.last);
 	}
@@ -671,7 +683,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   &&
 	   ( (int)xd->record_setup->range_array[i]->ext_requests.ext_minor.last != 0))
 	{
-	  fprintf (fp, XNEE_EXT_REQ_MIN_STR "  %u-%u \n", 
+	  fprintf (fp, "%s  %u-%u \n", 
+		   XNEE_EXT_REQ_MIN_STR ,
 		   xd->record_setup->range_array[i]->ext_requests.ext_minor.first,
 		   xd->record_setup->range_array[i]->ext_requests.ext_minor.last        );
 	}
@@ -680,7 +693,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   &&
 	   ( (int)xd->record_setup->range_array[i]->ext_replies.ext_major.last != 0))
 	{
-	  fprintf (fp, XNEE_EXT_REP_MAJ_STR "   %u-%u\n", 
+	  fprintf (fp,  "%s   %u-%u\n", 
+		   XNEE_EXT_REP_MAJ_STR,
 		   xd->record_setup->range_array[i]->ext_replies.ext_major.first,
 		   xd->record_setup->range_array[i]->ext_replies.ext_major.last        );
 	}
@@ -689,7 +703,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   ( (int)xd->record_setup->range_array[i]->ext_replies.ext_minor.last != 0))
 	{
 	  
-	  fprintf (fp, XNEE_EXT_REP_MIN_STR "   %u-%u \n", 
+	  fprintf (fp,  "%s   %u-%u \n", 
+		   XNEE_EXT_REP_MIN_STR,
 		   xd->record_setup->range_array[i]->ext_replies.ext_minor.first,
 		   xd->record_setup->range_array[i]->ext_replies.ext_minor.last);
 	}
@@ -698,7 +713,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   &&
 	   ( (int)xd->record_setup->range_array[i]->delivered_events.last != 0))
 	{
-	  fprintf (fp, XNEE_DELIVERED_EVENT_STR"         %u-%u \n", 
+	  fprintf (fp, "%s         %u-%u \n", 
+		   XNEE_DELIVERED_EVENT_STR,
 		   xd->record_setup->range_array[i]->delivered_events.first,
 		   xd->record_setup->range_array[i]->delivered_events.last      );
 	  
@@ -707,7 +723,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   &&
 	   ( (int)xd->record_setup->range_array[i]->device_events.last != 0))
 	{
-	  fprintf (fp, XNEE_DEVICE_EVENT_STR "            %u-%u \n", 
+	  fprintf (fp, "%s            %u-%u \n", 
+		   XNEE_DEVICE_EVENT_STR,
 		   xd->record_setup->range_array[i]->device_events.first,
 		   xd->record_setup->range_array[i]->device_events.last        );
 	}
@@ -715,7 +732,8 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 	   &&
 	   ( (int) xd->record_setup->range_array[i]->errors.last != 0))
 	{
-	  fprintf (fp, XNEE_ERROR_STR "                   %u-%u \n", 
+	  fprintf (fp,  "%s                   %u-%u \n", 
+		   XNEE_ERROR_STR,
 		   xd->record_setup->range_array[i]->errors.first,
 		   xd->record_setup->range_array[i]->errors.last      );
 	}
@@ -880,9 +898,11 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "##############################################\n");
   fprintf (out,  "#      Files                                 #\n");
   fprintf (out,  "##############################################\n");
-  fprintf (out,  XNEE_OUT_FILE " %s\n",
+  fprintf (out,   "%s %s\n",
+	   XNEE_OUT_FILE,
 	   (xd->out_name==NULL) ? "stdout" : xd->out_name );
-  fprintf (out,  XNEE_ERR_FILE " %s\n",
+  fprintf (out,   "%s %s\n",
+	   XNEE_ERR_FILE,
 	   (xd->err_name==NULL) ? "stderr" : xd->err_name );
   
   /* GRAB */
@@ -954,13 +974,16 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "#      Resolution                            #\n");
   fprintf (out,  "##############################################\n");
   fprintf (out,  "\n# Resolution\n");
-  fprintf (out,  "#" XNEE_RECORDED_RESOLUTION"  %dx%d\n",
+  fprintf (out,  "#" "%s  %dx%d\n",
+	   XNEE_RECORDED_RESOLUTION,
 	   xnee_get_rec_resolution_x(xd),
 	   xnee_get_rec_resolution_y(xd)  ); 
-  fprintf (out,  "#" XNEE_REPLAY_RESOLUTION"  %dx%d\n",
+  fprintf (out,  "#" "%s  %dx%d\n",
+	   XNEE_REPLAY_RESOLUTION,
 	   xnee_get_rep_resolution_x(xd),
 	   xnee_get_rep_resolution_y(xd)  ); 
-  fprintf (out,  "#" XNEE_ADJUST_RESOLUTION"  %d\n",
+  fprintf (out,  "#" "%s  %d\n",
+	   XNEE_ADJUST_RESOLUTION,
 	   xnee_get_resolution_used (xd));
 
 
@@ -969,7 +992,8 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "#      Speed                                 #\n");
   fprintf (out,  "##############################################\n");
   fprintf (out,  "\n# Speed\n");
-  fprintf (out,  "#" XNEE_SPEED_PERCENT"  %d\n",
+  fprintf (out,  "#" "%s  %d\n",
+	   XNEE_SPEED_PERCENT,
 	   xnee_get_replay_speed(xd)); 
   
 
@@ -1019,21 +1043,25 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "##############################################\n");
   /* Plugin */
   fprintf (out,  "\n# Plugin file (0 means none)\n");
-  fprintf (out,  XNEE_PLUGIN"       %s\n",
+  fprintf (out,  "%s       %s\n",
+	   XNEE_PLUGIN,
 	   xd->plugin_name? xd->plugin_name : "0" ); 
   
   /* Modes */
   fprintf (out,  "\n# Modes (currently not used)\n");
-  fprintf (out,  XNEE_SYNC_MODE  "       %d\n",
+  fprintf (out,    "%s       %d\n",
+	   XNEE_SYNC_MODE,
 	   xd->sync ); 
 
   fprintf (out,  "\n# Human printout of X11 data (instead of Xnee format)\n");
-  fprintf (out,  XNEE_HUMAN_PRINTOUT"  %d\n",
+  fprintf (out,  "%s  %d\n",
+	   XNEE_HUMAN_PRINTOUT,
 	   (xnee_is_human_printout(xd)!=0)); 
 
   
   fprintf (out,  "\n# Delay before starting record/replay\n");
-  fprintf (out,  XNEE_DELAY_TIME "  %d\n", xnee_get_interval(xd) ); 
+  fprintf (out,  "# "  "%s  %d\n", xnee_get_interval(xd) ); 
+  XNEE_DELAY_TIME,
            
 
   
@@ -1142,10 +1170,11 @@ xnee_store_mouse_pos (xnee_data* xd )
 		     &mask);
   
   xd->data_fp (xd->out_file, 
-	       XNEE_FAKE_MOTION " " 
-	       XNEE_FAKE_X_ARG "=%d " 
-	       XNEE_FAKE_Y_ARG "=%d \n" 
-	       , rx, ry );
+	        "%s " 
+	        "%s=%d " 
+	       "%s=%d \n" ,
+	       XNEE_FAKE_MOTION,XNEE_FAKE_X_ARG,XNEE_FAKE_Y_ARG,
+	       rx, ry );
 }
 
 

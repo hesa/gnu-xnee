@@ -26,7 +26,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include <stdarg.h>
 #include <stdlib.h>
 #include <setjmp.h>
 #include <signal.h>

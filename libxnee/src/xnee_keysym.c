@@ -29,6 +29,7 @@
 
 
 #include "libxnee/xnee.h"
+#include "libxnee/print.h"
 #include "libxnee/xnee_keysym.h"
 #include "libxnee/xnee_km.h"
 
@@ -125,6 +126,8 @@ xnee_token_to_km (xnee_data *xd,
   KeySym keysym;
   Display *dpy = xd->fake;
 
+  xnee_verbose((xd, "Finding km for %s\n", str));
+
   memset (kc->mod_keycodes, 0, XNEE_NR_OF_MODIFIERS * sizeof(KeyCode));
 
   for (i=0;masks[i]!=-1;i++)
@@ -144,7 +147,13 @@ xnee_token_to_km (xnee_data *xd,
 	{
 	  KeySym ks ;
 	  char *nm ;
+	  xnee_verbose((xd, "  i=%d\n", i ));
+	  xnee_verbose((xd, "  xd=%d\n", xd ));
+	  xnee_verbose((xd, "  map=%d\n", xd->map ));
+	  xnee_verbose((xd, "  max_keypermod=%d\n" ,xd->map->max_keypermod ));
+
 	  k = (i-1)*xd->map->max_keypermod ;
+	  xnee_verbose((xd, "  k=%d\n", k ));
 	  ks = XKeycodeToKeysym(dpy,
 				xd->map->modifiermap[k],
 				0);

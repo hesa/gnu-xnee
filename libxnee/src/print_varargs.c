@@ -26,12 +26,13 @@
 #include "libxnee/print.h"
 #include "libxnee/print_varargs.h"
 
-
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>
 #else
 #include <varargs.h> 
 #endif
+
+
 
 /**************************************************************
  *                                                            *

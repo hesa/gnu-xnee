@@ -23,9 +23,11 @@
  ****/
 
 #include <libxnee/xnee.h>
-#include <semaphore.h>
 
 #ifdef XNEE_USE_SEMAPHORES
+#include <semaphore.h>
+
+
 int 
 xnee_sem_init(xnee_data *xd, sem_t *sem, int shared, int val);
 
@@ -40,18 +42,13 @@ xnee_sem_post(xnee_data *xd, sem_t *sem);
 
 int 
 xnee_sem_destroy(xnee_data *xd, sem_t *sem);
+
 #else
-
-#define xnee_sem_init(xd, sem, shared, val) 
-
-#define xnee_sem_wait(xd, sem) 
-
-#define xnee_sem_trywait(xd, sem) 
-
-#define xnee_sem_post(xd, sem) 
-
-#define xnee_sem_destroy(xd, sem) 
-
+#define xnee_sem_init(xd, sem, shared, val)
+#define xnee_sem_wait(xd, sem)
+#define xnee_sem_trywait(xd, sem)
+#define xnee_sem_post(xd,  sem)
+#define xnee_sem_destroy(xd, sem)
 #endif /* XNEE_USE_SEMAPHORES*/
 
 #define XNEE_BUFFER_SEM_INIT    

@@ -39,6 +39,8 @@
 #include <libxnee/xnee_threshold.h>
 #include <libxnee/xnee_setget.h>
 #include <libxnee/xnee_error.h>
+#include <libxnee/xnee_session.h>
+#include <libxnee/xnee_alloc.h>
 
 
 /* static gnee_xnee gx ;  */

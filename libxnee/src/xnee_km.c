@@ -533,10 +533,10 @@ xnee_handle_rec_key(xnee_data *xd)
       feedback (xd, "Xnee exec received");
       exec_prog = xnee_get_exec_prog(xd);
       if (exec_prog==NULL)
-	fprintf (xd->out_file, XNEE_EXEC_MARK"   \n");
+	fprintf (xd->out_file, "%s   \n",XNEE_EXEC_MARK);
       else
 	{
-	  fprintf (xd->out_file, XNEE_EXEC_MARK"    %s\n", exec_prog);
+	  fprintf (xd->out_file, "%s    %s\n", XNEE_EXEC_MARK, exec_prog);
 	  system ( exec_prog );
 	}
 

@@ -26,6 +26,14 @@ libxnee_a_SOURCES = xnee.c  \
 	xnee_expr.c \
 	xnee_error.c \
 	xnee_keysym.c \
+	xnee_strings.c \
+	xnee_session.c \
+	xnee_utils.c \
+	xnee_alloc.c \
+	xnee_fileop.c \
+	xnee_display.c \
+	xnee_settings.c \
+	xnee_plugin.c \
 	feedback.c 
 
 EXTRA_DIST = ../include/libxnee/xnee.h     \
@@ -50,6 +58,14 @@ EXTRA_DIST = ../include/libxnee/xnee.h     \
 	../include/libxnee/xnee_range.h \
 	../include/libxnee/xnee_expr.h \
 	../include/libxnee/xnee_keysym.h \
+	../include/libxnee/xnee_strings.h \
+	../include/libxnee/xnee_session.h \
+	../include/libxnee/xnee_utils.h \
+	../include/libxnee/xnee_alloc.h \
+	../include/libxnee/xnee_fileop.h \
+	../include/libxnee/xnee_display.h \
+	../include/libxnee/xnee_settings.h \
+	../include/libxnee/xnee_plugin.h \
 	../include/libxnee/feedback.h 
 
 

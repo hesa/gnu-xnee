@@ -30,7 +30,7 @@
 #else
 #include <varargs.h> 
 #endif
-#include <libxnee/xnee.h>
+
 
 
 static char *latest_error = NULL ;
@@ -66,8 +66,8 @@ char error_descr_solut[256][256] =
     "You have given invalid input to Xnee ",
 
     /* XNEE_NO_REC_EXT */     
-    "Record extension missing on the display",
-    "Enable the RECORD extension. Read the mnual on how to do this",
+    "Record extension missing on the display. Please add appropriate option to your X Server configuration",
+    "Enable the RECORD extension. Read the manual on how to do this",
 
     /* XNEE_NO_TEST_EXT */    
     "XTest extension missing on the display",

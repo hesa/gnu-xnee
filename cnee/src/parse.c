@@ -35,6 +35,7 @@
 #include "libxnee/xnee_replay.h"
 #include "libxnee/datastrings.h"
 #include "libxnee/xnee_threshold.h"
+#include "libxnee/xnee_strings.h"
 #include "parse.h"
 #include "libxnee/print.h"
 #include "libxnee/xnee_range.h"
@@ -994,7 +995,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"Henrik Sandklef.\n");
 
   fprintf (fd ,".SH \"REPORTING BUGS\"\n");
-  fprintf (fd ,"Report bugs in the program to "XNEE_BUG_MAIL". \n");
+  fprintf (fd ,"Report bugs in the program to %s. \n", XNEE_BUG_MAIL);
 
   fprintf (fd ,".SH \"COPYRIGHT\"\n");
   fprintf (fd ,"Copyright (C) 2002 Henrik Sandklef.\n");
@@ -1011,7 +1012,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,".SH \"NOTES\"\n");
   fprintf (fd ,"This page describes\n");
   fprintf (fd ,".B Xnee.\n");
-  fprintf (fd ,"Mail corrections and additions to " XNEE_BUG_MAIL "\n");
+  fprintf (fd ,"Mail corrections and additions to %s\n", XNEE_BUG_MAIL );
 }
 
 int

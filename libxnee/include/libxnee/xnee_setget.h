@@ -30,7 +30,7 @@
 
 
 int
-xnee_set_display_name (xnee_data *xd, char *disp);
+xnee_set_display_name (xnee_data *xd, const char *disp);
 
 char*
 xnee_get_display_name (xnee_data *xd);
@@ -94,10 +94,10 @@ xnee_get_rc_file (xnee_data *xd);
 
 
 int
-xnee_set_rc_name (xnee_data *xd, char* rc_name);
+xnee_set_rc_name (xnee_data *xd, const char* rc_name);
  
 int
-xnee_set_rc_byname (xnee_data *xd, char* rc_name);
+xnee_set_rc_byname (xnee_data *xd, const char* rc_name);
  
  
 char *
@@ -112,7 +112,7 @@ FILE*
 xnee_get_data_file (xnee_data *xd);
 
 int
-xnee_set_data_name (xnee_data *xd, char* data);
+xnee_set_data_name (xnee_data *xd, const char* data);
 
 char *
 xnee_get_data_name (xnee_data *xd);
@@ -199,7 +199,7 @@ char*
 xnee_get_exec_prog (xnee_data *xd);
 
 int
-xnee_set_key (xnee_data *xd, int mode, char* key );
+xnee_set_key (xnee_data *xd, int mode, const char* key );
 
 char *
 xnee_get_key (xnee_data *xd, int mode);
@@ -211,13 +211,13 @@ char*
 xnee_get_extra_str (xnee_data *xd, int idx);
 
 int
-xnee_set_key_str (xnee_data *xd, int idx, char *str);
+xnee_set_key_str (xnee_data *xd, int idx, const char *str);
 
 int
-xnee_set_extra_str (xnee_data *xd, int idx, char *str);
+xnee_set_extra_str (xnee_data *xd, int idx, const char *str);
 
 int
-xnee_set_exec_prog (xnee_data *xd, char *prog);
+xnee_set_exec_prog (xnee_data *xd, const char *prog);
 
 
 #define xnee_get_stop_key(xd)        xnee_get_key_str(xd, XNEE_GRAB_STOP)
@@ -337,7 +337,7 @@ xnee_set_xnee_printout (xnee_data *xd);
 #define xnee_is_xnee_printout(xd)  (xd->rec_callback == xnee_record_dispatch)
 
 int
-xnee_set_replay_speed_str (xnee_data *xd, char *speed_str);
+xnee_set_replay_speed_str (xnee_data *xd, const char *speed_str);
 
 int
 xnee_set_replay_speed (xnee_data *xd, int speed);
@@ -394,7 +394,7 @@ Bool
 xnee_is_store_mouse_pos(xnee_data *xd);
 
 int
-xnee_set_program_name(xnee_data *xd, char* name);
+xnee_set_program_name(xnee_data *xd, const char* name);
 
 char *
 xnee_get_program_name(xnee_data *xd);
@@ -407,6 +407,14 @@ xnee_set_new_project(xnee_data *xd);
 
 int
 xnee_unset_new_project(xnee_data *xd);
+
+
+int
+xnee_set_autorepeat (xnee_data *xd);
+
+int
+xnee_reset_autorepeat (xnee_data *xd);
+
 
 
 #endif /* XNEE_SETGET_H */ 

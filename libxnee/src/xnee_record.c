@@ -512,18 +512,18 @@ xnee_record_init (xnee_data *xd)
   xd->xnee_info.first_last      = False  ; /* Intercept all MotionNotify, else only first and last */
 
   xd->xnee_info.last_motion     = False  ; /* Used to record only first and last Motion in a row*/
-  xd->xnee_info.events_recorded = 0    ; /* Default 100 Datum */
+  xd->xnee_info.events_recorded = 0    ; 
   xd->xnee_info.store_mouse_pos = 0;
    
-  xd->xnee_info.data_recorded   = 0    ; /* Default 500 Datum*/
+  xd->xnee_info.data_recorded   = 0    ; 
    
-  xd->xnee_info.time_recorded   = 0      ; /* Default 1*/
+  xd->xnee_info.time_recorded   = 0    ;
    
-  xd->xnee_info.events_max      = 100    ; /* Default 100 Datum */
+  xd->xnee_info.events_max      = -1    ; 
    
-  xd->xnee_info.data_max        = 500    ; /* Default 500 Datum*/
+  xd->xnee_info.data_max        = -1    ; 
    
-  xd->xnee_info.time_max        = 1     ; /* Default 1*/
+  xd->xnee_info.time_max        = -1    ; 
    
   xd->xnee_info.x               = 0      ; /* Need not to be set, anyhow last MotionNotify x=0*/
   xd->xnee_info.y               = 0      ; /* Need not to be set, anyhow last MotionNotify x=0*/

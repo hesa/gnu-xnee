@@ -37,7 +37,7 @@
 
 
 int
-xnee_set_display_name (xnee_data *xd, char *disp)
+xnee_set_display_name (xnee_data *xd, const char *disp)
 {
   if (disp==NULL)
     return XNEE_OK;
@@ -198,7 +198,7 @@ xnee_get_rc_file (xnee_data *xd)
 
 
 int
-xnee_set_rc_name (xnee_data *xd, char* rc_name)
+xnee_set_rc_name (xnee_data *xd, const char* rc_name)
 {
   XNEE_FREE_IF_NOT_NULL(xd->rc_name);
   xd->rc_name=strdup(rc_name);
@@ -217,7 +217,7 @@ xnee_get_rc_name (xnee_data *xd)
 
 
 int
-xnee_set_rc_byname (xnee_data *xd, char *rc_name)
+xnee_set_rc_byname (xnee_data *xd, const char *rc_name)
 {
   struct stat buf;
 
@@ -264,7 +264,7 @@ xnee_get_data_file (xnee_data *xd)
 }
 
 int
-xnee_set_data_name (xnee_data *xd, char* data)
+xnee_set_data_name (xnee_data *xd, const char* data)
 {
   XNEE_FREE_IF_NOT_NULL(xd->data_name);
   xd->data_name=strdup(data);
@@ -496,7 +496,7 @@ xnee_is_cont (xnee_data *xd)
 
 
 int
-xnee_set_key (xnee_data *xd, int mode, char* km)
+xnee_set_key (xnee_data *xd, int mode, const char* km)
 {
   xnee_verbose((xd, "---> xnee_set_key\n"));
   switch (mode)
@@ -568,7 +568,7 @@ xnee_get_key (xnee_data *xd, int mode)
 
 
 int
-xnee_set_extra_str (xnee_data *xd, int idx, char *str)
+xnee_set_extra_str (xnee_data *xd, int idx, const char *str)
 {
   if ( (idx<0) && (idx>XNEE_GRAB_LAST) )
     return XNEE_BAD_GRAB_DATA;
@@ -581,7 +581,7 @@ xnee_set_extra_str (xnee_data *xd, int idx, char *str)
 }
 
 int
-xnee_set_key_str (xnee_data *xd, int idx, char *str)
+xnee_set_key_str (xnee_data *xd, int idx, const char *str)
 {
   if ( (idx<0) && (idx>XNEE_GRAB_LAST) )
     return XNEE_BAD_GRAB_DATA;
@@ -618,7 +618,7 @@ xnee_get_exec_prog (xnee_data *xd)
 
 
 int
-xnee_set_exec_prog (xnee_data *xd, char *prog)
+xnee_set_exec_prog (xnee_data *xd, const char *prog)
 {
   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str);
 
@@ -815,7 +815,7 @@ xnee_set_xnee_printout (xnee_data *xd)
 
 
 int
-xnee_set_replay_speed_str (xnee_data *xd, char *speed_str)
+xnee_set_replay_speed_str (xnee_data *xd, const char *speed_str)
 {
   int speed;
   int ret  ; 
@@ -866,7 +866,7 @@ xnee_is_store_mouse_pos(xnee_data *xd)
 
 
 int
-xnee_set_program_name(xnee_data *xd, char* name)
+xnee_set_program_name(xnee_data *xd, const char* name)
 {
   XNEE_FREE_IF_NOT_NULL(xd->program_name);
 
@@ -905,3 +905,102 @@ xnee_unset_new_project(xnee_data *xd)
       xd->xrm.new_project = 0;
       return XNEE_OK;
 }
+
+
+
+
+int
+xnee_set_autorepeat (xnee_data *xd)
+{
+  if (xd->autorepeat_saved==1)
+    {
+      return XNEE_OK;
+    }
+  
+
+  if ( (xd==NULL) || (xd->fake==NULL) )
+    {
+      return (XNEE_MEMORY_FAULT);
+    }
+
+  /*@ ignore @*/
+  XGetKeyboardControl (xd->fake, &xd->kbd_orig);
+  /*@ end @*/
+  
+  xnee_verbose ((xd," key_click_percent  %d \n", 
+		 xd->kbd_orig.key_click_percent));
+  xnee_verbose ((xd," bell_percent       %d\n", 
+		 xd->kbd_orig.bell_percent));
+  xnee_verbose ((xd," bell_pitch         %d\n", 
+		 xd->kbd_orig.bell_pitch));
+  xnee_verbose ((xd," bell_duration      %d\n", 
+		 xd->kbd_orig.bell_duration));
+  xnee_verbose ((xd," led_mask           %d\n",  
+		 (int)xd->kbd_orig.led_mask));
+  xnee_verbose ((xd," global_auto_repeat %d\n", 
+		 xd->kbd_orig.global_auto_repeat));
+
+  xnee_verbose((xd,"Auto repeat:\n"));
+  /*
+  for (i=0;i<32;i++)
+    {
+      xnee_verbose((xd,"Key\t"));
+      for (j=1;j<=8;j++)
+	xnee_verbose((xd,"%03d ", (i*8)+j )); 
+      xnee_verbose((xd,"\nValue\t"));
+      for (j=1;j<=8;j++)
+        {
+          xnee_verbose((xd,"  %d ", xd->kbd_orig.auto_repeats[i] && j));
+        }
+      xnee_verbose((xd,"\n\n"));
+    }
+  */
+  /*@ ignore @*/
+  XAutoRepeatOff(xd->fake);
+  /*@ end @*/
+  xd->autorepeat_saved=1;  
+
+
+  return XNEE_OK;
+}
+
+
+int
+xnee_reset_autorepeat (xnee_data *xd)
+{  
+  if (xd->autorepeat_saved==0)
+    {
+      return XNEE_OK;
+    }
+
+
+  xnee_verbose((xd,"Resetting autorepeat on (%d) to: ",
+		(xd->fake==NULL)?0:(int)xd->fake));
+
+  if (!xd->fake)
+    return XNEE_OK;
+
+  if (xd->kbd_orig.global_auto_repeat==AutoRepeatModeOn)
+    {
+      xnee_verbose((xd,"AutoRepeatModeOn\n"));
+      /*@ignore@*/
+      XAutoRepeatOn(xd->fake);
+      /*@end@*/
+    }
+  else
+    {
+      xnee_verbose((xd,"AutoRepeatModeOff\n"));
+      /*@ignore@*/
+      XAutoRepeatOff(xd->fake);
+      /*@end@*/
+    }
+  /* Make sure the resetting of autorepeat is handled
+     before we close down the display */
+  /*@ignore@*/
+  XFlush (xd->fake);
+  /*@end@*/
+  xd->autorepeat_saved=0;  
+  return XNEE_OK;
+}
+
+

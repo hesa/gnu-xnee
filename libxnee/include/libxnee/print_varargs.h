@@ -26,7 +26,7 @@
 #define  XNEE_PRINT_VARARGS_H
 
 
-#include "xnee.h"
+#include "libxnee/xnee.h"
 
 /**
  * Verbose prints to specified file
