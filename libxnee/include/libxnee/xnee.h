@@ -215,14 +215,16 @@ enum xnee_resolution_states
   } _xnee_resolution_states;
 
 /* 
- * Grab modes 
+ * Grab modes/actions
  */
 enum xnee_grab_modes 
   {
-    XNEE_GRAB_UNKOWN = 0,
+    XNEE_GRAB_NODATA = 0,
+    XNEE_GRAB_SET    = 1,
     XNEE_GRAB_STOP    ,
     XNEE_GRAB_PAUSE   ,
-    XNEE_GRAB_RESUME  
+    XNEE_GRAB_RESUME  ,
+    XNEE_GRAB_UNKOWN  = 15
   } _xnee_grab_modes;
 
 
@@ -597,6 +599,7 @@ typedef struct
 {
 
   int     grab         ;    /*!< true if any key+mod is grabbed */
+  int     grabbed_action ;    /*!< set to the action when grabbed */
 
   int     stop_key     ;    /*!< key used to stop Xnee */
   int     stop_mod     ;    /*!< modifier used to stop Xnee */

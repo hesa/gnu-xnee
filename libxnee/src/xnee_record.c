@@ -970,24 +970,25 @@ xnee_record_async(xnee_data *xd)
   
   while (1) 
     {
-      /* handle data in the RECORD buffer */
-      xnee_process_replies(xd);
-      
       /* has the user pressed a modifier+key */
       if (xnee_check_km (xd)==XNEE_GRAB_DATA)
 	{
 	  xnee_handle_km(xd);
 	}
       
+      /* handle data in the RECORD buffer */
+      xnee_process_replies(xd);
+      
       if ( xd->xnee_info->loops_left == 0 ) 
 	{
 	  xnee_verbose  ((xd," closing down while loop in async loop\n"));
 	  break ; 
 	}
+
       /* sleep for a little while 
        * there might be someone wanting the CPU
        */  
-      usleep (100*1000);
+      usleep (100*100);
     }
 
   XRecordDisableContext(xd->control, 

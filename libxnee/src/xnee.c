@@ -279,6 +279,10 @@ xnee_close_down(xnee_data* xd)
   
   xnee_verbose((xd, "Freeing context "));
 
+  xnee_ungrab_keys(xd_global);
+  xnee_reset_autorepeat (xd_global);
+  
+
   if (xd->plugin_handle!=NULL)
     {
       xnee_verbose((xd, "Closing plugin lib "));
@@ -467,10 +471,12 @@ signal_handler(int sig)
     {
     case SIGTERM:
       fprintf  (stderr,  "sighandler SIGTERM (%d)\n", sig);
+      xnee_ungrab_keys(xd_global);
       xnee_reset_autorepeat (xd_global);
       exit (sig);
     case SIGINT:
       fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
+      xnee_ungrab_keys(xd_global);
       xnee_reset_autorepeat (xd_global);
       exit (sig);
     default:
@@ -1103,13 +1109,6 @@ xnee_process_count(int mode)
   return continue_process;
 }
 
-int 
-xnee_handle_km(xnee_data *xd)
-{
-  xnee_verbose ((xd, " ---> xnee_handle_km\n"));
-  xnee_verbose ((xd, " <--- xnee_handle_km\n"));
-  return XNEE_OK;
-}
 
 
 int 

@@ -10,6 +10,8 @@ Changes in 1.08
 	   '--replay-resolution'   resolution to use when replaying
 	   '--no-resolution-adjustment'   Don't use resolution adjustment
 	   '--speed-percent [percent]'   change the replaying speed
+	   '--pause-key [k m]'         key+modifier pauses xnee's current action
+	   '--pause-key [k m]'         key+modifier resume xnee's paused action
 
         - synchronisation rewritten 
 

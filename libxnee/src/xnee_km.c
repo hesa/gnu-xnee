@@ -29,6 +29,7 @@
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_km.h"
+#include "libxnee/xnee_setget.h"
 
 
 /* internal prototypes */
@@ -348,137 +349,27 @@ xget_modifier(xnee_data *xd, char *mod_str)
 
 
 
-/**************************************************************
- *                                                            *
- * xnee_grab_key                                              *
- *                                                            *
- *                                                            *
- **************************************************************/
-int 
-xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
-{
-  int window;
-  int screen;
-  xnee_km_tuple km;
-
-  xnee_verbose((xd, "----> xnee_grab_key\n"));
-
-  xnee_verbose((xd, "----  xnee_grab_key mod_key=%s\n", mod_key));
-  xnee_get_km_tuple (xd, &km, mod_key);
-  xnee_verbose((xd, "----  xnee_grab_key mod=%d\n", km.modifier));
-
-
-  
-  /* get the key+modifier from xd
-   * corresponding to the mode given */
-  switch (mode)
-    {
-    case XNEE_GRAB_STOP:
-      xd->grab_keys->stop_key=km.key;
-      xd->grab_keys->stop_mod=km.modifier;
-      xnee_verbose((xd, "----  xnee_grab_key STOP mode\n"));
-      break;
-    case XNEE_GRAB_PAUSE:
-      xd->grab_keys->pause_key=km.key;
-      xd->grab_keys->pause_mod=km.modifier;
-      xnee_verbose((xd, "----  xnee_grab_key PAUSE mode\n"));
-      break;
-    case XNEE_GRAB_RESUME:
-      xd->grab_keys->resume_key=km.key;
-      xd->grab_keys->resume_mod=km.modifier;
-      xnee_verbose((xd, "----  xnee_grab_key RESUME mode\n"));
-      break;
-    default:
-      xnee_print_error ("Unknown grab mode\n");
-      return XNEE_UNKNOWN_GRAB_MODE;
-    }
-
-
-  /* make sure we have a display to grab on*/
-  if (xd->grab==NULL)
-    {
-      xd->grab = XOpenDisplay (NULL);
-      if (xd->grab==NULL)
-	{
-	  xnee_verbose((xd, "could not open display for grab...\n"));
-	  return XNEE_NOT_OPEN_DISPLAY;
-	}
-    }
-  
-  /* grab key + modifier */
-  screen = DefaultScreen (xd->grab);
-  window = RootWindow    (xd->grab, screen );
-  xnee_verbose((xd, "window   %d\n", window));
-  xnee_verbose((xd, "screen   %d\n", screen));
-  xnee_verbose((xd, "data     %d\n", xd->grab));
-  xnee_verbose((xd, "stop key %d\n", km.key));
-  xnee_verbose((xd, "stop mod %d\n", km.modifier));
-  XGrabKey (xd->grab,  
-	    km.key,            
-	    km.modifier,
-	    window,       
-	    False,  
-	    GrabModeSync,
-	    GrabModeSync );
-  xnee_verbose((xd, "<---- xnee_grab_stop_key\n"));
-  return XNEE_OK;
-}
-
-
-
-int
-xnee_get_grab_mode (xnee_data *xd, int key, int modifier)
-{
-  
-
-
-  if ( (key==xd->grab_keys->stop_key) && 
-       (modifier==xd->grab_keys->stop_mod) )
-    {
-      xnee_verbose ((xd, "xnee_get_grab_mode: STOP \n"));
-      return XNEE_GRAB_STOP;
-    }
-  else if ( (key==xd->grab_keys->pause_key) && 
-	    (modifier==xd->grab_keys->pause_mod) )
-    {
-      xnee_verbose ((xd, "xnee_get_grab_mode: PAUSE \n"));
-      return XNEE_GRAB_PAUSE;
-    }
-  else if ( (key==xd->grab_keys->resume_key) && 
-	    (modifier==xd->grab_keys->resume_mod) )
-    {
-      xnee_verbose ((xd, "xnee_get_grab_mode: RESUME \n"));
-      return XNEE_GRAB_PAUSE;
-    }
-  else 
-   {
- return XNEE_GRAB_UNKOWN;
-   }
-}
-
-
 int
 xnee_check_km(xnee_data *xd)
 {
   XEvent ev;
+
   if ( (xd->grab!=NULL)
        &&
        ( xd->grab_keys->grab))
     {
-      
-
 
       /*
        * Has the user pressed STOP (mod + key) 
        */
       XFlush (xd->grab);
       XAllowEvents (xd->grab,
-		    AsyncKeyboard,
+		    SyncKeyboard,
 		    CurrentTime);
       XFlush (xd->grab);
       
 
-      if ( !XCheckMaskEvent ( xd->grab, 0xffffffff , &ev) == False)
+      if ( XCheckMaskEvent ( xd->grab, 0xffffffff , &ev) == True)
 	{
 	  XEvent my_event ;
 	  int    tmp_code;
@@ -500,22 +391,74 @@ xnee_check_km(xnee_data *xd)
 	  
 	  
 	  xnee_verbose((xd, "\n\n\tUSER PUSHED MOD + KEY ... leaving\n\n\n"));
-	  /* Since we've got called we have data .. we don't care about it. 
-	     Only freeeing the mem */
-	  
+	  if ( ( tmp_modifier == xd->grab_keys->stop_mod ) &&
+	       ( tmp_code == xd->grab_keys->stop_key ) )
+	    {
+	      xd->grab_keys->grabbed_action=XNEE_GRAB_STOP;
+	    }
+	  else if ( ( tmp_modifier == xd->grab_keys->pause_mod ) &&
+	       ( tmp_code == xd->grab_keys->pause_key ) )
+	    {
+	      xd->grab_keys->grabbed_action=XNEE_GRAB_PAUSE;
+	    }
+	  else if ( ( tmp_modifier == xd->grab_keys->resume_mod ) &&
+	       ( tmp_code == xd->grab_keys->resume_key ) )
+	    {
+	      xd->grab_keys->grabbed_action=XNEE_GRAB_RESUME;
+	    }
+	  else 
+	    {
+	      xd->grab_keys->grabbed_action=XNEE_GRAB_NODATA;
+	    }
 	  return XNEE_GRAB_DATA;
 	}
       else
 	{
-	  return XNEE_NO_GRAB_DATA;
+	  return XNEE_GRAB_NODATA;
 	}
       
     }
   else
     {
-      return XNEE_NO_GRAB_DATA;
+      return XNEE_GRAB_NODATA;
     }
-  return XNEE_NO_GRAB_DATA;
+  return XNEE_GRAB_NODATA;
+}
+
+
+int 
+xnee_handle_km(xnee_data *xd)
+{
+  xnee_verbose ((xd, " ---> xnee_handle_km\n"));
+
+  if (xd->grab_keys->grabbed_action==XNEE_GRAB_STOP)
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_km: STOP \n"));
+      xnee_close_down(xd);
+      exit (XNEE_OK);
+    }
+  else if (xd->grab_keys->grabbed_action==XNEE_GRAB_PAUSE)
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_km: PAUSE \n"));
+      XRecordDisableContext(xd->control, 
+			    xd->record_setup->rContext);
+
+    }
+  else if (xd->grab_keys->grabbed_action==XNEE_GRAB_RESUME)
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_km: RESUME \n"));
+      XRecordEnableContext(xd->data, 
+			   xd->record_setup->rContext, 
+			   xd->rec_callback, 
+			   (XPointer) (xd) /* closure passed to Dispatch */);
+    }
+  else 
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_km: UNKNOWN \n"));
+    }  
+
+  xnee_verbose ((xd, " <--- xnee_handle_km\n"));
+  return XNEE_OK;
 }
 
 

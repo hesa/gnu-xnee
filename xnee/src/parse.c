@@ -69,6 +69,8 @@ static char *help[] = {
   "--replay, -rep                 ", "Set replaying mode" , 
   "--speed-percent, -sp           ", "Set replaying speed (percentage)",
   "--stop-key mod,key, -sk        ", "When pressing modifier mod and key key Xnee exits" , 
+  "--pause-key mod,key, -pk       ", "When pressing modifier mod and key key Xnee pauses its current action" , 
+  "--resume-key mod,key, -rk      ", "When pressing modifier mod and key key Xnee resumes its paused action" , 
   "--write-settings file          ", "Writes settings to a resource file",
   "--print-settings, -ps          ", "Prints Xnee settings and waits (for <ENTER>)", 
   "--print-event-names, -pens     ", "Prints X11 event number and name ", 
