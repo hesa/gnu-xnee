@@ -723,25 +723,34 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
   fprintf (out,  "#\n");
   fprintf (out,  "display %s\n",
 	   (xd->display==NULL) ? "NULL"  : xd->display);
-  fprintf (out,  XNEE_OUT_FILE "  %s\n",
+  fprintf (out, "#####" XNEE_OUT_FILE "  %s\n",
 	   (xd->out_name==NULL) ? "stdout" : xd->out_name );
   fprintf (out,  XNEE_ERR_FILE " %s\n",
 	   (xd->err_name==NULL) ? "stderr" : xd->err_name );
   
   /* ****************************** */
   
-  fprintf (out,  "%s         %s\n",
-	   XNEE_STOP_KEY,
-	   xd->grab_keys->stop_str);
-  fprintf (out,   "%s        %d,%d\n",
-	   XNEE_PAUSE_KEY,
-	   xd->grab_keys->pause_mod,
-	   xd->grab_keys->pause_key );
-  fprintf (out,   "%s       %d,%d\n",
-	   XNEE_RESUME_KEY,
-	   xd->grab_keys->resume_mod,
-	   xd->grab_keys->resume_key );
-
+  if (xd->grab_keys->stop_str)
+    fprintf (out,  "%s         %s\n",
+	     XNEE_STOP_KEY,
+	     xd->grab_keys->stop_str);
+  if (xd->grab_keys->pause_str)
+    fprintf (out,   "%s        %d,%d\n",
+	     XNEE_PAUSE_KEY,
+	     xd->grab_keys->pause_str );
+  if (xd->grab_keys->resume_str)
+    fprintf (out,   "%s       %d,%d\n",
+	     XNEE_RESUME_KEY,
+	     xd->grab_keys->resume_str );
+  if (xd->grab_keys->insert_str)
+    fprintf (out,   "%s       %d,%d\n",
+	     XNEE_INSERT_KEY,
+	     xd->grab_keys->insert_str );
+  if (xd->grab_keys->exec_str)
+    fprintf (out,   "%s       %d,%d\n",
+	     XNEE_EXEC_KEY,
+	     xd->grab_keys->exec_str );
+  
   fprintf (out,  "%s       %d\n",
 	   XNEE_ALL_EVENTS,xd->xnee_info->all_events );
   fprintf (out,  "everything       %d\n",

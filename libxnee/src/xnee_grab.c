@@ -150,6 +150,10 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
   xnee_km_tuple km;
 
   xnee_verbose((xd, "----> xnee_grab_key\n"));
+  if (mod_key==NULL)
+    {
+      return XNEE_OK;
+    }
 
   xnee_get_km_tuple (xd, &km, mod_key);
   xnee_verbose((xd, "----  xnee_grab_key mod_key=%s\n", mod_key));

@@ -265,6 +265,9 @@ int
 xnee_set_force_replay (xnee_data *xd);
  
 int
+xnee_unset_force_replay (xnee_data *xd);
+ 
+int
 xnee_get_force_replay (xnee_data *xd);
 
 int

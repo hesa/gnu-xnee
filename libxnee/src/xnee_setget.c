@@ -241,13 +241,14 @@ int
 xnee_set_data_name_byname (xnee_data *xd, char* data_name)
 {
   xnee_set_data_name (xd, data_name);
-
   xd->data_file = fopen (data_name,"r");
+
   if (xd->data_file == NULL)
     {
       XNEE_FREE (xd->data_name);
       return XNEE_FILE_NOT_FOUND;
     }
+
   return XNEE_OK;
 }
  
@@ -338,6 +339,7 @@ xnee_is_all_clients (xnee_data *xd)
 int
 xnee_set_sync (xnee_data *xd)
 {
+  xnee_verbose((xd, "xnee_set_sync\n"));
   xd->sync=XNEE_TRUE;
   return XNEE_OK;
 }
@@ -345,6 +347,7 @@ xnee_set_sync (xnee_data *xd)
 int
 xnee_unset_sync (xnee_data *xd)
 {
+  xnee_verbose((xd, "xnee_unset_sync\n"));
   xd->sync=XNEE_FALSE;
   return XNEE_OK;
 }
@@ -597,6 +600,13 @@ int
 xnee_set_force_replay (xnee_data *xd)
 {
   xd->force_replay=XNEE_TRUE;
+  return XNEE_OK;
+}
+ 
+int
+xnee_unset_force_replay (xnee_data *xd)
+{
+  xd->force_replay=XNEE_FALSE;
   return XNEE_OK;
 }
  

@@ -288,6 +288,8 @@ enum cont_proc_commands
 #define XNEE_STOP_KEY             "stop-key"
 #define XNEE_PAUSE_KEY            "pause-key"
 #define XNEE_RESUME_KEY           "resume-key"
+#define XNEE_INSERT_KEY           "insert-key"
+#define XNEE_EXEC_KEY             "exec-key"
 #define XNEE_EVERYTHING           "everything"
 #define XNEE_DISTRIBUTE           "distribute"
 #define XNEE_NO_EXPOSE            "no-expose"

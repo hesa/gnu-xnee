@@ -510,6 +510,13 @@ xnee_get_km_tuple (xnee_data     *xd,
   int idx=-1;
   int len=strlen(mod_and_key);
 
+  printf ("km=%s\n", mod_and_key);
+  if (mod_and_key==NULL)
+    {
+      km->key=0;
+      km->modifier=0;
+    }
+
   xnee_verbose((xd, " ---> xnee_get_km_tuple_key %s \n", mod_and_key));
   strcpy (mod_buf, mod_and_key);
   rem_all_blanks (mod_buf, strlen(mod_and_key));

@@ -204,7 +204,6 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
       xd->data_file=stdin;
     }
   ret = fgets(tmp, 256, xd->data_file);
-  printf ("String to handle: %s\n", tmp);
 
   if (ret == NULL )
     {

@@ -37,15 +37,85 @@
 #include <libxnee/xnee_range.h>
 
 
-
+static gnee_xnee gx ; 
 static pthread_t action_thread;
 
 
 extern  xnee_data   *ext_xd;
+extern  gnee_xnee   *ext_gx;
 extern  GtkWidget   *ext_gnee_window;
 static GtkWidget *err_win=NULL;
 
 
+void gx_init_gx(gnee_xnee *gx) 
+{
+  gx->use_rec_display = 0 ; 
+  gx->use_rep_display = 0 ; 
+}
+
+int     gx_is_using_rec_display(gnee_xnee *gx)  { return gx->use_rec_display; }
+int     gx_is_using_rep_display(gnee_xnee *gx)  { return gx->use_rep_display; }
+
+
+
+int 
+gx_set_record_display(xnee_data *xd, gnee_xnee *gx)
+{
+  GtkWidget   *rec_disp_text;
+
+  if (gx_is_using_rec_display(gx))
+    {
+      rec_disp_text = (GtkWidget*) 
+	lookup_widget (ext_gnee_window, "rec_disp_text");
+      
+      if (rec_disp_text==NULL)
+	{
+	  ;
+	}
+      else
+	{
+	  printf ("new display to record from is: %s\n", 
+		  gtk_entry_get_text((GtkEntry*)rec_disp_text));
+	  xnee_set_display_name(ext_xd, 
+				(char*)
+				gtk_entry_get_text((GtkEntry*)rec_disp_text));
+	}
+    }
+  return GNEE_OK; 
+}
+
+int 
+gx_set_replay_display(xnee_data *xd, gnee_xnee *gx)
+{
+  GtkWidget   *rep_disp_text;
+  
+  if (gx_is_using_rep_display(gx))
+    {
+      rep_disp_text = (GtkWidget*) 
+	lookup_widget (ext_gnee_window, "rep_disp_text");
+      
+      if (rep_disp_text==NULL)
+	{
+	  ;
+	}
+      else
+	{
+	  printf ("new display to replay to is: %s\n", 
+		  gtk_entry_get_text((GtkEntry*)rep_disp_text));
+	  xnee_set_display_name(ext_xd, 
+				(char*)
+				gtk_entry_get_text((GtkEntry*)rep_disp_text));
+	}
+    }
+  return GNEE_OK; 
+}
+
+int 
+gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
+{
+  gx_set_replay_display(xd, gx);
+  gx_set_record_display(xd, gx);
+}
 
 
 void
@@ -54,7 +124,7 @@ gnee_set_events_max(int val)
   GtkSpinButton   *spinbutton;
   
   spinbutton = (GtkSpinButton *) 
-    lookup_widget (ext_gnee_window, "spinbutton5");
+    lookup_widget (ext_gnee_window, "spinbutton11");
   gtk_spin_button_set_value(spinbutton, val); 
 }
 
@@ -64,7 +134,7 @@ gnee_set_data_max(int val)
   GtkSpinButton   *spinbutton;
   
   spinbutton = (GtkSpinButton *)
-    lookup_widget (ext_gnee_window, "spinbutton4");
+    lookup_widget (ext_gnee_window, "spinbutton12");
   gtk_spin_button_set_value(spinbutton, val); 
 }
 
@@ -75,33 +145,10 @@ gnee_set_time_max(int val)
   GtkSpinButton   *spinbutton;
   
   spinbutton = (GtkSpinButton *)
-    lookup_widget (ext_gnee_window, "spinbutton6");
+    lookup_widget (ext_gnee_window, "spinbutton13");
   gtk_spin_button_set_value(spinbutton, val); 
 }
 
-
-
-void
-gx_set_events_max(int val)
-{
-  if (ext_xd!=NULL)
-    xnee_set_events_max(ext_xd, val);
-}
-
-void
-gx_set_data_max(int val)
-{
-  if (ext_xd!=NULL)
-    xnee_set_data_max(ext_xd, val);
-}
-
-
-void
-gx_set_time_max(int val)
-{
-  if (ext_xd!=NULL)
-    xnee_set_time_max(ext_xd, val);
-}
 
 
 
@@ -247,6 +294,8 @@ gx_start_recording(xnee_data* xd)
   static int dat_save = 0;
   static int tim_save = 0;
 
+  gx_set_variable_data(xd, ext_gx);
+
   xnee_set_recorder (xd);
 
   ret = xnee_start(xd);
@@ -273,8 +322,6 @@ gx_start_replaying(xnee_data* xd)
   gx_init_xnee(xd);
   xnee_set_replayer(xd);
 
-  xnee_set_data_name_byname(xd, "hesa.xlr"); 
-  xnee_unset_sync(xd);
   xnee_start(xd);
   return 0;
 }

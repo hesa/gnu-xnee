@@ -14,8 +14,10 @@
 #include "recordables.h"
 
 #include <libxnee/xnee.h>
+#include <gnee_xnee.h>
 
 xnee_data   *ext_xd;
+gnee_xnee   *ext_gx;
 GtkWidget   *ext_gnee_window;
 
 
@@ -40,6 +42,10 @@ main (int argc, char *argv[])
     GtkWidget          *event_group_combo;
 
     xnee_data   *xd;
+    gnee_xnee    gx; 
+
+    ext_gx = &gx;
+    gx_init_gx(ext_gx);
 
     //gnee_settings      *gnee_settings;
 
@@ -116,13 +122,15 @@ main (int argc, char *argv[])
     gtk_widget_show (gnee_window);
 
 
-
+    
 
 
     xd = xnee_new_xnee_data();
     xnee_init(xd);
     xnee_record_init(xd);
     ext_xd = xd;
+
+    xnee_set_verbose(xd);
 
     /* test settings */
     xnee_grab_key (xd, XNEE_GRAB_PAUSE, "Control,p");
