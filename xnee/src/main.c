@@ -28,10 +28,15 @@
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_setget.h"
-#include "libxnee/xnee_range.h"
-#include "libxnee/xnee_range.h"
-
+#include "libxnee/xnee_fake.h"
 #include "parse.h"
+
+/*int xnee_set_info(xnee_data *xd);*/
+
+int
+cnee_check_protocol(xnee_data *xd);
+
+
 
 /**************************************************************
  *                                                            *
@@ -42,222 +47,72 @@
 int main(int argc,char *argv[])
 {
   int ret;
-  int max;
   xnee_data *xd ;
-
-
   
-  
+  /* Set the signal handler the libxnee's built in */ 
   (void) signal (SIGINT, signal_handler);
+  
 
-   /*
-    *  
-    */
+  /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
 
-  /*
-   * Init the structs. 
-   */
-  xnee_init(xd);
-  
-  /*
-   * Init Recording variables
-   * Since those are used when recording and replaying we 
-   */
-  xnee_record_init (xd);
-  
-  /*
-   * Well .... parse the args
-   *
-   */
+
+  /* Well .... parse the args */
   xnee_parse_args (xd, argc, argv);
 
 
-  /*
-   * The value max will indicate how many ranges was specified
-   * on the command line 
-   */
-  max = xnee_get_max_range(xd);
-  
-  
-  xnee_set_ranges(xd);
+  /* start up the action set during parsing the commnd line */
+  ret = xnee_start(xd);
+  if (ret==XNEE_NO_PROT_CHOOSEN)
+  {
+     xnee_print_error ("No protocol data choosen to record\n");
+     xnee_print_error ("You can try out with xnee --all-events\n");
+     exit(ret);
+  }
 
+
+  /* hey, we are fin(n)ished .... cloe down */
+  xnee_close_down(xd);
   
+
+  /* Since we are here, we can exit gracefully */
+  exit(XNEE_OK); 
+}
+
+
+
+
+
+
+
+int
+cnee_check_protocol(xnee_data *xd)
+{
+   int max;
+
+   max = xnee_get_max_range(xd);
+
+   
   /*
    * Check if default ranges was choosen
    *
    * everything option is to be  OBSOLETED
    */
   if ( xd->xnee_info->everything || xnee_is_all_events (xd)) 
-    {
-      if ( max > 0 )
-	{
-	  xnee_print_error ("Error:\n%s, amibigous ranges\n", PACKAGE);
-	  xnee_print_error (" You can't use --all-events or --everything\n");
-	  xnee_print_error (" together with --event-ranges ..... \n");
-	  xnee_print_error (" For syntax description type %s --help\n",
-			    PACKAGE);
+  {
+     if ( max > 0 )
+     {
+        xnee_print_error ("Error:\n%s, amibigous ranges\n", PACKAGE);
+        xnee_print_error (" You can't use --all-events or --everything\n");
+        xnee_print_error (" together with --event-ranges ..... \n");
+        xnee_print_error (" For syntax description type %s --help\n",
+                          PACKAGE);
+        
+        exit (XNEE_AMBIGOUS_CMD);
+     }
+     xnee_verbose((xd, "Choosing some of the default values as protocol\n"));
+     xnee_record_select_default_protocol    (xd);
+  }
 
-	  exit (XNEE_AMBIGOUS_CMD);
-	}
-      xnee_verbose((xd, "Choosing some of the default values as protocol\n"));
-      xnee_record_select_default_protocol    (xd);
-    }
-
-
-  /* 
-   * Print settings 
-   * only done if verbose mode  
-   */
-  xnee_print_distr_list(xd, NULL);
-  
-  xnee_record_print_record_range (xd, NULL);
-  
-  ret=xnee_setup_recordext (xd);
-
-  if ( xnee_is_recorder(xd) )
-    {
-      if (ret==XNEE_NO_PROT_CHOOSEN)
-	{
-	  xnee_print_error ("No protocol data choosen to record\n");
-	  xnee_print_error ("You can try out with xnee --all-events\n");
-	  exit(ret);
-	}
-    }
-  
-  
-  /* 
-   * Test Displays and Extensions  
-   *
-   */
-  xnee_setup_display (xd);
-  
-
-
-  /*
-   * If no recording client, init xnee_sync 
-   *
-   */
-  if ( ! xnee_is_recorder(xd) )
-    {
-      xnee_replay_init (xd);   
-    }
-  
-  
-  /*
-   * Save repeat mode so we can reset it after we are done
-   *
-   */
-  xnee_set_autorepeat (xd);
-  
-
-  if (xd->xnee_info->interval != 0)
-    {
-      xnee_delay (xd->xnee_info->interval, "xnee:" );
-    }
-  
-  
-
-  /*
-   * are we recording or are we replaying
-   */
-  if (xnee_is_recorder(xd)) 
-    {
-      
-      /* 
-       * Print settings 
-       * if verbose mode that is 
-       */
-      xnee_print_xnee_settings       (xd, NULL); 
-      xnee_record_print_record_range (xd, NULL);
-
-
-      /*
-       * Do we have XRecord extension on the display
-       *
-       */ 
-      if (!xnee_has_record_extension(xd))
-	{
-	  xnee_verbose((xd, "Can't find Record extension\n"));
-	  xnee_verbose((xd, "Look in the README file included in Xnee how to enable it\n"));
-	  exit(XNEE_NO_REC_EXT);
-	}
-      xnee_setup_recording(xd);
-
-      xnee_print_sys_info(xd, xnee_get_out_file (xd));
-      xnee_print_xnee_settings (xd, xnee_get_out_file (xd)) ;
-      xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
-
-      /*
-       * At last. Time to enter the main loop
-       *
-       */
-      if (xnee_get_loops_left(xd)!=0)
-	{
-	  xnee_verbose ((xd, "Entering main loop( recorder)\n"));
-
-	  xnee_record_async(xd);
-	}
-    }
-  else if (xnee_is_replayer(xd))
-    {
-      xnee_verbose((xd, " (replayer)\n"));
-      /*
-       * Do we have XTest extension on the display
-       *
-       */ 
-      if (!xnee_has_xtest_extension(xd))
-	{
-	  exit(XNEE_NO_TEST_EXT);
-	}
-      
-      /*
-       * Do we have XRecord extension on the display
-       *
-       */ 
-      if (!xnee_has_record_extension(xd))
-	{
-	  xnee_verbose((xd, "I can't find Record extension\n"));
-	  xnee_verbose((xd, "Look in the README file how to enable it\n"));
-	  xnee_verbose((xd, "However, I continue without doing syncing\n"));
-	  /*	  xd->sync=False;*/
-	  xnee_unset_sync (xd);
-	}
-
-      XTestGrabControl (xnee_get_control_display(xd), True);
-      XTestGrabControl (xnee_get_data_display(xd), True);
-
-      /*
-       * At last. Time to enter the main loop
-       * ... wait to set up recording until all META data from file is read 
-       * Thanks: Janice Waddick 
-       */
-      xnee_verbose((xd, "Entering main loop (replayer)\n"));
-      xnee_replay_main_loop(xd);
-    }
-  else if (xnee_is_retyper(xd))
-    {
-       /* */
-       ;
-    }
-  else
-    {
-      fprintf (stderr, 
-	       "No mode specified... leaving\n"
-	       "You can use either of record/replay/retype\n");
-    }
-  /*
-   * Close everything down .... free memory, tell X server we are leaving ...
-  if ( xd->recorder || xd->sync )
-    {
-      xnee_record_close_down(xd);
-    }
-   */
-
-  xnee_reset_autorepeat (xd);
-
-  xnee_close_down(xd);
-  
-  exit(XNEE_OK); 
+  return (XNEE_OK);
 }
-
