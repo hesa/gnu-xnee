@@ -386,17 +386,17 @@ xnee_set_time_max (xnee_data *xd, int time);
 int 
 xnee_get_time_left (xnee_data *xd);
 
-#define xnee_inc_events_recorded(xd)   xd->xnee_info->events_recorded++;
-#define xnee_dec_events_recorded(xd)   xd->xnee_info->events_recorded--;
-#define xnee_zero_events_recorded(xd)   xd->xnee_info->events_recorded=0;
+#define xnee_inc_events_recorded(xd)   xd->xnee_info.events_recorded++;
+#define xnee_dec_events_recorded(xd)   xd->xnee_info.events_recorded--;
+#define xnee_zero_events_recorded(xd)   xd->xnee_info.events_recorded=0;
 
-#define xnee_inc_data_recorded(xd)   xd->xnee_info->data_recorded++;
-#define xnee_dec_data_recorded(xd)   xd->xnee_info->data_recorded--;
-#define xnee_zero_data_recorded(xd)   xd->xnee_info->data_recorded=0;
+#define xnee_inc_data_recorded(xd)   xd->xnee_info.data_recorded++;
+#define xnee_dec_data_recorded(xd)   xd->xnee_info.data_recorded--;
+#define xnee_zero_data_recorded(xd)   xd->xnee_info.data_recorded=0;
 
-#define xnee_inc_time_recorded(xd)   xd->xnee_info->time_recorded++;
-#define xnee_dec_time_recorded(xd)   xd->xnee_info->time_recorded--;
-#define xnee_zero_time_recorded(xd)   xd->xnee_info->time_recorded=0;
+#define xnee_inc_time_recorded(xd)   xd->xnee_info.time_recorded++;
+#define xnee_dec_time_recorded(xd)   xd->xnee_info.time_recorded--;
+#define xnee_zero_time_recorded(xd)   xd->xnee_info.time_recorded=0;
 
 
 #endif /* XNEE_SETGET_H */ 

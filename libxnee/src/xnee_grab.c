@@ -52,7 +52,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       modifier = xd->grab_keys->stop_mod;
       xd->grab_keys->stop_key=0;
       xd->grab_keys->stop_mod=0;
-      XNEE_FREE_IF_NULL(xd->grab_keys->stop_str);
+      XNEE_FREE_IF_NOT_NULL(xd->grab_keys->stop_str);
       xnee_verbose((xd, "----  xnee_grab_key STOP mode\n"));
       break;
     case XNEE_GRAB_PAUSE:
@@ -60,7 +60,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       modifier = xd->grab_keys->pause_mod;
       xd->grab_keys->pause_key=0;
       xd->grab_keys->pause_mod=0;
-      XNEE_FREE_IF_NULL(xd->grab_keys->pause_str);
+      XNEE_FREE_IF_NOT_NULL(xd->grab_keys->pause_str);
       xnee_verbose((xd, "----  xnee_grab_key PAUSE mode\n"));
       break;
     case XNEE_GRAB_RESUME:
@@ -68,7 +68,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       modifier = xd->grab_keys->resume_mod;
       xd->grab_keys->resume_key=0;
       xd->grab_keys->resume_mod=0;
-      XNEE_FREE_IF_NULL(xd->grab_keys->resume_str);
+      XNEE_FREE_IF_NOT_NULL(xd->grab_keys->resume_str);
       xnee_verbose((xd, "----  xnee_grab_key RESUME mode\n"));
       break;
     case XNEE_GRAB_INSERT:
@@ -76,7 +76,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       modifier = xd->grab_keys->insert_mod;
       xd->grab_keys->insert_key=0;
       xd->grab_keys->insert_mod=0;
-      XNEE_FREE_IF_NULL(xd->grab_keys->insert_str);
+      XNEE_FREE_IF_NOT_NULL(xd->grab_keys->insert_str);
       xnee_verbose((xd, "----  xnee_grab_key INSERT mode\n"));
       break;
     case XNEE_GRAB_EXEC:
@@ -84,7 +84,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       modifier = xd->grab_keys->exec_mod;
       xd->grab_keys->exec_key=0;
       xd->grab_keys->exec_mod=0;
-      XNEE_FREE_IF_NULL(xd->grab_keys->exec_str);
+      XNEE_FREE_IF_NOT_NULL(xd->grab_keys->exec_str);
       xnee_verbose((xd, "----  xnee_grab_key EXEC mode\n"));
       break;
     default:

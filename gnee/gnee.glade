@@ -1864,7 +1864,7 @@
 				  <property name="spacing">4</property>
 
 				  <child>
-				    <widget class="GtkCheckButton" id="checkbutton8">
+				    <widget class="GtkCheckButton" id="speed_toggle">
 				      <property name="visible">True</property>
 				      <property name="can_focus">True</property>
 				      <property name="label" translatable="yes">Replay with speed:</property>
@@ -1873,6 +1873,7 @@
 				      <property name="active">False</property>
 				      <property name="inconsistent">False</property>
 				      <property name="draw_indicator">True</property>
+				      <signal name="toggled" handler="on_speed_toggle_toggled" last_modification_time="Sat, 03 Jan 2004 23:17:36 GMT"/>
 				    </widget>
 				    <packing>
 				      <property name="padding">0</property>
@@ -3831,7 +3832,7 @@ Jon-Erling Dahl &lt;joda@gadgeteer.nu&gt;</property>
 
 <widget class="GtkDialog" id="dialog1">
   <property name="visible">True</property>
-  <property name="title" translatable="yes">dialog1</property>
+  <property name="title" translatable="yes">Gnee error</property>
   <property name="type">GTK_WINDOW_TOPLEVEL</property>
   <property name="window_position">GTK_WIN_POS_NONE</property>
   <property name="modal">False</property>
@@ -3840,31 +3841,18 @@ Jon-Erling Dahl &lt;joda@gadgeteer.nu&gt;</property>
   <property name="has_separator">True</property>
 
   <child internal-child="vbox">
-    <widget class="GtkVBox" id="dialog-vbox1">
+    <widget class="GtkVBox" id="dialog-vbox2">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
       <property name="spacing">0</property>
 
       <child internal-child="action_area">
-	<widget class="GtkHButtonBox" id="dialog-action_area1">
+	<widget class="GtkHButtonBox" id="dialog-action_area2">
 	  <property name="visible">True</property>
 	  <property name="layout_style">GTK_BUTTONBOX_END</property>
 
 	  <child>
-	    <widget class="GtkButton" id="cancelbutton1">
-	      <property name="visible">True</property>
-	      <property name="can_default">True</property>
-	      <property name="can_focus">True</property>
-	      <property name="label">gtk-cancel</property>
-	      <property name="use_stock">True</property>
-	      <property name="relief">GTK_RELIEF_NORMAL</property>
-	      <property name="response_id">-6</property>
-	      <signal name="clicked" handler="on_cancelbutton1_clicked" last_modification_time="Mon, 29 Dec 2003 17:43:15 GMT"/>
-	    </widget>
-	  </child>
-
-	  <child>
-	    <widget class="GtkButton" id="okbutton1">
+	    <widget class="GtkButton" id="okbutton2">
 	      <property name="visible">True</property>
 	      <property name="can_default">True</property>
 	      <property name="can_focus">True</property>
@@ -3872,7 +3860,7 @@ Jon-Erling Dahl &lt;joda@gadgeteer.nu&gt;</property>
 	      <property name="use_stock">True</property>
 	      <property name="relief">GTK_RELIEF_NORMAL</property>
 	      <property name="response_id">-5</property>
-	      <signal name="clicked" handler="on_okbutton1_clicked" last_modification_time="Mon, 29 Dec 2003 17:43:21 GMT"/>
+	      <signal name="clicked" handler="on_okbutton2_clicked" last_modification_time="Fri, 02 Jan 2004 23:52:35 GMT"/>
 	    </widget>
 	  </child>
 	</widget>

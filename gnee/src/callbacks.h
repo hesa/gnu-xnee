@@ -280,3 +280,11 @@ on_skip_sync_cb_toggled                (GtkToggleButton *togglebutton,
 void
 on_force_rep_cb_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+void
+on_okbutton2_clicked                   (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_speed_toggle_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

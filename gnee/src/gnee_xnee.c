@@ -51,10 +51,14 @@ void gx_init_gx(gnee_xnee *gx)
 {
   gx->use_rec_display = 0 ; 
   gx->use_rep_display = 0 ; 
+
+  gx->use_speed = 0 ; 
+  gx->speed = 100 ; 
 }
 
-int     gx_is_using_rec_display(gnee_xnee *gx)  { return gx->use_rec_display; }
-int     gx_is_using_rep_display(gnee_xnee *gx)  { return gx->use_rep_display; }
+int gx_is_using_rec_display(gnee_xnee *gx)  { return gx->use_rec_display; }
+int gx_is_using_rep_display(gnee_xnee *gx)  { return gx->use_rep_display; }
+int gx_is_using_speed(gnee_xnee *gx)        { return gx->use_speed;}
 
 
 
@@ -115,7 +119,10 @@ gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
 {
   gx_set_replay_display(xd, gx);
   gx_set_record_display(xd, gx);
+
 }
+
+
 
 
 void
@@ -206,25 +213,25 @@ gnee_set_ranges(int type)
 	{
 	  GNEE_DEBUG(("Adding from proj file: \t%.3d (%s)\n", 
 		      data[i], name ));
-	  gx_move_event(ext_gnee_window, name);
+	  gx_add_event(ext_gnee_window, name);
 	}
       else if ( type==XNEE_ERROR)
 	{
 	  GNEE_DEBUG(("\t%.3d (%s)\n", 
 		      data[i], name ));
-	  gx_move_error(ext_gnee_window, name);
+	  gx_add_error(ext_gnee_window, name);
 	}
       else if ( type==XNEE_REPLY)
 	{
 	  GNEE_DEBUG(("\t%.3d (%s)\n", 
 		      data[i], name ));
-	  gx_move_reply(ext_gnee_window, name);
+	  gx_add_reply(ext_gnee_window, name);
 	}
       else if ( type==XNEE_REQUEST)
 	{
 	  GNEE_DEBUG(("\t%.3d (%s)\n", 
 		      data[i], name ));
-	  gx_move_request (ext_gnee_window, name);
+	  gx_add_request (ext_gnee_window, name);
 	}
       else
 	;
@@ -245,7 +252,6 @@ gx_set_xd_settings()
       printf ("Aint got no window\n");
     }
   
-
   val = xnee_get_events_max(ext_xd);
   gnee_set_events_max(val);
 
@@ -295,6 +301,8 @@ gx_start_recording(xnee_data* xd)
   static int tim_save = 0;
 
   gx_set_variable_data(xd, ext_gx);
+  
+  GNEE_DEBUG(("Starting recorder\n"));
 
   xnee_set_recorder (xd);
 
@@ -302,7 +310,7 @@ gx_start_recording(xnee_data* xd)
   if (ret != XNEE_OK) 
     {
       gtk_widget_show_all(ext_gnee_window);
-      gx_display_errror(ret, "failed to start recording.. bad grab?");
+      gx_display_errror(ret);
       printf ("\n\nfailed to start gnee... cause: %d\n", ret);
     }
   
@@ -361,24 +369,24 @@ create_km_list(GtkWidget *m_combo,GtkWidget *k_combo)
   GList *m_items = NULL;
   GList *k_items = NULL;
 
-  GNEE_DEBUG(("Add modifiers\n"));
+/*   GNEE_DEBUG(("Add modifiers\n")); */
   i=0;
   while (gx_modifiers[i]!=NULL)
     {
-      GNEE_DEBUG(("Adding modifier: %s\n", gx_modifiers[i]));
+/*       GNEE_DEBUG(("Adding modifier: %s\n", gx_modifiers[i])); */
       m_items = g_list_append (m_items, gx_modifiers[i]);
       i++;
     }
-  GNEE_DEBUG(("Adding modifiers to popdown\n"));
+/*   GNEE_DEBUG(("Adding modifiers to popdown\n")); */
   gtk_combo_set_popdown_strings (GTK_COMBO (m_combo), m_items);
 
   
   
-  GNEE_DEBUG(("Add keys\n"));
+/*   GNEE_DEBUG(("Add keys\n")); */
   i=0;
   while (gx_keys[i]!=NULL)
     {
-      GNEE_DEBUG(("Adding key: %s\n", gx_keys[i]));
+/*       GNEE_DEBUG(("Adding key: %s\n", gx_keys[i])); */
       k_items = g_list_append (k_items, gx_keys[i]);
       i++;
     }
@@ -429,25 +437,97 @@ gx_undisplay_errror()
 }
 
 void 
-gx_display_errror(int err_nr, char *err_str)
+gx_display_errror(int err_nr)
 {
   GtkLabel   *my_text;
   gchar buf[4];
+  const char *str_ptr = NULL;
+  int i ;
+  char *tmp_str ; 
 
   if (err_win == NULL)
     {
       err_win = create_dialog1();
     }
 
-  my_text = (GtkLabel *) 
-    lookup_widget (err_win, "descr_label");
-  
-  gtk_label_set_text(my_text,err_str);
-
+  /* number field */
   my_text = (GtkLabel *) 
     lookup_widget (err_win, "err_nr_label");
   sprintf (buf, "%d", err_nr);
   gtk_label_set_text(my_text,buf);
+
+  /* description field */
+  my_text = (GtkLabel *) 
+    lookup_widget (err_win, "descr_label");
+  if (my_text!=NULL)
+    {
+      str_ptr = xnee_get_err_description(err_nr);
+      if (str_ptr!=NULL)
+	{
+	  gtk_label_set_text(my_text,str_ptr);
+	}
+    }
   
+  /* description field */
+  my_text = (GtkLabel *) 
+    lookup_widget (err_win, "solu_label");
+  if (my_text!=NULL)
+    {
+      str_ptr = xnee_get_err_solution(err_nr);
+      if (str_ptr!=NULL)
+	{
+	  gtk_label_set_text(my_text,str_ptr);
+	}
+    }
+
   gtk_widget_show (err_win);
+
+
+  for (i=XNEE_OK;i<=XNEE_LAST_ERROR;i++)
+    {
+      printf ("%.2d\n\t%s\n\t%s\n",
+	      i,
+	      xnee_get_err_description(i),
+	      xnee_get_err_solution(i)) ;
+    }
+
 }
+
+
+
+
+int 
+gx_set_use_speed (int val) 
+{
+  printf ("Setting USE speed to %d\n", val);
+  ext_gx->use_speed=val;
+
+  if (val==0)
+    {
+      printf ("Setting default speed\n");
+      gx_set_replay_speed(ext_xd, 100);
+    }
+  else
+    {
+      GtkSpinButton   *spinbutton;
+      int val ; 
+
+      spinbutton = (GtkSpinButton *) 
+	lookup_widget (ext_gnee_window, "speed_spin");
+      val = gtk_spin_button_get_value_as_int(spinbutton); 
+      printf ("Setting set speed %d\n", val);
+      gx_set_replay_speed(ext_xd, val);
+    }
+}
+
+int 
+gx_set_speed (int val) 
+{
+  if (ext_gx->use_speed)
+    {
+      gx_set_replay_speed(ext_xd, val);
+    }
+  ext_gx->speed = val ; 
+}
+
+

@@ -27,8 +27,13 @@
 #define XNEE_XNEE_H
 
 /* needed for the RECORD extension */
+#ifndef NEED_EVENTS
 #define NEED_EVENTS
+#endif  /* NEED_EVENTS */
+
+#ifndef NEED_REPLIES
 #define NEED_REPLIES
+#endif  /* NEED_REPLIES */
 
 
 
@@ -60,10 +65,12 @@
 #define XNEE_REPLAY_BUFFER_SIZE ( XNEE_HIGHEST_DATA_NR  )
 
 
-#define XNEE_FREE(a)           free(a);   a=NULL; 
-#define XNEE_FCLOSE(a)         fclose(a); a=NULL; 
-#define XNEE_FREE_IF_NULL(a)   if (a!=NULL) XNEE_FREE(a)
-#define XNEE_FCLOSE_IF_NULL(a) if(a!=0) XNEE_FCLOSE(a)
+#define XNEE_FREE(a)               free(a);   a=NULL; 
+#define XNEE_FCLOSE(a)             fclose(a); a=0; 
+#define XNEE_FREE_IF_NOT_NULL(a)   if (a!=NULL) XNEE_FREE(a)
+#define XNEE_FCLOSE_IF_NOT_NULL(a) if(a!=0) XNEE_FCLOSE(a)
+#define XNEE_CLOSE_DISPLAY_IF_NOT_NULL(a) if(a!=NULL) XCloseDisplay(a); a=NULL;
+
 
 #define XNEE_RANGE_STRING_SIZE 512
 
@@ -201,7 +208,7 @@ enum return_values
   XNEE_NOT_SYNCING       ,
   XNEE_NO_PLUGIN_FILE    ,
   XNEE_PLUGIN_FILE_ERROR ,
-  XNEE_NO_RESOURCE_FILE  ,
+  XNEE_NO_PROJECT_FILE  ,
   XNEE_NO_MAIN_DATA      ,
   XNEE_SYNTAX_ERROR      , 
   XNEE_UNKNOWN_GRAB_MODE ,
@@ -212,7 +219,8 @@ enum return_values
   XNEE_BAD_SPEED         ,
   XNEE_BAD_RESOLUTION    ,
   XNEE_BAD_THRESHOLD     ,
-  XNEE_BAD_CONTEXT
+  XNEE_BAD_CONTEXT       ,
+  XNEE_LAST_ERROR
 } _return_values;
   
 
@@ -779,7 +787,7 @@ typedef struct
   XKeyboardState kbd_orig;  /*!< User keyboard stare before Xnee */
   int     glob_autorepeat ; /*!< Current global autorepeat state */
 
-  xnee_record_init_data    *xnee_info ; 
+  xnee_record_init_data    xnee_info ; 
   xnee_recordext_setup     *record_setup;
   xnee_testext_setup       *replay_setup;
   
@@ -1067,10 +1075,6 @@ int
 xnee_process_count(int mode);
 
 int 
-xnee_handle_km(xnee_data *xd);
-
-
-int 
 xnee_process_replies(xnee_data *xd);
 
 
@@ -1100,6 +1104,16 @@ xnee_more_to_record(xnee_data *xd);
 
 int
 xnee_err_handler(Display* dpy, XErrorEvent* ev);
+
+
+const char *
+xnee_get_err_description (int error);
+
+const char *
+xnee_get_err_solution (int error);
+
+int
+xnee_reopen_descriptors(xnee_data* xd) ;
 
 #endif /*   XNEE_XNEE_H */
 

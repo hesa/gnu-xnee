@@ -77,7 +77,7 @@ xnee_delta_time ( xnee_intercept_data * xindata)
  *                                                            *
  *                                                            *
  **************************************************************/
-void 
+int
 xnee_replay_synchronize (xnee_data* xd)
 {
   int diff;
@@ -88,7 +88,7 @@ xnee_replay_synchronize (xnee_data* xd)
   if ( xd->sync == False ) 
     {
       xnee_verbose((xd, "Xnee in NO SYNC mode\n"));
-      return ;
+      return XNEE_OK;
     }
    
   /*****
@@ -144,8 +144,7 @@ xnee_replay_synchronize (xnee_data* xd)
 		    break;
 		  fprintf (stderr,
 			   "Can't synchronize anymore .... have to leave!\n");
-		  xnee_close_down(xd);
-		  exit (XNEE_SYNCH_FAULT);
+		  return XNEE_SYNCH_FAULT;
 		}
 	      else 
 		{
@@ -165,8 +164,7 @@ xnee_replay_synchronize (xnee_data* xd)
 	    {
 	      xd->buf_verbose=True;
 	      xnee_replay_printbuffer(xd); 
-	      xnee_close_down(xd);
-	      exit (XNEE_SYNCH_FAULT);
+	      return XNEE_SYNCH_FAULT;
 	      /*	      exit(0);*/
 	    }
 	  diff_counter=0;
@@ -175,11 +173,9 @@ xnee_replay_synchronize (xnee_data* xd)
 	}
     }      
   
-
-
-
   xnee_replay_printbuffer(xd);
   xnee_verbose((xd,"<--- xnee_replay_synchronize \n"));
+  return XNEE_OK;
 }
 
 
@@ -214,12 +210,11 @@ xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata)
     {
       return XNEE_OK;
     }
-
   eofile = xnee_expression_handle_session(xd,
 					  tmp,
 					  xindata);
 
-  xnee_verbose((xd,"replay data handled (or perhaps not)\n", tmp)); 
+  xnee_verbose((xd,"replay data handled (or perhaps not) '%s'\n", tmp)); 
   return eofile;
 }
 
@@ -276,35 +271,35 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
 
   if (strncmp (str, XNEE_ALL_EVENTS, strlen (XNEE_ALL_EVENTS)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->all_events, str,  strlen(XNEE_ALL_EVENTS) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.all_events, str,  strlen(XNEE_ALL_EVENTS) );
     }
   else if (strncmp (str, XNEE_EVERYTHING, strlen (XNEE_EVERYTHING)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->everything, str,  strlen(XNEE_EVERYTHING) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.everything, str,  strlen(XNEE_EVERYTHING) );
     }
   else if (strncmp (str, XNEE_LOOPS_LEFT, strlen (XNEE_LOOPS_LEFT)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->events_max, str,  strlen(XNEE_LOOPS_LEFT) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.events_max, str,  strlen(XNEE_LOOPS_LEFT) );
     }
   else if (strncmp (str, XNEE_EVENT_MAX, strlen (XNEE_EVENT_MAX)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->events_max, str,  strlen(XNEE_EVENT_MAX) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.events_max, str,  strlen(XNEE_EVENT_MAX) );
     }
   else if (strncmp (str, XNEE_DATA_MAX, strlen (XNEE_DATA_MAX)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->data_max, str,  strlen(XNEE_DATA_MAX) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.data_max, str,  strlen(XNEE_DATA_MAX) );
     }
   else if (strncmp (str, XNEE_TIME_MAX, strlen (XNEE_TIME_MAX)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->time_max, str,  strlen(XNEE_TIME_MAX) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.time_max, str,  strlen(XNEE_TIME_MAX) );
     }
   else if (strncmp (str, XNEE_NO_EXPOSE, strlen (XNEE_NO_EXPOSE)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->no_expose, str,  strlen(XNEE_NO_EXPOSE) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.no_expose, str,  strlen(XNEE_NO_EXPOSE) );
     }
   else if (strncmp (str, XNEE_NO_EXPOSE, strlen (XNEE_NO_EXPOSE)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info->no_expose, str,  strlen(XNEE_NO_EXPOSE) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.no_expose, str,  strlen(XNEE_NO_EXPOSE) );
     }
   else if ( 
 	   (strncmp (str, XNEE_REQUEST_STR, strlen (XNEE_REQUEST_STR)) == 0  )
@@ -385,7 +380,7 @@ print_time()
  *                                                            *
  *                                                            *
  **************************************************************/
-void 
+int
 xnee_replay_main_loop(xnee_data *xd)
 {
   xnee_intercept_data xindata ;
@@ -393,14 +388,21 @@ xnee_replay_main_loop(xnee_data *xd)
   int replayable ;
   static int last_logread=1;
   int last_elapsed = 0;
+  int ret = XNEE_OK ; 
+  static int in_pause_mode = 0 ; 
+
+
   xindata.oldtime = xindata.newtime ;
+  
+  printf ("1\n");
+  rewind (xd->data_file);
+  printf ("1\n");
 
   /* First of all ... read up the META DATA 
    * so we know our settings */
   while (logread && xd->cont) 
     {
       logread = xnee_replay_read_protocol(xd, &xindata);
-
       if (!logread)
 	{
 	  fprintf (stderr, "Could not read data from file\n");
@@ -451,11 +453,25 @@ xnee_replay_main_loop(xnee_data *xd)
 	  if (xd->first_read_time==0)
             xd->first_read_time = xindata.newtime;
 
+
 	  if (xnee_check_km (xd)==XNEE_GRAB_DATA)
 	    {
-	      xnee_verbose ((xd,"\n\nsomeone grabbed us\n\n"));
+	      ret = xnee_handle_rep_km(xd) ; 
+	      if (ret == XNEE_GRAB_STOP)
+		{
+		  xnee_verbose  ((xd," breaking async loop since STOP \n"));
+		  return XNEE_OK;
+		}
+	      else if (ret == XNEE_GRAB_RESUME)
+		{
+		  xnee_verbose  ((xd," starting async loop since RESUME \n"));
+		  XRecordEnableContextAsync(xd->data, 
+					    xd->record_setup->rContext, 
+					    xd->rec_callback, 
+					    (XPointer) (xd) );
+		}
 	    }
-	    
+	  
 	  switch (xindata.type)
 	    {
 	    case XNEE_EVENT:
@@ -487,7 +503,13 @@ xnee_replay_main_loop(xnee_data *xd)
 				  (xd->key_pressed==0) )
 				  {
 		  */
-		  xnee_replay_synchronize (xd);
+		  ret = xnee_replay_synchronize (xd);
+		  if (ret != XNEE_OK)
+		    {
+		      xnee_verbose((xd, "xnee_replay_main_loop return %d\n", 
+				    ret));
+		      return ret;
+		    }
 		  /*		  */
 		  /*		    }*/
 		  replayable = 
@@ -540,6 +562,7 @@ xnee_replay_main_loop(xnee_data *xd)
       xnee_verbose((xd, "  <-- Flushed after handled event\n"));
       last_logread = 0;
     }
+  return XNEE_OK;
 }
 
 

@@ -52,6 +52,7 @@
 #include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_callback.h"
 #include "libxnee/xnee_range.h"
+#include "libxnee/xnee_setget.h"
 
 
 
@@ -89,7 +90,7 @@ xnee_get_max_range (xnee_data *xd)
   int max_val=0;
   for ( i=0 ; i<XNEE_NR_OF_TYPES ; i++)
     {
-      max_val=XNEE_MAX (xd->xnee_info->data_ranges[i], max_val);
+      max_val=XNEE_MAX (xd->xnee_info.data_ranges[i], max_val);
     }
   xnee_verbose((xd, "Returning max_val=%d\n", max_val));
   /* Returns the number of RecordRanges allocated so far */
@@ -276,6 +277,39 @@ xnee_free_file (xnee_data *xd, char *file_name, FILE* file)
 	    }
 	}
     }
+  return XNEE_OK;
+}
+
+
+/**************************************************************
+ *                                                            *
+ * xnee_reopen_descriptors                                    *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int
+xnee_reopen_descriptors(xnee_data* xd) 
+{
+  int ret = XNEE_OK ; 
+  char *tmp;
+
+/*   printf ("REOPEN ...\n"); */
+/*   ret = xnee_set_display_name (xd, xnee_get_display_name(xd)); */
+/*   if (ret != XNEE_OK) return ret ;  */
+    
+  ret = xnee_set_out_byname (xd, 
+			     xnee_get_out_name(xd));
+  if (ret != XNEE_OK) return ret ; 
+    
+  ret = xnee_set_err_byname (xd, xnee_get_err_name(xd));
+  if (ret != XNEE_OK) return ret ; 
+    
+  ret = xnee_set_data_name_byname (xd, xnee_get_data_name(xd));
+  if (ret != XNEE_OK) return ret ; 
+    
+  ret = xnee_set_rc_byname (xd, xnee_get_rc_name(xd));
+  if (ret != XNEE_OK) return ret ; 
+    
   return XNEE_OK;
 }
 
@@ -595,19 +629,16 @@ xnee_new_dyn_data(xnee_data *xd)
 {
    xnee_verbose((xd, "---> xnee_new_dyn_data\n"));
 
-
-   xnee_verbose((xd, " --- xnee_new_dyn_data: xnee_info\n"));
-   xd->xnee_info     = 
-      (xnee_record_init_data*)  malloc (sizeof (xnee_record_init_data)) ;
-   memset (xd->xnee_info, 0, sizeof(xnee_record_init_data));
-   
+/*    xnee_verbose((xd, " --- xnee_new_dyn_data: xnee_info\n")); */
+/*    xd->xnee_info     =   */
+/*      (xnee_record_init_data*)  malloc (sizeof (xnee_record_init_data)) ;  */
+/*    memset (xd->xnee_info, 0, sizeof(xnee_record_init_data));  */
 
    xnee_verbose((xd, " --- xnee_new_dyn_data: replay_setup\n"));
    xd->replay_setup  = 
       (xnee_testext_setup*)     malloc (sizeof (xnee_testext_setup)) ;
    memset (xd->replay_setup, 0, sizeof(xnee_testext_setup));
    
-
    xnee_verbose((xd, " --- xnee_new_dyn_data: record_setup\n"));
    xd->record_setup  = xnee_new_recordext_setup(); 
    
@@ -618,10 +649,28 @@ xnee_new_dyn_data(xnee_data *xd)
   return XNEE_OK;
 }
 
+
+int 
+xnee_reset_xnee_info(xnee_data *xd)
+{
+  int i ; 
+  for (i=0;i<XNEE_NR_OF_TYPES;i++)
+    {
+      xd->xnee_info.data_ranges[i]=0;
+    }
+  return XNEE_OK;
+}
+
+
 int
 xnee_free_dyn_data(xnee_data *xd)
 {
    xnee_verbose((xd, "---> xnee_free_dyn_data\n"));
+
+/*    xnee_verbose((xd, " --- xnee_free_dyn_data: refreshing ranges\n")); */
+
+   if (xnee_is_replayer(xd))
+     xnee_refresh_ranges(xd); 
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: record_ext\n"));
    xnee_free_recordext_setup ( xd);
@@ -635,8 +684,10 @@ xnee_free_dyn_data(xnee_data *xd)
    xnee_verbose((xd, " --- xnee_free_dyn_data: replay_setup\n"));
    free ( xd->replay_setup);
 
-   xnee_verbose((xd, " --- xnee_free_dyn_data: xnee_info\n"));
-   free (xd->xnee_info);
+/*    xnee_verbose((xd, " --- xnee_free_dyn_data: xnee_info\n"));  */
+/*    free (xd->xnee_info);  */
+   xnee_reset_xnee_info(xd);
+
 
    xnee_verbose((xd, "<--- xnee_free_dyn_data\n"));
    return XNEE_OK;
@@ -990,11 +1041,12 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
   
 
   xd->plugin_handle = (void*) xnee_dlopen (xd, lib_name, RTLD_LAZY );
-  if (!xd->plugin_handle) {
-    fputs (dlerror(), stderr);
-    xnee_close_down(xd);
-    exit(XNEE_PLUGIN_FILE_ERROR);
-  }
+  if (!xd->plugin_handle) 
+    {
+      fputs (dlerror(), stderr);
+      xnee_close_down(xd);
+      exit(XNEE_PLUGIN_FILE_ERROR);
+    }
   
   xnee_verbose ((xd, "We've got plugin file handle %d\n", xd->plugin_handle));
 
@@ -1452,8 +1504,6 @@ xnee_prepare(xnee_data *xd)
 
   xnee_set_ranges(xd);
 
-  xnee_record_print_record_range (xd, NULL);
-  
   ret=xnee_setup_recordext (xd);
   
   if ( xnee_is_recorder(xd) )
@@ -1497,7 +1547,7 @@ int
 xnee_start(xnee_data *xd)
 {
    int ret ;
-   
+
    ret = xnee_prepare(xd);
 
    if (ret!=XNEE_OK)
@@ -1566,15 +1616,21 @@ xnee_start(xnee_data *xd)
        xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
        
 
-       
+       xnee_zero_events_recorded(xd);
+       xnee_zero_data_recorded(xd);
+       xnee_zero_time_recorded(xd);
+  
+
        /*
         * At last. Time to enter the main loop
         *
         */
        if (xnee_more_to_record(xd)!=0)
        {
-          xnee_verbose((xd, "Entering main loop( recorder)\n"));
-          xnee_record_async(xd);
+	 xnee_verbose((xd, "Entering main loop( recorder)\n"));
+	 ret = xnee_record_async(xd);
+	 if (ret != XNEE_OK)
+	   return ret;
        }
     }
   else if (xnee_is_replayer(xd))
@@ -1611,7 +1667,13 @@ xnee_start(xnee_data *xd)
        * Thanks: Janice Waddick 
        */
       xnee_verbose((xd, "Entering main loop (replayer)\n"));
-      xnee_replay_main_loop(xd);
+      ret = xnee_replay_main_loop(xd);
+      if (ret != XNEE_OK)
+	{
+	  xnee_verbose((xd, "Leaving replay, "));
+	  xnee_verbose((xd, "since some error was found (%d)\n", ret));
+	  return ret;
+	}
     }
   else if (xnee_is_retyper(xd))
     {
@@ -1631,17 +1693,28 @@ xnee_start(xnee_data *xd)
       xnee_record_close_down(xd);
     }
    */
-
-  xnee_reset_autorepeat (xd);
-  xnee_ungrab_keys (xd);
-  
-  return (XNEE_OK);
+   
+   xnee_reset_autorepeat (xd);
+   xnee_ungrab_keys (xd);
+   
+   xnee_renew_xnee_data(xd);
+/*    xnee_reopen_descriptors(xd) ; */
+   return (XNEE_OK);
 }
 
 
 
 int 
 xnee_renew_xnee_data(xnee_data *xd)
+{
+   xnee_free_dyn_data(xd);
+   xnee_new_dyn_data(xd);
+   return (XNEE_OK);
+}
+
+
+int 
+xnee_refresh_xnee_data(xnee_data *xd)
 {
    xnee_free_dyn_data(xd);
    xnee_new_dyn_data(xd);

@@ -51,6 +51,13 @@ xnee_get_km_tuple (xnee_data     *xd,
 		   char          *mod_and_key);
 
 
+int 
+xnee_handle_rec_km(xnee_data *xd);
+
+int 
+xnee_handle_rep_km(xnee_data *xd);
+
+
 
 
 #endif /* XNEE_KM_H */

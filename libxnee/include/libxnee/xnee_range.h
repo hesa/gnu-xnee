@@ -147,4 +147,7 @@ xnee_rem_data_from_range_str (xnee_data *xd,
                               int type  , 
                               char *str) ;
 
+int 
+xnee_refresh_ranges(xnee_data *xd);
+
 #endif 

@@ -752,23 +752,23 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
 	     xd->grab_keys->exec_str );
   
   fprintf (out,  "%s       %d\n",
-	   XNEE_ALL_EVENTS,xd->xnee_info->all_events );
+	   XNEE_ALL_EVENTS,xd->xnee_info.all_events );
   fprintf (out,  "everything       %d\n",
-	   xd->xnee_info->everything );
+	   xd->xnee_info.everything );
 
   fprintf (out,  "%s       %d\n",
-	   XNEE_EVENT_MAX,xnee_get_events_left(xd) );
+	   XNEE_EVENT_MAX,xnee_get_events_max(xd) );
   fprintf (out,  "%s       %d\n",
 	   XNEE_DATA_MAX,xnee_get_data_max(xd) );
   fprintf (out,  "%s       %d\n",
 	   XNEE_TIME_MAX,xnee_get_time_left(xd) );
 
   fprintf (out,  "%s        %d\n",
-	   XNEE_NO_EXPOSE,xd->xnee_info->no_expose );
+	   XNEE_NO_EXPOSE,xd->xnee_info.no_expose );
   fprintf (out,  "last-motion      %d\n",
-	   xd->xnee_info->last_motion ); 
+	   xd->xnee_info.last_motion ); 
   fprintf (out,  "first-last       %d\n",
-	   xd->xnee_info->first_last ); 
+	   xd->xnee_info.first_last ); 
 }
 
 
@@ -786,7 +786,7 @@ xnee_print_data_range_count (xnee_data * xd)
 
   for ( i=0 ; i< XNEE_NR_OF_TYPES ; i++) 
     {
-      xnee_verbose((xd, "PROT_DATA %d=%d\n", i,xd->xnee_info->data_ranges[i]));
+      xnee_verbose((xd, "PROT_DATA %d=%d\n", i,xd->xnee_info.data_ranges[i]));
     }
   xnee_verbose((xd, "MAX = %d\n", xnee_get_max_range(xd)));
   return (0);

@@ -19,22 +19,59 @@ typedef struct
 {
   int use_rec_display ; 
   int use_rep_display ; 
+
+  int use_speed ;
+  int speed ; 
+
+  
+
 } gnee_xnee ;
 
-#define gx_move_event(gw, ev)  \
-      move_recordable(gw, ev, "exclude_event_store","include_event_store")
+#define gx_add_event(gw, ev)  \
+      move_recordable(gw, ev, \
+		      "exclude_event_store","include_event_store", \
+		      XNEE_EVENT, XNEE_FALSE)
 
-#define gx_move_reply(gw, rep)  \
-      move_recordable(gw, rep, "exclude_reply_store","include_reply_store")
+#define gx_del_event(gw, ev)  \
+      move_recordable(gw, ev, \
+		      "exclude_event_store","include_event_store", \
+		      XNEE_EVENT, XNEE_TRUE)
 
-#define gx_move_request(gw, req)  \
+
+#define gx_add_reply(gw, rep)  \
+      move_recordable(gw, rep, \
+		      "exclude_reply_store","include_reply_store", \
+		      XNEE_REPLY, XNEE_FALSE)
+
+#define gx_del_reply(gw, rep)  \
+      move_recordable(gw, rep, \
+		      "exclude_reply_store","include_reply_store", \
+		      XNEE_REPLY, XNEE_TRUE)
+
+#define gx_add_request(gw, req)  \
       move_recordable(gw, req, \
-      "exclude_request_store","include_request_store")
+	              "exclude_request_store","include_request_store", \
+		      XNEE_REQUEST, XNEE_FALSE)
 
-#define gx_move_error(gw, err)  \
-      move_recordable(gw, err, "exclude_error_store","include_error_store")
+#define gx_del_request(gw, req)  \
+      move_recordable(gw, req, \
+	              "exclude_request_store","include_request_store", \
+		      XNEE_REQUEST, XNEE_TRUE)
+
+#define gx_add_error(gw, err)  \
+      move_recordable(gw, err, \
+      "exclude_error_store","include_error_store" ,\
+      XNEE_ERROR, XNEE_FALSE)
+
+#define gx_del_error(gw, err)  \
+      move_recordable(gw, err, \
+      "exclude_error_store","include_error_store" ,\
+      XNEE_ERROR, XNEE_TRUE)
+
+
 
 #define gx_set_replay_speed(xd,s)        xnee_set_replay_speed(xd,s)
+
 #define gx_set_interval(xd,i)            xnee_set_interval(xd,i)      
 #define gx_set_verbose(xd)               xnee_set_verbose(xd)
 #define gx_unset_verbose(xd)             xnee_unset_verbose(xd)
@@ -47,14 +84,17 @@ typedef struct
 #define gx_set_km(xd,km,mode)            xnee_set_km(xd,km,mode) 
 #define gx_get_km(ext_xd,mode)           xnee_get_km(ext_xd,mode)
 
-#define  gx_set_events_max(ext_xd,loops) xnee_set_events_max(ext_xd, loops)
-#define  gx_get_events_max(ext_xd)       xnee_get_events_max(ext_xd)
-#define  gx_get_events_left(ext_xd)      xnee_get_events_left(ext_xd)
-#define  gx_set_data_max(ext_xd,loops)   xnee_set_data_max(ext_xd, loops)
-#define  gx_get_data_max(ext_xd)         xnee_get_data_max(ext_xd)
-#define  gx_get_data_left(ext_xd)        xnee_get_data_left(ext_xd)
-#define  gx_set_time_max(ext_xd,time)    xnee_set_time_max(ext_xd,time)
-#define  gx_get_time_left(ext_xd)        xnee_get_time_left(ext_xd)
+#define gx_set_events_max(ext_xd,loops) xnee_set_events_max(ext_xd, loops);
+#define gx_get_events_max(ext_xd)       xnee_get_events_max(ext_xd)
+#define gx_get_events_left(ext_xd)      xnee_get_events_left(ext_xd)
+
+#define gx_set_data_max(ext_xd,loops)   xnee_set_data_max(ext_xd, loops);
+#define gx_get_data_max(ext_xd)         xnee_get_data_max(ext_xd)
+#define gx_get_data_left(ext_xd)        xnee_get_data_left(ext_xd)
+
+#define gx_set_time_max(ext_xd,time)    xnee_set_time_max(ext_xd,time);
+#define gx_get_time_max(ext_xd)         xnee_get_time_max(ext_xd)
+#define gx_get_time_left(ext_xd)        xnee_get_time_left(ext_xd)
 
 
 
@@ -96,9 +136,11 @@ gx_stop_replaying(xnee_data* xd);
 
 
 void 
-gx_display_errror(int err_nr, char *err_str);
+gx_display_errror(int err_nr);
 
 void 
 gx_undisplay_errror(void);
+
+
 
 #endif //GNEE_XNEE__H

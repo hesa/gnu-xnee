@@ -239,7 +239,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
     }
   else if (!strncmp(XNEE_FIRST_LAST,tmp,strlen(XNEE_FIRST_LAST)))
     {
-      xd->xnee_info->first_last = True;
+      xd->xnee_info.first_last = True;
     }
   else if (!strncmp(XNEE_NO_SYNC,tmp,strlen(XNEE_NO_SYNC)))
     {
@@ -430,7 +430,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
   /* START OF OBSOLETE PARSING */
   else if (!strncmp(XNEE_OBSOLETE_FIRST_LAST,tmp,strlen(XNEE_OBSOLETE_FIRST_LAST)))
     {
-      xd->xnee_info->first_last = True;
+      xd->xnee_info.first_last = True;
     }
   else if (!strncmp(XNEE_OBSOLETE_NO_SYNC,tmp,strlen(XNEE_OBSOLETE_NO_SYNC)))  
     {

@@ -256,6 +256,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	}
 
     }
+
   if (!strncmp(XNEE_DISPLAY,tmp,strlen(XNEE_DISPLAY)))
     {
       xnee_set_display_name (xd, range) ;

@@ -439,31 +439,38 @@ xnee_check_km(xnee_data *xd)
 
 
 int 
-xnee_handle_km(xnee_data *xd)
+xnee_handle_rec_km(xnee_data *xd)
 {
   int ret=XNEE_OK;
-  xnee_verbose ((xd, " ---> xnee_handle_km\n"));
+  xnee_verbose ((xd, " ---> xnee_handle_rec_km\n"));
 
   if (xd->grab_keys->grabbed_action==XNEE_GRAB_STOP)
     {
-      xnee_verbose ((xd, " ---  xnee_handle_km: STOP \n"));
-      xnee_verbose ((xd, " <--- xnee_handle_km\n"));
+      xnee_verbose ((xd, " ---  xnee_handle_rec_km: STOP \n"));
+      xnee_verbose ((xd, " <--- xnee_handle_rec_km\n"));
       feedback ("Xnee stop received");
       ret=XNEE_GRAB_STOP;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_PAUSE)
     {
-      xnee_verbose ((xd, " ---  xnee_handle_km: PAUSE \n"));
+      xnee_verbose ((xd, " ---  xnee_handle_rec_km: PAUSE \n"));
       feedback ("Xnee pause received");
       xnee_unsetup_recording (xd);
       ret=XNEE_GRAB_PAUSE;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_RESUME)
     {
-      xnee_verbose ((xd, " ---  xnee_handle_km: RESUME \n"));
+      xnee_verbose ((xd, " ---  xnee_handle_rec_km: RESUME \n"));
       feedback ("Xnee resume received");
       xnee_setup_recording (xd);
       ret=XNEE_GRAB_RESUME;
+    }
+  else if (xd->grab_keys->grabbed_action==XNEE_GRAB_EXEC)
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_rec_km: EXEC \n"));
+      feedback ("Xnee exec received");
+      system ("xterm&");
+      ret=XNEE_GRAB_EXEC;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_INSERT)
     {
@@ -471,7 +478,7 @@ xnee_handle_km(xnee_data *xd)
       struct tm * timeinfo;
 
       feedback ("Xnee inserting mark in log file");
-      xnee_verbose ((xd, " ---  xnee_handle_km: MARK \n"));
+      xnee_verbose ((xd, " ---  xnee_handle_rec_km: MARK \n"));
       time ( &rawtime );
       timeinfo = localtime ( &rawtime );
       fprintf (xd->out_file, "#XNEE INSERT MARK:%.4d-%.2d-%.2d:%.2d.%.2d.%.2d\n",
@@ -485,10 +492,61 @@ xnee_handle_km(xnee_data *xd)
     }
   else 
     {
-      xnee_verbose ((xd, " ---  xnee_handle_km: UNKNOWN \n"));
+      xnee_verbose ((xd, " ---  xnee_handle_rec_km: UNKNOWN \n"));
     }  
 
-  xnee_verbose ((xd, " <--- xnee_handle_km\n"));
+  xnee_verbose ((xd, " <--- xnee_handle_rec_km\n"));
+  return ret;
+}
+
+
+int 
+xnee_handle_rep_km(xnee_data *xd)
+{
+  int ret=XNEE_OK;
+  xnee_verbose ((xd, " ---> xnee_handle_rep_km\n"));
+
+  if (xd->grab_keys->grabbed_action==XNEE_GRAB_STOP)
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_rep_km: STOP \n"));
+      xnee_verbose ((xd, " <--- xnee_handle_rep_km\n"));
+      feedback ("Xnee stop received");
+      ret=XNEE_GRAB_STOP;
+    }
+  else if (xd->grab_keys->grabbed_action==XNEE_GRAB_PAUSE)
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_rep_km: PAUSE \n"));
+      feedback ("Xnee pause received");
+      fprintf (stderr, "pause during replay is not implemented yet\n");
+      ret=XNEE_GRAB_PAUSE;
+    }
+  else if (xd->grab_keys->grabbed_action==XNEE_GRAB_RESUME)
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_rep_km: RESUME \n"));
+      feedback ("Xnee resume received");
+      fprintf (stderr, "resume during replay is not implemented yet\n");
+      ret=XNEE_GRAB_RESUME;
+    }
+  else if (xd->grab_keys->grabbed_action==XNEE_GRAB_EXEC)
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_rep_km: EXEC \n"));
+      feedback ("Xnee exec received");
+      system ("xterm&");
+      ret=XNEE_GRAB_EXEC;
+    }
+  else if (xd->grab_keys->grabbed_action==XNEE_GRAB_INSERT)
+    {
+      feedback ("Xnee inserting mark in log file");
+      xnee_verbose ((xd, " ---  xnee_handle_rep_km: MARK \n"));
+      fprintf (stderr, "insert during replay is not implemented yet\n");
+      ret=XNEE_GRAB_INSERT;
+    }
+  else 
+    {
+      xnee_verbose ((xd, " ---  xnee_handle_rep_km: UNKNOWN \n"));
+    }  
+
+  xnee_verbose ((xd, " <--- xnee_handle_rep_km\n"));
   return ret;
 }
 

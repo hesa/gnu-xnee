@@ -42,13 +42,13 @@ xnee_delta_time( xnee_intercept_data *);
 
 
 /**
- * Read the Xnee Manual and Xnee developer Manual for a more detailed description
- * on synchronisation. 
+ * Read the Xnee Manual and Xnee developer Manual for a more detailed 
+ * description on synchronisation. 
  *
  * @param xd             xnee's main structure
  * @return void  
  */
-void  
+int
 xnee_replay_synchronize (xnee_data *xd) ;
 
 
@@ -89,7 +89,7 @@ xnee_handle_meta_data(xnee_data* xd ,char* str );
  * @param xd    xnee's main structure
  * @return void  
  */
-void   
+int
 xnee_replay_main_loop ( xnee_data *xd);
 
 

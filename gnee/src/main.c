@@ -40,6 +40,7 @@ main (int argc, char *argv[])
 
     GList              *combo_list = NULL;
     GtkWidget          *event_group_combo;
+    int i ; 
 
     xnee_data   *xd;
     gnee_xnee    gx; 
@@ -126,44 +127,32 @@ main (int argc, char *argv[])
 
 
     xd = xnee_new_xnee_data();
-    xnee_init(xd);
-    xnee_record_init(xd);
     ext_xd = xd;
 
+
+    /* TEST */
     xnee_set_verbose(xd);
+    gx_add_event (gnee_window,"MotionNotify");
 
-    /* test settings */
-    xnee_grab_key (xd, XNEE_GRAB_PAUSE, "Control,p");
-    xnee_grab_key (xd, XNEE_GRAB_RESUME, "Control,r");
-    xnee_grab_key (xd, XNEE_GRAB_RESUME, "Control,q");
-    printf ("FAKE..\n"); 
+    /* END OF TEST */
+
+
+
     
-#define move_event(gw, ev)  \
-      move_recordable(gw, ev, "exclude_event_store","include_event_store")
-    
-      move_event(gnee_window, "MotionNotify");
-    /*
-      move_event(gnee_window, "KeyRelease");
-      
-      move_event(gnee_window, xnee_int2event(4));
-      move_event(gnee_window, xnee_int2event(5));
-      move_event(gnee_window, xnee_int2event(6));
-    */
-    /* EO test settings */
-
-
     /* Set the signal handler the libxnee's built in */ 
     (void) signal (SIGINT, signal_handler);
 
-
-
-
     /* set gnee default settings */
-    xnee_set_data_max (xd, -1);
-    xnee_set_events_max (xd, -1);
+    gx_set_events_max (xd, 12);
+    gnee_set_events_max (12);
+
+    gx_set_data_max (xd, 123);
+    gnee_set_data_max (123);
+
+    gx_set_time_max (xd, 19);
+    gnee_set_time_max (19);
 
     g_object_set_data(G_OBJECT(gnee_window), "xd", xd);
-
 
     gx_create_km_lists(gnee_window);
     

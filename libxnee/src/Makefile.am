@@ -21,6 +21,7 @@ libxnee_a_SOURCES = xnee.c  \
 	xnee_threshold.c \
 	xnee_range.c \
 	xnee_expr.c \
+	xnee_error.c \
 	feedback.c 
 
 EXTRA_DIST = ../include/libxnee/xnee.h     \

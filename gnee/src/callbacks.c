@@ -199,7 +199,6 @@ on_include_list_row_activated          (GtkTreeView     *treeview,
     GtkWidget          *source_list;
     GtkWidget          *destination_list;
     GtkWidget          *combo_label;
-/*     xnee_data          *xd; */
 
     source_list      = lookup_widget(GTK_WIDGET(user_data),
                                      "include_list");
@@ -207,8 +206,6 @@ on_include_list_row_activated          (GtkTreeView     *treeview,
                                      "exclude_list");
     combo_label      = lookup_widget(GTK_WIDGET(user_data),
                                      "combo_label1");
-
-/*     xd = (xnee_data*) lookup_widget(GTK_WIDGET(user_data), "xd"); */
 
     gnee_recordables_exclude(GTK_TREE_VIEW(source_list), 
                              GTK_TREE_VIEW(destination_list),
@@ -387,8 +384,6 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
   about_box      = lookup_widget(GTK_WIDGET(user_data),
 				 "about_window");
 
-  printf ("on_about1 %d \n", (int) about_box);
-
   if (about_box==NULL)
     about_box = create_about_window();
 
@@ -423,6 +418,8 @@ on_record                              (GtkButton       *button,
       
       if (ext_xd != NULL)
         {
+	  gx_set_variable_data(ext_xd, ext_gx);
+
 	  gx_start_recording(ext_xd);
         }
       
@@ -453,14 +450,11 @@ on_replay                              (GtkButton       *button,
         {
 	  gx_set_variable_data(ext_xd, ext_gx);
 
-	  /* tes tes test */
-	  gx_unset_sync(ext_xd);
 	  gx_start_replaying(ext_xd);
         }
     }
 
     gtk_widget_show_all(window);
-  
 }
 
 
@@ -474,7 +468,7 @@ on_spinbutton3_change_value            (GtkSpinButton   *spinbutton,
     
     if (ext_xd != NULL)
       {
-	gx_set_replay_speed (ext_xd, speed); 
+	gx_set_speed (ext_xd, speed); 
       }
 }
 
@@ -1008,10 +1002,6 @@ void
 on_okbutton1_clicked                   (GtkButton       *button,
                                         gpointer         user_data)
 {
-  err_continue_clicked=0;
-  err_quit_clicked=1;
-  gx_undisplay_errror();
-
 }
 
 
@@ -1071,7 +1061,16 @@ void
 on_rep_disp_cb_toggled                 (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-
+  if (gtk_toggle_button_get_active(togglebutton))
+    {
+      printf ("use rep disp\n");
+      gx_set_using_rep_display(ext_gx);
+    }
+  else
+    {
+      printf ("NOT use rec disp\n");
+      gx_unset_using_rep_display(ext_gx);
+    }
 }
 
 
@@ -1172,11 +1171,14 @@ void
 on_speed_spin_change_value             (GtkSpinButton   *spinbutton,
                                         gpointer         user_data)
 {
-  if (ext_xd != NULL)
-    {
-      gx_set_replay_speed(ext_xd, 
-			  gtk_spin_button_get_value_as_int(spinbutton)); 
-    }
+    gint speed = 0 ; 
+
+    speed = gtk_spin_button_get_value_as_int(spinbutton);
+    
+    if (ext_xd != NULL)
+      {
+	gx_set_speed (speed); 
+      }
 }
 
 
@@ -1227,5 +1229,34 @@ on_force_rep_cb_toggled                (GtkToggleButton *togglebutton,
 	  gx_unset_force_replay (ext_xd); 
 	}
     }
+}
+
+
+void
+on_okbutton2_clicked                   (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  err_continue_clicked=0;
+  err_quit_clicked=1;
+  gx_undisplay_errror();
+}
+
+
+void
+on_speed_toggle_toggled                (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  if (ext_xd != NULL)
+    {
+      if (gtk_toggle_button_get_active(togglebutton))
+	{
+	  gx_set_use_speed(1); 
+	}
+      else
+	{
+	  gx_set_use_speed(0); 
+	}
+    }
+
 }
 

@@ -79,6 +79,7 @@ xnee_null_range ( XRecordRange *range)
   range->errors.last  = BadCursor;
   */
 }
+
 static int
 xnee_bsort(int *numbers, int size)
 {
@@ -144,6 +145,18 @@ xnee_init_lists()
    }
    need_init = 0 ;
    return XNEE_OK;
+}
+
+
+int 
+xnee_refresh_ranges(xnee_data *xd)
+{
+  xnee_verbose((xd, "-->xnee_refresh_ranges\n"));
+  xnee_free_lists();
+  xnee_init_lists();
+  xrs->nr_of_data = 0;
+  xnee_verbose((xd, "<--xnee_refresh_ranges\n"));
+  return XNEE_OK;
 }
 
 int 
@@ -339,7 +352,7 @@ xnee_add_range (xnee_data* xd,
   
   XNEE_DEBUG ( (stderr ," --> xnee_add_range()  \n"  ));
   /* increment the counter to ensure we allocate enough memory */
-  alloc_nr=xd->xnee_info->data_ranges[type]  ;
+  alloc_nr=xd->xnee_info.data_ranges[type]  ;
   max_index=xnee_get_max_range(xd) - 1 ;
   
   
@@ -390,7 +403,7 @@ xnee_add_range (xnee_data* xd,
       range->delivered_events.last = stop;
 
       /* Workaround for problem with crashing X server*/
-      xd->xnee_info->data_ranges[XNEE_ERROR]++;
+      xd->xnee_info.data_ranges[XNEE_ERROR]++;
       range->errors.first = BadCursor;
       range->errors.last = BadCursor;
     }
@@ -407,7 +420,7 @@ xnee_add_range (xnee_data* xd,
       /* Workaround for problem with crashing X server*/
       range->delivered_events.first =33 ;
       range->delivered_events.last = 33;
-      xd->xnee_info->data_ranges[XNEE_DELIVERED_EVENT]++;
+      xd->xnee_info.data_ranges[XNEE_DELIVERED_EVENT]++;
     }
   else if ( type == XNEE_REPLY ) 
     {
@@ -447,7 +460,7 @@ xnee_add_range (xnee_data* xd,
    * print_data_range_count (xnee_info, rec_range); 
    *
    */
-  xd->xnee_info->data_ranges[type]++;
+  xd->xnee_info.data_ranges[type]++;
   xnee_verbose((xd, "<--- xnee_add_range\n"));
   return (0);
   
@@ -523,6 +536,8 @@ xnee_set_ranges(xnee_data *xd)
 {
    int i ; 
    int j ; 
+
+
    xnee_bsort_all();
 
 
@@ -583,23 +598,15 @@ xnee_rem_from_list(int type, int ev)
 
    struct xnee_range *xrp;
 
-   printf ("1 remo: %d %d   %d\n", type, ev, XNEE_DEVICE_EVENT);
-      
    if (need_init==1)
       return 0;
    xrp = &xrs->type[type];
-
-   printf ("2 remo: %d %d     %d %d\n", 
-	   type, ev, xrp->index,
-	   xrs->type[type].index);
-
 
    xnee_print_list();
     
 
    for (i=0;i<xrp->index;i++)
    {
-     printf ("3   %d == %d ???\n", ev, xrp->data[i]);
       if ( xrp->data[i] == ev )
       {
          for (j=i;j<xrp->index;j++)
@@ -616,8 +623,6 @@ xnee_rem_from_list(int type, int ev)
          xrp->index--;
       }
    }
-   xnee_print_list();
-   printf ("-------------------------\n"); 
 
    return XNEE_OK;
 }
@@ -668,3 +673,7 @@ xnee_rem_data_from_range_str (xnee_data *xd,
 
    return XNEE_OK;
 }
+
+
+
+

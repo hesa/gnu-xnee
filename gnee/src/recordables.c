@@ -50,7 +50,7 @@ gnee_recordables_include(GtkTreeView* source_list,
                          xnee_data* xd,
                          int type)
 {
-    move_between_lists(source_list, destination_list, xd, type, TRUE);
+  move_between_lists(source_list, destination_list, xd, type, TRUE);
 }
 
 void
@@ -156,7 +156,9 @@ void
 move_recordable(GtkWidget* gnee_window,
 		char* data_name,
 		char* exclude_store_name,
-		char* include_store_name)
+		char* include_store_name,
+		int   type, 
+		int   delete)
 {
   GtkTreeStore       *excl_store;
   GtkTreeStore       *incl_store;
@@ -208,9 +210,14 @@ move_recordable(GtkWidget* gnee_window,
 			     &incl_iter, 
 			     0, str_data, 
 			     -1);
-	  xnee_add_range_str (ext_xd, XNEE_EVENT, str_data);
-	  
-	  
+	  if (delete)
+	    {
+	      xnee_rem_data_from_range_str (ext_xd, type, str_data); 
+	    }
+	  else
+	    {
+	      xnee_add_range_str (ext_xd, type, str_data);
+	    }
 	}
       
       g_free (str_data);

@@ -168,7 +168,7 @@ create_gnee_window (void)
   GtkWidget *vbox32;
   GtkWidget *label62;
   GtkWidget *hbox24;
-  GtkWidget *checkbutton8;
+  GtkWidget *speed_toggle;
   GtkObject *speed_spin_adj;
   GtkWidget *speed_spin;
   GtkWidget *vbox29;
@@ -915,9 +915,9 @@ create_gnee_window (void)
   gtk_box_pack_start (GTK_BOX (vbox32), hbox24, TRUE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbox24), 4);
 
-  checkbutton8 = gtk_check_button_new_with_mnemonic (_("Replay with speed:"));
-  gtk_widget_show (checkbutton8);
-  gtk_box_pack_start (GTK_BOX (hbox24), checkbutton8, FALSE, FALSE, 0);
+  speed_toggle = gtk_check_button_new_with_mnemonic (_("Replay with speed:"));
+  gtk_widget_show (speed_toggle);
+  gtk_box_pack_start (GTK_BOX (hbox24), speed_toggle, FALSE, FALSE, 0);
 
   speed_spin_adj = gtk_adjustment_new (100, 0, 10000, 1, 10, 100);
   speed_spin = gtk_spin_button_new (GTK_ADJUSTMENT (speed_spin_adj), 1, 0);
@@ -1406,6 +1406,9 @@ create_gnee_window (void)
   g_signal_connect_swapped ((gpointer) rep_disp_text, "changed",
                             G_CALLBACK (on_rep_disp_text_changed),
                             GTK_OBJECT (gnee_window));
+  g_signal_connect ((gpointer) speed_toggle, "toggled",
+                    G_CALLBACK (on_speed_toggle_toggled),
+                    NULL);
   g_signal_connect_swapped ((gpointer) speed_spin, "value_changed",
                             G_CALLBACK (on_speed_spin_change_value),
                             GTK_OBJECT (speed_spin));
@@ -1591,7 +1594,7 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, vbox32, "vbox32");
   GLADE_HOOKUP_OBJECT (gnee_window, label62, "label62");
   GLADE_HOOKUP_OBJECT (gnee_window, hbox24, "hbox24");
-  GLADE_HOOKUP_OBJECT (gnee_window, checkbutton8, "checkbutton8");
+  GLADE_HOOKUP_OBJECT (gnee_window, speed_toggle, "speed_toggle");
   GLADE_HOOKUP_OBJECT (gnee_window, speed_spin, "speed_spin");
   GLADE_HOOKUP_OBJECT (gnee_window, vbox29, "vbox29");
   GLADE_HOOKUP_OBJECT (gnee_window, label75, "label75");
@@ -1925,7 +1928,7 @@ GtkWidget*
 create_dialog1 (void)
 {
   GtkWidget *dialog1;
-  GtkWidget *dialog_vbox1;
+  GtkWidget *dialog_vbox2;
   GtkWidget *vbox17;
   GtkWidget *err_label;
   GtkWidget *table5;
@@ -1935,19 +1938,18 @@ create_dialog1 (void)
   GtkWidget *solu_label;
   GtkWidget *label47;
   GtkWidget *err_nr_label;
-  GtkWidget *dialog_action_area1;
-  GtkWidget *cancelbutton1;
-  GtkWidget *okbutton1;
+  GtkWidget *dialog_action_area2;
+  GtkWidget *okbutton2;
 
   dialog1 = gtk_dialog_new ();
-  gtk_window_set_title (GTK_WINDOW (dialog1), _("dialog1"));
+  gtk_window_set_title (GTK_WINDOW (dialog1), _("Gnee error"));
 
-  dialog_vbox1 = GTK_DIALOG (dialog1)->vbox;
-  gtk_widget_show (dialog_vbox1);
+  dialog_vbox2 = GTK_DIALOG (dialog1)->vbox;
+  gtk_widget_show (dialog_vbox2);
 
   vbox17 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox17);
-  gtk_box_pack_start (GTK_BOX (dialog_vbox1), vbox17, TRUE, TRUE, 0);
+  gtk_box_pack_start (GTK_BOX (dialog_vbox2), vbox17, TRUE, TRUE, 0);
 
   err_label = gtk_label_new (_("\n<b>gnee error</b>\n"));
   gtk_widget_show (err_label);
@@ -2006,30 +2008,22 @@ create_dialog1 (void)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (err_nr_label), 0, 0.5);
 
-  dialog_action_area1 = GTK_DIALOG (dialog1)->action_area;
-  gtk_widget_show (dialog_action_area1);
-  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area1), GTK_BUTTONBOX_END);
+  dialog_action_area2 = GTK_DIALOG (dialog1)->action_area;
+  gtk_widget_show (dialog_action_area2);
+  gtk_button_box_set_layout (GTK_BUTTON_BOX (dialog_action_area2), GTK_BUTTONBOX_END);
 
-  cancelbutton1 = gtk_button_new_from_stock ("gtk-cancel");
-  gtk_widget_show (cancelbutton1);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), cancelbutton1, GTK_RESPONSE_CANCEL);
-  GTK_WIDGET_SET_FLAGS (cancelbutton1, GTK_CAN_DEFAULT);
+  okbutton2 = gtk_button_new_from_stock ("gtk-ok");
+  gtk_widget_show (okbutton2);
+  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), okbutton2, GTK_RESPONSE_OK);
+  GTK_WIDGET_SET_FLAGS (okbutton2, GTK_CAN_DEFAULT);
 
-  okbutton1 = gtk_button_new_from_stock ("gtk-ok");
-  gtk_widget_show (okbutton1);
-  gtk_dialog_add_action_widget (GTK_DIALOG (dialog1), okbutton1, GTK_RESPONSE_OK);
-  GTK_WIDGET_SET_FLAGS (okbutton1, GTK_CAN_DEFAULT);
-
-  g_signal_connect ((gpointer) cancelbutton1, "clicked",
-                    G_CALLBACK (on_cancelbutton1_clicked),
-                    NULL);
-  g_signal_connect ((gpointer) okbutton1, "clicked",
-                    G_CALLBACK (on_okbutton1_clicked),
+  g_signal_connect ((gpointer) okbutton2, "clicked",
+                    G_CALLBACK (on_okbutton2_clicked),
                     NULL);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog1, "dialog1");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox1, "dialog_vbox1");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_vbox2, "dialog_vbox2");
   GLADE_HOOKUP_OBJECT (dialog1, vbox17, "vbox17");
   GLADE_HOOKUP_OBJECT (dialog1, err_label, "err_label");
   GLADE_HOOKUP_OBJECT (dialog1, table5, "table5");
@@ -2039,9 +2033,8 @@ create_dialog1 (void)
   GLADE_HOOKUP_OBJECT (dialog1, solu_label, "solu_label");
   GLADE_HOOKUP_OBJECT (dialog1, label47, "label47");
   GLADE_HOOKUP_OBJECT (dialog1, err_nr_label, "err_nr_label");
-  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area1, "dialog_action_area1");
-  GLADE_HOOKUP_OBJECT (dialog1, cancelbutton1, "cancelbutton1");
-  GLADE_HOOKUP_OBJECT (dialog1, okbutton1, "okbutton1");
+  GLADE_HOOKUP_OBJECT_NO_REF (dialog1, dialog_action_area2, "dialog_action_area2");
+  GLADE_HOOKUP_OBJECT (dialog1, okbutton2, "okbutton2");
 
   return dialog1;
 }

@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -34,6 +34,10 @@
 int
 xnee_set_display_name (xnee_data *xd, char *disp)
 {
+  if (disp==NULL)
+    return XNEE_OK;
+
+
   xd->display=strdup(disp);
 
   if (xd->display==NULL)
@@ -72,6 +76,7 @@ xnee_get_grab_display(xnee_data *xd)
 int
 xnee_set_out_file (xnee_data *xd, FILE* out)
 {
+  XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
   xd->out_file=out;
   return XNEE_OK;
 }
@@ -85,6 +90,7 @@ xnee_get_out_file (xnee_data *xd)
 int
 xnee_set_out_name (xnee_data *xd, char* out_name)
 {
+  XNEE_FREE_IF_NOT_NULL(xd->out_name);
   xd->out_name=strdup(out_name);
   if (xd->out_name==NULL)
     {
@@ -103,10 +109,20 @@ xnee_get_out_name (xnee_data *xd)
 int
 xnee_set_out_byname (xnee_data *xd, char* out_name)
 {
-  xnee_set_out_name (xd, out_name);
+  if (out_name!=NULL)
+    {
+      xnee_set_out_name (xd, out_name);
+    }
+  else
+    {
+      return XNEE_OK;
+    }
 
   if (!xnee_check (out_name, "stdout", "STDOUT"))
-    xd->out_file = fopen (xd->out_name,"w");
+    {
+      XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
+      xd->out_file = fopen (xd->out_name,"w");
+    }
   return XNEE_OK;
 }
 
@@ -115,6 +131,7 @@ xnee_set_out_byname (xnee_data *xd, char* out_name)
 int
 xnee_set_err_file (xnee_data *xd, FILE* err)
 {
+  XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
   xd->err_file=err;
   return XNEE_OK;
 }
@@ -130,6 +147,7 @@ xnee_get_err_file (xnee_data *xd)
 int
 xnee_set_err_name (xnee_data *xd, char* err_name)
 {
+  XNEE_FREE_IF_NOT_NULL(xd->err_name);
   xd->err_name=strdup(err_name);
 
   if (xd->err_name==NULL)
@@ -148,10 +166,20 @@ xnee_get_err_name (xnee_data *xd)
 int
 xnee_set_err_byname (xnee_data *xd, char *err_name)
 {
-  xnee_set_err_name (xd, err_name);
+  if (err_name!=NULL)
+    {
+      xnee_set_err_name (xd, err_name);
+    }
+  else
+    {
+      return XNEE_OK;
+    }
 
   if (!xnee_check (err_name, "stderr", "STDERR"))
-    xd->err_file = fopen (xd->err_name,"w");
+    {
+      XNEE_FCLOSE_IF_NOT_NULL(xd->err_file);
+      xd->err_file = fopen (xd->err_name,"w");
+    }
   return XNEE_OK;
 }
 
@@ -160,6 +188,7 @@ xnee_set_err_byname (xnee_data *xd, char *err_name)
 int
 xnee_set_rc_file (xnee_data *xd, FILE* rc)
 {
+  XNEE_FCLOSE_IF_NOT_NULL(xd->rc_file);
   xd->rc_file=rc;
   return XNEE_OK;
 }
@@ -175,6 +204,7 @@ xnee_get_rc_file (xnee_data *xd)
 int
 xnee_set_rc_name (xnee_data *xd, char* rc_name)
 {
+  XNEE_FREE_IF_NOT_NULL(xd->rc_name);
   xd->rc_name=strdup(rc_name);
   if (xd->rc_name==NULL)
     {
@@ -192,14 +222,21 @@ xnee_get_rc_name (xnee_data *xd)
 int
 xnee_set_rc_byname (xnee_data *xd, char *rc_name)
 {
-  xnee_set_rc_name (xd, rc_name);
+  if (rc_name!=NULL)
+    {
+      xnee_set_rc_name (xd, rc_name);
+    }
+  else
+    {
+      return XNEE_OK;
+    }
 
+  XNEE_FCLOSE_IF_NOT_NULL(xd->rc_file);
   xd->rc_file = fopen (xd->rc_name,"r");
 
   if (xd->rc_file ==NULL)
     {
-      free (xd->rc_name);
-      xd->rc_name=NULL;
+      XNEE_FREE_IF_NOT_NULL (xd->rc_name);
       return XNEE_FILE_NOT_FOUND;
     }
 
@@ -211,6 +248,7 @@ xnee_set_rc_byname (xnee_data *xd, char *rc_name)
 int
 xnee_set_data_file (xnee_data *xd, FILE* data_file)
 {
+  XNEE_FCLOSE_IF_NOT_NULL(xd->data_file);
   xd->data_file=data_file;
   return XNEE_OK;
 }
@@ -225,6 +263,7 @@ int
 xnee_set_data_name (xnee_data *xd, char* data)
 {
 
+  XNEE_FREE_IF_NOT_NULL(xd->data_name);
   xd->data_name=strdup(data);
   return XNEE_OK;
 }
@@ -240,12 +279,21 @@ xnee_get_data_name (xnee_data *xd)
 int
 xnee_set_data_name_byname (xnee_data *xd, char* data_name)
 {
-  xnee_set_data_name (xd, data_name);
+  if (data_name!=NULL)
+    {
+      xnee_set_data_name (xd, data_name);
+    }
+  else
+    {
+      return XNEE_OK;
+    }
+
+  XNEE_FCLOSE_IF_NOT_NULL(xd->data_file);
   xd->data_file = fopen (data_name,"r");
 
   if (xd->data_file == NULL)
     {
-      XNEE_FREE (xd->data_name);
+      XNEE_FREE_IF_NOT_NULL (xd->data_name);
       return XNEE_FILE_NOT_FOUND;
     }
 
@@ -519,7 +567,7 @@ xnee_get_km (xnee_data *xd, int mode)
 int
 xnee_set_stop_km (xnee_data *xd, char* stop_km)
 {
-  XNEE_FREE_IF_NULL(xd->grab_keys->stop_str);
+  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->stop_str);
   xd->grab_keys->stop_str=strdup(stop_km);
   return XNEE_OK;
 }
@@ -536,7 +584,7 @@ xnee_get_stop_km (xnee_data *xd)
 int
 xnee_set_pause_km (xnee_data *xd, char *pause_km)
 {
-  XNEE_FREE_IF_NULL(xd->grab_keys->pause_str);
+  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->pause_str);
   xd->grab_keys->pause_str=strdup(pause_km);
   return XNEE_OK;
 }
@@ -551,7 +599,7 @@ xnee_get_pause_km (xnee_data *xd)
 int
 xnee_set_resume_km (xnee_data *xd, char* resume_km)
 {
-  XNEE_FREE_IF_NULL(xd->grab_keys->resume_str);
+  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->resume_str);
   xd->grab_keys->resume_str=strdup(resume_km);
   return XNEE_OK;
 }
@@ -566,7 +614,7 @@ xnee_get_resume_km (xnee_data *xd)
 int
 xnee_set_insert_km (xnee_data *xd, char* insert_km)
 {
-  XNEE_FREE_IF_NULL(xd->grab_keys->insert_str);
+  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->insert_str);
   xd->grab_keys->insert_str=strdup(insert_km);
   return XNEE_OK;
 }
@@ -580,7 +628,7 @@ xnee_get_insert_km (xnee_data *xd)
 int
 xnee_set_exec_km (xnee_data *xd, char *exec_km)
 {
-  XNEE_FREE_IF_NULL(xd->grab_keys->exec_str);
+  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->exec_str);
   xd->grab_keys->exec_str=strdup(exec_km);
   return XNEE_OK;
 }
@@ -651,26 +699,26 @@ is_first_replayed_event (xnee_data *xd)
 int 
 xnee_set_first_last (xnee_data *xd)
 {
-  xd->xnee_info->first_last = XNEE_TRUE;
+  xd->xnee_info.first_last = XNEE_TRUE;
   return XNEE_OK;
 }
 
 
 int 
 xnee_get_first_last (xnee_data *xd){
-  return xd->xnee_info->first_last;
+  return xd->xnee_info.first_last;
 }
 
 int 
 xnee_is_first_last (xnee_data *xd){
-  return (xd->xnee_info->first_last==XNEE_TRUE);
+  return (xd->xnee_info.first_last==XNEE_TRUE);
 }
 
 
 int 
 xnee_unset_first_last (xnee_data *xd)
 {
-  xd->xnee_info->first_last = XNEE_FALSE;
+  xd->xnee_info.first_last = XNEE_FALSE;
   return XNEE_OK;
 }
 
@@ -685,26 +733,26 @@ xnee_unset_first_last (xnee_data *xd)
 int 
 xnee_set_no_expose (xnee_data *xd)
 {
-  xd->xnee_info->no_expose = XNEE_TRUE;
+  xd->xnee_info.no_expose = XNEE_TRUE;
   return XNEE_OK;
 }
 
 
 int 
 xnee_get_no_expose (xnee_data *xd){
-  return xd->xnee_info->no_expose;
+  return xd->xnee_info.no_expose;
 }
 
 int 
 xnee_is_no_expose (xnee_data *xd){
-  return (xd->xnee_info->no_expose==XNEE_TRUE);
+  return (xd->xnee_info.no_expose==XNEE_TRUE);
 }
 
 
 int 
 xnee_unset_no_expose (xnee_data *xd)
 {
-  xd->xnee_info->no_expose = XNEE_FALSE;
+  xd->xnee_info.no_expose = XNEE_FALSE;
   return XNEE_OK;
 }
 
@@ -713,7 +761,7 @@ xnee_unset_no_expose (xnee_data *xd)
 int 
 xnee_set_events_max (xnee_data *xd, int loops)
 {
-  xd->xnee_info->events_max = loops;
+  xd->xnee_info.events_max = loops;
   return XNEE_OK;
 }
 
@@ -721,20 +769,21 @@ xnee_set_events_max (xnee_data *xd, int loops)
 int 
 xnee_get_events_max (xnee_data *xd)
 {
-  return xd->xnee_info->events_max;
+  return xd->xnee_info.events_max;
 }
 
 
 int 
-xnee_get_events_left (xnee_data *xd){
-  return (xd->xnee_info->events_max - xd->xnee_info->events_recorded);
+xnee_get_events_left (xnee_data *xd)
+{
+  return (xd->xnee_info.events_max - xd->xnee_info.events_recorded);
 }
 
 
 int 
 xnee_set_data_max (xnee_data *xd, int loops)
 {
-  xd->xnee_info->data_max = loops;
+  xd->xnee_info.data_max = loops;
   return XNEE_OK;
 }
 
@@ -742,35 +791,34 @@ xnee_set_data_max (xnee_data *xd, int loops)
 int 
 xnee_get_data_max (xnee_data *xd)
 {
-  return xd->xnee_info->data_max;
+  return xd->xnee_info.data_max;
 }
 
 
 int 
 xnee_get_data_left (xnee_data *xd){
-  return (xd->xnee_info->data_max - xd->xnee_info->data_recorded);
+  return (xd->xnee_info.data_max - xd->xnee_info.data_recorded);
 }
 
 
 int 
 xnee_set_time_max (xnee_data *xd, int time)
 {
-  printf ("time:    %d\n", time);
-  xd->xnee_info->time_max = time;
-  printf ("time:    %d\n", xd->xnee_info->time_max);
+  xd->xnee_info.time_max = time;
   return XNEE_OK;
 }
 
 int 
 xnee_get_time_max (xnee_data *xd)
 {
-  return xd->xnee_info->time_max ;
+  return xd->xnee_info.time_max ;
 }
 
 
 int 
-xnee_get_time_left (xnee_data *xd){
-  return (xd->xnee_info->time_max - xd->xnee_info->time_recorded);
+xnee_get_time_left (xnee_data *xd)
+{
+  return (xd->xnee_info.time_max - xd->xnee_info.time_recorded);
 }
 
 
@@ -778,14 +826,14 @@ xnee_get_time_left (xnee_data *xd){
 int 
 xnee_set_interval (xnee_data *xd, int interval)
 {
-  xd->xnee_info->interval = interval ;
+  xd->xnee_info.interval = interval ;
   return XNEE_OK;
 }
 
 int 
 xnee_get_interval (xnee_data *xd)
 {
-  return xd->xnee_info->interval;
+  return xd->xnee_info.interval;
 }
 
 
@@ -802,14 +850,14 @@ xnee_set_human_printout (xnee_data *xd)
 int 
 xnee_set_all_events (xnee_data *xd)
 {
-  xd->xnee_info->all_events = True;
+  xd->xnee_info.all_events = True;
   return XNEE_OK;
 }
 
 int 
 xnee_is_all_events (xnee_data *xd)
 {
-  return (xd->xnee_info->all_events == XNEE_TRUE);
+  return (xd->xnee_info.all_events == XNEE_TRUE);
 }
 
 
@@ -822,7 +870,8 @@ xnee_set_replay_speed_str (xnee_data *xd, char *speed_str)
   
   if (ret == 1)
     {
-      xnee_verbose ((xd, "Setting replay speed = \n", speed));
+      xnee_verbose ((xd, "Setting replay speed = %d (%s)\n", 
+		     speed, speed_str));
       xnee_set_replay_speed (xd, speed);
       return XNEE_OK;
     }
@@ -837,7 +886,7 @@ xnee_set_replay_speed_str (xnee_data *xd, char *speed_str)
 int
 xnee_set_replay_speed (xnee_data *xd, int speed)
 {
-  xnee_verbose ((xd, "Setting replay speed = \n", speed));
+  xnee_verbose ((xd, "Setting replay speed = %d \n", speed));
   xd->speed_percent=speed;
   return XNEE_OK;
 }
