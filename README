@@ -7,20 +7,33 @@ Xnee is a GNU package. For more information about GNU, please visit
 
 
 
-The following files contains information about Xnee
+Xnee consists of three parts:
+----------------------------------------------
+1) libxnee (libxnee is basically xnee) 
+A library containing most of the functionality.
 
-Name		Description
----------------------------
-AUTHORS		List of authors, contributors etc 
-BUGS		Known bugs and limitations
-Changelog	Log of source code changes
-COPYING		Contains the Xnee license
-DESCRIPTION	Obsolete*
-DEVELOPMENT	Obsolete*
-EXAMPLES	Obsolete*
-FAQ		Obsolete*
-INSTALL		Contains information about how to build and install Xnee
-NEWS		Contains information about what is new in "this" release
-README		This file
-TODO		List of features, fixes, docs,  ... to implement 
-USAGE		A printout of Xnee's built in doc, 'xnee --help'
+2) xnee (xnee's not an event emulator)
+A command line program using libxnee
+
+3) gnee (gnee's not an emulator either)
+A GUI program using libxnee
+
+
+
+
+To build these three programs do the following:
+-----------------------------------------------
+
+libxnee:
+  Go to the directory libxnee and read the INSTALL file
+
+xnee:
+  Go to the directory xnee and read the INSTALL file
+
+gnee:
+  Go to the directory gnee and read the INSTALL file
+ 
+
+
+
+
