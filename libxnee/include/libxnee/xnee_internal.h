@@ -163,7 +163,7 @@ enum _xnee_mode {
       const char *xnee_macro_tmp ;                                      \
       (void) fprintf (stderr, "Xnee error\n");                          \
       xnee_macro_tmp = xnee_get_err_description (ret);                  \
-      (void) fprintf (stderr, "Description: %s\n", xnee_macro_tmp );               \
+      (void) fprintf (stderr, "Description: %s\n", xnee_macro_tmp );    \
       xnee_macro_tmp = xnee_get_err_solution (ret) ;                    \
       (void) fprintf (stderr, "Solution:    %s\n", xnee_macro_tmp);     \
       return (ret);                                                     \

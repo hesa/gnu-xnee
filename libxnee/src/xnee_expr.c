@@ -250,7 +250,9 @@ xnee_expression_handle_replay(xnee_data *xd,
       ret=-1;
     }      
   if (ret>0)
-    ret = XNEE_REPLAY_DATA;
+    {
+      ret = XNEE_REPLAY_DATA;
+    }
 
   return ret;
 }
@@ -258,10 +260,11 @@ xnee_expression_handle_replay(xnee_data *xd,
 static int
 xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 {
+  #define RANGE_BUF_SIZE 100
   int ret=XNEE_SETTINGS_DATA;  
   char *range_tmp = NULL;
   char *range = NULL;
-  char range_buf[100];
+  char range_buf[RANGE_BUF_SIZE];
   int len=0;
   
   xnee_verbose ((xd, "handling settings: %s\n", tmp));
@@ -272,7 +275,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 
   if (range_tmp!=NULL) 
     {
-      strcpy(range_buf, range_tmp);
+      strncpy(range_buf, range_tmp, RANGE_BUF_SIZE );
       
       len=strlen(range_buf);
       
@@ -714,7 +717,9 @@ xnee_expr_get_proj_value (char *var_and_val)
 
   tmp = strstr(var_and_val, ":");
   if (tmp==NULL)
-    return NULL;
+    {  
+      return NULL;
+    }
   tmp++;
 
   while ( (tmp!=NULL) && ( (*tmp==' ') || (*tmp=='\t') )) 
@@ -723,13 +728,19 @@ xnee_expr_get_proj_value (char *var_and_val)
     }
   
   if (tmp==NULL)
-    return NULL;
+    {
+      return NULL;
+    }
 
   if (tmp==NULL)
-    return NULL;
+    {
+      return NULL;
+    }
 
   if (tmp[strlen(tmp)-1]=='\n')
-    tmp[strlen(tmp)-1]='\0';
+    {
+      tmp[strlen(tmp)-1]='\0';
+    }
 
   return tmp;
 }
@@ -859,7 +870,7 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 
       /* copy everything from str upto '=' into var */  
       len = strlen(str);
-      strcpy (val,str);
+      strncpy (val, str, BUF_SIZE - strlen(val));
       val[len]='\0';
       /* remove trailing blanks ... */
       i=0;

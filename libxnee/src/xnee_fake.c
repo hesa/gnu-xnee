@@ -185,7 +185,7 @@ xnee_replay_event_handler( xnee_data* xd,
       xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_PRESS, sleep_amt );
       break;
     case KeyRelease:
-      xnee_fake_key_event  (xd, xindata->u.event.keycode, XNEE_RELEASE, sleep_amt);
+      xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_RELEASE, sleep_amt);
       break;
     case ButtonPress:
       xnee_fake_button_event (xd, xindata->u.event.button, XNEE_PRESS, sleep_amt);
@@ -195,8 +195,8 @@ xnee_replay_event_handler( xnee_data* xd,
       break;
     case MotionNotify:
       screen = xindata->u.event.screen_nr ; 
-      x = (int) xindata->u.event.x ; 
-      y = (int) xindata->u.event.y ; 
+      x      = (int) xindata->u.event.x ; 
+      y      = (int) xindata->u.event.y ; 
       xnee_fake_motion_event (xd,
 			      screen,
 			      x, 
@@ -419,12 +419,12 @@ xnee_fake_motion_event (xnee_data* xd,
 
       xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))  **\n",
 		   (int) xd->distr_list[i].dpy, 
-		   (int) screen, 
+		   (int) 0, 
 		   (int) x,
 		   (int) y,
 		    10));
       XTestFakeMotionEvent(xd->distr_list[i].dpy, 
-			   screen, 
+			   0, 
 			   x, 
 			   y, 
 			   CurrentTime);

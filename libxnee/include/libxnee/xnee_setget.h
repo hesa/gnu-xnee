@@ -29,59 +29,194 @@
 #include "libxnee/xnee_replay.h"
 
 
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * @param disp  name of the X display to set
+ * 
+ * This functions is called to set the display name of the 
+ * main display for Xnee.
+ *
+ * @return      0 on success
+ */
 int
 xnee_set_display_name (xnee_data *xd, const char *disp);
 
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * 
+ * This functions is called to get the display name of the
+ * display used in Xnee.
+ *
+ * @return      display
+ */
 char*
 xnee_get_display_name (xnee_data *xd);
 
+
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * 
+ * This functions is called to get the display of the 
+ * control display for Xnee.
+ *
+ * @return 
+ */
 Display *
 xnee_get_control_display(xnee_data *xd);
 
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * 
+ * This functions is called to get the display of the 
+ * data display for Xnee.
+ *
+ * @return 
+ */
 Display *
 xnee_get_data_display(xnee_data *xd);
 
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * 
+ * This functions is called to get the display of the 
+ * grab display for Xnee.
+ *
+ * @return      display 
+ */
 Display *
 xnee_get_grab_display(xnee_data *xd);
 
 
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * @param out   file descriptor to use for printout
+ * 
+ * @return 
+ */
 int
 xnee_set_out_file (xnee_data *xd, FILE* out);
 
+
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * 
+ * @return      file descriptor to use for printout
+ */
 FILE*
 xnee_get_out_file (xnee_data *xd);
 
+/** 
+ * 
+ * 
+ * @param xd         xnee's main structure
+ * @param out_name   file name to use for printout
+ * 
+ * @return 
+ */
 int
 xnee_set_out_name (xnee_data *xd, char* out_name);
  
+/** 
+ * 
+ * 
+ * @param xd         xnee's main structure
+ * 
+ * @return           file name to use for printout
+ */
 char *
 xnee_get_out_name (xnee_data *xd);
 
 
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * @param rt    file descriptor to use for retype
+ * 
+ * @return 
+ */
 int
 xnee_set_rt_file (xnee_data *xd, FILE* rt);
 
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * 
+ * @return      file descriptor to use for retype
+ */
 FILE*
 xnee_get_rt_file (xnee_data *xd);
 
+/** 
+ * 
+ * 
+ * @param xd         xnee's main structure
+ * 
+ * @return           file name to use for retype
+ */
 int
 xnee_set_rt_name (xnee_data *xd, char* rt_name);
  
+/** 
+ * 
+ * 
+ * @param xd         xnee's main structure
+ * 
+ * @return           file name to use for retype
+ */
 char *
 xnee_get_rt_name (xnee_data *xd);
 
 
+/** 
+ * 
+ * 
+ * @param xd        xnee's main structure
+ * @param err       file decriptor to use for error prints
+ * 
+ * @return          0 on success
+ */
 int
 xnee_set_err_file (xnee_data *xd, FILE* err);
 
+/** 
+ * 
+ * 
+ * @param xd    xnee's main structure
+ * 
+ * @return      file descriptor to use for error prints
+ */
 FILE*
 xnee_get_err_file (xnee_data *xd);
 
 
-
+/** 
+ * 
+ * 
+ * @param xd         xnee's main structure
+ * @param out_name   file name to use for error prints
+ * 
+ * @return           0 on success
+ */
 int
 xnee_set_err_name (xnee_data *xd, char* err_name);
  
+
 char *
 xnee_get_err_name (xnee_data *xd);
 
@@ -416,5 +551,10 @@ int
 xnee_reset_autorepeat (xnee_data *xd);
 
 
+int
+xnee_set_application_parameters(xnee_data *xd, char **argv);
+
+char **
+xnee_get_application_parameters(xnee_data *xd);
 
 #endif /* XNEE_SETGET_H */ 

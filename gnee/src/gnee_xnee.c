@@ -214,7 +214,7 @@ gx_set_record_display(xnee_data *xd, gnee_xnee *gx)
       
       if (rec_disp_text==NULL)
 	{
-	  ;
+	  xnee_set_display_name(ext_xd, "");
 	}
       else
 	{
@@ -225,6 +225,10 @@ gx_set_record_display(xnee_data *xd, gnee_xnee *gx)
 				gtk_entry_get_text((GtkEntry*)rec_disp_text));
 	}
     }
+  else
+    {
+      xnee_set_display_name(ext_xd, "");
+    }
   return GNEE_OK; 
 }
 
@@ -234,6 +238,7 @@ gx_set_replay_display(xnee_data *xd, gnee_xnee *gx)
   GtkWidget   *rep_disp_text;
   
   GNEE_DEBUG(("gx_set_replay\n"));
+
   if (gx_is_using_rep_display(gx))
     {
       rep_disp_text = (GtkWidget*) 
@@ -241,7 +246,7 @@ gx_set_replay_display(xnee_data *xd, gnee_xnee *gx)
       
       if (rep_disp_text==NULL)
 	{
-	  ;
+	  xnee_set_display_name(ext_xd, "");
 	}
       else
 	{
@@ -251,6 +256,10 @@ gx_set_replay_display(xnee_data *xd, gnee_xnee *gx)
 				(char*)
 				gtk_entry_get_text((GtkEntry*)rep_disp_text));
 	}
+    }
+  else
+    {
+      xnee_set_display_name(ext_xd, "");
     }
   return GNEE_OK; 
 }
@@ -268,7 +277,7 @@ gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
     {
       gx_set_record_display(xd, gx);
     }
-  else if (xnee_is_recorder(xd))
+  else if (xnee_is_replayer(xd))
     {
       gx_set_replay_display(xd, gx);
     }
@@ -432,7 +441,7 @@ gx_set_xd_settings()
 
   if (ext_gnee_window == NULL)
     {
-      fprintf (stderr, "Aint got no window\n");
+      fprintf (stderr, "Could not find a gnee_window in\n");
     }
   
   val = xnee_get_events_max(ext_xd);
@@ -445,35 +454,14 @@ gx_set_xd_settings()
   gnee_set_time_max(val);
 
 
-  printf ("GX %d %d %d\n",
-	  ext_xd->meta_data.sum_max_threshold,
-	  ext_xd->meta_data.sum_min_threshold,
-	  ext_xd->meta_data.tot_diff_threshold);
-	  
   val = xnee_get_max_threshold(ext_xd); 
-  printf ("GX MAX %d \n", val );
   gnee_set_max_thresh(val);  
 
-  printf ("GX %d %d %d\n",
-	  ext_xd->meta_data.sum_max_threshold,
-	  ext_xd->meta_data.sum_min_threshold,
-	  ext_xd->meta_data.tot_diff_threshold);
   val = xnee_get_min_threshold(ext_xd);
-  printf ("GX MIN %d \n", val );
   gnee_set_min_thresh(val);
 
-  printf ("GX %d %d %d\n",
-	  ext_xd->meta_data.sum_max_threshold,
-	  ext_xd->meta_data.sum_min_threshold,
-	  ext_xd->meta_data.tot_diff_threshold);
   val = xnee_get_tot_threshold(ext_xd);
-  printf ("GX TOT %d\n", val);
   gnee_set_tot_thresh(val);
-
-  printf ("GX %d %d %d\n",
-	  ext_xd->meta_data.sum_max_threshold,
-	  ext_xd->meta_data.sum_min_threshold,
-	  ext_xd->meta_data.tot_diff_threshold);
 
   for (i=1;i<XNEE_NR_OF_TYPES;i++)
     {
@@ -490,13 +478,11 @@ gx_set_xd_settings()
 
   gnee_set_interval();
 
-  printf ("is replay synced = %d\n",xnee_is_sync(ext_xd)); 
   if (xnee_is_sync(ext_xd))
     gnee_set_sync();
   else
     gnee_unset_sync();
 
-  printf ("is replay forced = %d\n",xnee_is_force_replay(ext_xd)); 
   if (xnee_is_force_replay(ext_xd))
     gnee_set_force();
   else
@@ -543,17 +529,15 @@ gx_start_recording(xnee_data* xd)
 {
   int ret;
   GNEE_DEBUG(("gx_start_recording\n"));
-  printf ("gx_start_recorder 1a\n");fflush(stdout);
-  printf ("gx_start_recorder 1b\n");fflush(stdout);
   
   GNEE_DEBUG(("Starting recorder\n"));
   xnee_set_recorder (xd);
 
-  ret = xnee_prepare(xd);
-  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
-
   GNEE_DEBUG(("setting variable data\n"));
   ret = gx_set_variable_data(xd, ext_gx);
+  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
+
+  ret = xnee_prepare(xd);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 
   GNEE_DEBUG(("start recording\n"));
@@ -580,24 +564,21 @@ gx_start_replaying(xnee_data* xd)
   int ret ; 
   GNEE_DEBUG(("gx_start_replaying\n"));
 
-/*   gx_init_xnee(xd); */
   GNEE_DEBUG(("Starting replayer\n"));
-
   xnee_set_replayer(xd);
-
-  GNEE_DEBUG(("preparing\n"));
-  ret = xnee_prepare(xd);
-  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 
   GNEE_DEBUG(("setting variable data\n"));
   ret = gx_set_variable_data(xd, ext_gx);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 
+  ret = xnee_prepare(xd);
+  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
+
   GNEE_DEBUG(("start recplatying\n"));
+
   ret = xnee_start(xd);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 
-  printf ("gx_start_replayer 3\n");
   GNEE_DEBUG((" replayer stopped\n"));
   return 0;
 }
@@ -722,7 +703,8 @@ void
 gx_display_errror(int err_nr)
 {
   GtkLabel   *my_text;
-  gchar buf[4];
+#define GNEE_BUF_SIZE 8
+  gchar buf[GNEE_BUF_SIZE];
   const char *str_ptr = NULL;
   int i ;
 
@@ -735,7 +717,7 @@ gx_display_errror(int err_nr)
   /* number field */
   my_text = (GtkLabel *) 
     lookup_widget (err_win, "err_nr_label");
-  sprintf (buf, "%d", err_nr);
+  snprintf (buf, GNEE_BUF_SIZE, "%d", err_nr);
   gtk_label_set_text(my_text,buf);
 
   /* description field */
@@ -858,10 +840,11 @@ gx_get_default_filename()
 {
   char *tmp_dir = NULL;
   char *user_name = NULL;
-  char *default_tmp_dir   = "/tmp/";
-  char *default_user_name = "user";
-  char *file_prefix = "gnee_";
-  char *file_suffix = ".xns";
+
+  const char *default_tmp_dir   = "/tmp/";
+  const char *default_user_name = "user";
+  const char *file_prefix = "gnee_";
+  const char *file_suffix = ".xns";
   char *ret_str;
   int   size = 0 ; 
 
@@ -882,18 +865,20 @@ gx_get_default_filename()
     }
   
   size = strlen (tmp_dir) + 
-    strlen (user_name) + 
-    strlen (file_prefix) + 
+    strlen (user_name)    + 
+    strlen (file_prefix)  + 
     strlen (file_suffix) ;
   
   ret_str = (char*) malloc (size*sizeof(char));
   if (ret_str==NULL)
-    return NULL;
+    {
+      return NULL;
+    }
   
-  strcpy (ret_str, tmp_dir);
-  strcat (ret_str, file_prefix);
-  strcat (ret_str, user_name);
-  strcat (ret_str, file_suffix);
+  strncpy (ret_str, size, tmp_dir);
+  strncat (ret_str, size - strlen(ret_str), file_prefix);
+  strncat (ret_str, size - strlen(ret_str), user_name);
+  strncat (ret_str, size - strlen(ret_str), file_suffix);
   return ret_str;
 }
 

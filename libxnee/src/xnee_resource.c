@@ -445,10 +445,11 @@ int
 xnee_add_resource(xnee_data *xd)
 {
 
-  static char tmp[256] ;
+  #define TMP_BUF_SIZE 256
+  static char tmp[TMP_BUF_SIZE] ;
   int read_more  = 1 ;
   
-  strcpy(tmp,"");
+  strncpy(tmp,"",TMP_BUF_SIZE);
   
 
   while (read_more!=0)
@@ -493,15 +494,21 @@ xnee_get_creat_date(xnee_data *xd)
 {
   time_t rawtime;
   struct tm * timeinfo;
-  static char buf[20];
+  #define XNEE_DATE_BUF_SIZE 100
+  static char buf[XNEE_DATE_BUF_SIZE];
+
   if (xd->xrm.creat_date!=NULL)  
-    return xd->xrm.creat_date;
+    {
+      return xd->xrm.creat_date;
+    }
   time ( &rawtime );
   timeinfo = localtime ( &rawtime );
-  sprintf(buf, "%.4d-%.2d-%.2d",
-	  timeinfo->tm_year + 1900 , 
-	  timeinfo->tm_mon + 1 , 
-	  timeinfo->tm_mday  );
+  snprintf(buf, XNEE_DATE_BUF_SIZE,
+	   "%.4d-%.2d-%.2d",
+	   timeinfo->tm_year + 1900 , 
+	   timeinfo->tm_mon + 1 , 
+	   timeinfo->tm_mday  );
+  
   return buf;
 }
 

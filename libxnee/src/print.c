@@ -861,7 +861,8 @@ xnee_print_xnee_resource_settings (xnee_data* xd, FILE* out)
 int
 xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out) 
 {
-   int ret;
+  int ret;
+  int i ;
    
   if (out == NULL)
     {
@@ -878,9 +879,23 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   {
      return XNEE_NO_MAIN_DATA;
   }
-
-  
   fprintf (out,  "\n");
+
+  if ( xd->app_args!= NULL)
+    {
+      /* Xnee application argument */
+      fprintf (out,  "\n\n");
+      fprintf (out,  "##############################################\n");
+      fprintf (out,  "#      Xnee application arguments            #\n");
+      fprintf (out,  "##############################################\n");
+      fprintf (out,  "#  ");
+      for (i=0;xd->app_args[i]!=NULL;i++)
+	{
+	  fprintf (out,  "%s ", xd->app_args[i]);
+	}
+      fprintf (out,  "\n");
+    }
+  
   /* DISPLAY */
   fprintf (out,  "\n\n");
   fprintf (out,  "##############################################\n");
@@ -1060,9 +1075,7 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
 
   
   fprintf (out,  "\n# Delay before starting record/replay\n");
-  fprintf (out,  "# "  "%s  %d\n", xnee_get_interval(xd) ); 
-  XNEE_DELAY_TIME,
-           
+  fprintf (out,  "# %d\n", xnee_get_interval(xd) ); 
 
   
 

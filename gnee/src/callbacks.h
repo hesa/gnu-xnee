@@ -324,3 +324,21 @@ on_xosb_fb_b_toggled                   (GtkToggleButton *togglebutton,
 void
 on_xosd_fb_b_toggled                   (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+gboolean
+on_replay_settings_box_realize         (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data);
+
+gboolean
+on_replay_settings_box_visi            (GtkWidget       *widget,
+                                        GdkEvent        *event,
+                                        gpointer         user_data);
+
+void
+on_replay_settings_box_map             (GtkWidget       *widget,
+                                        gpointer         user_data);
+
+void
+on_record_settings_box_map             (GtkWidget       *widget,
+                                        gpointer         user_data);

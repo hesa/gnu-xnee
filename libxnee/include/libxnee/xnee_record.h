@@ -151,6 +151,13 @@ int
 xnee_setup_recording(xnee_data *xd);
 
 
+/** 
+ * 
+ * 
+ * @param xd xnee's main structure
+ * 
+ * @return   0 if succuessful
+ */
 int
 xnee_unsetup_recording(xnee_data *xd);
 
@@ -166,32 +173,19 @@ xnee_unsetup_recording(xnee_data *xd);
 int 
 xnee_record_loop(xnee_data *xd);
 
+
+/** 
+ * 
+ * 
+ * @param xd xnee's main structure
+ * 
+ * @return   0 on succeess
+ */
 int 
 xnee_record_async(xnee_data *xd);
 
 
 
-
-
-
-
-/*
- *  This function parses arguments and sets values that corresponds 
- *  to the options
- *  
- *   OBSOLETE 
-void 
-xnee_record_parse_args        (xnee_data*, int, char ** ) ;
-*/
-
-
-
-/*
- *
- * OBSOLETED by xnee_free_xnee_data 
-int
-xnee_record_close_down (xnee_data *);
-*/
 
 
 #endif   /* XNEE_RECORD_H */

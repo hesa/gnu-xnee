@@ -563,7 +563,7 @@ create_gnee_window (void)
   rec_file_sel = gtk_button_new_with_mnemonic (_("..."));
   gtk_widget_show (rec_file_sel);
   gtk_box_pack_start (GTK_BOX (hbox30), rec_file_sel, FALSE, FALSE, 0);
-  gtk_widget_set_size_request (rec_file_sel, -1, 20);
+  gtk_widget_set_size_request (rec_file_sel, -1, 4);
 
   table1 = gtk_table_new (1, 3, TRUE);
   gtk_widget_show (table1);
@@ -657,7 +657,7 @@ create_gnee_window (void)
   gtk_misc_set_alignment (GTK_MISC (label71), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label71), 4, 0);
 
-  spinbutton11_adj = gtk_adjustment_new (-1, -1, 1e+06, 1, 10, 10);
+  spinbutton11_adj = gtk_adjustment_new (-1, -1, 1000000, 1, 10, 10);
   spinbutton11 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton11_adj), 1, 0);
   gtk_widget_show (spinbutton11);
   gtk_table_attach (GTK_TABLE (table7), spinbutton11, 1, 2, 0, 1,
@@ -673,7 +673,7 @@ create_gnee_window (void)
   gtk_misc_set_alignment (GTK_MISC (label72), 0, 0.5);
   gtk_misc_set_padding (GTK_MISC (label72), 4, 0);
 
-  spinbutton12_adj = gtk_adjustment_new (-1, -1, 1e+06, 1, 10, 10);
+  spinbutton12_adj = gtk_adjustment_new (-1, -1, 1000000, 1, 10, 10);
   spinbutton12 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton12_adj), 1, 0);
   gtk_widget_show (spinbutton12);
   gtk_table_attach (GTK_TABLE (table7), spinbutton12, 1, 2, 1, 2,
@@ -796,8 +796,8 @@ create_gnee_window (void)
   gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (include_list), FALSE);
 
   label1 = gtk_label_new (_("Record settings"));
-  gtk_widget_show (label1);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 1), label1);
+  gtk_widget_set_size_request (label1, -1, 8);
 
   replay_settings_box = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (replay_settings_box);
@@ -894,7 +894,7 @@ create_gnee_window (void)
   button11 = gtk_button_new_with_mnemonic (_("..."));
   gtk_widget_show (button11);
   gtk_box_pack_start (GTK_BOX (hbox31), button11, FALSE, FALSE, 0);
-  gtk_widget_set_size_request (button11, -1, 20);
+  gtk_widget_set_size_request (button11, -1, 8);
 
   spin_boxes = gtk_hbox_new (FALSE, 0);
   gtk_widget_show (spin_boxes);
@@ -1271,6 +1271,9 @@ create_gnee_window (void)
   g_signal_connect_swapped ((gpointer) stderr_fb_b, "toggled",
                             G_CALLBACK (on_stderr_fb_b_toggled),
                             GTK_OBJECT (stderr_fb_b));
+  g_signal_connect ((gpointer) record_settings_box, "map",
+                    G_CALLBACK (on_record_settings_box_map),
+                    NULL);
   g_signal_connect_swapped ((gpointer) checkbutton10, "toggled",
                             G_CALLBACK (on_checkbutton10_toggled),
                             GTK_OBJECT (checkbutton10));
@@ -1316,6 +1319,9 @@ create_gnee_window (void)
   g_signal_connect_swapped ((gpointer) include_list, "row_activated",
                             G_CALLBACK (on_include_list_row_activated),
                             GTK_OBJECT (gnee_window));
+  g_signal_connect ((gpointer) replay_settings_box, "map",
+                    G_CALLBACK (on_replay_settings_box_map),
+                    NULL);
   g_signal_connect_swapped ((gpointer) rep_disp_cb, "toggled",
                             G_CALLBACK (on_rep_disp_cb_toggled),
                             GTK_OBJECT (rep_disp_cb));
@@ -1561,6 +1567,7 @@ create_fileselection1 (void)
 
   fileselection1 = gtk_file_selection_new (_("Select File"));
   gtk_container_set_border_width (GTK_CONTAINER (fileselection1), 10);
+  gtk_window_set_type_hint (GTK_WINDOW (fileselection1), GDK_WINDOW_TYPE_HINT_DIALOG);
 
   ok_button1 = GTK_FILE_SELECTION (fileselection1)->ok_button;
   gtk_widget_show (ok_button1);
@@ -1759,8 +1766,7 @@ create_about_window (void)
   license_textview = gtk_text_view_new ();
   gtk_widget_show (license_textview);
   gtk_container_add (GTK_CONTAINER (scrolledwindow7), license_textview);
-  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (license_textview)),
-	_("Here shalt be thy license "), -1);
+  gtk_text_buffer_set_text (gtk_text_view_get_buffer (GTK_TEXT_VIEW (license_textview)), _("Here shalt be thy license "), -1);
 
   button12 = gtk_button_new_from_stock ("gtk-ok");
   gtk_widget_show (button12);
@@ -1824,6 +1830,7 @@ create_dialog1 (void)
 
   dialog1 = gtk_dialog_new ();
   gtk_window_set_title (GTK_WINDOW (dialog1), _("Gnee error"));
+  gtk_window_set_type_hint (GTK_WINDOW (dialog1), GDK_WINDOW_TYPE_HINT_DIALOG);
 
   dialog_vbox2 = GTK_DIALOG (dialog1)->vbox;
   gtk_widget_show (dialog_vbox2);

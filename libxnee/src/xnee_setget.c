@@ -40,7 +40,9 @@ int
 xnee_set_display_name (xnee_data *xd, const char *disp)
 {
   if (disp==NULL)
-    return XNEE_OK;
+    {
+      return XNEE_OK;
+    }
 
 
   xd->display=strdup(disp);
@@ -904,6 +906,19 @@ xnee_unset_new_project(xnee_data *xd)
 {
       xd->xrm.new_project = 0;
       return XNEE_OK;
+}
+
+int
+xnee_set_application_parameters(xnee_data *xd, char **argv)
+{
+  xd->app_args=argv;
+  return XNEE_OK;
+}
+
+char **
+xnee_get_application_parameters(xnee_data *xd)
+{
+  return xd->app_args;
 }
 
 

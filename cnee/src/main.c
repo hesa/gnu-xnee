@@ -26,6 +26,7 @@
 #include "libxnee/print.h"
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_record.h"
+#include "libxnee/xnee_alloc.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_fake.h"
@@ -64,6 +65,9 @@ int main(int argc,char *argv[])
 
   /* Well .... parse the args */
   xnee_parse_args (xd, argc, argv);
+
+  /* Set the cli parameters */
+  xnee_set_application_parameters (xd, argv);
 
 
   ret = xnee_prepare(xd);

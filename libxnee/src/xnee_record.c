@@ -106,6 +106,8 @@ get_screen_nr(Display *dpy, Window recorded_root)
   /* If we didn't find a screen, bail out */
   if ( this_screen == -1)
     {
+      /* FIX ME FIX ME.... 
+	 this may be intepreted as a screen nr */
       return XNEE_SCREEN_MISSING;
     }
   
@@ -270,7 +272,7 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
                  
                  xd->xnee_info.last_motion = True ;
                  ret = xnee_fake_motion_event (xd,
-                                               0, 
+                                               screen, 
                                                xrec_data->event.u.keyButtonPointer.rootX, 
                                                xrec_data->event.u.keyButtonPointer.rootY, 
                                                CurrentTime);

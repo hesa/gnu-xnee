@@ -279,11 +279,12 @@ is_last (xnee_data *xd,  char *mod_strs)
 xnee_keymask
 get_modifier(xnee_data *xd,  char *mod_strs, xnee_km_tuple *km) 
 {
+  #define MODIFIER_BUF_SIZE 50
   int ret=0;
   /*  int try_ret;*/
   char *tmp;
-  char mod_head[20]="";
-  char mod_tail[40]="";
+  char mod_head[MODIFIER_BUF_SIZE]="";
+  char mod_tail[MODIFIER_BUF_SIZE]="";
   int i;
   /*  int last=0;*/
   int len=strlen(mod_strs);
@@ -313,7 +314,7 @@ get_modifier(xnee_data *xd,  char *mod_strs, xnee_km_tuple *km)
 	      tmp+=(sizeof(char)*i+1);
 
 	      xnee_verbose((xd, "%d --- get_modifier 4: '%s'\n", level, mod_head));
-	      strcpy (mod_tail, tmp); 
+	      strncpy (mod_tail, MODIFIER_BUF_SIZE - strlen(mod_tail), tmp); 
 
 	      xnee_verbose((xd, "%d --- get_modifier 5: '%s'\n", level, mod_tail));
 	      ret |= get_modifier_sub (xd, mod_head, km);

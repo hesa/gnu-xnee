@@ -24,6 +24,7 @@ xnee_data   *ext_xd;
 gnee_xnee   *ext_gx;
 GtkWidget   *ext_gnee_window;
 
+const char  *version_string = "--version" ;
 
 int
 main (int argc, char *argv[])
@@ -132,11 +133,13 @@ main (int argc, char *argv[])
     xd = xnee_new_xnee_data();
     ext_xd = xd;
 
+    /* Set the cli parameters */
+    xnee_set_application_parameters (xd, argv);
 
     /* scan through the args .... */
     for (i=0;i<argc;i++)
       {
-	if (strcmp(argv[i],"--version")==0)
+	if (strncmp(argv[i],version_string, strlen(version_string))==0)
 	  {
 	    fprintf (stderr, "%s %s, part of project ", 
 		     GNEE,
@@ -159,8 +162,8 @@ main (int argc, char *argv[])
     (void) XSetErrorHandler (handle_xerr);  
   
     /* set gnee default settings */
-    gx_set_events_max (xd, 10);
-    gnee_set_events_max (10);
+    gx_set_events_max (xd, 100);
+    gnee_set_events_max (100);
 
     gx_set_data_max (xd, -1);
     gnee_set_data_max (-1);

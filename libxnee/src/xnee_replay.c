@@ -195,11 +195,12 @@ xnee_replay_synchronize (xnee_data* xd)
 int 
 xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata) 
 {
-  char tmp[256] ;
+  #define TMP_BUF_SIZE 256
+  char tmp[TMP_BUF_SIZE] ;
   int eofile = 0 ;
   char *ret;
 
-  strcpy(tmp,"");
+  strncpy(tmp, TMP_BUF_SIZE, "");
   if ( xd->data_file == NULL)
     {
       xnee_verbose((xd, "Using stdin as file\n"));

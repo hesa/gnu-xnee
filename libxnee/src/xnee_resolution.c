@@ -47,7 +47,8 @@ xnee_set_default_rep_resolution (xnee_data *xd)
 int
 xnee_set_default_rec_resolution (xnee_data *xd)
 {
-  if (xd->data != NULL)
+  if ( (xd!=NULL) &&
+       (xd->data != NULL) )
     {
       xd->res_info.record.x_res = DisplayWidth  (xd->data, 0);
       xd->res_info.record.y_res = DisplayHeight (xd->data, 0);

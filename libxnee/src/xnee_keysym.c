@@ -117,12 +117,14 @@ xnee_token_to_km (xnee_data *xd,
 		  const char *str,
 		  xnee_key_code *kc)
 {
+  #define TOKEN_STRING_SIZE 20
+
   XEvent event;
   int size;
   int i ;
   int k ;
   int ret=-1;
-  char string[20];
+  char string[TOKEN_STRING_SIZE];
   KeySym keysym;
   Display *dpy = xd->fake;
 
@@ -143,7 +145,7 @@ xnee_token_to_km (xnee_data *xd,
       size = XLookupString ((XKeyEvent *) &event, string, 20, &keysym, 0);
       string [size] = 0;
 
-      if (strcmp(str,string)==0)
+      if (strncmp(str,string, TOKEN_STRING_SIZE)==0)
 	{
 	  KeySym ks ;
 	  char *nm ;
@@ -195,8 +197,11 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
       ks=XK_space;
       break;
     case '!':
-      ks=XK_exclamdown;
+      ks=XK_exclam;
       break;
+/*     case '!': */
+/*       ks=XK_exclamdown; */
+/*       break; */
     case '\"':
       ks=XK_quotedbl;
       break;
@@ -211,9 +216,6 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
       break;
     case '&':
       ks=XK_ampersand;
-      break;
-    case '\'':
-      ks=XK_apostrophe;
       break;
     case '(':
       ks=XK_parenleft;
@@ -236,8 +238,6 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
     case '/':
       ks=XK_slash;
       break;
-
-
     case ':':
       ks=XK_colon;
       break;
@@ -259,30 +259,35 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
     case '@':
       ks=XK_at;
       break;
-
-
+    case '*':
+      ks=XK_asterisk;
+      break;
     case '\\':
       ks=XK_backslash;
       break;
-
-    case -228:
-      /* FIX ME */
+    case '[':
+      ks=XK_bracketleft;
+      break;
+    case ']':
       ks=XK_bracketright;
       break;
-    case -3:
-      /* FIX ME */
+    case '^':
       ks=XK_asciicircum;
       break;
     case '_':
       ks=XK_underscore;
       break;
-    case -4:
-      /* FIX ME */
+    case '`':
       ks=XK_grave;
       break;
-    case -5:
-      /* FIX ME */
+    case '´':
       ks=XK_quoteleft;
+      break;
+    case '\'':
+       ks=XK_quoteright;
+      break;
+    case 27:
+      ks=XK_apostrophe;
       break;
     case '{':
       ks=XK_braceleft;
@@ -299,6 +304,9 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
     case '\t':
        ks=XK_Tab;
        break;
+    case '~':
+      ks=XK_asciitilde;
+      break;
     default:
        break;
     }
@@ -318,27 +326,7 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
 
 
 #ifdef KEYSYMS_TO_USE_LATER
-    case 'p':
-      /* FIX ME */
-      ks=XK_bracketleft;
-      break;
-    case :
-      /* FIX ME */
-      ks=XK_asterisk;
-      break;
-    case :
-      /* FIX ME .... same as apostrophe??? */
-      ks=XK_quoteright;
-      break;
-    case 0:
-      ks=XK_exclam;
-      break;
-    case -8:
-      /* FIX ME */
-      ks=XK_asciitilde;
-      break;
     case -9:
-      /* FIX ME */
       ks=XK_nobreakspace;
       break;
     case -11:
@@ -353,6 +341,8 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
       /* FIX ME */
       ks=XK_currency;
       break;
+       
+
     case -14:
       /* FIX ME */
       ks=XK_yen;

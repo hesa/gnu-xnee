@@ -205,7 +205,7 @@ xnee_add_to_list2(int type, int ev)
    for (i=0;i<xrp->index;i++)
       if (xrp->data[i]==ev)
       {
-         return 0;
+         return XNEE_OK;
       }
 
    if (xrp->index >=(xrp->size-1) )
@@ -216,9 +216,9 @@ xnee_add_to_list2(int type, int ev)
                                   xrp->size*sizeof(int));
       if (xrp->data==NULL)
       { 
-         printf ("  PANIC in xnee_add_to_list2 ....\n") ; 
+         fprintf (stderr, "  PANIC in xnee_add_to_list2 ....\n") ; 
 	 fflush(stdout); 
-	 exit(0); 
+	 return ; 
       }
    }
    xrp->data[xrp->index++]=ev;

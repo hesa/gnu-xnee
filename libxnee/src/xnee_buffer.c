@@ -196,9 +196,13 @@ xnee_replay_buffer_handler (xnee_data* xd,
 {
   xnee_verbose((xd,"---> xnee_replay_buffer_handler "));
   if (rec_or_rep==XNEE_RECEIVED) 
-    xnee_verbose((xd," XNEE_RECEIVED \n"));
+    {
+      xnee_verbose((xd," XNEE_RECEIVED \n"));
+    }
   else
-    xnee_verbose((xd," XNEE_REPLAYED \n"));
+    {
+      xnee_verbose((xd," XNEE_REPLAYED \n"));
+    }
 
   /*
    * protect the buffer by waiting for the buffer semaphore

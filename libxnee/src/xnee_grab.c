@@ -126,8 +126,6 @@ xnee_grab_key (xnee_data* xd, int mode, char *key)
   int screen;
   xnee_action_key ak;
 
-  printf ("Get action key\n"); fflush(stdout);
-
   xnee_verbose((xd, "----> xnee_grab_key\n"));
   if (key==NULL)
     {
@@ -438,9 +436,7 @@ xnee_mod_in_use_sub (xnee_km_tuple *km)
     }
   else
     {
-      printf ("\n\n\nWARNING HESA \n\n\n");
       ret = XNEE_GRAB_SOME_IN_USE ;
-      printf ("   SUB: %d %d %d : RETURN %d \n", nr_of_found, km->kcs_idx, mod_idx, ret);    
     }
 
 /*   printf ("   SUB: %d %d %d : RETURN %d \n", nr_of_found, km->kcs_idx, mod_idx, ret);     */
@@ -506,7 +502,7 @@ xnee_grab_handle_buffer(xnee_data *xd, char *str, int mode)
 	  xnee_verbose((xd, "<--- xnee_grab_handle_buffer %d \n", XNEE_GRAB_MEM_FAILURE));
 	  return XNEE_GRAB_MEM_FAILURE;
 	}
-      strcat (saved_buf, str);
+      strncat (saved_buf, str, XNEE_SAVED_LINES_BYTES - strlen(saved_buf) );
       xnee_verbose((xd, "---  xnee_grab_handle_buffer saved '%s'\n", str));
       
     }

@@ -195,7 +195,11 @@ char error_descr_solut[256][256] =
 
     /* XNEE_SCREEN_MISSING */
     "Screen nr could not be retrieved",
-    "Xnee could not find the screen of the recorded event. Report it",
+    "Xnee could not find the screen of the recorded event. Report the problem",
+
+    /* XNEE_RANGE_FAILURE */
+    "Fatal error while adding data to range of recorded data",
+    "Xnee could not add data to record. Report the problem",
 
     /* XNEE_LAST_ERROR */
     "Last error",

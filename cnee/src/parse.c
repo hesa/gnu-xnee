@@ -158,6 +158,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 
   int i ;
   int ret=0;
+  #define XNEE_PARSE_BUF 200
+  char buf [XNEE_PARSE_BUF]; 
  
   for (i = 1; i < argc; i++) 
     {
@@ -317,7 +319,6 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  ret = xnee_set_rc_byname (xd, argv[i]);
 	  if ( ret != XNEE_OK) 
 	    {
-	      char buf [200]; 
 	      xnee_verbose((xd, "Could not open project file %s\n", argv[i]));
 	      
 	      if ( (strlen(argv[i]) + strlen (XNEE_RESOURCE_DIR) + 2 ) > 200)
@@ -327,9 +328,9 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 		  xnee_close_down(xd);
 		  exit(XNEE_WRONG_PARAMS);
 		}
-	      strcpy ( buf , XNEE_RESOURCE_DIR);
-	      strcat ( buf , "/");
-	      strcat ( buf , argv[i]);
+	      strncpy ( buf , XNEE_RESOURCE_DIR, XNEE_PARSE_BUF );
+	      strncat ( buf ,  "/", XNEE_PARSE_BUF - strlen(buf));
+	      strncat ( buf , argv[i], XNEE_PARSE_BUF - strlen(buf));
 	      xnee_verbose((xd, "\ttryingresource file %s\n", buf));
 	      ret = xnee_set_rc_name (xd, buf);
 	    }
@@ -1021,7 +1022,9 @@ xnee_type_help (xnee_data *xd)
   int i ;
   xnee_script_s xss ;
 
-  char my_string[500];
+  #define HELP_STR_SIZE 500
+
+  char my_string[HELP_STR_SIZE];
   char **cpp;
 
   xnee_verbose ((xd,"---> xnee_type_help\n"));
@@ -1034,7 +1037,7 @@ xnee_type_help (xnee_data *xd)
   for (cpp = help; *cpp; cpp+=1) 
     {
       xnee_verbose ((xd,"string to fake %s\n", *cpp));
-      strcpy(my_string,*cpp);
+      strncpy(my_string,*cpp,HELP_STR_SIZE);
 
       for (i=0;(size_t)i<strlen(my_string);i++)
 	{

@@ -47,7 +47,6 @@
 
 
 #define  XNEE_CLI    "cnee"
-
   
 typedef int xnee_keymask;
 
@@ -94,6 +93,7 @@ enum return_values
     XNEE_RECORD_FAILURE    ,
     XNEE_DATE_FAILURE      ,
     XNEE_SCREEN_MISSING    ,
+    XNEE_RANGE_FAILURE     ,
     XNEE_LAST_ERROR
   } _return_values;
   
@@ -305,22 +305,41 @@ typedef struct {
   Time oldtime ; /*!< Remember when the last data occured*/
 } xnee_intercept_data;
 
+
+
+
+/** 
+ * Used for holding scripting data 
+ *
+ * x             mouse position's X coord  
+ * y             mouse position's Y coord
+ * x_rel         X coord is relative 
+ * y_rel         Y coord is relative  
+ * button        nr of button to fake
+ * button_state  XNEE_PRESS or XNEE_RELEASE 
+ * key           nr of key to fake
+ * key_state     XNEE_PRESS or XNEE_RELEASE 
+ * valid         1 if whole struct is valid, else 0 
+ * msecs         Nr of msecs to sleep before fakeing
+ * kc            keycode of the key to fake
+ *
+ */
 typedef struct 
 {
   /* Mouse */
-  int x ;  /* mouse position's X coord */
-  int y ;  /* mouse position's Y coord */
-  int x_rel  ; /* X coord is relative  */
-  int y_rel  ; /* Y coord is relative  */
-  int button ; /* nr of button to fake */
-  int button_state ; /* XNEE_PRESS or XNEE_RELEASE  */
+  int x ; 
+  int y ; 
+  int x_rel  ; 
+  int y_rel  ; 
+  int button ; 
+  int button_state ; 
 
   /* Keyboard */
-  int key    ; /* nr of key to fake */
-  int key_state    ;  /* XNEE_PRESS or XNEE_RELEASE  */
+  int key    ; 
+  int key_state    ;
 
-  int valid ; /* 1 if whole struct is valid, else 0 */
-  int msecs ; /* Nr of msecs to sleep before fakeing ... */
+  int valid ; 
+  int msecs ; 
 
   xnee_key_code kc;
 
@@ -454,6 +473,8 @@ typedef struct
   /*@null@*/ /*@dependent@*/FILE    *rc_file     ;    /*!< resource file descriptor */
   /*@null@*/ /*@dependent@*/FILE    *rt_file     ;    /*!< retype file descriptor */
   /*@null@*/ /*@dependent@*/FILE    *buffer_file ;    /*!< verbose buffer printout file descriptor */
+
+  char   **app_args    ;
 
   Bool     verbose     ;    /*!< true if verbose mode */
   Bool     buf_verbose ;    /*!< true if verbose mode for buffer printouts */
