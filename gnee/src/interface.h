@@ -3,3 +3,4 @@
  */
 
 GtkWidget* create_gnee_window (void);
+GtkWidget* create_fileselection1 (void);

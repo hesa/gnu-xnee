@@ -77,3 +77,60 @@ void
 on_replay                              (GtkButton       *button,
                                         gpointer         user_data);
 
+
+
+void
+on_spinbutton3_change_value            (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_wait_checkbox_toggled               (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_wait_spinbutton_change_value        (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_wait_button_value_change            (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_wait_spinbutton_value_change        (GtkEditable     *editable,
+                                        gpointer         user_data);
+
+void
+on_verbose_logging_checkbox_toggled    (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_spinbutton5_change_value            (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_spinbutton4_change_value            (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_spinbutton6_change_value            (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_ok_button1_clicked                  (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_open_button_clicked                 (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_cancel_button1_clicked              (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_sfile_activate                      (GtkMenuItem     *menuitem,
+                                        gpointer         user_data);
+
+void
+on_save_button_clicked                 (GtkButton       *button,
+                                        gpointer         user_data);

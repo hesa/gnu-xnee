@@ -15,6 +15,10 @@
 
 #include <libxnee/xnee.h>
 
+xnee_data   *ext_xd;
+GtkWidget   *ext_gnee_window;
+
+
 int
 main (int argc, char *argv[])
 {
@@ -56,6 +60,7 @@ main (int argc, char *argv[])
      * the project. Delete any components that you don't want shown initially.
      */
     gnee_window = create_gnee_window ();
+    ext_gnee_window = gnee_window;
 
     //gnee_settings = gnee_settings_new();
 
@@ -113,7 +118,34 @@ main (int argc, char *argv[])
     xd = xnee_new_xnee_data();
     xnee_init(xd);
     xnee_record_init(xd);
+    ext_xd = xd;
+
+    /* test settings */
+    xnee_grab_key (xd, XNEE_GRAB_STOP, "Control+Shift,q");
+    printf ("FAKE..\n"); 
+
+      #define move_event(gw, ev)  \
+      move_recordable(gw, ev, "exclude_event_store","include_event_store")
     
+      move_event(gnee_window, "KeyPress");
+    /*
+      move_event(gnee_window, "KeyRelease");
+      
+      move_event(gnee_window, xnee_int2event(4));
+      move_event(gnee_window, xnee_int2event(5));
+      move_event(gnee_window, xnee_int2event(6));
+    */
+    /* EO test settings */
+
+
+    /* Set the signal handler the libxnee's built in */ 
+    (void) signal (SIGINT, signal_handler);
+
+
+    /* set gnee default settings */
+    xnee_set_data_max (xd, -1);
+    xnee_set_events_max (xd, -1);
+
     g_object_set_data(G_OBJECT(gnee_window), "xd", xd);
 
     gtk_main();

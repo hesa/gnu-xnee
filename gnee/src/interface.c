@@ -38,6 +38,7 @@ create_gnee_window (void)
   GtkWidget *open1;
   GtkWidget *save1;
   GtkWidget *save_as1;
+  GtkWidget *sfile;
   GtkWidget *separatormenuitem1;
   GtkWidget *quit1;
   GtkWidget *menuitem3;
@@ -73,7 +74,7 @@ create_gnee_window (void)
   GtkWidget *distribution_list_box;
   GtkWidget *vbox4;
   GtkWidget *hbox6;
-  GtkWidget *label8;
+  GtkWidget *distr_displ_label;
   GtkWidget *distribute_display_entry;
   GtkWidget *scrolledwindow3;
   GtkWidget *distribution_list_view;
@@ -89,12 +90,27 @@ create_gnee_window (void)
   GtkWidget *record_display_box;
   GtkWidget *checkbutton7;
   GtkWidget *entry3;
+  GtkWidget *table1;
   GtkWidget *vbox8;
   GtkWidget *label21;
   GtkWidget *record_clients_box;
   GtkWidget *radiobutton1;
   GSList *radiobutton1_group = NULL;
   GtkWidget *radiobutton2;
+  GtkWidget *vbox13;
+  GtkWidget *nr_of_data;
+  GtkWidget *hbox15;
+  GtkWidget *max_event;
+  GtkObject *spinbutton5_adj;
+  GtkWidget *spinbutton5;
+  GtkWidget *hbox16;
+  GtkWidget *data_max;
+  GtkObject *spinbutton4_adj;
+  GtkWidget *spinbutton4;
+  GtkWidget *hbox17;
+  GtkWidget *time_to_record;
+  GtkObject *spinbutton6_adj;
+  GtkWidget *spinbutton6;
   GtkWidget *vbox6;
   GtkWidget *label20;
   GtkWidget *record_recordables_box;
@@ -139,6 +155,9 @@ create_gnee_window (void)
   GtkWidget *vbuttonbox3;
   GtkWidget *button3;
   GtkWidget *label2;
+  GtkWidget *table2;
+  GtkWidget *table3;
+  GtkWidget *keymodifierpane;
   GtkAccelGroup *accel_group;
   GtkTooltips *tooltips;
 
@@ -180,6 +199,10 @@ create_gnee_window (void)
   save_as1 = gtk_image_menu_item_new_from_stock ("gtk-save-as", accel_group);
   gtk_widget_show (save_as1);
   gtk_container_add (GTK_CONTAINER (menuitem1_menu), save_as1);
+
+  sfile = gtk_menu_item_new_with_mnemonic (_("Set session file"));
+  gtk_widget_show (sfile);
+  gtk_container_add (GTK_CONTAINER (menuitem1_menu), sfile);
 
   separatormenuitem1 = gtk_menu_item_new ();
   gtk_widget_show (separatormenuitem1);
@@ -223,19 +246,19 @@ create_gnee_window (void)
 
   new_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
                                 "gtk-new",
-                                "gtk-new",
+                                _("New"),
                                 NULL, NULL, NULL, -1);
   gtk_widget_show (new_button);
 
   open_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
                                 "gtk-open",
-                                "gtk-open",
+                                _("Open"),
                                 NULL, NULL, NULL, -1);
   gtk_widget_show (open_button);
 
   save_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (file_toolbar),
                                 "gtk-save",
-                                "gtk-save",
+                                _("Save"),
                                 NULL, NULL, NULL, -1);
   gtk_widget_show (save_button);
 
@@ -266,7 +289,7 @@ create_gnee_window (void)
 
   stop_button = gtk_toolbar_insert_stock (GTK_TOOLBAR (action_toolbar),
                                 "gtk-stop",
-                                "gtk-stop",
+                                _("Stop"),
                                 NULL, NULL, NULL, -1);
   gtk_widget_show (stop_button);
   gtk_widget_set_sensitive (stop_button, FALSE);
@@ -291,7 +314,6 @@ create_gnee_window (void)
   gtk_widget_show (label11);
   gtk_box_pack_start (GTK_BOX (time_settings_box), label11, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label11), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label11), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label11), 0, 0.5);
 
   timeout_box = gtk_hbox_new (FALSE, 4);
@@ -303,7 +325,7 @@ create_gnee_window (void)
   gtk_widget_show (wait_checkbox);
   gtk_box_pack_start (GTK_BOX (timeout_box), wait_checkbox, FALSE, FALSE, 0);
 
-  wait_spinbutton_adj = gtk_adjustment_new (5, 0, 100, 1, 10, 10);
+  wait_spinbutton_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
   wait_spinbutton = gtk_spin_button_new (GTK_ADJUSTMENT (wait_spinbutton_adj), 1, 0);
   gtk_widget_show (wait_spinbutton);
   gtk_box_pack_start (GTK_BOX (timeout_box), wait_spinbutton, FALSE, FALSE, 0);
@@ -316,7 +338,6 @@ create_gnee_window (void)
   gtk_widget_show (label14);
   gtk_box_pack_start (GTK_BOX (log_settings_box), label14, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label14), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label14), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label14), 0, 0);
 
   verbose_logging_box = gtk_hbox_new (FALSE, 0);
@@ -336,7 +357,6 @@ create_gnee_window (void)
   gtk_widget_show (label13);
   gtk_box_pack_start (GTK_BOX (distribution_settings_box), label13, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label13), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label13), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label13), 0, 0);
 
   distribution_list_box = gtk_hbox_new (FALSE, 4);
@@ -353,10 +373,9 @@ create_gnee_window (void)
   gtk_box_pack_start (GTK_BOX (vbox4), hbox6, FALSE, TRUE, 0);
   gtk_container_set_border_width (GTK_CONTAINER (hbox6), 2);
 
-  label8 = gtk_label_new (_("Distribute to display:"));
-  gtk_widget_show (label8);
-  gtk_box_pack_start (GTK_BOX (hbox6), label8, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label8), GTK_JUSTIFY_LEFT);
+  distr_displ_label = gtk_label_new (_("Distribute to display:"));
+  gtk_widget_show (distr_displ_label);
+  gtk_box_pack_start (GTK_BOX (hbox6), distr_displ_label, FALSE, FALSE, 0);
 
   distribute_display_entry = gtk_entry_new ();
   gtk_widget_show (distribute_display_entry);
@@ -402,7 +421,6 @@ create_gnee_window (void)
   label6 = gtk_label_new (_("General settings"));
   gtk_widget_show (label6);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 0), label6);
-  gtk_label_set_justify (GTK_LABEL (label6), GTK_JUSTIFY_LEFT);
 
   record_settings_box = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (record_settings_box);
@@ -418,7 +436,6 @@ create_gnee_window (void)
   gtk_widget_show (label19);
   gtk_box_pack_start (GTK_BOX (vbox5), label19, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label19), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label19), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label19), 0, 0);
 
   record_display_box = gtk_hbox_new (FALSE, 4);
@@ -434,16 +451,21 @@ create_gnee_window (void)
   gtk_widget_show (entry3);
   gtk_box_pack_start (GTK_BOX (record_display_box), entry3, TRUE, TRUE, 0);
 
+  table1 = gtk_table_new (1, 2, FALSE);
+  gtk_widget_show (table1);
+  gtk_box_pack_start (GTK_BOX (record_settings_box), table1, FALSE, FALSE, 0);
+
   vbox8 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox8);
-  gtk_box_pack_start (GTK_BOX (record_settings_box), vbox8, FALSE, FALSE, 0);
+  gtk_table_attach (GTK_TABLE (table1), vbox8, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
   gtk_container_set_border_width (GTK_CONTAINER (vbox8), 4);
 
   label21 = gtk_label_new (_("<b>Clients</b>"));
   gtk_widget_show (label21);
   gtk_box_pack_start (GTK_BOX (vbox8), label21, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label21), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label21), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label21), 0, 0);
 
   record_clients_box = gtk_vbox_new (FALSE, 0);
@@ -463,6 +485,66 @@ create_gnee_window (void)
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton1_group);
   radiobutton1_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton2));
 
+  vbox13 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox13);
+  gtk_table_attach (GTK_TABLE (table1), vbox13, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_FILL), 0, 0);
+
+  nr_of_data = gtk_label_new (_("<b>Recording limits</b>"));
+  gtk_widget_show (nr_of_data);
+  gtk_box_pack_start (GTK_BOX (vbox13), nr_of_data, FALSE, FALSE, 0);
+  gtk_label_set_use_markup (GTK_LABEL (nr_of_data), TRUE);
+  gtk_misc_set_alignment (GTK_MISC (nr_of_data), 0, 0.5);
+
+  hbox15 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox15);
+  gtk_box_pack_start (GTK_BOX (vbox13), hbox15, FALSE, FALSE, 0);
+
+  max_event = gtk_label_new (_("Events to record:"));
+  gtk_widget_show (max_event);
+  gtk_box_pack_start (GTK_BOX (hbox15), max_event, FALSE, FALSE, 0);
+  gtk_widget_set_size_request (max_event, 150, -1);
+  gtk_misc_set_alignment (GTK_MISC (max_event), 0, 0.5);
+  gtk_misc_set_padding (GTK_MISC (max_event), 4, 0);
+
+  spinbutton5_adj = gtk_adjustment_new (-1, -1, 100000, 1, 10, 10);
+  spinbutton5 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton5_adj), 1, 0);
+  gtk_widget_show (spinbutton5);
+  gtk_box_pack_start (GTK_BOX (hbox15), spinbutton5, TRUE, TRUE, 0);
+
+  hbox16 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox16);
+  gtk_box_pack_start (GTK_BOX (vbox13), hbox16, TRUE, TRUE, 0);
+
+  data_max = gtk_label_new (_("Data to record:"));
+  gtk_widget_show (data_max);
+  gtk_box_pack_start (GTK_BOX (hbox16), data_max, FALSE, FALSE, 0);
+  gtk_widget_set_size_request (data_max, 150, -1);
+  gtk_misc_set_alignment (GTK_MISC (data_max), 0, 0.5);
+  gtk_misc_set_padding (GTK_MISC (data_max), 4, 0);
+
+  spinbutton4_adj = gtk_adjustment_new (-1, -1, 100000, 1, 10, 10);
+  spinbutton4 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton4_adj), 1, 0);
+  gtk_widget_show (spinbutton4);
+  gtk_box_pack_start (GTK_BOX (hbox16), spinbutton4, TRUE, TRUE, 0);
+
+  hbox17 = gtk_hbox_new (FALSE, 0);
+  gtk_widget_show (hbox17);
+  gtk_box_pack_start (GTK_BOX (vbox13), hbox17, FALSE, FALSE, 0);
+
+  time_to_record = gtk_label_new (_("Time (secs):"));
+  gtk_widget_show (time_to_record);
+  gtk_box_pack_start (GTK_BOX (hbox17), time_to_record, FALSE, FALSE, 0);
+  gtk_widget_set_size_request (time_to_record, 150, -1);
+  gtk_misc_set_alignment (GTK_MISC (time_to_record), 0, 0.5);
+  gtk_misc_set_padding (GTK_MISC (time_to_record), 4, 0);
+
+  spinbutton6_adj = gtk_adjustment_new (0, 0, 10000, 1, 10, 10);
+  spinbutton6 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton6_adj), 1, 0);
+  gtk_widget_show (spinbutton6);
+  gtk_box_pack_start (GTK_BOX (hbox17), spinbutton6, TRUE, TRUE, 0);
+
   vbox6 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox6);
   gtk_box_pack_start (GTK_BOX (record_settings_box), vbox6, TRUE, TRUE, 0);
@@ -472,7 +554,6 @@ create_gnee_window (void)
   gtk_widget_show (label20);
   gtk_box_pack_start (GTK_BOX (vbox6), label20, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label20), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label20), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label20), 0, 0);
 
   record_recordables_box = gtk_vbox_new (FALSE, 4);
@@ -505,7 +586,6 @@ create_gnee_window (void)
   label22 = gtk_label_new_with_mnemonic (_("Exclude:"));
   gtk_widget_show (label22);
   gtk_box_pack_start (GTK_BOX (vbox10), label22, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label22), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label22), 0, 0);
 
   scrolledwindow4 = gtk_scrolled_window_new (NULL, NULL);
@@ -550,7 +630,6 @@ create_gnee_window (void)
   label23 = gtk_label_new_with_mnemonic (_("Include:"));
   gtk_widget_show (label23);
   gtk_box_pack_start (GTK_BOX (vbox11), label23, FALSE, FALSE, 0);
-  gtk_label_set_justify (GTK_LABEL (label23), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label23), 0, 0);
 
   scrolledwindow5 = gtk_scrolled_window_new (NULL, NULL);
@@ -567,7 +646,6 @@ create_gnee_window (void)
   label1 = gtk_label_new (_("Record settings"));
   gtk_widget_show (label1);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 1), label1);
-  gtk_label_set_justify (GTK_LABEL (label1), GTK_JUSTIFY_LEFT);
 
   replay_settings_box = gtk_vbox_new (FALSE, 4);
   gtk_widget_show (replay_settings_box);
@@ -582,7 +660,6 @@ create_gnee_window (void)
   gtk_widget_show (label15);
   gtk_box_pack_start (GTK_BOX (replay_display_box), label15, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label15), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label15), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label15), 0, 0);
 
   hbox13 = gtk_hbox_new (FALSE, 4);
@@ -607,7 +684,6 @@ create_gnee_window (void)
   gtk_widget_show (label17);
   gtk_box_pack_start (GTK_BOX (replay_speed_box), label17, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label17), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label17), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label17), 0, 0);
 
   hbox14 = gtk_hbox_new (FALSE, 4);
@@ -619,10 +695,11 @@ create_gnee_window (void)
   gtk_widget_show (checkbutton4);
   gtk_box_pack_start (GTK_BOX (hbox14), checkbutton4, FALSE, FALSE, 0);
 
-  spinbutton3_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
+  spinbutton3_adj = gtk_adjustment_new (100, 0, 10000, 1, 10, 100);
   spinbutton3 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton3_adj), 1, 0);
   gtk_widget_show (spinbutton3);
   gtk_box_pack_start (GTK_BOX (hbox14), spinbutton3, TRUE, TRUE, 0);
+  gtk_spin_button_set_numeric (GTK_SPIN_BUTTON (spinbutton3), TRUE);
 
   replay_error_handling_box = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (replay_error_handling_box);
@@ -632,7 +709,6 @@ create_gnee_window (void)
   gtk_widget_show (label18);
   gtk_box_pack_start (GTK_BOX (replay_error_handling_box), label18, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label18), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label18), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label18), 0, 0);
 
   checkbutton6 = gtk_check_button_new_with_mnemonic (_("Force replay even when not synchronized"));
@@ -648,7 +724,6 @@ create_gnee_window (void)
   gtk_widget_show (label24);
   gtk_box_pack_start (GTK_BOX (vbox12), label24, FALSE, FALSE, 0);
   gtk_label_set_use_markup (GTK_LABEL (label24), TRUE);
-  gtk_label_set_justify (GTK_LABEL (label24), GTK_JUSTIFY_LEFT);
   gtk_misc_set_alignment (GTK_MISC (label24), 0, 0);
 
   replay_files_box = gtk_hbox_new (FALSE, 0);
@@ -681,7 +756,20 @@ create_gnee_window (void)
   label2 = gtk_label_new (_("Replay settings"));
   gtk_widget_show (label2);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label2);
-  gtk_label_set_justify (GTK_LABEL (label2), GTK_JUSTIFY_LEFT);
+
+  table2 = gtk_table_new (3, 3, FALSE);
+  gtk_widget_show (table2);
+  gtk_container_add (GTK_CONTAINER (notebook), table2);
+
+  table3 = gtk_table_new (3, 3, FALSE);
+  gtk_widget_show (table3);
+  gtk_table_attach (GTK_TABLE (table2), table3, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  keymodifierpane = gtk_label_new (_("Keybindings"));
+  gtk_widget_show (keymodifierpane);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 3), keymodifierpane);
 
   g_signal_connect ((gpointer) new1, "activate",
                     G_CALLBACK (on_new1_activate),
@@ -695,6 +783,9 @@ create_gnee_window (void)
   g_signal_connect ((gpointer) save_as1, "activate",
                     G_CALLBACK (on_save_as1_activate),
                     NULL);
+  g_signal_connect ((gpointer) sfile, "activate",
+                    G_CALLBACK (on_sfile_activate),
+                    NULL);
   g_signal_connect ((gpointer) quit1, "activate",
                     G_CALLBACK (on_quit1_activate),
                     NULL);
@@ -704,12 +795,39 @@ create_gnee_window (void)
   g_signal_connect ((gpointer) about1, "activate",
                     G_CALLBACK (on_about1_activate),
                     NULL);
+  g_signal_connect ((gpointer) open_button, "clicked",
+                    G_CALLBACK (on_open_button_clicked),
+                    NULL);
+  g_signal_connect ((gpointer) save_button, "clicked",
+                    G_CALLBACK (on_save_button_clicked),
+                    NULL);
   g_signal_connect_swapped ((gpointer) record_button, "clicked",
                             G_CALLBACK (on_record),
                             GTK_OBJECT (gnee_window));
   g_signal_connect_swapped ((gpointer) replay_button, "clicked",
                             G_CALLBACK (on_replay),
                             GTK_OBJECT (gnee_window));
+  g_signal_connect_swapped ((gpointer) wait_checkbox, "toggled",
+                            G_CALLBACK (on_wait_checkbox_toggled),
+                            GTK_OBJECT (wait_checkbox));
+  g_signal_connect_swapped ((gpointer) wait_spinbutton, "change_value",
+                            G_CALLBACK (gtk_main_quit),
+                            GTK_OBJECT (wait_spinbutton));
+  g_signal_connect_swapped ((gpointer) wait_spinbutton, "changed",
+                            G_CALLBACK (on_wait_spinbutton_change_value),
+                            GTK_OBJECT (wait_spinbutton));
+  g_signal_connect_swapped ((gpointer) verbose_logging_checkbox, "toggled",
+                            G_CALLBACK (on_verbose_logging_checkbox_toggled),
+                            GTK_OBJECT (verbose_logging_checkbox));
+  g_signal_connect_swapped ((gpointer) spinbutton5, "value_changed",
+                            G_CALLBACK (on_spinbutton5_change_value),
+                            GTK_OBJECT (spinbutton5));
+  g_signal_connect_swapped ((gpointer) spinbutton4, "value_changed",
+                            G_CALLBACK (on_spinbutton4_change_value),
+                            GTK_OBJECT (spinbutton4));
+  g_signal_connect_swapped ((gpointer) spinbutton6, "value_changed",
+                            G_CALLBACK (on_spinbutton6_change_value),
+                            GTK_OBJECT (spinbutton6));
   g_signal_connect_swapped ((gpointer) combo_label1, "changed",
                             G_CALLBACK (on_combo_label1_changed),
                             GTK_OBJECT (gnee_window));
@@ -725,6 +843,9 @@ create_gnee_window (void)
   g_signal_connect_swapped ((gpointer) include_list, "row_activated",
                             G_CALLBACK (on_include_list_row_activated),
                             GTK_OBJECT (gnee_window));
+  g_signal_connect_swapped ((gpointer) spinbutton3, "value_changed",
+                            G_CALLBACK (on_spinbutton3_change_value),
+                            GTK_OBJECT (spinbutton3));
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (gnee_window, gnee_window, "gnee_window");
@@ -736,6 +857,7 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, open1, "open1");
   GLADE_HOOKUP_OBJECT (gnee_window, save1, "save1");
   GLADE_HOOKUP_OBJECT (gnee_window, save_as1, "save_as1");
+  GLADE_HOOKUP_OBJECT (gnee_window, sfile, "sfile");
   GLADE_HOOKUP_OBJECT (gnee_window, separatormenuitem1, "separatormenuitem1");
   GLADE_HOOKUP_OBJECT (gnee_window, quit1, "quit1");
   GLADE_HOOKUP_OBJECT (gnee_window, menuitem3, "menuitem3");
@@ -769,7 +891,7 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, distribution_list_box, "distribution_list_box");
   GLADE_HOOKUP_OBJECT (gnee_window, vbox4, "vbox4");
   GLADE_HOOKUP_OBJECT (gnee_window, hbox6, "hbox6");
-  GLADE_HOOKUP_OBJECT (gnee_window, label8, "label8");
+  GLADE_HOOKUP_OBJECT (gnee_window, distr_displ_label, "distr_displ_label");
   GLADE_HOOKUP_OBJECT (gnee_window, distribute_display_entry, "distribute_display_entry");
   GLADE_HOOKUP_OBJECT (gnee_window, scrolledwindow3, "scrolledwindow3");
   GLADE_HOOKUP_OBJECT (gnee_window, distribution_list_view, "distribution_list_view");
@@ -785,11 +907,23 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, record_display_box, "record_display_box");
   GLADE_HOOKUP_OBJECT (gnee_window, checkbutton7, "checkbutton7");
   GLADE_HOOKUP_OBJECT (gnee_window, entry3, "entry3");
+  GLADE_HOOKUP_OBJECT (gnee_window, table1, "table1");
   GLADE_HOOKUP_OBJECT (gnee_window, vbox8, "vbox8");
   GLADE_HOOKUP_OBJECT (gnee_window, label21, "label21");
   GLADE_HOOKUP_OBJECT (gnee_window, record_clients_box, "record_clients_box");
   GLADE_HOOKUP_OBJECT (gnee_window, radiobutton1, "radiobutton1");
   GLADE_HOOKUP_OBJECT (gnee_window, radiobutton2, "radiobutton2");
+  GLADE_HOOKUP_OBJECT (gnee_window, vbox13, "vbox13");
+  GLADE_HOOKUP_OBJECT (gnee_window, nr_of_data, "nr_of_data");
+  GLADE_HOOKUP_OBJECT (gnee_window, hbox15, "hbox15");
+  GLADE_HOOKUP_OBJECT (gnee_window, max_event, "max_event");
+  GLADE_HOOKUP_OBJECT (gnee_window, spinbutton5, "spinbutton5");
+  GLADE_HOOKUP_OBJECT (gnee_window, hbox16, "hbox16");
+  GLADE_HOOKUP_OBJECT (gnee_window, data_max, "data_max");
+  GLADE_HOOKUP_OBJECT (gnee_window, spinbutton4, "spinbutton4");
+  GLADE_HOOKUP_OBJECT (gnee_window, hbox17, "hbox17");
+  GLADE_HOOKUP_OBJECT (gnee_window, time_to_record, "time_to_record");
+  GLADE_HOOKUP_OBJECT (gnee_window, spinbutton6, "spinbutton6");
   GLADE_HOOKUP_OBJECT (gnee_window, vbox6, "vbox6");
   GLADE_HOOKUP_OBJECT (gnee_window, label20, "label20");
   GLADE_HOOKUP_OBJECT (gnee_window, record_recordables_box, "record_recordables_box");
@@ -833,10 +967,46 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, vbuttonbox3, "vbuttonbox3");
   GLADE_HOOKUP_OBJECT (gnee_window, button3, "button3");
   GLADE_HOOKUP_OBJECT (gnee_window, label2, "label2");
+  GLADE_HOOKUP_OBJECT (gnee_window, table2, "table2");
+  GLADE_HOOKUP_OBJECT (gnee_window, table3, "table3");
+  GLADE_HOOKUP_OBJECT (gnee_window, keymodifierpane, "keymodifierpane");
   GLADE_HOOKUP_OBJECT_NO_REF (gnee_window, tooltips, "tooltips");
 
   gtk_window_add_accel_group (GTK_WINDOW (gnee_window), accel_group);
 
   return gnee_window;
+}
+
+GtkWidget*
+create_fileselection1 (void)
+{
+  GtkWidget *fileselection1;
+  GtkWidget *ok_button1;
+  GtkWidget *cancel_button1;
+
+  fileselection1 = gtk_file_selection_new (_("Select File"));
+  gtk_container_set_border_width (GTK_CONTAINER (fileselection1), 10);
+
+  ok_button1 = GTK_FILE_SELECTION (fileselection1)->ok_button;
+  gtk_widget_show (ok_button1);
+  GTK_WIDGET_SET_FLAGS (ok_button1, GTK_CAN_DEFAULT);
+
+  cancel_button1 = GTK_FILE_SELECTION (fileselection1)->cancel_button;
+  gtk_widget_show (cancel_button1);
+  GTK_WIDGET_SET_FLAGS (cancel_button1, GTK_CAN_DEFAULT);
+
+  g_signal_connect ((gpointer) ok_button1, "clicked",
+                    G_CALLBACK (on_ok_button1_clicked),
+                    NULL);
+  g_signal_connect ((gpointer) cancel_button1, "clicked",
+                    G_CALLBACK (on_cancel_button1_clicked),
+                    NULL);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (fileselection1, fileselection1, "fileselection1");
+  GLADE_HOOKUP_OBJECT_NO_REF (fileselection1, ok_button1, "ok_button1");
+  GLADE_HOOKUP_OBJECT_NO_REF (fileselection1, cancel_button1, "cancel_button1");
+
+  return fileselection1;
 }
 

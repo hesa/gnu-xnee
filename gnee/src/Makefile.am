@@ -4,13 +4,20 @@
 if HAVE_LIBXNEE_DIR
 LIBXNEE_DIR=@libxnee_dir@
 else
-LIBXNEE_DIR="./"
+LIBXNEE_DIR="../../libxnee"
+endif
+
+if XOSD
+XOSD_FLAGS = -DHAVE_XOSD
+XOSD_LIBS = -lxosd
+else
+XOSD_FLAGS = -DNO_XOSD
+XOSD_LIBS = 
 endif
 
 
-
-
 INCLUDES = \
+	${XOSD_FLAGS} \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-I${LIBXNEE_DIR}/include \
@@ -28,5 +35,6 @@ gnee_SOURCES = \
 
 gnee_LDADD = @PACKAGE_LIBS@ $(INTLLIBS) \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
-	 ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl -lxosd
+	${XOSD_LIBS} \
+	 ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl 
 

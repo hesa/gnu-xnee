@@ -22,22 +22,135 @@
  * MA  02111-1307, USA.                                              
  ****/
 
+#include <gtk/gtk.h>
 
 #include <pthread.h>
 
 
 #include "gnee_xnee.h"
-
-
-
 #include <libxnee/print.h>
 #include <libxnee/xnee_record.h>
 #include <libxnee/xnee_replay.h>
 #include <libxnee/xnee_setget.h>
+#include <libxnee/datastrings.h>
+#include <libxnee/xnee_range.h>
 
 
 
 static pthread_t action_thread;
+
+
+extern  xnee_data   *ext_xd;
+extern  GtkWidget   *ext_gnee_window;
+
+void
+gnee_set_events_max(int val)
+{
+  GtkSpinButton   *spinbutton;
+  
+  spinbutton = (GtkSpinButton *) 
+    lookup_widget (ext_gnee_window, "spinbutton5");
+  gtk_spin_button_set_value(spinbutton, val); 
+}
+
+void
+gnee_set_data_max(int val)
+{
+  GtkSpinButton   *spinbutton;
+  
+  spinbutton = (GtkSpinButton *)
+    lookup_widget (ext_gnee_window, "spinbutton4");
+  gtk_spin_button_set_value(spinbutton, val); 
+}
+
+
+void
+gnee_set_time_max(int val)
+{
+  GtkSpinButton   *spinbutton;
+  
+  spinbutton = (GtkSpinButton *)
+    lookup_widget (ext_gnee_window, "spinbutton6");
+  gtk_spin_button_set_value(spinbutton, val); 
+}
+
+
+
+void
+gnee_set_ranges(int type)
+{
+  int   i    = 0 ;
+  int   len  = 0 ;
+  int  *data = NULL ; 
+  char *name = NULL ;
+
+  printf ("setting Walker Texas ranger\n");
+
+  
+  len  = xnee_get_nr_of_data(type);
+  data = xnee_get_data (type);
+  g_print("Type: %d \n", type);
+  g_print("  XNEE_EVENT          = %d \n", XNEE_EVENT);
+  g_print("  XNEE_REQUEST        = %d \n", XNEE_REQUEST);
+  g_print("  XNEE_REPLY          = %d \n", XNEE_REPLY);
+  g_print("  XNEE_ERROR          = %d \n", XNEE_ERROR);
+  g_print("  XNEE_DELIVEREDEVENT = %d \n", XNEE_DELIVERED_EVENT);
+  g_print("  XNEE_DEVICE_EVENT   = %d \n", XNEE_DEVICE_EVENT);
+  for (i=0;i<len;i++)
+    {
+      name = (char*) xnee_int2data(type, data[i]);
+      g_print ("\t%.3d (%s)\n", 
+	       data[i], name );
+      if ( (type==XNEE_DEVICE_EVENT)
+	   || (type==XNEE_DELIVERED_EVENT)
+	   || (type==XNEE_EVENT))
+	move_event (ext_gnee_window, name);
+      else if ( type==XNEE_ERROR)
+	move_error (ext_gnee_window, name);
+      else if ( type==XNEE_REPLY)
+	move_reply (ext_gnee_window, name);
+      else if ( type==XNEE_REQUEST)
+	move_request (ext_gnee_window, name);
+      else
+	;
+    }
+  g_print ("\n");
+
+
+}
+
+
+
+
+void 
+gnee_set_xd_settings()
+{
+  int val;
+  int i ;
+
+  printf ("setting gnee from xd\n");
+
+
+  if (ext_gnee_window != NULL)
+    {
+      printf ("Aint got no window\n");
+    }
+  
+
+  val = xnee_get_events_max(ext_xd);
+  gnee_set_events_max(val);
+
+  val = xnee_get_data_max(ext_xd);
+  gnee_set_data_max(val);
+
+  val = xnee_get_time_max(ext_xd);
+  gnee_set_time_max(val);
+
+  for (i=1;i<XNEE_NR_OF_TYPES;i++)
+    {
+      gnee_set_ranges(i);
+    }
+}
 
 
 static int
@@ -69,52 +182,35 @@ int
 gnee_xnee_start_recording(xnee_data* xd)
 {
   int ret;
-
+  static int ev_save = 0;
+  static int dat_save = 0;
+  static int tim_save = 0;
   
-  gnee_xnee_init_xnee (xd);
+  xnee_zero_time_recorded(xd);
+  xnee_zero_data_recorded(xd);
+  xnee_zero_events_recorded(xd);
 
-  /* This should be done elsewhere .... just to test */
-/*   xnee_set_verbose(xd); */
-  xnee_parse_range (xd, XNEE_DEVICE_EVENT, "2-6");
-  xnee_parse_range (xd, XNEE_DELIVERED_EVENT, "11-13");
-  xnee_set_loops_left (xd, 100);
   xnee_set_recorder (xd);
-  xnee_set_out_byname (xd, "hesa.xlr"); 
-  /* EO This should be done elsewhere .... just to test */
-
-  printf ("recording now.......\n");
 
   xnee_start(xd);
   
-  printf ("recording finished.......\n");
   return 0;
 }
 
 int
 gnee_xnee_stop_recording(xnee_data* xd)
 {
-  
-  xnee_renew_xnee_data(xd);
-  
   return 0;
 }
 
 int
 gnee_xnee_start_replaying(xnee_data* xd)
 {
-  printf ("start 1\n");
   gnee_xnee_init_xnee (xd);
-  printf ("start 1 1\n");
   xnee_set_replayer (xd);
-  printf ("start 1 2\n");
-  xnee_renew_xnee_data(xd);
 
-  printf ("start 2\n");
   xnee_set_data_name_byname (xd, "hesa.xlr"); 
   xnee_unset_sync (xd);
-  printf ("starting to replay now ....\n");
-/*   xnee_set_verbose(xd);  */
-  printf ("starting \n");
   xnee_start(xd);
   return 0;
 }
@@ -124,3 +220,11 @@ gnee_xnee_stop_replaying(xnee_data* xd)
 {
   return 0;
 }
+
+
+int
+gnee_xnee_init_value(xnee_data* xd)
+{
+  ;
+}
+
