@@ -1,6 +1,12 @@
 bin_PROGRAMS = xnee
 xnee_SOURCES = main.c parse.c parse.h 
-xnee_LDADD = ../../libxnee/src/libxnee.a  ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl
+
+if HAVE_LIBXNEE_DIR
+LIBXNEE_DIR=@libxnee_dir@
+else
+LIBXNEE_DIR="./"
+endif
+xnee_LDADD =  -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE
@@ -28,4 +34,4 @@ endif
 
 
 
-CFLAGS = -I../../libxnee/include ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}
+CFLAGS =  -I${LIBXNEE_DIR}/include  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}

@@ -1,5 +1,5 @@
 AC_INIT(src/main.c)
-AC_CONFIG_AUX_DIR(autotools/)
+AC_CONFIG_AUX_DIR(./autotools/)
 AM_INIT_AUTOMAKE(xnee,1.08d)
 
 AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")])
@@ -45,6 +45,19 @@ AM_CONDITIONAL(GPROF, test x$gprof = xtrue)
 AM_CONDITIONAL(BUF_VERBOSE, test x$buffer_verbose = xtrue)
 AM_CONDITIONAL(HAVE_XOSD, test x$HAVE_XOSD_SUB = xtrue)
 
+ 
+# Process the option "--with-libxnee-dir="
+AC_ARG_WITH(libxnee-dir,
+	 [  --with-libxnee-dir   Specify the installation directory for libxnee ],
+	 [case "${withval}" in
+	  yes) AC_MSG_ERROR(Missing directory for --with-libxnee-dir);;
+	  no) libxnee-dir=;;
+	  *) if test -d "${withval}"; then libxnee_dir=${withval}; \
+		  else AC_MSG_ERROR(invalid directory \"${withval}\" for --with-libxnee-dir); fi;;
+	 esac],
+	 libxnee_dir=)
+AC_SUBST(libxnee_dir)
+AM_CONDITIONAL(HAVE_LIBXNEE_DIR, test x${libxnee_dir} != x)
 
 AC_PROG_INSTALL
 AC_PROG_CC
