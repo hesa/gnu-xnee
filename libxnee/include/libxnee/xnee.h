@@ -26,6 +26,12 @@
 #ifndef XNEE_XNEE_H
 #define XNEE_XNEE_H
 
+/* needed for the RECORD extension */
+#define NEED_EVENTS
+#define NEED_REPLIES
+
+
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -53,10 +59,6 @@
 #define XNEE_HIGHEST_DATA_NR  256
 #define XNEE_REPLAY_BUFFER_SIZE ( XNEE_HIGHEST_DATA_NR  )
 
-
-/* needed for the RECORD extension */
-#define NEED_EVENTS
-#define NEED_REPLIES
 
 #define XNEE_FREE(a)   { printf ("--> free %d\n", (int)a); free(a);   a=NULL; printf ("<-- free\n");}
 #define XNEE_FCLOSE(a) { printf ("--> close %d\n", (int)a); fclose(a); a=NULL; printf ("<-- close\n");}
