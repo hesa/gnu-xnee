@@ -37,17 +37,6 @@
 
 
 
-/*
- * internal use only
- */
-static void 
-xnee_correct_time(unsigned long *myTime) 
-{
-  if (*myTime < 2) 
-    {
-      *myTime = 2;
-    }
-}
 
 
 static void

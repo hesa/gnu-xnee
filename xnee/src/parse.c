@@ -67,7 +67,7 @@ static char *help[] = {
   "--human-printouts, -hp         ", "Prints human readable" , 
   "--record, -rec                 ", "Set recording mode (default)" , 
   "--replay, -rep                 ", "Set replaying mode" , 
-  "--speed-adjust, -sa             ", "Adjust replaying speed (percentage)",
+  "--speed-percent, -sp           ", "Set replaying speed (percentage)",
   "--stop-key mod,key, -sk        ", "When pressing modifier mod and key key Xnee exits" , 
   "--write-settings file          ", "Writes settings to a resource file",
   "--print-settings, -ps          ", "Prints Xnee settings and waits (for <ENTER>)", 
@@ -231,7 +231,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 			 xnee_get_rec_resolution_y(xd)));
  	  continue;
 	}
-      else if (xnee_check (argv[i], "--speed-adjust", "-sa"  ) )
+      else if (xnee_check (argv[i], "--speed-percent", "-sp"  ) )
 	{
 	  if (++i >= argc) 
 	    {

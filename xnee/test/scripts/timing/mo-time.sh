@@ -136,7 +136,7 @@ function timed_replay()
     SPEED=$1
     verbose "replaying with speed=$SPEED%"
     FAKE_START_TIME=`date '+%s'`
-    $XNEE --replay -f rep-time.log --speed-adjust $SPEED
+    $XNEE --replay -f rep-time.log --speed-percent $SPEED
     FAKE_STOP_TIME=`date '+%s'`
 
     FAKE_TIME=$(( $FAKE_STOP_TIME - $FAKE_START_TIME ))

@@ -50,10 +50,10 @@ xnee_get_elapsed_time(xnee_data *xd, char type );
  */
 long 
 xnee_calc_sleep_amount(xnee_data *xd, 
-		       long last_diff, 
-		       long first_diff, 
-		       long record_last_diff, 
-		       long record_first_diff );
+		       unsigned long last_diff, 
+		       unsigned long first_diff, 
+		       unsigned long record_last_diff, 
+		       unsigned long record_first_diff );
 
 
 #define xnee_is_normal_speed(xd)  (xd->speed_percent==100)
@@ -65,5 +65,21 @@ xnee_calc_sleep_amount_percent(xnee_data *xd,
 			       Time first_diff, 
 			       Time record_last_diff, 
 			       Time recordFirst_diff );
+
+
+long 
+xnee_calc_sleep_amount_slow(xnee_data *xd, 
+			    unsigned long  last_diff, 
+			    unsigned long first_diff, 
+			    unsigned long record_last_diff, 
+			    unsigned long recordFirst_diff );
+
+long 
+xnee_calc_sleep_amount_fast(xnee_data *xd, 
+			    unsigned long last_diff, 
+			    unsigned long first_diff, 
+			    unsigned long record_last_diff, 
+			    unsigned long recordFirst_diff );
+
 
 #endif /* XNEE_TIME_H */

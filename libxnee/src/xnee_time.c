@@ -125,13 +125,14 @@ xnee_get_elapsed_time(xnee_data *xd, char type )
  **************************************************************/
 long 
 xnee_calc_sleep_amount(xnee_data *xd, 
-		       long  last_diff, 
-		       long first_diff, 
-		       long record_last_diff, 
-		       long recordFirst_diff )
+		       unsigned long last_diff, 
+		       unsigned long first_diff, 
+		       unsigned long record_last_diff, 
+		       unsigned long recordFirst_diff )
 {
   Time sleep_amt;
-  long out_of_wack_amt =0;
+  unsigned long out_of_wack_amt = 0;
+  int           out_of_wack     = 0;
   float tmp;
 
   
@@ -141,16 +142,30 @@ xnee_calc_sleep_amount(xnee_data *xd,
 	  last_diff, first_diff, record_last_diff, recordFirst_diff ); 
   */
 
-  /* determine where we are from first read  either too fast or too slow */
-  /* find amount that we are too fast or too slow */
-  out_of_wack_amt = recordFirst_diff - first_diff;
-  
-  if ( out_of_wack_amt > 0 ) /* too fast - we should slow down a bit */
+  /* determine where we are from first read  
+   * either too fast or too slow */
+  if (recordFirst_diff > first_diff)
     {
+      out_of_wack=1;
+    }
+  else if (recordFirst_diff < first_diff)
+    {
+      out_of_wack=-1;
+    }
+  /* else we keep =0 */
+
+
+  
+  if ( out_of_wack==1 ) 
+    {
+      /* too fast - we should slow down a bit */
       if ( record_last_diff > last_diff ) 
 	{
 	  /* recorded wait more than we have waited so far */
 
+	  /* find amount that we are too fast or too slow */
+	  out_of_wack_amt = recordFirst_diff - first_diff;
+	  
 	  /* if the amount we are out of wack is more than the recorded wait */
 	  /* then sleep the full recorded difference */
 	  if ( out_of_wack_amt > record_last_diff )  
@@ -172,7 +187,7 @@ xnee_calc_sleep_amount(xnee_data *xd,
 	  sleep_amt = ( long ) tmp;
 	}
     }
-  else if ( out_of_wack_amt < 0 ) /* too slow or right on time */ 
+  else if ( out_of_wack == -1 ) 
     {
       if ( record_last_diff > last_diff ) 
 	{
@@ -187,7 +202,9 @@ xnee_calc_sleep_amount(xnee_data *xd,
 	}
     }
   else
-    sleep_amt=2;
+    {
+      sleep_amt=2;
+    }
 
     xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", sleep_amt )); 
   return ( sleep_amt );
@@ -204,13 +221,14 @@ xnee_calc_sleep_amount(xnee_data *xd,
  **************************************************************/
 long 
 xnee_calc_sleep_amount_slow(xnee_data *xd, 
-			long  last_diff, 
-			long first_diff, 
-			long record_last_diff, 
-			long recordFirst_diff )
+			unsigned long  last_diff, 
+			unsigned long first_diff, 
+			unsigned long record_last_diff, 
+			unsigned long recordFirst_diff )
 {
   Time sleep_amt;
-  long out_of_wack_amt =0;
+  unsigned long out_of_wack_amt = 0;
+  int           out_of_wack     = 0;
   float tmp;
 
   
@@ -225,16 +243,30 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
 	  last_diff, first_diff, record_last_diff, recordFirst_diff ); 
   */
 
-  /* determine where we are from first read  either too fast or too slow */
-  /* find amount that we are too fast or too slow */
-  out_of_wack_amt = recordFirst_diff - first_diff;
-  
-  if ( out_of_wack_amt > 0 ) /* too fast - we should slow down a bit */
+  /* determine where we are from first read  
+   * either too fast or too slow */
+  if (recordFirst_diff > first_diff)
     {
+      out_of_wack=1;
+    }
+  else if (recordFirst_diff < first_diff)
+    {
+      out_of_wack=-1;
+    }
+  /* else we keep =0 */
+
+
+  
+  if ( out_of_wack==1 ) 
+    {
+      /* too fast - we should slow down a bit */
       if ( record_last_diff > last_diff ) 
 	{
 	  /* recorded wait more than we have waited so far */
 
+	  /* find amount that we are too fast or too slow */
+	  out_of_wack_amt = recordFirst_diff - first_diff;
+	  
 	  /* if the amount we are out of wack is more than the recorded wait */
 	  /* then sleep the full recorded difference */
 	  if ( out_of_wack_amt > record_last_diff )  
@@ -256,7 +288,7 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
 	  sleep_amt = ( long ) tmp;
 	}
     }
-  else if ( out_of_wack_amt < 0 ) /* too slow or right on time */ 
+  else if ( out_of_wack == -1 ) 
     {
       if ( record_last_diff > last_diff ) 
 	{
@@ -271,7 +303,10 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
 	}
     }
   else
-    sleep_amt=0;
+    {
+      sleep_amt=0;
+    }
+
   xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", sleep_amt )); 
   return ( sleep_amt );
 }
@@ -288,37 +323,49 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
  **************************************************************/
 long 
 xnee_calc_sleep_amount_fast(xnee_data *xd, 
-			    Time last_diff, 
-			    Time first_diff, 
-			    Time record_last_diff, 
-			    Time recordFirst_diff )
+			    unsigned long last_diff, 
+			    unsigned long first_diff, 
+			    unsigned long record_last_diff, 
+			    unsigned long recordFirst_diff )
 {
   Time sleep_amt;
-  long out_of_wack_amt =0;
-  float tmp;
-
+  unsigned long out_of_wack_amt = 0;
+  int           out_of_wack     = 0;
+  
   recordFirst_diff = 
     recordFirst_diff * xnee_get_speed(xd) / 100;
   record_last_diff = 
     record_last_diff * xnee_get_speed(xd) / 100;
   
-  /*  printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",  
-	  last_diff, first_diff, record_last_diff, recordFirst_diff ); 
+  /*  printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: 
+      %lu record_last_diff: %lu recordFirst_diff: %lu\t",  
+      last_diff, first_diff, record_last_diff, recordFirst_diff ); 
   */
 
 
   /* determine where we are from first read  
-   * either too fast or too slow 
-   * ...
-   * find amount that we are too fast or too slow */
-  out_of_wack_amt = recordFirst_diff - first_diff;
+   * either too fast or too slow */
+  if (recordFirst_diff > first_diff)
+    {
+      out_of_wack=1;
+    }
+  else if (recordFirst_diff < first_diff)
+    {
+      out_of_wack=-1;
+    }
+  /* else we keep =0 */
+
+
   
-  if ( out_of_wack_amt > 0 ) 
+  if ( out_of_wack==1 ) 
     {
       /* too fast - we should slow down a bit */
       if ( record_last_diff > last_diff ) 
 	{
 	  /* recorded wait more than we have waited so far */
+	  
+	  /* find amount that we are too fast or too slow */
+	  out_of_wack_amt = recordFirst_diff - first_diff;
 	  
 	  /* if the amount we are out of wack is more than the 
 	   * recorded wait then sleep the full recorded difference */
@@ -340,7 +387,7 @@ xnee_calc_sleep_amount_fast(xnee_data *xd,
 	  sleep_amt = record_last_diff ;
 	}
     }
-  else if ( out_of_wack_amt < 0 ) 
+  else if ( out_of_wack == -1 ) 
     {
 
       
