@@ -683,9 +683,6 @@ create_gnee_window (void)
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook), 2), label2);
   gtk_label_set_justify (GTK_LABEL (label2), GTK_JUSTIFY_LEFT);
 
-  g_signal_connect_swapped ((gpointer) gnee_window, "hide",
-                            G_CALLBACK (on_gnee_window_hide),
-                            GTK_OBJECT (gnee_window));
   g_signal_connect ((gpointer) new1, "activate",
                     G_CALLBACK (on_new1_activate),
                     NULL);

@@ -13,7 +13,6 @@
   <property name="default_height">480</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
-  <signal name="hide" handler="on_gnee_window_hide" object="gnee_window" last_modification_time="Tue, 08 Jul 2003 22:41:41 GMT"/>
 
   <child>
     <widget class="GtkVBox" id="vbox1">
