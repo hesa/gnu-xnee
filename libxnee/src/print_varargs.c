@@ -41,15 +41,20 @@
  **************************************************************/
 #ifdef HAVE_STDARG_H
 void
-xnee_verbosef (xnee_data *xd, char * msg, ...)
+xnee_verbosef (xnee_data *xd, /*@null@*/ char * msg,  ...)
 {
   
   va_list ap;
 
-  if (xd->verbose) 
+  if (xd==NULL)
+  {
+     return;
+  }
+
+  if (xd->verbose!=0) 
     {
       va_start(ap, msg);
-      xd->verbose_fp ( xd->err_file, msg, ap );
+      (void)xd->verbose_fp ( xd->err_file, msg, ap );
     }
 }
 
@@ -61,6 +66,11 @@ xnee_verbosef (xnee_data *xd, valist)
   char *fmt;
   va_list ap;
   
+  if (xd==NULL)
+  {
+     return;
+  }
+
   if (xd->verbose) 
     {
       va_start(argp);
@@ -82,7 +92,7 @@ xnee_print_error (char * error, ...)
 {
   va_list ap;
   va_start(ap, error);
-  vprintf ( error, ap );
+  (void)vprintf ( error, ap );
   va_end(ap);
 }
 #else

@@ -45,9 +45,10 @@ function replay_file()
     rm /tmp/xnee_test.txt
     verbose "  launching xterm/cat"
     xterm -e 'cat > /tmp/xnee_test.txt' &
-    sleep 2
+    sleep 5
     verbose "  launching xnee"
     $XNEE --replay -f $RECORDED_FILE 
+
     sleep 2 
     verbose "  faking enter"
     fake_enter

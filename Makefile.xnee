@@ -1,5 +1,6 @@
 PACKAGE=\"Xnee\"
-VERSION=\"1.08.94k\"
+VERSION=\"1.08.94l\"
+CC=gcc-3.2
 
 PEDANTIC_FLAGS =  -W -Wall -pedantic -Werror \
 	-Wpointer-arith -Wcast-qual \
@@ -10,12 +11,13 @@ PEDANTIC_FLAGS =  -W -Wall -pedantic -Werror \
         -Wformat=2 -Wimplicit -Wmain \
         -Wcomment -Wformat-nonliteral \
         -Wmissing-braces -Wparentheses -Wreturn-type \
-        -Wswitch -Wswitch-default -Wswitch-enum \
-        -Wunused \
-        -Wendif-labels -Wundef \
+        -Wswitch -Wunused -Wundef \
         -Wbad-function-cast -Wcast-qual -Wcast-align \
         -Wredundant-decls -Wnested-externs 
-        
+# -Wswitch-default -Wswitch-enum -Wendif-labels
+
+LINT=splint
+LINT_TAR=Xnee-lint.tar
 
 ##XOSD_LIB=-lxosd
 XOSD_LIB=
@@ -25,18 +27,29 @@ XOSD_LIB=
 SEMI_FLAGS = \
         -pedantic-errors  
 
-CC=gcc
+
 CFLAGS =  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -DHAVE_STDARG_H=1 \
         -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src -g \
         ${PEDANTIC_FLAGS}
 
+LINTFLAGS =  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -DHAVE_STDARG_H=1 \
+        -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src \
+	-D__GNUC__ \
+	-warnposix -mustfreefresh -temptrans -compdef -mustfreeonly
 
 LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib
 
 LIBS = -lX11 -lXext -lXtst -lpthread ${XOSD_LIB}
 
-CLI_OBJS =  cnee/src/parse.o  cnee/src/main.o  
-COMM_OBJS = libxnee/src/xnee.o libxnee/src/xnee_record.o  libxnee/src/xnee_replay.o  libxnee/src/print.o libxnee/src/print_varargs.o libxnee/src/datastrings.o libxnee/src/xnee_dl.o  libxnee/src/xnee_sem.o  libxnee/src/xnee_setget.o libxnee/src/xnee_fake.o libxnee/src/xnee_km.o libxnee/src/xnee_resolution.o  libxnee/src/xnee_resource.o  libxnee/src/xnee_buffer.o  libxnee/src/xnee_callback.o  libxnee/src/xnee_km.o  libxnee/src/xnee_grab.o  libxnee/src/xnee_time.o libxnee/src/xnee_threshold.o libxnee/src/xnee_range.o libxnee/src/feedback.o libxnee/src/xnee_keysym.o libxnee/src/xnee_error.o libxnee/src/xnee_expr.o
+CLI_SRC =  cnee/src/parse.c  cnee/src/main.c  
+COMM_SRC = libxnee/src/xnee.c libxnee/src/xnee_record.c  libxnee/src/xnee_replay.c  libxnee/src/print.c libxnee/src/print_varargs.c libxnee/src/datastrings.c libxnee/src/xnee_dl.c  libxnee/src/xnee_sem.c  libxnee/src/xnee_setget.c libxnee/src/xnee_fake.c libxnee/src/xnee_km.c libxnee/src/xnee_resolution.c  libxnee/src/xnee_resource.c  libxnee/src/xnee_buffer.c  libxnee/src/xnee_callback.c  libxnee/src/xnee_km.c  libxnee/src/xnee_grab.c  libxnee/src/xnee_time.c libxnee/src/xnee_threshold.c libxnee/src/xnee_range.c libxnee/src/feedback.c libxnee/src/xnee_keysym.c libxnee/src/xnee_error.c libxnee/src/xnee_expr.c
+
+CLI_OBJS      := $(CLI_SRC:%.c=%.o)
+COMM_OBJS     := $(COMM_SRC:%.c=%.o)
+
+CLI_LINT      := $(CLI_SRC:%.c=%.lint)
+COMM_LINT     := $(COMM_SRC:%.c=%.lint)
+
 
 ${COMM_OBJS}: Makefile.xnee
 
@@ -44,6 +57,9 @@ OBJS = ${COMM_OBJS}
 
 .c.o: 
 	${CC} -g ${CFLAGS} -c $< -o $@
+.c.lint:
+	@echo "Doing lint...:   ${LINT}  $< to $@"
+	-${LINT} ${LINTFLAGS}  $<  > $@
 
 
 XNEELIB = libxnee.a
@@ -67,3 +83,11 @@ ${XNEE_CLI}: ${XNEELIB} ${CLI_OBJS}
 	${CC}  -o ${XNEE_CLI}  ${CLI_OBJS} ${LDFLAGS} ${LIBS} -L./ -lxnee ${LIBS}
 
 
+lintsave: ${COMM_LINT}  ${CLI_LINT}
+	tar cvf ${LINT_TAR} ${COMM_LINT} ${CLI_LINT}
+	gzip ${LINT_TAR}
+	@echo "Created ${LINT_TAR}.gz"
+
+lint: ${COMM_SRC}  ${CLI_SRC}
+	@echo " ${LINT}  $< "
+	-${LINT} ${LINTFLAGS}  $< 

@@ -1,4 +1,5 @@
 export XNEE=../src/cnee
+export LIBXNEE=../../libxnee/src
 export VERBOSE_MODE=false
 
 export LOG=./xnee_test.log
@@ -7,6 +8,8 @@ export ERR_LOG=./xnee_test.err
 export MOUSE_DEVICE=/dev/swmouse
 export KEYBOARD_DEVICE=/dev/swmouse
 
+MEMCHECK=valgrind
+MEMCHECK_ARGS="--trace-malloc=yes --log-file=xnee_val --leak-check=yes -v" 
 
 function init_test()
 {
@@ -171,17 +174,23 @@ function check_retval_false()
 
 function parse_me()
 {
-    for arg in "$1"
+    for arg in $1
       do
       verbose "Parsing : \"$arg\" "
       case "$arg" in 
 	  "--verbose")
-          VERBOSE_MODE=true
-          ;;
-
-          *)
-          verbose "faulty argument: $arg"
-          ;;
+	      VERBOSE_MODE=true
+	      ;;
+	  
+	  "--memcheck")
+	      XNEE="${MEMCHECK} ${MEMCHECK_ARGS} ${XNEE}"
+		shift
+		echo "XNEE=$XNEE"
+	      ;;
+	  
+	  *)
+	      verbose "faulty argument: $arg"
+	      ;;
       esac
       shift
     done
@@ -344,8 +353,8 @@ function verify_same()
 
     if [ "$EXP_VAL" != "$REAL_VAL" ];
 	then
-	verbose " Data differs: $MSG"
-	error_log " Data differs: $MSG"
+	verbose " ERROR Data differs: $MSG"
+	error_log " ERROR Data differs: $MSG"
 	ERR_TEST=$(($ERR_TEST + 1))
 	return 1
     fi
@@ -370,8 +379,8 @@ function verify_not_same()
 
     if [ "$EXP_VAL" == "$REAL_VAL" ];
 	then
-	verbose " Data is same: $MSG"
-	error_log " Data is same : $MSG"
+	verbose " ERROR Data is same: $MSG"
+	error_log " ERROR Data is same : $MSG"
 	ERR_TEST=$(( $ERR_TEST + 1 ))
 	return 1
     fi
@@ -398,14 +407,14 @@ function verify_pos_alm_same()
 
     if [ "$REAL_VAL" -gt "$HIGH_VAL" ];
 	then
-	verbose " Data too big: $MSG"
-	error_log " Data too big: $MSG"
+	verbose " ERROR Data too big: $MSG"
+	error_log " ERROR Data too big: $MSG"
 	ERR_TEST=$(( $ERR_TEST + 1 ))
 	return 1
     elif [ "$REAL_VAL" -lt "$LOW_VAL" ];
 	then
-	verbose " Data too small: $MSG"
-	error_log " Data too small: $MSG"
+	verbose " ERROR Data too small: $MSG"
+	error_log " ERROR Data too small: $MSG"
 	ERR_TEST=$(($ERR_TEST + 1 ))
 	return 1
     fi
@@ -544,8 +553,8 @@ function get_in_position()
     fast_move_mouse  u 1000
     fast_move_mouse  l 1000
     sleep 0
-    move_mouse  d 150
-    move_mouse  r 150
+    move_mouse  d 300
+    move_mouse  r 300
     sleep 3
 }
 
@@ -575,6 +584,19 @@ function fast_move_mouse()
 function zero_mouse()
 {
     echo "0" > $MOUSE_DEVICE
+}
+
+
+function remove_gcov_gprof_file()
+{
+    verbose "Removing gcov and gprof files....."
+    # gcov
+    rm -f ${LIBXNEE}/*.bb
+    rm -f ${LIBXNEE}/*.bbg
+    rm -f ${LIBXNEE}/*.da
+    
+    #gprof
+    rm -f gmon.out
 }
 
 

@@ -49,24 +49,28 @@ int main(int argc,char *argv[])
   (void) signal (SIGINT, signal_handler);
   
   /* Set the error handler the libxnee's built in */ 
-/*   (void) XSetErrorHandler (xnee_err_handler); */
+  (void) XSetErrorHandler (handle_xerr);  
   
-
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
+  if (xd==NULL)
+  {
+     return (XNEE_NO_MAIN_DATA);
+  }
 
   /* Set the program name */
   xnee_set_program_name (xd, XNEE_CLI);
-  
+
   /* Well .... parse the args */
   xnee_parse_args (xd, argc, argv);
 
-   ret = xnee_prepare(xd);
-   if (ret==XNEE_OK)
-     {
-       /* start up the action set during parsing the commnd line */
-       ret = xnee_start(xd);
-     }
+
+  ret = xnee_prepare(xd);
+  if (ret==XNEE_OK)
+    {
+      /* start up the action set during parsing the commnd line */
+      ret = xnee_start(xd);
+    }
   
   if ( ret != XNEE_OK)
   {

@@ -1,4 +1,4 @@
 @set UPDATED 22 August 2004
 @set UPDATED-MONTH August 2004
-@set EDITION 1.08.94k
-@set VERSION 1.08.94k
+@set EDITION 1.08.94o
+@set VERSION 1.08.94o

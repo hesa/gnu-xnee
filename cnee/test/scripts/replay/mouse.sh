@@ -62,7 +62,7 @@ function record_and_replay()
     verbose "   ### start point:    $XPOS $YPOS `date`"
     $XNEE --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record $SUM -o rep-mouse.log &
 
-    sleep 1
+    sleep 2
     verbose "Start faking with swinput:"
 
 
@@ -164,7 +164,7 @@ function record_and_replay()
 #exit
     # sleep half the sleeping interval
     MYSLEEP=$(( $SLEEP_INTERVAL / 2 ))
-    verbose "sleepig $MYSLEEP"
+    verbose "sleeping $MYSLEEP"
 
     sleep $R_DELAY
     sleep $MYSLEEP
@@ -215,18 +215,16 @@ HALF_WAYS=200
 
 
 #get mouse in position and zero the device counter
-#get_in_position
-#zero_device swmouse
-#record_and_replay 40 5 6 7
+get_in_position
+zero_device swmouse
+record_and_replay 40 5 6 7
+sleep 5
 
 #get mouse in position and zero the device counter
 get_in_position
 zero_device swmouse
 record_and_replay 200 300 250 170
 sleep 5
-
-
-
 
 #get mouse in position and zero the device counter
 get_in_position
@@ -237,7 +235,7 @@ sleep 5
 #get mouse in position and zero the device counter
 get_in_position
 zero_device swmouse
-record_and_replay 1000 800 800 600
+record_and_replay 800 600 700 500
 sleep 5
 
 

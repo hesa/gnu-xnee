@@ -40,9 +40,9 @@ xnee_print_event_info (xnee_data *xd);
  * Prints number and name of X11 errors
  *
  * @param xd     xnee's main structure
- * @return void  
+ * @return int
  */
-void
+int
 xnee_print_error_info (xnee_data *xd);
 
 
@@ -50,9 +50,9 @@ xnee_print_error_info (xnee_data *xd);
  * Prints number and name of X11 replies
  *
  * @param xd     xnee's main structure
- * @return void  
+ * @return int
  */
-void
+int
 xnee_print_reply_info (xnee_data *xd);
 
 
@@ -60,9 +60,9 @@ xnee_print_reply_info (xnee_data *xd);
  * Prints number and name of X11 requests
  *
  * @param xd     xnee's main structure
- * @return void  
+ * @return int
  */
-void
+int
 xnee_print_request_info (xnee_data *xd);
 
 
@@ -70,9 +70,9 @@ xnee_print_request_info (xnee_data *xd);
  * Prints number and name of X11 data
  *
  * @param xd     xnee's main structure
- * @return void  
+ * @return int
  */
-void
+int
 xnee_print_data_info (xnee_data *xd);
 
 
@@ -209,7 +209,8 @@ void xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd );
  *              File descriptors to be used are specified in the xnee_data struct
  *
  */
-void xnee_record_print_record_range (xnee_data *xd, FILE*) ;
+int
+xnee_record_print_record_range (xnee_data *xd, /*@null@*/ FILE *) ;
 
 
 /*
@@ -244,8 +245,8 @@ xnee_rec_print_sys_info(xnee_data *xd);
  * 
  * 
  */
-void 
-xnee_print_xnee_settings (xnee_data* xd, FILE *) ;
+int
+xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE *) ;
 
 
 /*
@@ -259,7 +260,7 @@ xnee_print_xnee_settings (xnee_data* xd, FILE *) ;
  *                  
  */ 
 int 
-xnee_print_distr_list (xnee_data*, FILE *);
+xnee_print_distr_list (xnee_data*, /*@null@*/FILE *);
 
 
 
@@ -303,11 +304,11 @@ void
 xnee_version(xnee_data *xd);
 
 
-void
+int
 xnee_print_ranges (xnee_data *xd, FILE *fp);
 
 
-void 
+int
 xnee_print_xnee_resource_settings (xnee_data* xd, FILE* out) ;
 
 void 

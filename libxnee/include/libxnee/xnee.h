@@ -61,12 +61,13 @@
 
 #include <sys/utsname.h>
 
-#include <X11/Xlibint.h>
 #include <X11/Xproto.h>
+#include <X11/Xlibint.h>
 #include <X11/Xlib.h>
 
 #include <X11/extensions/record.h> 
 
+#define NULL_STRING "NULL"
 
 #define XNEE_MAX_DELAY       3600
 
@@ -75,14 +76,37 @@
 #define XNEE_REPLAY_BUFFER_SIZE ( XNEE_HIGHEST_DATA_NR  )
 
 
-#define XNEE_FREE(a)               free(a);   a=NULL; 
-#define XNEE_FCLOSE(a)             fclose(a); a=NULL; 
-#define XNEE_FREE_IF_NOT_NULL(a)   if (a!=NULL) { XNEE_FREE(a);   }
-#define XNEE_FCLOSE_IF_NOT_NULL(a) if (a!=NULL) { XNEE_FCLOSE(a); }
+#define XNEE_FREE(a)               (void)xnee_free(a);   
+#define XNEE_FCLOSE(a)             (void)fclose(a); 
+
+#define XNEE_FREE_AND_NULL(a)      XNEE_FREE(a); a=NULL; 
+#define XNEE_FCLOSE_AND_NULL(a)    XNEE_FCLOSE(a); a=NULL; 
+
+#define XNEE_FREE_IF_NOT_NULL(a)   if (a!=NULL) { XNEE_FREE_AND_NULL(a);   }
+#define XNEE_FCLOSE_IF_NOT_NULL(a) if (a!=NULL) { XNEE_FCLOSE_AND_NULL(a); }
 #define XNEE_CLOSE_DISPLAY_IF_NOT_NULL(a) if(a!=NULL) { XCloseDisplay(a); a=NULL; }
 
 
 #define XNEE_RANGE_STRING_SIZE 512
+
+
+#define XNEE_CHECK_ALLOCED_MEMORY(mem) \
+   {                                            \
+      if (mem==NULL)                                 \
+      {                                                 \
+         XNEE_PRINT_ERROR_IF_NOT_OK(XNEE_MEMORY_FAULT); \
+         return (NULL);                                 \
+      }                                                 \
+   }
+
+#define XNEE_CHECK_ALLOCED_MEMORY_INT(mem) \
+   {                                            \
+      if (mem==NULL)                                 \
+      {                                                 \
+         XNEE_PRINT_ERROR_IF_NOT_OK(XNEE_MEMORY_FAULT); \
+         return (XNEE_MEMORY_FAULT);                                 \
+      }                                                 \
+   }
 
 
 #define XNEE_PRESS   True
@@ -142,7 +166,6 @@ typedef int xnee_keymask;
 
 
 
-#define XNEE_FREE_AND_NULL(x) { free(x); x=NULL;}
 
 #define XNEE_MAX_SYNCH     100 /* buffer size */
 #define XNEE_MOTION_DELAY   21 /* default value for delay during synch */
@@ -212,6 +235,31 @@ typedef int xnee_keymask;
 #define XNEE_TRUE  1
 #define XNEE_FALSE 0
 
+#define XNEE_RETURN_IF_ERR(ret_val) \
+   if (ret_val!=XNEE_OK)            \
+   {                                                                    \
+      const char *xnee_macro_tmp ;                                      \
+      (void) fprintf (stderr, "Xnee error\n");                          \
+      xnee_macro_tmp = xnee_get_err_description (ret);                  \
+      (void) fprintf (stderr, "Description: %s\n", xnee_macro_tmp );               \
+      xnee_macro_tmp = xnee_get_err_solution (ret) ;                    \
+      (void) fprintf (stderr, "Solution:    %s\n", xnee_macro_tmp);     \
+      return (ret);                                                     \
+   }
+
+#define XNEE_RETURN_NULL_IF_ERR(ret_val) \
+   if (ret_val != XNEE_OK)               \
+   {                                     \
+      return (NULL);                     \
+   }
+
+#define XNEE_RETURN_VOID_IF_ERR(ret_val) \
+   if (ret_val != XNEE_OK)               \
+   {                                     \
+      return;                            \
+   }
+
+
 /* 
  * Return values
  */
@@ -235,6 +283,8 @@ enum return_values
   XNEE_PLUGIN_FILE_ERROR ,
   XNEE_NO_PROJECT_FILE   ,
   XNEE_NO_MAIN_DATA      ,
+  XNEE_NO_RECORD_DATA    ,
+  XNEE_NO_REPLAY_DATA    ,
   XNEE_SYNTAX_ERROR      , 
   XNEE_UNKNOWN_GRAB_MODE ,
   XNEE_NO_GRAB_DATA      ,
@@ -250,6 +300,9 @@ enum return_values
   XNEE_FEEDBACK_FAILURE  ,
   XNEE_MODE_NOT_SET      ,
   XNEE_GRAB_MEM_FAILURE  ,
+  XNEE_RECORD_FAILURE    ,
+  XNEE_DATE_FAILURE      ,
+  XNEE_SCREEN_MISSING    ,
   XNEE_LAST_ERROR
 } _return_values;
   
@@ -715,15 +768,16 @@ typedef struct
  */
 typedef struct
 {
-  XID		      id ;
-  XRecordClientSpec * xids; 
-  XRecordContext      rContext;
-  XRecordState 	    * rState; 
-  XRecordRange     ** range_array ; 
-  /*  XRecordRange 	    * range;*/
+   /*@null@*/ /*@only@*/   XRecordClientSpec * xids; 
+   /*@null@*/ /*@only@*/   XRecordState      * rState; 
+   /*@null@*/ /*@only@*/   XRecordRange     ** range_array ; 
 
-  int 	data_flags;
-  int	major_return, minor_return, nclients; 
+   XID		      id ;
+   XRecordContext      rContext;
+   int 	data_flags;
+   int	major_return;
+   int  minor_return ;
+   int  nclients; 
 } xnee_recordext_setup;
 
 
@@ -762,19 +816,19 @@ struct buffer_meta_data
  */
 typedef struct
 {
-  char    *program_name;    /*!< name of the program currently using libxnee */
-  char    *out_name    ;    /*!< name of output file (e.g stdout, /tmp/xnee.log*/
-  char    *err_name    ;    /*!< name of error file  (e.g stdout, /tmp/xnee.log*/
-  char    *rc_name     ;    /*!< name of resource file (e.g netscape.xns, /tmp/xterm.xns*/
-  char    *data_name   ;    /*!< name of data file (e.g */
-  char    *rt_name     ;    /*!< name of retype file (e.g stdout, /home/user/myfile.txt */
+  /*@null@*/ char    *program_name;    /*!< name of the program currently using libxnee */
+  /*@null@*/ char    *out_name    ;    /*!< name of output file (e.g stdout, /tmp/xnee.log*/
+  /*@null@*/ char    *err_name    ;    /*!< name of error file  (e.g stdout, /tmp/xnee.log*/
+  /*@null@*/ char    *rc_name     ;    /*!< name of resource file (e.g netscape.xns, /tmp/xterm.xns*/
+  /*@null@*/ char    *data_name   ;    /*!< name of data file (e.g */
+  /*@null@*/ char    *rt_name     ;    /*!< name of retype file (e.g stdout, /home/user/myfile.txt */
 
-  FILE    *data_file   ;    /*!< data input file descriptor */
-  FILE    *out_file    ;    /*!< output file descriptor */
-  FILE    *err_file    ;    /*!< error file descriptor */
-  FILE    *rc_file     ;    /*!< resource file descriptor */
-  FILE    *rt_file     ;    /*!< retype file descriptor */
-  FILE    *buffer_file ;    /*!< verbose buffer printout file descriptor */
+  /*@null@*/ /*@dependent@*/FILE    *data_file   ;    /*!< data input file descriptor */
+  /*@null@*/ /*@dependent@*/FILE    *out_file    ;    /*!< output file descriptor */
+  /*@null@*/ /*@dependent@*/ FILE    *err_file    ;    /*!< error file descriptor */
+  /*@null@*/ /*@dependent@*/FILE    *rc_file     ;    /*!< resource file descriptor */
+  /*@null@*/ /*@dependent@*/FILE    *rt_file     ;    /*!< retype file descriptor */
+  /*@null@*/ /*@dependent@*/FILE    *buffer_file ;    /*!< verbose buffer printout file descriptor */
 
   Bool     verbose     ;    /*!< true if verbose mode */
   Bool     buf_verbose ;    /*!< true if verbose mode for buffer printouts */
@@ -783,8 +837,8 @@ typedef struct
   Bool     sync        ;    /*!< True if Record used when replaying */
   Bool     mode        ;    /*!< Xnee's current mode (RECORDER/REPLAY...)  */
 
-  void *plugin_handle  ;        /*!< Handle for the plugin file */
-  char *plugin_name    ;        /*!< Name of the plugin file */
+  /*@null@*/ void *plugin_handle  ;        /*!< Handle for the plugin file */
+  /*@null@*/ char *plugin_name    ;        /*!< Name of the plugin file */
   callback_ptr rec_callback ;   /*!< recording callback function  */
   callback_ptr rep_callback ;   /*!< replaying callback function  */
   callback_ptr sync_fun     ;   /*!< synchronisation function     */
@@ -795,35 +849,43 @@ typedef struct
     void (* sync_fun     ) (XPointer , XRecordInterceptData *); 
   */
 
-  fprint_fptr buffer_verbose_fp; /*!< pointer to buffer verbose fun */
-  vfprint_fptr verbose_fp;        /*!< pointer to verbose fun */
-  fprint_fptr data_fp   ;        /*!< pointer to xnee protcol print fun */
+   fprint_fptr buffer_verbose_fp; /*!< pointer to buffer verbose fun */
+   vfprint_fptr verbose_fp;        /*!< pointer to verbose fun */
+   fprint_fptr data_fp   ;        /*!< pointer to xnee protcol print fun */
+   
+   /*@null@*/ /*@observer@*/
+   /*@null@*/ char    * display    ;    /*!< char representation of the Display */
+   /*@null@*/ Display *data        ;    /*!< used for sending recored data between Xnee and Xserver*/
+   /*@null@*/ Display *control     ;    /*!< used for sending info between Xnee and Xserver  */
+   /*@null@*/ Display *fake        ;    /*!< used for faking events  */
+   /*@null@*/ Display *grab        ;    /*!< used for holding the grabbed key/modifier */
+   int first_replayed_event;  /*!< True if the event to replay is the first one. 
+                                   Needed to set the start time of the first event to 0 */
+   int     cont         ;     /*!< A simple flag telling Xnee wether to keep 
+                                   recording/replaying or to quit. */
+   /*@null@*/ xnee_distr *distr_list ;  /*!< array of displays to distribute events to */
+   size_t     distr_list_size ; /*!< size of array of displays to distribute events to */
+   /*@null@*/    /*@reldef@*/ 
+   sem_t   *buf_sem     ;    /*!< semaphore to protect the replay buffer */
+   long first_read_time ;    /*!< server time of the first read from recorded file */
+   int     force_replay ;    /*!< Keep replaying even if we are out of sync .... dangerous */
+   
+   XKeyboardState kbd_orig;  /*!< User keyboard state before Xnee messes is up */
+   int     autorepeat_saved; /*!< Flag indicating if we have a stored keyboard state */
+   
+   /*@only@*/ /*@null@*/ 
+   xnee_record_init_data    xnee_info ; 
 
-  char    *display     ;    /*!< char representation of the Display */
-  Display *data        ;    /*!< used for sending recored data between Xnee and Xserver*/
-  Display *control     ;    /*!< used for sending info between Xnee and Xserver  */
-  Display *fake        ;    /*!< used for faking events  */
-  Display *grab        ;    /*!< used for holding the grabbed key/modifier */
-  int first_replayed_event; /*!< True if the event to replay is the first one. 
-                                 Needed to set the start time of the first event to 0 */
-  int     cont         ;    /*!< A simple flag telling Xnee wether to keep 
-			         recording/replaying or to quit. */
-  xnee_distr *distr_list ;  /*!< array of displays to distribute events to */
-  int     distr_list_size ; /*!< size of array of displays to distribute events to */
-  sem_t   *buf_sem     ;    /*!< semaphore to protect the replay buffer */
-  long first_read_time ;    /*!< server time of the first read from recorded file */
-  int     force_replay ;    /*!< Keep replaying even if we are out of sync .... dangerous */
+   /*@only@*/ /*@null@*/ 
+   xnee_recordext_setup     *record_setup;
 
-  XKeyboardState kbd_orig;  /*!< User keyboard state before Xnee messes is up */
-  int     autorepeat_saved; /*!< Flag indicating if we have a stored keyboard state */
-
-  xnee_record_init_data    xnee_info ; 
-  xnee_recordext_setup     *record_setup;
-  xnee_testext_setup       *replay_setup;
-  
+   /*@only@*/ /*@null@*/ 
+   xnee_testext_setup       *replay_setup;
+   
   int                      data_buffer[4][XNEE_REPLAY_BUFFER_SIZE];
   struct buffer_meta_data  meta_data;
   int                      speed_percent;
+   /*@only@*/ /*@null@*/ 
   xnee_grab_keys           *grab_keys;
 
   int     button_pressed ;
@@ -1000,6 +1062,7 @@ xnee_set_default_display (xnee_data *xd);
  * To free the memory, xnee_free_xnee_data can be used.
  * @return xnee_data * NULL if alloc failed
  */
+/*@null@*/
 xnee_data*
 xnee_new_xnee_data(void);
 
@@ -1020,6 +1083,7 @@ xnee_free_xnee_data(xnee_data* xd );
  * To free the memory allocated, use xnee_free_recordext_setup
  * @return xnee_recordext_setup *  NULL if alloc failed
  */
+/*@null@*/ 
 xnee_recordext_setup*
 xnee_new_recordext_setup(void);
 
@@ -1029,8 +1093,9 @@ xnee_new_recordext_setup(void);
  * @param xd      xnee's main structure
  * @return int    0 on success
  */
+/*@null@*/ 
 int 
-xnee_free_recordext_setup(xnee_data* xd);
+xnee_free_recordext_setup( xnee_data* xd);
 
 
 /**
@@ -1104,7 +1169,7 @@ xnee_stop_session( xnee_data* xd);
 
 
 int
-rem_all_blanks (char *array, int size);
+rem_all_blanks (char *array, size_t size);
 
 
 int
@@ -1164,6 +1229,10 @@ xnee_prepare(xnee_data *xd);
 
 int
 handle_xerr(Display *dpy, XErrorEvent *errevent);
+
+int
+xnee_free( /*@only@*/ /*@out@*/ /*@null@*/ void *mem);
+
 
 #endif /*   XNEE_XNEE_H */
 

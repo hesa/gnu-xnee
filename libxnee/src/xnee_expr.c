@@ -102,9 +102,26 @@ xnee_expression_handle_session(xnee_data *xd,
 				tmp);
   if (do_continue==XNEE_PRIMITIVE_DATA) { return (XNEE_PRIMITIVE_DATA); }
 
-  /* ok, we have some other data */
-  do_continue = xnee_expression_handle_project(xd, 
-					       tmp);
+
+
+
+  /* Is it a meta string */
+  do_continue = xnee_expression_handle_comment(xd, tmp);
+  if (do_continue==XNEE_META_DATA) { return (do_continue); }
+  
+  /* Is it a setting expression*/
+  do_continue = xnee_expression_handle_settings(xd, tmp);
+  if (do_continue==XNEE_SETTINGS_DATA) { return (do_continue); }
+  
+  /* Is it an action string */
+  do_continue = xnee_expression_handle_action(xd, tmp);
+  if (do_continue==XNEE_ACTION_DATA) { return (do_continue); }
+
+  /* Is it a mark string */
+  do_continue = xnee_expression_handle_mark(xd, tmp);
+  if (do_continue==XNEE_MARK_DATA) { return (do_continue); }
+  
+  /* Is it a mark string */
   return (do_continue);
 }
 
@@ -152,6 +169,7 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp)
   do_continue = xnee_expression_handle_projinfo(xd, tmp);
   if (do_continue==XNEE_PROJECT_INFORMATION_DATA) { return (do_continue); }
   
+
   return (XNEE_SYNTAX_ERROR);
 }
 
@@ -166,6 +184,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 			      xnee_intercept_data * xindata)
 {
   int ret = 0;
+
 
   if (!strncmp("0",tmp,1))  /* EVENT */
     {    
@@ -619,6 +638,11 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 static int
 xnee_expression_handle_comment(xnee_data *xd, char *tmp)
 {
+  int i ;
+  int len ;
+
+  len = strlen(tmp);
+
   xnee_verbose ((xd, "handling comment: %s\n", tmp));
   if (!strncmp("#",tmp,1))  /* # META data */
     {
@@ -748,7 +772,8 @@ xnee_expression_handle_projinfo(xnee_data *xd, char *tmp)
 	{
 	  return XNEE_PROJECT_INFORMATION_DATA;
 	}
-      return -1;
+
+      return XNEE_OK;
 }
 
 

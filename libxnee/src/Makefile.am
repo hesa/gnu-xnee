@@ -60,13 +60,13 @@ VERBOSE_FLAG = -DNO_VERBOSE
 endif
 
 if GCOV
-GCOV_FLAG = -fprofile-arcs -ftest-coverage 
+GCOV_FLAG = -fprofile-arcs -ftest-coverage -g
 else
 GCOV_FLAG = 
 endif
 
 if GPROF
-GPROF_FLAG = -pg
+GPROF_FLAG = -pg -g
 else
 GPROF_FLAG = 
 endif
@@ -91,3 +91,28 @@ endif
 
 libxnee_a_CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS}  
 
+
+
+HTML_SRC_FILES = $(libxnee_a_SOURCES:%.c=%.c.html)
+HTML_INC_FILES = $(EXTRA_DIST:%.h=%.h.html)
+
+%.c.html:%.c
+	$(SRC_HIGHLIGHT)  -f html -n  --line-number-ref -d -t "$<" -H header.html   $<
+
+%.h.html:%.h
+	$(SRC_HIGHLIGHT)  -f html -n  --line-number-ref -d -t "$<" -H header.html   $<
+
+#${HTML_SRC_FILES}:
+#	$(SRC_HIGHLIGHT)  -f html -n  --line-number-ref -d -t "$<" -H header.html   $<
+
+devel-doc-inc: ${HTML_INC_FILES}
+	cp ${HTML_INC_FILES} ../../src-html/libxnee/include/libxnee
+
+devel-doc-src: ${HTML_SRC_FILES}
+	cp ${HTML_SRC_FILES} ../../src-html/libxnee/src
+
+
+testnames:
+	echo "HTML_INC_FILES=${HTML_INC_FILES}"
+
+devel-doc: devel-doc-src devel-doc-inc

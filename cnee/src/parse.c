@@ -160,8 +160,6 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
  
   for (i = 1; i < argc; i++) 
     {
-      xnee_verbose ((xd, "##########  xnee_parse_args: %d / %d  \"%s\"\n", 
-		     i, argc, argv[i]));
       if( xnee_check (argv[i], "--display", "-d"  ) )
 	{
 	  if (++i >= argc) 
@@ -695,13 +693,12 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--verbose", "-v")) 
 	{
-	  xd->verbose = True;
-	  continue;
+           xnee_set_verbose(xd);
+           printf ("setting verbose on %d\n", xd);
 	}
       else if(xnee_check(argv[i], "--buffer-verbose", "-bv")) 
 	{
 	  xd->buf_verbose = True;
-	  continue;
 	}
       else if(xnee_check(argv[i], "--delivered-event-range", "-devra")) 
 	{

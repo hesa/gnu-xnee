@@ -26,6 +26,13 @@
 #include <libxnee/xnee.h>
 
 
+#define XNEE_PRINT_ERROR_IF_NOT_OK(ret)           \
+   {                                            \
+      if (ret != XNEE_OK)                                         \
+      {                                                           \
+         fprintf (stderr, "%s\n", xnee_get_err_description(ret)); \
+      } \
+   }
 
 
 const char *

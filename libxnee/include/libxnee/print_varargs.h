@@ -37,7 +37,7 @@
  * @return void  
  */
 void
-xnee_verbosef (xnee_data* xd, char * str, ...);
+xnee_verbosef (xnee_data* xd, /*@null@*/ char * str,  ...)  __attribute__ ((format ( printf, 2 , 3))) ;
 
 #ifdef HAVE_STDARG_H
 void 

@@ -8,6 +8,7 @@ EXTRA_DIST = Makefile.cnee Makefile.cvs autotools/install-sh \
     test/bin/new_script.sh \
     test/etc/base_funs \
     test/test_all.sh \
+    test/check_mem.sh \
     test/record/keyboard.sh \
     test/record/mouse.sh \
     test/scripts/options/all-events.sh \
@@ -25,11 +26,7 @@ EXTRA_DIST = Makefile.cnee Makefile.cvs autotools/install-sh \
     test/scripts/resolution/mo-res.sh \
     test/scripts/timing/mo-time.sh \
     test/src/Makefile \
-    test/src/xgetter.c \
-    test/src/xgetter.o \
-    test/src/xgetter \
-    test/xnee_test.err \
-    test/rep-time.tmp
+    test/src/xgetter.c 
 
 
 man:

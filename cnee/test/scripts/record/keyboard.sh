@@ -33,6 +33,7 @@ init_test $MYNAME
 
 parse_me "$*"
 
+
 #######################################################################
 
 KEYBOARD_DEVICE=/dev/swkeybd

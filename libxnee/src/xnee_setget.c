@@ -285,6 +285,10 @@ xnee_get_data_name (xnee_data *xd)
 int
 xnee_set_verbose (xnee_data *xd)
 {
+   if (xd==NULL)
+   {
+      return (XNEE_NO_MAIN_DATA);
+   }
   xd->verbose=XNEE_TRUE;
   return XNEE_OK;
 }
@@ -774,7 +778,6 @@ xnee_get_time_left (xnee_data *xd)
 int 
 xnee_set_interval (xnee_data *xd, int interval)
 {
-  printf ("set interval = %d\n", interval); 
   xd->xnee_info.interval = interval ;
   return XNEE_OK;
 }
@@ -859,6 +862,7 @@ int
 xnee_set_program_name(xnee_data *xd, char* name)
 {
   XNEE_FREE_IF_NOT_NULL(xd->program_name);
+
   xd->program_name = strdup(name);
   if (xd->program_name==NULL)
     {

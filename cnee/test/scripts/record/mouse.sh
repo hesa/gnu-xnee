@@ -121,7 +121,7 @@ verify_device swmouse
 
 rm m*.log
 
-NR_OF_PIX=400
+NR_OF_PIX=250
 HALF_WAYS=200
 
 

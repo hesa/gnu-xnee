@@ -11,32 +11,29 @@ sighandler()
 trap sighandler 2
 trap sighandler 15
 
-run_scripts()
+
+
+
+option_scripts()
 {
-    START=`date '+%s'`
     for i in `ls scripts/options/*.sh | grep -v test_all\.sh `; 
       do 
       echo "exec $i"
-#      $i $*
-#      sleep 10
+      $i $*
+      sleep 1
     done
+}
 
+function_scripts()
+{
     scripts/record/keyboard.sh    $* 
-    echo "einar 1"
     scripts/record/mouse.sh       $*
-    echo "einar 11"
     scripts/replay/keyboard.sh    $*
-    echo "einar 122"
     scripts/replay/mouse.sh       $*
-    echo "einar 133"
     scripts/resolution/mo-res.sh  $*
-    echo "einar 144"
     scripts/timing/mo-time.sh     $*
-    echo "einar 155"
     scripts/timing/mo-time.sh     $*
-    echo "einar 166"
     scripts/retype/keyboard.sh    $*
-    STOP=`date '+%s'`
 }
 
 
@@ -82,12 +79,41 @@ echo "TIME 0:"$(( $STOP - $START ))":$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS" >> $
 
 NAME=test_all.sh
 
+remove_gcov_gprof_file
+
 if [ "$1" == "--no-run" ];
 then
     scan_logs
-else
+elif [ "$1" == "--clean" ];
+then
+    remove_gcov_gprof_file
+    rm -f *.log
+    rm -f *.tmp
+    rm -fr gmon*.*
+    rm -fr gcov*.*
+    rm -fr xnee_val.*
+    rm -fr rep-*.log
+
+elif [ "$1" == "--function" ];
+then
+    START=`date '+%s'`
     \rm -f $LOG $ERR_LOG
-    run_scripts
+    function_scripts "$*"
+    STOP=`date '+%s'`
+    scan_logs
+elif [ "$1" == "--option" ];
+then
+    START=`date '+%s'`
+    \rm -f $LOG $ERR_LOG
+    option_scripts "$*"
+    STOP=`date '+%s'`
+    scan_logs
+else
+    START=`date '+%s'`
+    \rm -f $LOG $ERR_LOG
+    option_scripts "$*"
+    function_scripts "$*"
+    STOP=`date '+%s'`
     scan_logs
 fi
 

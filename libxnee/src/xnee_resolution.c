@@ -234,12 +234,20 @@ xnee_resolution_newy (xnee_data *xd, int yval)
 int
 xnee_is_resolution_used (xnee_data *xd)
 {
+   if (xd==NULL)
+   {
+      return XNEE_MEMORY_FAULT;
+   }
   return xd->res_info.is_used==XNEE_RESOLUTION_USED;  
 }
 
 int 
 xnee_set_resolution_used (xnee_data *xd)
 {
+   if (xd==NULL)
+   {
+      return XNEE_MEMORY_FAULT;
+   }
   xd->res_info.is_used=XNEE_RESOLUTION_USED;  
   return XNEE_OK;
 }
@@ -247,6 +255,10 @@ xnee_set_resolution_used (xnee_data *xd)
 int 
 xnee_unset_resolution_used (xnee_data *xd)
 {
+   if (xd==NULL)
+   {
+      return XNEE_MEMORY_FAULT;
+   }
   xd->res_info.is_used=XNEE_RESOLUTION_UNUSED;  
   return XNEE_OK;
 }
@@ -254,6 +266,10 @@ xnee_unset_resolution_used (xnee_data *xd)
 int 
 xnee_get_resolution_used (xnee_data *xd)
 {
+   if (xd==NULL)
+   {
+      return XNEE_MEMORY_FAULT;
+   }
   return xd->res_info.is_used;  
 }
 

@@ -22,7 +22,7 @@
  * MA  02111-1307, USA.                                              
  ****/
 
-
+#include <unistd.h>
 
 #include "libxnee/xnee.h"
 #include "libxnee/datastrings.h"
@@ -35,6 +35,7 @@
 #include "libxnee/xnee_setget.h"
 #include "libxnee/feedback.h"
 #include "libxnee/xnee_range.h"
+#include "libxnee/xnee_error.h"
 
 
 #ifdef DEBUG_DISPATCHER
@@ -72,32 +73,88 @@ xnee_record_dispatch2 (XPointer xpoint_xnee_data,
 
 /**************************************************************
  *                                                            *
+ * get_screen_nr                                              *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+static unsigned int
+get_screen_nr(Display *dpy, Window recorded_root)
+{
+  int nr_screens  ;
+  int this_screen ;
+  int i            ; 
+  int keep_looping  ; 
+  Window  disp_root     ;
+  
+  nr_screens = ScreenCount(dpy);
+  keep_looping = 1 ;
+  this_screen  = -1 ; 
+  i = 0 ;
+  
+  do {
+    Screen *scr;
+    scr = ScreenOfDisplay(dpy,i);
+    disp_root = RootWindowOfScreen(scr);
+    if ( disp_root == recorded_root )
+      {
+	keep_looping = 0 ;
+	this_screen  = i; 
+      }
+    i++;
+  } while ( (i<nr_screens) && ( keep_looping ) );
+  
+  /* If we didn't find a screen, bail out */
+  if ( this_screen == -1)
+    {
+      return XNEE_SCREEN_MISSING;
+    }
+  
+  return this_screen;
+}
+
+/**************************************************************
+ *                                                            *
  * xnee_record_handle_event                                   *
  *                                                            *
  *                                                            *
  **************************************************************/
-void
-xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
+int
+xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xrecintd)
 {
-  XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
-  int           event_type = xrec_data->type ;
-  FILE *out = xd->out_file;
-  KeyCode kc;
-  int do_print = 1;
+   XRecordDatum *xrec_data ;
+   unsigned int  event_type ;
+   FILE *out ;
+   KeyCode kc;
+   int do_print;
+   int ret ; 
+
+
+   if ( xrecintd==NULL )
+   {
+      return XNEE_RECORD_FAILURE;
+   }
+
+  xrec_data  = (XRecordDatum *) (xrecintd->data) ;
+  event_type = (unsigned int)xrec_data->type ;
+  out = xd->out_file;
+  do_print = 1;
 
   XNEE_DEBUG ( (stderr ," -->xnee_record_handle_event()  \n"  ));
-  if ((xd->xnee_info.first_last) && (xd->xnee_info.last_motion > 0) && (event_type==MotionNotify)) 
+  if ( (xd->xnee_info.first_last!=0) && (xd->xnee_info.last_motion > 0) && (event_type==MotionNotify)) 
     {
       XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 0  \n"  ));
       xd->xnee_info.x           = xrec_data->event.u.keyButtonPointer.rootX ;
       xd->xnee_info.y           = xrec_data->event.u.keyButtonPointer.rootY ;
+
+      /*@ignore@*/ 
       xd->xnee_info.server_time = xrecintd->server_time ;
+      /*@end@*/
     }
   else 
     { 
       XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 1  \n"  ));
-      if ( (xd->xnee_info.first_last) && 
-	   (xd->xnee_info.last_motion) &&
+      if ( (xd->xnee_info.first_last!=0) && 
+	   (xd->xnee_info.last_motion!=0) &&
 	   ((event_type==KeyPress)    || 
 	    (event_type==KeyRelease)  ||
 	    (event_type==ButtonPress) || 
@@ -123,21 +180,28 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
 	      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_PRESS);
 	      if (do_print==XNEE_GRAB_DO_PRINT)
 		{
-		  fprintf (out,"0,%d,0,0,0,%d,0,%lu\n",
+		  fprintf (out,"0,%u,0,0,0,%d,0,%lu\n",
 			   event_type,
 			   kc,
 			   xrecintd->server_time
 			   );
-		  xnee_fake_key_event  (xd, kc, True, CurrentTime );
+		  ret = xnee_fake_key_event  (xd, kc, True, CurrentTime );
+                  XNEE_RETURN_IF_ERR (ret);
+
 		}
 	      else if (do_print==XNEE_GRAB_DO_SAVE)
 		{
 		  char buf[64];
-		  sprintf (buf, "0,%d,0,0,0,%d,0,%lu\n",
-			    event_type,
-			    kc,
-			   xrecintd->server_time);
-		  xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
+		  ret = snprintf (buf, 64, "0,%u,0,0,0,%d,0,%lu\n",
+                                  event_type,
+                                  kc,
+                                  xrecintd->server_time);
+                  if (ret<3)
+                  {
+                     return   XNEE_MEMORY_FAULT    ;
+                  }
+		  ret = xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
+                  XNEE_RETURN_IF_ERR(ret);
 		}
 	      break;
 	    case KeyRelease:
@@ -146,71 +210,88 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
 
 	      if (do_print==XNEE_GRAB_DO_PRINT)
 		{
-		  fprintf (out,"0,%d,0,0,0,%d,0,%lu\n",
+		  fprintf (out,"0,%u,0,0,0,%d,0,%lu\n",
 			   event_type,
 			   xrec_data->event.u.u.detail,
 			   xrecintd->server_time
 			   );
-		  xnee_fake_key_event  (xd,xrec_data->event.u.u.detail , False, CurrentTime);
+		  ret = xnee_fake_key_event  (xd, (int) xrec_data->event.u.u.detail , False, CurrentTime);
+                  XNEE_RETURN_IF_ERR(ret);
 		}
 	      else if (do_print==XNEE_GRAB_DO_SAVE)
 		{
 		  char buf[64];
-		  sprintf (buf, "0,%d,0,0,0,%d,0,%lu\n",
-			    event_type,
-			    kc,
-			   xrecintd->server_time);
-		  xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
+		  ret = snprintf (buf, 64, "0,%u,0,0,0,%d,0,%lu\n",
+                                  event_type,
+                                  kc,
+                                  xrecintd->server_time);
+                  if (ret<3)
+                  {
+                     return   XNEE_MEMORY_FAULT    ;
+                  }
+		  ret = xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
+                  XNEE_RETURN_IF_ERR(ret);
 
 		}
 	      break;
 	    case ButtonPress:
-	      fprintf (out,"0,%d,0,0,%d,0,0,%lu\n",
+	      fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
 		       event_type,
 		       xrec_data->event.u.u.detail,
 		       xrecintd->server_time
 		       );
-	      xnee_fake_button_event (xd,xrec_data->event.u.u.detail , True, CurrentTime);
+	      ret = xnee_fake_button_event (xd, (int)xrec_data->event.u.u.detail , True, CurrentTime);
+              XNEE_RETURN_IF_ERR(ret);
 	      break;
 	    case ButtonRelease:
-	      fprintf (out,"0,%d,0,0,%d,0,0,%lu\n",
+	      fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
 		       event_type,
 		       xrec_data->event.u.u.detail,
 		       xrecintd->server_time
 		       );
-	      xnee_fake_button_event (xd, xrec_data->event.u.u.detail, False, CurrentTime);
+	      ret = xnee_fake_button_event (xd,  (int)xrec_data->event.u.u.detail, False, CurrentTime);
+              XNEE_RETURN_IF_ERR(ret);
+              
 	      break;
 	    case MotionNotify:  
-	      xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
-	      fprintf (out,"0,%d,%d,%d,0,0,0,%lu\n",
-		       event_type,
-		       xrec_data->event.u.keyButtonPointer.rootX,
-		       xrec_data->event.u.keyButtonPointer.rootY,
-		       xrecintd->server_time
-		       );
-	      xd->xnee_info.last_motion = True ;
-	      xnee_fake_motion_event (xd,
-				      0, 
-				      xrec_data->event.u.keyButtonPointer.rootX, 
-				      xrec_data->event.u.keyButtonPointer.rootY, 
-				      CurrentTime);
-	      
-	      break;
+               kc = 0;
+	       unsigned int screen = 
+		 get_screen_nr(xd->data,
+			       xrec_data->event.u.keyButtonPointer.root);
+	       do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
+	       fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
+			event_type,
+			xrec_data->event.u.keyButtonPointer.rootX,
+			xrec_data->event.u.keyButtonPointer.rootY,
+			screen,
+			xrecintd->server_time
+			);
+	       
+                 
+                 xd->xnee_info.last_motion = True ;
+                 ret = xnee_fake_motion_event (xd,
+                                               0, 
+                                               xrec_data->event.u.keyButtonPointer.rootX, 
+                                               xrec_data->event.u.keyButtonPointer.rootY, 
+                                               CurrentTime);
+                 XNEE_RETURN_IF_ERR(ret);
+                 
+                 break;
 	    case CreateNotify:
-	      fprintf (out,"0,%d,0,0,0,0,0,%lu\n",
+	      fprintf (out,"0,%u,0,0,0,0,0,%lu\n",
 		       event_type,
 		       xrecintd->server_time
 		       );
 	      break;
 	    case DestroyNotify:
-	      fprintf (out,"0,%d,0,0,0,0,0,%lu\n", 
+	      fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
 		       event_type,
 		       xrecintd->server_time
 		       );
 	      break;
 	    default:
 	      XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 6  \n"  ));
-	      fprintf (out,"0,%d,0,0,0,0,0,%lu\n", 
+	      fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
 		       event_type,
 		       xrecintd->server_time
 		       );
@@ -220,12 +301,14 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
       XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 7  \n"  ));
 
     }
-  fflush (out);
+  (void)fflush (out);
   if (((event_type==KeyPress) || (event_type==KeyRelease)
        || (event_type==ButtonPress) || (event_type==ButtonRelease)) 
-      && (xd->xnee_info.last_motion) )
+      && (xd->xnee_info.last_motion!=0) )
     xd->xnee_info.last_motion=0 ;
   XNEE_DEBUG ( (stderr ," <-- xnee_record_handle_event()  \n"  ));
+  
+  return XNEE_OK;
 }
 
 
@@ -240,11 +323,12 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
  **************************************************************/
 void 
 xnee_record_dispatch(XPointer xpoint_xnee_data,
-			  XRecordInterceptData *data )
+                     XRecordInterceptData *data )
 {
-  XRecordDatum        *xrec_data  ;
-  xnee_data           *xd ;
-  int                  data_type = 0;  
+  XRecordDatum *xrec_data  ;
+  xnee_data    *xd ;
+  int           data_type = 0;  
+  int           ret;
 
   XNEE_DEBUG ( (stderr ," --> xnee_record_dispatch()  \n"  ));
   
@@ -252,13 +336,13 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
     {
       XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
-      xnee_process_count(XNEE_PROCESS_RESET);
+      (void)xnee_process_count(XNEE_PROCESS_RESET);
       return;
     } 
   else
     {
       /*increment the process reply counter*/
-      xnee_process_count(XNEE_PROCESS_INC);
+       (void)xnee_process_count(XNEE_PROCESS_INC);
     }
   
   /* fix by Ton van Vliet */
@@ -279,9 +363,9 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
 
  
   /* if NOT XRECORDEndOffData or XRECORDClientDied  set data_type */  
-  if(data->data_len) 
+  if(data->data_len!=0) 
     {
-      data_type = xrec_data->type;
+       data_type = (int) xrec_data->type;
     }
   
   
@@ -294,11 +378,12 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
       if(data_type >  X_Reply )
 	{
 	  xnee_inc_events_recorded(xd);
-	  xnee_record_handle_event (xd, data) ;
+	  ret = xnee_record_handle_event (xd, data) ;
+          XNEE_RETURN_VOID_IF_ERR (ret);
 	}
       else
 	{ 
-	  xnee_record_print_reply (xd, data) ;
+           xnee_record_print_reply (xd, data) ;
 	}
       break;   
     case XRecordClientStarted:
@@ -342,13 +427,13 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
     {
       XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
-      xnee_process_count(XNEE_PROCESS_RESET);
+      (void)xnee_process_count(XNEE_PROCESS_RESET);
       return;
     } 
   else
     {
       /*increment the process reply counter*/
-      xnee_process_count(XNEE_PROCESS_INC);
+       (void)xnee_process_count(XNEE_PROCESS_INC);
     }
   
   /* fix by Ton van Vliet */
@@ -367,9 +452,9 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
 
  
   /* if NOT XRECORDEndOffData or XRECORDClientDied  set data_type */  
-  if(data->data_len) 
+  if(data->data_len!=0) 
     {
-      data_type = xrec_data->type;
+       data_type = (int) xrec_data->type;
     }
 
   
@@ -482,6 +567,12 @@ xnee_setup_recordext (xnee_data *xd)
 {
   int ret=XNEE_OK;
 
+  if ( (xd == NULL) ||
+       (xd->record_setup == NULL))
+  {
+     return XNEE_RECORD_FAILURE;
+  }
+
   xnee_verbose((xd, " ---> xnee_setup_recordext\n"));
   xd->record_setup->data_flags = XRecordFromServerTime 
     | XRecordFromClientTime  
@@ -512,16 +603,31 @@ xnee_setup_recordext (xnee_data *xd)
 int 
 xnee_has_record_extension(xnee_data *xd)
 {
-  int ok=1;
-  XSynchronize(xd->control,True);
-  if(!XRecordQueryVersion(xd->control, &xd->record_setup->major_return, &xd->record_setup->minor_return) )
+  int ok=XNEE_OK;
+  (void)XSynchronize(xd->control,True);
+
+  if  ( (xd == NULL)
+        ||
+        (xd->control == NULL)
+        ||
+        (xd->record_setup == NULL))
+  {
+     return XNEE_RECORD_FAILURE;
+  }
+
+  if( XRecordQueryVersion(xd->control, 
+                          &xd->record_setup->major_return, 
+                          &xd->record_setup->minor_return) == 0 )
     {
       xnee_print_error ("Record extension missing\n");
-      ok=0;
+      ok=XNEE_NO_REC_EXT;
     }
-  xnee_verbose ((xd, "\t  XRecord-\n\t  Release         %d.%d\n", 
-		xd->record_setup->major_return, 
-		xd->record_setup->minor_return));  
+  else
+  {
+     xnee_verbose ((xd, "\t  XRecord-\n\t  Release         %d.%d\n", 
+                    xd->record_setup->major_return, 
+                    xd->record_setup->minor_return));  
+  }
   return (ok);
 }
 
@@ -541,12 +647,23 @@ xnee_setup_recording(xnee_data *xd)
   nr_of_ranges=xnee_get_max_range(xd);
   xnee_verbose((xd, "--->xnee_setup_recording\n"));
 
+  if ( (xd == NULL)
+       ||
+       (xd->control == NULL)
+       ||
+       (xd->record_setup == NULL)
+       ||
+       (xd->record_setup->xids == NULL))
+  {
+     return XNEE_RECORD_FAILURE;
+  }
+
+
   XNEE_DEBUG ( (stderr ," --> xnee_setup_recording()  \n"  ));
 
-  XSynchronize(xd->control, True); /* so we get errors at convenient times */
-  XSetErrorHandler(handle_xerr);
+  (void)XSynchronize(xd->control, True); /* so we get errors at convenient times */
 
-  if (xd->all_clients)
+  if (xd->all_clients!=0)
     {
       xd->record_setup->xids[0] = XRecordAllClients; 
     }
@@ -554,7 +671,7 @@ xnee_setup_recording(xnee_data *xd)
     {
       xd->record_setup->xids[0] = XRecordFutureClients; 
     }
-  
+
   xd->record_setup->rContext = 
     XRecordCreateContext(xd->control, 
 			 xd->record_setup->data_flags, 
@@ -570,7 +687,6 @@ xnee_setup_recording(xnee_data *xd)
   */
   xd->record_setup->xids[0] = xnee_client_id (xd->control);
   xd->record_setup->xids[1] = xnee_client_id (xd->data);
-  
   /* 
    *Remove our clients displays from recording ...
    */
@@ -617,13 +733,30 @@ int
 xnee_unsetup_recording(xnee_data *xd)
 {
 
+   if (xd==NULL)
+     {
+       return XNEE_RECORD_FAILURE;
+     }
+   if ( (xd->control == NULL) || 
+        (xd->record_setup == NULL))
+     {
+       return XNEE_OK; 
+     }
+
   xnee_verbose((xd, "---> xnee_unsetup_recording\n"));
 
-  xnee_verbose((xd, "---  disabling context \n"));
-  XRecordDisableContext(xd->control, xd->record_setup->rContext);
+  if (xd->record_setup->rContext != 0)
+    {
+      xnee_verbose((xd, "---  disabling context %d \n", 
+		    xd->record_setup->rContext));
+      (void)XRecordDisableContext(xd->control, xd->record_setup->rContext);
 
-  xnee_verbose((xd, "---  freeing context \n"));
-  XRecordFreeContext(xd->control, xd->record_setup->rContext);
+      xnee_verbose((xd, "---  freeing context \n"));
+      (void)XRecordFreeContext(xd->control, xd->record_setup->rContext);
+
+      xd->record_setup->rContext = 0;
+    }
+
 
   xnee_verbose((xd, "<--- xnee_unsetup_recording\n"));
   return (XNEE_OK);
@@ -641,27 +774,43 @@ xnee_unsetup_recording(xnee_data *xd)
 int 
 xnee_record_loop(xnee_data *xd)
 {
-  xnee_verbose((xd, " ---> xnee_record_loop()\n"));
+   int ret ; 
+
+   if ( (xd==NULL)
+        || 
+        (xd->data==NULL)
+        || 
+        (xd->record_setup==NULL))
+     {
+       return XNEE_RECORD_FAILURE;
+     }
+   
+   
+   xnee_verbose((xd, " ---> xnee_record_loop()\n"));
   
   /* 
    * In case the key pressed to invoke Xnee is not released
    * we wait 1/2 of a second and hopefully it is. If not
    * the user is holding it pressed for "TOO" long.
    */
-  usleep ( XNEE_DELAY_RECORDING );
+  /*@ ignore @*/
+  (void) usleep ( XNEE_DELAY_RECORDING );
+  /*@ end @*/
 
-  XRecordEnableContext(xd->data, 
-		       xd->record_setup->rContext, 
-		       xd->rec_callback, 
-		       (XPointer) (xd) /* closure passed to Dispatch */);
-      
+  ret = XRecordEnableContext(xd->data, 
+                             xd->record_setup->rContext, 
+                             xd->rec_callback, 
+                             (XPointer) (xd) /* closure passed to Dispatch */);
+  
+  XNEE_RETURN_IF_ERR(ret);
+  
   xnee_verbose((xd, " <--- xnee_record_loop()\n"));
   /*  while (1) 
     {
       XRecordProcessReplies (xd->data); 
     }
   */
-  return (0);
+  return XNEE_OK;
 }
 
 
@@ -674,6 +823,17 @@ xnee_record_loop(xnee_data *xd)
 int 
 xnee_record_async(xnee_data *xd)
 {
+   int ret ;
+
+   if ( (xd==NULL)
+        || 
+        (xd->data==NULL)
+        || 
+        (xd->record_setup==NULL))
+     {
+       return XNEE_RECORD_FAILURE;
+     }
+   
   xnee_verbose((xd, " ---> xnee_record_async()\n"));
   
   /* 
@@ -683,20 +843,26 @@ xnee_record_async(xnee_data *xd)
    */
   usleep ( XNEE_DELAY_RECORDING );
 
-  if (xnee_is_store_mouse_pos(xd))
+  if ( xnee_is_store_mouse_pos(xd) != 0  )
     {
       xnee_store_mouse_pos (xd);
     }
 
 
-  XRecordEnableContextAsync(xd->data, 
+  ret = XRecordEnableContextAsync(xd->data, 
 			    xd->record_setup->rContext, 
 			    xd->rec_callback, 
 			    (XPointer) (xd) /* closure passed to Dispatch */);
+  if (!ret)
+  {
+     return (XNEE_RECORD_FAILURE);
+  }
+
+/*   XNEE_RETURN_IF_ERR(ret); */
+
   
-  while (1) 
+  for (;;) 
     {
-      int ret;
       /* has the user pressed a modifier+key */
       if (xnee_check_key (xd)==XNEE_GRAB_DATA)
 	{
@@ -709,15 +875,17 @@ xnee_record_async(xnee_data *xd)
 	  else if (ret == XNEE_GRAB_RESUME)
 	    {
 	      xnee_verbose  ((xd," starting async loop since RESUME \n"));
-	      XRecordEnableContextAsync(xd->data, 
-					xd->record_setup->rContext, 
-					xd->rec_callback, 
-					(XPointer) (xd) );
+	      ret = XRecordEnableContextAsync(xd->data, 
+                                              xd->record_setup->rContext, 
+                                              xd->rec_callback, 
+                                              (XPointer) (xd) );
+              XNEE_RETURN_IF_ERR(ret);
 	    }
 	}
 
       /* handle data in the RECORD buffer */
-      xnee_process_replies(xd);
+      ret = xnee_process_replies(xd);
+      XNEE_RETURN_IF_ERR(ret);
       
       if ( xnee_more_to_record(xd) == 0 ) 
 	{
@@ -735,10 +903,10 @@ xnee_record_async(xnee_data *xd)
 /* 			xd->record_setup->rContext); */
 /*   XRecordFreeContext(xd->control,  */
 /* 			xd->record_setup->rContext); */
-  xnee_stop_session(xd);
+  ret = xnee_stop_session(xd);
 
   xnee_verbose((xd, " <--- xnee_record_async()\n"));
-  return (XNEE_OK);
+  return (ret);
 }
 
 

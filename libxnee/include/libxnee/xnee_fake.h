@@ -86,7 +86,7 @@ xnee_fake_key_event  (xnee_data* xd, int keycode, Bool bo, int dtime);
  *  
  */
 int 
-xnee_replay_event_handler (xnee_data *xd,  xnee_intercept_data* xid , int last_elapsed);  
+xnee_replay_event_handler (xnee_data *xd,  xnee_intercept_data* xid , long int last_elapsed);  
 
 
 

@@ -319,7 +319,6 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
     }
   /* ret=xnee_add_range (xd, type, start, stop); */
   
-  
   xnee_verbose((xd, " <-- add_range_str (%d, %d, %s)\n", xd,type, range));
   return (ret);
 }
@@ -482,11 +481,9 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
   int ret=0;
   int range_len=strlen(range);
 
-  xnee_verbose ((xd,"int arg=%d\n", xd));
+  xnee_verbose ((xd, "int arg=%d\n", xd));
   xnee_verbose ((xd, "nt arg=%d\n", type));
   xnee_verbose ((xd, "string arg=%s\n", range));
-
-  xnee_verbose((xd, "--> parse_range (%u, %d, %s)\n", (int) xd, type, range));
 
   while ( 1 ) {
     next=strspn (range, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");

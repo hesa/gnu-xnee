@@ -56,6 +56,7 @@
 #include "libxnee/xnee_callback.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_error.h"
 
 
 
@@ -70,7 +71,11 @@ xnee_data *xd_global;
 int
 xnee_write_settings_to_file (xnee_data *xd, FILE *fp) 
 {
-   xnee_set_ranges(xd);
+   int ret;
+   
+   ret = xnee_set_ranges(xd);
+   XNEE_RETURN_IF_ERR(ret); 
+
    xnee_print_xnee_resource_settings (xd, fp) ;
    xnee_print_xnee_settings (xd, fp) ;
    xnee_print_ranges (xd, fp);
@@ -123,6 +128,7 @@ xnee_setup_display (xnee_data *xd)
 
   if (xd->fake==NULL)
     xd->fake     = xnee_open_display (xd);
+
   if (xd->fake==NULL)
      return XNEE_NOT_OPEN_DISPLAY;
 
@@ -130,7 +136,7 @@ xnee_setup_display (xnee_data *xd)
   xnee_verbose((xd, "display control %d\n" , (int) xd->control));
   xnee_verbose((xd, "display fake    %d\n" , (int) xd->fake));
   /* return XNEE_OK on success, 1  indicats error opening the displays */
-  if ( ( xd->data != NULL ) && (xd->control) && (xd->fake) )
+  if ( ( xd->data != NULL ) && (xd->control != NULL) && (xd->fake != NULL) )
     return XNEE_OK;
   else 
     return 1;
@@ -151,29 +157,43 @@ xnee_delay (int secs, char *mess)
   int j;
   int bytes_written = 0 ;
   int last_written  = 0 ;
-  int len = strlen (mess);
+  size_t len = strlen (mess);
+  unsigned int sleep_int = 1 ; 
+  unsigned int ret;
 
   for ( i=secs ; i>-1 ; i-- ) 
     {
       if (len>0)
 	{
-	  fflush(stdout);
-	  last_written= bytes_written  ;
-	  bytes_written = fprintf (stdout,"\r%s delayed start, time left: %d seconds left", mess, i );
-	  for ( j=0 ; j < ( last_written -bytes_written) ; j++ ) 
+           /* We can typecast this to void safely, since this is not
+            * in any way an obstacle if it fails.... */
+           (void) fflush(stdout);
+           last_written= bytes_written  ;
+           bytes_written = fprintf (stdout,"\r%s delayed start, time left: %d seconds left", mess, i );
+           for ( j=0 ; j < ( last_written -bytes_written) ; j++ ) 
 	    {
-	      fprintf (stdout," \b");
+               fprintf (stdout," \b");
 	    }
 	}
-      sleep (1);
+      ret = sleep (sleep_int);
+      if (ret!=0)
+      {
+         sleep_int = sleep_int + ret;
+      }
+      else
+      {
+         sleep_int = 1 ;
+      }
     }
   printf ("\r");
   for ( j=0 ; j < bytes_written ; j++ ) 
     {
       printf (" ");
     }
-  printf ("\r");
-  fflush(stdout);
+  /* We can typecast these to void safely, since this is not
+   * in any way an obstacle if it fails.... */
+  (void) printf ("\r");
+  (void) fflush(stdout);
 }
 
 
@@ -191,7 +211,8 @@ xnee_check ( const char *arg, const char *long_arg , const char *short_arg )
 {
   /* returns 1 if arg was equal to any of long_arg or short_arg, 
      else it returns 0*/
-  return ( ! strcmp ( arg, long_arg) || ( ! strcmp ( arg, short_arg) )) ; 
+   return (int) ( (strcmp ( arg, long_arg)  == 0 ) || 
+                  (strcmp ( arg, short_arg) == 0 ) ) ; 
 }
 
 
@@ -229,7 +250,8 @@ xnee_check_begin ( char *arg, char *long_arg , char *short_arg )
 void 
 xnee_set_default_display (xnee_data *xd)
 {
-  xd->display = getenv ("DISPLAY");
+   xd->display = getenv ((const char*)"DISPLAY");
+   return ;
 }
 
 
@@ -245,39 +267,40 @@ xnee_open_display(xnee_data* xd)
 {
   Display *dpy ;
 
-  xnee_verbose((xd,  "Open display %s \n", xd->display ));
+/*@null@*/
+  char    *tmp = (xd->display!=NULL)?xd->display:NULL_STRING ;
+
+  xnee_verbose((xd,  "Open display %s \n", tmp ));
   
-  dpy = XOpenDisplay (xd->display);
+  dpy = XOpenDisplay (tmp);
   if (!dpy) 
     {
       (void) xnee_print_error ("%s: unable to open display \"%s\"\n",
 			       PACKAGE, 
-			       XDisplayName(xd->display));
+			       XDisplayName(tmp));
       return dpy;
     }
-  xnee_verbose((xd, "Display %s = %d\n", xd->display, (int) dpy));
+  xnee_verbose((xd, "Display %s = %d\n", tmp, (int) dpy));
   return dpy;
 }
 
 
 
 static int  
-xnee_free_file (xnee_data *xd, char *file_name, FILE* file)
+xnee_free_file (xnee_data *xd, /*@null@*/ char *file_name, /*@null@*/ FILE* file)
 {
-  if ( file_name != NULL) 
-    {
-      xnee_verbose((xd, "Closing file=%s fd=%d\n", 
-		    file_name, 
-		    (int)file));
+   /*  @owned@  */ /* char *tmp = file_name ; */
+   if ( file_name != NULL) 
+   {
+      /* Tell splint we REALLY want to cast FILE* to an int 
+         .... it won't believe us else */
+      /*@access FILE@*/
+       xnee_verbose((xd, "Closing file=%s fd=%d\n", 
+                     file_name, 
+                     (int)file));
       
-      if ( ( file_name != NULL) && ( strlen(file_name)!=0))
-	{
-	  XNEE_FREE (file_name); 
-	  if ( file != 0) 
-	    {
-	      XNEE_FCLOSE (file); 
-	    }
-	}
+       XNEE_FREE_IF_NOT_NULL (file_name); 
+       XNEE_FCLOSE_IF_NOT_NULL ( file ) ;
     }
   return XNEE_OK;
 }
@@ -293,6 +316,13 @@ xnee_free_file (xnee_data *xd, char *file_name, FILE* file)
 void 
 xnee_close_down(xnee_data* xd) 
 {
+   int ret ;
+
+   if (xd==NULL)
+   {
+      return;
+   }
+
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0 \n"  ));
 
   xnee_verbose((xd, "Freeing context "));
@@ -303,20 +333,24 @@ xnee_close_down(xnee_data* xd)
       xnee_verbose((xd, " ---  xnee_close_down the grab exists.....\n"));
     
   xnee_verbose((xd, "xnee_close_down : ungrab -----> \n"));
-  xnee_ungrab_keys (xd);
-  xnee_verbose((xd, "xnee_close_down : ungrab <---- \n"));
-  xnee_reset_autorepeat (xd_global);
+  ret = xnee_ungrab_keys (xd);
+  xnee_verbose((xd, "xnee_close_down : ungrab <---- %d\n", ret));
+  xnee_verbose((xd, "xnee_close_down : xnee_reset_autorepeat ----> \n"));
+  ret = xnee_reset_autorepeat (xd_global);
+  xnee_verbose((xd, "xnee_close_down : xnee_reset_autorepeat <---- %d\n", ret));
 
   if (xd->plugin_handle!=NULL)
     {
       xnee_verbose((xd, "Closing plugin lib "));
-      xnee_dlclose(xd, xd->plugin_handle);
+      ret = xnee_dlclose(xd, xd->plugin_handle);
+      xnee_verbose((xd, "Closing plugin lib <<--- %d\n", ret));
     }
 
   if (xd->buf_sem!=0)
     {
       xnee_verbose((xd, "Destroying buffer semaphore "));
-      sem_destroy (xd->buf_sem);
+      ret = sem_destroy (xd->buf_sem);
+      xnee_verbose((xd, "Destroying buffer semaphore <--- %d\n ", ret));
     }
 
 
@@ -360,27 +394,32 @@ xnee_close_down(xnee_data* xd)
   xnee_verbose((xd, "closing fds\n"));
 
   xnee_verbose((xd ," --  xnee_close_down() free data_file \n"  ));
-  xnee_free_file (xd, xd->data_name, xd->data_file);
+  ret = xnee_free_file (xd, xd->data_name, xd->data_file);
+  xnee_verbose((xd ," --  xnee_close_down() free data_file <-- %d\n", ret));
 
   xnee_verbose((xd ," --  xnee_close_down() free rc_file \n"  ));
-  xnee_free_file (xd, xd->rc_name,   xd->rc_file);
+  ret = xnee_free_file (xd, xd->rc_name,   xd->rc_file);
+  xnee_verbose((xd ," --  xnee_close_down() free rc_file <-- %d\n", ret));
 
   if (xd->err_file!=stdout)
     {
       xnee_verbose((xd ," --  xnee_close_down() free out_file \n"  ));
-      xnee_free_file (xd, xd->out_name,  xd->out_file);
+      ret = xnee_free_file (xd, xd->out_name,  xd->out_file);
+      xnee_verbose((xd ," --  xnee_close_down() free out_file <-- %d\n", ret));
     }
 
   if (xd->rt_file!=stdout)
     {
       xnee_verbose((xd ," --  xnee_close_down() free rt_file \n"  ));
-      xnee_free_file (xd, xd->rt_name,  xd->rt_file);
+      ret = xnee_free_file (xd, xd->rt_name,  xd->rt_file);
+      xnee_verbose((xd ," --  xnee_close_down() free rt_file <-- %d\n", ret));
     }
 
   if (xd->err_file!=stderr)
     {
       xnee_verbose((xd ," --  xnee_close_down() free err_file\n"  ));
-      xnee_free_file (xd, xd->err_name,  xd->err_file); 
+      ret = xnee_free_file (xd, xd->err_name,  xd->err_file); 
+      xnee_verbose((xd ," --  xnee_close_down() free err_file <-- %d\n", ret));
     }
 
   xnee_verbose((xd, "finished closing fds\n"));
@@ -388,7 +427,8 @@ xnee_close_down(xnee_data* xd)
 
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.6 \n"  ));
   xnee_verbose((xd, "Freeeing data "));
-  xnee_free_xnee_data(xd);
+  ret = xnee_free_xnee_data(xd);
+  xnee_verbose((xd, "Freeeing data <-- %d\n ", ret));
 
 }
 
@@ -403,6 +443,8 @@ xnee_close_down(xnee_data* xd)
 int 
 xnee_init(xnee_data* xd)
 {
+  int ret ; 
+  
   if (xd == NULL) 
     {
       return XNEE_MEMORY_FAULT;
@@ -412,6 +454,7 @@ xnee_init(xnee_data* xd)
 
 
   /*  xd->human_print = False  ; */
+  
   xd->plugin_handle    = NULL;
   xd->rec_callback     = xnee_record_dispatch ;
   xd->rep_callback     = xnee_replay_dispatch ;
@@ -426,12 +469,19 @@ xnee_init(xnee_data* xd)
   xd->sync          = True   ; 
   xd->mode          = XNEE_NOMODE   ; 
 
-  xd->data_file     = stdin  ;
-  xd->out_file      = stdout ;
-  xd->err_file      = stderr ;
+  
+  /*@access FILE@*/
+  xd->data_file     = (FILE*) stdin  ;
+  /*@access FILE@*/
+  xd->out_file      = (FILE*) stdout ;
+  /*@access FILE@*/
+  xd->err_file      = (FILE*) stderr ;
+  /*@access FILE@*/
   xd->rc_file       = NULL   ;
-  xd->rt_file       = stdin  ;
-  xd->buffer_file   = stderr ;
+  /*@access FILE@*/
+  xd->rt_file       = (FILE*) stdin  ;
+  /*@access FILE@*/
+  xd->buffer_file   = (FILE*) stderr ;
 
   xd->data_name     = NULL  ;
   xd->out_name      = NULL  ;
@@ -458,9 +508,14 @@ xnee_init(xnee_data* xd)
   */
 
   
-  xnee_set_resolution_used (xd);
-  xnee_resolution_init (xd);
-  xnee_grab_keys_init(xd);
+  ret = xnee_set_resolution_used (xd);
+  XNEE_RETURN_IF_ERR(ret);
+
+  ret = xnee_resolution_init (xd);
+  XNEE_RETURN_IF_ERR(ret);
+
+  ret = xnee_grab_keys_init(xd);
+  XNEE_RETURN_IF_ERR(ret);
 
 
   /* 
@@ -498,16 +553,27 @@ int
 xnee_err_handler(Display* dpy, XErrorEvent* ev)
 {
   int len=100;
-  char tmp[100];
-  
+  int ret ; 
+
+  /*@out@*/ char tmp[100]="";
+
   printf ("xnee - X11 error handler \n");
   printf ("   type       %d \n",  ev->type);
   printf ("   serial     %lu \n", ev->serial);
-  printf ("   error code %d \n", ev->error_code);
-  printf ("   major code %d \n", ev->request_code);
-  printf ("   minor code %d \n", ev->minor_code);
+  printf ("   error code %u \n", ev->error_code);
+  printf ("   major code %u \n", ev->request_code);
+  printf ("   minor code %u \n", ev->minor_code);
   
-  XGetErrorText (dpy, ev->error_code, tmp, len);
+  ret = XGetErrorText (dpy, 
+		       (int) ev->error_code, 
+		       tmp, 
+		       len);
+  if (ret!=0)
+  {
+     fprintf (stderr, "Could not look up error string for error %d %lu %c %c %c \n",    
+              ev->type, ev->serial, ev->error_code, ev->request_code, ev->minor_code);
+  }
+
   printf ("   Message: %s\n", tmp);
   return ev->type;
 }
@@ -523,11 +589,12 @@ xnee_err_handler(Display* dpy, XErrorEvent* ev)
 int 
 xnee_stop_session( xnee_data* xd)
 {
-  xnee_verbose((xd, " ---> xnee_stop_session\n" ));
-  xnee_verbose((xd, "xnee_stop_session : ungrab -----> \n"));
-  xnee_verbose((xd, "xnee_stop_session : ungrab <---- \n"));
-  xnee_reset_autorepeat (xd);
-  xnee_verbose((xd, " <--- xnee_stop_session\n" ));
+   int ret ;
+   xnee_verbose((xd, " ---> xnee_stop_session\n" ));
+   xnee_verbose((xd, "xnee_stop_session : ungrab -----> \n"));
+   xnee_verbose((xd, "xnee_stop_session : ungrab <---- \n"));
+   ret = xnee_reset_autorepeat (xd);
+   xnee_verbose((xd, " <--- xnee_stop_session %d\n", ret ));
   return (0);
 }
 
@@ -542,26 +609,32 @@ xnee_stop_session( xnee_data* xd)
 void 
 signal_handler(int sig) 
 {
+   int ret; 
   switch (sig)
     {
     case SIGTERM:
       fprintf  (stderr,  "sighandler SIGTERM (%d)\n", sig);
-      xnee_ungrab_keys(xd_global);
-      xnee_reset_autorepeat (xd_global);
+      ret = xnee_ungrab_keys(xd_global);
+      XNEE_PRINT_ERROR_IF_NOT_OK(ret);
+      
+      ret = xnee_reset_autorepeat (xd_global);
+      XNEE_PRINT_ERROR_IF_NOT_OK(ret);
+      
       exit (sig);
-      break;
     case SIGINT:
-      fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
-      xnee_ungrab_keys(xd_global);
-      xnee_reset_autorepeat (xd_global);
-      exit (sig);
-      break;
+       fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
+       ret = xnee_ungrab_keys(xd_global);
+       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
+       
+       ret = xnee_reset_autorepeat (xd_global);
+       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
+
+       exit (sig);
     default:
       fprintf (stderr, 
 	       "signal_handler error. Unxpected signal (%d)\n .... leaving",
 	       sig);
       exit (sig);
-      break;
     }
 }
 
@@ -575,17 +648,41 @@ signal_handler(int sig)
  *                                                            *
  *                                                            *
  **************************************************************/
+
+
+
+
+/*@null@*/ 
 xnee_recordext_setup*
 xnee_new_recordext_setup()
 {
-  xnee_recordext_setup* xrs = (xnee_recordext_setup*) malloc (sizeof (xnee_recordext_setup));
-  memset (xrs, 0, sizeof (xnee_recordext_setup));
+   xnee_recordext_setup* xrs ;
+   xrs = (xnee_recordext_setup*) malloc (sizeof (xnee_recordext_setup));
+   XNEE_CHECK_ALLOCED_MEMORY(xrs);
 
-  xrs->xids     = (XRecordClientSpec*) calloc (2, sizeof(XRecordClientSpec)); 
+   memset (xrs, 0, sizeof (xnee_recordext_setup));
+
+   if (xrs->xids != NULL) 
+     { 
+       XNEE_FREE_IF_NOT_NULL(xrs->xids);
+     }
+   /*@ignore@*/ /* we can ignore splint warning since we know we have freed it */
+   xrs->xids     = (XRecordClientSpec*) calloc (2, sizeof(XRecordClientSpec)); 
+  /*@end@*/
+  XNEE_CHECK_ALLOCED_MEMORY(xrs->xids);
+
   xrs->rContext = 0;
 
+  if (xrs->rState!=NULL) 
+  {
+     XNEE_FREE_IF_NOT_NULL (xrs->rState);
+  }
+  /*@ignore@*/ /* we can ignore splint warning since we know we have freed it */
   xrs->rState   = (XRecordState*) malloc (sizeof(XRecordState)); 
+  /*@end@*/
+  XNEE_CHECK_ALLOCED_MEMORY(xrs->rState);
   memset (xrs->rState, 0, sizeof (XRecordState));
+
   /* 
    * Record ranges are allocated using seperate functions
    */
@@ -600,42 +697,94 @@ xnee_new_recordext_setup()
  *                                                            *
  *                                                            *
  **************************************************************/
+/*@null@*/ 
 int 
 xnee_free_recordext_setup(xnee_data* xd)
 {
   int i;
-  int max=xnee_get_max_range(xd);
+  int max ; 
+  int ret ; 
+  /*@only@*/ /*@out@*/ /*@null@*/ 
+  xnee_recordext_setup *record_setup = NULL ;
+
 
   XNEE_DEBUG ( (stderr ," -->xnee_free_recordext_data()  \n"  ));
-  if (xd->control!=NULL)
+  
+  if (xd!=NULL)
   {
-    if ( xd->record_setup->rContext != 0)
-      {
-	xnee_unsetup_recording(xd);
-      }
+     record_setup = xd->record_setup;
+     
+     max = xnee_get_max_range(xd);
+     
+     ret = xnee_unsetup_recording(xd);
+     if (ret!=XNEE_OK)
+       {
+	 xnee_print_error ("Could not unsetup recording (%d)\n", ret);
+	 return ret;
+       }
+     
+     if (max>0)
+     {
+        for ( i=0 ; i<max ; i++ )
+        {
+           XNEE_DEBUG ( (stderr, "   freeing range at %d since max=%d\n", i, max));
+           /*@ignore@*/
+           if ((record_setup != NULL) && 
+               (record_setup->range_array != NULL ) &&
+               (record_setup->range_array[i] != NULL ))
+              /*@end@*/
+           {
+              /*@ignore@*/
+              ret = xnee_free (record_setup->range_array[i]);
+              /*@end@*/
+	      if (ret!=XNEE_OK)
+		{
+		  xnee_print_error ("Could not free memory at  "
+				    "record_setup->range_array[%d]   (%d)\n", 
+				    i, ret);
+		  return ret;
+		}
+           }
+        }
+     }
   }
 
 
-  if (max>0)
-    {
-      for ( i=0 ; i<max ; i++ )
-	{
-	  XNEE_DEBUG ( (stderr, "   freeing range at %d since max=%d\n", i, max));
-	  free (xd->record_setup->range_array[i]);
-	}
-    }
+  /*@ignore@*/
+  if (record_setup!=NULL)
+  {
+    XNEE_FREE_IF_NOT_NULL (record_setup->xids);
+    XNEE_FREE_IF_NOT_NULL (record_setup->rState);
+  }
+  XNEE_FREE_IF_NOT_NULL (record_setup);
 
-  free (xd->record_setup->xids);
-  free (xd->record_setup->rState);
-  free (xd->record_setup);
   XNEE_DEBUG ( (stderr ," <--xnee_free_xnee_data()\n"  ));
   return XNEE_OK;
+  /*@end@*/
 }
 
+
+void
+xnee_free_replay_setup( /*@only@*/ /*@null@*/ xnee_testext_setup* xrs)
+{
+  XNEE_FREE_IF_NOT_NULL (xrs); 
+  return ;
+}
+
+/*@null@*/
+xnee_testext_setup*
+xnee_new_replay_setup(void)
+{
+   xnee_testext_setup* xrs = (xnee_testext_setup*)     malloc (sizeof (xnee_testext_setup)) ;
+   XNEE_CHECK_ALLOCED_MEMORY(xrs);
+   memset (xrs, 0, sizeof(xnee_testext_setup));
+   return xrs;
+}
 
 static int
 xnee_new_dyn_data(xnee_data *xd)
 {
+   int ret;
    xnee_verbose((xd, "---> xnee_new_dyn_data\n"));
 
 /*    xnee_verbose((xd, " --- xnee_new_dyn_data: xnee_info\n")); */
@@ -643,26 +792,34 @@ xnee_new_dyn_data(xnee_data *xd)
 /*      (xnee_record_init_data*)  malloc (sizeof (xnee_record_init_data)) ;  */
 /*    memset (xd->xnee_info, 0, sizeof(xnee_record_init_data));  */
 
-   xnee_verbose((xd, " --- xnee_new_dyn_data: replay_setup\n"));
-   xd->replay_setup  = 
-      (xnee_testext_setup*)     malloc (sizeof (xnee_testext_setup)) ;
-   memset (xd->replay_setup, 0, sizeof(xnee_testext_setup));
+   if (xd==NULL)
+   {
+      return XNEE_MEMORY_FAULT;
+   }
    
-   xnee_verbose((xd, " --- xnee_new_dyn_data: record_setup\n"));
+   xnee_free_replay_setup(xd->replay_setup);
+   xd->replay_setup = xnee_new_replay_setup();
+   XNEE_CHECK_ALLOCED_MEMORY_INT(xd->replay_setup);
+   
    xd->record_setup  = xnee_new_recordext_setup(); 
+   XNEE_CHECK_ALLOCED_MEMORY_INT(xd->record_setup);
    
-   xnee_verbose((xd, " --- xnee_new_dyn_data: grab_keys\n"));
+   ret  = xnee_free_grab_keys(xd->grab_keys);
    xd->grab_keys     = xnee_new_grab_keys();
-   xnee_verbose((xd, "<--- xnee_new_dyn_data\n"));
-
-  return XNEE_OK;
+   XNEE_CHECK_ALLOCED_MEMORY_INT(xd->grab_keys);
+   
+   return XNEE_OK;
 }
 
 
 static int 
-xnee_reset_xnee_info(xnee_data *xd)
+xnee_reset_xnee_info(/*@null@*/ xnee_data *xd)
 {
   int i ; 
+  if (xd==NULL)
+  {
+     return XNEE_NO_MAIN_DATA;
+  }
   for (i=0;i<XNEE_NR_OF_TYPES;i++)
     {
       xd->xnee_info.data_ranges[i]=0;
@@ -674,28 +831,35 @@ xnee_reset_xnee_info(xnee_data *xd)
 static int
 xnee_free_dyn_data(xnee_data *xd)
 {
+   int ret;
    xnee_verbose((xd, "---> xnee_free_dyn_data\n"));
 
 /*    xnee_verbose((xd, " --- xnee_free_dyn_data: refreshing ranges\n")); */
 
-   if (xnee_is_replayer(xd))
-     xnee_refresh_ranges(xd); 
+   if (xnee_is_replayer(xd) != 0)
+   {
+      ret = xnee_refresh_ranges(xd); 
+      XNEE_RETURN_IF_ERR(ret);
+   }
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: record_ext\n"));
-   xnee_free_recordext_setup ( xd);
+   ret = xnee_free_recordext_setup (xd);
+   XNEE_RETURN_IF_ERR(ret);
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: grab_keys\n"));
-   xnee_free_grab_keys(xd);
+   ret = xnee_free_grab_keys(xd->grab_keys);
+   XNEE_RETURN_IF_ERR(ret);
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: resource_meta\n"));
-   xnee_free_xnee_resource_meta(&xd->xrm);
+   ret = xnee_free_xnee_resource_meta(&xd->xrm);
+   XNEE_RETURN_IF_ERR(ret);
 
-   xnee_verbose((xd, " --- xnee_free_dyn_data: replay_setup\n"));
-   free ( xd->replay_setup);
+   xnee_verbose((xd, " --- xnee_free_dyn_data: xnee_info\n")); 
+   ret = xnee_reset_xnee_info(xd);
+   XNEE_RETURN_IF_ERR(ret);
 
-/*    xnee_verbose((xd, " --- xnee_free_dyn_data: xnee_info\n"));  */
-/*    free (xd->xnee_info);  */
-   xnee_reset_xnee_info(xd);
+/*    ret = xnee_free ((void*)xd->xnee_info); */
+/*    XNEE_RETURN_IF_ERR(ret); */
 
    xnee_verbose((xd, "<--- xnee_free_dyn_data\n"));
    return XNEE_OK;
@@ -710,23 +874,27 @@ xnee_free_dyn_data(xnee_data *xd)
  *                                                            *
  *                                                            *
  **************************************************************/
+/*@null@*/
 xnee_data* 
 xnee_new_xnee_data()
 {
+   int ret ;
+   xnee_data* xd  = (xnee_data*) malloc (sizeof (xnee_data));
 
-  xnee_data* xd  = (xnee_data*) malloc (sizeof (xnee_data));
-  if (xd==NULL)
-    {
+   if (xd==NULL)
+   {
       xnee_print_error ("Could not allocate memory ........\n");
-      exit (XNEE_MEMORY_FAULT);
-    }
-  memset (xd, 0, sizeof(xnee_data));
+      return NULL;
+   }
+   memset (xd, 0, sizeof(xnee_data));
+   
+   ret = xnee_new_dyn_data(xd);
+   XNEE_RETURN_NULL_IF_ERR(ret);
+  
+   ret = xnee_init(xd);
+   XNEE_RETURN_NULL_IF_ERR(ret);
 
-  xnee_new_dyn_data(xd);
-
-  xnee_init(xd);
-
-  return xd;
+   return xd;
 }
 
 
@@ -739,7 +907,10 @@ xnee_new_xnee_data()
 int 
 xnee_free_xnee_data(xnee_data* xd)
 {
-  xnee_free_dyn_data(xd);
+  int ret ; 
+
+  ret = xnee_free_dyn_data(xd);
+  XNEE_RETURN_IF_ERR(ret);
   
   free (xd->buf_sem);
   free (xd);
@@ -772,12 +943,12 @@ int
 xnee_add_display_list ( xnee_data* xd, char * disp)
 {
   char buf[10];
-  int next;
-  int len;
+  size_t next;
+  size_t len;
   int ret=0;
-  int disp_len=strlen(disp);
+  size_t disp_len=strlen(disp);
   xnee_verbose((xd, "xnee_add_display (%s, ... )\n", disp));
-  while ( 1 ) {
+  while ( (1!=0) ) {
     next=strcspn (disp, ",");
     if (next==0) break; 
     strncpy(buf,disp,next);
@@ -793,7 +964,7 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
 	xnee_verbose((xd, "Could not add all display for distribution ... returning\n"));
 	return (ret);
       }
-    if (disp_len<=0) 
+    if (disp_len==0) 
       {
 	xnee_verbose((xd, "disp_len = %d\n", disp_len));
 	break;
@@ -817,10 +988,10 @@ int
 xnee_add_display_str (char * disp_str, xnee_data* xd)
 {
   Display *dpy;
-  int xtest_event_basep;
-  int xtest_error_basep;
-  int xtest_version_major;
-  int xtest_version_minor;
+  int xtest_event_basep = 0;
+  int xtest_error_basep = 0;
+  int xtest_version_major = 0;
+  int xtest_version_minor = 0;
   
   xnee_verbose((xd, "Adding Display \"%s\" to distribution list\n", disp_str));
   
@@ -834,11 +1005,20 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
     }
   else 
     {
+      xnee_distr *tmp = xd->distr_list;
       xnee_verbose((xd, 
 		    "Adding Display - allocating memory for the %d time\n", 
 		    xd->distr_list_size));
       xd->distr_list = (xnee_distr *) realloc (xd->distr_list, 
-						xd->distr_list_size);
+					       xd->distr_list_size);
+      if (xd->distr_list==NULL)
+	{
+	  /*@ignore@*/
+	  xd->distr_list = tmp;
+	  /*@end@*/
+	  tmp = NULL;
+	  return XNEE_MEMORY_FAULT;
+	}
     }
   
   
@@ -852,7 +1032,9 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
   xnee_verbose((xd, "Adding Display  - opening display gave us %d\n", dpy));
   
   xnee_verbose((xd, "Adding Display  - trying to grab control\n"));
+  /*@ignore@*/
   XTestGrabControl (dpy, True);
+  /*@end@*/
 
   if (!dpy) 
     {
@@ -861,11 +1043,11 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
       return (XNEE_NOT_OPEN_DISPLAY);
     }
   xnee_verbose((xd, "Adding Display  - does the display/host have XTest\n"));
-  if( !XTestQueryExtension(dpy,
-			   &xtest_event_basep,
-			   &xtest_error_basep,
-			   &xtest_version_major,
-			   &xtest_version_minor) )
+  if( XTestQueryExtension(dpy,
+			  &xtest_event_basep,
+			  &xtest_error_basep,
+			  &xtest_version_major,
+			  &xtest_version_minor) == 0)
     {
       xnee_print_error ("XTest extension missing on display %s \n", disp_str);
       return (XNEE_NO_TEST_EXT);
@@ -878,25 +1060,34 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
   xnee_verbose ((xd, "adding to distr list at pos %d\n", 
 		 xd->distr_list_size));
   xnee_verbose ((xd, " -- resolution to 0\n"));
-  xd->distr_list[xd->distr_list_size].is_used=0;
-  
-  xnee_verbose ((xd, "\t width %d \n"));
-  xd->distr_list[xd->distr_list_size].res.x_res=DisplayWidth  (dpy, 0);
-  xnee_verbose ((xd, "\t height\n"));
-  xd->distr_list[xd->distr_list_size].res.y_res=DisplayHeight (dpy, 0);
-  xnee_verbose ((xd, "\t dpy \n"));
-  xd->distr_list[xd->distr_list_size].dpy=dpy;
 
-
-  xnee_verbose ((xd, "cheking if resolution differs\n"));
-  if (xnee_res_cmp(&xd->distr_list[xd->distr_list_size].res,
-		   &xd->res_info.record)==0)
+  if  ( (xd!=NULL) && 
+	(xd->distr_list != NULL ) )
     {
-      xnee_verbose ((xd, " -- resolution differs\n"));
-      xd->distr_list[xd->distr_list_size].is_used=1;
+      xd->distr_list[xd->distr_list_size].is_used=0;
+      
+      xnee_verbose ((xd, "\t width %d \n"));
+      xd->distr_list[xd->distr_list_size].res.x_res=DisplayWidth  (dpy, 0);
+      xnee_verbose ((xd, "\t height\n"));
+      xd->distr_list[xd->distr_list_size].res.y_res=DisplayHeight (dpy, 0);
+      xnee_verbose ((xd, "\t dpy \n"));
+      xd->distr_list[xd->distr_list_size].dpy=dpy;
+      
+      
+      xnee_verbose ((xd, "cheking if resolution differs\n"));
+      if (xnee_res_cmp(&xd->distr_list[xd->distr_list_size].res,
+		       &xd->res_info.record)==0)
+	{
+	  xnee_verbose ((xd, " -- resolution differs\n"));
+	  xd->distr_list[xd->distr_list_size].is_used=1;
+	}
+      xd->distr_list_size++;
     }
-  xd->distr_list_size++;
-  
+  else
+    {
+      return (XNEE_MEMORY_FAULT);
+    }
+
   return (XNEE_OK);
 }
 
@@ -912,10 +1103,10 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
 int 
 xnee_add_display (Display *dpy, xnee_data* xd)
 {
-  int xtest_event_basep;
-  int xtest_error_basep;
-  int xtest_version_major;
-  int xtest_version_minor;
+  int xtest_event_basep   = 0;
+  int xtest_error_basep   = 0;
+  int xtest_version_major = 0;
+  int xtest_version_minor = 0;
 
   xnee_verbose((xd, "Adding Display \"%d\" to distribution list\n", dpy));
   if (xd->distr_list_size==0) 
@@ -924,28 +1115,41 @@ xnee_add_display (Display *dpy, xnee_data* xd)
     }
   else 
     {
+      xnee_distr *tmp = xd->distr_list;
       xd->distr_list = (xnee_distr *) realloc (xd->distr_list, 
 					       xd->distr_list_size);
+      /*@ignore@*/
+      xd->distr_list = tmp;
+      /*@end@*/
+      return (XNEE_MEMORY_FAULT);
     }
+  /*@ignore@*/
   XTestGrabControl (dpy, True);
+  /*@end@*/
 
-  if( !XTestQueryExtension(dpy,
-			   &xtest_event_basep,
-			   &xtest_error_basep,
-			   &xtest_version_major,
-			   &xtest_version_minor) )
+  if( XTestQueryExtension(dpy,
+			  &xtest_event_basep,
+			  &xtest_error_basep,
+			  &xtest_version_major,
+			  &xtest_version_minor) == 0)
     {
        xnee_print_error ("XTest extension missing on display %d \n", (int)dpy);
        return (XNEE_NO_TEST_EXT);
     }
   xnee_verbose ((xd, "  XTest  Release on \"%d\"         %d.%d\n", 
 		dpy,
-		xtest_version_major,
-		xtest_version_minor));
+		 xtest_version_major,
+		 xtest_version_minor));
   
-  xd->distr_list[xd->distr_list_size].dpy=dpy;
-  xd->distr_list_size++;
-  
+  if ( (xd != NULL) && (xd->distr_list != NULL) )
+    {
+      xd->distr_list[xd->distr_list_size].dpy=dpy;
+      xd->distr_list_size++;
+    }
+  else
+    {
+      return (XNEE_MEMORY_FAULT);
+    }
   return (XNEE_OK);
 }
 
@@ -960,18 +1164,21 @@ xnee_add_display (Display *dpy, xnee_data* xd)
 int
 xnee_strip(xnee_data *xd, char *str) 
 {
-  int i,j, blanks=0, len  ;
+  int i;
+  int j;
+  int blanks=0;
+  size_t len  ;
   len = strlen (str);
 
   xnee_verbose ((xd," --> xnee_strip \"%s\"\n", str));
   /*
    * how many blanks do we have  */
-  for (i=0 ; i<=len ; i++)
+  for (i=0 ; i<=(int)len ; i++)
     {
       if  (str[i]==' ' ) 
 	{
 	  blanks++;
-	  for (j=i ; j<=len ; j++)
+	  for (j=i ; j<=(int)len ; j++)
 	    {
 	      str[j]=str[j+1];
 	      len--;
@@ -997,7 +1204,10 @@ xnee_strip(xnee_data *xd, char *str)
 int
 xnee_rem_comment_start(xnee_data *xd, char *str) 
 {
-  int i,j, comms=0, len  ;
+  int  i ;
+  int  j ;
+  int  comms=0;
+  size_t len  ;
 
   if (str==NULL)
     return 1;
@@ -1009,12 +1219,12 @@ xnee_rem_comment_start(xnee_data *xd, char *str)
   
   /*
    * how many comments do we have  */
-  for (i=0 ; i<=len ; i++)
+  for (i=0 ; i<=(int)len ; i++)
     {
       if ( str[i]==XNEE_COMMENT_START_CHAR )
 	{
 	  comms++;
-	  for (j=i ; j<=len ; j++)
+	  for (j=i ; j<=(int)len ; j++)
 	    {
 	      str[j]=str[j+1];
 	    }
@@ -1047,11 +1257,18 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
   strcpy (lib_name, "lib");
   strcat (lib_name, pl_name);
 
+  if (xd->plugin_name!=NULL)
+    {
+      ret = xnee_free(xd->plugin_name);
+      XNEE_RETURN_IF_ERR(ret);
+    }
+  /*@ignore@*/
   xd->plugin_name=strdup(pl_name);
+  /*@end@*/
   xd->plugin_handle = (void*) xnee_dlopen (xd, lib_name, RTLD_LAZY );
   if (!xd->plugin_handle) 
     {
-      fputs (dlerror(), stderr);
+      (void)fputs (dlerror(), stderr);
       xnee_close_down(xd);
       exit(XNEE_PLUGIN_FILE_ERROR);
     }
@@ -1105,9 +1322,19 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
 int
 xnee_unuse_plugin(xnee_data *xd)
 {
+  int ret;
+  if ( xd == NULL)
+    {
+      return (XNEE_MEMORY_FAULT);
+    }
   XNEE_FREE_IF_NOT_NULL(xd->plugin_name);
-  xnee_dlclose (xd, xd->plugin_handle);
-  xd->plugin_handle = NULL;
+
+  if (xd->plugin_handle != NULL)
+    {
+      ret = xnee_dlclose (xd, xd->plugin_handle);
+      XNEE_RETURN_IF_ERR(ret);
+      xd->plugin_handle = NULL;
+    }
 
   xd->rec_callback     = xnee_record_dispatch ;
   xd->rep_callback     = xnee_replay_dispatch ;
@@ -1183,19 +1410,19 @@ rem_begin_blanks (char *array, int size)
  *                                                            *
  **************************************************************/
 int
-rem_all_blanks (char *array, int size)
+rem_all_blanks (char *array, size_t size)
 {
   int i=0;
   int j=0;
   int zeros=0;
 
 
-  for (i=0;i<size;i++)
+  for (i=0;i<(int)size;i++)
     {
       if ( (array[i]==' ') ||  (array[i]=='\t') ||  (array[i]=='\n') )
 	{
 	  zeros++;
-	  for (j=i;j<size;j++)
+	  for (j=i;j<(int)size;j++)
 	    {
 	      array[j]=array[j+1];
 	    }
@@ -1319,13 +1546,19 @@ xnee_process_replies(xnee_data *xd)
 
   int last_count;
   int count; 
+
+  if ( (xd==NULL) || (xd->data==NULL) )
+    {
+      return (XNEE_MEMORY_FAULT);
+    }
+
   last_count=xnee_process_count (XNEE_PROCESS_GET);
-  xnee_process_count (XNEE_PROCESS_RESET);
+  (void) xnee_process_count (XNEE_PROCESS_RESET);
 
   /* it is more important to handle all data
      in the data display than to check for 
      grabbed key+modifier */
-  while ( 1 )
+  while ( (1!=0) )
     {
       XRecordProcessReplies (xd->data); 
       /* XX reasons to stop calling RECORD to check buffer
@@ -1348,7 +1581,7 @@ xnee_process_replies(xnee_data *xd)
 	}
       last_count=count;
     }
-  xnee_process_count (XNEE_PROCESS_RESET);
+  (void)xnee_process_count (XNEE_PROCESS_RESET);
   return XNEE_OK;
 }
 
@@ -1362,7 +1595,14 @@ xnee_set_autorepeat (xnee_data *xd)
     }
   
 
+  if ( (xd==NULL) || (xd->fake==NULL) )
+    {
+      return (XNEE_MEMORY_FAULT);
+    }
+
+  /*@ ignore @*/
   XGetKeyboardControl (xd->fake, &xd->kbd_orig);
+  /*@ end @*/
   
   xnee_verbose ((xd," key_click_percent  %d \n", 
 		 xd->kbd_orig.key_click_percent));
@@ -1392,9 +1632,13 @@ xnee_set_autorepeat (xnee_data *xd)
       xnee_verbose((xd,"\n\n"));
     }
   */
+  /*@ ignore @*/
   XAutoRepeatOff(xd->fake);
+  /*@ end @*/
   xd->autorepeat_saved=1;  
-  return xd->kbd_orig.global_auto_repeat;
+
+
+  return XNEE_OK;
 }
 
 
@@ -1406,8 +1650,9 @@ xnee_reset_autorepeat (xnee_data *xd)
       return XNEE_OK;
     }
 
+
   xnee_verbose((xd,"Resetting autorepeat on (%d) to: ",
-		xd->fake));
+		(xd->fake==NULL)?0:xd->fake));
 
   if (!xd->fake)
     return XNEE_OK;
@@ -1415,16 +1660,22 @@ xnee_reset_autorepeat (xnee_data *xd)
   if (xd->kbd_orig.global_auto_repeat==AutoRepeatModeOn)
     {
       xnee_verbose((xd,"AutoRepeatModeOn\n"));
+      /*@ignore@*/
       XAutoRepeatOn(xd->fake);
+      /*@end@*/
     }
   else
     {
       xnee_verbose((xd,"AutoRepeatModeOff\n"));
+      /*@ignore@*/
       XAutoRepeatOff(xd->fake);
+      /*@end@*/
     }
   /* Make sure the resetting of autorepeat is handled
      before we close down the display */
+  /*@ignore@*/
   XFlush (xd->fake);
+  /*@end@*/
   xd->autorepeat_saved=0;  
   return XNEE_OK;
 }
@@ -1440,7 +1691,7 @@ xnee_open_files(xnee_data *xd)
   if (file_name!=NULL)
     {
       xnee_verbose((xd, "---  xnee_open_files: handling err\n"));
-      if (!xnee_check (file_name, "stderr", "STDERR"))
+      if ((xnee_check (file_name, "stderr", "STDERR")!=XNEE_OK)!=0)
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: opening err: %s\n", 
 			xd->err_name));
@@ -1451,14 +1702,14 @@ xnee_open_files(xnee_data *xd)
 	}
     }
 
-  if (xnee_is_recorder(xd))
+  if ( (xnee_is_recorder(xd) != 0) )
     {
       xnee_verbose((xd, "---  xnee_open_files: is recorder\n"));
       file_name = xnee_get_out_name(xd);
       if (file_name!=NULL)
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: handling out\n"));
-	  if (!xnee_check (file_name, "stdout", "STDOUT"))
+	  if ( xnee_check (file_name, "stdout", "STDOUT") == 0 )
 	    {
 	      xnee_verbose((xd, "---  xnee_open_files: opening out: %s\n", 
 			    xd->out_name));
@@ -1469,14 +1720,14 @@ xnee_open_files(xnee_data *xd)
 	    }
 	}
     }
-  else if (xnee_is_replayer(xd))
+  else if ( xnee_is_replayer(xd) != 0 )
     {
       xnee_verbose((xd, "---  xnee_open_files: is replayer\n"));
       file_name = xnee_get_data_name(xd);
       if (file_name!=NULL)
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: handling data (in)\n"));
-	  if (!xnee_check (file_name, "stdin", "STDIN"))
+	  if ( xnee_check (file_name, "stdin", "STDIN") == 0 )
 	    {
 	      xnee_verbose((xd, "---  xnee_open_files: opening data: %s\n", 
 			    xd->data_name));
@@ -1487,14 +1738,14 @@ xnee_open_files(xnee_data *xd)
 	    }
 	}
     }
-  else if (xnee_is_retyper(xd))
+  else if ( xnee_is_retyper(xd) != 0 )
     {
       xnee_verbose((xd, "---  xnee_open_files: is retyper\n"));
       file_name = xnee_get_rt_name(xd);
       if (file_name!=NULL)
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: handling retype (in)\n"));
-	  if (!xnee_check (file_name, "stdin", "STDIN"))
+	  if ( xnee_check (file_name, "stdin", "STDIN") != 0)
 	    {
 	      xnee_verbose((xd, "---  xnee_open_files: opening retype: %s\n", 
 			    xd->rt_name));
@@ -1520,12 +1771,15 @@ xnee_rep_prepare(xnee_data *xd)
    * Print settings 
    * only done if verbose mode  
    */
-  xnee_print_distr_list(xd, NULL);
-  xnee_set_ranges(xd);
+  ret = xnee_print_distr_list(xd, NULL);
+  XNEE_RETURN_IF_ERR (ret);
+
+  ret = xnee_set_ranges(xd);
+  XNEE_RETURN_IF_ERR (ret);
 
   ret=xnee_setup_recordext (xd);
   
-  if ( xnee_is_recorder(xd) )
+  if ( xnee_is_recorder(xd) != 0)
   {
     if (ret==XNEE_NO_PROT_CHOOSEN)
       {
@@ -1534,7 +1788,7 @@ xnee_rep_prepare(xnee_data *xd)
       }
   }
 
-  if ( xnee_is_replayer(xd) )
+  if ( xnee_is_replayer(xd) != 0 )
   {
     xnee_verbose((xd, "Entering main loop (replayer) to read META data \n"));
     ret = xnee_replay_main_loop(xd, XNEE_REPLAY_READ_META_DATA);
@@ -1555,12 +1809,11 @@ xnee_rep_prepare(xnee_data *xd)
   xnee_verbose((xd," building modifier map on %d\n", xd->fake)); 
   xd->map = XGetModifierMapping(xd->fake);
 
-  
   /*
    * If no recording client, init xnee_sync 
    *
    */
-  if ( ! xnee_is_recorder(xd) )
+  if ( xnee_is_recorder(xd) == 0 )
     {
       xnee_replay_init (xd);   
     }
@@ -1569,8 +1822,9 @@ xnee_rep_prepare(xnee_data *xd)
    * Save repeat mode so we can reset it after we are done
    *
    */
-  xnee_set_autorepeat (xd);
-  
+  ret = xnee_set_autorepeat (xd);
+  XNEE_RETURN_IF_ERR (ret);
+
   xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", XNEE_OK));
   return XNEE_OK;
 }
@@ -1596,6 +1850,7 @@ int
 xnee_start(xnee_data *xd)
 {
    int ret ;
+
 
 #ifdef XNEE_OBSOLETE
    ret = xnee_prepare(xd);
@@ -1636,7 +1891,7 @@ xnee_start(xnee_data *xd)
    /*
     * are we recording or are we replaying
     */
-   if (xnee_is_recorder(xd)) 
+   if ( xnee_is_recorder(xd) != 0)  
    {
      
       /* 
@@ -1650,16 +1905,19 @@ xnee_start(xnee_data *xd)
        * Do we have XRecord extension on the display
        *
        */ 
-       if (!xnee_has_record_extension(xd))
+       if ( xnee_has_record_extension(xd) != XNEE_OK)
        {
           xnee_verbose((xd, "Can't find Record extension\n"));
           xnee_verbose((xd, "Look in the README file included"));
           xnee_verbose((xd, "in Xnee how to enable it\n"));
           exit(XNEE_NO_REC_EXT);
        }
-       xnee_setup_recording(xd);
+       ret = xnee_setup_recording(xd);
+       XNEE_RETURN_IF_ERR (ret);
        
-       xnee_print_sys_info(xd, xnee_get_out_file (xd));
+       ret = xnee_print_sys_info(xd, xnee_get_out_file (xd));
+       XNEE_RETURN_IF_ERR (ret);
+
        xnee_print_xnee_settings (xd, xnee_get_out_file (xd)) ;
        xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
        
@@ -1681,14 +1939,14 @@ xnee_start(xnee_data *xd)
 	   return ret;
        }
     }
-  else if (xnee_is_replayer(xd))
+  else if ( xnee_is_replayer(xd) != 0 )
   {
       xnee_verbose((xd, " (replayer)\n"));
       /*
        * Do we have XTest extension on the display
        *
        */ 
-      if (!xnee_has_xtest_extension(xd))
+      if ( xnee_has_xtest_extension(xd) == 0)
 	{
 	  exit(XNEE_NO_TEST_EXT);
 	}
@@ -1697,17 +1955,20 @@ xnee_start(xnee_data *xd)
        * Do we have XRecord extension on the display
        *
        */ 
-      if (!xnee_has_record_extension(xd))
+      if ( xnee_has_record_extension(xd) != XNEE_OK)
 	{
 	  xnee_verbose((xd, "I can't find Record extension\n"));
 	  xnee_verbose((xd, "Look in the README file how to enable it\n"));
 	  xnee_verbose((xd, "However, I continue without doing syncing\n"));
 	  /*	  xd->sync=False;*/
-	  xnee_unset_sync (xd);
+	  ret = xnee_unset_sync (xd);
+          XNEE_RETURN_IF_ERR (ret);
 	}
 
+      /*@ignore@*/
       XTestGrabControl (xnee_get_control_display(xd), True);
       XTestGrabControl (xnee_get_data_display(xd), True);
+      /*@end@*/
 
       /*
        * At last. Time to enter the main loop
@@ -1721,7 +1982,7 @@ xnee_start(xnee_data *xd)
 	  ;
 	}
     }
-  else if (xnee_is_retyper(xd))
+  else if ( xnee_is_retyper(xd) != 0 )
     {
       if ( xnee_type_file(xd) != 0 )
 	{
@@ -1742,12 +2003,16 @@ xnee_start(xnee_data *xd)
    */
    
    xnee_verbose((xd, "xnee_start : ungrab -----> \n"));
-   xnee_ungrab_keys (xd);
+   ret = xnee_ungrab_keys (xd);
+   XNEE_RETURN_IF_ERR (ret);
 
    xnee_verbose((xd, "xnee_start : ungrab <---- \n"));
-   xnee_reset_autorepeat (xd); 
+   ret = xnee_reset_autorepeat (xd); 
+   XNEE_RETURN_IF_ERR (ret);
    
-   xnee_renew_xnee_data(xd);
+   ret = xnee_renew_xnee_data(xd);
+   XNEE_RETURN_IF_ERR (ret);
+
    return (XNEE_OK);
 }
 
@@ -1756,8 +2021,14 @@ xnee_start(xnee_data *xd)
 int 
 xnee_renew_xnee_data(xnee_data *xd)
 {
-   xnee_free_dyn_data(xd);
-   xnee_new_dyn_data(xd);
+   int ret ; 
+
+   ret = xnee_free_dyn_data(xd);
+   XNEE_RETURN_IF_ERR (ret);
+
+   ret = xnee_new_dyn_data(xd);
+   XNEE_RETURN_IF_ERR (ret);
+
    return (XNEE_OK);
 }
 
@@ -1789,36 +2060,62 @@ xnee_more_to_record(xnee_data *xd)
   tims = xnee_get_time_left(xd);
   if (tims<0) tims = 1;
 
-  return ( evs && dats && tims );
+  return (int) ( (evs!=0) && (dats!=0) && (tims!=0) );
 }
 
 int 
 xnee_check_true(char *expr)
 {
-  return  ( (strncmp(expr,XNEE_TRUE_STRING,strlen(XNEE_TRUE_STRING))==0)
-	    ||
-	    (strncmp(expr,XNEE_1_STRING,strlen(XNEE_1_STRING))==0) );
+   return  (int) ( (strncmp(expr,XNEE_TRUE_STRING,strlen(XNEE_TRUE_STRING))==0)
+                   ||
+                   (strncmp(expr,XNEE_1_STRING,strlen(XNEE_1_STRING))==0) );
 }
 
 int 
 xnee_check_false(char *expr)
 {
-  return  ( (strncmp(expr,XNEE_FALSE_STRING,strlen(XNEE_FALSE_STRING))==0)
-	    ||
-	    (strncmp(expr,XNEE_0_STRING,strlen(XNEE_0_STRING))==0) );
+   return  (int)( (strncmp(expr,XNEE_FALSE_STRING,strlen(XNEE_FALSE_STRING))==0)
+                  ||
+                  (strncmp(expr,XNEE_0_STRING,strlen(XNEE_0_STRING))==0) );
 }
 
 int
 handle_xerr(Display *dpy, XErrorEvent *errevent)
 {
-  int protocol_error;	        /* error code of error caught by error handler */
-  int protocol_error_major;	/* major op code of error caught */
-  int protocol_error_minor;	/* minor op code of error caught */
-  
-  protocol_error = errevent->error_code;
-  protocol_error_major = errevent->request_code;
-  protocol_error_minor = errevent->minor_code;
-  printf ("Error recevied.... on display=%d\n", (int)dpy);
-  return 1;
+  int ret ; 
+  /*@out@*/ char tmp[100]="";
+
+  if (errevent->type==0)
+    {
+       return XNEE_OK; 
+    }
+  printf ("Error received:\n");
+  printf ("\terror type       %u (0x%x)\n", 
+	  errevent->type,errevent->type);
+  printf ("\terror code       %u (0x%x)\n", 
+	  errevent->error_code,errevent->error_code);
+  printf ("\terror code major %u (0x%x)\n", 
+	  errevent->request_code,errevent->request_code);
+  printf ("\terror code minor %u (0x%x)\n", 
+	  errevent->minor_code,errevent->minor_code);
+  printf ("\tdisplay          %d (0x%x)\n", (int)dpy);
+
+  ret = XGetErrorText (dpy, 
+		       (int) errevent->error_code, 
+		       tmp, 
+		       100);
+  printf ("%s\n", tmp);
+  return XNEE_OK;
 }
 
+int
+xnee_free( /*@only@*/  /*@out@*/ /*@null@*/ void *mem)
+{
+   if (mem==NULL)
+   {
+      return XNEE_MEMORY_FAULT;
+   }
+   free(mem);
+   mem=NULL;
+   return XNEE_OK;
+}

@@ -73,7 +73,7 @@ xnee_fake_sleep(unsigned long period)
 int 
 xnee_replay_event_handler( xnee_data* xd, 
 			   xnee_intercept_data* xindata, 
-			   int last_elapsed)
+			   long int last_elapsed)
 {
   static int loop_nr = 0;
   
@@ -199,7 +199,7 @@ xnee_replay_event_handler( xnee_data* xd,
       x = (int) xindata->u.event.x ; 
       y = (int) xindata->u.event.y ; 
       xnee_fake_motion_event (xd,
-			      0,
+			      screen,
 			      x, 
 			      y, 
 			      sleep_amt);

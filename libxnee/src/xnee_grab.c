@@ -229,18 +229,12 @@ xnee_new_grab_keys()
  *                                                            *
  *                                                            *
  **************************************************************/
+/*@null@*/ 
 int
-xnee_free_grab_keys(xnee_data *xd)
+xnee_free_grab_keys(/*@null@*/ xnee_grab_keys *grab_keys)
 {
-  xnee_verbose((xd, "--->  xnee_free_grab\n"));
-  XNEE_FREE_IF_NOT_NULL (xd->grab_keys);
-  if (xd->grab_keys==NULL)
-    {
-      xnee_verbose((xd, "---  xnee_free_grab  .... yes, we are NULL\n"));
-      return XNEE_OK;
-    }
-  xnee_verbose((xd, "<---  xnee_free_grab\n"));
-  return XNEE_OK;
+   XNEE_FREE_IF_NOT_NULL (grab_keys);
+   return XNEE_OK;
 }
 
 

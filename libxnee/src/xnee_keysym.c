@@ -70,7 +70,6 @@ xnee_str2keycode(xnee_data* xd, const char *str, xnee_key_code *kc)
        str=tmp;
     }
 
-  printf ("getting keysym for %s\n", str); fflush(stdout);
   kc->kc = XKeysymToKeycode(xd->fake,XStringToKeysym(str));
 
   if (kc!=NULL)
@@ -80,7 +79,6 @@ xnee_str2keycode(xnee_data* xd, const char *str, xnee_key_code *kc)
 
   return kc->kc;
 }
-
 
 
 KeyCode

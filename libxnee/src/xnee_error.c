@@ -112,6 +112,18 @@ char error_descr_solut[256][256] =
     "with all the information you have: project file, session file, comand"
     "line options etc",
 
+    /* XNEE_NO_RECORD_DATA */   
+    "record_setup structure missing",
+    "This is a major error, please report the error "
+    "with all the information you have: project file, session file, comand"
+    "line options etc",
+
+    /* XNEE_NO_REPLAY_DATA */   
+    "record_replay structure missing",
+    "This is a major error, please report the error "
+    "with all the information you have: project file, session file, comand"
+    "line options etc",
+
     /* XNEE_SYNTAX_ERROR */    
     "Xnee syntax error",
     "Make sure all Xnee expressiona are valid",
@@ -172,6 +184,18 @@ char error_descr_solut[256][256] =
     /* XNEE_GRAB_MEM_FAILURE */
     "Grab memory failure",
     "The memory used to save lines during grabs is exceeded. Report it",
+
+    /* XNEE_RECORD_FAILURE */
+    "Record memory failure",
+    "Xnee failed due to bad data received from RECORD extension",
+
+    /* XNEE_DATE_FAILURE */
+    "Date failure",
+    "Xnee failed to get or handle the date from the OS",
+
+    /* XNEE_SCREEN_MISSING */
+    "Screen nr could not be retrieved",
+    "Xnee could not find the screen of the recorded event. Report it",
 
     /* XNEE_LAST_ERROR */
     "Last error",

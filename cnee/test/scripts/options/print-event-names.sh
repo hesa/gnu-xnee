@@ -148,14 +148,15 @@ for i in `cat $X11_NAMES`
 do
   EV_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[0-9]*=\([a-zA-Z0-9]*\),\1,g'`
-  if [ "$NAME_" == "LASTEvent" ];
-      then
-      verbose "   comparing (false): \"$EV_\" \"$NAME_\" "
-      compare_event_false $EV_ $NAME_ "$EV_ $NAME_ "
-  else
+# LASTEvent is now concidered valid 
+#  if [ "$NAME_" == "LASTEvent" ];
+#      then
+#      verbose "   comparing (false): \"$EV_\" \"$NAME_\" "
+#      compare_event_false $EV_ $NAME_ "$EV_ $NAME_ "
+#  else
       verbose "   comparing: \"$EV_\" \"$NAME_\" "
       compare_event $EV_ $NAME_ "$EV_ $NAME_ "
-  fi
+#  fi
 done
 check_retval $STATUS 0 
 

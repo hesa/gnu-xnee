@@ -9,6 +9,14 @@ Xnee / NEWS
 
 
 Changes in 1......
+        Changes:
+                events-to-record defaults to -1
+                data-to-record defaults to   -1
+                time-to-record defaults to   -1
+
+        Bugs fixed:
+                Record/replay multiple screens
+
 	New options:
 	   '--data-to-record'
 	   '--events-to-record'

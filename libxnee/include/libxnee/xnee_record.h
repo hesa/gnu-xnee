@@ -32,11 +32,11 @@
 #include <stdio.h>
 
 /* X11 includes */
-#include <X11/Xlib.h>
 #include <X11/Xmd.h>
 #include <X11/Xproto.h>
 #include <X11/Xos.h>
 #include <X11/Xlibint.h>  /* Warning, there be dragons here.... */
+#include <X11/Xlib.h>
 
 /* 
  *  X11 extensions includes 
@@ -66,8 +66,8 @@
  * @param xrecintd  pointer to data as sent by the Xserver
  * @return void  
  */
-void
-xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd);
+int
+xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xrecintd);
 
 
 

@@ -39,6 +39,7 @@
 #include "libxnee/xnee_buffer.h"
 #include "libxnee/xnee_threshold.h"
 #include "libxnee/xnee_expr.h"
+#include "libxnee/xnee_error.h"
 
 
 #ifdef USE_OBSOLETE
@@ -96,7 +97,7 @@ xnee_replay_synchronize (xnee_data* xd)
    */
   xnee_verbose ((xd, "   synchronize: entering sync test loop\n"));
 
-  while (1)
+  while ( (0==0) )
     {
       /*
        * Handle all pending data from Xserver/RECORD 
@@ -140,10 +141,12 @@ xnee_replay_synchronize (xnee_data* xd)
 	       */
 	      if (time_out_counter > MAX_SKIPPED_UNSYNC) 
 		{
-		  if (xnee_is_force_replay(xd))
-		    break;
-		  fprintf (stderr,
-			   "Can't synchronize anymore .... have to leave!\n");
+		  if (xnee_is_force_replay(xd) != 0 )
+                  {
+                     break;
+                  }
+		  (void)fprintf (stderr,
+                                 "Can't synchronize anymore .... have to leave!\n");
 		  return XNEE_SYNCH_FAULT;
 		}
 	      else 
@@ -154,7 +157,9 @@ xnee_replay_synchronize (xnee_data* xd)
 	    }
 	  xnee_verbose ((xd, " ...diff => sleeping %d microsecs\n", 
 			 XNEE_MISSING_DATA_DELAY ));
+          /*@ ignore @*/
 	  usleep (XNEE_MISSING_DATA_DELAY );
+          /*@ end @*/
 	  last_diff = diff;
 
 	}
@@ -232,9 +237,9 @@ xnee_handle_meta_data_sub1(int *dest, char *src_str, int comp_str_size)
   int val;
   
 
-  if ( ! sscanf ( src_str + comp_str_size + 1 , "%d", &val)  ) 
+  if ( sscanf ( src_str + comp_str_size + 1 , "%d", &val)  == 0 ) 
     {
-      xnee_print_error ("Could not read value for argument (for \"%s\" from file)\n", src_str);
+       (void) xnee_print_error ("Could not read value for argument (for \"%s\" from file)\n", src_str);
     }
   else
     {
@@ -256,32 +261,35 @@ int
 xnee_handle_meta_data(xnee_data* xd, char * str)
 {
   char *range;
+  int   ret;
 
   xnee_verbose((xd, "xnee_handle_meta_data     (xd, \"%s\");\n", str));
 
-  xnee_rem_comment_start (xd, str);
+  ret = xnee_rem_comment_start (xd, str);
+  XNEE_RETURN_IF_ERR(ret);
 
   xnee_verbose((xd, "xnee_handle_meta_data (2) (xd, \"%s\");\n", str));
 
-  rem_all_blanks (str, strlen(str));
+  ret = rem_all_blanks (str, strlen(str));
+  XNEE_RETURN_IF_ERR(ret);
 
   xnee_verbose((xd, "xnee_handle_meta_data (3) (xd, \"%s\");\n", str));
 
   if (strncmp (str, XNEE_LOOPS_LEFT, strlen (XNEE_LOOPS_LEFT)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info.events_max, str,  strlen(XNEE_LOOPS_LEFT) );
+       xnee_handle_meta_data_sub1 (&xd->xnee_info.events_max, str,  (int)strlen(XNEE_LOOPS_LEFT) );
     }
   else if (strncmp (str, XNEE_EVENT_MAX, strlen (XNEE_EVENT_MAX)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info.events_max, str,  strlen(XNEE_EVENT_MAX) );
+       xnee_handle_meta_data_sub1 (&xd->xnee_info.events_max, str,  (int)strlen(XNEE_EVENT_MAX) );
     }
   else if (strncmp (str, XNEE_DATA_MAX, strlen (XNEE_DATA_MAX)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info.data_max, str,  strlen(XNEE_DATA_MAX) );
+       xnee_handle_meta_data_sub1 (&xd->xnee_info.data_max, str,  (int)strlen(XNEE_DATA_MAX) );
     }
   else if (strncmp (str, XNEE_TIME_MAX, strlen (XNEE_TIME_MAX)) == 0  )
     {
-      xnee_handle_meta_data_sub1 (&xd->xnee_info.time_max, str,  strlen(XNEE_TIME_MAX) );
+      xnee_handle_meta_data_sub1 (&xd->xnee_info.time_max, str,  (int)strlen(XNEE_TIME_MAX) );
     }
   else if ( 
 	   (strncmp (str, XNEE_REQUEST_STR, strlen (XNEE_REQUEST_STR)) == 0  )
@@ -303,7 +311,8 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
 	   (strncmp (str, XNEE_STOP_KEY, strlen (XNEE_STOP_KEY)) == 0  )
 	   )
     {
-      xnee_add_resource_syntax(xd, str);
+      ret = xnee_add_resource_syntax(xd, str);
+      XNEE_RETURN_IF_ERR(ret);
     }
   else if (strncmp (str, XNEE_DEVICE_EVENT_STR, strlen (XNEE_DEVICE_EVENT_STR)) == 0 )
     {
@@ -314,11 +323,11 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
       /* once the meta end line is read - temp stop processing file until XRecord Async callback set up*/
       return XNEE_FALSE;
     }
-  else if (!strncmp(XNEE_DIMENSION,str,strlen(XNEE_DIMENSION)))
+  else if ( strncmp(XNEE_DIMENSION,str,strlen(XNEE_DIMENSION)) != 0 )
     {
       range=strstr (str, ":");
       range += 1 ;
-      if ( xnee_set_rec_resolution (xd, range))
+      if ( xnee_set_rec_resolution (xd, range) != 0)
 	{
 	  xnee_verbose ((xd, "failed to set recorded resolution\n"));
 	  xnee_close_down(xd);
@@ -365,15 +374,17 @@ print_time(void)
 int
 xnee_replay_main_loop(xnee_data *xd, int read_mode)
 {
-  xnee_intercept_data xindata ;
-  int logread = -1 ;
-  int replayable ;
-  static int last_logread=1;
-  int last_elapsed = 0;
-  int ret = XNEE_OK ; 
   static char tmp[256] ;
-  char *ret_str;
-/*   static int in_pause_mode = 0 ;  */
+  static int last_logread=1;
+  
+/*@reldef@*/
+  xnee_intercept_data xindata ;
+
+  int      logread = -1 ;
+  int      replayable ;
+  long int last_elapsed = 0;
+  int      ret = XNEE_OK ; 
+  char    *ret_str;
 
   xindata.oldtime = 0 ;
   xindata.newtime = 0 ;
@@ -388,15 +399,18 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        (read_mode==XNEE_REPLAY_READ_ALL_DATA)
        )
     {
-      while (logread && xd->cont) 
+       while ( (logread != 0)  && ( xd->cont != 0 ) ) 
 	{
-	  ret_str = strcpy(tmp,"");
 	  ret_str = fgets(tmp, 256, xd->data_file);
 	  
 	  if ( ret_str == NULL)
-	    ret = -1;
+          {
+             ret = -1;
+          }
 	  else
-	    ret = strlen (ret_str);
+          {
+             ret = (int)strlen (ret_str);
+          }
 	  
 	  if ( ret == -1 )
 	    {
@@ -410,7 +424,9 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    {
 	      ret = xnee_expression_handle_project(xd, ret_str);
 
-	      if ( (ret == XNEE_REPLAY_DATA) || (ret == XNEE_PRIMITIVE_DATA) || ( ret == XNEE_SYNTAX_ERROR) )
+	      if ( (ret == XNEE_REPLAY_DATA) || 
+		   (ret == XNEE_PRIMITIVE_DATA) || 
+		   (ret == XNEE_SYNTAX_ERROR) )
 		{
 		  xnee_verbose((xd, 
 				"We are finished reading settings"
@@ -442,13 +458,15 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
       /*        return ret; */
       /*      } */
       
-      if (xd->sync)
+      if ( xd->sync != 0 )
 	{
-	  xnee_setup_rep_recording(xd);
+           ret = xnee_setup_rep_recording(xd);
+           XNEE_RETURN_IF_ERR(ret);
 	}
-      if (xnee_is_verbose(xd))
+      if ( xnee_is_verbose(xd) != 0)
 	{
-	  xnee_print_sys_info(xd , xd->out_file);
+           ret = xnee_print_sys_info(xd , xd->out_file);
+           XNEE_RETURN_IF_ERR(ret);
 	}
 
       ret = xnee_expression_handle_session(xd, tmp, &xindata);
@@ -460,12 +478,9 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        * 
        *       Think of this as the main loop
        */
-      while  ( (ret!=XNEE_SYNTAX_ERROR) && xd->cont ) 
+      while  ( (ret!=XNEE_SYNTAX_ERROR) && ( xd->cont != 0 ) ) 
 	{
-
-	  xnee_verbose((xd, "REPLAY str = '%s' ret=%d (last_log_read=%d) \n",
-			ret_str, ret, last_logread));
-	  if (last_logread)
+	  if (last_logread != 0)
 	    {
 	      /* 
 	       * set value for forthcoming time calculations 
@@ -480,10 +495,14 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	      xnee_verbose((xd, "META DATA read ... should be "
 			    "handled in the future... eg script ????\n"));
 	    }
-	  else if (ret)
+	  else if (ret!=0)
 	    {
 	      if (xd->first_read_time==0)
-		xd->first_read_time = xindata.newtime;
+              {
+                 /*@ ignore @*/
+                 xd->first_read_time = xindata.newtime;
+                 /*@ end @*/
+              }
 	      
 	      
 	      if (xnee_check_key (xd)==XNEE_GRAB_DATA)
@@ -496,11 +515,22 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		    }
 		  else if (ret == XNEE_GRAB_RESUME)
 		    {
+                       if  ( (xd == NULL)
+                             ||
+                             (xd->control ==NULL)
+                             ||
+                             (xd->record_setup ==NULL))
+                       {
+                          return XNEE_RECORD_FAILURE;
+                       }
+
+
 		      xnee_verbose  ((xd," starting async loop since RESUME \n"));
-		      XRecordEnableContextAsync(xd->data, 
-						xd->record_setup->rContext, 
-						xd->rec_callback, 
-						(XPointer) (xd) );
+		      ret = XRecordEnableContextAsync(xd->data, 
+                                                      xd->record_setup->rContext, 
+                                                      xd->rec_callback, 
+                                                      (XPointer) (xd) );
+                      XNEE_RETURN_IF_ERR(ret);
 		    }
 		}
 	      
@@ -509,7 +539,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		case XNEE_EVENT:
 		  
 		  /* is it a device event ? */
-		  if ( ( xindata.u.event.type >= KeyPress ) 
+                   if ( ( xindata.u.event.type >= KeyPress ) 
 		       && (xindata.u.event.type <= MotionNotify) )
 		    {
 		      
@@ -568,6 +598,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 					       XNEE_REQUEST, 
 					       xindata.u.request.type, 
 					       XNEE_REPLAYED);
+                  break;
 		case XNEE_REPLY:
 		  xnee_verbose((xd, "READ A REPLY, %d\n", xindata)); 
 		  xnee_replay_buffer_handler ( 
@@ -589,20 +620,23 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    }
 	  
 	  
-	  XSync(xd->control, False);
+	  (void)XSync(xd->control, False);
 	  xnee_verbose((xd, "Flushing after handled event\n"));
-	  XFlush(xd->control);
+	  (void)XFlush(xd->control);
 	  xnee_verbose((xd, "  <-- Flushed after handled event\n"));
 
 	  ret_str = fgets(tmp, 256, xd->data_file);
+	  ret_str = fgets(tmp, 256, xd->data_file);
+
 
 	  if (ret_str == NULL)
-	    break;
+	    {
+ 	      break; 
+	    }
 
 	  ret = xnee_expression_handle_session(xd, tmp, &xindata);
 
 	  last_logread = 0;
-
 	}
     }
   return XNEE_OK;
@@ -622,12 +656,23 @@ int
 xnee_setup_rep_recording(xnee_data *xd)
 {
   int nr_of_ranges=0;
+  int ret;
   xnee_recordext_setup  *xrs       = xd->record_setup;
+
+
+  if  ( (xd == NULL)
+        ||
+        (xd->control ==NULL)
+        ||
+        (xd->record_setup ==NULL))
+  {
+     return XNEE_RECORD_FAILURE;
+  }
 
   xnee_verbose((xd, "--->xnee_setup_rep_recording :)\n"));             
   nr_of_ranges=xnee_get_max_range(xd);
 
-  if (xd->all_clients)
+  if (xd->all_clients != 0)
     {
       xrs->xids[0] = XRecordAllClients;
     }
@@ -644,11 +689,21 @@ xnee_setup_rep_recording(xnee_data *xd)
 				       xrs->range_array,nr_of_ranges );
 
   xnee_verbose((xd, "\t  CreateContext   0x%lx\n", xrs->rContext));  
-  XRecordRegisterClients   (xd->control,
-			    xrs->rContext,
-			    xrs->data_flags, 
-			    xrs->xids,1,
-			    xrs->range_array,nr_of_ranges);    
+  ret = XRecordRegisterClients   (xd->control,
+                                  xrs->rContext,
+                                  xrs->data_flags, 
+                                  xrs->xids,1,
+                                  xrs->range_array,nr_of_ranges);    
+  if (ret==0)
+    {
+      xnee_verbose ((xd, "Could not register clients dpy=%u data_flags=%d"
+		     "nr of ranges=%\n", 
+		     (unsigned int)xd->control,
+		     xrs->data_flags,
+		     nr_of_ranges));
+      return XNEE_RECORD_FAILURE;
+    }
+
 
   xnee_verbose((xd, "--- xnee_setup_rep_recording setting xids \n"));             
 
@@ -657,10 +712,16 @@ xnee_setup_rep_recording(xnee_data *xd)
 
   xnee_verbose((xd, "--- xnee_setup_rep_recording unregistring \n"));             
 
-  XRecordUnregisterClients( xd->control, 
-			    xrs->rContext,
-			    xrs->xids,
-			    2);
+  ret = XRecordUnregisterClients( xd->control, 
+                                  xrs->rContext,
+                                  xrs->xids,
+                                  2);
+  if (ret==0)
+    {
+      xnee_verbose ((xd, "Could not unregister clients dpy=%u\n", 
+		     (unsigned int)xd->control));
+      return XNEE_RECORD_FAILURE;
+    }
 
   xnee_verbose((xd, "--- xnee_setup_rep_recording getting context \n"));             
   xnee_verbose((xd, "--- \t %d\n", xd->control));             
@@ -668,7 +729,7 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "--- \t %d\n", xrs->rContext));             
   xnee_verbose((xd, "--- \t %d\n", xrs->rState));             
 
-  if(!XRecordGetContext(xd->control, xrs->rContext, (XRecordState **) xrs->rState))
+  if( XRecordGetContext(xd->control, xrs->rContext, (XRecordState **) xrs->rState) == 0)
     {
       xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
       exit(XNEE_BAD_CONTEXT);
@@ -696,10 +757,17 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "--- xnee_setup_rep_recording enabling async \n"));             
 
   /* Enable context for async interception */
-  XRecordEnableContextAsync (xd->data, 
-			     xrs->rContext, 
-			     xnee_replay_dispatch, 
-			     (XPointer) (xd) /* closure passed to Dispatch */);
+  ret = XRecordEnableContextAsync (xd->data, 
+                                   xrs->rContext, 
+                                   xnee_replay_dispatch, 
+                                   (XPointer) (xd) /* closure passed to Dispatch */);
+  if (ret==0)
+    {
+      xnee_verbose ((xd, "Could not start recording\n"));
+      return XNEE_RECORD_FAILURE;
+    }
+
+
   xnee_verbose((xd, " 1.3\n"));             
   xnee_verbose((xd, "finished setting up record for replaying\n"));
   xnee_verbose((xd, "<---xnee_setup_rep_recording\n"));             
@@ -731,7 +799,7 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
     }
 
   xrec_data  = (XRecordDatum *) (data->data) ;
-  type       = xrec_data->type ;
+  type       = (int) xrec_data->type ;
   xd         = (xnee_data*) (type_ref);
 
   switch(data->category)
@@ -793,12 +861,25 @@ int
 xnee_has_xtest_extension (xnee_data *xd) 
 {
   int ok=1;
-  xnee_testext_setup* xrs=xd->replay_setup;
-  if( !XTestQueryExtension(xd->control,
-			   &xrs->xtest_event_basep,
-			   &xrs->xtest_error_basep,
-			   &xrs->xtest_version_major,
-			   &xrs->xtest_version_minor) )
+  xnee_testext_setup* xrs;
+  
+  if  ( (xd == NULL)
+        ||
+        (xd->control ==NULL)
+        ||
+        (xd->replay_setup ==NULL))
+  {
+     return XNEE_RECORD_FAILURE;
+  }
+
+  
+
+  xrs=xd->replay_setup;
+  if( XTestQueryExtension(xd->control,
+                          &xrs->xtest_event_basep,
+                          &xrs->xtest_error_basep,
+                          &xrs->xtest_version_major,
+                          &xrs->xtest_version_minor) == 0 )
     {
       xnee_print_error ("XTest extension missing\n");
       ok=0;
@@ -846,8 +927,13 @@ xnee_replay_init          (xnee_data* xd)
   xd->meta_data.total_diff=0;
   xd->meta_data.sum_max=0;
   xd->meta_data.sum_min=0;
-  if (xnee_no_rep_resolution(xd))
-    xnee_set_default_rep_resolution (xd);
+  if ( xnee_no_rep_resolution(xd) == 0 )
+  {
+     int ret ; 
+     
+     ret = xnee_set_default_rep_resolution (xd);
+     XNEE_RETURN_VOID_IF_ERR(ret);
+  }
   
   xnee_verbose((xd, "<--- xnee_replay_init\n")); 
 }
