@@ -34,7 +34,7 @@ cat $LOG | awk 'BEGIN { FS="[:]" ; TOT_T=0 ; SUC_T=0 ; ERR_T=0 ; WARN_T=0 ; RET_
     printf "%s:", RET_E ;\
     }'
     
-echo "TIME 0:`expr $STOP - $START`:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS"
+echo "TIME 0:`expr $STOP - $START`:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS" >> $LOG
 
 
 

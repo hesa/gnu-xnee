@@ -1,4 +1,4 @@
-export XNEE=../src
+export XNEE=../src/xnee
 export VERBOSE_MODE=false
 
 export LOG=./xnee_test.log
@@ -120,7 +120,7 @@ function check_retval()
     MSG="$SCRIPT_NAME checking return value $RESULT == $EXPECTED   "
     
     RESULT_TEST=`expr $RESULT_TEST + 1`
-    verbose "Checking reurn val for:$MSG"
+    verbose "Checking return val for:$MSG"
     if [ "$RESULT" != "$EXPECTED" ] ;
 	then 
 	verbose "   Unexpected return val: $MSG"
@@ -139,7 +139,7 @@ function check_retval_false()
     MSG="$SCRIPT_NAME checking return value (false)  $RESULT == $EXPECTED   "
     RESULT_TEST=`expr $RESULT_TEST + 1`
     
-    if [ "$RESULT" == "$EXPECTED" ] ;
+    if [ "$RESULT" == "$UN_EXPECTED" ] ;
 	then
 	verbose "   Unexpected return val: $MSG"
 	error_log  "   Unexpected return val: $MSG"

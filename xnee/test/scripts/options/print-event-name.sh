@@ -108,7 +108,6 @@ done
 
 
 
-
 # loop through all events and run them in a Xnee renaming pipe 
 # Make sure that 2 == 2   
 # after this has been done:  2 --xnee--> KeyPress --xnee--> 2
@@ -129,7 +128,6 @@ do
   else
     SUCC_TEST=`expr $SUCC_TEST + 1`
   fi
-
 
 
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
@@ -172,7 +170,7 @@ do
   XNEE_EV_NAME=`$XNEE $LONG_ARG $EV_`
   STATUS=$?
   check_retval_false $STATUS 0
-  if [ "$XNEE_EV" != "" ];
+  if [ "$XNEE_EV_NAME" != "" ];
       then
       ERR_TEST=`expr $ERR_TEST + 1`
   else
@@ -181,10 +179,10 @@ do
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
   
 
-# ###
-# Xnee returns no value so we can't compare
-# ### 
-#  compare_data_false $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME 
+  # ###
+  # Xnee returns no value so we can't compare
+  # ### 
+  #  compare_data_false $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME 
 
 
   XNEE_EV=`$XNEE $SHORT_ARG $NAME_`
@@ -210,6 +208,8 @@ do
       SUCC_TEST=`expr $SUCC_TEST + 1`
   fi
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
+
+
 
 # ###
 # Xnee returns no value so we can't compare

@@ -9,8 +9,8 @@
 # 
 # Description:
 #
-#  Test the Xnee option
-#       --print-event-name
+#  Tests the Xnee option
+#       --print-request-name
 #  By reading up X11 events (name and number) from
 #  the header file X.h. These values are compared
 #  with the output from Xnee 
@@ -62,9 +62,8 @@ LAST_REQ=`grep X_GetModifierMapping /usr/include/X11/Xproto.h | awk '{ print $3}
 
 
 
-
 #
-# positive tests
+# positive tests of long args
 #
 # compare Xnee number and names with the system
 for i in `cat $X11_NAMES`
@@ -82,23 +81,11 @@ do
 
   compare_data $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME "$MYNAME"
 
-
-
-
 done
-
-\rm -f $X11_NAMES
-
-result_log $MYNAME 
-exit
-
-
-
-
-
 
 
 # compare Xnee number and names with the system
+# short args
 for i in `cat $X11_NAMES`
 do
   EV_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
@@ -114,7 +101,6 @@ do
 
   compare_data $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME
 done
-
 
 
 
@@ -157,12 +143,16 @@ do
 
   
   TMP=`expr $TMP + 1`
+
 done
+
+
+
 
 #
 # negative tests
 #
-for i in 0=bartok    -12=bela      1=allan 67=pettersson 127=dimitri 200=shostakovich
+for i in 0=bartok -12=bela  200=shostakovich
 do
   EV_=`echo $i | sed 's,\([-0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[-0-9]*=\([a-zA-Z0-9]*\),\1,g'`
@@ -182,7 +172,7 @@ do
   XNEE_EV_NAME=`$XNEE $LONG_ARG $EV_`
   STATUS=$?
   check_retval_false $STATUS 0
-  if [ "$XNEE_EV" != "" ];
+  if [ "$XNEE_EV_NAME" != "" ];
       then
       ERR_TEST=`expr $ERR_TEST + 1`
   else
@@ -190,7 +180,6 @@ do
   fi
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
   
-
 # ###
 # Xnee returns no value so we can't compare
 # ### 
@@ -208,12 +197,73 @@ do
   fi
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
   
-
-
   XNEE_EV_NAME=`$XNEE $SHORT_ARG $EV_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_EV_NAME" != "" ];
+      then
+      ERR_TEST=`expr $ERR_TEST + 1`
+  else
+      SUCC_TEST=`expr $SUCC_TEST + 1`
+  fi
+  TOTAL_TEST=`expr $TOTAL_TEST + 1`
+
+done
+
+
+# more neg tests.....
+#for i in    1=allan 67=pettersson 127=dimitri 
+for i in    1=allan 
+do
+  EV_=`echo $i | sed 's,\([-0-9]*\)=.*,\1,g'`
+  NAME_=`echo $i | sed 's,[-0-9]*=\([a-zA-Z0-9]*\),\1,g'`
+
+
+  XNEE_EV=`$XNEE $LONG_ARG $NAME_`
+  STATUS=$?
+  check_retval_false $STATUS 0
+  if [ "$XNEE_EV" != "" ];
+      then
+      ERR_TEST=`expr $ERR_TEST + 1`
+  else
+      SUCC_TEST=`expr $SUCC_TEST + 1`
+  fi
+  TOTAL_TEST=`expr $TOTAL_TEST + 1`
+
+
+  XNEE_EV_NAME=`$XNEE $LONG_ARG $EV_`
+  STATUS=$?
+  check_retval $STATUS 0
+  if [ "$XNEE_EV_NAME" == "" ];
+      then
+      ERR_TEST=`expr $ERR_TEST + 1`
+  else
+      SUCC_TEST=`expr $SUCC_TEST + 1`
+  fi
+  TOTAL_TEST=`expr $TOTAL_TEST + 1`
+  
+# ###
+# Xnee returns no value so we can't compare
+# ### 
+#  compare_data_false $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME 
+
+  XNEE_EV=`$XNEE $SHORT_ARG $NAME_`
+  STATUS=$?
+  check_retval_false $STATUS 0
+  if [ "$XNEE_EV" != "" ];
+      then
+      ERR_TEST=`expr $ERR_TEST + 1`
+  else
+      SUCC_TEST=`expr $SUCC_TEST + 1`
+  fi
+  TOTAL_TEST=`expr $TOTAL_TEST + 1`
+  
+
+
+  XNEE_EV_NAME=`$XNEE $SHORT_ARG $EV_`
+  STATUS=$?
+  check_retval $STATUS 0
+  if [ "$XNEE_EV_NAME" == "" ];
       then
       ERR_TEST=`expr $ERR_TEST + 1`
   else
@@ -226,3 +276,8 @@ do
 # ### 
 #  compare_data_false $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME 
 done
+
+
+\rm -f $X11_NAMES
+result_log $MYNAME 
+exit
