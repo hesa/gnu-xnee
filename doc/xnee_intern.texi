@@ -43,7 +43,7 @@ During replay the following is done:
 @item   Ctrl-O is typed which pops up a window
 @item   Press the left button in the textfield of the popup window
 @item   Enter the URL you want to enter (e.g @url{http://www.gnu.org})
-@item   Clock on the OK button 
+@item   Click on the OK button 
 @item      ... due to an enormous amount of visitors the GNU web server can't respond as quick as it did when recording. So when the next thing happens
 @item   Then click on another URL (e.g GNU Documentation)
 @item      ... the page hasn't been loaded and when the next event is replayed
@@ -64,7 +64,7 @@ During record the following is done:
 @item   Record some X data that tells us that a window have been created
 @item   Press the left button in the textfield of the popup window
 @item   Enter the URL you want to enter (e.g @url{http://www.gnu.org})
-@item   Clock on the OK button 
+@item   Click on the OK button 
 @item   Record some X data that tells us that a window have been destroyed
 @item   Then click on another URL (e.g GNU Documentation)
 @item   Record some X data that tells us that a some text has been displayed in a window
@@ -81,7 +81,7 @@ During replay the following is done:
 @item   wait for: the recorded X data to be sent again
 @item   Press the left button in the textfield of the popup window
 @item   Enter the URL you want to enter (e.g @url{http://www.gnu.org})
-@item   Clock on the OK button 
+@item   Click on the OK button 
 @item   wait for: the recorded X data to be sent again
 @item   Then click on another URL (e.g GNU Documentation)
 @item   wait for: the recorded X data to be sent again

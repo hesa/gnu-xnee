@@ -21,7 +21,7 @@ We move on to a (very) simple recording session.
 Start a terminal emulator (e.g xterm) and your favorite editor.
 Move the pointer to one of the terminal windows and start Xnee.
 @example
-   @code{xnee --record -o exmaple2.xnr --device-event-range 2-3 \}
+   @code{xnee --record -o example2.xnr --device-event-range 2-3 \}
    @code{--time 5 --loops 20}
 @end example
 Move the pointer to the editor and get focus (e.g click the 
@@ -38,7 +38,7 @@ Let Xnee repeat the stuff you did in the example above.
 Undo all changes in the editor that was made in the previous example.
 Move the pointer to one of the terminal windows and start Xnee.
 @example
-   @code{xnee --replay -f exmaple2.xnr --time 5}
+   @code{xnee --replay -f example2.xnr --time 5}
 @end example
 Move the pointer to the editor and get focus (e.g click the 
 window frame). After 5 seconds you will see your typings in the example 
@@ -49,7 +49,7 @@ We move on to another simple recording session.
 Start a terminal emulator (e.g xterm).
 Move the pointer to the terminal window and start Xnee.
 @example
-   @code{xnee --record -o exmaple3.xnr --device-event-range 5-6 \}
+   @code{xnee --record -o example3.xnr --device-event-range 5-6 \}
    @code{--time 5 --loops 20}
 @end example
 After 5 seconds you can move the pointer around (20 motion events are recorded).
@@ -58,7 +58,7 @@ After 5 seconds you can move the pointer around (20 motion events are recorded).
 Let Xnee repeat the stuff you did in the example above.. 
 Move the pointer to the terminal window and start Xnee.
 @example
-   @code{xnee --replay -f exmaple3.xnr --time 5}
+   @code{xnee --replay -f example3.xnr --time 5}
 @end example
 After 5 seconds you will see your mouse motions in the example above being 
 repplayed.

@@ -457,7 +457,7 @@ shall be replayed.
 @cindex     Using verbose mode
 To enable verbose mode, start xnee like this
 @example
-@code{xkeymouse --verbose --record --mouse}
+@code{xnee --verbose --record --mouse}
 @end example
 Move the mouse for a while and you'll lots of verbose printouts that 
 usualy isn't there.
@@ -467,7 +467,7 @@ usualy isn't there.
 @cindex     Using human readable printouts
 To enable human printout mode, start xnee like this
 @example
-@code{xkeymouse --human-printouts --record --mouse}
+@code{xnee --human-printout --record --mouse}
 @end example
 Move the mouse for a while and you'll see the data printed out in an almost
 human friendly format.
@@ -481,7 +481,7 @@ on the one where we replay the session xnee will translate all coordinates
 automagically. However, you can force xnee to use a specific resolution when 
 replaying. To do this, start xnee like this
 @example
-@code{xkeymouse --replay --file mouse-rec.xnl \ }
+@code{xnee --replay --file mouse-rec.xnl \ }
 @code{--replay-resolution  800x600}
 @end example
 Xnee will now replay the events recorded in the sessions file 
@@ -495,7 +495,7 @@ on the one where we replay the session xnee will translate all coordinates
 automagically. However, you can force xnee not to use translation. To do this, 
 start xnee like this
 @example
-@code{xkeymouse --replay --file mouse-rec.xnl \ }
+@code{xnee --replay --file mouse-rec.xnl \ }
 @code{--no-resolution-adjustment}
 @end example
 Xnee will now replay the events recorded in the sessions file 
@@ -509,7 +509,7 @@ the recorded one.
 If you want to record another display than the default, as set in the 
 DISPLAY variable, you use the @code{--display} option.
 @example
-@code{xkeymouse --record --mouse --display frodo:0.0 }
+@code{xnee --record --mouse --display frodo:0.0 }
 @end example
 Xnee will now record the mouse events on the display frodo:0.0.
 
@@ -519,7 +519,7 @@ Xnee will now record the mouse events on the display frodo:0.0.
 If you want to replat to another display than the default, as set in the 
 DISPLAY variable, you use the @code{--display} option.
 @example
-@code{xkeymouse --replay --display frodo:0.0 --file mouse-rec.xnl }
+@code{xnee --replay --display frodo:0.0 --file mouse-rec.xnl }
 @end example
 Xnee will now replay the mouse events on the display frodo:0.0.
 
