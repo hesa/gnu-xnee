@@ -1,0 +1,50 @@
+PACKAGE=\"xnee\"
+VERSION=\"1.08\"
+
+XOSD_DEFINE=
+XOSD_PATH=
+XOSD_INC=
+XOSD_LIB=
+XOSD_FLAGS=
+
+XNEE_PATH=../libxnee
+XNEE_INC=${XNEE_PATH}/include
+XNEE_LIB=${XNEE_PATH}/src/
+
+CC=gcc
+CFLAGS = -W -Wall -pedantic -pedantic-errors  -Werror \
+  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} \
+  -I/usr/X11R6/include -I${XNEE_INC}\
+  ${XOSD_FLAGS} \
+  -g -DHAVE_STDARG_H=1 
+
+
+LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib
+
+LIBS = -lX11 -lXext -lXtst -lpthread
+
+CLI_OBJS =  src/parse.o  src/main.o  
+
+OBJS = ${CLI_OBJS} 
+
+.c.o:
+	${CC} -g ${CFLAGS} -c $< -o $@
+
+	
+
+XNEELIB = -L${XNEE_LIB}  -lxnee
+
+XNEE_CLI= src/xnee  
+
+all : ${XNEE_CLI}
+
+clean:
+	\rm -fr ${CLI_OBJS} ${XNEE_CLI} src/*/*~ *~ src/*/*.o */a.out core 
+
+bin : ${XNEE_CLI} 
+
+
+${XNEE_CLI}: ${CLI_OBJS}
+	${CC}  -o ${XNEE_CLI}  ${CLI_OBJS} ${LDFLAGS} ${LIBS} ${XNEELIB} ${XOSD_FLAGS}   ${LIBS} 
+
+
