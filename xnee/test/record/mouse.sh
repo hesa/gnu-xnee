@@ -36,10 +36,6 @@ parse_me "$*"
 
 MOUSE_DEVICE=/dev/swmouse
 
-
-
-
-
 function check_nr_of_loops()
 {
     EXPECTED=$1
@@ -111,7 +107,7 @@ function test_mouse()
     EXP_DIFF=$5
 
     TMP=-1
-    verbose "staring xnee"
+    verbose "starting xnee"
     $XNEE --record --device-event-range 6 --loops $PIX -o $FILE &
 
     sleep 2
@@ -134,9 +130,31 @@ function test_mouse()
 
 verify_device swmouse
 
+
+
 rm m*.log
 
 NR_OF_PIX=400
+HALF_WAYS=200
+
+#start with the mouse in such a position that in can move around enought
+move_mouse      u  $NR_OF_PIX
+move_mouse      u  $NR_OF_PIX
+move_mouse      u  $NR_OF_PIX
+move_mouse      u  $NR_OF_PIX
+move_mouse      l  $NR_OF_PIX
+move_mouse      l  $NR_OF_PIX
+move_mouse      l  $NR_OF_PIX
+move_mouse      l  $NR_OF_PIX
+move_mouse      d  $NR_OF_PIX
+move_mouse      d  $HALF_WAYS
+move_mouse      r  $NR_OF_PIX
+move_mouse      r  $HALF_WAYS
+
+
+#zero the device counter
+zero_device swmouse
+
 
 verbose  "starting...."
 move_mouse      d  $NR_OF_PIX
@@ -154,8 +172,6 @@ test_mouse      d  $NR_OF_PIX md.log 4 -1
 
 
 #rm m*.log
-
-
 
 result_log $MYNAME 
 exit

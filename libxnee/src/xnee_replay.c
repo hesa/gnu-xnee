@@ -58,7 +58,7 @@ xnee_delta_time ( xnee_intercept_data * xindata)
   unsigned int old ; 
   new = xindata->newtime; 
   old = xindata->oldtime; 
-  
+
   if ( new > old ) 
     {
       return (new-old); 

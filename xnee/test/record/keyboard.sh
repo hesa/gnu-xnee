@@ -43,11 +43,9 @@ function check_nr_of_loops()
     PRESS_EXPECTED=$1
     RELEASE_EXPECTED=$2
     LOGFILE=$3
-
     
     PRESS_NR=`grep -e '^0,2' $LOGFILE | wc -l | sed 's,[ \t]*,,g'`
     RELEASE_NR=`grep -e '^0,2' $LOGFILE | wc -l | sed 's,[ \t]*,,g'`
-
 
     verify_same $PRESS_EXPECTED   $PRESS_NR   $LOGFILE 
     verify_same $RELEASE_EXPECTED $RELEASE_NR $LOGFILE 
@@ -75,7 +73,7 @@ function test_keyboard()
 	
 	
 	
-CAPS=0
+    CAPS=0
     TMP=0
     while [ "$TMP" != "$LEN" ];
     do
@@ -90,16 +88,16 @@ CAPS=0
     verbose "CAPS=$CAPS"
     verbose "LEN=$LEN"
     LEN=$(( $LEN + $CAPS)) 
-    DLEN=$(( $LEN * 2 ))
-    verbose "DLEN=$DLEN"
+    TLEN=$(( $LEN * 2 ))
+    verbose "TLEN=$TLEN"
     
 
     verbose "starting xnee"
-    $XNEE --record --device-event-range 2-3 --loops $DLEN -o $FILE &
+    $XNEE --record --device-event-range 2-3 --loops $TLEN -o $FILE &
     XNEE_PID=$!
 
     verbose "XNEE PID = $XNEE_PID"
-    sleep 3
+    sleep 2
 
     TMP=0
     while [ "$TMP" != "$LEN" ];
@@ -109,13 +107,13 @@ CAPS=0
     done
 
     
+    sleep 2
     verbose "shoot Xnee down"
     kill -2 $XNEE_PID
 #    press_key a 
     sleep 3
 
     check_nr_of_loops $LEN $LEN $FILE
-
 }
 
 
@@ -126,14 +124,11 @@ verify_device swkeybd
 rm k*.log
 
 STRING="This is a simple test string for Xnee"
-#STRING="this"
 test_keyboard "$STRING"   k1.log
 verbose  "starting...."
 
 
 #rm k*.log
-
-
 
 result_log $MYNAME 
 exit

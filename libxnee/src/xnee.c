@@ -365,7 +365,7 @@ xnee_init(xnee_data* xd, char *name)
   xd->buf_verbose   = False  ; 
   xd->all_clients   = True   ; 
   xd->sync          = True   ; 
-  xd->mode          = XNEE_RECORDER   ; 
+  xd->mode          = XNEE_NOMODE   ; 
 
   xd->data_file     = stdin  ;
   xd->out_file      = stdout ;

@@ -9,7 +9,7 @@ To get the first feel of Xnee four examples are presented.
 Start one terminal emulator (e.g xterm)
 Start Xnee, 
 @example
-   @code{xnee -rep -f example1.xnr &}
+   @code{xnee --replay --file example1.xnr &}
 @end example
 ....dont forget '&'.
 The file example1.xnr contains keyboard events recorded during development of this manual. 
@@ -56,6 +56,18 @@ Move the pointer to a terminal windows and start Xnee.
 @end example
 After 5 seconds you will see your mouse motions in the example above being repeated.
 
+@subsection Simple retyping of a text file
+Let Xnee retype (type again) the text in a text file.
+Move the pointer to a terminal windows and create a text file.
+@example
+   @code{echo "ls -l" > ./mytext.txt}
+@end example
+ and then start Xnee.
+@example
+   @code{xnee --retype  ./mytext.txt --time 5}
+@end example
+After 5 seconds you will see Xnee type @code{ls -l}, which probably will list the files in the current directory.
+
 @subsection Example session files
 @cindex Example session file
 The example file above (example1.xnr) is a session file that has been delivered with the sources 
@@ -98,12 +110,16 @@ When record mode is used Xnee receives a copy of the data sent to and from the X
 
 @subsection  Replay
 @cindex replaying
-When replay mode is used Xnee reads data from a file or stdin. These data is either sent to the server (if it is a keyboard or a mouse event) or used to synchronise with (if any of the other data).
-
+When replay mode is used Xnee reads data from a file or stdin. These data is either sent to the server (if it is a keyboard or a mouse event) or used to synchronise with (if any of the other data). Xnee can also retype the contents of a text file.
 
 @subsection  Distribution
 @cindex distributing
 Xnee can distribute mouse and keyboard events to multiple displays. The distribution mechanism can be used when recording as well as when replaying.
+
+@subsection  Distribution
+@cindex distributing
+Xnee can distribute mouse and keyboard events to multiple displays. The distribution mechanism can be used when recording as well as when replaying.
+
 
 
 @section  Ranges
@@ -325,21 +341,23 @@ To use a resource file use the @code{--resource} option,  e.g @code{xnee --resou
 To use a recorded file use the @code{--file} option,  e.g @code{xnee --file user1_session.xnee}
 
 
-@section  Stopping Xnee
-@cindex stopping xnee
-Stopping Xnee when recording or replaying can be done as follows
+@section  Interupting Xnee
+@cindex  interupting xnee
+Interupting Xnee when recording or replaying can be done as follows
 @itemize @bullet
 @item	user specified modifier and key
 @item	number of data to record
 @item	sending a SIGTERM signal (e.g pressing Control-c in a terminal window)
 @end itemize
 
-@subsection	user specified modifier and key
-@cindex stop modifier
-@cindex stop key
-It is possible to specify a modifier (e.g Control button) and a key (e.g 'a') that will stop the Xnee session. When using this option make sure that the modifier/key is not used in any way by the applications you recording.
-@subsection	number of data to record
+@subsection user specified modifier and key
+@cindex modifier
+@cindex key
+It is possible to specify a modifier (e.g Control button) and a key (e.g 'a') that will stop the Xnee session. When using this option make sure that the modifier/key is not used in any way by the applications you are recording. It is possible to stop Xnee from recording or replaying. In the fututre it will be possible to pause and resume Xnee while recording or replaying using key and modifier.
+
+@subsection number of data to record
 By specifying the number of data to record Xnee stops when this number num,ber of data is received from the server. When replaying the same amount of data is replayed. 
+
 @subsection	sending a SIGTERM signal (e.g pressing CTRL-C in a terminal window)
 @cindex SIGTERM
 The easiest way to send a signal to a process is by launching Xnee from a terminal window (e.g xterm). By pressing Control-c xterm sends the SIGTERM signal to Xnee. When replaying it can sometimes be hard to move the pointer into the terminal window (e.g if a lot of motion events were recorded that will let you compete with Xnee on where the mouse pointer shall be located. Beleive me, you'll end up lossing that battle).  

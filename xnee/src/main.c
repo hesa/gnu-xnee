@@ -239,7 +239,6 @@ int main(int argc,char *argv[])
 
   xnee_close_down(xd);
   
-
   exit(XNEE_OK); 
 }
 

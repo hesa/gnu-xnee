@@ -13,9 +13,11 @@ done
 STOP=`date '+%s'`
 
 NAME=test_all.sh
-
-echo " " 
-/bin/echo -n "TOTAL:"
+NEW_LOG=test_all.log
+rm    $NEW_LOG
+touch $NEW_LOG
+echo "Script name: test_all.sh" >> $NEW_LOG
+echo "Results from test"  >> $NEW_LOG
 cat $LOG | awk 'BEGIN { FS="[:]" ; TOT_T=0 ; SUC_T=0 ; ERR_T=0 ; WARN_T=0 ; RET_T=0 ; RET_E=0 ; } \
     { \
     TOT_T=TOT_T   + $2 ;\
@@ -26,15 +28,17 @@ cat $LOG | awk 'BEGIN { FS="[:]" ; TOT_T=0 ; SUC_T=0 ; ERR_T=0 ; WARN_T=0 ; RET_
     RET_E=RET_E   + $7 ;\
     } \
     END { \
-    printf "%s:", TOT_T ;\
-    printf "%s:", SUC_T ;\
-    printf "%s:", ERR_T ;\
-    printf "%s:", WARN_T ;\
-    printf "%s:", RET_T ;\
-    printf "%s:", RET_E ;\
-    }'
+    printf "Total nr of tests:   %s\n", TOT_T ;\
+    printf "  Success:           %s\n", SUC_T ;\
+    printf "  Error:             %s\n", ERR_T ;\
+    printf "  Warning:           %s\n", WARN_T ;\
+    printf "  Return (correct):  %s\n", RET_T ;\
+    printf "  Return (incorrect):%s\n", RET_E ;\
+    }' | tee test_all.log
+
     
-echo "TIME 0:`expr $STOP - $START`:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS" >> $LOG
+echo "TIME 0:`expr $STOP - $START`:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS" >> $NEW_LOG
+
 
 
 

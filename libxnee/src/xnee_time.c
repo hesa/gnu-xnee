@@ -133,16 +133,17 @@ xnee_calc_sleep_amount(xnee_data *xd,
 
   
 
-/*   xnee_verbose ((xd, "xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\n",  */
-/* 		last_diff, first_diff, record_last_diff, recordFirst_diff )); */
-
+  xnee_verbose ((xd, "xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\n",  
+		 last_diff, first_diff, record_last_diff, recordFirst_diff )); 
+  
   /* determine where we are from first read  either too fast or too slow */
   /* find amount that we are too fast or too slow */
   out_of_wack_amt = recordFirst_diff - first_diff;
 
   if ( out_of_wack_amt > 0 ) /* too fast - we should slow down a bit */
     {
-      if ( record_last_diff > last_diff )  /* recorded wait more than we have waited so far */
+      /* recorded wait more than we have waited so far */
+      if ( record_last_diff > last_diff ) 
 	{
 	  /* if the amount we are out of wack is more than the recorded wait */
 	  /* then sleep the full recorded difference */
@@ -152,29 +153,34 @@ xnee_calc_sleep_amount(xnee_data *xd,
 	    }
 	  else /* otherwise sleep the amount out of wack */
 	    {
+
 	      sleep_amt = out_of_wack_amt;
 	    }
 	}
       else  /* we have already waited the recorded amount of time */
 	{
-	  /* but since we are still too fast - sleep a percentage of recorded wait time */
+	  /* but since we are still too fast - 
+	     sleep a percentage of recorded wait time */
 	  tmp = (float)record_last_diff * XNEE_TOO_FAST_ADJ_PERCENTAGE/100;
-	  sleep_amt = ( long )tmp;
+	  sleep_amt = ( long ) tmp;
 	}
     }
   else if ( out_of_wack_amt < 0 ) /* too slow or right on time */ 
     {
+
       if ( record_last_diff > last_diff )  /* recorded wait more than we have waited so far */
 	{
+
 	  sleep_amt = record_last_diff - last_diff; /* amount of wait left */
 	}
       else  /* we have already waited the recorded amount of time */
 	{
+
 	  sleep_amt = 0;
 	}
     }
 
-/*   xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", sleep_amt )); */
+  xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", sleep_amt )); 
   return ( sleep_amt );
 }
 

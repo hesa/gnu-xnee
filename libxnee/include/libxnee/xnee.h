@@ -80,8 +80,10 @@ enum _xnee_data_types {
 
 /* ** Do NOT edit ** */
 enum _xnee_mode {
-  XNEE_REPLAYER  = 0,
+  XNEE_NOMODE    = 0,
+  XNEE_REPLAYER     ,
   XNEE_RECORDER     ,
+  XNEE_RETYPER      ,        
   XNEE_DISTRIBUTOR          
 } xnee_mode ;
 

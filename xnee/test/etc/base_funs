@@ -5,6 +5,8 @@ export LOG=./xnee_test.log
 export ERR_LOG=./xnee_test.err
 
 
+
+
 function init_test()
 {
     SCRIPT_NAME=$1
@@ -101,7 +103,7 @@ function result_log_()
 function result_log()
 {
     STOP=`date '+%s'`
-    result_log_simple $*
+    result_log_ $*
 }
 
 
@@ -295,6 +297,13 @@ function verify_device()
 }
 
 
+function zero_device()
+{
+	DEV=$1
+	echo "0" > /dev/$DEV
+}
+
+
 function verify_same()
 {
     EXP_VAL=$1
@@ -321,3 +330,59 @@ function verify_same()
     
 
 }
+
+
+function verify_not_same()
+{
+    EXP_VAL=$1
+    REAL_VAL=$2
+
+    MSG="$SCRIPT_NAME un comparing : \"$EXP_VAL == $REAL_VAL\" $3"
+
+    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+
+    verbose "Comparing :"
+    verbose "  expected:  \"$EXP_VAL\""
+    verbose "  real    :  \"$REAL_VAL\""
+
+    if [ "$EXP_VAL" == "$REAL_VAL" ];
+	then
+	verbose " Data is same: $MSG"
+	error_log " Data is same : $MSG"
+	ERR_TEST=`expr $ERR_TEST + 1`
+	return 1
+    fi
+
+    verbose "success...."
+    SUCC_TEST=`expr $SUCC_TEST + 1`
+}
+
+
+function check_xgetter()
+{
+    if [ ! -f ./src/xgetter ]
+	then
+	pushd ./src/
+	make all
+	popd
+    fi
+}
+
+export getx="./src/xgetter  --mouse-position-root-x"
+export gety="./src/xgetter  --mouse-position-root-y"
+export getxy="./src/xgetter  --mouse-position-root-all"
+
+get_pointer()
+{
+    check_xgetter    
+    XPOS=`$getx`
+    YPOS=`$gety`
+}
+
+save_pointer()
+{
+    check_xgetter    
+    SAVE_XPOS=`$getx`
+    SAVE_YPOS=`$gety`
+}
+

@@ -369,6 +369,15 @@ xnee_set_distributor (xnee_data *xd)
   return XNEE_OK;
 }
  
+
+int
+xnee_set_retyper (xnee_data *xd)
+{
+  xd->mode=XNEE_RETYPER;
+  return XNEE_OK;
+}
+ 
+
 int
 xnee_get_mode (xnee_data *xd)
 {
@@ -389,7 +398,7 @@ xnee_is_recorder (xnee_data *xd)
 }
 
 int
-is_xnee_replayer (xnee_data *xd)
+xnee_is_replayer (xnee_data *xd)
 {
   return (xd->mode==XNEE_REPLAYER);
 }
@@ -399,6 +408,14 @@ xnee_is_distributor (xnee_data *xd)
 {
   return (xd->mode==XNEE_DISTRIBUTOR);
 }
+
+int
+xnee_is_retyper (xnee_data *xd)
+{
+  return (xd->mode==XNEE_RETYPER);
+}
+
+
 
 int
 xnee_set_cont (xnee_data *xd)

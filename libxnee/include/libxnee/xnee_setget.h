@@ -183,6 +183,9 @@ int
 xnee_set_distributor (xnee_data *xd);
  
 int
+xnee_set_retyper (xnee_data *xd);
+ 
+int
 xnee_get_mode (xnee_data *xd);
 
 int
@@ -192,10 +195,13 @@ int
 xnee_is_recorder (xnee_data *xd);
 
 int
-is_xnee_replayer (xnee_data *xd);
+xnee_is_replayer (xnee_data *xd);
 
 int
 xnee_is_distributor (xnee_data *xd);
+
+int
+xnee_is_retyper (xnee_data *xd);
 
 
  

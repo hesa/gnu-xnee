@@ -343,6 +343,10 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
+	  else
+	    {
+	      xnee_set_retyper(xd);
+	    }
 	  if ( xnee_type_file(xd, argv[i]) != 0 )
 	    {
 	      xnee_print_error ("Unable to open plugin file (%s)\n", argv[i]);
@@ -675,7 +679,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--version", "-V")) 
 	{
 	  xnee_version(xd);
-	  exit(0);
+	  exit(XNEE_OK);
 	}
       else if(xnee_check(argv[i], "--distribute", "-di")) 
 	{
@@ -724,7 +728,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 					   file);
 	      fclose(file);
 	    }
-	  exit(0);
+	  exit(XNEE_OK);
 	}
       /* 
        * TO KEEP COMPATIBILITY WITH OLD 
