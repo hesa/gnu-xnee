@@ -1,7 +1,7 @@
 ###info_TEXINFOS=xnee.texi
-xnee_TEXINFOS=xnee_error.texi version.texi  xnee_error.texi xnee_exampl.texi xnee_faq.texi xnee_install.texi xnee_intro.texi xnee_req.texi xnee_synch.texi xnee_usage.texi   xnee_copying fdl.texi
+xnee_TEXINFOS=xnee_error.texi version.texi  xnee_error.texi xnee_exampl.texi xnee_faq.texi xnee_install.texi xnee_intro.texi xnee_req.texi xnee_synch.texi xnee_usage.texi xnee_general.texi xnee_start.texi  xnee_intern.texi xnee_copying fdl.texi
 
-EXTRA_DIST = xnee_copying fdl.texi xnee*.html xnee.txt xnee.1 xnee.info 
+EXTRA_DIST = xnee_copying fdl.texi xnee.info 
 
 
 

@@ -124,20 +124,10 @@ rm m*.log
 NR_OF_PIX=400
 HALF_WAYS=200
 
-#start with the mouse in such a position that in can move around enought
-move_mouse      u  $NR_OF_PIX
-move_mouse      u  $NR_OF_PIX
-move_mouse      u  $NR_OF_PIX
-move_mouse      u  $NR_OF_PIX
-move_mouse      l  $NR_OF_PIX
-move_mouse      l  $NR_OF_PIX
-move_mouse      l  $NR_OF_PIX
-move_mouse      l  $NR_OF_PIX
-move_mouse      d  $NR_OF_PIX
-move_mouse      d  $HALF_WAYS
-move_mouse      r  $NR_OF_PIX
-move_mouse      r  $HALF_WAYS
 
+verbose "find a nice start position ..."
+#start with the mouse in such a position that in can move around enought
+get_in_position
 
 #zero the device counter
 zero_device swmouse

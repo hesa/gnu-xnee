@@ -16,7 +16,7 @@ run_scripts()
     START=`date '+%s'`
     for i in `ls scripts/options/*.sh | grep -v test_all\.sh `; 
       do 
-echo      $i $*
+      $i $*
     done
     
     
@@ -26,6 +26,8 @@ echo      $i $*
     scripts/replay/mouse.sh       $*
     scripts/resolution/mo-res.sh  $*
     scripts/timing/mo-time.sh     $*
+    scripts/timing/mo-time.sh     $*
+    scripts/retype/keyboard.sh    $*
     STOP=`date '+%s'`
 }
 

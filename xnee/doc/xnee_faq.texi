@@ -8,7 +8,7 @@
 @email{info-xnee@@gnu.org}
 @*
 
-@item Where do I send bugs?
+@item Where and how do I report bugs?
 @cindex Report bugs?
 Turn on verbose mode @code{xnee --verbose} and save the printouts. 
 Include all printouts and log files in the mail which is sent to
@@ -49,7 +49,10 @@ Yes! Gnee.
 
 @item Why the name Xnee?
 @cindex why name it Xnee
-  We wanted to use a recursive acronym, as GNU (``GNU's Not Unix'). After having read the Wine documentation, I thought that Xnee is not an Event Emulator would work fine. Since Xnee is Not an Event Emulator but rather a event generator. 
+  We wanted to use a recursive acronym, as GNU (``GNU's Not Unix'). 
+After having read the Wine documentation, we thought that Xnee is not an 
+Event Emulator would work fine since Xnee is Not an Event Emulator but 
+rather a event recorder and faker. 
 
 @item What does the name Gnee mean?
 @cindex  What does the name Gnee mean?
@@ -58,7 +61,6 @@ Yes! Gnee.
 @item What doesn't the name Gnee mean?
 @cindex  What does the name Gnee mean?
           Gnee's not an Event Emulator  
-
 
 @item Can you add xxx functionality to Xnee
   Send an email to @email{xnee-devel@@gnu.org} and we'll consider it.

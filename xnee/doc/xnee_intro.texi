@@ -80,7 +80,7 @@ the command line. Today there is a GUI program, gnee, that uses the library.
 @*
 
 By using xnee your testcase(s) can be recorded and later on replayed.
-XNee comes with other features For more information about these, read the 
+Xnee comes with other features For more information about these, read the 
 Introduction.
 
 

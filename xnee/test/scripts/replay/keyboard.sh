@@ -1,7 +1,7 @@
 #/bin/sh
 #
 #
-# Filename:   recplay/keyboard-rec.sh
+# Filename:   recplay/keyboard.sh
 # Created:  Fri Aug  8 00:04:38 CEST 2003
 # 
 # Description:

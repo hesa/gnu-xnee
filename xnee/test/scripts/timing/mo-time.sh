@@ -56,32 +56,30 @@ verify_device swmouse
 get_in_position
 zero_device swmouse
 verbose "Storing start time"
+verbose "Recording a session ......"
 REAL_START_TIME=`date '+%s'`
 $XNEE --record --mouse --loops 5000 -o rep-time.log &
 
 move_mouse r 600
-sleep 1
 move_mouse d 600
-sleep 2
 move_mouse l 600
-sleep 3
 move_mouse u 600
-sleep 0
+sleep 3
 
 move_mouse r 400
 sleep 1
 move_mouse d 400
 sleep 2
 move_mouse l 400
-sleep 3
+sleep 2
 move_mouse u 400
 REAL_STOP_TIME=`date '+%s'`
 sleep 1
 killall -TERM $XNEE
 verbose "Storing stop time"
+verbose " .... finished recording a session"
 REAL_TIME=$(( $REAL_STOP_TIME - $REAL_START_TIME ))
 verbose "The mouse motions took $REAL_TIME secs"
-echo "The mouse motions took $REAL_TIME secs"
 
 function timed_replay()
 {
@@ -98,14 +96,19 @@ function timed_replay()
     FAKE_SPEED_PERCENT=$(( $FAKE_SPEED *100 / $SPEED ))
 
     TIME_PERCENT=$(( $FAKE_TIME *100 / $EXP_TIME ))
+
+    LIMIT__=$(( $EXP_TIME * 90 )) 
+    LIMIT_=$(( $LIMIT__ / 100 )) 
+    LIMIT=$(( $EXP_TIME - $LIMIT_ )) 
+    verbose "  Speed (%)   ${SPEED}          $FAKE_SPEED     $FAKE_SPEED_PERCENT"
+    verbose "  Time (secs) $EXP_TIME          $FAKE_TIME     $LIMIT"
     
-    echo "  Speed (%)   ${SPEED}          $FAKE_SPEED     $FAKE_SPEED_PERCENT"
-    echo "  Time (secs) $EXP_TIME          $FAKE_TIME     $TIME_PERCENT"
+    verify_pos_alm_same $EXP_TIME          $FAKE_TIME     $LIMIT
 }
 
 
-echo "Variable      Wanted      Actual      Percent"
-echo "=============================================="
+verbose "Variable      Wanted      Actual      Percent"
+verbose "=============================================="
 
 timed_replay 10
 
@@ -135,9 +138,8 @@ timed_replay 800
 
 timed_replay 1000
 
-
-
 result_log $MYNAME 
+
 
 
 

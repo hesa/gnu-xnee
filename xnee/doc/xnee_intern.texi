@@ -125,19 +125,119 @@ X-LIST is a comma separated list of RANGE, e.g
 
 @section Session file
 @cindex  Session file
-The Xnee session files are the printouts from a recorded session. The file 
-starts with META information from .........
+The Xnee session files are the printouts from a recorded session. The lines
+in the session file can be either of the following:
+
+@table @samp
+@item  Replayable data
+@item  Synchronisation data
+@item  Xnee setup data
+@item  Insert marks
+@end table
+
+@subsection  Replayable data
+       A text representation of the recorded device event.
+       Example: 
+       @code{0,3,0,0,0,28,0,3182009792})
+@subsection  Synchronisation data
+       A text representation of the recorded non device event
+@subsection  Xnee setup data
+       Information about how Xnee was setup when recording this session.
+       Examples: 
+       @code{       #   device_event:            2-3}
+@subsection  Xnee meta data
+       Information about the evnironment used when recording the seesion
+       Examples: 
+       @code{# Nodename:             laphroaig}
+@subsection  Insert marks
+       This is intended to be used in the future when Xnee will be scriptable.
+       Insert marks are inserted using a key+modifier during recording. 
+
+
 
 @section Key and modifier
-@cindex Key and modifier
+@cindex  Key and modifier
+When wanting to interupt Xnee from its current action it may sometimes be hard to 
+send a signal. Because of this Xnee has been added support to grab key and modifiers
+that can be bound to various xnee actions. You can specify a key + modifier 
+combination and bind that to either one of the following actions:
+@table @samp
+@item  stop
+@item  pause
+@item  resume
+@item  insert mark
+@end table
+
+@subsection  Stop Xnee with key+modifier combination
+@cindex      Stop Xnee with key+modifier combination
+Xnee stops its current action when the user presses the key+modifier
+combination as specified during setup. Xnee will be shut gracefully.
+
+@subsection  Pause Xnee with key+modifier combination
+@cindex      Pause Xnee with key+modifier combination
+Xnee pause its current action when the user presses the key+modifier
+combination as specified during setup. Xnee will be in paused mode until
+the user stops or resumes Xnee.
+
+@subsection  Pause Xnee with key+modifier combination
+@cindex      Pause Xnee with key+modifier combination
+Xnee resumes its current paused action when the user presses the key+modifier
+combination as specified during setup. Xnee will continue where it was
+paused.
+
+@subsection  Insert marks Xnee with key+modifier combination
+@cindex      Insert marks Xnee with key+modifier combination
+When the user presses the key+modifier combination as specified during setup Xnee will 
+print a mark in the session file containing a time stamp. This feature is intended be used
+when you want to mark an interresting time/event during recording. 
+After recording has finished you can add Xnee scripting calls to Xnee which will be 
+interpreted and executed as if they were recorded.
 
 
-@subsection  Key and modifier syntax
-@cindex      Key and modifier syntax
+@subsection  Stop key and modifier syntax
+@cindex      Stop key and modifier syntax
+Setting stop key and modifier is done using the @code{--stop-key} option.
+@example
+@code{xnee --record --mouse --stop-key Control,e}
+@end example
+This will make Xnee stop its current action when the user presses Control and e.
+
+@subsection  Pause key and modifier syntax
+@cindex      Pause key and modifier syntax
+Setting pause key and modifier is done using the @code{--pause-key} option.
+@example
+@code{xnee --record --mouse --pause-key Control,p}
+@end example
+This will make Xnee pause its current action when the user presses Control and p.
+
+@subsection  Resume key and modifier syntax
+@cindex      Resume key and modifier syntax
+Setting stop resume and modifier is done using the @code{--resume-key} option.
+@example
+@code{xnee --record --mouse --resume-key Control,r}
+@end example
+This will make Xnee resume its paused action when the user presses Control and r.
+
+
+@subsection  Insert key and modifier syntax
+@cindex      Insert key and modifier syntax
+Setting insert key and modifier is done using the @code{--insert-key} option.
+@example
+@code{xnee --record --mouse --insert-key Control,i}
+@end example
+This will make Xnee insert a mark in the session file when the user presses Control and i.
+
+
+
+@subsection  Key syntax
+@cindex      Key syntax
 You can set the key by entering one character or the keycode for the 
 character you wish to use. 
 
-Modifiers can be any of the following.
+@subsection  Modifier syntax
+@cindex      Modifier syntax
+
+Modifiers can be set to a '+' separated list of any of the following.
 @table @samp
 @item  Shift or Shift
         Modifier is set to the Shift key
@@ -185,14 +285,26 @@ Modifiers can be any of the following.
 
 You can also specify the keycode for the modifier you wish to use
 
-@section Modifier examples
-@cindex  Modifier examples
+@section Modifier+key examples
+@cindex  Modifier+key  examples
+
+If you want to set the modifier to be a combination of Control, Alt and Shift you
+spearate them with a @code{+} sign.
+@example
+@code{Control+Alt+Shift}
+@end example
+
+If you want to make Xnee stop when pressing the above modifier combination and the key
+y, you type 
+@example
+@code{--stop-key Control+Alt+Shift,y} 
+@end example
 
 
 
 @chapter Synchronisation
 @cindex Synchronisation
-We will try to go through the basics of Xnee implememnts synchronisation and 
+We will try to go through the basics of how Xnee implememnts synchronisation and 
 try to tell you, by using examples, why synhronisation is important.
 
 @section Why synchronise
@@ -207,7 +319,7 @@ During record the following is done:
 @item	Start galeon (or another web browser) via the GNOME panel
 @item	Press Ctrl-O which pops up a window
 @item   Press the left button in the textfield of the popup window
-@item   Enter the URL you want to enter (e.g http://www.gnu.org)
+@item   Enter the URL you want to enter (e.g @url{http://www.gnu.org})
 @item   Click on the OK button 
 @item   Then click on another URL (e.g GNU Documentation)
 @item   Then click on another URL (e.g On-Line Documentation)
@@ -220,7 +332,7 @@ During replay the following is done:
 @item   Galeon is started
 @item   Ctrl-O is typed which pops up a window
 @item   Press the left button in the textfield of the popup window
-@item   Enter the URL you want to enter (e.g http://www.gnu.org)
+@item   Enter the URL you want to enter (e.g @url{http://www.gnu.org})
 @item   Clock on the OK button 
 @item      ... due to an enormous amount of visitors the GNU web server can't respond as quick as it did when recording. So when the next thing happens
 @item   Then click on another URL (e.g GNU Documentation)
@@ -241,7 +353,7 @@ During record the following is done:
 @item	Press Ctrl-O which pops up a window
 @item   Record some X data that tells us that a window have been created
 @item   Press the left button in the textfield of the popup window
-@item   Enter the URL you want to enter (e.g http://www.gnu.org)
+@item   Enter the URL you want to enter (e.g @url{http://www.gnu.org})
 @item   Clock on the OK button 
 @item   Record some X data that tells us that a window have been destroyed
 @item   Then click on another URL (e.g GNU Documentation)
@@ -258,7 +370,7 @@ During replay the following is done:
 @item	Press Ctrl-O which pops up a window
 @item   wait for: the recorded X data to be sent again
 @item   Press the left button in the textfield of the popup window
-@item   Enter the URL you want to enter (e.g http://www.gnu.org)
+@item   Enter the URL you want to enter (e.g @url{http://www.gnu.org})
 @item   Clock on the OK button 
 @item   wait for: the recorded X data to be sent again
 @item   Then click on another URL (e.g GNU Documentation)
@@ -303,12 +415,43 @@ Even if one starts up a machine from scratch (reboot) when recording and from sc
 To enable synchronisation Xnee buffers data:
 @itemize @bullet
 @item    that was read in the session file but hasn't been sent during replay
-@item    that was sent during replay but hasn't been seen in the sessopn file being replayed
+@item    that was sent during replay but hasn't been seen in the session
+         file being replayed
 @end itemize
-For every data read from session file (during replay) that isn't replayable (i e device event) and 
-that hasn't been sent (as when recorded) Xnee pauses for a short while. 
-If the data is sent to Xnee, everything is fine. If the data isn't sent it is stored in the 
-buffer of unsynchronised data. If the number of unsynchronise data is getting to high, 
-Xnee will eventually exit with an error code (see man page(s)).
+For every data read from session file (during replay) that isn't replayable 
+(i e device event) Xnee stores the data in a buffer. Xnee also stores the
+data sent from the X server during playback. The data received from the server
+make the buffer entry for that specific data be decremented. If, on the other 
+hand, the same data was read from file the buffer entry for that data is 
+incremented.
+Before replaying any replayable event Xnee makes sure it is in sync. If Xnee 
+is in sync the replaying 
+continues. If Xnee is out of sync it will look for its thresholds and see
+if it is inside a user specified range. There are three thresholds:
+@itemize @bullet
+@item    @b{positive maximum}  nr data read from session file
+@item    @b{negative minimum}  nr of data sent from X server
+@item    @b{absolute total maximum} sum of the absolute values above
+@end itemize
+If Xnee read one data from file (e.g the event MapNotify) Xnee checks if the 
+buffer entry for the specific data is bigger than the positive maximum value
+(after having incremented the buffer value). 
 
+If Xnee receives one data from the X server (e.g the event MapNotify) it 
+checks if the  buffer entry for the specific data is bigger than the 
+negative minimum value (after having decremented the buffer value). 
 
+Xnee also checks if the absolute sum of the diferences for every entry
+in the buffer is higher the a total threshold.
+
+If Xnee is getting out of sync it slows down the speed a bit and tries to 
+continue. However after a while it may happen that Xnee considers that it
+no use to continue since we are too much out of sync.
+@*
+Xnee compensates for the delay during replay that is caused when being out of 
+sync.
+@*
+It is possible to tweak the thresholds using the @code{--maximum-threshold},
+@code{--negative-threshold} and @code{--total-diff-threshold} options. Is is
+also possible to turn off synchronisation completely using the @code{--no-sync}
+option.

@@ -15,6 +15,9 @@ api-doc:
 devel-doc: doc
 	cd libxnee/doc && $(MAKE) $(AM_MAKEFLAGS) $@
 
+test: 
+	cd xnee/test && ./test_all.sh
+
 .PHONY: html pdf text info xnee.1 devel 
 
 ## -------------------- ##
@@ -25,6 +28,6 @@ EXTRA_DIST = MANUAL \
 	DEVELOPMENT EXAMPLES USAGE \
 	TODO DESCRIPTION FAQ BUGS \
 	build*.sh depcomp \
-	resources/*.xns  sessions/*.xnr \
+	resources/*.xnr  sessions/*.xns \
 	Makefile.xnee Makefile.openbsd Makefile.cvs 
 

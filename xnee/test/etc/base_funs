@@ -238,7 +238,7 @@ function compare_data()
 
     TOTAL_TEST=$(($TOTAL_TEST + 1))
 
-    verbose "Comparing:"
+    verbose "Comparing: "
     verbose "  expected:  \"$EXP_EV == $EXP_EV_NAME\""
     verbose "  xnee:      \"$REC_EV == $REC_EV_NAME\""
 
@@ -256,7 +256,7 @@ function compare_data()
 	return 1
     fi
 
-    verbose "success...."
+    verbose " .... OK"
     SUCC_TEST=$(($SUCC_TEST + 1))
 }
 
@@ -275,9 +275,7 @@ function compare_data_false()
 
     TOTAL_TEST=$(($TOTAL_TEST + 1))
 
-    verbose "Comparing (false):"
-    verbose "  inv xnee:      \"$REC_EV/$REC_EV_NAME\""
-    verbose "  inv expected:  \"$EXP_EV/$EXP_EV_NAME\""
+    verbose "Comparing (false): \"$REC_EV/$REC_EV_NAME\"  \"$EXP_EV/$EXP_EV_NAME\" "
 
     if [ "$REC_EV" == "$EXP_EV" ];
 	then
@@ -292,7 +290,7 @@ function compare_data_false()
 	return 1
     fi
     
-    verbose "success...."
+    verbose " ...OK "
     SUCC_TEST=$(($SUCC_TEST + 1))
 }
 
@@ -328,9 +326,7 @@ function verify_same()
 
     TOTAL_TEST=$(($TOTAL_TEST + 1))
 
-    verbose "Comparing :"
-    verbose "  expected:  \"$EXP_VAL\""
-    verbose "  real    :  \"$REAL_VAL\""
+    verbose "Comparing : \"$EXP_VAL\"  \"$REAL_VAL\""
 
     if [ "$EXP_VAL" != "$REAL_VAL" ];
 	then
@@ -340,7 +336,7 @@ function verify_same()
 	return 1
     fi
 
-    verbose "success...."
+    verbose "OK"
     SUCC_TEST=$(( $SUCC_TEST + 1 ))
     
 
@@ -356,9 +352,7 @@ function verify_not_same()
 
     TOTAL_TEST=$(( $TOTAL_TEST + 1 ))
 
-    verbose "Uncomparing :"
-    verbose "  expected:  \"$EXP_VAL\""
-    verbose "  real    :  \"$REAL_VAL\""
+    verbose "Uncomparing : \"$EXP_VAL\" \"$REAL_VAL\""
 
     if [ "$EXP_VAL" == "$REAL_VAL" ];
 	then
@@ -368,7 +362,7 @@ function verify_not_same()
 	return 1
     fi
 
-    verbose "success...."
+    verbose "OK"
     SUCC_TEST=$(( $SUCC_TEST + 1 ))
 }
 
@@ -382,12 +376,11 @@ function verify_pos_alm_same()
 
     TOTAL_TEST=$(( $TOTAL_TEST + 1 ))
 
-    verbose "verify_pos_alm_same:"
-    verbose "  expected:  \"$EXP_VAL\""
-    verbose "  real    :  \"$REAL_VAL\""
 
     LOW_VAL=$(( $EXP_VAL - $LIMIT ))
     HIGH_VAL=$(( $EXP_VAL + $LIMIT ))
+
+    verbose "verify_pos_alm_same:  $LOW_VAL <  \"$EXP_VAL\" , \"$REAL_VAL\"  < $HIGH_VAL"
 
     if [ "$REAL_VAL" -gt "$HIGH_VAL" ];
 	then
@@ -403,7 +396,7 @@ function verify_pos_alm_same()
 	return 1
     fi
 
-    verbose "success...."
+    verbose "OK"
     SUCC_TEST=$(($SUCC_TEST + 1 ))
 }
 
