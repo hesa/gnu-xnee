@@ -132,7 +132,7 @@ compare_error_false()
 #
 
 # get the error numbers and names from the devel header file
-find_errors  X.h $X11_NAMES
+find_errors  /usr/include/X11/X.h  $X11_NAMES
 
 LAST_ERROR=`cat $X11_NAMES | grep -v Extension | tail -1 | awk 'BEGIN {FS="="} ; { print $1}' | sed 's,[ ]*,,g' `
 echo "LAST_ERROR=$LAST_ERROR"

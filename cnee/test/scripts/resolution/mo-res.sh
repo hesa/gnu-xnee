@@ -61,7 +61,7 @@ function time_record()
     STARTX=$XPOS
     STARTY=$YPOS
     verbose "   ### start point:    $XPOS $YPOS `date`"
-    $XNEE --record --mouse --loops $SUM -o rep-mouse.log &
+    $XNEE --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record $SUM -o rep-mouse.log &
 
     sleep 1
     verbose "Start faking with swinput:"

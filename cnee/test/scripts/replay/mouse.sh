@@ -60,7 +60,7 @@ function record_and_replay()
     STARTX=$XPOS
     STARTY=$YPOS
     verbose "   ### start point:    $XPOS $YPOS `date`"
-    $XNEE --record --mouse --loops $SUM -o rep-mouse.log &
+    $XNEE --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record $SUM -o rep-mouse.log &
 
     sleep 1
     verbose "Start faking with swinput:"
@@ -224,6 +224,9 @@ get_in_position
 zero_device swmouse
 record_and_replay 200 300 250 170
 sleep 5
+
+
+
 
 #get mouse in position and zero the device counter
 get_in_position

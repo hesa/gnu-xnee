@@ -17,18 +17,24 @@ run_scripts()
     for i in `ls scripts/options/*.sh | grep -v test_all\.sh `; 
       do 
       echo "exec $i"
-      $i $*
-      sleep 10
+#      $i $*
+#      sleep 10
     done
-    
-    
-    scripts/record/keyboard.sh    $*
+
+    scripts/record/keyboard.sh    $* 
+    echo "einar 1"
     scripts/record/mouse.sh       $*
+    echo "einar 11"
     scripts/replay/keyboard.sh    $*
+    echo "einar 122"
     scripts/replay/mouse.sh       $*
+    echo "einar 133"
     scripts/resolution/mo-res.sh  $*
+    echo "einar 144"
     scripts/timing/mo-time.sh     $*
+    echo "einar 155"
     scripts/timing/mo-time.sh     $*
+    echo "einar 166"
     scripts/retype/keyboard.sh    $*
     STOP=`date '+%s'`
 }

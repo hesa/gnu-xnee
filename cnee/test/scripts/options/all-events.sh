@@ -8,8 +8,12 @@
 # Generated:  Sun Mar 16 20:17:14 CET 2003
 # 
 #
- 
- 
+
+
+echo "obsolete test case: --all-events"
+echo "... leaving" 
+exit 0
+
 # Arguments to test (short and long)
 export LONG_ARG=--all-events
 export SHORT_ARG=-ae
@@ -59,18 +63,18 @@ function check_arg()
 
 
 # positive test
-$XNEE $LONG_ARG --record  --loops 0 > $XNEE_STDOUT
+$XNEE $LONG_ARG --record  --events-to-record 0 > $XNEE_STDOUT
 STATUS=$?
 check_retval $STATUS 0 
 check_arg $XNEE_STDOUT 1 "$LONG_ARG"
 
 # positive test
-$XNEE $SHORT_ARG --record --loops 0 > $XNEE_STDOUT
+$XNEE $SHORT_ARG --record --events-to-record 0 > $XNEE_STDOUT
 check_retval $STATUS 0 
 check_arg  $XNEE_STDOUT 1 "$SHORT_ARG"
 
 # negative test
-$XNEE --record --device-event-range 6 --loops 0 > $XNEE_STDOUT
+$XNEE --record --device-event-range 6 --events-to-record 0 > $XNEE_STDOUT
 check_retval $STATUS 0 
 check_arg  $XNEE_STDOUT 0 "$SHORT_ARG"
 
