@@ -1,0 +1,252 @@
+@node Installation, Examples, General ideas, top
+@chapter Installation
+
+@section Installation from source with the configure script
+Since Xnee is divided into sub projects which are delivered on their own you have to download, build and install these seperately. Do the following:
+Download the following source files into a directory (version numbers given here are just examples)
+@itemize @bullet
+@item	libxnee-1.0.tar.gz
+@item	cnee-1.1.tar.gz
+@item	gnee-1.2.tar.gz
+@end itemize
+and optionally
+@itemize @bullet
+@item	xnee-doc-1.3.tar.gz
+@end itemize
+
+
+@*
+Unzip the source file
+@example
+@code{gunzip libxnee-1.0.tar.gz}
+@code{gunzip cnee-1.1.tar.gz}
+@code{gunzip gnee-1.2.tar.gz}
+@end example
+
+@*
+Untar the source file
+@example
+@code{tar xvf libxnee-1.0.tar}
+@code{tar xvf cnee-1.1.tar}
+@code{tar xvf gnee-1.2.tar}
+@end example
+
+@*
+Enter the libxnee directory
+@example
+@code{cd libxnee-1.0}
+@end example
+
+@*
+Generate the makefiles
+@example
+@code{./configure}
+@end example
+@*
+or if you want to specify which directory to install xnee to 
+@example
+@code{./configure --prefix=<PATH TO INSTALLATION DIR>}
+@end example
+
+@*
+Build libxnee
+@example
+@code{make clean all}
+@end example
+
+@*
+Install (as root) if you want libxnee to be installed. If not, skip the following command. Installation of libxnee is not needed to build cnee and gnee.
+@example
+@code{make install}
+@end example
+
+@*
+Enter the cnee directory
+@example
+@code{cd cnee-1.1}
+@end example
+
+@*
+Generate the makefiles
+@example
+@code{./configure}
+@end example
+@*
+If you haven't installed libxnee you can use configure in the following way
+@example
+@code{./configure --with-libxnee-dir=/home/hesa/gnu/xnee/libxnee-1.0}
+@end example
+
+@*
+Build cnee
+@example
+@code{make clean all}
+@end example
+
+@*
+Install (as root).
+@example
+@code{make install}
+@end example
+
+
+@*
+Enter the gnee directory
+@example
+@code{cd gnee-1.2}
+@end example
+
+@*
+Generate the makefiles
+@example
+@code{./configure}
+@end example
+@*
+If you haven't installed libxnee you can use configure in the following way
+@example
+@code{./configure --with-libxnee-dir=/home/hesa/gnu/xnee/libxnee-1.0}
+@end example
+
+@*
+Build gnee
+@example
+@code{make clean all}
+@end example
+
+@*
+Install (as root).
+@example
+@code{make install}
+@end example
+
+
+
+@section Installation from source with default Makefile
+To unpack, build and install Xnee from the sourcefiles do the following:
+@*
+Download the source files into a directory
+
+Unzip the source file
+@example
+@code{gunzip xnee-1.0.tar.gz}
+@end example
+
+Untar the source file
+@example
+@code{tar xvf xnee-1.0.tar}
+@end example
+
+Enter the Xnee directory
+@example
+@code{cd xnee-1.0}
+@end example
+
+Build Xnee
+@example
+@code{make -f Makefile.xnee clean all}
+@end example
+
+Copy the Xnee binary (xnee/src/xnee) to a directory
+@example
+@code{cp xnee/src/xnee /usr/local/bin}
+@end example
+
+
+
+
+
+@section Installation from SOURCE RPM
+Use the rpm command, e.g
+@example
+@code{rpm --install cnee-1.1.i386.srpm}
+@code{rpm --install gnee-1.2.i386.srpm}
+@code{rpm --install xnee-doc-1.3.i386.srpm}
+@end example
+
+
+@section Installation from RPM
+Use the rpm command, e.g 
+@example
+@code{rpm --install cnee-1.1.i386.rpm}
+@code{rpm --install gnee-1.1.i386.rpm}
+@code{rpm --install xnee-doc-1.3.i386.rpm}
+@end example
+
+
+@section Installation from CVS
+@*
+Download the xnee source code from the CVS repository at 
+@url{http://savannah.gnu.org}. Instructions on how to do 
+this can be found there as well. 
+
+@*
+
+Build libxnee
+@example
+@code{cd libxnee}
+@code{make -f Makefile.cvs}
+@code{./configure}
+@code{make}
+@code{make install} (optional)
+@code{cd ..}
+@end example
+
+Build cnee
+@example
+@code{cd cnee}
+@code{make -f Makefile.cvs}
+@code{./configure}
+@code{make}
+@code{make install} (as root)
+@code{cd ..}
+@end example
+
+Build gnee
+@example
+@code{cd gnee}
+@code{make -f Makefile.cvs}
+@code{./configure}
+@code{make}
+@code{make install} (as root)
+@code{cd ..}
+@end example
+
+
+Build Xnee Documentation
+@example
+@code{cd doc}
+@code{make -f Makefile.cvs}
+@code{./configure}
+@code{make}
+@code{make install} (as root)
+@code{cd ..}
+@end example
+
+
+@chapter Uninstallation
+
+@section Uninstallation from SOURCE RPM
+Use the rpm command, e.g
+@example
+@code{rpm --erase cnee}
+@code{rpm --erase gnee}
+@code{rpm --erase xnee-doc}
+@end example
+
+@section Uninstallation from RPM
+Use the rpm command, e.g
+@example
+@code{rpm --erase cnee}
+@code{rpm --erase gnee}
+@code{rpm --erase xnee-doc}
+@end example
+
+@section Uninstallation from source installation
+Remove the Xnee binaries
+@example
+@code{rm /usr/local/bin/xnee}
+@code{rm /usr/local/bin/gnee}
+@code{rm /usr/local/lib/libxnee*}
+@end example
+
+

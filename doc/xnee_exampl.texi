@@ -1,0 +1,528 @@
+@node Examples, Protocol, Installation, top
+@chapter Examples
+
+@section Recorder
+
+
+@subsection Record mouse motions 
+@cindex     Record mouse motions 
+Record mouse motions only and save the session to mouse-rec.xnl. 
+@example
+   @code{xnee --record --mouse --out mouse-rec.xnl}
+@end example
+After having typed this you can move your mouse round for a while. After Xnee 
+has exited you will be able to replay your motions. Xnee will stop
+after having record 100 events (this is the default behaviour).
+
+
+@subsection Record keyboard  
+@cindex     Record keyboard 
+Record keyboard events only and save log to kbd-rec.xnl. 
+@example
+   @code{xnee --record --mouse --out kbd-rec.xnl}
+@end example
+After having typed this Xnee records all your keyboard actions. After Xnee 
+has exited you will be able to replay your keyboard actions. Xnee will stop
+after having record 100 events (this is the default behaviour).
+
+
+@subsection Record keyboard and mouse
+@cindex     Record keyboard and mouse
+Record keyboard and mouse and save log to km-rec.xnl. 
+@example
+   @code{xnee --record --keyboard --mouse --out kbd-rec.xnl}
+@end example
+After having typed this Xnee records all your keyboard and mouse actions. 
+So now move your pointer and write some stuff with your keyboard. After Xnee 
+has exited you will be able to replay your keyboard and mouse actions. Xnee 
+will stop after having record 100 events (this is the default behaviour).
+
+
+
+@subsection Record a gnumeric session
+@cindex     Record a gnumeric session
+Record a galeon session. Record 400 events. Save output in file galeon.xnl
+Start a terminal emulator (e.g xterm)
+@example
+@code{xterm&}
+@end example
+
+Start Xnee
+@example
+   @code{xnee --record --keyboard --mouse --loops 400 --out gnumeric.xnl&}
+@end example
+
+Start galeon
+@example
+@code{gnumeric&}
+@end example
+Start using gnumeric. Browse the menus above, reset the fonts etc.
+
+
+
+
+@subsection Record a gnumeric session with synchronisation data
+@cindex     Record a gnumeric session with synchronisation data
+Record a gnumeric session. Record 400 events. Save output in file gnumeric2.xnl
+
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+
+Start Xnee
+@example
+   @code{xnee --record --keyboard --mouse --loops 400 --out gnumeric2.xnl\}
+   @code{--delivered-event-range Expose,MapRequest,LeaveNotify,EnterNotify  &}
+@end example
+
+@*
+Start galeon
+@code{gnumeric&}
+Start using gnumeric. Browse the menus above, reset the fonts etc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@section Replayer
+
+@subsection Replay mouse motions 
+@cindex     replay mouse motions 
+Replay mouse motions as found in the file mouse-rec.xnl. 
+@example
+   @code{xnee --replay  --file mouse-rec.xnl}
+@end example
+Xnee will now imitate exactly what you did when you recorded this file.
+
+@subsection Replay mouse motions using with half speed
+@cindex     replay using half speed
+Replay mouse motions as found in the file mouse-rec.xnl but with the 
+speed set to 50% of the recorded.
+@example
+   @code{xnee --replay  --file mouse-rec.xnl --speed-percent 50}
+@end example
+Xnee will now imitate exactly what you did when you recorded this file, 
+allthough it will be done in 50% of the recorded time.
+
+@subsection Replay mouse motions using with double speed
+@cindex     replay using double speed
+Replay mouse motions as found in the file mouse-rec.xnl but with the 
+speed set to 200% of the recorded.
+@example
+   @code{xnee --replay  --file mouse-rec.xnl --speed-percent 200}
+@end example
+Xnee will now imitate exactly what you did when you recorded this file, 
+allthough it will be done twice as fast as when recorded.
+
+@subsection Replay keyboard actions
+@cindex     Replay keyboard actions
+Replay keyboard events from file kbd-rec.xnl. 
+@example
+   @code{xnee --replay --file kbd-rec.xnl}
+@end example
+After having typed this Xnee replays all your keyboard actions. After Xnee 
+has exited you will be able to replay your keyboard actions. 
+
+
+
+@subsection Replay keyboard and mouse
+@cindex     Replay keyboard and mouse
+Replay keyboard and mouse from the file km-rec.xnl. 
+@example
+   @code{xnee --replay --keyboard --mouse --file kbd-rec.xnl}
+@end example
+After having typed this Xnee replays all your keyboard and mouse actions. 
+Xnee moves your pointer and writes the the same stuff as you did when
+recording. 
+
+
+
+@subsection Replay a gnumeric session
+@cindex     Replay a gnumeric session
+Replay the gnumeric session above
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+Start a new fresh gnumeric spreadsheet
+@code{gnumeric&}
+
+Start Xnee
+@example
+   @code{xnee --replay  --file gnumeric.xnl}
+@end example
+Xnee will now do the same stuff you did when recording. It may happen 
+that some user actions are replayed to early. This is so because Xnee has
+no way of knowing if it is in sync with the recorded session.
+
+
+
+
+@subsection Replay a galeon session with synchronisation data
+@cindex     Replay a galeon session with synchronisation data
+Replay the second gnumeric session above.
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+Start a new fresh gnumeric spreadsheet
+@code{gnumeric&}
+
+
+Start Xnee
+@example
+   @code{xnee --replay  --file gnumeric2.xnl}
+@end example
+Xnee will now do the same stuff you did when recording. It may happen 
+that the replaying slows down. This is because Xnee is currently out of sync. 
+When being out of sync Xnee slows down a bit and checks the thresholds if it
+is allowed to continue. Xnee will most probably find itself in sync after
+a short while. All recorded user actions should have occured the same way
+as when recording.
+
+
+@subsection Replay a galeon session with synchronisation data setting threshold
+@cindex     Replay a galeon session with synchronisation data setting threshold
+Replay the second gnumeric session above.
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+Start a new fresh gnumeric spreadsheet
+@code{gnumeric&}
+
+
+@section Retyper
+
+@subsection Retype the help printout
+@cindex     Retype the help printout
+If you want Xnee to fake a user typing the help printout from xnee
+you can use the @code{--type-help} option.
+@*
+Start a terminal emulator (e.g xterm) and an editor (e.g emacs).
+@example
+@code{xterm &}
+@end example
+@example
+@code{emacs &}
+@end example
+Retype the help printout by starting xnee with a 10 seconds delay delay.
+@example
+@code{xnee --time 10 --type-help}
+@end example
+Move your mouse to the editor and make the editor have focus.
+Wait a few seconds and xnee will type the help. You will now also have a 
+copy of help text.
+
+
+@subsection Retype a file
+@cindex     Retype a file
+If you want Xnee to fake a user typing the letters as found in a text 
+file you can use the retype mode. Note that it isn't possible to retype all
+characters yet. This will be implemented as soon as possible. We'll give 
+an example on how to use this mode.
+@*
+Start a terminal emulator (e.g xterm)
+@example
+@code{xterm &}
+@end example
+Create a text file
+@example
+@code{echo "Hi Xnee" > testfile.txt}
+@end example
+
+Retype the contents of this file to another file by starting xnee 
+with a 10 seconds delay delay.
+@example
+@code{xnee --time 10 --retype-file testfile.txt}
+@end example
+Start the fabulous editor @code{cat}
+@example
+@code{cat > copiedfile.txt}
+@end example
+Wait a few seconds and xnee will retype the letters in the file 
+@code{testfile.txt}. You will now also have a copy of that file.
+The copy is called copiedfile.txt. This is a realy a stupid way
+to copy a file but this option opens up a few possibilities.
+
+
+
+@section Distributor
+With the distribution mode Xnee can send your device events to 
+multiple displays. 
+
+@subsection Distribute your mouse motions 
+@cindex     Distribute your mouse motions 
+You can distribute your mouse motions to the displays frodo:0.0 and
+sam:0.0 
+@*
+Start a terminal emulator (e.g xterm)
+@example
+@code{xterm &}
+@end example
+Start xnee
+@example
+@code{xnee --distribute frodo:0,sam:0.0}
+@code{ --record --mouse}
+@end example
+
+If you have setup authority correct on frodo and sam you will
+see all you mouse motions being done on thos displays as well.
+
+
+@subsection Distribute the replaying of mouse motions 
+@cindex     Distribute the replaying of mouse motions 
+Replay and distribute mouse motions as found in the file 
+@code{mouse-rec.xnl}. 
+@example
+   @code{xnee --replay  --file mouse-rec.xnl}
+   @code{ --distribute frodo:0,sam:0.0}
+@end example
+Xnee will now imitate exactly what you did when you recorded this file on 
+your host as well on frodo and sam.
+
+
+
+@subsection Distribute the retyping of a file
+@cindex     Distribute the retyping of a file
+If you want Xnee to to distribute the fakeing of a user typing the 
+letters as found in a text file you can use the retype mode together
+with the distribution mode. 
+@*
+Start a terminal emulator (e.g xterm) on each of the hosts
+@example
+@code{xterm &}
+@end example
+Create a text file. 
+@example
+@code{echo "Hi again Xnee" > distfile.txt}
+@end example
+
+Retype the contents of this file to another file by starting xnee 
+with a 10 seconds delay delay.
+@example
+@code{xnee --time 10 --retype-file distfile.txt}
+@code{ --distribute frodo:0,sam:0.0 }
+@end example
+Start the fabulous editor @code{cat} on the terminal emulators on each the 
+terminals.
+@example
+@code{cat > copiedfile.txt}
+@end example
+@*
+If you have setup authority correct on frodo and sam you will, after
+a few seconds, see xnee retype the letters in the file 
+@code{distfile.txt}. You will now also have three copies of that file.
+On copy on each host. The copy is called copiedfile.txt. This might 
+seem like a stupid way to copy a file to three locations but this
+is just an example.
+
+
+
+
+@section    Key and modofiers
+
+@subsection Stop Xnee with key + modifier
+@cindex     Stop Xnee with key + modifier
+You can stop xnee by specifying a key and modifier combination. Make
+sure that this key modifier isn't grabbed by another X client (e.g by the
+Window Manager). Let's say that you want Xnee to stop recording if you press
+Control and h. 
+@example
+   @code{xnee --record --mouse --loops -1 --stop-key Control,h}
+@end example
+This will make xnee record mouse events until you press Control and h. 
+All printouts are done to stdout so you can see that Xnee stops when you
+press the key and modifier. 
+@*
+Move your mouse for a while and you'll see xnee print out lots of lines. 
+@*
+Press Control and h. 
+@*
+Xnee will now have stopped recording.
+
+
+@subsection Pausing and resuming Xnee with key + modifier
+@cindex     Pausing and resuming Xnee with key + modifier
+You can pause and resum xnee by specifying a key and modifier combination. 
+Make sure that this key modifier isn't grabbed by another X client (e.g by 
+the Window Manager). Let's say that you want Xnee to pause recording if you 
+press Control and p and to resume when pressing Comntrol and r. 
+@example
+   @code{xnee --record --mouse --loops -1 --pause-key Control,p \}
+   @code{--resume-key Control,r}
+@end example
+This will make xnee record mouse events until you press Control and p. 
+All printouts are done to stdout so you can see that Xnee stops when you
+press the key and modifier. 
+@*
+Move your mouse for a while and you'll see xnee print out lots of lines. 
+@*
+Press Control and p. 
+@*
+Xnee will now have paused recording. Move your mouse for a while and note that
+nothing is printed.
+@*
+Press Control and r. 
+@*
+Xnee will now have resumed recording. Move your mouse for a while and note that
+xnee begins its printouts.
+
+
+@section    Using macro 
+Macors can be used in various applications allthough many applicaions have 
+a macro functionality built in (e.g emacs). 
+
+@subsection Define a simple macro
+@cindex     Define a simple macro
+There are plenty of tools that bind a key + modifier combination to 
+different actions. For various reasons the author of this manual is familliar
+with xkeymouse so we will use xkeymouse in this example.
+@*
+The first thing to do is to decide which key + modifier combination to tie
+to the wanted action. Let's say we want to use one of the funtion keys, F1. 
+We then have to find out which keycode belongs to that key. The action we will 
+bind to this key + modifier combination will be the replaying of a recorded
+session from the previous examples. 
+@*
+We use Xnee to find the keycode for F1. Start xnee.
+@example
+   @code{xnee --record --keyboard --loops 20}
+@end example
+Press the F1 key and see what number was printed out. It will look something
+like this:
+@example
+@code{0,2,0,0,0,67,0,90300078}
+@code{0,3,0,0,0,67,0,90300156}
+@end example
+The interesting part here is the 6th column. In our example we find 67, which
+is the keycode for F1.
+@*
+Now we move on to setup xkeymouse to grab F1 and bind that to replay the 
+mouse motions from the file @code{mouse-rec.xnl}. Open or create a new file
+in your home directory called @code{.xkmrc} and add the lines.
+@example
+@code{keycode=67, 0, Exec, xnee,  --replay --file mouse-rec.xnl, \}
+@code{Fork, NoAutoRepeat}
+@end example
+Let's try it. Start xkeymouse with verbose printouts.
+@example
+@code{xkeymouse --verbose}
+@end example
+Press F1 and the recorded session from the previous example shall be replayed. You
+can also see in the verbose printouts that xkeymouse executes xnee.
+
+
+@subsection Define another simple macro
+@cindex     Define another simple macro
+Let's say we want to bind Control and e to execute the session as in the
+example above. This time setting up xkeymouse is a bit easier.
+@*
+Setup xkeymouse to grab F1 and bind that to replay the 
+mouse motions from the file @code{mouse-rec.xnl} by opening or create a 
+new file in your home directory called @code{.xkmrc} and add the lines.
+@example
+@code{e, Control, Exec, xnee,  --replay --file mouse-rec.xnl, \}
+@code{Fork, NoAutoRepeat}
+@end example
+Let's try it. Start xkeymouse with verbose printouts.
+@example
+@code{xkeymouse --verbose}
+@end example
+Press Control and e and the recorded session from the previous example 
+shall be replayed.
+
+
+
+
+
+
+
+
+
+
+
+
+@section    Various options
+
+@subsection Using verbose mode
+@cindex     Using verbose mode
+To enable verbose mode, start xnee like this
+@example
+@code{xkeymouse --verbose --record --mouse}
+@end example
+Move the mouse for a while and you'll lots of verbose printouts that 
+usualy isn't there.
+
+
+@subsection Using human readable printouts
+@cindex     Using human readable printouts
+To enable human printout mode, start xnee like this
+@example
+@code{xkeymouse --human-printouts --record --mouse}
+@end example
+Move the mouse for a while and you'll see the data printed out in an almost
+human friendly format.
+
+
+
+@subsection Using a differet screen resolution
+@cindex     Using a differet screen resolution
+If a session was recorded on a screen with another resolution than 
+on the one where we replay the session xnee will translate all coordinates
+automagically. However, you can force xnee to use a specific resolution when 
+replaying. To do this, start xnee like this
+@example
+@code{xkeymouse --replay --file mouse-rec.xnl \ }
+@code{--replay-resolution  800x600}
+@end example
+Xnee will now replay the events recorded in the sessions file 
+@code{mouse-rec.xnl} as if the screen has a resolution of 800x600. 
+
+
+@subsection Using no resolution translation
+@cindex     Using no resolution translation
+If a session was recorded on a screen with another resolution than the
+on the one where we replay the session xnee will translate all coordinates
+automagically. However, you can force xnee not to use translation. To do this, 
+start xnee like this
+@example
+@code{xkeymouse --replay --file mouse-rec.xnl \ }
+@code{--no-resolution-adjustment}
+@end example
+Xnee will now replay the events recorded in the sessions file 
+@code{mouse-rec.xnl} as if the screen had the same resolution 
+the recorded one.
+
+
+
+@subsection Record another display than the default
+@cindex     Record another display than the default
+If you want to record another display than the default, as set in the 
+DISPLAY variable, you use the @code{--display} option.
+@example
+@code{xkeymouse --record --mouse --display frodo:0.0 }
+@end example
+Xnee will now record the mouse events on the display frodo:0.0.
+
+
+@subsection Replay to another display than the default
+@cindex     Replay to another display than the default
+If you want to replat to another display than the default, as set in the 
+DISPLAY variable, you use the @code{--display} option.
+@example
+@code{xkeymouse --replay --display frodo:0.0 --file mouse-rec.xnl }
+@end example
+Xnee will now replay the mouse events on the display frodo:0.0.
+
+
+
+

@@ -1,0 +1,376 @@
+@node Protocol, Internals, Examples, top
+@chapter Protocol
+
+All Xnee applications must use the Xnee protocol (or format). We will present a brief overview of this protocol.
+@*
+First of all the protocol is line based, meaning that
+@itemize @bullet
+@item  there is one expression per line
+@item  one line contains one (and only one) expression
+@end itemize
+
+@section Xnee expression description
+The following expressions are used in Xnee:
+@multitable  @columnfractions .100 .20 .50 .30
+@item 
+@tab @b{Expression}
+@tab @b{Interpretation}
+@tab @b{Used }
+
+@item
+@tab META 
+@tab This is used to comment the various files
+@tab Session and projects files
+
+@item
+@tab Settings
+@tab Data used when recording and replaying
+@tab Session and projects files
+
+@item
+@tab Replay data
+@tab Data used when replaying
+@tab Session files
+
+@item
+@tab Marks
+@tab Marks inserted in the seesion file when a modifier+key was pressed
+@tab Session files
+
+@item
+@tab Actions
+@tab Actions to perform during replay
+@tab Session files
+
+@end multitable
+
+
+@section Xnee expression syntax
+@multitable  @columnfractions .100 .20 .30 .50
+@item 
+@tab @b{Expression}
+@tab @b{Start token}
+@tab @b{optional arguments}
+
+@item 
+@tab  META data
+@tab  #
+@tab  all characters
+
+@item 
+@tab  Settings
+@tab  a-z
+@tab  various arguments
+
+@item
+@tab  Replay data
+@tab  0
+@tab  various arguments
+
+@item
+@tab  Marks
+@tab  M
+@tab  various arguments
+
+@item
+@tab  Actions
+@tab  A
+@tab  various arguments
+
+@end multitable
+
+
+
+@subsection META data
+@cindex META data
+@multitable  @columnfractions .100 .20 .50 .30
+@item 
+@tab @b{Start token}
+@tab @b{Argument}
+@tab @b{Interpretation}
+
+@item
+@tab  #
+@tab  all characters
+@tab  ignored
+
+@end multitable
+
+
+@subsection Settings
+@cindex Settings
+@multitable  @columnfractions .100 .20 .30 .50
+@item 
+@tab @b{Start token}
+@tab @b{Argument}
+@tab @b{Interpretation}
+
+@item
+@tab  data-to-record
+@tab  integer n
+@tab  Limits the number of data to record to n
+
+@item
+@tab  events-to-record
+@tab  integer n
+@tab  Limits the number of events to record to n
+
+@item
+@tab  time-to-record
+@tab  integer n
+@tab  Limits the number of seconds to record to n
+
+@item
+@tab  display
+@tab  string s
+@tab  Sets the display to record or replay to s 
+
+@item
+@tab  file
+@tab  string s
+@tab  Read replay data from the file s
+
+@item
+@tab  out
+@tab  string s
+@tab  Print recorded data to the file s
+
+@item
+@tab  plugin
+@tab  string s
+@tab  Use the plugin s
+
+@item
+@tab  first-last
+@tab  
+@tab  Print only first and last of successive MotionNotify events
+
+@item
+@tab  verbose
+@tab  
+@tab  Use verbose debugging printout
+
+@item
+@tab  buffer-verbose
+@tab  
+@tab  Use verbose buffer verbose printouts (not built by default)
+
+@item
+@tab  time
+@tab  integer t
+@tab  Delay the start of the Xnee action for t seconds
+
+@item
+@tab  all-clients
+@tab  
+@tab  Record all curret and future clients (default)
+
+@item
+@tab  future-clients
+@tab  
+@tab  Record only future clients
+
+@item
+@tab  human-printout
+@tab  
+@tab  Prints the recorded data in a (quite) more ser friendly format
+
+@item
+@tab  record
+@tab  
+@tab  Sets recording mode
+
+@item
+@tab  replay
+@tab  
+@tab  Sets replaying mode
+
+@item
+@tab  speed-percent
+@tab  integer p
+@tab  Sets the replaying speed to p percent
+
+@item
+@tab  stop-key
+@tab  string m,string k
+@tab  Sets the stop modifier+key combination to m k
+
+@item
+@tab  pause-key
+@tab  string m,string k
+@tab  Sets the pause modifier+key combination to m k
+
+@item
+@tab  resume-key
+@tab  string m,string k
+@tab  Sets the resume modifier+key combination to m k
+
+@item
+@tab  mark-key
+@tab  string m,string k
+@tab  Sets the mark modifier+key combination to m k
+
+@item
+@tab  execute-key
+@tab  string m,string k
+@tab  Sets the execute modifier+key combination to m k
+
+@item
+@tab  replay-resolution
+@tab  string res
+@tab  Sets the replay resolution to the string res
+
+@item
+@tab  no-resolution-adjustment
+@tab  
+@tab  Don't use resolution adjustment, even if the recored resolution differs from the one to replay to
+
+@item
+@tab  distribute
+@tab  string d
+@tab  Distribute all recorded or replayed replayable events to the display as given by d
+
+@item 
+@tab  event-range
+@tab  string range
+@tab  Sets the events to record to range*
+
+@item 
+@tab  error-range
+@tab  string range
+@tab  Sets the errors to record to range*
+
+@item 
+@tab  request-range
+@tab  string range
+@tab  Sets the request to record to range*
+
+@item 
+@tab  reply-range
+@tab  string range
+@tab  Sets the replies to record to range*
+
+@item
+@tab  extension-request-major-range
+@tab  string range
+@tab  Sets the extension requests (major) to record to range*
+
+@item
+@tab  extension-request-minor-range
+@tab  string range
+@tab  Sets the extension requests (minor) to record to range*
+
+@item
+@tab  extension-reply-major-range
+@tab  string range
+@tab  Sets the extension replies (major) to record to range*
+
+@item
+@tab  extension-reply-minor-range
+@tab  string range
+@tab  Sets the extension replies (minor) to record to range*
+
+@item
+@tab  force-replay
+@tab  
+@tab  Continue to replay even if Xnee is out of sync
+
+@item
+@tab  max-threshold
+@tab  integer n
+@tab  Sets the maximum synchronisation threshold to n
+
+@item
+@tab  min-threshold
+@tab  integer n
+@tab  Sets the minimum synchronisation threshold to n
+
+@item
+@tab  total-threshold
+@tab  integer n
+@tab  Sets the total maximum synchronisation threshold to n
+
+@item
+@tab  
+@tab  
+@tab  
+
+@item
+@tab  
+@tab  
+@tab  
+
+@item
+@tab  
+@tab  
+@tab  
+
+@end multitable
+
+@subsection Replay data
+@cindex Replay data
+@multitable  @columnfractions .100 .20 .30 .50
+@item 
+@tab @b{Start token}
+@tab @b{Argument}
+@tab @b{Interpretation}
+
+@item 
+@tab 0
+@tab 0
+@tab not valid
+
+@item 
+@tab 0
+@tab 1
+@tab not valid
+
+@item 
+@tab 0
+@tab 2,keycode,time
+@tab KeyPress on key with keycode, used to replay
+
+@item 
+@tab 0
+@tab 3,keycode,time
+@tab KeyRelease on key with keycode, used to replay
+
+@item 
+@tab 0
+@tab 4,button nr,time
+@tab ButtonPress on button nr, used to replay
+
+@item 
+@tab 0
+@tab 5,button nr,time
+@tab ButtonRelease on button nr, used to replay
+
+@item 
+@tab 0
+@tab 6,x,y,time
+@tab MotionNotify on poistion (x,y), used to replay
+
+@item 
+@tab 0
+@tab 7-XXX,time
+@tab MotionNotify on poistion (x,y), used to replay
+
+@item 
+@tab 1
+@tab ,request number,time
+@tab Recorded request, used during synchronisation 
+
+@item 
+@tab 2
+@tab reply number,time
+@tab Recorded reply, used during synchronisation 
+
+@item 
+@tab 3
+@tab error number,time
+@tab Recorded error, used during synchronisation 
+
+
+@end multitable
+time is the time on the server the data was to the recording Xnee client. This time is used to keep the speed intact during replay.
+

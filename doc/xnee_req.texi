@@ -1,0 +1,17 @@
+@node  Requirements , FAQ, Internals, top
+@chapter  Xnee Requirements
+@cindex requirements
+
+@section Runtime requirements
+@cindex runtime requirements
+Xnee requirements:
+@itemize @bullet
+@item	RECORD extension
+@item	XTest extension
+@end itemize
+You can use Xnee in replaying mode without RECORD extension if synchronisation is turned off.
+
+@section Development requirements
+@cindex development requirements
+For development requirements, please look at the DEVELOPMENT file that is distributed with all packages and with CVS.
+
