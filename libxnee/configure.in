@@ -1,5 +1,6 @@
 AC_INIT(libxnee,1.08d)
-AC_CONFIG_AUX_DIR(autotools/)
+
+AC_CONFIG_AUX_DIR(./autotools/)
 AM_INIT_AUTOMAKE(libxnee,1.08d)
 
 

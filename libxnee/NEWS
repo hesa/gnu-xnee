@@ -1,0 +1,178 @@
+Xnee / NEWS 
+----------------------------
+
+Changes in 1.08
+	- new options:
+	   '--write-settings'      writes a resource file from settings done
+	   '--mouse'               sets up ranges for all mouse events
+	   '--keyboard'            sets up ranges for all keynoard events
+	   '--recorded-resolution' resolution used when recording
+	   '--replay-resolution'   resolution to use when replaying
+	   '--no-resolution-adjustment'   Don't use resolution adjustment
+	   '--speed-percent [percent]'   change the replaying speed
+	   '--pause-key [k m]'         key+modifier pauses xnee's current action
+	   '--pause-key [k m]'         key+modifier resume xnee's paused action
+	   '--insert-key [k m]'        key+modifier inserts a meta mark in the log file
+	   '--max-threshold [nr]'      sets the maximum threshold during sync
+	   '--min-threshold [nr]'      sets the maximum threshold during sync
+	   '--tot-threshold [nr]'      sets the total threshold during sync
+	   '--retype-file [file]'      retype the contents of file
+	   '--retype-help '            retype the help printout
+        - synchronisation rewritten 
+
+Changes in 1.07
+	- version numbering changed (x.yz is used instead of x.y.z)
+	- plugin functionality renamed to resource
+	- plugin functionality added (plug in dynamic libs)
+	- synchronization rewritten
+	- force-replay option added
+	- replay delay rewritten
+	- Xnee can be configured (during configure) to:
+	  + exclude buffer verbose
+	- print functions replaced by function pointers
+	  in dispatch functions, 
+	- Added modifier+key binding to pause, resume 
+	
+Changes in 1.0.6
+	- data names can now be more then 10 chars long ... errrh
+	- Xnee can be configured to:
+	  + exclude verbose mode
+	  + gcov compilation
+	  + grpof compilation
+	- new or modified options:
+	  '--print-event-names'   prints all event names and number
+	  '--print-request-names' prints all request names and number
+	  '--print-event-names'   prints event name or  number
+	  '--print-request-names' prints request names or number
+
+Changes in 1.0.6pre1
+	- multiple modifiers added
+	- data names can be used when setting ranges
+	- docs updated with the above changes
+	- range setting (when replaying) bug corrected
+	- speed increased (removed recording of device event when replying)
+	- Xnee is now a GNU package
+
+Changes in 1.0.5
+	- Typos corrected in doc/ & README (after GNU review)
+	- Fiex parser error (--no_sync ----> --no-sync )
+	- Manual corrected (after GNU review)
+	- new options added to ease up usage a bit:
+	   '--print-event-name' 
+	   '--print-error-name' 
+	   '--print-reply-name' 
+	   '--print-request-name' 
+	   '--print-data-name' 
+	- info, manuals updated
+
+Changes in 1.0.4
+	- changed printout for --help and --version
+	- made ChangeLog what is supposed to be 	
+	  build.sh doesn't copy NEWS to ChangeLog anymore
+	- xnee manual is now under FDL
+	- xnee developer manual is now under FDL
+	- TODO updated with GNU Coding Standard todos
+	- doc (texi) files updated with index refs
+	- doc (texi) files updated to make info pages nice
+	- build_web.sh added to CVS
+	- fixed one sigbus & one sigsegv on non-glibc platforms (thanks freeBSD)
+		
+Changes in 1.0.3
+	- fixed parse error (mainor_range  ---> minor_range )
+	- switched to CLI options syntax as recommended by the GNU Coding Standards 
+	- fixed a seg fault when closing down recording
+
+Changes in 1.0.2
+	- stop_key is now correctly parsed (man page updated)
+	- CPU consuming calls to XRecordProcessReplies removed
+	- Async recording is not used anymore
+	- Fixed memory leak (a few bytes when closing down)
+	- man page corrected
+	- help printout corrected
+
+Changes in 1.0.1
+	- Fixed memory leak
+
+Changes in 1.0
+	- Added --stop_key option to CLI and plugin files and record file
+	- Added --future_clients option to CLI
+	- Manual in pdf has moved to Documentation package
+	- Manual updated
+	- Example session included
+	- Source code is documented (using doxygen)
+	- man pages are generated from xnee binary
+	- Xnee now comes in two packages Program and Documentation
+
+Changes in 0.9
+	- new command line options:
+		--print_settings
+	- xnee reads (and uses) settings from recorded file
+	- added texi files (pdf, html, txt manuals)
+	- added man page
+	- EXAMPLES file updated 
+	- redhat specs updated
+
+Changes in 0.9beta
+	- ugly printout when using delayed startup removed
+	- MANUAL added
+
+Changes in 0.9alpha
+	- synchronisation works .... at last  :)
+	- removed a lot of duplicated code
+	- The following option has been updated
+	 1) help 
+	 2) binary 
+	 3) out "stdout" in plugin scripts is treated  
+	    as stdout (not creating a file called stdout)
+	 4) err "stderr" in plugin scripts is treated
+	    as stderr (not creating a file called stderr)
+	- DESCRIPTION, EXAMPLES, FAQ, README, TODO updated
+	- DEVELOPMENT added
+
+Changes in 0.8.1
+	- fixed a hanging (not on all platforms) xnee when finished replaying
+	- fixed dependency to libxnee for the xnee binary in the generated Makefiles
+	- fiexd missing newline in help text
+
+Changes in 0.8
+	- minor bugfixes
+	- copyright years added 
+	- the depcomp script have been added. 
+	- It compiles and runs on Solaris8 (intel) and Windows98/Cygwin/Xfree86. 
+	- The order of libs to be linked has changed. 
+
+Changes in 0.8beta
+	- --time  options now works 
+	- Pressing Ctrl-C will stop Xnee but __NOT__ remove the recorded file
+
+Changes in 0.8alpha
+	- worked around the bug* that crashed the X server when recording
+	delivered events.
+	
+	*) I still do not know where the bug is located (e.g xnee, X, RECORD)
+
+
+Changes in 0.7.2
+	- "plugins / xnee settings" is from now on only called plugin .. sorry about the fuzz
+	- Support for RedHat RPM/SRPMS is included is distribution
+	- build.sh is extended to build from clean dist to RPMs
+
+Changes in 0.7.1
+	- Support for plugins / xnee settings file is corrected
+
+Changes in 0.7
+	- Delay works fine 
+	- System info printing is back ... never missed it really since replay doesn't use it .. yet
+	- Support for plugins / xnee settings file is added
+
+
+Changes in 0.7alpha_2
+	- Xnee can now record delivered events (used FutureClients)
+	  without crashing
+	- First event not recorded (thank to Ton van Vliet)
+
+Changes in 0.7alpha_1
+	- Seg. fault on debian fixed
+	- Mem fault on OpenBSD fixed
+	- Xnee is now (at last) "autoconfed"
+
