@@ -1,0 +1,298 @@
+@node Internals, Requirements, Examples, top
+
+@chapter Xnee Internals
+@cindex  Xnee Internals
+This chapter is intended to explain the internal design of libxnee. 
+Hopefully this will lead to a better understanding of how to use Xnee
+and why some features exists and why some doesn't. 
+
+
+@chapter Projects files
+@cindex  Projects files
+Xnee can be set either using command line options (when using xnee) or by
+clicking the correct buttons etc in the GUI (using gnee). Instead of setting 
+the same settings over and over again, you can use the Xnee Project File. 
+
+
+@subsection  Create a projects file
+@cindex      Create a projects file
+You can create a project by either
+@*
+using the @{write-settings} option in xnee. For information about how to do this, 
+read the Xnee man pages.
+
+@*
+save settins to file when using gnee
+
+@*
+write on for your self in your favorite editor.  For information about how to 
+do this, read the chapter 'Projects file syntax'.
+
+
+@subsection  Projects file syntax
+@cindex      Projects file syntax
+
+@table @samp
+@item display displayname	
+	This sets the display to record or send events to when replaying
+@item file <file-name>
+	Use the file <file-name> when replaying 	
+@item out <file-name>
+	Redirect printouts to <file-name> (stdout is default)
+@item err <file-name>
+	Redirect error printouts to <file-name> (stderr is default)
+@item resource <file-name>
+	Use resource named <resource-name>
+@item plugin <file-name>
+	Use the lib pointed out by file name as plugin.
+@item first-last
+	Sets the first-last option to true
+@item everything
+	Tells Xnee to record everything.
+@item mouse
+	Tells Xnee to record mouse events.
+@item keyboard
+	Tells Xnee to record keyboard eventes.
+ @item loops <n>
+	How many data to record. -1 means for ever.
+ @item k-log
+	Record 1000 data.
+ @item 10k-log
+	Record 100 000 data.
+ @item 100k-log
+	Record 100 000 data.
+ @item m-log
+	Record 1000 000 data.
+ @item verbose
+	Turns on verbose mode
+ @item buffer-verbose
+	Turns on verbose mode showing replay buffers
+ @item time <secs>
+	Pauses Xnee for secs seconds
+ @item stop-key modifier key
+	Recording/replaying stops when pressing modifier + key. @*
+        See chapter "Stop key syntax" and "Stop modifier syntax" for syntax
+ @item future-clients
+	TO BE DOCUMNETED
+ @item all-clients
+	TO BE DOCUMNETED
+ @item human-printouts
+	Print recorded data in a human friendlier format	
+ @item record
+	Use record mode
+ @item replay
+	Use replay mode
+ @item distribute <LIST>
+	Sets the list of displays to distribute events to
+ @item device-event-range     <X-LIST>
+	Sets the list of device events to record to <X-LIST>
+ @item delivered-event-range  <X-LIST>
+	Sets the list of delivered events to record to <X-LIST>
+ @item error-range            <X-LIST>
+	Sets the list of errors to record to <X-LIST>
+ @item request-range          <X-LIST>
+	Sets the list of requests to record to <X-LIST>
+ @item reply-range            <X-LIST>
+	Sets the list of replies to record to <X-LIST>
+ @item extension-request-major-range  <X-LIST>
+	Sets the list of extension request major to record to <X-LIST>
+ @item extension-request-minor-range <X-LIST>
+	Sets the list of extension request minor to record to <X-LIST>
+ @item extension-reply-major-range    <X-LIST>
+	Sets the list of extension reply major to record to <X-LIST>
+ @item extension-reply-mainor-range   <X-LIST>
+	Sets the list of extension reply minor to record to <X-LIST>
+@end table
+
+ 
+LIST is a comma separated list if displays, e.g @code{192.168.1.2:9,10.0.0.2:1}
+@*
+RANGE is either a single data name or number or a range between two such 
+(seperated with a ``-'')
+@*
+X-LIST is a comma separated list of RANGE, e.g 
+@*
+@code{12-15,17,22-29,KeyPress-MotionNotify,ButtonPress}
+
+
+
+@chapter Session files
+@cindex  Session files
+
+@chapter Key and modifier syntax
+You can set the key by entering one character or the keycode for the 
+character you wish to use.
+
+Modifiers can be any of the following.
+@table @samp
+@item  Shift or Shift
+        Modifier is set to the Shift key
+@item  LockMask or Lock
+        Modifier is set to the Lock key
+@item  Control or ctrl
+        Modifier is set to the Control key
+@item  Mod1Mask or m1m
+        Modifier is set to 
+@item  Mod2Mask or m2m
+        Modifier is set to 
+@item  Mod3Mask or m3m
+        Modifier is set to 
+@item  Mod4Mask or m4m
+        Modifier is set to 
+@item  Mod5Mask or m5m
+        Modifier is set to 
+@item  Alt_L
+        Modifier is set to Alt_L
+@item  Alt_L
+        Modifier is set to Alt_R
+@item  Alt 
+        Modifier is set to Alt_L and Alt_R
+@item  Shift_R
+        Modifier is set to Shift_R
+@item  Shift_L
+        Modifier is set to Shift_L
+@item  Shift
+        Modifier is set to Shift_L and Shift_R
+@item  Control_R
+        Modifier is set to Control_R
+@item  Control_L
+        Modifier is set to Control_L
+@item  Control
+        Modifier is set to Control_L and Control_R
+@item  Scroll
+        Modifier is set Scroll
+@item  Caps_Lock
+        Modifier is set Caps Lock
+@item  AnyModifier or any
+        Modifier is set to any of the modifier
+@item  none or 0
+        No modifier is used
+@end table
+
+You can also specify the keycode for the modifier you wish to use
+
+
+
+
+@chapter Synchronisation
+@cindex Synchronisation
+We will try to go through the basics of Xnee implememnts synchronisation and 
+try to tell you, by using examples, why synhronisation is important.
+
+@section Why synchronise
+@cindex why synchronise
+
+To understand why synchronisation during replay is needed an example is given. 
+
+In this example only mouse and keyboard events are recorded. Think of a session with a web browser. 
+
+During record the following is done:
+@itemize @bullet
+@item	Start galeon (or another web browser) via the GNOME panel
+@item	Press Ctrl-O which pops up a window
+@item   Press the left button in the textfield of the popup window
+@item   Enter the URL you want to enter (e.g http://www.gnu.org)
+@item   Click on the OK button 
+@item   Then click on another URL (e.g GNU Documentation)
+@item   Then click on another URL (e.g On-Line Documentation)
+@end itemize
+
+When replaying this session it is often to synchronise the recorded session with what's happening "right now" on the display since sometimes (or rather always) there can be different response times from the same URL. 
+
+During replay the following is done:
+@itemize @bullet
+@item   Galeon is started
+@item   Ctrl-O is typed which pops up a window
+@item   Press the left button in the textfield of the popup window
+@item   Enter the URL you want to enter (e.g http://www.gnu.org)
+@item   Clock on the OK button 
+@item      ... due to an enormous amount of visitors the GNU web server can't respond as quick as it did when recording. So when the next thing happens
+@item   Then click on another URL (e.g GNU Documentation)
+@item      ... the page hasn't been loaded and when the next event is replayed
+@item   Then click on another URL (e.g On-Line Documentation)
+@item      ... the link isn't there and we're really out of sync with the recorded session
+@end itemize
+
+
+@section How to synchronise
+@cindex how to synchronise
+Instead we could record some more data than just the mouse and keyboard events. 
+
+During record the following is done:
+@itemize @bullet
+@item	Start galeon (or another web browser) via the GNOME panel
+@item   Record some X data that tells us that a window have been created
+@item	Press Ctrl-O which pops up a window
+@item   Record some X data that tells us that a window have been created
+@item   Press the left button in the textfield of the popup window
+@item   Enter the URL you want to enter (e.g http://www.gnu.org)
+@item   Clock on the OK button 
+@item   Record some X data that tells us that a window have been destroyed
+@item   Then click on another URL (e.g GNU Documentation)
+@item   Record some X data that tells us that a some text has been displayed in a window
+@item   Then click on another URL (e.g On-Line Documentation)
+@item   Record some X data that tells us that a some text has been displayed in a window
+@end itemize
+The non-mouse-or-keyboard events recorded (window created & text displayed) are record for synchronisation purposes.
+
+During replay the following is done:
+@itemize @bullet
+@item	Start galeon (or another web browser) via the GNOME panel
+@item   wait for: the recorded X data to be sent again
+@item	Press Ctrl-O which pops up a window
+@item   wait for: the recorded X data to be sent again
+@item   Press the left button in the textfield of the popup window
+@item   Enter the URL you want to enter (e.g http://www.gnu.org)
+@item   Clock on the OK button 
+@item   wait for: the recorded X data to be sent again
+@item   Then click on another URL (e.g GNU Documentation)
+@item   wait for: the recorded X data to be sent again
+@item   Then click on another URL (e.g On-Line Documentation)
+@item   wait for: the recorded X data to be sent again
+@end itemize
+
+
+
+@section Synchronisation is needed
+So by recording more data than just the events to be replayed we can synchornise what was recorded with what is going on when replaying. But the data has to be choosen with respect to that the data:
+@itemize @bullet
+@item    differs from different sessions (Gimp and Xterm are really different)
+@item    slows down the replay session if there are too many
+@item    is hard to choose since the X protocol is rich
+@item    differs (comparing record and replaying)
+@item    can have different ordering (comparing record and replaying)
+@end itemize
+
+@subsection Different data for different kind of sessions
+If we record an xterm session with all data being recorded and compare that to a recorded GIMP session with all data being recordr we can see that the data to use as synchronisation data differs. AS an example there aren't so many windows created/destryed during an xterm session.
+
+The solve to the the problem of finding out what data to use as synchronisation data one can:
+@itemize @bullet
+@item   use the project files delivered with Xnee
+@item   analyse the application (using Xnee's  @code{--human-printouts} option) and do some "trial and error"
+@end itemize
+
+
+@subsection Slow replay session due to too many synchronise data 
+The synchronisation itself doesn't take much time but there are timeouts that makes Xnee paues for a short while (see above). If there are many such timeouts it will lead to a slow or shaking replaying session.
+
+@subsection X protocol is rich
+For an end user (with no X expertise) it is hard to read the X protocol specification and make assumptions on what data to use.
+
+@subsection Different data sent 
+Even if one starts up a machine from scratch (reboot) when recording and from scratch when replaying there is no guarantee that the data is sent in the same order or that exactly the same amount of data is sent.
+
+
+@section Buffers and timeouts
+To enable synchronisation Xnee buffers data:
+@itemize @bullet
+@item    that was read in the session file but hasn't been sent during replay
+@item    that was sent during replay but hasn't been seen in the sessopn file being replayed
+@end itemize
+For every data read from session file (during replay) that isn't replayable (i e device event) and 
+that hasn't been sent (as when recorded) Xnee pauses for a short while. 
+If the data is sent to Xnee, everything is fine. If the data isn't sent it is stored in the 
+buffer of unsynchronised data. If the number of unsynchronise data is getting to high, 
+Xnee will eventually exit with an error code (see man page(s)).
+
+

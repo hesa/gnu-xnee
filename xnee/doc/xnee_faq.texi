@@ -3,9 +3,25 @@
 
 @table @samp
 
-@item When setting ranges (integers), how do I know what numbers belong to X11 data?
-@cindex When setting ranges (integers), how do I know what numbers belong to X11 data?
-You can either type the name directly (e.g MotionNotify) or you can use the print-xxx-name options. 
+@item Where do I send questions?
+@cindex questions is sent where?
+@email{info-xnee@@gnu.org}
+@*
+
+@item Where do I send bugs?
+@cindex Report bugs?
+Turn on verbose mode @code{xnee --verbose} and save the printouts. 
+Include all printouts and log files in the mail. 
+@email{xnee-bug@@gnu.org}
+@*
+
+
+@item When setting ranges (integers), how do I know what numbers belong 
+to X11 data?
+@cindex what numbers belong to X11 data?
+You can either type the data name directly (e.g MotionNotify) or you 
+can use the 
+print-xxx-name options. 
 @itemize @bullet
 @item  @code{--print-data-name} 
 @item  @code{--print-event-name}
@@ -16,43 +32,37 @@ You can either type the name directly (e.g MotionNotify) or you can use the prin
 
 @item Can Xnee record more than one display?
 @cindex can Xnee record more than one display
- No, but we are considering adding the functionality (see the TODO file)
+No, but we are considering adding the functionality (see the TODO file)
 
-@item Will you put up a source tree so that I can join ?
- You can find a CVS tree (soon) at Sourceforge.
+@item Where is the CVS repository?
+ You can find a CVS tree (soon) at savannah.gnu.org.
  You are more than welcome to join
 
 @item Is there a GUI frontend for Xnee ?
 @cindex GUI frontend for Xnee
- No !
-
-@item Can I write a GUI frontend for you ?
-@cindex can Xnee record more than one display
- Yes !
+Yes! Gnee.
 
 @item What license is Xnee released under ?
 @cindex license
  GPL  @url{http://www.gnu.org/copyleft/gpl.html}
 
-@item Why GPL?
-@cindex why gpl
- We think:
-@itemize @bullet
-@item  programs shall be free
-@item  xnee is a fun way for me to (hopefully) become a better programmer
-@item  xnee is a small payback for our free operating systems (GNU/Linux and OpenBSD)
-@item  xnee is a way to make free operating systems better and more widely used than XXX
-@end itemize
- And of course I think it would be a great kick for my ego to have other 
- people using my programs (especially if the alternative is a non-free program on a non-free operating system).
 
 @item Why the name Xnee?
 @cindex why name it Xnee
   We wanted to use a recursive acronym, as GNU (``GNU's Not Unix'). After having read the Wine documentation, I thought that Xnee is not an Event Emulator would work fine. Since Xnee is Not an Event Emulator but rather a XEvent generator. Emulation is not part of the game here.... 
   .... it just sounds nice! 
 
+@item What does the name Gnee mean?
+@cindex  What does the name Gnee mean?
+          Gnee's not an Emulator Either
+
+@item What doesn't the name Gnee mean?
+@cindex  What does the name Gnee mean?
+          Gnee's not an Event Emulator  
+
+
 @item Can you add xxx functionality to Xnee
-  Send an email to @email{xnee@@sandklef.com} and we'll consider it.
+  Send an email to @email{xnee-devel@@gnu.org} and we'll consider it.
 
 
 @item When starting Xnee I get noticed that I am missing RECORD extension
@@ -64,18 +74,18 @@ Your X server doesn't have the RECORD extension either loaded or compiled. To so
 Make sure that the RECORD extension is loaded. This is done by letting the Module section in the X config file (e.g /etc/X11/XF86Config-4) look something like:
 
 @code{Section "Module"}@*
-@ @ @ @ @code{Load  "dbe"             # Double-buffering}@*
-@ @ @ @ @code{Load  "GLcore"          # OpenGL support}@*
-@ @ @ @ @code{Load  "dri"             # Direct rendering infrastructure}@*
-@ @ @ @ @code{Load  "glx"             # OpenGL X protocol interface}@*
-@ @ @ @ @code{Load  "extmod"          # Misc. required extensions}@*
-@ @ @ @ @code{Load  "v4l"             # Video4Linux}@*
-@ @ @ @ @code{# Load  "pex5"          # PHIGS for X 3D environment (obsolete)}@*
-@ @ @ @ @code{Load  "record"  # X event recorder}@*
-@ @ @ @ @code{# Load  "xie"           # X Image Extension (obsolete)}@*
+@ @ @ @ @code{Load  "dbe"         # Double-buffering}@*
+@ @ @ @ @code{Load  "GLcore"      # OpenGL support}@*
+@ @ @ @ @code{Load  "dri"         # Direct rendering infrastructure}@*
+@ @ @ @ @code{Load  "glx"         # OpenGL X protocol interface}@*
+@ @ @ @ @code{Load  "extmod"      # Misc. required extensions}@*
+@ @ @ @ @code{Load  "v4l"         # Video4Linux}@*
+@ @ @ @ @code{# Load  "pex5"      # PHIGS for X 3D environment (obsolete)}@*
+@ @ @ @ @code{Load  "record"      # X event recorder}@*
+@ @ @ @ @code{# Load  "xie"       # X Image Extension (obsolete)}@*
 @ @ @ @ @code{# You only need the following two modules if you do not use xfs.}@*
-@ @ @ @ @code{# Load  "freetype"       # TrueType font handler}@*
-@ @ @ @ @code{# Load  "type1"         # Adobe Type 1 font handler}@*
+@ @ @ @ @code{# Load  "freetype"  # TrueType font handler}@*
+@ @ @ @ @code{# Load  "type1"     # Adobe Type 1 font handler}@*
 EndSection
 
 The important load directive (in this case) is the following line@*
@@ -84,12 +94,67 @@ The important load directive (in this case) is the following line@*
 
 
 @item X.org, XFree86 (3.3 and lower)  or any other Xserver
-Recompile and reinstall the Xserver and make sure that RECORD extension is built into the Xserver. Please look at the documentation from your Xserver "vendor" on how to do that.
+Recompile and reinstall the Xserver and make sure that RECORD extension 
+is built into the Xserver. Please look at the documentation from your 
+Xserver "vendor" on how to do that.
 @end itemize
 
-@item Where do I send questions?
-@cindex questions is sent where?
- @email{xnee@@sandklef.com}
+@item   How do I build VNC so that I can use Xnee together with it?
+@cindex Build VNC to be used with Xnee
+@*
+Download vnc source from:
+@*
+@url{http://www.uk.research.att.com/vnc/xvnchistory.html}
+@*
+@*
+In the file @code{Xvnc/config/cf/vnc.def} change NO on the following 
+items to YES as below:
+@*
+@code{#define BuildRECORD YES}
+@*
+@code{#define BuildRECORDlib YES}
+@*
+@*
+Download the Xfree86 distribution from @url{http://www.xfree86.org}. 
+Specifically, the following dir, 
+(currently in the file @code{X430src-3.tgz file} ):
+@*
+@code{tar zxvf \}
+@*
+@code{X430src-3.tgz }
+@*
+@code{xc/programs/Xserver/record/}
+@*
+@code{xc/programs/Xserver/record/Imakefile}
+@*
+@code{xc/programs/Xserver/record/record.c}
+@*
+@code{xc/programs/Xserver/record/recordmod.c}
+@*
+@code{xc/programs/Xserver/record/set.c}
+@*
+@code{xc/programs/Xserver/record/set.h}
+@*
+@code{xc/programs/Xserver/record/module/}
+@*
+@code{xc/programs/Xserver/record/module/Imakefile}
+@*
+@code{cp -rf \}
+@*
+@code{xc/programs/Xserver/record \}
+@*
+@code{vnc_unixsrc/Xvnc/programs/Xserver}
+@*
+@code{cd libvncauth/}
+@code{xmkmf}
+@code{make all}
+@*
+@code{cd Xvnc}
+@code{make World |& tee LOG}
+@*
+@*
+Verify the build bu running @code{xdpyinfo} in an xterm in the vncserver 
+and verify that RECORD and XTEST extensions are loaded.
 
 
 @end table

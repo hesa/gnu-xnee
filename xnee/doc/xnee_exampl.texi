@@ -1,25 +1,232 @@
-@node Examples, Synchronisation, Installation, top
+@node Examples, Internals, Installation, top
 @chapter Examples
 
 @section Recorder
 
-@subsection Recording a netscape session
-Start one terminal exmulator (e.g xterm)
-Start Xnee,
-@example
-   @code{xnee -p  &}
-@end example
-=======
-TBD
 
-@section Recorder
+@subsection Record mouse motions 
+@cindex     Record mouse motions 
+Record mouse motions only and save log to mouse-rec.xnl. 
+@example
+   @code{xnee --record --mouse --out mouse-rec.xnl}
+@end example
+After having typed this you can move your mouse round for a while. After Xnee 
+has exited you will be able to replay your motions. Xnee will stop
+after having record 100 events (this is the default behaviour).
+See Replayer section.
+
+
+@subsection Record keyboard  
+@cindex     Record keyboard 
+Record keyboard events only and save log to kbd-rec.xnl. 
+@example
+   @code{xnee --record --mouse --out kbd-rec.xnl}
+@end example
+After having typed this Xnee records all your keyboard actions. After Xnee 
+has exited you will be able to replay your keyboard actions. Xnee will stop
+after having record 100 events (this is the default behaviour).
+See Replayer section.
+
+
+@subsection Record keyboard and mouse
+@cindex     Record keyboard and mouse
+Record keyboard and mouse and save log to km-rec.xnl. 
+@example
+   @code{xnee --record --keyboard --mouse --out kbd-rec.xnl}
+@end example
+After having typed this Xnee records all your keyboard and mouse actions. 
+So now move your pointer and write some stuff with your keyboard. After Xnee 
+has exited you will be able to replay your keyboard actions. Xnee will stop
+after having record 100 events (this is the default behaviour).
+See Replayer section.
+
+
+
+@subsection Record a galeon session
+@cindex     Record a galeon session
+Record a galeon session. Record 400 events. Save output in file galeon.xnl
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+
+Start Xnee
+@example
+   @code{xnee --record --keyboard --mouse --loops 400 --out galeon.xnl&}
+@end example
+
+@*
+Start galeon
+@code{galeon&}
+You can now start browsing the web. Make sure that you visit popular sites
+that can be slow sometimes due to the 'slashdot effect' (e.g slashdot.org). 
+Try to follow links from every page instead of using bookmarks. Why you shall 
+do all this is shown later in when we replay the galeon session.
+See Replayer section.
+
+
+
+@subsection Record a galeon session
+@cindex     Record a galeon session
+Record a galeon session. Record 400 events. Save output in file galeon.xnl
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+
+Start Xnee
+@example
+   @code{xnee --record --keyboard --mouse --loops 400 --out galeon.xnl&}
+@end example
+
+@*
+Start galeon
+@code{galeon&}
+You can now start browsing the web. Make sure that you visit popular sites
+that can be slow sometimes due to the 'slashdot effect' (e.g slashdot.org). 
+Try to follow links from every page instead of using bookmarks. Why you shall 
+do all this is shown later in when we replay the galeon session.
+See Replayer section.
+
+
+
+
+
+@subsection Record a galeon session with synchronisation data
+@cindex     Record a galeon session with synchronisation data
+Record a galeon session. Record 400 events. Save output in file galeon2.xnl
+
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+
+Start Xnee
+@example
+   @code{xnee --record --keyboard --mouse --loops 400 \}
+   @code{--request-range TBD --out galeon2.xnl &}
+@end example
+
+@*
+Start galeon
+@code{galeon&}
+
+You can now start browsing the web. Make sure that you visit popular sites
+that can be slow sometimes due to the 'slashdot effect' (e.g slashdot.org). 
+Try to follow links from every page instead of using bookmarks. Why you shall 
+do all this is shown later in when we replay the galeon session.
+See Replayer section.
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 @section Replayer
 
-TBD
+@subsection Replay mouse motions 
+@cindex     replay mouse motions 
+Replay mouse motions as found in the file mouse-rec.xnl. 
+@example
+   @code{xnee --replay  --file mouse-rec.xnl}
+@end example
+Xnee will now imitate exactly what you did when you recorded this file.
+
+@subsection Replay mouse motions using with half speed
+@cindex     replay using half speed
+Replay mouse motions as found in the file mouse-rec.xnl but with the 
+speed set to 50% of the recorded.
+@example
+   @code{xnee --replay  --file mouse-rec.xnl --speed-percent 50}
+@end example
+Xnee will now imitate exactly what you did when you recorded this file, 
+allthough it will be done in 50% of the recorded time.
+
+@subsection Replay mouse motions using with double speed
+@cindex     replay using double speed
+Replay mouse motions as found in the file mouse-rec.xnl but with the 
+speed set to 200% of the recorded.
+@example
+   @code{xnee --replay  --file mouse-rec.xnl --speed-percent 200}
+@end example
+Xnee will now imitate exactly what you did when you recorded this file, 
+allthough it will be done twice as fast as when recorded.
+
+@subsection Replay keyboard actions
+@cindex     Replay keyboard actions
+Replay keyboard events from file kbd-rec.xnl. 
+@example
+   @code{xnee --replay --file kbd-rec.xnl}
+@end example
+After having typed this Xnee replays all your keyboard actions. After Xnee 
+has exited you will be able to replay your keyboard actions. 
+
+
+
+@subsection Replay keyboard and mouse
+@cindex     Replay keyboard and mouse
+Replay keyboard and mouse from the file km-rec.xnl. 
+@example
+   @code{xnee --replay --keyboard --mouse --file kbd-rec.xnl}
+@end example
+After having typed this Xnee replays all your keyboard and mouse actions. 
+Xnee moves your pointer and writes the the same stuff as you did when
+recording. 
+
+
+
+@subsection Replay a galeon session
+@cindex     Replay a galeon session
+Replay the galeon session above
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+
+Start Xnee
+@example
+   @code{xnee --replay  --file galeon.xnl}
+@end example
+Xnee will now start browsing the web the way you did before. Since no 
+synchronisation data have been recorded Xnee will not have a chance in
+trying to know the status of the galeon browser. This means that we
+risk replaying events before they should be replayed. This can happen
+either if galeon took a lot longer time to start up then when recording
+or it can happen if a web site doesn't answer as quick as it did when
+you recorded. Things might not have gone bad since xnee replays all
+events in the same speed as when recorded so if your computer hads the
+same load and the web sites you visit has the same response times you
+won't notice that Xnee is replaying blindly.
+
+
+
+
+@subsection Replay a galeon session with synchronisation data
+@cindex     Replay a galeon session with synchronisation data
+Replay the second galeon session above.
+@*
+Start a terminal emulator (e.g xterm)
+@code{xterm&}
+
+Start Xnee
+@example
+   @code{xnee --replay  --file galeon2.xnl}
+@end example
+Xnee will now start browsing the web the way you did before. Since 
+synchronisation data have been recorded Xnee will have a good chance in
+syncing the status of the galeon browser's X11 traffic state right now 
+with the state when recording . So if galeon took a lot longer time to 
+start up then when recording or if a web site doesn't answer as quick 
+as it did when you recorded Xnee will wait until everything is OK. Xnee is 
+not replaying blindly this time.
+
+
+@section Retyper
 
 @section Distributor
 
-TBD
 

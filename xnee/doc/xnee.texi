@@ -58,13 +58,14 @@
 
 
 @menu
-* Introduction::         Xnee Introduction
-* Usage::                Xnee Usage
-* Installation::         Xnee Installation
-* Examples::             Xnee Usage Examples
-* Synchronisation::      Xnee Synchronisation
-* Requirements::         Xnee Requirements
-* FAQ::                  Xnee FAQ
+* Introduction::         Introduction
+* Get started::          Get started
+* Genereal ideas::       Genereal ideas
+* Installation::         Installation
+* Examples::             Usage examples
+* Internals::            Internals
+* Requirements::         Requirements
+* FAQ::                  FAQ
 * Copying This Manual::  Copying This Manual
 * Index::                Index
 @end menu
@@ -72,12 +73,13 @@
 
 @shortcontents
 
-@node Introduction, Usage, top, top
+@node Introduction, Get started, top, top
 @include xnee_intro.texi
-@include xnee_usage.texi
+@include xnee_start.texi
+@include xnee_general.texi
 @include xnee_install.texi
 @include xnee_exampl.texi
-@include xnee_synch.texi
+@include xnee_intern.texi
 @include xnee_req.texi
 @node FAQ, Copying This Manual, Requirements, top
 @include xnee_faq.texi

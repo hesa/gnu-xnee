@@ -1,7 +1,7 @@
-@node Installation, Examples, Usage, top
+@node Installation, Examples, General ideas, top
 @chapter Xnee Installation
 
-@section Installation from source (tar.gz) with the configure script
+@section Installation from source with the configure script
 To unpack, build and install Xnee from the sourcefiles do the following:
 @table @samp
 @item Download the source files into a directory
@@ -16,6 +16,8 @@ To unpack, build and install Xnee from the sourcefiles do the following:
 @code{gunzip cd xnee-1.0}
 
 @item Generate the makefiles
+@code{./configure}
+or if you want to specify which directory to install xnee to 
 @code{./configure --prefix=<PATH TO INSTALLATION DIR>}
 
 @item Build Xnee
@@ -26,9 +28,7 @@ To unpack, build and install Xnee from the sourcefiles do the following:
 @end table
 
 
-
-
-@section Installation from source (tar.gz) with default Makefile
+@section Installation from source with default Makefile
 To unpack, build and install Xnee from the sourcefiles do the following:
 @table @samp
 @item Download the source files into a directory
@@ -45,9 +45,9 @@ To unpack, build and install Xnee from the sourcefiles do the following:
 @item Build Xnee
 @code{make -f Makefile.xnee clean all}
 
-@item Copy the Xnee binary (src/cli/xnee) to a directory
+@item Copy the Xnee binary (xnee/src/xnee) to a directory
 E.g 
-@code{cp src/cli/xnee /usr/local/bin}
+@code{cp xnee/src/xnee /usr/local/bin}
 
 @end table
 
@@ -56,7 +56,9 @@ E.g
 
 
 @section Installation from SOURCE RPM
-
+Use the rpm command.
+E.g
+@code{rpm --install xnee-0.9-1.i386.srpm}
 
 
 
@@ -66,10 +68,21 @@ E.g
 @code{rpm --install xnee-0.9-1.i386.rpm}
 
 
-
 @section Installation from CVS
-See the Xnee Developer Manual
-
+Download the xnee source coe from the CVS repository at 
+@url{http://savannah.gnu.org}. Instructions on how to do 
+this can be found there as well. After have downloaded the sources
+do the following.
+@code{make -f Makefile.cvs}
+@code{./configure}
+@code{make}
+@code{make install}
 
 
 @chapter Deinstallation
+
+@section Denstallation from SOURCE RPM
+Use the rpm command.
+E.g
+@code{rpm --erase xnee}
+
