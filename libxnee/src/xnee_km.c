@@ -415,7 +415,6 @@ xnee_check_key(xnee_data *xd)
        &&
        ( xd->grab_keys->grab))
     {
-	  
       /*
        * Has the user pressed STOP (mod + key) 
        */

@@ -29,7 +29,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <unistd.h>
-#include <curses.h>
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>
 #else

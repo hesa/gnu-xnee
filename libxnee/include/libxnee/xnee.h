@@ -452,6 +452,7 @@ enum cont_proc_commands
 #define XNEE_FAKE_KEY             "fake-key"
 #define XNEE_FAKE_KEY_ARG         "key"
 
+#define XNEE_FAKE_MSEC_SLEEP      "msec"
 
 #define REPLAY_CALLBACK 1
 #define RECORD_CALLBACK 2
@@ -463,6 +464,11 @@ enum cont_proc_commands
 #define XNEE_FALSE_STRING         "false"
 #define XNEE_0_STRING             "0"
 
+
+#define XNEE_XK_ALT_L  "Alt_L"
+#define XNEE_XK_ALT_R  "Alt_R"
+#define XNEE_XK_RETURN "XK_Return"
+#define XNEE_XK_SPACE  "XK_space"
 
 #define XNEE_NR_OF_GRABBED_MODIFIER 8
 /** 
@@ -687,6 +693,7 @@ typedef struct
   int key_state    ;  /* XNEE_PRESS or XNEE_RELEASE  */
 
   int valid ; /* 1 if whole struct is valid, else 0 */
+  int msecs ; /* Nr of msecs to sleep before fakeing ... */
 
   xnee_key_code kc;
 

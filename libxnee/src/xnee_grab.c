@@ -298,28 +298,14 @@ xnee_grab_all_keys (xnee_data* xd)
       xd->grab_keys->action_keys[i].key=0;
       xnee_verbose((xd, "----      xnee_grab_all_keys: i=%d\n",i ));
 
-      xnee_verbose((xd, "----      xnee_grab_all_keys: %d \n" ,xd->grab_keys));
-      xnee_verbose((xd, "----      xnee_grab_all_keys: %d \n" ,xd->grab_keys->action_keys));
-      xnee_verbose((xd, "----      xnee_grab_all_keys at [%d]: %d \n" ,
-		    i, xd->grab_keys->action_keys[i]));
-      xnee_verbose((xd, "----      xnee_grab_all_keys str at [%d]: %d \n" ,
-		    i, xd->grab_keys->action_keys[i].str));
-
       if (xd->grab_keys->action_keys[i].str != NULL )
 	{
  	  xnee_verbose((xd, "----      DEBUG STARTING\n" ));
  	  xnee_verbose((xd, "----      xnee_grab_all_keys %d \n",ak.key));
 
- 	  xnee_verbose((xd, "----       xnee_grab_all_keys %d\n",xd->grab_keys->action_keys[i] ));
  	  xnee_verbose((xd, "----       xnee_grab_all_keys key=%d\n",xd->grab_keys->action_keys[i].key ));
 
-	  if ( xd->grab_keys->action_keys[i].str == NULL)
-	    xnee_verbose((xd, "----       xnee_grab_all_keys NULL\n" ));
-	  else
-	    xnee_verbose((xd, "----       xnee_grab_all_keys NOT NULL  .. I said NOT\n" ));
-
 	
- 	  xnee_verbose((xd, "----       xnee_grab_all_keys %d\n", xd->grab_keys->action_keys[i].str ));
  	  xnee_verbose((xd, "----       xnee_grab_all_keys \n" ));
 	  fflush(stderr);
  	  xnee_verbose((xd, "---->      xnee_grab_all_keys %s\n",xd->grab_keys->action_keys[i].str ));

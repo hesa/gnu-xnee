@@ -153,6 +153,9 @@ main (int argc, char *argv[])
     /* Set the signal handler the libxnee's built in */ 
     (void) signal (SIGINT, signal_handler);
 
+    /* Set the error handler the libxnee's built in */ 
+    (void) XSetErrorHandler (handle_xerr);  
+  
     /* set gnee default settings */
     gx_set_events_max (xd, 10);
     gnee_set_events_max (10);

@@ -85,8 +85,9 @@ xnee_replay_synchronize (xnee_data* xd)
   static int time_out_counter=0;
   static int diff_counter=0;
 
-  xnee_verbose((xd,"---> xnee_replay_synchronize \n"));;
-  if ( xd->sync == False ) 
+  xnee_verbose((xd,"---> xnee_replay_synchronize sync=%d   FALSE=%d \n",
+		xd->sync, XNEE_FALSE));
+  if ( xd->sync == XNEE_FALSE ) 
     {
       xnee_verbose((xd, "Xnee in NO SYNC mode\n"));
       return XNEE_OK;
@@ -505,6 +506,11 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
               }
 	      
 	      
+	      /*
+	       *
+	       * Do we have any grabbed key that have been pressed?
+	       * 
+	       */
 	      if (xnee_check_key (xd)==XNEE_GRAB_DATA)
 		{
 		  ret = xnee_handle_rep_key(xd) ; 
@@ -534,6 +540,11 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		    }
 		}
 	      
+	      /*
+	       *
+	       * OK, all grabbed stuffed is handled, let's fake some events
+	       *
+	       */
 	      switch (xindata.type)
 		{
 		case XNEE_EVENT:
@@ -620,7 +631,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    }
 	  
 	  
-	  (void)XSync(xd->control, False);
+/* 	  (void)XSync(xd->control, False); */
 	  xnee_verbose((xd, "Flushing after handled event\n"));
 	  (void)XFlush(xd->control);
 	  xnee_verbose((xd, "  <-- Flushed after handled event\n"));

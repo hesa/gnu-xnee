@@ -70,7 +70,24 @@ xnee_str2keycode(xnee_data* xd, const char *str, xnee_key_code *kc)
        str=tmp;
     }
 
-  kc->kc = XKeysymToKeycode(xd->fake,XStringToKeysym(str));
+
+  /* Xnee special syntax */
+  if (strncmp(str, XNEE_XK_SPACE, strlen(XNEE_XK_SPACE))==0)
+    {
+      kc->kc = XKeysymToKeycode(xd->fake, XK_space);
+    }
+  else if (strncmp(str, XNEE_XK_RETURN, strlen(XNEE_XK_RETURN))==0)
+    {
+      kc->kc = XKeysymToKeycode(xd->fake, XK_Return);
+    }
+  else if (strncmp(str, XNEE_XK_ALT_L, strlen(XNEE_XK_ALT_L))==0)
+    {
+      kc->kc = XKeysymToKeycode(xd->fake, XK_Alt_L);
+    }
+  else  
+    {
+      kc->kc = XKeysymToKeycode(xd->fake,XStringToKeysym(str));
+    }
 
   if (kc!=NULL)
   {
@@ -238,6 +255,7 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
     case '\\':
       ks=XK_backslash;
       break;
+
     case -228:
       /* FIX ME */
       ks=XK_bracketright;

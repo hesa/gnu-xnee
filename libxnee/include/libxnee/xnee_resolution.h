@@ -69,6 +69,9 @@ int
 xnee_set_default_rep_resolution (xnee_data *xd);
 
 int
+xnee_set_default_rec_resolution (xnee_data *xd);
+
+int
 xnee_no_rep_resolution (xnee_data *xd);
 
 int 

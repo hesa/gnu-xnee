@@ -879,7 +879,11 @@ xnee_record_async(xnee_data *xd)
                                               xd->record_setup->rContext, 
                                               xd->rec_callback, 
                                               (XPointer) (xd) );
-              XNEE_RETURN_IF_ERR(ret);
+	      xnee_verbose  ((xd," starting async loop since RESUME finished \n"));
+              if(ret!=1)
+		{
+		  return XNEE_RECORD_FAILURE;
+		}
 	    }
 	}
 
@@ -898,6 +902,7 @@ xnee_record_async(xnee_data *xd)
        */  
       usleep (100*100);
     }
+
 
 /*   XRecordDisableContext(xd->control,  */
 /* 			xd->record_setup->rContext); */

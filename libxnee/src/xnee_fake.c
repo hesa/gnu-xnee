@@ -44,7 +44,8 @@ static void
 xnee_fake_sleep(unsigned long period)
 { 
   static unsigned long collected_time=0;
-#define SLEEP_THRESH 1
+
+#define SLEEP_THRESH 10
   if (period>SLEEP_THRESH)
     {
       usleep (period*1000); 
@@ -390,10 +391,9 @@ xnee_fake_motion_event (xnee_data* xd,
   int i=0;
   int size= xd->distr_list_size;
 	  
-
   x = xnee_resolution_newx(xd,x);
   y = xnee_resolution_newy(xd,y);
-  
+
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   if (!xnee_is_recorder (xd))
     {
@@ -404,7 +404,7 @@ xnee_fake_motion_event (xnee_data* xd,
 		    (int) screen, 
 		    (int) x,
 		    (int) y,
-		    0));
+		    dtime));
       XTestFakeMotionEvent(xd->fake, 
 			   screen, 
 			   x, 
@@ -506,9 +506,6 @@ xnee_type_file(xnee_data *xd)
     exit(XNEE_NO_TEST_EXT);
   
   xnee_verbose ((xd,"--- xnee_type_file\n"));
-
-  xnee_verbose ((xd,"---> xnee_type_file loop file=%s   %d\n", 
-		 xd->rt_name,xd->rt_file));
 
   while (fgets(tmp, 256, xd->rt_file)!=NULL)
     {

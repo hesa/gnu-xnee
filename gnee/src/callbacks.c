@@ -69,7 +69,7 @@ write_session_file()
 int
 read_project_file()
 {
-GNEE_DEBUG(("read_project_file()\n"));
+  GNEE_DEBUG(("read_project_file()\n"));
   if (fs==NULL)
     fs = create_fileselection1 ();
   file_choosen = CHOOSE_XNEE_PROJECT_FILE;

@@ -284,6 +284,12 @@ xnee_open_display(xnee_data* xd)
 			       XDisplayName(tmp));
       return dpy;
     }
+
+
+  /* 
+   * resolution */
+  xnee_set_default_rec_resolution (xd);
+
   xnee_verbose((xd, "Display %s = %d\n", tmp, (int) dpy));
   return dpy;
 }
@@ -511,14 +517,14 @@ xnee_init(xnee_data* xd)
       xnee_init_names();
   */
 
-  ret = xnee_resolution_init (xd);
-  XNEE_RETURN_IF_ERR(ret);
-
   ret = xnee_grab_keys_init(xd);
   XNEE_RETURN_IF_ERR(ret);
 
 
-
+  /* 
+   * resolution */
+  xnee_set_default_rec_resolution (xd);
+  
   /* 
    * meta data */
   xd->meta_data.sum_max    = 0;
@@ -537,7 +543,8 @@ xnee_init(xnee_data* xd)
    * Since those are used when recording and replaying. */
   xnee_record_init (xd);
   
-  
+  ret = xnee_resolution_init (xd);
+  XNEE_RETURN_IF_ERR(ret);
 
   xnee_verbose((xd, "<--- xnee_init\n"));
   return XNEE_OK;
@@ -622,6 +629,7 @@ signal_handler(int sig)
       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
       
       exit (sig);
+
     case SIGINT:
       fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
       ret = xnee_ungrab_keys(xd_global);
@@ -784,8 +792,6 @@ xnee_new_replay_setup(void)
 static int
 xnee_new_dyn_data(xnee_data *xd)
 {
-   int ret;
-
    if (xd==NULL)
    {
       return XNEE_MEMORY_FAULT;
@@ -1861,6 +1867,7 @@ xnee_start(xnee_data *xd)
 {
    int ret ;
 
+
 #ifdef XNEE_OBSOLETE
    ret = xnee_prepare(xd);
    if (ret!=XNEE_OK)
@@ -1883,6 +1890,8 @@ xnee_start(xnee_data *xd)
       }
    }
 #endif
+
+
    /* grab all keys that have been specified */
    ret = xnee_grab_all_keys (xd);
    if (ret != XNEE_OK)

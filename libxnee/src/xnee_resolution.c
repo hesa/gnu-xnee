@@ -37,8 +37,20 @@ xnee_set_default_rep_resolution (xnee_data *xd)
 {
   if (xd->data != NULL)
     {
-      xd->res_info.replay.x_res = DisplayWidth (xd->data, 0);
+      xd->res_info.replay.x_res = DisplayWidth  (xd->data, 0);
       xd->res_info.replay.y_res = DisplayHeight (xd->data, 0);
+      return XNEE_OK;
+    }
+  return -1 ;
+}
+ 
+int
+xnee_set_default_rec_resolution (xnee_data *xd)
+{
+  if (xd->data != NULL)
+    {
+      xd->res_info.record.x_res = DisplayWidth  (xd->data, 0);
+      xd->res_info.record.y_res = DisplayHeight (xd->data, 0);
       return XNEE_OK;
     }
   return -1 ;
@@ -184,6 +196,7 @@ int
 xnee_resolution_newx (xnee_data *xd, int xval)
 {
   static int diff = XNEE_RESOLUTION_UNSET ; 
+
   if (diff==XNEE_RESOLUTION_UNSET)  
     {
       if (xnee_is_resolution_used(xd))
@@ -215,6 +228,7 @@ int
 xnee_resolution_newy (xnee_data *xd, int yval)
 {
   static int diff = XNEE_RESOLUTION_UNSET ;
+
   if (diff==XNEE_RESOLUTION_UNSET)
     {
       if (xnee_is_resolution_used(xd))
@@ -286,11 +300,11 @@ xnee_get_resolution_used (xnee_data *xd)
 int
 xnee_resolution_init (xnee_data *xd)
 {
-  xd->res_info.record.x_res=1;
-  xd->res_info.record.y_res=1;
+   xd->res_info.record.x_res=1; 
+   xd->res_info.record.y_res=1; 
 
-  xd->res_info.replay.x_res=1;
-  xd->res_info.replay.y_res=1;
+   xd->res_info.replay.x_res=1; 
+   xd->res_info.replay.y_res=1; 
 
 /*   xnee_set_resolution_used(xd); */
   return XNEE_OK;

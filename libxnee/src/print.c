@@ -954,13 +954,13 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "#      Resolution                            #\n");
   fprintf (out,  "##############################################\n");
   fprintf (out,  "\n# Resolution\n");
-  fprintf (out,  XNEE_RECORDED_RESOLUTION"  %dx%d\n",
+  fprintf (out,  "#" XNEE_RECORDED_RESOLUTION"  %dx%d\n",
 	   xnee_get_rec_resolution_x(xd),
 	   xnee_get_rec_resolution_y(xd)  ); 
-  fprintf (out,  XNEE_REPLAY_RESOLUTION"  %dx%d\n",
+  fprintf (out,  "#" XNEE_REPLAY_RESOLUTION"  %dx%d\n",
 	   xnee_get_rep_resolution_x(xd),
 	   xnee_get_rep_resolution_y(xd)  ); 
-  fprintf (out,  XNEE_ADJUST_RESOLUTION"  %d\n",
+  fprintf (out,  "#" XNEE_ADJUST_RESOLUTION"  %d\n",
 	   xnee_get_resolution_used (xd));
 
 

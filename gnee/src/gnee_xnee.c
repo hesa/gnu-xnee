@@ -381,8 +381,6 @@ gnee_set_ranges(int type)
   data = xnee_get_data (type);
   
   GNEE_DEBUG(("Setting ranges from project file \n"));
-  GNEE_DEBUG(("  type    %d  \n", type));
-  GNEE_DEBUG(("  len     %d  \n", len));
 
   for (i=0;i<len;i++)
     {

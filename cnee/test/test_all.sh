@@ -29,35 +29,35 @@ option_scripts()
 function_scripts()
 {
     CMD="scripts/record/keyboard.sh    $* "
-    echo "executing $CD"
+    echo "executing $CMD"
     scripts/record/keyboard.sh    $* 
 
     CMD="scripts/record/mouse.sh       $*"
-    echo "executing $CD"
+    echo "executing $CMD"
     scripts/record/mouse.sh       $*
 
     CMD="scripts/replay/keyboard.sh    $*"
-    echo "executing $CD"
+    echo "executing $CMD"
     scripts/replay/keyboard.sh    $*
 
     CMD="scripts/replay/mouse.sh       $*"
-    echo "executing $CD"
+    echo "executing $CMD"
     scripts/replay/mouse.sh       $*
 
     CMD="scripts/resolution/mo-res.sh  $*"
-    echo "executing $CD"
+    echo "executing $CMD"
     scripts/resolution/mo-res.sh  $*
 
     CMD="scripts/timing/mo-time.sh     $*"
-    echo "executing $CD"
+    echo "executing $CMD"
     scripts/timing/mo-time.sh     $*
 
     CMD="scripts/timing/mo-time.sh     $*"
-    echo "executing $CD"
+    echo "executing $CMD"
     scripts/timing/mo-time.sh     $*
 
     CMD="scripts/retype/keyboard.sh    $*"
-    echo "executing $CD"
+    echo "executing $CMD"
     scripts/retype/keyboard.sh    $*
 }
 
@@ -110,17 +110,17 @@ NAME=test_all.sh
 remove_gcov_gprof_file
 
 if [ "$1" == "--no-run" ];
-then
+    then
     scan_logs
 elif [ "$1" == "--help" ];
-then
+    then
     echo "OPTIONS:"
     echo "   --clean     removes all generated files"
     echo "   --function  test cnee functionality only"
     echo "   --option    test cnee options only"
     echo "   --no-run    Dont exec cnee. Scan logs"
 elif [ "$1" == "--clean" ];
-then
+    then
     remove_gcov_gprof_file
     rm -f *.log
     rm -f *.tmp
@@ -128,16 +128,16 @@ then
     rm -fr gcov*.*
     rm -fr xnee_val.*
     rm -fr rep-*.log
-
+    
 elif [ "$1" == "--function" ];
-then
+    then
     START=`date '+%s'`
     \rm -f $LOG $ERR_LOG
     function_scripts "$*"
     STOP=`date '+%s'`
     scan_logs
 elif [ "$1" == "--option" ];
-then
+    then
     START=`date '+%s'`
     \rm -f $LOG $ERR_LOG
     option_scripts "$*"

@@ -39,6 +39,7 @@
 #include "libxnee/xnee_error.h"
 #include "libxnee/xnee_keysym.h"
 #include "libxnee/xnee_fake.h"
+#include "libxnee/feedback.h"
 
 
 
@@ -66,7 +67,7 @@ static int
 xnee_expression_handle_mark(xnee_data *xd, char *tmp);
 
 static int
-xnee_expression_handle_prim(xnee_data *xd, char *tmp);
+xnee_expression_handle_prim(xnee_data *xd, char *tmp, xnee_intercept_data * xindata);
 
 static int
 xnee_expression_handle_projinfo(xnee_data *xd, char *tmp);
@@ -96,10 +97,11 @@ xnee_expression_handle_session(xnee_data *xd,
 				  xindata);
   if (do_continue==XNEE_REPLAY_DATA) { return (XNEE_REPLAY_DATA); }
 
-  /* Is it a replayable event*/
+  /* Is it a replayable script primitive */
   do_continue = 
     xnee_expression_handle_prim(xd, 
-				tmp);
+				tmp,
+				xindata);
   if (do_continue==XNEE_PRIMITIVE_DATA) { return (XNEE_PRIMITIVE_DATA); }
 
 
@@ -804,7 +806,12 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
   int i ; 
 
   if (arg == NULL)
-    return XNEE_SYNTAX_ERROR;
+    {
+      return XNEE_SYNTAX_ERROR;
+    }
+
+  xss->msecs =  0;  
+
 
   while (str!=NULL)
     {
@@ -812,7 +819,6 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
       /* skip leading blanks */
       while ( str[0] == ' ' ) str++ ;
       
-
       /****************
        * Find varaiable 
        */
@@ -822,7 +828,9 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 
       /* no '=' found, bail out */
       if (tmpp==NULL)
-	return XNEE_SYNTAX_ERROR;
+	{
+	  return XNEE_SYNTAX_ERROR;
+	}
 
       /* copy everything from str upto '=' into var */  
       len = strlen(str)-strlen(tmpp);
@@ -841,7 +849,10 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
       str = strstr(str,"=");
       /* no '=' found, bail out */
       if (tmpp==NULL)
-	return XNEE_SYNTAX_ERROR;
+	{
+	  return XNEE_SYNTAX_ERROR;
+	}
+
       str++;
       /* skip leading blanks */
       while ( str[0] == ' ' ) str++ ;
@@ -890,21 +901,31 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
       /* key=a key=shift etc */
       else if (strncmp(var,XNEE_FAKE_KEY_ARG,strlen(XNEE_FAKE_KEY_ARG))==0)
 	{
- 	  if (strlen(val)==1) 
+	  
+	  if (strlen(val)==1)  
 	    {
 	      valp = &val[0];
 	      valp++;
 
 	      if (val[0]=='\0')
-		val[0]=' ';
+		{
+		  val[0]=' ';
+		}
 	      
-	      xss->valid = sscanf (val, "%d", &xss->key);
 	      xss->key = xnee_char2keycode (xd,val[0],&xss->kc);
+	      if ( xss->kc.kc != 0 )
+		{
+		  xss->valid = 1 ; 
+		}
+	      else
+		{
+		  xss->valid = 0 ; 
+		}
 	    }
-	  else
+	  else 
 	    {
- 	      xss->valid = 1; 
 	      xss->key = xnee_str2keycode (xd,val,&xss->kc); 
+ 	      xss->valid = 1; 
 	    }
 	}
       /* button=12 etc */
@@ -915,10 +936,19 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 	  valp = &val[0];
 	  xss->valid = sscanf (valp, "%d", &xss->button);
 	}
+      /* msecs=12 etc */
+      else if (strncmp(var,
+		       XNEE_FAKE_MSEC_SLEEP,
+		       strlen(XNEE_FAKE_MSEC_SLEEP))==0)
+	{
+	  valp = &val[0];
+	  xss->valid = sscanf (valp, "%d", &xss->msecs);
+	}
       else 
 	{
 	  fprintf (stderr, " keyword '%s' not yet handled\n", var);
 	}
+
 
       /* skip leading blanks */
       
@@ -933,7 +963,7 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 }
 
 static int
-xnee_expression_handle_prim(xnee_data *xd, char *str)
+xnee_expression_handle_prim(xnee_data *xd, char *str, xnee_intercept_data * xindata)
 {
   int ret= 0 ;  
   char *prim_args;
@@ -941,6 +971,9 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
   int   prim_len = 0 ; 
   xnee_script_s xss ;
   
+  xindata->type         = 0;
+  xindata->u.event.type = 0;
+
   xnee_verbose ((xd, "handling primitive: %s\n", str));
   prim_args = strstr(str," ");
 
@@ -960,45 +993,45 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
     {
       if (xss.x_rel)
 	{
-	  xnee_fake_relative_motion_event (xd, xss.x, xss.y, 0);
+	  xnee_fake_relative_motion_event (xd, xss.x, xss.y, xss.msecs);
 	}
       else
 	{
-	  xnee_fake_motion_event (xd, 0, xss.x, xss.y, 0);
+	  xnee_fake_motion_event (xd, 0, xss.x, xss.y, xss.msecs);
 	}
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_BUTTON_PRESS))
     {
-      xnee_fake_button_event (xd, xss.button, XNEE_PRESS, 0);
+      xnee_fake_button_event (xd, xss.button, XNEE_PRESS, xss.msecs);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_BUTTON_RELEASE))
     {
-      xnee_fake_button_event (xd, xss.button, XNEE_RELEASE, 0);
+      xnee_fake_button_event (xd, xss.button, XNEE_RELEASE, xss.msecs);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_BUTTON))
     {
-      xnee_fake_button_event (xd, xss.button, XNEE_PRESS, 0);
+      xnee_fake_button_event (xd, xss.button, XNEE_PRESS, xss.msecs);
       usleep (100);
-      xnee_fake_button_event (xd, xss.button, XNEE_RELEASE, 0);
+      xnee_fake_button_event (xd, xss.button, XNEE_RELEASE, xss.msecs);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY_PRESS))
     {
-      xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
+      xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, xss.msecs);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY_RELEASE))
     {
-      xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
+      xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, xss.msecs);
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY))
     {
-      xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
-      xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
+      xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS,   xss.msecs); 
+      xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, xss.msecs); 
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else
