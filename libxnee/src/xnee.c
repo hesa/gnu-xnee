@@ -1351,6 +1351,8 @@ xnee_set_autorepeat (xnee_data *xd)
   int i ;
   int j;
 
+  printf ("set autorepeat\n");
+
   XGetKeyboardControl (xd->fake, &xd->kbd_orig);
   
   xnee_verbose ((xd," key_click_percent  %d \n", 
@@ -1405,8 +1407,8 @@ xnee_reset_autorepeat (xnee_data *xd)
       xnee_verbose((xd,"AutoRepeatModeOff\n"));
       XAutoRepeatOff(xd->fake);
     }
-  /* make sure the resetting of autorepeat is handled
-     before we vlose down the diaplay */
+  /* Make sure the resetting of autorepeat is handled
+     before we close down the display */
   XFlush (xd->fake);
   
   return XNEE_OK;
@@ -1585,7 +1587,6 @@ xnee_open_files(xnee_data *xd)
     }
   return XNEE_OK;
 }
-
 
 
 
@@ -1799,6 +1800,7 @@ xnee_start(xnee_data *xd)
 	{
 	  xnee_print_error ("Unable to open retype file\n");
 	}
+      xnee_verbose((xd,"finished replaying\n"));
     }
   else
     {
@@ -1817,7 +1819,7 @@ xnee_start(xnee_data *xd)
    xnee_verbose((xd, "xnee_start : ungrab -----> \n"));
    xnee_ungrab_keys (xd);
    xnee_verbose((xd, "xnee_start : ungrab <---- \n"));
-   xnee_reset_autorepeat (xd);
+   xnee_reset_autorepeat (xd); 
    
    xnee_renew_xnee_data(xd);
    return (XNEE_OK);

@@ -438,7 +438,6 @@ xnee_type_file(xnee_data *xd)
 
   xnee_setup_display (xd);
   xnee_replay_init (xd);   
-  xnee_set_autorepeat (xd);
 
   xnee_verbose ((xd,"--- xnee_type_file\n"));
 

@@ -417,6 +417,7 @@ xnee_replay_main_loop(xnee_data *xd)
 	{
 	  fprintf (stderr, "Could not read data from file\n");
 	  xnee_close_down (xd);
+	  return XNEE_OK;
 	}	
       else if ( ret == 0 )
 	{
@@ -461,6 +462,7 @@ xnee_replay_main_loop(xnee_data *xd)
      }
 
    ret = XNEE_REPLAY_DATA ; 
+
    
    /**
     * all META DATA setting up our sessions is read ...

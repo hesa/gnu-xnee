@@ -775,6 +775,16 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 	    }
 	  xss->valid = sscanf (valp, "%d", &xss->y);
 	}
+      /* key=12 etc */
+      else if (strncmp(var,XNEE_FAKE_KEY_ARG,strlen(XNEE_FAKE_KEY_ARG))==0)
+	{
+	  valp = &val[0];
+	  valp++;
+	  xss->valid = sscanf (val, "%d", &xss->key);
+	  printf ("KEY found %d   %d  '%s' '%s'\n", 
+		  xss->key, xss->valid,
+		  valp,val);
+	}
       else 
 	{
 	}
@@ -826,8 +836,8 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
       printf ("Faking motion '%s'\n", prim_args);  
       
       xnee_fake_relative_motion_event (xd,
-				       12, 
-				       12, 
+				       xss.x, 
+				       xss.y, 
 				       0);
       printf ("after the parse... x=%d  valid=%d  rel=%d\n", 
 	      xss.x,
@@ -839,6 +849,26 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
   else if (CHECK_EQUALITY(buf, XNEE_FAKE_BUTTON))
     {
       printf ("Faking button\n");
+      
+      ret = XNEE_PRIMITIVE_DATA ;
+    }
+  else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY_PRESS))
+    {
+      printf ("Faking press %d\n", xss.key);
+      xnee_fake_key_event (xd,
+			   xss.key, 
+			   True, 
+			   0);
+      
+      ret = XNEE_PRIMITIVE_DATA ;
+    }
+  else if (CHECK_EQUALITY(buf, XNEE_FAKE_KEY_RELEASE))
+    {
+      printf ("Faking release %d\n", xss.key);
+      xnee_fake_key_event (xd,
+			   xss.key, 
+			   False, 
+			   0);
       
       ret = XNEE_PRIMITIVE_DATA ;
     }
