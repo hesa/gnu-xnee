@@ -75,7 +75,7 @@ sleep 2
 move_mouse u 400
 REAL_STOP_TIME=`date '+%s'`
 sleep 1
-killall -TERM $XNEE
+$KILLALL_1 $XNEE
 verbose "Storing stop time"
 verbose " .... finished recording a session"
 REAL_TIME=$(( $REAL_STOP_TIME - $REAL_START_TIME ))

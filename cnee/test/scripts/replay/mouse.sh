@@ -125,7 +125,7 @@ function record_and_replay()
     verify_same     $(( $SAVE_YPOS - $YPOS )) $UP_PIX
 
     sleep 5
-    killall -TERM xnee
+    $KILLALL_1 $XNEE
     verbose "Making sure we have a valid log file...."
     export NR_OF_LOGS=`grep -e "0,6" rep-mouse.log | wc -l`
     verbose "Nr of logs:"

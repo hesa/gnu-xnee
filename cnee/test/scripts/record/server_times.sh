@@ -49,9 +49,9 @@ create_log()
 
 kill_all()
 {
-    kill -s TERM $XEV_PID
-    kill -s TERM $XNEE_PID
-    kill -s TERM $XNEST_PID
+    $KILL_1 TERM $XEV_PID
+    $KILL_1 TERM $XNEE_PID
+    $KILL_1 TERM $XNEST_PID
 }
 
 start_all()
