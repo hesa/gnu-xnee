@@ -1,0 +1,34 @@
+void
+on_action_button_clicked               (GtkButton       *button,
+                                        gpointer         user_data)
+{
+    printf("on_action_button_clicked\n");
+
+    xnee_data *xd;
+    
+    xnee_init(xd, PACKAGE);
+    xnee_record_init(xd);
+    xnee_set_recorder(xd);
+    xnee_add_range_str(xd, XNEE_DELIVERED_EVENT, "KeyPress");
+    xnee_setup_display(xd);
+    xnee_setup_recording(xd);
+    xnee_print_sys_info(xd, "gnee.xnee");
+    xnee_print_xnee_settings(xd, "gnee.xnee");
+    xnee_record_print_record_range(xd, "gnee.xnee");
+    xnee_record_loop(xd);
+}
+
+
+gcc -DHAVE_CONFIG_H -I. -I. -I.. -DPACKAGE_DATA_DIR=\""/usr/local/share"\"     -DPACKAGE_LOCALE_DIR=\""/usr/local/share/locale"\"       -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/pango-1.0 -I/usr/include/freetype2 -I/usr/X11R6/include -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include      -I/home/joda/src/xnee/libxnee/include -L/home/joda/src/xnee/libxnee/src -lxneE -c callbacks.c
+callbacks.c: In function `on_action_button_clicked':
+callbacks.c:179: `xnee_data' undeclared (first use in this function)
+callbacks.c:179: (Each undeclared identifier is reported only once
+callbacks.c:179: for each function it appears in.)
+callbacks.c:179: `xd' undeclared (first use in this function)
+callbacks.c:184: `XNEE_DELIVERED_EVENT' undeclared (first use in this function)
+make[2]: *** [callbacks.o] Error 1
+make[2]: Leaving directory `/home/joda/Projects/gnee/src'
+make[1]: *** [all-recursive] Error 1
+make[1]: Leaving directory `/home/joda/Projects/gnee'
+make: *** [all-recursive-am] Error 2
+
