@@ -1,0 +1,107 @@
+%define name            Xnee
+%define version         XNEE_VERSION
+%define release         XNEE_RELEASE
+%define xbindir         /usr/bin/X11
+%define xneeprojectdir  /usr/lib
+%define xneesessiondir  /usr/lib
+%define xneemandir      /usr/share/man/man1/
+%define xneeinfodir     /usr/share/info/
+
+
+Summary:	Xnee is an X11 data recorder/replayer/distributer.
+Name:		%{name}
+Version:	%{version}
+Release:	%{release}
+Group:		X11
+License:	GPL
+URL:		http://www.gnu.org/software/xnee
+Distribution: 	www.gnu.org
+Vendor:		www.gnu.org
+Packager:	hesa <hesa@gnu.org>
+
+
+
+
+
+BuildRequires:	XFree86-devel
+BuildRoot:	%{_tmppath}/%{name}-buildroot
+Prefix:		%{_prefix}
+
+Source:		http://ftp.gnu.org/pub/gnu/xnee/%{name}-%{version}.tar.gz
+
+%description
+
+%prep
+rm -rf $RPM_BUILD_ROOT/%{name}-%{version}
+tar zxvf $RPM_SOURCE_DIR/%{name}-%{version}.tar.gz
+
+%setup -q
+
+%build
+%configure      --bindir=%{xbindir} \
+                --mandir=/usr/X11R6/man \
+                --enable-gui 
+
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT
+
+make install     prefix=%{buildroot}/usr \
+                 bindir=%{buildroot}/%{xbindir} \
+                 projectdir=%{buildroot}/projects \
+                 sessionndir=%{buildroot}/sessions
+	
+
+
+if ! [ $DEBUG ]; then
+        strip   $RPM_BUILD_ROOT/%{xbindir}/cnee
+        strip   $RPM_BUILD_ROOT/%{xbindir}/gnee
+fi
+
+
+mkdir -p ${RPM_BUILD_ROOT}/usr/lib/%{name}/projects
+install -m 644 projects/*.xnp \
+	${RPM_BUILD_ROOT}/usr/lib/%{name}/projects/
+
+mkdir -p ${RPM_BUILD_ROOT}/usr/lib/%{name}/sessions
+install -m 644 sessions/*.xns \
+	${RPM_BUILD_ROOT}/usr/lib/%{name}/sessions/
+
+
+mkdir -p ${RPM_BUILD_ROOT}/usr/share/man/man1
+install -m 644 doc/xnee.1 ${RPM_BUILD_ROOT}/usr/share/man/man1
+
+mkdir -p ${RPM_BUILD_ROOT}/usr/share/info
+install -m 644 doc/xnee.info ${RPM_BUILD_ROOT}/usr/share/info
+
+
+
+
+
+%post
+# New menu-system
+#/usr/X11R6/bin/fluxbox-generate_menu \
+#	-kg \
+#	-p /usr/share \
+#	-o /usr/share/%{name}/menu \
+#	-m %{name}-%{version}
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT
+
+
+%files
+%defattr(-,root,root,755)
+%doc README AUTHORS COPYING ChangeLog INSTALL NEWS README TODO EXAMPLES FAQ BUGS doc/xnee.txt  doc/xnee.html doc/xnee_man.txt
+%{xneeprojectdir}/%{name}/projects/*
+%{xneesessiondir}/%{name}/sessions/*
+%{xneeinfodir}/*
+%{xneemandir}/*
+%{xbindir}/cnee
+%{xbindir}/gnee
+
+%changelog
+
+# end of file
