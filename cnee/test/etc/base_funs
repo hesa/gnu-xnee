@@ -1,0 +1,575 @@
+export XNEE=../src/cnee
+export VERBOSE_MODE=false
+
+export LOG=./xnee_test.log
+export ERR_LOG=./xnee_test.err
+
+export MOUSE_DEVICE=/dev/swmouse
+export KEYBOARD_DEVICE=/dev/swmouse
+
+
+function init_test()
+{
+    SCRIPT_NAME=$1
+    
+    # Result counters
+    TOTAL_TEST=0
+    SUCC_TEST=0
+    ERR_TEST=0
+    WARN_TEST=0
+    RETURN_TEST=0
+    RETURN_ERR=0
+    UNTESTED=0
+
+    START=`date '+%s'`
+    XNEE_VERSION=`$XNEE --version 2>&1 | grep xnee | grep -v opyrigh | grep -v WARRAN | grep -v http | awk '{ print $2}' | sed 's,[ ],,'`
+    X_VEND=`xdpyinfo | grep "vendor string" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
+    X_VERS=`xdpyinfo | grep "vendor release" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
+    ME=`whoami`
+
+    uname -o > /dev/null 2>/dev/null
+    if [ "$?" != "0" ]; then
+	OS="`uname -s`:`uname -r`:`uname -n`"
+    else	
+	OS="`uname -o`:`uname -s`:`uname -r`:`uname -n`"
+    fi    
+}
+
+
+function log()
+{
+    echo "$*" >> $LOG
+    echo "$*"
+}
+
+function error_log()
+{
+    echo "$*" >> $ERR_LOG
+}
+
+
+function move_cursor()
+{
+    DELAY=$1
+    $XNEE --replay -f rc/one_cursor.xnr --time $DELAY
+}
+
+
+function result_log_xml()
+{
+    NAME=$1
+    log "<RESULT script-name=\"$NAME\">"
+    log "  <TOTAL>"
+    log "    $TOTAL_TEST"
+    log "  </TOTAL>"
+    log "  <SUCCES>"
+    log "    $SUCC_TEST"
+    log "  </SUCCES>"
+    log "  <ERROR>"
+    log "    $ERR_TEST"
+    log "  </ERROR>"
+    log "  <WARN>"
+    log "    $WARN_TEST"
+    log "  </WARN>"
+    log "  <RETURN-SUCCESS>"
+    log "    $RETURN_TEST"
+    log "  </RETURN-SUCCESS>"
+    log "  <RETURN-ERROR>"
+    log "    $RETURN_ERR"
+    log "  </RETURN-ERROR>"
+    log "  <UNTESTED>"
+    log "    $UNTESTED"
+    log "  </UNTESTED>"
+    log "</RESULT>"
+}
+
+function result_log_simple()
+{
+    NAME=$1
+    log "Script name=\"$NAME\""
+    log "============================="
+    log " "
+    log "  Functionality test"
+    log "  ------------------"
+    log "    Test total:   $TOTAL_TEST"
+    log "    Success:      $SUCC_TEST"
+    log "    Error:        $ERR_TEST"
+    log "    Warnings:     $WARN_TEST"
+    log " "
+    log "  Return value test"
+    log "  ------------------"
+    log "    Correct:      $RETURN_TEST"
+    log "    Wrong         $RETURN_ERR"
+    log " "
+    log "  Untested"
+    log "  ------------------"
+    log "    Nr of scripts $UNTESTED"
+}
+
+
+function result_log_()
+{
+    NAME=$1
+    log "$NAME:$TOTAL_TEST:$SUCC_TEST:$ERR_TEST:$WARN_TEST:$RETURN_TEST:$RETURN_ERR:$UNTESTED:$START:$STOP:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS"
+}
+
+
+function result_log()
+{
+    STOP=`date '+%s'`
+    result_log_ $*
+}
+
+
+function verbose()
+{
+    if [ "$VERBOSE_MODE" == "true" ];
+        then
+        echo "  $MYNAME: $*"  1>&2
+    fi
+}
+
+function check_retval()
+{
+    RESULT=$1
+    EXPECTED=$2 
+    MSG="$SCRIPT_NAME checking return value $RESULT == $EXPECTED   "
+    
+    RESULT_TEST=$(( $RESULT_TEST + 1 ))
+    verbose "Checking return val for:$MSG"
+    if [ "$RESULT" != "$EXPECTED" ] ;
+	then 
+	verbose "   Unexpected return val: $MSG"
+	error_log "   Unexpected return val: $MSG"
+	RETURN_ERR=$(( $RETURN_ERR + 1))
+    else
+	verbose "  return val OK"
+	RETURN_TEST=$(( $RETURN_TEST + 1))
+    fi
+}
+
+function check_retval_false()
+{
+    RESULT=$1
+    UN_EXPECTED=$2 
+    MSG="$SCRIPT_NAME checking return value (false)  $RESULT == $EXPECTED   "
+    RESULT_TEST=$(( $RESULT_TEST + 1))
+    
+    if [ "$RESULT" == "$UN_EXPECTED" ] ;
+	then
+	verbose "   Unexpected return val: $MSG"
+	error_log  "   Unexpected return val: $MSG"
+	RETURN_ERR=$(($RETURN_ERR + 1))
+    else
+	verbose "  return val OK"
+	RETURN_TEST=$(( $RETURN_TEST + 1))
+    fi
+}
+
+
+function parse_me()
+{
+    for arg in "$1"
+      do
+      verbose "Parsing : \"$arg\" "
+      case "$arg" in 
+	  "--verbose")
+          VERBOSE_MODE=true
+          ;;
+
+          *)
+          verbose "faulty argument: $arg"
+          ;;
+      esac
+      shift
+    done
+}
+
+
+function find_events()
+{
+    FILE=$1 
+    OUT=$2
+    rm -f $OUT
+    cat $FILE | \
+	awk 'BEGIN { found=0; } \
+	/#define KeyPress[ \t]+/ { found=1;} \
+	{ if (found)             { printf "%.2d=%s\n", $3, $2 }   } \
+	/#define LASTEvent/      { found=0;} \
+	    '  > $OUT
+}
+
+function find_requests()
+{
+    FILE=$1 
+    OUT=$2
+    rm -f $OUT
+    cat $FILE | \
+	awk 'BEGIN { found=0; } \
+	/#define X_CreateWindow[ \t]+/ { found=1;} \
+	{ if (found)             { printf "%.2d=%s\n", $3, $2 }   } \
+	/#define X_NoOperation/      { found=0;} \
+	    '  > $OUT
+}
+
+
+function find_errors()
+{
+    FILE=$1 
+    OUT=$2
+    rm -f $OUT
+    cat $FILE | \
+	awk 'BEGIN { found=0; } \
+	/#define Success[ \t]+/ { found=1;} \
+	{ if (found)             { printf "%.2d=%s\n", $3, $2 }   } \
+	/#define BadAccess/      { found=0;} \
+	    '  > $OUT
+}
+
+
+#
+#
+#  compare_data
+#
+#
+#  Compare if the the name,number pair given
+#  as argument is the same as given by Xnee --print-xxxx-name
+#  
+# 
+
+function compare_data()
+{
+    
+    EXP_EV=`echo $1 | sed 's,^[0]*\([0-9][0-9]*\),\1,g'`
+    EXP_EV_NAME=$2
+
+    REC_EV=$3
+    REC_EV_NAME=$4
+
+    MSG="$SCRIPT_NAME comparing: \"$EXP_EV == $EXP_EV_NAME\"   and \"$REC_EV == $REC_EV_NAME\""
+
+    TOTAL_TEST=$(($TOTAL_TEST + 1))
+
+    verbose "Comparing: "
+    verbose "  expected:  \"$EXP_EV == $EXP_EV_NAME\""
+    verbose "  xnee:      \"$REC_EV == $REC_EV_NAME\""
+
+    if [ "$REC_EV" != "$EXP_EV" ];
+	then
+	error_log " Data differs: $MSG"
+	ERR_TEST=$(($ERR_TEST + 1))
+	return 1
+    fi
+
+    if [ "$REC_EV_NAME" != "$EXP_EV_NAME" ];
+	then
+	error_log " Data differs: $MSG"
+	ERR_TEST=$(($ERR_TEST + 1))
+	return 1
+    fi
+
+    verbose " .... OK"
+    SUCC_TEST=$(($SUCC_TEST + 1))
+}
+
+
+function compare_data_false()
+{
+    
+    EXP_EV=`echo $1 | sed 's,^[0]*,,g'`
+    EXP_EV_NAME=$2
+
+    REC_EV=$3
+    REC_EV_NAME=$4
+
+    MSG="$SCRIPT_NAME comparing (false): \"$EXP_EV == $EXP_EV_NAME\"   and \"$REC_EV == $REC_EV_NAME\""
+
+
+    TOTAL_TEST=$(($TOTAL_TEST + 1))
+
+    verbose "Comparing (false): \"$REC_EV/$REC_EV_NAME\"  \"$EXP_EV/$EXP_EV_NAME\" "
+
+    if [ "$REC_EV" == "$EXP_EV" ];
+	then
+	error_log " Data doesn't differ: $MSG"
+	ERR_TEST=$(($ERR_TEST + 1))
+	return 1
+    fi
+    if [ "$REC_EV_NAME" == "$EXP_EV_NAME" ];
+	then
+	error_log " Data doesn't differ: $MSG"
+	ERR_TEST=$(($ERR_TEST + 1))
+	return 1
+    fi
+    
+    verbose " ...OK "
+    SUCC_TEST=$(($SUCC_TEST + 1))
+}
+
+
+
+function verify_device()
+{
+    DEV=$1
+    cat /proc/misc | grep $DEV   2>/dev/null 1>/dev/null 
+    if [ "$?" != "0" ];
+	then
+	echo "$SCRIPT_NAME: Could not find device $DEV   ...leaving"
+	UNTESTED=$(( $UNTESTED + 1))
+        result_log $MYNAME 
+	exit 1
+    fi
+}
+
+
+function zero_device()
+{
+	DEV=$1
+	echo "0" > /dev/$DEV
+}
+
+
+function verify_same()
+{
+    EXP_VAL=$1
+    REAL_VAL=$2
+
+    MSG="$SCRIPT_NAME comparing : \"$EXP_VAL == $REAL_VAL\" $3"
+
+    TOTAL_TEST=$(($TOTAL_TEST + 1))
+
+    verbose "Comparing : \"$EXP_VAL\"  \"$REAL_VAL\""
+
+    if [ "$EXP_VAL" != "$REAL_VAL" ];
+	then
+	verbose " Data differs: $MSG"
+	error_log " Data differs: $MSG"
+	ERR_TEST=$(($ERR_TEST + 1))
+	return 1
+    fi
+
+    verbose "OK"
+    SUCC_TEST=$(( $SUCC_TEST + 1 ))
+    
+
+}
+
+
+function verify_not_same()
+{
+    EXP_VAL=$1
+    REAL_VAL=$2
+
+    MSG="$SCRIPT_NAME un comparing : \"$EXP_VAL != $REAL_VAL\" $3"
+
+    TOTAL_TEST=$(( $TOTAL_TEST + 1 ))
+
+    verbose "Uncomparing : \"$EXP_VAL\" \"$REAL_VAL\""
+
+    if [ "$EXP_VAL" == "$REAL_VAL" ];
+	then
+	verbose " Data is same: $MSG"
+	error_log " Data is same : $MSG"
+	ERR_TEST=$(( $ERR_TEST + 1 ))
+	return 1
+    fi
+
+    verbose "OK"
+    SUCC_TEST=$(( $SUCC_TEST + 1 ))
+}
+
+function verify_pos_alm_same()
+{
+    EXP_VAL=$1
+    REAL_VAL=$2
+    LIMIT=$3
+
+    MSG="$SCRIPT_NAME  verify_pos_alm_same : \"$EXP_VAL == $REAL_VAL\" and within range of $3"
+
+    TOTAL_TEST=$(( $TOTAL_TEST + 1 ))
+
+
+    LOW_VAL=$(( $EXP_VAL - $LIMIT ))
+    HIGH_VAL=$(( $EXP_VAL + $LIMIT ))
+
+    verbose "verify_pos_alm_same:  $LOW_VAL <  \"$EXP_VAL\" , \"$REAL_VAL\"  < $HIGH_VAL"
+
+    if [ "$REAL_VAL" -gt "$HIGH_VAL" ];
+	then
+	verbose " Data too big: $MSG"
+	error_log " Data too big: $MSG"
+	ERR_TEST=$(( $ERR_TEST + 1 ))
+	return 1
+    elif [ "$REAL_VAL" -lt "$LOW_VAL" ];
+	then
+	verbose " Data too small: $MSG"
+	error_log " Data too small: $MSG"
+	ERR_TEST=$(($ERR_TEST + 1 ))
+	return 1
+    fi
+
+    verbose "OK"
+    SUCC_TEST=$(($SUCC_TEST + 1 ))
+}
+
+
+function check_xgetter()
+{
+    if [ ! -f ./src/xgetter ]
+	then
+	pushd ./src/
+	make all
+	popd
+    fi
+}
+
+export getresx="./src/xgetter  --resolution-x"
+export getresy="./src/xgetter  --resolution-y"
+export getx="./src/xgetter  --mouse-position-root-x"
+export gety="./src/xgetter  --mouse-position-root-y"
+export getxy="./src/xgetter  --mouse-position-root-all"
+
+get_pointer()
+{
+    check_xgetter    
+    XPOS=`$getx`
+    YPOS=`$gety`
+}
+
+save_pointer()
+{
+    check_xgetter    
+    SAVE_XPOS=`$getx`
+    SAVE_YPOS=`$gety`
+}
+
+
+function press_key()
+{
+    KEY=$1
+    verbose "faking key $KEY"
+    echo "$KEY" > $KEYBOARD_DEVICE
+    sleep 0
+}
+
+function fake_controld()
+{
+    sleep 1
+    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
+    sleep 1
+    echo "d"              > $KEYBOARD_DEVICE
+    sleep 1
+    echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
+}
+
+function fake_control_()
+{
+    KEY=$1
+    sleep 1
+    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
+    sleep 1
+    echo "$1"             > $KEYBOARD_DEVICE
+    sleep 1
+    echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
+}
+
+function fake_alt_()
+{
+    KEY=$1
+    sleep 1
+    echo "[ALT_DOWN]" > $KEYBOARD_DEVICE
+    sleep 1
+    echo "$1"         > $KEYBOARD_DEVICE
+    sleep 1
+    echo "[ALT_UP]"   > $KEYBOARD_DEVICE
+    sleep 1
+}
+
+function fake_control_press()
+{
+    sleep 0
+    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
+    sleep 0
+}
+
+function fake_control_release()
+{
+    sleep 0
+    echo "[CONTROL_UP]" > $KEYBOARD_DEVICE
+    sleep 0
+}
+
+function fake_controlc()
+{
+    sleep 1
+    echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
+    sleep 1
+    echo "c"              > $KEYBOARD_DEVICE
+    sleep 1
+    echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
+    sleep 1
+}
+
+
+function fake_enter()
+{
+    echo "[ENTER]"   > $KEYBOARD_DEVICE
+}
+
+
+function move_mouse()
+{
+    TMP=0
+    PIX=$2
+    DIR=$1
+    while [ "$TMP" != "$PIX" ];
+    do
+      echo "$DIR" > $MOUSE_DEVICE
+      TMP=`expr $TMP + 1 `
+      sleep 0
+    done
+}
+
+#start with the mouse in such a position that in can move around enough
+function get_in_position()
+{
+    fast_move_mouse  u 1000
+    fast_move_mouse  l 1000
+    sleep 0
+    fast_move_mouse  u 1000
+    fast_move_mouse  l 1000
+    sleep 0
+    fast_move_mouse  d 100
+    fast_move_mouse  r 100
+    sleep 3
+}
+
+
+function slow_move_mouse()
+{
+    TMP=0
+    PIX=$2
+    DIR=$1
+    while [ "$TMP" != "$PIX" ];
+    do
+      echo "$DIR" > $MOUSE_DEVICE
+      TMP=`expr $TMP + 1 `
+#      echo "TMP=$TMP"
+      sleep 1
+    done
+}
+
+function fast_move_mouse()
+{
+    DIR=$1
+    PIX=$2
+    echo "$DIR$PIX" > $MOUSE_DEVICE
+}
+
+
+function zero_mouse()
+{
+    echo "0" > $MOUSE_DEVICE
+}
+
+
