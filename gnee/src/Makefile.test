@@ -1,0 +1,2 @@
+all:
+	gcc -pedantic -W -Wall -DHAVE_CONFIG_H -DHAVE_STDARG_H -I. -I. -I..   -I/home/hesa/gnu/xnee/xnee/libxnee//include  -I/usr/X11R6/include  -g -O2  getstrings.c -o gets    -L/home/hesa/gnu/xnee/xnee/libxnee// -L/home/hesa/gnu/xnee/xnee/libxnee//.. -L/home/hesa/gnu/xnee/xnee/libxnee//src -lxnee        -L/usr/X11R6/lib -L/usr/X11R6/lib -lXext  -lXtst -lX11
