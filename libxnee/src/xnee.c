@@ -110,10 +110,19 @@ xnee_setup_display (xnee_data *xd)
 {
   if (xd->data==NULL)
     xd->data     = xnee_open_display (xd);
+  if (xd->data==NULL)
+     return XNEE_NOT_OPEN_DISPLAY;
+  
   if (xd->control==NULL)
     xd->control  = xnee_open_display (xd);
+  if (xd->control==NULL)
+     return XNEE_NOT_OPEN_DISPLAY;
+
   if (xd->fake==NULL)
     xd->fake     = xnee_open_display (xd);
+  if (xd->fake==NULL)
+     return XNEE_NOT_OPEN_DISPLAY;
+
   xnee_verbose((xd, "display data    %d\n" , (int) xd->data));
   xnee_verbose((xd, "display control %d\n" , (int) xd->control));
   xnee_verbose((xd, "display fake    %d\n" , (int) xd->fake));
@@ -422,6 +431,11 @@ xnee_init(xnee_data* xd)
   xd->meta_data.sum_min_threshold  = 0;
   xd->meta_data.tot_diff_threshold = 0;
 
+  /* Init Recording variables
+   * Since those are used when recording and replaying. */
+  xnee_record_init (xd);
+  
+  
 
   xnee_verbose((xd, "<--- xnee_init\n"));
   return XNEE_OK;
@@ -551,15 +565,71 @@ xnee_free_recordext_setup(xnee_data* xd)
 	  free (xd->record_setup->range_array[i]);
 	}
     }
-  XRecordDisableContext (xd->control, xd->record_setup->rContext) ; 
-  XRecordFreeContext (xd->control, xd->record_setup->rContext) ; 
-
+  if (xd->control!=NULL)
+  {
+    XRecordDisableContext (xd->control, xd->record_setup->rContext) ; 
+    XRecordFreeContext (xd->control, xd->record_setup->rContext) ; 
+  }
   free (xd->record_setup->xids);
   free (xd->record_setup->rState);
   free (xd->record_setup);
   XNEE_DEBUG ( (stderr ," <--xnee_free_xnee_data()\n"  ));
   return XNEE_OK;
 }
+
+
+int
+xnee_new_dyn_data(xnee_data *xd)
+{
+   xnee_verbose((xd, "---> xnee_new_dyn_data\n"));
+
+
+   xnee_verbose((xd, " --- xnee_new_dyn_data: xnee_info\n"));
+   xd->xnee_info     = 
+      (xnee_record_init_data*)  malloc (sizeof (xnee_record_init_data)) ;
+   memset (xd->xnee_info, 0, sizeof(xnee_record_init_data));
+   
+
+   xnee_verbose((xd, " --- xnee_new_dyn_data: replay_setup\n"));
+   xd->replay_setup  = 
+      (xnee_testext_setup*)     malloc (sizeof (xnee_testext_setup)) ;
+   memset (xd->replay_setup, 0, sizeof(xnee_testext_setup));
+   
+
+   xnee_verbose((xd, " --- xnee_new_dyn_data: record_setup\n"));
+   xd->record_setup  = xnee_new_recordext_setup(); 
+   
+   xnee_verbose((xd, " --- xnee_new_dyn_data: grab_keys\n"));
+   xd->grab_keys     = xnee_new_grab_keys();
+   xnee_verbose((xd, "<--- xnee_new_dyn_data\n"));
+
+  return XNEE_OK;
+}
+
+int
+xnee_free_dyn_data(xnee_data *xd)
+{
+   xnee_verbose((xd, "---> xnee_free_dyn_data\n"));
+
+   xnee_verbose((xd, " --- xnee_free_dyn_data: grab_keys\n"));
+   xnee_free_grab_keys(xd);
+
+   xnee_verbose((xd, " --- xnee_free_dyn_data: resource_meta\n"));
+   xnee_free_xnee_resource_meta(&xd->xrm);
+
+   xnee_verbose((xd, " --- xnee_free_dyn_data: record_ext\n"));
+   xnee_free_recordext_setup ( xd);
+
+   xnee_verbose((xd, " --- xnee_free_dyn_data: replay_setup\n"));
+   free ( xd->replay_setup);
+
+   xnee_verbose((xd, " --- xnee_free_dyn_data: xnee_info\n"));
+   free (xd->xnee_info);
+
+   xnee_verbose((xd, "<--- xnee_free_dyn_data\n"));
+   return XNEE_OK;
+}
+
 
 
 
@@ -581,18 +651,9 @@ xnee_new_xnee_data()
     }
   memset (xd, 0, sizeof(xnee_data));
 
-  xd->xnee_info     = 
-    (xnee_record_init_data*)  malloc (sizeof (xnee_record_init_data)) ;
-  memset (xd->xnee_info, 0, sizeof(xnee_record_init_data));
+  xnee_new_dyn_data(xd);
 
-  xd->replay_setup  = 
-    (xnee_testext_setup*)     malloc (sizeof (xnee_testext_setup)) ;
-  memset (xd->replay_setup, 0, sizeof(xnee_testext_setup));
-
-  xd->record_setup  = xnee_new_recordext_setup(); 
-
-  xd->grab_keys     = xnee_new_grab_keys();
-
+  xnee_init(xd);
 
   return xd;
 }
@@ -607,13 +668,8 @@ xnee_new_xnee_data()
 int 
 xnee_free_xnee_data(xnee_data* xd)
 {
-
-  xnee_free_recordext_setup ( xd);
-  xnee_free_grab_keys(xd);
-  xnee_free_xnee_resource_meta(&xd->xrm);
-
-  free (xd->xnee_info);
-  free (xd->replay_setup );
+  xnee_free_dyn_data(xd);
+  
   free (xd->buf_sem);
   free (xd);
   return XNEE_OK;
@@ -1327,4 +1383,206 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
   if ((token >= 'A') && (token <='Z'))
     kc->shift_press=1;
   return XNEE_OK;
+}
+
+
+
+
+
+int
+xnee_prepare(xnee_data *xd)
+{
+   int ret;
+
+  /* 
+   * Print settings 
+   * only done if verbose mode  
+   */
+  xnee_print_distr_list(xd, NULL);
+
+  xnee_set_ranges(xd);
+
+  xnee_record_print_record_range (xd, NULL);
+  
+  ret=xnee_setup_recordext (xd);
+  
+  if ( xnee_is_recorder(xd) )
+  {
+     if (ret==XNEE_NO_PROT_CHOOSEN)
+     {
+        return ret;
+     }
+  }
+
+  /* 
+   * Test Displays and Extensions  
+   *
+   */
+  ret = xnee_setup_display (xd);
+  if (ret!=XNEE_OK)
+     return ret;
+  
+  
+  /*
+   * If no recording client, init xnee_sync 
+   *
+   */
+  if ( ! xnee_is_recorder(xd) )
+    {
+      xnee_replay_init (xd);   
+    }
+  
+  /*
+   * Save repeat mode so we can reset it after we are done
+   *
+   */
+  xnee_set_autorepeat (xd);
+  
+  return XNEE_OK;
+}
+
+
+
+int
+xnee_start(xnee_data *xd)
+{
+   int ret ;
+   
+   ret = xnee_prepare(xd);
+
+   if (ret!=XNEE_OK)
+   {
+      xnee_verbose((xd, "xnee_prepare failed (%d)....checking\n", ret));
+      if ( xnee_is_recorder(xd) )
+      {
+         if (ret==XNEE_NO_PROT_CHOOSEN)
+         {
+            xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
+            return ret;
+         }
+         xnee_verbose((xd, "xnee_prepare failed.... it was not OK\n"));
+         return ret;
+         
+      }
+      else
+      {
+         xnee_verbose((xd, "xnee_prepare failed.... failure\n"));
+         return ret;
+      }
+   }
+  
+   if (xd->xnee_info->interval != 0)
+   {
+      xnee_delay (xd->xnee_info->interval, "xnee:" );
+   }
+   
+   /*
+    * are we recording or are we replaying
+    */
+   if (xnee_is_recorder(xd)) 
+   {
+      
+      /* 
+       * Print settings 
+       * if verbose mode that is 
+       */
+      xnee_print_xnee_settings       (xd, NULL); 
+      xnee_record_print_record_range (xd, NULL);
+      
+      
+      /*
+       * Do we have XRecord extension on the display
+       *
+       */ 
+       if (!xnee_has_record_extension(xd))
+       {
+          xnee_verbose((xd, "Can't find Record extension\n"));
+          xnee_verbose((xd, "Look in the README file included"));
+          xnee_verbose((xd, "in Xnee how to enable it\n"));
+          exit(XNEE_NO_REC_EXT);
+       }
+       xnee_setup_recording(xd);
+       
+       xnee_print_sys_info(xd, xnee_get_out_file (xd));
+       xnee_print_xnee_settings (xd, xnee_get_out_file (xd)) ;
+       xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
+       
+       /*
+        * At last. Time to enter the main loop
+        *
+        */
+       if (xnee_get_loops_left(xd)!=0)
+       {
+          xnee_verbose((xd, "Entering main loop( recorder)\n"));
+          xnee_record_async(xd);
+       }
+    }
+  else if (xnee_is_replayer(xd))
+  {
+      xnee_verbose((xd, " (replayer)\n"));
+      /*
+       * Do we have XTest extension on the display
+       *
+       */ 
+      if (!xnee_has_xtest_extension(xd))
+	{
+	  exit(XNEE_NO_TEST_EXT);
+	}
+      
+      /*
+       * Do we have XRecord extension on the display
+       *
+       */ 
+      if (!xnee_has_record_extension(xd))
+	{
+	  xnee_verbose((xd, "I can't find Record extension\n"));
+	  xnee_verbose((xd, "Look in the README file how to enable it\n"));
+	  xnee_verbose((xd, "However, I continue without doing syncing\n"));
+	  /*	  xd->sync=False;*/
+	  xnee_unset_sync (xd);
+	}
+
+      XTestGrabControl (xnee_get_control_display(xd), True);
+      XTestGrabControl (xnee_get_data_display(xd), True);
+
+      /*
+       * At last. Time to enter the main loop
+       * ... wait to set up recording until all META data from file is read 
+       * Thanks: Janice Waddick 
+       */
+      xnee_verbose((xd, "Entering main loop (replayer)\n"));
+      xnee_replay_main_loop(xd);
+    }
+  else if (xnee_is_retyper(xd))
+    {
+       /* */
+       ;
+    }
+  else
+    {
+      fprintf (stderr, 
+	       "No mode specified... leaving\n"
+	       "You can use either of record/replay/retype\n");
+    }
+  /*
+   * Close everything down .... free memory, tell X server we are leaving ...
+  if ( xd->recorder || xd->sync )
+    {
+      xnee_record_close_down(xd);
+    }
+   */
+
+  xnee_reset_autorepeat (xd);
+  
+  return (XNEE_OK);
+}
+
+
+
+int 
+xnee_renew_xnee_data(xnee_data *xd)
+{
+   xnee_free_dyn_data(xd);
+   xnee_new_dyn_data(xd);
+   return (XNEE_OK);
 }
