@@ -36,6 +36,14 @@ convert_to_png()
     convert -density 32x32 $1.eps "$1"_small.png  
 }
 
+convert_to_jpg()
+{
+    check_src_dst "$1.eps" "$1.png"
+    convert -density 144x144 $1.eps "$1"_big.jpg
+    convert -density 60x60 $1.eps $1.jpg
+    convert -density 32x32 $1.eps "$1"_small.jpg
+}
+
 convertall()
 {
     DIA_FILE=$1
@@ -45,6 +53,7 @@ convertall()
     convert_to_eps   $NOSUFF_FILE
     convert_to_pdf   $NOSUFF_FILE
     convert_to_png   $NOSUFF_FILE
+    convert_to_jpg   $NOSUFF_FILE
 }
 
 
