@@ -405,6 +405,14 @@ typedef struct {
 }xnee_event;
 
 
+struct data_description 
+{
+   int   data_nr;
+   char *data_name;
+   char *data_descr;
+};
+
+
 
 typedef struct 
 {
@@ -1073,6 +1081,13 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc);
 
 int
 xnee_write_settings_to_file (xnee_data *xd, FILE *fp);
+
+int
+xnee_renew_xnee_data(xnee_data *xd);
+
+int
+xnee_start(xnee_data *xd);
+
 
 #endif /*   XNEE_XNEE_H */
 

@@ -103,11 +103,14 @@ char *
 xnee_int2request(int req);
 
 
-char ** 
+char *
+xnee_int2error(int err);
+
+struct data_description*
 xnee_get_event_names();
 
-char ** 
+struct data_description*
 xnee_get_error_names();
 
-char ** 
+struct data_description*
 xnee_get_request_names();
