@@ -27,8 +27,50 @@
 #define XNEE_FEEDBACK_RESUME       feedback_fp(XNEE_FEEDBACK_RESUME_STR);   
 
 
+enum feedback_types 
+{
+  XNEE_NO_FEEDBACK      = 0 ,
+  XNEE_STDERR_FEEDBACK      ,
+  XNEE_XOSD_FEEDBACK        ,
+  XNEE_UNDEFINED_FEEDBACK   
+} ;
+
+
+
+
+
+/*********************************************
+ *
+ *
+ *  XOSD - X11 on screen display support 
+ *
+ *
+ *
+ *********************************************/
+#ifndef  XOSD_string
+#define  XOSD_string 1
+#endif /* XOSD_string*/
+
+
+
+
 int 
-feedback( xnee_data *, char *str, ... );
+xnee_set_xosd_feedback(xnee_data *xd);
+
+int 
+xnee_set_stderr_feedback(xnee_data *xd);
+
+int 
+xnee_is_xosd_feedback(xnee_data *xd);
+
+int 
+xnee_is_stderr_feedback(xnee_data *xd);
+
+int 
+xnee_feedback_close(xnee_data *xd);
+
+int 
+xnee_feedback( xnee_data *, char *str, ... );
 
 
 

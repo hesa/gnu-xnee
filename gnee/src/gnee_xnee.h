@@ -53,6 +53,9 @@ gx_set_record_display(xnee_data *xd, gnee_xnee *gx);
 int 
 gx_set_variable_data(xnee_data *xd, gnee_xnee *gx);
 
+#define gx_set_xosd_feedback()   xnee_set_xosd_feedback(ext_xd) 
+#define gx_set_no_feedback()     xnee_set_no_feedback(ext_xd) 
+#define gx_set_stderr_feedback() xnee_set_stderr_feedback(ext_xd) 
 
 
 #define gnee_set_record_display()  gnee_set_various_display(0)

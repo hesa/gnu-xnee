@@ -308,3 +308,19 @@ on_human_format_rb_toggled             (GtkToggleButton *togglebutton,
 void
 on_gnee_window_destroy                 (GtkObject       *object,
                                         gpointer         user_data);
+
+void
+on_stderr_fb_b_toggled                 (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_no_fb_b_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_xosb_fb_b_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_xosd_fb_b_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

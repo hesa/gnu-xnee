@@ -33,36 +33,14 @@
 #include <varargs.h> 
 #endif
 
-enum feedback_types 
-{
-  XNEE_NO_FEEDBACK      = 0 ,
-  XNEE_STDERR_FEEDBACK      ,
-  XNEE_XOSD_FEEDBACK        ,
-  XNEE_UNDEFINED_FEEDBACK   
-} ;
-
-
-
-
-
-/*********************************************
- *
- *
- *  XOSD - X11 on screen display support 
- *
- *
- *
- *********************************************/
-#ifndef  XOSD_string
-#define  XOSD_string 1
-#endif /* XOSD_string*/
 
 
 
 /* xosd fun/lib pointers */
 static void   *xosd_lib = NULL ; 
 static void   *osd;
-static int     feedback_used;
+static int     feedback_used      = XNEE_UNDEFINED_FEEDBACK;
+static int     feedback_requested = XNEE_XOSD_FEEDBACK;
 static void* (*xosd_print)(void*, int, int, char *) = NULL ; 
 
 
@@ -78,16 +56,20 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_lib = xnee_dlopen (xd, "libxosd.so", RTLD_LAZY);
   if (xosd_lib==NULL) 
     { 
-      feedback_used=0; 
+      feedback_used=XNEE_UNDEFINED_FEEDBACK; 
       return XNEE_XOSD_FAILURE ; 
     }
   
   xosd_create = xnee_dlsym(xd, xosd_lib, "xosd_create");
-  if (xosd_create==NULL) { feedback_used=0; return XNEE_XOSD_FAILURE ; }
+  if (xosd_create==NULL) 
+    { 
+      feedback_used=XNEE_UNDEFINED_FEEDBACK; 
+      return XNEE_XOSD_FAILURE ; 
+    }
   osd = xosd_create(2);
   if (osd==NULL) 
     { 
-      feedback_used=0; 
+      feedback_used=XNEE_UNDEFINED_FEEDBACK; 
       xnee_dlclose(xd, xosd_lib);
       return XNEE_XOSD_FAILURE ; 
     }
@@ -96,7 +78,7 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_int = xnee_dlsym(xd, xosd_lib, "xosd_set_shadow_offset");
   if (xosd_int==NULL) 
     { 
-      feedback_used=0; 
+      feedback_used=XNEE_UNDEFINED_FEEDBACK; 
       free(osd);
       xnee_dlclose(xd, xosd_lib);
       return XNEE_XOSD_FAILURE ; 
@@ -107,7 +89,7 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_int = xnee_dlsym(xd, xosd_lib, "xosd_set_timeout");
   if (xosd_int==NULL) 
     { 
-      feedback_used=0; 
+      feedback_used=XNEE_UNDEFINED_FEEDBACK; 
       free(osd);
       xnee_dlclose(xd, xosd_lib);
       return XNEE_XOSD_FAILURE ; 
@@ -118,7 +100,7 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_char = xnee_dlsym(xd, xosd_lib, "xosd_set_font");
   if (xosd_char==NULL) 
     { 
-      feedback_used=0; 
+      feedback_used=XNEE_UNDEFINED_FEEDBACK; 
       free(osd);
       xnee_dlclose(xd, xosd_lib);
       return XNEE_XOSD_FAILURE ; 
@@ -128,7 +110,7 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_char = xnee_dlsym(xd, xosd_lib, "xosd_set_colour");
   if (xosd_char==NULL) 
     { 
-      feedback_used=0; 
+      feedback_used=XNEE_UNDEFINED_FEEDBACK; 
       free(osd);
       xnee_dlclose(xd, xosd_lib);
       return XNEE_XOSD_FAILURE ; 
@@ -139,7 +121,7 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_print= xnee_dlsym(xd, xosd_lib, "xosd_display");
   if (xosd_print==NULL) 
     { 
-      feedback_used=0; 
+      feedback_used=XNEE_UNDEFINED_FEEDBACK; 
       free(osd);
       xnee_dlclose(xd, xosd_lib);
       return XNEE_XOSD_FAILURE ; 
@@ -148,27 +130,77 @@ xnee_setup_xosd(xnee_data *xd)
   return XNEE_OK;
 }
 
-static int
-xnee_setup_feedback(xnee_data *xd)
-{
-  if (xnee_setup_xosd(xd)==XNEE_OK)
-    feedback_used = XNEE_XOSD_FEEDBACK;
-  else
-    feedback_used = XNEE_STDERR_FEEDBACK;
-
-  return feedback_used;
-}
-
 int static 
 feedback_init(xnee_data *xd, char *str)
 {
-  static int need_init = 1 ;
+  int ret ;
 
-  if (need_init == 1)
+  /* this should not be the case */
+  if ( feedback_requested==XNEE_UNDEFINED_FEEDBACK )
     {
-      xnee_setup_feedback(xd);
-      need_init = 0 ;
+      feedback_used = XNEE_NO_FEEDBACK ; 
+      return XNEE_FEEDBACK_FAILURE;
     }
+
+  /* this happends when we already have init the requested feedback */
+  if ( feedback_used==feedback_requested )
+    {
+      return XNEE_OK;
+    }
+  
+
+  /* OK a new feedback is requested */
+
+  /* anything to close ? */
+
+  /* is the current XOSD? .. then close it */
+  if ( feedback_used==XNEE_XOSD_FEEDBACK )
+    {
+      xnee_xosd_close(xd);
+    }
+  else if ( feedback_used==XNEE_STDERR_FEEDBACK )
+    {
+      ; 
+    }
+
+  if ( feedback_requested==XNEE_XOSD_FEEDBACK )
+    {
+      ret = xnee_setup_xosd(xd);
+      if (ret == XNEE_OK) 
+	{
+	  feedback_used = XNEE_XOSD_FEEDBACK;
+	}
+    }
+  else if (feedback_requested==XNEE_STDERR_FEEDBACK )
+    {
+      ret = XNEE_OK;
+      feedback_used = XNEE_STDERR_FEEDBACK;
+    } 
+  else if (feedback_requested==XNEE_NO_FEEDBACK )
+    {
+      ret = XNEE_OK;
+      feedback_used = XNEE_NO_FEEDBACK;
+    } 
+  else 
+    {
+      ret = XNEE_OK;
+      feedback_used = XNEE_UNDEFINED_FEEDBACK;
+    } 
+  return ret;
+}
+
+int 
+xnee_xosd_close(xnee_data *xd)
+{
+  XNEE_FREE_IF_NOT_NULL(osd);
+  if (xosd_lib!=NULL)
+    xnee_dlclose(xd, xosd_lib);
+}
+
+int 
+xnee_feedback_close(xnee_data *xd)
+{
+  xnee_xosd_close(xd);
   return XNEE_OK;
 }
 
@@ -229,13 +261,19 @@ feedback(xnee_data *xd, valist)
 int 
 xnee_set_stderr_feedback(xnee_data *xd)
 {
-  feedback_used=XNEE_STDERR_FEEDBACK;
-  
-  if (xosd_lib!=NULL)
-    xnee_dlclose(xd, xosd_lib);
+  int ret ;
 
-  if (osd!=NULL)
-    free(osd);
+  feedback_requested=XNEE_STDERR_FEEDBACK;
+  
+  return XNEE_OK;
+}
+
+int 
+xnee_set_no_feedback(xnee_data *xd)
+{
+  int ret ;
+
+  feedback_requested=XNEE_NO_FEEDBACK;
   
   return XNEE_OK;
 }
@@ -244,16 +282,8 @@ int
 xnee_set_xosd_feedback(xnee_data *xd)
 {
   int ret ;
-
-  ret = xnee_setup_xosd(xd);
-  if (ret == XNEE_OK)
-    {
-      feedback_used = XNEE_XOSD_FEEDBACK;
-    }
-  else
-    {
-      feedback_used = XNEE_STDERR_FEEDBACK;
-    }
+  
+  feedback_requested=XNEE_XOSD_FEEDBACK;
   return ret;
 }
 

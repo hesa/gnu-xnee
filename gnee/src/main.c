@@ -151,6 +151,8 @@ main (int argc, char *argv[])
 
     gnee_set_sync();
     
+    gx_set_xosd_feedback();
+    gnee_set_xosd_feedback();
     
     default_tmp_file=gx_get_default_filename();
     gnee_set_rec_file (default_tmp_file);

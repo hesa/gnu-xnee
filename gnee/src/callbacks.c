@@ -778,16 +778,16 @@ combo_change_helper(gpointer gw,
 {
   gchar *k_selection = NULL;
   gchar *m_selection = NULL;
+
   GtkWidget          *m_combo = NULL;
   GtkWidget          *k_combo = NULL;
+
   char  m_combo_name[50] ;
   char  k_combo_name[50] ;
 
 
-  if ( (m_combo==NULL) || (m_combo==0) )
-    return ;
 
-  
+  GNEE_DEBUG((" combo .............. \n"));
   
   switch (grab_action)
     {
@@ -817,6 +817,7 @@ combo_change_helper(gpointer gw,
       strcpy (k_combo_name, "exec_k_combo");
       break;
     default:
+      GNEE_DEBUG(("NO action choosen\n"));
       strcpy (m_combo_name, "");
       strcpy (k_combo_name, "");
     }
@@ -834,16 +835,19 @@ combo_change_helper(gpointer gw,
 	(GTK_EDITABLE(k_combo), 0, -1);
     }
       
+  if ( (m_combo==NULL) || (m_combo==0) )
+    return ;
+
   
   if (strlen(k_selection)!=0)
     {
       if (strcmp (k_selection, "None")==0)
 	{
-	  ;
+	  GNEE_DEBUG((" combo no 1 \n"));
 	}
       else if (strcmp (m_selection, "None")==0)
 	{
-	  ;
+	  GNEE_DEBUG((" combo no 1 \n"));
 	}
       else
 	{
@@ -893,6 +897,8 @@ void
 on_pause_m_combo_changed               (GtkEditable     *editable,
                                         gpointer         user_data)
 {
+  printf ("PAUSE set ...\n");
+  xnee_set_verbose(ext_xd);
   combo_change_helper(user_data, 
 		      "pause_m_combo", 
 		      XNEE_GRAB_MODIFIER, 
@@ -1336,5 +1342,49 @@ on_gnee_window_destroy                 (GtkObject       *object,
 {
   printf ("destroy.... and search\n");
   gnee_close_down();
+}
+
+
+void
+on_stderr_fb_b_toggled                 (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  if (ext_xd != NULL)
+    {
+      if (gtk_toggle_button_get_active(togglebutton))
+	{
+	  gx_set_stderr_feedback();
+	}
+    }
+}
+
+
+void
+on_no_fb_b_toggled                     (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  if (ext_xd != NULL)
+    {
+      if (gtk_toggle_button_get_active(togglebutton))
+	{
+	  gx_set_no_feedback();
+	}
+    }
+}
+
+
+
+void
+on_xosd_fb_b_toggled                   (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  if (ext_xd != NULL)
+    {
+      if (gtk_toggle_button_get_active(togglebutton))
+	{
+	  gx_set_xosd_feedback();
+	}
+    }
+
 }
 

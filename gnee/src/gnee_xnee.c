@@ -134,18 +134,28 @@ gnee_set_interval()
   return GNEE_OK;
 }
 
-static int
+int
 gnee_set_verbosity(int on_or_off)
 {
-  GtkWidget   *verbose_cb;
-  
-  verbose_cb = (GtkWidget*)lookup_widget (ext_gnee_window, 
-					  "verbose_logging_checkbox");
-  if (verbose_cb!=NULL)
-    {
-      gtk_toggle_button_set_active((GtkToggleButton *)verbose_cb, on_or_off);
-    }
-  return GNEE_OK;
+  return gnee_set_cb ("verbose_logging_checkbox", on_or_off);
+}
+
+int
+gnee_set_no_feedback()
+{
+  gnee_set_cb ("no_fb_b", 1);
+}
+
+int
+gnee_set_xosd_feedback()
+{
+  gnee_set_cb ("xosd_fb_b", 1);
+}
+
+static int
+gnee_set_stderr_feedback()
+{
+  gnee_set_cb ("stderr_fb_b", 1);
 }
 
 static int 

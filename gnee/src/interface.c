@@ -73,7 +73,8 @@ create_gnee_window (void)
   GtkWidget *feedback_label;
   GtkWidget *no_fb_b;
   GSList *no_fb_b_group = NULL;
-  GtkWidget *xosb_fb_b;
+  GtkWidget *xosd_fb_b;
+  GtkWidget *stderr_fb_b;
   GtkWidget *distribution_settings_box;
   GtkWidget *label13;
   GtkWidget *distribution_list_box;
@@ -443,12 +444,18 @@ create_gnee_window (void)
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (no_fb_b), no_fb_b_group);
   no_fb_b_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (no_fb_b));
 
-  xosb_fb_b = gtk_radio_button_new_with_mnemonic (NULL, _("xosd"));
-  gtk_widget_show (xosb_fb_b);
-  gtk_box_pack_start (GTK_BOX (vbox16), xosb_fb_b, FALSE, FALSE, 0);
-  gtk_tooltips_set_tip (tooltips, xosb_fb_b, _("Enables XOSD feedback"), NULL);
-  gtk_radio_button_set_group (GTK_RADIO_BUTTON (xosb_fb_b), no_fb_b_group);
-  no_fb_b_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (xosb_fb_b));
+  xosd_fb_b = gtk_radio_button_new_with_mnemonic (NULL, _("xosd"));
+  gtk_widget_show (xosd_fb_b);
+  gtk_box_pack_start (GTK_BOX (vbox16), xosd_fb_b, FALSE, FALSE, 0);
+  gtk_tooltips_set_tip (tooltips, xosd_fb_b, _("Enables XOSD feedback"), NULL);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (xosd_fb_b), no_fb_b_group);
+  no_fb_b_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (xosd_fb_b));
+
+  stderr_fb_b = gtk_radio_button_new_with_mnemonic (NULL, _("stderr"));
+  gtk_widget_show (stderr_fb_b);
+  gtk_box_pack_start (GTK_BOX (vbox16), stderr_fb_b, FALSE, FALSE, 0);
+  gtk_radio_button_set_group (GTK_RADIO_BUTTON (stderr_fb_b), no_fb_b_group);
+  no_fb_b_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (stderr_fb_b));
 
   distribution_settings_box = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (distribution_settings_box);
@@ -560,6 +567,7 @@ create_gnee_window (void)
   rec_disp_text = gtk_entry_new ();
   gtk_widget_show (rec_disp_text);
   gtk_box_pack_start (GTK_BOX (hbox32), rec_disp_text, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, rec_disp_text, _("Set the display to record from"), NULL);
 
   repl_file_box = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (repl_file_box);
@@ -862,6 +870,7 @@ create_gnee_window (void)
   rep_disp_text = gtk_entry_new ();
   gtk_widget_show (rep_disp_text);
   gtk_box_pack_start (GTK_BOX (hbox26), rep_disp_text, TRUE, TRUE, 0);
+  gtk_tooltips_set_tip (tooltips, rep_disp_text, _("Set the display name to replay to"), NULL);
 
   vbox32 = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (vbox32);
@@ -1341,6 +1350,15 @@ create_gnee_window (void)
   g_signal_connect_swapped ((gpointer) wait_spinbutton, "changed",
                             G_CALLBACK (on_wait_spinbutton_change_value),
                             GTK_OBJECT (wait_spinbutton));
+  g_signal_connect_swapped ((gpointer) no_fb_b, "toggled",
+                            G_CALLBACK (on_no_fb_b_toggled),
+                            GTK_OBJECT (no_fb_b));
+  g_signal_connect_swapped ((gpointer) xosd_fb_b, "toggled",
+                            G_CALLBACK (on_xosd_fb_b_toggled),
+                            GTK_OBJECT (xosd_fb_b));
+  g_signal_connect_swapped ((gpointer) stderr_fb_b, "toggled",
+                            G_CALLBACK (on_stderr_fb_b_toggled),
+                            GTK_OBJECT (stderr_fb_b));
   g_signal_connect_swapped ((gpointer) checkbutton10, "toggled",
                             G_CALLBACK (on_checkbutton10_toggled),
                             GTK_OBJECT (checkbutton10));
@@ -1490,7 +1508,8 @@ create_gnee_window (void)
   GLADE_HOOKUP_OBJECT (gnee_window, vbox16, "vbox16");
   GLADE_HOOKUP_OBJECT (gnee_window, feedback_label, "feedback_label");
   GLADE_HOOKUP_OBJECT (gnee_window, no_fb_b, "no_fb_b");
-  GLADE_HOOKUP_OBJECT (gnee_window, xosb_fb_b, "xosb_fb_b");
+  GLADE_HOOKUP_OBJECT (gnee_window, xosd_fb_b, "xosd_fb_b");
+  GLADE_HOOKUP_OBJECT (gnee_window, stderr_fb_b, "stderr_fb_b");
   GLADE_HOOKUP_OBJECT (gnee_window, distribution_settings_box, "distribution_settings_box");
   GLADE_HOOKUP_OBJECT (gnee_window, label13, "label13");
   GLADE_HOOKUP_OBJECT (gnee_window, distribution_list_box, "distribution_list_box");
