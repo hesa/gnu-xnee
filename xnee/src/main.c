@@ -28,11 +28,10 @@
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_range.h"
+#include "libxnee/xnee_range.h"
+
 #include "parse.h"
-
-int
-xnee_set_info(xnee_data *xd);
-
 
 /**************************************************************
  *                                                            *
@@ -72,6 +71,7 @@ int main(int argc,char *argv[])
    *
    */
   xnee_parse_args (xd, argc, argv);
+
 
   /*
    * The value max will indicate how many ranges was specified
@@ -234,7 +234,8 @@ int main(int argc,char *argv[])
     }
   else if (xnee_is_retyper(xd))
     {
-      xnee_type_file(xd);
+       /* */
+       ;
     }
   else
     {

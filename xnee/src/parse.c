@@ -36,6 +36,7 @@
 #include "libxnee/xnee_threshold.h"
 #include "parse.h"
 #include "libxnee/print.h"
+#include "libxnee/xnee_range.h"
 
 
 
@@ -712,6 +713,14 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, argv[++i]);
 	  continue;
 	}
+      else if(xnee_check(argv[i], "--remove_event", "-rev")) 
+      {
+         ret=xnee_rem_data_from_range_str (xd, 
+                                           XNEE_DEVICE_EVENT, 
+                                           argv[++i]) ;
+         continue;
+      }
+      
       else if(xnee_check(argv[i], "--error-range", "-erra")) 
 	{
 	  ret=xnee_parse_range (xd, XNEE_ERROR, argv[++i]);

@@ -177,9 +177,6 @@ xnee_add_to_list2(int type, int ev)
    struct xnee_range *xrp;
    xrp = &xrs->type[type];
 
-   printf ("\tadding to list2 %d %d\n", type, ev);
-
-
    if (need_init==1)
       xnee_init_lists();
       
@@ -197,8 +194,11 @@ xnee_add_to_list2(int type, int ev)
                                   xrp->size*sizeof(int));
       if (xrp->data==NULL)
       { 
-         printf ("  PANIC ....\n") ; fflush(stdout); exit(0); }
+         printf ("  PANIC in xnee_add_to_list2 ....\n") ; 
+	 fflush(stdout); 
+	 exit(0); 
       }
+   }
    xrp->data[xrp->index++]=ev;
    return XNEE_OK;
 }
@@ -223,13 +223,17 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
   str_len=strspn(range, "1234567890-");
   if (str_len==0)
     {
-      str_len=strspn(range, "1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
+      str_len=
+	strspn(range, 
+	       "1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
       strncpy(start_str,range,str_len);
       start_str[str_len]='\0';
       start=xnee_data2int (type, start_str);
       if (start==-1)
 	{
-	  fprintf(stderr, "Could not convert \"%s\" to an integer\nleaving", start_str); 
+	  fprintf(stderr, 
+		  "Could not convert \"%s\" to an integer\nleaving", 
+		  start_str); 
 	  xnee_stop_session(xd);
 	  exit(stop);
 	}
@@ -240,7 +244,9 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
       start_str[str_len]='\0';
       sscanf(start_str,"%d",&start);
     }
-  xnee_verbose((xd, " --  add_range_str first string=\"%s\" (%d)\n", start_str, start));
+  xnee_verbose((xd, 
+		" --  add_range_str first string=\"%s\" (%d)\n", 
+		start_str, start));
   
 
   second=strchr ( range, '-' ) ;
@@ -254,7 +260,9 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 	  stop=xnee_data2int (type, second);
 	  if (stop==-1)
 	    {
-	      fprintf(stderr, "Could not convert \"%s\" to an integer\nleaving", second); 
+	      fprintf(stderr, 
+		      "Could not convert \"%s\" to an integer\nleaving", 
+		      second); 
 	      xnee_stop_session(xd);
 	      exit(stop);
 	    }
@@ -269,15 +277,11 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
   {
      for (i=start;i<=stop;i++)
      {
-        printf (" -- calling add_to_list2 multiple (%d, %d)\n", 
-                type, i);
         ret = xnee_add_to_list2(type, i);
      }
   }
   else
   {
-     printf (" -- calling add_to_list2 single (%d, %d)\n", 
-             type, start);
      ret = xnee_add_to_list2(type, start);
   }
      
@@ -502,8 +506,6 @@ xnee_set_ranges(xnee_data *xd)
    xnee_bsort_all();
 
 
-   printf ("setting ranges...\n");
-
    for (j=0; j<XNEE_NR_OF_TYPES ;j++)
    {
       int first = -1;
@@ -610,12 +612,11 @@ xnee_rem_data_from_range_str (xnee_data *xd,
    ret = sscanf(name,"%d",&rem_data);
    if (ret != 1)
    {
-      printf ("FAILED REMOVAL\n" );
       return -1;
    }
    
-   printf ("REMOVING: %d of type %d\n", rem_data, type );
-   xnee_verbose ((xd, " ....\n"));
+   xnee_verbose ((xd, "xnee range removing : %d of type %d\n", 
+		  rem_data, type ));
    xnee_rem_from_list(type, rem_data);
 
 

@@ -33,6 +33,8 @@
 #include "libxnee/xnee_km.h"
 #include "libxnee/xnee_fake.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/feedback.h"
+#include "libxnee/xnee_range.h"
 
 /**************************************************************
  *                                                            *
@@ -519,252 +521,6 @@ xnee_record_select_default_protocol (xnee_data *xd)
 
 
 
-/**************************************************************
- *                                                            *
- * xnee_add_range_str                                         *
- *                                                            *
- *                                                            *
- **************************************************************/
-int
-xnee_add_range_str (xnee_data *xd, int type, char *range)
-{
-  char start_str[XNEE_RANGE_STRING_SIZE] ;
-  char *second;
-  int start=0;
-  int stop=0;
-  int str_len=0;
-  int ret=0;
-
-  xnee_verbose((xd, " --> add_range_str (%d, %d, %s)\n", xd,type, range));
-  str_len=strspn(range, "1234567890-");
-  if (str_len==0)
-    {
-      str_len=strspn(range, "1234567890abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ");
-      strncpy(start_str,range,str_len);
-      start_str[str_len]='\0';
-      start=xnee_data2int (type, start_str);
-      if (start==-1)
-	{
-	  fprintf(stderr, "Could not convert \"%s\" to an integer\nleaving", start_str); 
-	  xnee_stop_session(xd);
-	  exit(stop);
-	}
-    }
-  else
-    {
-      strncpy(start_str,range,str_len);
-      start_str[str_len]='\0';
-      sscanf(start_str,"%d",&start);
-    }
-  xnee_verbose((xd, " --  add_range_str first string=\"%s\" (%d)\n", start_str, start));
-  
-
-  second=strchr ( range, '-' ) ;
-  if (second) 
-    {
-      int ret;
-      second++;
-      ret=sscanf(second,"%d",&stop);
-      if (ret==0)
-	{
-	  stop=xnee_data2int (type, second);
-	  if (stop==-1)
-	    {
-	      fprintf(stderr, "Could not convert \"%s\" to an integer\nleaving", second); 
-	      xnee_stop_session(xd);
-	      exit(stop);
-	    }
-	}
-      xnee_verbose((xd, " --  add_range_str second string=\"%s\"   ret=%d\n", second, ret));
-    }
-
-
-  xnee_verbose((xd, " -- calling add_range (%d, %d, %d, %d)\n", xd, type, start, stop));
-
-  ret=xnee_add_range (xd, type, start, stop);
-  xnee_verbose((xd, " <-- add_range_str (%d, %d, %s)\n", xd,type, range));
-  return (ret);
-}
-
-
-
-
-
-/**************************************************************
- *                                                            *
- * xnee_add_range                                             *
- *                                                            *
- *                                                            *
- **************************************************************/
-int
-xnee_add_range (xnee_data* xd, 
-		int type, 
-		int start, 
-		int stop)
-{
-
-  /*  
-      int this_types_index=0;
-  */
-
-  int max_index=0;
-  int alloc_nr=0;
-  XRecordRange *r_range; 
-  xnee_verbose((xd, "---> xnee_add_range %d %d %d\n", type, start, stop));
-  
-  XNEE_DEBUG ( (stderr ," --> xnee_add_range()  \n"  ));
-  /* increment the counter to ensure we allocate enough memory */
-  alloc_nr=xd->xnee_info->data_ranges[type]  ;
-  max_index=xnee_get_max_range(xd) - 1 ;
-  
-  xnee_verbose((xd, "  MAX %d ALLOC %d\n", max_index, alloc_nr));
-
-  XNEE_DEBUG ( (stderr ," -- xnee_add_range() index before = %d \n", max_index  ));
-  if (alloc_nr>max_index)
-    {
-      xnee_verbose((xd, " -- Allocating a new range of size %d\n", alloc_nr+1));
-      XNEE_DEBUG ( (stderr ," -- xnee_add_range() 2 \n"  ));
-
-      if ( alloc_nr == 0 ) 
-	{
-	  XNEE_DEBUG ( (stderr ," -- xnee_add_range() new array alloc_nr=%d max_index=%d \n", alloc_nr, max_index  ));
-	  xd->record_setup->range_array = (XRecordRange**) Xcalloc (1, sizeof(XRecordRange*));
-	}
-      else 
-	{
-	  XNEE_DEBUG ( (stderr ," -- xnee_add_range()  realloc_nr=%d max_index=%d \n", alloc_nr, max_index  ));
-	  xd->record_setup->range_array = 
-	    (XRecordRange**) Xrealloc (xd->record_setup->range_array,
-				      (alloc_nr+1)*sizeof(XRecordRange*));
-	}
-      r_range =  XRecordAllocRange();
-      XNEE_DEBUG ( (stderr ," -- xnee_add_range() adding new range at %d \n", alloc_nr  ));
-
-      xnee_null_range (r_range);
-
-      xd->record_setup->range_array[alloc_nr] = r_range; 
-    }
-
-  
-
-  /* is it single value */
-  if (stop==0) 
-    {
-      stop=start;
-    }
-  xnee_verbose((xd, "Adding %d range %d - %d at range %d\n", type, start, stop, alloc_nr));
-  if ( type == XNEE_DELIVERED_EVENT ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->delivered_events.first = start;
-      xd->record_setup->range_array[alloc_nr]->delivered_events.last = stop;
-
-      /* Workaround for problem with crashing X server*/
-      xd->xnee_info->data_ranges[XNEE_ERROR]++;
-      xd->record_setup->range_array[alloc_nr]->errors.first = BadCursor;
-      xd->record_setup->range_array[alloc_nr]->errors.last = BadCursor;
-    }
-  else if ( type == XNEE_REQUEST ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->core_requests.first = start;
-      xd->record_setup->range_array[alloc_nr]->core_requests.last = stop;
-    }
-  else if ( type == XNEE_ERROR ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->errors.first = start;
-      xd->record_setup->range_array[alloc_nr]->errors.last = stop;
-
-      /* Workaround for problem with crashing X server*/
-      xd->record_setup->range_array[alloc_nr]->delivered_events.first =33 ;
-      xd->record_setup->range_array[alloc_nr]->delivered_events.last = 33;
-      xd->xnee_info->data_ranges[XNEE_DELIVERED_EVENT]++;
-    }
-  else if ( type == XNEE_REPLY ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->core_replies.first = start;
-      xd->record_setup->range_array[alloc_nr]->core_replies.last = stop;
-
-    }
-  else if ( type == XNEE_EXT_REQUEST_MAJOR ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->ext_requests.ext_major.first = start;
-      xd->record_setup->range_array[alloc_nr]->ext_requests.ext_major.last = stop;
-    }
-  else if ( type == XNEE_EXT_REQUEST_MINOR ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->ext_requests.ext_minor.first = start;
-      xd->record_setup->range_array[alloc_nr]->ext_requests.ext_minor.last = stop;
-    }
-  else if ( type == XNEE_EXT_REPLY_MAJOR ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->ext_replies.ext_major.first = start;
-      xd->record_setup->range_array[alloc_nr]->ext_replies.ext_major.last = stop;
-    }
-  else if ( type == XNEE_EXT_REPLY_MINOR ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->ext_replies.ext_minor.first = start;
-      xd->record_setup->range_array[alloc_nr]->ext_replies.ext_minor.last = stop;
-    }
-  else if ( type == XNEE_DEVICE_EVENT ) 
-    {
-      xd->record_setup->range_array[alloc_nr]->device_events.first = start;
-      xd->record_setup->range_array[alloc_nr]->device_events.last = stop;
-    }
-
- 
-  /*
-   * Used when debugging 
-   * print_data_range_count (xnee_info, rec_range); 
-   *
-   */
-  xd->xnee_info->data_ranges[type]++;
-  xnee_verbose((xd, "<--- xnee_add_range\n"));
-  return (0);
-  
-}
-
-
-/**************************************************************
- *                                                            *
- * xnee_parse_range                                           *
- *                                                            *
- *                                                            *
- **************************************************************/
-int
-xnee_parse_range (xnee_data *xd,int type, char *range)
-{
-  char buf[DATA_NAME_SIZE_MAX];
-  int next;
-  int len;
-  int ret=0;
-  int range_len=strlen(range);
-
-  xnee_verbose ((xd,"int arg=%d\n", xd));
-  xnee_verbose ((xd, "nt arg=%d\n", type));
-  xnee_verbose ((xd, "string arg=%s\n", range));
-
-  xnee_verbose((xd, "--> parse_range (%u, %d, %s)\n", (int) xd, type, range));
-
-  while ( 1 ) {
-    next=strspn (range, "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ-");
-    if (next==0) break; 
-    strncpy(buf,range,next);
-    buf[next]='\0';
-    len =strlen(range);
-    range+=next+1;
-    range_len=range_len - next - 1;
-    xnee_verbose((xd, " -- calling xnee_add_range_str (%d, %d, %s) \n" , xd, type, buf));
-    ret=xnee_add_range_str (xd, type, buf);
-    if (range_len<=0) break;
-    if (ret!=0) return (ret);
-  }
-
-  xnee_verbose((xd, "<-- parse_range()\n"));
-  return (0);  
-}
-
-
-
-
 
 
 /**************************************************************
@@ -940,6 +696,8 @@ xnee_record_loop(xnee_data *xd)
 {
   xnee_verbose((xd, " ---> xnee_record_loop()\n"));
   
+
+
   /* 
    * In case the key pressed to invoke Xnee is not released
    * we wait 1/2 of a second and hopefully it is. If not
@@ -1038,25 +796,6 @@ xnee_record_async(xnee_data *xd)
 
 
 
-
-/**************************************************************
- *                                                            *
- * xnee_null_range                                            *
- *                                                            *
- *                                                            *
- **************************************************************/
-void 
-xnee_null_range ( XRecordRange *range)
-{
-  memset (range, 0, sizeof(XRecordRange));
-  /* There seems to be something spooky about setting 
-     errors to first=last=0
-     This solves the X server crashes that has been around for a while */
-  /*
-  range->errors.first = BadCursor;
-  range->errors.last  = BadCursor;
-  */
-}
 
 
 

@@ -123,58 +123,6 @@ xnee_record_select_default_protocol   (xnee_data *xd) ;
 
 
 
-/**
- * Adds a range of data to record. 
- * <br><br>
- * Example range string: 1,2-4,6-9,12,10<br>
- * Calls xnee_add_range to do the job of allocating
- *
- * @param xd         xnee's main structure
- * @param data_type  type of X11 data (event, request ...) 
- * @param range_str  comma spearated integer or integer "-" integer
- * @return int       returns 0 in success
- */
-int
-xnee_add_range_str (xnee_data *xd, int data_type, char *range_str);
-
-
-
-
-/**
- * Add X11 data to record. Allocates a Record structure if needed.
- * <br><br>
- * YOU HAVE TO DEALLOC THE RANGES ALLOCATED BY THIS FUNCIOTN
- * or you can use xnee_free_xnee_data
- *
- * @param xd     xnee's main structure
- * @param type   type of protocol data (i.e event, request, reply or error) 
- * @param first  first value of range (or only value)  
- * @param end    end value of range (if not 0)
- * @return int   returns 0 in success
- */
-int
-xnee_add_range (xnee_data *xd, int type , int first, int end);
-
-
-
-
-/**
- * Parses a range string  and call.
- * Calls xnee_add_range_str to do the job of allocating
- * <br><br>
- * Example: xnee_parse_range (xd, XNEE_EVENT, "1-4,7,13");
- * <br><br>
- * NOTE:  YOU HAVE TO DEALLOC THE RANGES ALLOCATED BY THIS FUNCIOTN
- * or you can use xnee_free_xnee_data
- *
- * @param xd     xnee's main structure
- * @param type   type of protocol data (i.e event, request, reply or error) 
- * @param range  string with ranges
- * @return int   0 on success
- */
-int
-xnee_parse_range (xnee_data *xd, int type , char *range);
-
 
 
 /**
@@ -237,17 +185,6 @@ xnee_record_loop(xnee_data *xd);
 int 
 xnee_record_async(xnee_data *xd);
 
-
-/**
- * Sets a XRecordRange's values to 0 (zero)
- * <br><br>
- * This uses memset instead of going through the structure and set each value to 0.
- *
- * @param range  the XRecordRange to set to 0
- * @return void  
- */
-void 
-xnee_null_range ( XRecordRange *range);
 
 
 

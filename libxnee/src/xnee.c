@@ -34,7 +34,6 @@
 
 #include <sys/utsname.h>
 
-#include <X11/Xlibint.h>
 #include <X11/Xproto.h>
 #include <X11/Xlib.h>
 
@@ -52,6 +51,7 @@
 #include "libxnee/xnee_resolution.h"
 #include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_callback.h"
+#include "libxnee/xnee_range.h"
 
 
 
@@ -67,10 +67,11 @@ xnee_data *xd_global;
 int
 xnee_write_settings_to_file (xnee_data *xd, FILE *fp) 
 {
-  xnee_print_xnee_resource_settings (xd, fp) ;
-  xnee_print_xnee_settings (xd, fp) ;
-  xnee_print_ranges (xd, fp);
-  return XNEE_OK;
+   xnee_set_ranges(xd);
+   xnee_print_xnee_resource_settings (xd, fp) ;
+   xnee_print_xnee_settings (xd, fp) ;
+   xnee_print_ranges (xd, fp);
+   return XNEE_OK;
 }
 
 
