@@ -270,9 +270,19 @@ int
 xnee_set_stderr_feedback(xnee_data *xd)
 {
    xnee_verbose((xd, "xnee_set_stderr_feedback\n"));
-  feedback_requested=XNEE_STDERR_FEEDBACK;
-  return XNEE_OK;
+   feedback_requested=XNEE_STDERR_FEEDBACK;
+   return XNEE_OK;
 }
+
+int 
+xnee_get_requested_feedback(xnee_data *xd)
+{
+   xnee_verbose((xd, "xnee_get_requested_feedback\n"));
+
+   return feedback_requested;
+}
+
+
 
 int 
 xnee_set_no_feedback(xnee_data *xd)
@@ -295,14 +305,22 @@ int
 xnee_is_xosd_feedback(xnee_data *xd)
 {
    xnee_verbose((xd, "xnee_is_xosd_feedback\n"));
-  return (feedback_used==XNEE_XOSD_FEEDBACK);
+   return (feedback_used==XNEE_XOSD_FEEDBACK);
 }
+
 
 int 
 xnee_is_stderr_feedback(xnee_data *xd)
 {
    xnee_verbose((xd, "xnee_is_stderr_feedback\n"));
   return (feedback_used==XNEE_STDERR_FEEDBACK);
+}
+
+int 
+xnee_is_no_feedback(xnee_data *xd)
+{
+   xnee_verbose((xd, "xnee_is_stderr_feedback\n"));
+   return (feedback_used==XNEE_STDERR_FEEDBACK);
 }
 
 

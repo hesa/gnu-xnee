@@ -91,7 +91,7 @@ If we record an xterm session with all data being recorded and compare that to a
 
 The solve to the the problem of finding out what data to use as synchronisation data one can:
 @itemize @bullet
-@item   use the resource files delivered with Xnee
+@item   use the project files delivered with Xnee
 @item   analyse the application (using Xnee's  @code{--human-printouts} option) and do some "trial and error"
 @end itemize
 
@@ -110,7 +110,7 @@ Even if one starts up a machine from scratch (reboot) when recording and from sc
 To enable synchronisation Xnee buffers data:
 @itemize @bullet
 @item    that was recorded but hasn't been sent during replay
-@item    that was sent during replay but hasn't been seen in the recorded file 
+@item    that was sent during replay but hasn't been seen in the recorded session file 
 @end itemize
 
 For every data during replay that hasn't been sent (as when recorded) Xnee pauses for a short while. If the data is sent to Xnee, everything is fine. If the data isn't sent it is stored in the buffer of unsynchronised data. If the number of unsynchronise data is getting to high, Xnee will eventually exit with an error code (see man page(s)).

@@ -11,22 +11,46 @@
 
 #include "interface.h"
 #include "support.h"
+#include <gdk/gdk.h>
+#include "utils.h"
+
 
 int
 main (int argc, char *argv[])
 {
   GtkWidget *window1;
-
+  int i = 1 ;
+  
 #ifdef ENABLE_NLS
   bindtextdomain (GETTEXT_PACKAGE, PACKAGE_LOCALE_DIR);
   bind_textdomain_codeset (GETTEXT_PACKAGE, "UTF-8");
   textdomain (GETTEXT_PACKAGE);
 #endif
 
+#define CHECK_STRING(a,b) (strncmp(a, b, strlen(b))==0)
+  /* by default ... we assume replaying mode */
+  while (1)
+    {
+      if (argv[i]==NULL)
+	{
+	  break;
+	}
+      if (CHECK_STRING(argv[i], "--record-delay"))
+	{
+	  set_mode(TG_RECORD);
+	}
+      else
+	{
+	  break;
+	}
+      i++;
+    }
+
   gtk_set_locale ();
-  gtk_init (&argc, &argv);
+  gtk_init (&argc, &argv); 
 
   add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
+  add_pixmap_directory (".");
 
   /*
    * The following code was added by Glade to create one of each component

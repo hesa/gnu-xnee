@@ -1,5 +1,5 @@
 PACKAGE=\"Xnee\"
-VERSION=\"1.08.94g\"
+VERSION=\"1.08.94k\"
 
 PEDANTIC_FLAGS =  -W -Wall -pedantic -Werror \
 	-Wpointer-arith -Wcast-qual \
@@ -57,7 +57,7 @@ clean:
 
 lib : ${XNEELIB}
 
-${XNEELIB}: ${OBJS} 
+${XNEELIB}: ${OBJS} ${COMM_OBJS} 
 	ar -rv ${XNEELIB} ${OBJS} 
 
 bin : ${XNEE_CLI} 

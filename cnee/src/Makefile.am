@@ -12,3 +12,7 @@ cnee_LDADD = -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEM
 test-cli:
 	(cd test ; ./test_all.sh)
 
+man: cnee.1
+
+cnee.1: cnee
+	./cnee --manpage > $@

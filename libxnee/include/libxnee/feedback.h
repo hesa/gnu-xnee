@@ -86,6 +86,16 @@ int  feedback(xnee_data *xd, va_dcl valist)
 
 
 
+int 
+xnee_get_requested_feedback(xnee_data *xd);
+
+#define STDERR_REQ(xd) 
+#define XOSD_REQ(xd)   
+#define NO_REQ(xd)     
+
+#define xnee_fb_no_requested(xd)     (XNEE_NO_FEEDBACK     == xnee_get_requested_feedback(xd) )
+#define xnee_fb_stderr_requested(xd) (XNEE_STDERR_FEEDBACK == xnee_get_requested_feedback(xd) )
+#define xnee_fb_xosd_requested(xd)   (XNEE_XOSD_FEEDBACK   == xnee_get_requested_feedback(xd) )
 
 int 
 xnee_set_xosd_feedback(xnee_data *xd);
@@ -101,6 +111,9 @@ xnee_is_xosd_feedback(xnee_data *xd);
 
 int 
 xnee_is_stderr_feedback(xnee_data *xd);
+
+int 
+xnee_is_no_feedback(xnee_data *xd);
 
 int 
 xnee_feedback_close(xnee_data *xd);

@@ -37,7 +37,7 @@ SRC_IMAGES = ${IMG_DIA}
 ##  ALL
 ##
 
-doc: html man pdf ps
+doc: html pdf ps txt
 
 
 images: ${SRC_IMAGES} ${GEN_IMAGES}
@@ -52,8 +52,6 @@ images: ${SRC_IMAGES} ${GEN_IMAGES}
 ## ----------------------------- ##
 
 html: xnee.html 
-
-man:  xnee.1
 
 pdf:  xnee.pdf 
 
@@ -92,8 +90,6 @@ xnee.dvi: images
 xnee.ps: xnee.dvi
 	$(DVI2PS) -c xnee.ps $(srcdir)/xnee.dvi
 
-xnee.1: ../cnee/src/cnee
-	../cnee/src/cnee --manpage > $@
 
 
 api-doc: xnee.dox 
@@ -111,7 +107,6 @@ xnee.txt:
 
 
 all: doc
-manual: all
 
 #all: ${SRC_IMAGES} ${GEN_IMAGES}
 

@@ -26,6 +26,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_resource.h"
+#include "libxnee/xnee_threshold.h"
+#include "libxnee/feedback.h"
 
 
 
@@ -713,19 +715,29 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
     }
   
   
-  fprintf (out,  "#\n");
-  fprintf (out,  "#\n");
-  fprintf (out,  "#\n");
+  fprintf (out,  "\n");
+  /* DISPLAY */
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Displays                              #\n");
+  fprintf (out,  "##############################################\n");
   fprintf (out,  "display %s\n",
 	   (xd->display==NULL) ? "NULL"  : xd->display);
-  fprintf (out,  "\n# Files\n");
-  fprintf (out,  XNEE_OUT_FILE "  %s\n",
+  fprintf (out,  XNEE_DISTRIBUTE);
+  xnee_print_distr_list(xd, out);
+
+
+  /* FILES */
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Files                                 #\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  XNEE_OUT_FILE " %s\n",
 	   (xd->out_name==NULL) ? "stdout" : xd->out_name );
   fprintf (out,  XNEE_ERR_FILE " %s\n",
 	   (xd->err_name==NULL) ? "stderr" : xd->err_name );
   
   /* GRAB */
-  
   fprintf (out,  "\n\n");
   fprintf (out,  "##############################################\n");
   fprintf (out,  "#      Key Grabs                             #\n");
@@ -753,9 +765,9 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
   /* Limits */
   fprintf (out,  "\n\n");
   fprintf (out,  "##############################################\n");
-  fprintf (out,  "#      Recording limits                      #\n");
+  fprintf (out,  "#      Recording limits etc                  #\n");
   fprintf (out,  "##############################################\n");
-  fprintf (out,  "\n# Recording limits\n");
+  fprintf (out,  "\n");
   fprintf (out,  "%s        %d\n",
 	   XNEE_EVENT_MAX,xnee_get_events_max(xd) );
   fprintf (out,  "%s          %d\n",
@@ -764,10 +776,32 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
 	   XNEE_TIME_MAX,xnee_get_time_left(xd) );
   fprintf (out,  "first-last       %d\n",
 	   xd->xnee_info.first_last ); 
-  
+
+  fprintf (out,  "\n# Record  all (including current) clients or only future ones\n");
+  if (!xnee_get_all_clients(xd))
+  {
+     fprintf (out,  "# ");
+  }
+  fprintf (out,  "%s\n",
+           XNEE_ALL_CLIENTS);
+  if (xnee_get_all_clients(xd))
+  {
+     fprintf (out,  "# ");
+  }
+  fprintf (out,  "%s\n",
+           XNEE_FUTURE_CLIENTS);
+
+  fprintf (out,  "\n# Store the starting mouse position \n");
+  if (!xnee_is_store_mouse_pos(xd))
+  {
+     fprintf (out,  "# ");
+  }
+  fprintf (out,  "%s\n",
+              XNEE_STORE_MOUSE_POS);
   
   
   /* Resolution */
+  fprintf (out,  "\n\n");
   fprintf (out,  "##############################################\n");
   fprintf (out,  "#      Resolution                            #\n");
   fprintf (out,  "##############################################\n");
@@ -781,6 +815,57 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
   fprintf (out,  XNEE_ADJUST_RESOLUTION"  %d\n",
 	   xnee_get_resolution_used (xd));
 
+
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Speed                                 #\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "\n# Speed\n");
+  fprintf (out,  XNEE_SPEED_PERCENT"  %d\n",
+	   xnee_get_replay_speed(xd)); 
+  
+
+  /* Limits */
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Replaying limits etc                  #\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "\n%s %d \n", 
+           XNEE_MAX_THRESHOLD,
+           xnee_get_max_threshold(xd));
+  fprintf (out,  "%s %d \n", 
+           XNEE_MIN_THRESHOLD,
+           xnee_get_min_threshold(xd));
+  fprintf (out,  "%s %d \n", 
+           XNEE_TOT_THRESHOLD,
+           xnee_get_tot_threshold(xd));
+  
+
+  /* Feedback */
+  fprintf (out,  "\n\n");
+  fprintf (out,  "##############################################\n");
+  fprintf (out,  "#      Feedback                              #\n");
+  fprintf (out,  "##############################################\n");
+  if (!xnee_fb_no_requested(xd) )
+  {
+      fprintf (out, "#");
+  }
+  fprintf (out, "%s\n", XNEE_FEEDBACK_NONE);
+
+  if (!xnee_fb_stderr_requested(xd))
+  {
+      fprintf (out, "#");
+  }
+  fprintf (out, "%s\n", XNEE_FEEDBACK_STDERR);
+
+  if (!xnee_fb_xosd_requested(xd))
+  {
+      fprintf (out, "#");
+  }
+  fprintf (out, "%s\n", XNEE_FEEDBACK_XOSD);
+
+
+  fprintf (out,  "\n\n");
   fprintf (out,  "##############################################\n");
   fprintf (out,  "#      Various                               #\n");
   fprintf (out,  "##############################################\n");
@@ -789,24 +874,22 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
   fprintf (out,  XNEE_PLUGIN"       %s\n",
 	   xd->plugin_name? xd->plugin_name : "0" ); 
   
-  
   /* Modes */
   fprintf (out,  "\n# Modes (currently not used)\n");
-  fprintf (out,  XNEE_SYNC_MODE"       %d\n",
+  fprintf (out,  XNEE_SYNC_MODE  "       %d\n",
 	   xd->sync ); 
 
+  fprintf (out,  "\n# Human printout of X11 data (instead of Xnee format)\n");
   fprintf (out,  XNEE_HUMAN_PRINTOUT"  %d\n",
 	   xnee_is_human_printout(xd)); 
-  /* Various */
-  fprintf (out,  "\n# Speed\n");
-  if (xnee_get_replay_speed(xd)==100)
-    {
-      /* add a prepending '#' to disable the speed option */
-      fprintf (out, "#");
-    }
-  fprintf (out,  XNEE_SPEED_PERCENT"  %d\n",
-	   xnee_get_replay_speed(xd)); 
+
   
+  fprintf (out,  "\n# Delay before starting record/replay\n");
+  fprintf (out,  XNEE_DELAY_TIME "  %d\n", xnee_get_interval(xd) ); 
+           
+
+  
+
   /* Various */
   fprintf (out,  "\n# Various\n");
 }

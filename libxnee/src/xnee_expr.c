@@ -336,16 +336,34 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
     }
   else if (!strncmp(XNEE_ALL_CLIENTS,tmp,strlen(XNEE_ALL_CLIENTS)))
     {
-      if (xnee_check_true(range))
-	xd->all_clients = True;
-      else if (xnee_check_false(range))
-	xd->all_clients = False;
-      else
-	{
+       if ( range==NULL)
+          xd->all_clients = True;
+       else if (xnee_check_true(range))
+          xd->all_clients = True;
+       else if (xnee_check_false(range))
+          xd->all_clients = False;
+       else
+       {
 	  xnee_verbose((xd, "All clients mode is invalid ... bailing out\n"));
 	  xnee_set_err_string("Could not parse %s", tmp);
 	  return XNEE_SYNTAX_ERROR;
-	}
+       }
+      ret = XNEE_OK;
+    }
+  else if (!strncmp(XNEE_FUTURE_CLIENTS,tmp,strlen(XNEE_FUTURE_CLIENTS)))
+    {
+       if ( range==NULL)
+          xd->all_clients = False;
+       else if (xnee_check_true(range))
+          xd->all_clients = False;
+       else if (xnee_check_false(range))
+          xd->all_clients = True;
+       else
+       {
+	  xnee_verbose((xd, "Future clients mode is invalid ... bailing out\n"));
+	  xnee_set_err_string("Could not parse %s", tmp);
+	  return XNEE_SYNTAX_ERROR;
+       }
       ret = XNEE_OK;
     }
   else if (!strncmp(XNEE_DIMENSION,tmp,strlen(XNEE_DIMENSION)))
@@ -529,7 +547,14 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
     }
   else if (!strncmp(XNEE_DISTRIBUTE,tmp,strlen(XNEE_DISTRIBUTE)))
     {
-      ret = xnee_add_display_list ( xd, range);
+       if ( (range==NULL ) || (strlen(range)==0) )
+       {
+          ret = XNEE_OK ;
+       }
+       else
+       {
+          ret = xnee_add_display_list ( xd, range);
+       }
     }
   else if (!strncmp(XNEE_DEVICE_EVENT_STR,tmp,strlen(XNEE_DEVICE_EVENT_STR)))
     {

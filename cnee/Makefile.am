@@ -30,3 +30,7 @@ EXTRA_DIST = Makefile.cnee Makefile.cvs autotools/install-sh \
     test/src/xgetter \
     test/xnee_test.err \
     test/rep-time.tmp
+
+
+man:
+	( cd src ; make man )

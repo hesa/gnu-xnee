@@ -324,6 +324,7 @@ enum cont_proc_commands
 #define XNEE_FIRST_LAST           "first-last"
 #define XNEE_ALL_EVENTS           "all-events"
 #define XNEE_ALL_CLIENTS          "all-clients"
+#define XNEE_FUTURE_CLIENTS       "future-clients"
 #define XNEE_DIMENSION            "Dimension"
 #define XNEE_EVENT_MAX            "events-to-record"
 #define XNEE_DATA_MAX             "data-to-record"
@@ -359,6 +360,9 @@ enum cont_proc_commands
 #define XNEE_MOUSE                "mouse"
 #define XNEE_KEYBOARD             "keyboard"
 #define XNEE_STORE_MOUSE_POS      "store-mouse-position"
+#define XNEE_FEEDBACK_XOSD        "feedback-xosd"
+#define XNEE_FEEDBACK_STDERR      "feedback-stderr"
+#define XNEE_FEEDBACK_NONE        "feedback-none"
 
 #define XNEE_REQUEST_STR          "request-range"
 #define XNEE_REPLIES_STR          "reply-range"

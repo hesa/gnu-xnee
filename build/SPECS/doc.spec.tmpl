@@ -1,4 +1,6 @@
 %define name            Xnee
+%define packname        Xnee
+%define docname         Xnee-doc
 %define version         XNEE_VERSION
 %define release         XNEE_RELEASE
 %define xbindir         /usr/bin/X11
@@ -8,8 +10,8 @@
 %define xneeinfodir     /usr/share/info/
 
 
-Summary:	Xnee is an X11 data recorder/replayer/distributer.
-Name:		%{name}
+Summary:	Xnee is an X11 data recorder/replayer/distributer. This package contains the documentation.
+Name:		%{docname}
 Version:	%{version}
 Release:	%{release}
 Group:		X11
@@ -24,53 +26,32 @@ Packager:	hesa <hesa@gnu.org>
 
 
 BuildRequires:	XFree86-devel
-BuildRoot:	%{_tmppath}/%{name}-buildroot
+BuildRoot:	%{_tmppath}/%{Xnee}-buildroot
 Prefix:		%{_prefix}
 
-Source:		http://ftp.gnu.org/pub/gnu/xnee/%{name}-%{version}.tar.gz
+Source:		http://ftp.gnu.org/pub/gnu/xnee/Xnee-%{version}.tar.gz
 
 %description
 
 %prep
-rm -rf $RPM_BUILD_ROOT/%{name}-%{version}
-tar zxvf $RPM_SOURCE_DIR/%{name}-%{version}.tar.gz
+rm -rf $RPM_BUILD_ROOT/%{cliname}-%{version}
+rm -rf $RPM_BUILD_ROOT/%{packname}-%{version}
+tar zxvf $RPM_SOURCE_DIR/%{packname}-%{version}.tar.gz
 
-%setup -q
+%setup -q -n %{packname}-%{version}
 
 %build
-%configure      --bindir=%{xbindir} \
-                --mandir=/usr/X11R6/man \
-                --enable-gui \
-                --enable-doc
+%configure      --enable-doconly 
 
-make clean all manual man 
+make
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-make install     prefix=%{buildroot}/usr \
-                 bindir=%{buildroot}/%{xbindir} \
-                 projectdir=%{buildroot}/projects \
-                 sessionndir=%{buildroot}/sessions
+make install     
 	
 
 
-if ! [ $DEBUG ]; then
-        strip   $RPM_BUILD_ROOT/%{xbindir}/cnee
-        strip   $RPM_BUILD_ROOT/%{xbindir}/gnee
-fi
-
-
-mkdir -p ${RPM_BUILD_ROOT}/usr/lib/%{name}/projects
-install -m 644 projects/*.xnp \
-	${RPM_BUILD_ROOT}/usr/lib/%{name}/projects/
-
-mkdir -p ${RPM_BUILD_ROOT}/usr/lib/%{name}/sessions
-install -m 644 sessions/*.xns \
-	${RPM_BUILD_ROOT}/usr/lib/%{name}/sessions/
-
-mkdir -p ${RPM_BUILD_ROOT}/usr/share/man/man1
-install -m 644 cnee/src/cnee.1 ${RPM_BUILD_ROOT}/usr/share/man/man1
 
 mkdir -p ${RPM_BUILD_ROOT}/usr/share/info
 install -m 644 doc/xnee.info ${RPM_BUILD_ROOT}/usr/share/info
@@ -98,6 +79,8 @@ install -m 644 doc/*.info ${RPM_BUILD_ROOT}/usr/share/info
 
 
 
+
+
 %post
 # New menu-system
 #/usr/X11R6/bin/fluxbox-generate_menu \
@@ -113,13 +96,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,755)
-%doc README AUTHORS COPYING ChangeLog INSTALL NEWS README TODO EXAMPLES FAQ BUGS doc/xnee.txt  doc/xnee.html doc/xnee_man.txt
-%{xneeprojectdir}/%{name}/projects/*
-%{xneesessiondir}/%{name}/sessions/*
-%{xneeinfodir}/*
-%{xneemandir}/*
-%{xbindir}/cnee
-%{xbindir}/gnee
+%doc README AUTHORS COPYING ChangeLog INSTALL NEWS README TODO EXAMPLES FAQ BUGS doc/xnee.txt  doc/xnee.html doc/xnee.ps doc/xnee.pdf doc/xnee.dvi doc/xnee.txt doc/*.png doc/*.jpg
 
 %changelog
 

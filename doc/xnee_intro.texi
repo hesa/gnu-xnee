@@ -11,7 +11,7 @@ Xnee can record and replay user sessions in the X Windows System environment.
 
 Xnee consists of a library and two applications
 
-  @b{xnee} - command line program
+  @b{cnee} - command line program
 
   @b{gnee} - graphical user interface program
 

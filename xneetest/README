@@ -1,0 +1,13 @@
+This directory contains files used to test libxnee and xnee applications.
+
+Files to test cnee (Xnee's command line interface program) can be found
+in cnee/test/.
+
+
+It it assumed that you are familiar with Xnee .... so don't use these files
+to get a feeling of Xnee.... it is used for testing puropses only.
+
+BTW, the test application itself is just crap!!!!
+
+
+/hesa

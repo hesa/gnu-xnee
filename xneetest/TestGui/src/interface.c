@@ -30,7 +30,6 @@ GtkWidget*
 create_window1 (void)
 {
   GtkWidget *window1;
-  GtkWidget *vbox1;
   GtkWidget *menubar1;
   GtkWidget *menuitem1;
   GtkWidget *menu1;
@@ -55,7 +54,7 @@ create_window1 (void)
   GtkWidget *table1;
   GtkWidget *button1;
   GtkWidget *label4;
-/*   GtkWidget *vbox1; */
+  GtkWidget *vbox1;
   GtkWidget *radiobutton2;
   GSList *radiobutton2_group = NULL;
   GtkWidget *radiobutton3;
@@ -81,6 +80,17 @@ create_window1 (void)
   GtkWidget *label2;
   GtkWidget *calendar1;
   GtkWidget *label3;
+  GtkWidget *table2;
+  GtkWidget *label7;
+  GtkWidget *entry2;
+  GtkWidget *button4;
+  GtkWidget *button5;
+  GtkWidget *button6;
+  GtkWidget *entry3;
+  GtkWidget *image1;
+  GtkWidget *image2;
+  GtkWidget *image3;
+  GtkWidget *label6;
   GtkAccelGroup *accel_group;
 
   accel_group = gtk_accel_group_new ();
@@ -313,6 +323,68 @@ create_window1 (void)
   gtk_widget_show (label3);
   gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 2), label3);
 
+  table2 = gtk_table_new (3, 3, FALSE);
+  gtk_widget_show (table2);
+  gtk_container_add (GTK_CONTAINER (notebook1), table2);
+
+  label7 = gtk_label_new (_("Invisible"));
+  gtk_widget_show (label7);
+  gtk_table_attach (GTK_TABLE (table2), label7, 1, 2, 0, 1,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+  gtk_misc_set_alignment (GTK_MISC (label7), 0, 0.5);
+
+  entry2 = gtk_entry_new ();
+  gtk_widget_show (entry2);
+  gtk_table_attach (GTK_TABLE (table2), entry2, 1, 2, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  button4 = gtk_button_new_with_mnemonic (_("button4"));
+  gtk_widget_show (button4);
+  gtk_table_attach (GTK_TABLE (table2), button4, 0, 1, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
+
+  button5 = gtk_button_new_with_mnemonic (_("button5"));
+  gtk_widget_show (button5);
+  gtk_table_attach (GTK_TABLE (table2), button5, 0, 1, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND), 0, 0);
+
+  button6 = gtk_button_new_with_mnemonic (_("button6"));
+  gtk_widget_show (button6);
+  gtk_table_attach (GTK_TABLE (table2), button6, 0, 1, 2, 3,
+                    (GtkAttachOptions) (GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  entry3 = gtk_entry_new ();
+  gtk_widget_show (entry3);
+  gtk_table_attach (GTK_TABLE (table2), entry3, 1, 2, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (0), 0, 0);
+
+  image1 = create_pixmap (window1, "xnrep_small.jpg");
+  gtk_table_attach (GTK_TABLE (table2), image1, 2, 3, 0, 1,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  image2 = create_pixmap (window1, "xnrep_small.jpg");
+  gtk_widget_show (image2);
+  gtk_table_attach (GTK_TABLE (table2), image2, 2, 3, 1, 2,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  image3 = create_pixmap (window1, "xnrep_small.jpg");
+  gtk_widget_show (image3);
+  gtk_table_attach (GTK_TABLE (table2), image3, 2, 3, 2, 3,
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
+                    (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
+
+  label6 = gtk_label_new (_("label6"));
+  gtk_widget_show (label6);
+  gtk_notebook_set_tab_label (GTK_NOTEBOOK (notebook1), gtk_notebook_get_nth_page (GTK_NOTEBOOK (notebook1), 3), label6);
+
   g_signal_connect ((gpointer) new1, "activate",
                     G_CALLBACK (on_new1_activate),
                     NULL);
@@ -415,6 +487,15 @@ create_window1 (void)
   g_signal_connect ((gpointer) calendar1, "day_selected",
                     G_CALLBACK (on_calendar1_day_selected),
                     NULL);
+  g_signal_connect_swapped ((gpointer) button4, "clicked",
+                            G_CALLBACK (on_button4_clicked),
+                            GTK_OBJECT (button4));
+  g_signal_connect_swapped ((gpointer) button5, "clicked",
+                            G_CALLBACK (on_button5_clicked),
+                            GTK_OBJECT (button5));
+  g_signal_connect_swapped ((gpointer) button6, "clicked",
+                            G_CALLBACK (on_button6_clicked),
+                            GTK_OBJECT (button6));
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
   GLADE_HOOKUP_OBJECT_NO_REF (window1, window1, "window1");
@@ -467,6 +548,17 @@ create_window1 (void)
   GLADE_HOOKUP_OBJECT (window1, label2, "label2");
   GLADE_HOOKUP_OBJECT (window1, calendar1, "calendar1");
   GLADE_HOOKUP_OBJECT (window1, label3, "label3");
+  GLADE_HOOKUP_OBJECT (window1, table2, "table2");
+  GLADE_HOOKUP_OBJECT (window1, label7, "label7");
+  GLADE_HOOKUP_OBJECT (window1, entry2, "entry2");
+  GLADE_HOOKUP_OBJECT (window1, button4, "button4");
+  GLADE_HOOKUP_OBJECT (window1, button5, "button5");
+  GLADE_HOOKUP_OBJECT (window1, button6, "button6");
+  GLADE_HOOKUP_OBJECT (window1, entry3, "entry3");
+  GLADE_HOOKUP_OBJECT (window1, image1, "image1");
+  GLADE_HOOKUP_OBJECT (window1, image2, "image2");
+  GLADE_HOOKUP_OBJECT (window1, image3, "image3");
+  GLADE_HOOKUP_OBJECT (window1, label6, "label6");
 
   gtk_window_add_accel_group (GTK_WINDOW (window1), accel_group);
 

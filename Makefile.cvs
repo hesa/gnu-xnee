@@ -2,7 +2,7 @@ generate:
 	@echo "*** Retrieving configure tests needed by configure.in"
 	@aclocal -I ./autotools/
 	@ # echo "*** Scanning for include statements"
-	@ # autoheader
+	@autoheader
 	@echo "*** Building Makefile templates (step one)"
 	@automake --add-missing 
 	@echo "*** Building Makefile templates (step two)"

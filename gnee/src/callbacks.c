@@ -659,11 +659,12 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	  else
 	    g_print (" Could not open project file %s\n", filename);
 
-
+          
 	  fclose (file);
 	  file_choosen = 0;
 	  file_action  = 0;
 
+          /* Make the GUI reflect all settings as read from file */
  	  gx_set_xd_settings(); 
 	}
       else 
@@ -691,6 +692,11 @@ on_ok_button1_clicked                  (GtkButton       *button,
 			      filename);
 	  
 	  xnee_set_data_name(ext_xd, filename);
+
+          /* Make the GUI reflect all settings as read from file */
+ 	  gx_set_xd_settings(); 
+
+
 	}
       
       file_choosen=0;

@@ -10,9 +10,9 @@
 
 @item Where and how do I report bugs?
 @cindex Report bugs?
-Turn on verbose mode @code{xnee --verbose} and save the printouts. 
+Turn on verbose mode @code{cnee --verbose} and save the printouts. 
 Include all printouts and log files in the mail which is sent to
-@email{xnee-bug@@gnu.org}
+@email{cnee-bug@@gnu.org}
 @*
 
 
@@ -63,7 +63,7 @@ rather a event recorder and faker.
           Gnee's not an Event Emulator  
 
 @item Can you add xxx functionality to Xnee
-  Send an email to @email{xnee-devel@@gnu.org} and we'll consider it.
+  Send an email to @email{cnee-devel@@gnu.org} and we'll consider it.
 
 
 @item When starting Xnee I get noticed that I am missing RECORD extension

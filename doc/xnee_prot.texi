@@ -1,7 +1,7 @@
 @node File format, Internals, Usage, top
 @chapter File types and format
 
-The files used by libxnee are
+The files used by Xnee are
 @itemize @bullet
 @item  Xnee Project File
 @item  Xnee Session File
@@ -20,10 +20,19 @@ the same settings over and over again, you can use the Xnee Project File.
 You can create a project by yourself. This can be done using 
 the @code{write-settings} option in cnee or the ``save settings to file'' 
 when using gnee or you can use the Xnee GUI (gnee) to write one.
-You can also
-write one by yourself in your favorite editor. Just make sure you follow the XNee protocol. For information and specification on this protocol read the Xnee Protocol chapter.
+You can also write one by yourself in your favorite editor.  Just make sure you 
+follow the Xnee format. For information and specification on this format read 
+the Xnee format chapter.
+@ 
 
+The authors of Xnee suggests you start of with a generated project file. To get one 
+such file, type the following
+@code{cnee --mouse --keyboard --write-settings new_proj.xnp}. You will now 
+have a file @code{new_proj.xnp} with some useful values, which you can edit as you wish.
+@ 
 
+To use this file to record, simply type
+@code{cnee --record --project new_proj.xnp}
 
 
 @section Xnee Session file
@@ -32,17 +41,15 @@ The Xnee session files are the printouts from a recorded session following the X
 
 
 
-
-
 @section Xnee file format
 The Xnee Format is divided into different directives. 
 The format is line based, meaning that
+
 @itemize @bullet
 @item  there is one directive per line
 @item  one line contains one (and only one) directive
 @end itemize
 These directives are definied as follows. 
-
 
 @section Xnee directives 
 The following directives are used in Xnee:
@@ -65,7 +72,11 @@ The following directives are used in Xnee:
 
 @item
 @tab Replay data
-@tab Replayable data used when replaying
+@tab Recorded replayable data (used when replaying)
+
+@item
+@tab Script replay data 
+@tab Scriptable primitives
 
 @item
 @tab Mark
@@ -126,6 +137,11 @@ as in bash.
 @tab  display
 @tab  string
 @tab  Sets the display to record or replay to the string
+
+@item
+@tab  distribute
+@tab  string 
+@tab  Distribute all recorded or replayed replayable events to the display given by the string
 
 @item
 @tab  file
@@ -190,27 +206,27 @@ as in bash.
 @item
 @tab  stop-key
 @tab  string,string
-@tab  Sets the stop modifier+key combination to the strings
+@tab  Sets the stop key combination to the strings
 
 @item
 @tab  pause-key
 @tab  string,string
-@tab  Sets the pause modifier+key combination to the strings
+@tab  Sets the pause key combination to the strings
 
 @item
 @tab  resume-key
 @tab  string,string
-@tab  Sets the resume modifier+key combination to the strings
+@tab  Sets the resume key combination to the strings
 
 @item
 @tab  mark-key
 @tab  string,string
-@tab  Sets the mark modifier+key combination to the strings
+@tab  Sets the mark key combination to the strings
 
 @item
 @tab  exec-key
 @tab  string,string
-@tab  Sets the execute modifier+key combination to strings
+@tab  Sets the execute key combination to strings
 
 @item
 @tab  replay-resolution
@@ -221,11 +237,6 @@ as in bash.
 @tab  resolution-adjustment
 @tab  boolean
 @tab  Use resolution adjustment, even if the recored resolution differs from the one to replay to
-
-@item
-@tab  distribute
-@tab  string 
-@tab  Distribute all recorded or replayed replayable events to the display given by the string
 
 @item 
 @tab  event-range
@@ -303,9 +314,9 @@ as in bash.
 @tab  Sets the number of seconds to record
 
 @item
+@tab  store-mouse-position
 @tab  
-@tab  
-@tab  
+@tab  If set, Xnee records the initial mouse position and makes sure that replaying starts from there
 
 @end multitable
 
@@ -406,6 +417,90 @@ Xnee Settings Arguments
 
 @end multitable
 time is the time on the server the data was to the recording Xnee client. This time is used to keep the speed intact during replay.
+
+@subsection Script replay data 
+@cindex   Script replay data 
+
+@multitable  @columnfractions .0 .40 .60
+@item 
+@tab @b{Primitive}
+@tab @b{Interpretation}
+
+@item 
+@tab fake-motion
+@tab Fakes a mouse motion 
+
+@item 
+@tab fake-button-press
+@tab Fakes a button press
+
+@item 
+@tab fake-button-release
+@tab Fakes a button release
+
+@item 
+@tab fake-button
+@tab Fakes a button press and release
+
+@item 
+@tab fake-key-press
+@tab Fakes a key press
+
+@item 
+@tab fake-key-release
+@tab Fakes a key release
+
+@item 
+@tab fake-key
+@tab Fakes a key press and release
+
+@end multitable
+
+@multitable  @columnfractions .0 .20  .20 .60
+@item 
+@tab @b{Primitive variable}
+@tab @b{Primitive values}
+@tab @b{Interpretation}
+
+@item 
+@tab  x=value
+@tab  integer
+@tab  Sets the x position used in fake-motion to value
+
+@item 
+@tab  x=value
+@tab  +integer
+@tab  Set the relative motion (x direction) used in fake-motion to value
+
+@item 
+@tab  x=value
+@tab  -integer
+@tab  Set the relative motion (x direction) used in fake-motion to value
+
+@item 
+@tab  y=value
+@tab  Sets the y position used in fake-motion to value
+
+@item 
+@tab  y=value
+@tab  +integer
+@tab  Set the relative motion (y direction) used in fake-motion to value
+
+@item 
+@tab  y=value
+@tab  -integer
+@tab  Set the relative motion (y direction) used in fake-motion to value
+
+@item 
+@tab  button=value
+@tab  set the button to fake with fake-button-press, fake-button-release and fake-button to value
+
+@item 
+@tab  key=value
+@tab  set the key to fake with fake-key-press, fake-key-release and fake-key to value
+
+@end multitable
+
 
 @subsection Mark 
 @cindex  Mark directive

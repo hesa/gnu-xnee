@@ -1,0 +1,84 @@
+%define name            Xnee
+%define packname        Xnee
+%define devname         Xnee-devel
+%define version         XNEE_VERSION
+%define release         XNEE_RELEASE
+%define xbindir         /usr/bin/X11
+%define xneeprojectdir  /usr/lib
+%define xneesessiondir  /usr/lib
+%define xneemandir      /usr/share/man/man1/
+%define xneeinfodir     /usr/share/info/
+
+
+Summary:	Xnee is an X11 data recorder/replayer/distributer. This is the package caontaing library and headers.
+Name:		%{devname}
+Version:	%{version}
+Release:	%{release}
+Group:		X11
+License:	GPL
+URL:		http://www.gnu.org/software/xnee
+Distribution: 	www.gnu.org
+Vendor:		www.gnu.org
+Packager:	hesa <hesa@gnu.org>
+
+
+
+
+
+BuildRequires:	XFree86-devel
+BuildRoot:	%{_tmppath}/%{Xnee}-buildroot
+Prefix:		%{_prefix}
+
+Source:		http://ftp.gnu.org/pub/gnu/xnee/Xnee-%{version}.tar.gz
+
+%description
+
+%prep
+rm -rf $RPM_BUILD_ROOT/%{devname}-%{version}
+rm -rf $RPM_BUILD_ROOT/%{packname}-%{version}
+tar zxvf $RPM_SOURCE_DIR/%{packname}-%{version}.tar.gz
+
+%setup -q -n %{packname}-%{version}
+
+%build
+%configure      --bindir=%{xbindir} \
+                --mandir=/usr/X11R6/man \
+                --disable-gui \
+                --disable-cli \
+                --disable-doc \
+                --disable-xosd
+
+make
+
+%install
+rm -rf $RPM_BUILD_ROOT/*/*
+
+make install     prefix=%{buildroot}/usr \
+                 bindir=%{buildroot}/%{xbindir} \
+                 projectdir=%{buildroot}/projects \
+                 sessionndir=%{buildroot}/sessions
+	
+mkdir -p %{buildroot}/usr/local/include/
+cp -r libxnee/include/libxnee %{buildroot}/usr/local/include/
+
+
+%post
+# New menu-system
+#/usr/X11R6/bin/fluxbox-generate_menu \
+#	-kg \
+#	-p /usr/share \
+#	-o /usr/share/%{name}/menu \
+#	-m %{name}-%{version}
+
+
+%clean
+rm -rf $RPM_BUILD_ROOT/*/*
+
+
+%files
+%defattr(-,root,root,755)
+%doc README AUTHORS COPYING ChangeLog INSTALL NEWS README TODO EXAMPLES FAQ BUGS doc/xnee.txt  doc/xnee.html doc/xnee_man.txt
+
+%changelog
+
+# end of file

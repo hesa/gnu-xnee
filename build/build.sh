@@ -14,6 +14,8 @@ export XNEE_RELEASE=1
 export BUILD_RPM=false
 export PUT_WWW=false
 
+export SUDO="sudo"
+
 function verbose()
 {
 
@@ -110,107 +112,190 @@ perl -i -p -s -e 's/PACKAGE\=\\\"[a-zA-Z_0-9]*\\\"/PACKAGE\=\\\"$ENV{"XNEE_PACKA
 
 perl -i -p -s -e 's/VERSION\=\\\"[a-zA-Z_0-9\.]*\\\"/VERSION\=\\\"$ENV{"XNEE_VERSION"}\\\"/g' Makefile.xnee
 
+
+
+function rpm_build()
+{
+    PACKAGE_NAME=$1
+    SUB_PACKAGE_NAME=$2
+    SPEC_FILE_TMPL=$3
+    
+#1  Xnee
+#2  Xnee, cnee, gnee
+#3  build/SPECS/xnee.spec.tmpl
+
+
+
+
+    verbose "  Removing old SPEC file"
+    
+    RPM_BUILD_DIR=/usr/src/rpm
+    rm -fr ${RPM_BUILD_DIR}/
+    mkdir -p ${RPM_BUILD_DIR}/
+    mkdir ${RPM_BUILD_DIR}/SOURCES
+    mkdir ${RPM_BUILD_DIR}/SRPMS
+    mkdir ${RPM_BUILD_DIR}/RPMS
+    mkdir ${RPM_BUILD_DIR}/SPECS
+    mkdir ${RPM_BUILD_DIR}/BUILD
+    mkdir ${RPM_BUILD_DIR}/tmp
+
+    XNEE_SPEC=${RPM_BUILD_DIR}/SPECS/${SUB_PACKAGE_NAME}.spec
+    ${SUDO} rm -f ${XNEE_SPEC}
+    
+    ls -l $SPEC_FILE_TMPL
+    cat $SPEC_FILE_TMPL | perl -i -p -s -e 's/XNEE_VERSION/$ENV{"XNEE_VERSION"}/g' | perl -i -p -s -e 's/XNEE_RELEASE/$ENV{"XNEE_RELEASE"}/g' > /tmp/xnee.spec
+    ls -l /tmp/xnee.spec
+    ${SUDO} mv /tmp/xnee.spec ${XNEE_SPEC}
+    check_status "$?" "  making spec file"
+    verbose "   found $XNEE_VERSION"
+
+    export XNEE_TAR_GZ=Xnee-${XNEE_VERSION}.tar.gz
+    export XNEE_TAR_GZ=${PACKAGE_NAME}-${XNEE_VERSION}.tar.gz
+    verbose "   about to copy ${XNEE_TAR_GZ} ---> ${RPM_BUILD_DIR}/SOURCES"
+    echo "   PASSWD=$PASSWD"
+    verbose "    ls  ${RPM_BUILD_DIR}/SOURCES   -> `ls -l ${RPM_BUILD_DIR}/SOURCES`"
+    ${SUDO} rm -f ${RPM_BUILD_DIR}/SOURCES/${XNEE_TAR_GZ} 
+    verbose "      removed old tar.gz file"
+    verbose "$?" "  copying gzipped tar file "
+    ${SUDO} cp ${XNEE_TAR_GZ} ${RPM_BUILD_DIR}/SOURCES/${XNEE_TAR_GZ}
+    check_status "$?" "  copied gzipped tar file "
+    verbose "$?" "  copied gzipped tar file "
+    
+    verbose "  pushing to  ${RPM_BUILD_DIR}/SPECS"
+    pushd ${RPM_BUILD_DIR}/SPECS
+    verbose "   building .... rpm -ba ${XNEE_SPEC}"    
+    verbose "${SUDO}  rpm -ba `basename ${XNEE_SPEC}`"
+    ${SUDO}  rpm -ba   `basename ${XNEE_SPEC}`
+    check_status "$?" "  building RPM "
+    
+    XNEE_RPM=`find ${RPM_BUILD_DIR}/RPMS -type f -name "*nee*.rpm"`
+    check_status "$?" "  finding  binary rpm"
+    XNEE_SRPM=`find ${RPM_BUILD_DIR}/SRPMS -type f -name "*nee*.rpm"`
+    check_status "$?" "  finding  source rpm"
+    
+    
+    popd
+    
+    ${SUDO} cp $XNEE_RPM $XNEE_SRPM ./
+    ${SUDO} chown ${USER} ./*.rpm
+    check_status "$?" "  copying source and binary rpms"
+}
+
+
+
+build_rpm_prepare()
+{
+    CONFIGURE_FLAGS=$1
+    MAKE_FLAGS=$2
+    COMMENT=$3
+
+    verbose "Doing some autstuff in order to $3"
+    verbose "   make -f Makefile.cvs "
+    make -f Makefile.cvs 
+    check_status "$?" "autoconf"
+    verbose "Configuring"
+    verbose "   ./configure $CONFIGURE_FLAGS"
+    verbose "    "
+    ./configure $CONFIGURE_FLAGS
+    check_status "$?" "configure"
+    verbose "Making ...."
+    rm *.gz
+    verbose "   make $MAKE_FLAGS"
+    make $MAKE_FLAGS
+    check_status "$?" "make"
+}
+
+
+
+if [ "$BUILD_RPM" != "true" ] ;
+    then
+    
 #
 #  ATUTO
 #
-verbose "Doing some autstuff"
-###make -f Makefile.cvs 
-###check_status "$?" "autoconf"
-
+    verbose "Doing some autstuff"
+    make -f Makefile.cvs 
+    check_status "$?" "autoconf"
+    
 
 #
 #  CONFIGURE
 #
-verbose "Configuring"
-verbose "   configure"
-###./configure 
-###check_status "$?" "configure"
-
+    verbose "Configuring"
+    verbose "   configure"
+    ./configure 
+    check_status "$?" "configure"
+    
 
 #
 #  MAKE
 #
-verbose "Making ...."
-verbose "    make clean all text html man info"
-##make clean all manual
-check_status "$?" "make"
-check_version $XNEE_VERSION "xnee from configure && make"
-cp cnee/src/cnee ./cnee.makefile_configure
-
+    verbose "Making ...."
+    verbose "    make clean all text html man info"
+    make clean all manual
+    check_status "$?" "make"
+    check_version $XNEE_VERSION "xnee from configure && make"
+    cp cnee/src/cnee ./cnee.makefile_configure
+    
 #
 #  SOURCE DIST
 #
-verbose "Generating dist"
-verbose "    make dist"
-###make dist
-check_status "$?" "make dist"
-
-
+    verbose "Generating dist"
+    verbose "    make dist"
+    make dist
+    check_status "$?" "make dist"
+    
+    
 #
 #  GNU/Linux binary
 #
-cp cnee/src/cnee ./cnee.configure
-
-
-
-
-
+    cp cnee/src/cnee ./cnee.configure
+    
+    
+    make -f Makefile.xnee clean all
+    check_version $XNEE_VERSION "xnee from Makefile.xnee"
+    mv cnee/src/cnee ./cnee.makefile_xnee
+    
+    
+    verbose "Putting back configure binary"
+    cp ./cnee.makefile_configure cnee/src/cnee
+    
 #
 #   RPM
 #
-if [ "$BUILD_RPM" == "true" ] ;
-then
+else
     verbose " RPM"
     verbose "   checking that we are allowed to do root stuff"
-    sudo ls -l /proc 
+#    echo "Plese, enter password for coming sudo session"
+#    read PASSWD
+    
     if [ "$STATUS" == "1" ];
-    then 
+	then 
 	echo "WARNING: user not allowd to do sudo"
 	echo "         skipping RPM stuff"
-    else
-	echo "ENTER PASSWORD"
-	read PASSWD
-	verbose "  removing old SPEC file"
-	RPM_BUILD_DIR=/usr/src/rpm
-	XNEE_SPEC=${RPM_BUILD_DIR}/SPECS/xnee.spec
-	echo $PASSWD | sudo -S rm -f ${XNEE_SPEC}
-	
-	cat build/SPECS/xnee.spec.tmpl | perl -i -p -s -e 's/XNEE_VERSION/$ENV{"XNEE_VERSION"}/g' | perl -i -p -s -e 's/XNEE_RELEASE/$ENV{"XNEE_RELEASE"}/g' > /tmp/xnee.spec
-	echo $PASSWD | sudo -S mv /tmp/xnee.spec ${XNEE_SPEC}
-	check_status "$?" "  making spec file"
-	verbose "   found $XNEE_VERSION"
-	export XNEE_TAR_GZ=Xnee-${XNEE_VERSION}.tar.gz
-	verbose "   about to copy ${XNEE_TAR_GZ} ---> ${RPM_BUILD_DIR}/SOURCES"
-	echo "   PASSWD=$PASSWD"
-	verbose "    ls  ${RPM_BUILD_DIR}/SOURCES   -> `ls -l ${RPM_BUILD_DIR}/SOURCES`"
-	echo $PASSWD | sudo -S rm -f ${RPM_BUILD_DIR}/SOURCES/${XNEE_TAR_GZ} 
-	verbose "      removed old tar.gz file"
-	verbose "$?" "  copying gzipped tar file "
-	echo $PASSWD | sudo -S cp ${XNEE_TAR_GZ} ${RPM_BUILD_DIR}/SOURCES
-	check_status "$?" "  copied gzipped tar file "
-	verbose "$?" "  copied gzipped tar file "
-	
-	verbose "  pushing to  ${RPM_BUILD_DIR}/SPECS"
-	pushd ${RPM_BUILD_DIR}/SPECS
-	verbose "   building .... rpm -ba ${XNEE_SPEC}"    
-	verbose "sudo -S  rpm -ba `basename ${XNEE_SPEC}`"
-	echo $PASSWD | sudo -S  rpm -ba `basename ${XNEE_SPEC}`
-	check_status "$?" "  building RPM "
-	
-	XNEE_RPM=`find ${RPM_BUILD_DIR}/RPMS -type f -name "Xnee*.rpm"`
-	check_status "$?" "  finding  binary rpm"
-	XNEE_SRPM=`find ${RPM_BUILD_DIR}/SRPMS -type f -name "Xnee*.rpm"`
-	check_status "$?" "  finding  source rpm"
-	    
-	    
-	popd
-	
-	echo $PASSWD | sudo -S cp $XNEE_RPM $XNEE_SRPM ./
-	echo $PASSWD | sudo -S chown ${USER} ./*.rpm
-	check_status "$?" "  copying source and binary rpms"
+	exit 1
     fi
-fi
+	# Build:  Xnee rpm
+	#
+    build_rpm_prepare "--enable-gui --enable-doc" "clean all manual man dist" "Build Xnee rpm"
+    rpm_build Xnee Xnee build/SPECS/xnee.spec.tmpl
+    
+	# Build:  cnee rpm
+	#
+    build_rpm_prepare "--disable-gui --disable-doc" "clean all man dist" "Build cnee rpm"
+    rpm_build Xnee cnee build/SPECS/cnee.spec.tmpl
 
+	# Build:  doc rpm
+	#
+    build_rpm_prepare "--enable-doconly" "clean all dist" "Build Xnee docs"
+    rpm_build Xnee xnee-doc build/SPECS/doc.spec.tmpl
+
+	# Build:  xnee-devel rpm
+	#
+    build_rpm_prepare "--disable-cli --disable-gui" "clean all dist" "Build Xnee devel"
+    rpm_build Xnee devel build/SPECS/xnee-devel.spec.tmpl
+    
+fi
 
 
 
@@ -224,13 +309,5 @@ fi
 #make -f Makefile.solaris clean all
 #check_version $XNEE_VERSION "xnee from Makefile.solaris"
 #mv xnee/src/xnee ./xnee.makefile_solaris
-
-make -f Makefile.xnee clean all
-check_version $XNEE_VERSION "xnee from Makefile.xnee"
-mv cnee/src/cnee ./cnee.makefile_xnee
-
-
-verbose "Putting back configure binary"
-cp ./cnee.makefile_configure cnee/src/cnee
 
 

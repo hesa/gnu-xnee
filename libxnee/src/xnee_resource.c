@@ -346,6 +346,10 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 			"ButtonPress-MotionNotify");
     }
+  else if (!strncmp(XNEE_STORE_MOUSE_POS,tmp,strlen(XNEE_STORE_MOUSE_POS)))
+    {
+       xnee_set_store_mouse_pos (xd);
+    }
   else if (!strncmp(XNEE_OUT_FILE,tmp,3)) 
     {
       xnee_verbose((xd, "file \n" ));
@@ -362,9 +366,10 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
     }
   else if (!strncmp(XNEE_DISTRIBUTE,tmp,strlen(XNEE_DISTRIBUTE)))
     {
-      range=strstr (tmp, ":");
+      range=strstr (tmp, " ");
       range += 1 ;
-      xnee_add_display_list ( xd, range);
+      if (strlen(range)>0)
+         xnee_add_display_list ( xd, range);
     }
   else if (!strncmp(XNEE_DEVICE_EVENT_STR,tmp,strlen(XNEE_DEVICE_EVENT_STR)))
     {
