@@ -1,7 +1,4 @@
-	  xnee_set_loops_left (xd, atoi(argv[++i]));
+xnee_set_verbose (xnee_data *xd)
 
-
-
- xnee_set_out_byname (xd, argv[i]) != XNEE_OK)
 
 
