@@ -16,7 +16,7 @@
  
  
 # name of myself
-MYNAME=mouse-rep.sh
+MYNAME=timing/mo-time.sh
  
  
 # source useful funs
@@ -29,7 +29,7 @@ else
     . etc/base_funs
 fi 
  
-init_test 
+init_test $MYNAME
 parse_me "$*"
 
 #######################################################################
@@ -93,6 +93,7 @@ function fast_move_mouse()
 
 NR_OF_PIX=400
 HALF_WAYS=200
+verify_device swmouse
 
 
 #get mouse in position and zero the device counter

@@ -16,7 +16,7 @@
  
  
 # name of myself
-MYNAME=mouse-rec.sh
+MYNAME=record/mouse.sh
  
  
 # source useful funs
@@ -29,7 +29,7 @@ else
     . etc/base_funs
 fi 
  
-init_test 
+init_test $MYNAME
 parse_me "$*"
 
 #######################################################################

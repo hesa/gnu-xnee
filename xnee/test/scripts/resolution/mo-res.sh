@@ -16,7 +16,7 @@
  
  
 # name of myself
-MYNAME=mouse-rep.sh
+MYNAME=resolution/mo-res.sh
  
  
 # source useful funs
@@ -29,7 +29,7 @@ else
     . etc/base_funs
 fi 
  
-init_test 
+init_test $MYNAME
 parse_me "$*"
 
 #######################################################################
@@ -269,8 +269,7 @@ function time_replay()
 }
 
 # main ..... I guess
-
-#verify_device swmouse
+verify_device swmouse
 
 
 #

@@ -15,7 +15,7 @@
  
  
 # name of myself
-MYNAME=keyboard-rep.sh
+MYNAME=replay/keyboard.sh
  
  
 # source useful funs
@@ -28,7 +28,7 @@ else
     . etc/base_funs
 fi 
  
-init_test 
+init_test $MYNAME
 parse_me "$*"
 
 #######################################################################

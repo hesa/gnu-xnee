@@ -15,10 +15,6 @@
  
  
  
-# name of myself
-MYNAME=mouse-rep.sh
- 
- 
 # source useful funs
 if [ ! -f etc/base_funs ]; 
 then 
@@ -29,7 +25,10 @@ else
     . etc/base_funs
 fi 
  
-init_test 
+# name of myself
+MYNAME=replay/mouse.sh 
+ 
+init_test $MYNAME
 parse_me "$*"
 
 #######################################################################
@@ -255,7 +254,7 @@ function record_and_replay()
 
 # main ..... I guess
 
-#verify_device swmouse
+verify_device swmouse
 
 
 #

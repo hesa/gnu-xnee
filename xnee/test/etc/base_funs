@@ -18,14 +18,20 @@ function init_test()
     WARN_TEST=0
     RETURN_TEST=0
     RETURN_ERR=0
+    UNTESTED=0
 
     START=`date '+%s'`
     XNEE_VERSION=`$XNEE --version 2>&1 | grep xnee | grep -v opyrigh | grep -v WARRAN | grep -v http | awk '{ print $2}' | sed 's,[ ],,'`
     X_VEND=`xdpyinfo | grep "vendor string" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
     X_VERS=`xdpyinfo | grep "vendor release" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
     ME=`whoami`
-    OS="`uname -o`:`uname -s`:`uname -r`:`uname -n`"
 
+    uname -o > /dev/null 2>/dev/null
+    if [ "$?" != "0" ]; then
+	OS="`uname -s`:`uname -r`:`uname -n`"
+    else	
+	OS="`uname -o`:`uname -s`:`uname -r`:`uname -n`"
+    fi    
 }
 
 
@@ -70,6 +76,9 @@ function result_log_xml()
     log "  <RETURN-ERROR>"
     log "    $RETURN_ERR"
     log "  </RETURN-ERROR>"
+    log "  <UNTESTED>"
+    log "    $UNTESTED"
+    log "  </UNTESTED>"
     log "</RESULT>"
 }
 
@@ -90,13 +99,17 @@ function result_log_simple()
     log "  ------------------"
     log "    Correct:      $RETURN_TEST"
     log "    Wrong         $RETURN_ERR"
+    log " "
+    log "  Untested"
+    log "  ------------------"
+    log "    Nr of scripts $UNTESTED"
 }
 
 
 function result_log_()
 {
     NAME=$1
-    log "$NAME:$TOTAL_TEST:$SUCC_TEST:$ERR_TEST:$WARN_TEST:$RETURN_TEST:$RETURN_ERR:$START:$STOP:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS"
+    log "$NAME:$TOTAL_TEST:$SUCC_TEST:$ERR_TEST:$WARN_TEST:$RETURN_TEST:$RETURN_ERR:$UNTESTED:$START:$STOP:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS"
 }
 
 
@@ -121,16 +134,16 @@ function check_retval()
     EXPECTED=$2 
     MSG="$SCRIPT_NAME checking return value $RESULT == $EXPECTED   "
     
-    RESULT_TEST=`expr $RESULT_TEST + 1`
+    RESULT_TEST=$(( $RESULT_TEST + 1 ))
     verbose "Checking return val for:$MSG"
     if [ "$RESULT" != "$EXPECTED" ] ;
 	then 
 	verbose "   Unexpected return val: $MSG"
 	error_log "   Unexpected return val: $MSG"
-	RETURN_ERR=`expr $RETURN_ERR + 1`
+	RETURN_ERR=$(( $RETURN_ERR + 1))
     else
 	verbose "  return val OK"
-	RETURN_TEST=`expr $RETURN_TEST + 1`
+	RETURN_TEST=$(( $RETURN_TEST + 1))
     fi
 }
 
@@ -139,16 +152,16 @@ function check_retval_false()
     RESULT=$1
     UN_EXPECTED=$2 
     MSG="$SCRIPT_NAME checking return value (false)  $RESULT == $EXPECTED   "
-    RESULT_TEST=`expr $RESULT_TEST + 1`
+    RESULT_TEST=$(( $RESULT_TEST + 1))
     
     if [ "$RESULT" == "$UN_EXPECTED" ] ;
 	then
 	verbose "   Unexpected return val: $MSG"
 	error_log  "   Unexpected return val: $MSG"
-	RETURN_ERR=`expr $RETURN_ERR + 1`
+	RETURN_ERR=$(($RETURN_ERR + 1))
     else
 	verbose "  return val OK"
-	RETURN_TEST=`expr $RETURN_TEST + 1`
+	RETURN_TEST=$(( $RETURN_TEST + 1))
     fi
 }
 
@@ -222,7 +235,7 @@ function compare_data()
 
     MSG="$SCRIPT_NAME comparing: \"$EXP_EV == $EXP_EV_NAME\"   and \"$REC_EV == $REC_EV_NAME\""
 
-    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+    TOTAL_TEST=$(($TOTAL_TEST + 1))
 
     verbose "Comparing:"
     verbose "  expected:  \"$EXP_EV == $EXP_EV_NAME\""
@@ -231,19 +244,19 @@ function compare_data()
     if [ "$REC_EV" != "$EXP_EV" ];
 	then
 	error_log " Data differs: $MSG"
-	ERR_TEST=`expr $ERR_TEST + 1`
+	ERR_TEST=$(($ERR_TEST + 1))
 	return 1
     fi
 
     if [ "$REC_EV_NAME" != "$EXP_EV_NAME" ];
 	then
 	error_log " Data differs: $MSG"
-	ERR_TEST=`expr $ERR_TEST + 1`
+	ERR_TEST=$(($ERR_TEST + 1))
 	return 1
     fi
 
     verbose "success...."
-    SUCC_TEST=`expr $SUCC_TEST + 1`
+    SUCC_TEST=$(($SUCC_TEST + 1))
 }
 
 
@@ -259,7 +272,7 @@ function compare_data_false()
     MSG="$SCRIPT_NAME comparing (false): \"$EXP_EV == $EXP_EV_NAME\"   and \"$REC_EV == $REC_EV_NAME\""
 
 
-    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+    TOTAL_TEST=$(($TOTAL_TEST + 1))
 
     verbose "Comparing (false):"
     verbose "  inv xnee:      \"$REC_EV/$REC_EV_NAME\""
@@ -268,18 +281,18 @@ function compare_data_false()
     if [ "$REC_EV" == "$EXP_EV" ];
 	then
 	error_log " Data doesn't differ: $MSG"
-	ERR_TEST=`expr $ERR_TEST + 1`
+	ERR_TEST=$(($ERR_TEST + 1))
 	return 1
     fi
     if [ "$REC_EV_NAME" == "$EXP_EV_NAME" ];
 	then
 	error_log " Data doesn't differ: $MSG"
-	ERR_TEST=`expr $ERR_TEST + 1`
+	ERR_TEST=$(($ERR_TEST + 1))
 	return 1
     fi
     
     verbose "success...."
-    SUCC_TEST=`expr $SUCC_TEST + 1`
+    SUCC_TEST=$(($SUCC_TEST + 1))
 }
 
 
@@ -290,8 +303,9 @@ function verify_device()
     cat /proc/misc | grep $DEV   2>/dev/null 1>/dev/null 
     if [ "$?" != "0" ];
 	then
-	echo "Could not find device $DEV"
-	echo "...leaving"
+	echo "$SCRIPT_NAME: Could not find device $DEV   ...leaving"
+	UNTESTED=$(( $UNTESTED + 1))
+        result_log $MYNAME 
 	exit 1
     fi
 }
@@ -311,7 +325,7 @@ function verify_same()
 
     MSG="$SCRIPT_NAME comparing : \"$EXP_VAL == $REAL_VAL\" $3"
 
-    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+    TOTAL_TEST=$(($TOTAL_TEST + 1))
 
     verbose "Comparing :"
     verbose "  expected:  \"$EXP_VAL\""
@@ -321,12 +335,12 @@ function verify_same()
 	then
 	verbose " Data differs: $MSG"
 	error_log " Data differs: $MSG"
-	ERR_TEST=`expr $ERR_TEST + 1`
+	ERR_TEST=$(($ERR_TEST + 1))
 	return 1
     fi
 
     verbose "success...."
-    SUCC_TEST=`expr $SUCC_TEST + 1`
+    SUCC_TEST=$(( $SUCC_TEST + 1 ))
     
 
 }
@@ -339,7 +353,7 @@ function verify_not_same()
 
     MSG="$SCRIPT_NAME un comparing : \"$EXP_VAL != $REAL_VAL\" $3"
 
-    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+    TOTAL_TEST=$(( $TOTAL_TEST + 1 ))
 
     verbose "Uncomparing :"
     verbose "  expected:  \"$EXP_VAL\""
@@ -349,12 +363,12 @@ function verify_not_same()
 	then
 	verbose " Data is same: $MSG"
 	error_log " Data is same : $MSG"
-	ERR_TEST=`expr $ERR_TEST + 1`
+	ERR_TEST=$(( $ERR_TEST + 1 ))
 	return 1
     fi
 
     verbose "success...."
-    SUCC_TEST=`expr $SUCC_TEST + 1`
+    SUCC_TEST=$(( $SUCC_TEST + 1 ))
 }
 
 function verify_pos_alm_same()
@@ -365,7 +379,7 @@ function verify_pos_alm_same()
 
     MSG="$SCRIPT_NAME  verify_pos_alm_same : \"$EXP_VAL == $REAL_VAL\" and within range of $3"
 
-    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+    TOTAL_TEST=$(( $TOTAL_TEST + 1 ))
 
     verbose "verify_pos_alm_same:"
     verbose "  expected:  \"$EXP_VAL\""
@@ -378,18 +392,18 @@ function verify_pos_alm_same()
 	then
 	verbose " Data too big: $MSG"
 	error_log " Data too big: $MSG"
-	ERR_TEST=`expr $ERR_TEST + 1`
+	ERR_TEST=$(( $ERR_TEST + 1 ))
 	return 1
     elif [ "$REAL_VAL" -lt "$LOW_VAL" ];
 	then
 	verbose " Data too small: $MSG"
 	error_log " Data too small: $MSG"
-	ERR_TEST=`expr $ERR_TEST + 1`
+	ERR_TEST=$(($ERR_TEST + 1 ))
 	return 1
     fi
 
     verbose "success...."
-    SUCC_TEST=`expr $SUCC_TEST + 1`
+    SUCC_TEST=$(($SUCC_TEST + 1 ))
 }
 
 
