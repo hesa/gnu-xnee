@@ -524,7 +524,7 @@ xnee_record_select_default_protocol (xnee_data *xd)
 int
 xnee_add_range_str (xnee_data *xd, int type, char *range)
 {
-  char start_str[10] ;
+  char start_str[XNEE_RANGE_STRING_SIZE] ;
   char *second;
   int start=0;
   int stop=0;

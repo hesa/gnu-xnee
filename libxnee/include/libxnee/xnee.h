@@ -54,7 +54,7 @@
 #define NEED_REPLIES
 
 
-
+#define XNEE_RANGE_STRING_SIZE 512
 
 /* ** Do NOT edit ** */
 enum _xnee_data_types {
