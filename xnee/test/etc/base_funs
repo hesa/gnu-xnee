@@ -1,0 +1,281 @@
+export XNEE=../src
+export VERBOSE_MODE=false
+
+export LOG=./xnee_test.log
+export ERR_LOG=./xnee_test.err
+
+
+function init_test()
+{
+    SCRIPT_NAME=$1
+    
+    # Result counters
+    TOTAL_TEST=0
+    SUCC_TEST=0
+    ERR_TEST=0
+    WARN_TEST=0
+    RETURN_TEST=0
+    RETURN_ERR=0
+
+    START=`date '+%s'`
+    XNEE_VERSION=`$XNEE --version 2>&1 | grep xnee | grep -v opyrigh | grep -v WARRAN | grep -v http | awk '{ print $2}' | sed 's,[ ],,'`
+    X_VEND=`xdpyinfo | grep "vendor string" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
+    X_VERS=`xdpyinfo | grep "vendor release" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
+    ME=`whoami`
+    OS="`uname -o`:`uname -s`:`uname -r`:`uname -n`"
+
+}
+
+
+function log()
+{
+    echo "$*" >> $LOG
+    echo "$*"
+}
+
+function error_log()
+{
+    echo "$*" >> $ERR_LOG
+}
+
+
+function move_cursor()
+{
+    DELAY=$1
+    $XNEE --replay -f rc/one_cursor.xnr --time $DELAY
+}
+
+
+function result_log_xml()
+{
+    NAME=$1
+    log "<RESULT script-name=\"$NAME\">"
+    log "  <TOTAL>"
+    log "    $TOTAL_TEST"
+    log "  </TOTAL>"
+    log "  <SUCCES>"
+    log "    $SUCC_TEST"
+    log "  </SUCCES>"
+    log "  <ERROR>"
+    log "    $ERR_TEST"
+    log "  </ERROR>"
+    log "  <WARN>"
+    log "    $WARN_TEST"
+    log "  </WARN>"
+    log "  <RETURN-SUCCESS>"
+    log "    $RETURN_TEST"
+    log "  </RETURN-SUCCESS>"
+    log "  <RETURN-ERROR>"
+    log "    $RETURN_ERR"
+    log "  </RETURN-ERROR>"
+    log "</RESULT>"
+}
+
+function result_log_simple()
+{
+    NAME=$1
+    log "Script name=\"$NAME\""
+    log "============================="
+    log " "
+    log "  Functionality test"
+    log "  ------------------"
+    log "    Test total:   $TOTAL_TEST"
+    log "    Success:      $SUCC_TEST"
+    log "    Error:        $ERR_TEST"
+    log "    Warnings:     $WARN_TEST"
+    log " "
+    log "  Return value test"
+    log "  ------------------"
+    log "    Correct:      $RETURN_TEST"
+    log "    Wrong         $RETURN_ERR"
+}
+
+
+function result_log_()
+{
+    NAME=$1
+    log "$NAME:$TOTAL_TEST:$SUCC_TEST:$ERR_TEST:$WARN_TEST:$RETURN_TEST:$RETURN_ERR:$START:$STOP:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS"
+}
+
+
+function result_log()
+{
+    STOP=`date '+%s'`
+    result_log_ $*
+}
+
+
+function verbose()
+{
+    if [ "$VERBOSE_MODE" == "true" ];
+        then
+        echo "  $MYNAME: $*"  1>&2
+    fi
+}
+
+function check_retval()
+{
+    RESULT=$1
+    EXPECTED=$2 
+    MSG="$SCRIPT_NAME checking return value $RESULT == $EXPECTED   "
+    
+    RESULT_TEST=`expr $RESULT_TEST + 1`
+    verbose "Checking reurn val for:$MSG"
+    if [ "$RESULT" != "$EXPECTED" ] ;
+	then 
+	verbose "   Unexpected return val: $MSG"
+	error_log "   Unexpected return val: $MSG"
+	RETURN_ERR=`expr $RETURN_ERR + 1`
+    else
+	verbose "  return val OK"
+	RETURN_TEST=`expr $RETURN_TEST + 1`
+    fi
+}
+
+function check_retval_false()
+{
+    RESULT=$1
+    UN_EXPECTED=$2 
+    MSG="$SCRIPT_NAME checking return value (false)  $RESULT == $EXPECTED   "
+    RESULT_TEST=`expr $RESULT_TEST + 1`
+    
+    if [ "$RESULT" == "$EXPECTED" ] ;
+	then
+	verbose "   Unexpected return val: $MSG"
+	error_log  "   Unexpected return val: $MSG"
+	RETURN_ERR=`expr $RETURN_ERR + 1`
+    else
+	verbose "  return val OK"
+	RETURN_TEST=`expr $RETURN_TEST + 1`
+    fi
+}
+
+
+function parse_me()
+{
+    for arg in "$1"
+      do
+      verbose "Parsing : \"$arg\" "
+      case "$arg" in 
+	  "--verbose")
+          VERBOSE_MODE=true
+          ;;
+
+          *)
+          verbose "faulty argument: $arg"
+          ;;
+      esac
+      shift
+    done
+}
+
+
+function find_events()
+{
+    FILE=$1 
+    OUT=$2
+    rm -f $OUT
+    cat $FILE | \
+	awk 'BEGIN { found=0; } \
+	/#define KeyPress[ \t]+/ { found=1;} \
+	{ if (found)             { printf "%.2d=%s\n", $3, $2 }   } \
+	/#define LASTEvent/      { found=0;} \
+	    '  > $OUT
+}
+
+function find_requests()
+{
+    FILE=$1 
+    OUT=$2
+    rm -f $OUT
+    cat $FILE | \
+	awk 'BEGIN { found=0; } \
+	/#define X_CreateWindow[ \t]+/ { found=1;} \
+	{ if (found)             { printf "%.2d=%s\n", $3, $2 }   } \
+	/#define X_NoOperation/      { found=0;} \
+	    '  > $OUT
+}
+
+
+
+
+#
+#
+#  compare_data
+#
+#
+#  Compare if the the name,number pair given
+#  as argument is the same as given by Xnee --print-xxxx-name
+#  
+# 
+
+function compare_data()
+{
+    
+    EXP_EV=`echo $1 | sed 's,^[0]*,,g'`
+    EXP_EV_NAME=$2
+
+    REC_EV=$3
+    REC_EV_NAME=$4
+
+    MSG="$SCRIPT_NAME comparing: \"$EXP_EV == $EXP_EV_NAME\"   and \"$REC_EV == $REC_EV_NAME\""
+
+    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+
+    verbose "Comparing:"
+    verbose "  expected:  \"$EXP_EV == $EXP_EV_NAME\""
+    verbose "  xnee:      \"$REC_EV == $REC_EV_NAME\""
+
+    if [ "$REC_EV" != "$EXP_EV" ];
+	then
+	error_log " Data differs: $MSG"
+	ERR_TEST=`expr $ERR_TEST + 1`
+	return 1
+    fi
+
+    if [ "$REC_EV_NAME" != "$EXP_EV_NAME" ];
+	then
+	error_log " Data differs: $MSG"
+	ERR_TEST=`expr $ERR_TEST + 1`
+	return 1
+    fi
+
+    verbose "success...."
+    SUCC_TEST=`expr $SUCC_TEST + 1`
+}
+
+
+function compare_data_false()
+{
+    
+    EXP_EV=`echo $1 | sed 's,^[0]*,,g'`
+    EXP_EV_NAME=$2
+
+    REC_EV=$3
+    REC_EV_NAME=$4
+
+    MSG="$SCRIPT_NAME comparing (false): \"$EXP_EV == $EXP_EV_NAME\"   and \"$REC_EV == $REC_EV_NAME\""
+
+
+    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+
+    verbose "Comparing (false):"
+    verbose "  inv xnee:      \"$REC_EV/$REC_EV_NAME\""
+    verbose "  inv expected:  \"$EXP_EV/$EXP_EV_NAME\""
+
+    if [ "$REC_EV" == "$EXP_EV" ];
+	then
+	error_log " Data doesn't differ: $MSG"
+	ERR_TEST=`expr $ERR_TEST + 1`
+	return 1
+    fi
+    if [ "$REC_EV_NAME" == "$EXP_EV_NAME" ];
+	then
+	error_log " Data doesn't differ: $MSG"
+	ERR_TEST=`expr $ERR_TEST + 1`
+	return 1
+    fi
+    
+    verbose "success...."
+    SUCC_TEST=`expr $SUCC_TEST + 1`
+}
