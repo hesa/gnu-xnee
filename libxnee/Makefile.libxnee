@@ -1,0 +1,57 @@
+PACKAGE=\"libxnee\"
+VERSION=\"1.09\"
+
+
+XOSD_DEFINE=-DHAVE_XOSD
+XOSD_PATH=/home/hesa/xosd-2.2.5/
+XOSD_INC=-I${XOSD_PATH}/src -I${XOSD_PATH}/include
+XOSD_FLAGS=${XOSD_DEFINE} ${XOSD_INC} ${XOSD_LIB}
+
+
+CC=gcc
+CFLAGS = -W -Wall -pedantic -pedantic-errors  -Werror \
+  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} \
+  -I/usr/X11R6/include \
+  -I./include/ -I./src -I./src/feedback \
+  ${XOSD_FLAGS}  \
+  -g -DHAVE_STDARG_H=1 
+
+
+COMM_OBJS = src/xnee.o src/xnee_record.o \
+  src/xnee_replay.o \
+  src/print.o \
+  src/print_varargs.o \
+  src/datastrings.o \
+  src/xnee_dl.o \
+  src/xnee_sem.o \
+  src/xnee_setget.o \
+  src/xnee_fake.o \
+  src/xnee_km.o \
+  src/xnee_resolution.o \
+  src/xnee_resource.o \
+  src/xnee_buffer.o \
+  src/xnee_callback.o \
+  src/xnee_km.o \
+  src/xnee_grab.o \
+  src/xnee_time.o \
+  src/xnee_threshold.o \
+  src/feedback/feedback.o \
+  src/feedback/xosd_fb.o \
+  src/feedback/stderr_fb.o 
+
+
+
+OBJS = ${COMM_OBJS}
+
+XNEELIB = libxnee.a
+
+all : ${XNEELIB}
+
+clean:
+	\rm -fr ${OBJS}${XNEELIB} src/*/*~ *~ src/*/*.o */a.out core 
+
+lib : ${XNEELIB}
+
+${XNEELIB}: ${OBJS} 
+	ar -rv ${XNEELIB} ${OBJS} 
+
