@@ -464,6 +464,7 @@ xnee_check_buffer_limits (xnee_data *xd)
   /* HESA HESA HESA TO REMOVE 
   xnee_hard_update_buffer_cache (xd);
   */
+  xnee_hard_update_buffer_cache (xd);
 
 
   cached_max = xd->meta_data.cached_max;

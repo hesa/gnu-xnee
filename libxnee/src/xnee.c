@@ -409,6 +409,19 @@ xnee_init(xnee_data* xd)
   xnee_set_resolution_used (xd);
   xnee_resolution_init (xd);
   
+
+  /* 
+   * meta data */
+  xd->meta_data.sum_max    = 0;
+  xd->meta_data.sum_min    = 0;
+  xd->meta_data.total_diff = 0;
+  xd->meta_data.cached_max = 0;
+  xd->meta_data.cached_min = 0;
+  xd->meta_data.sum_max_threshold  = 0;
+  xd->meta_data.sum_min_threshold  = 0;
+  xd->meta_data.tot_diff_threshold = 0;
+
+
   xnee_verbose((xd, "<--- xnee_init\n"));
   return XNEE_OK;
 }
@@ -567,10 +580,12 @@ xnee_new_xnee_data()
     }
   memset (xd, 0, sizeof(xnee_data));
 
-  xd->xnee_info     = (xnee_record_init_data*)  malloc (sizeof (xnee_record_init_data)) ;
+  xd->xnee_info     = 
+    (xnee_record_init_data*)  malloc (sizeof (xnee_record_init_data)) ;
   memset (xd->xnee_info, 0, sizeof(xnee_record_init_data));
 
-  xd->replay_setup  = (xnee_testext_setup*)     malloc (sizeof (xnee_testext_setup)) ;
+  xd->replay_setup  = 
+    (xnee_testext_setup*)     malloc (sizeof (xnee_testext_setup)) ;
   memset (xd->replay_setup, 0, sizeof(xnee_testext_setup));
 
   xd->record_setup  = xnee_new_recordext_setup(); 
@@ -1197,6 +1212,10 @@ xnee_reset_autorepeat (xnee_data *xd)
 {  
   xnee_verbose((xd,"Resetting autorepeat on (%d) to: ",
 		xd->fake));
+
+  if (!xd->fake)
+    return XNEE_OK;
+
   if (xd->kbd_orig.global_auto_repeat==AutoRepeatModeOn)
     {
       xnee_verbose((xd,"AutoRepeatModeOn\n"));

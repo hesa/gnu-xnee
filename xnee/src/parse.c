@@ -33,6 +33,7 @@
 #include "libxnee/xnee_fake.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/datastrings.h"
+#include "libxnee/xnee_threshold.h"
 #include "parse.h"
 #include "libxnee/print.h"
 
@@ -98,6 +99,9 @@ static char *help[] = {
   "--retype, -rt                  ", "Types (fakes) the content of the file as specified by --file",
   "--type-help, -tp               ", "Type this help message using faked keys (used to test xnee itself)",
   "--force-replay, -fp            ", "Keep replaying even if we are out of sync .... dangerous",
+  "--max-threshold, -map <nr>      ", "Set the maximum threshold for sync to nr",
+  "--min-threshold, -mip <nr>      ", "Set the minimum threshold for sync to nr",
+  "--total-threshold, -tip <nr>    ", "Set the total threshold for sync to nr",
   NULL 
 };
 
@@ -227,7 +231,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    {
 	      xnee_verbose ((xd, "failed to set recorded resolution\n"));
 	      xnee_close_down(xd);
-	      exit(XNEE_BAD_RESOLTION );
+	      exit(XNEE_BAD_RESOLUTION );
 	    }
 	  xnee_verbose ((xd, "recored resolution= %dx%d\n", 
 			 xnee_get_rec_resolution_x(xd),
@@ -246,7 +250,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    {
 	      xnee_verbose ((xd, "failed to set replay speed\n"));
 	      xnee_close_down(xd);
-	      exit(XNEE_BAD_RESOLTION );
+	      exit(XNEE_BAD_RESOLUTION );
 	    }
 	  xnee_verbose ((xd, "replaying speed= %d\n", 
 			 xnee_get_replay_speed(xd)));
@@ -268,11 +272,59 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    {
 	      xnee_verbose ((xd, "failed to set replay resolution\n"));
 	      xnee_close_down(xd);
-	      exit(XNEE_BAD_RESOLTION );
+	      exit(XNEE_BAD_RESOLUTION );
 	    }
 	  xnee_verbose ((xd, "replay resolution= %dx%d\n", 
 			 xnee_get_rep_resolution_x(xd),
 			 xnee_get_rep_resolution_y(xd)));
+ 	  continue;
+	}
+      else if (xnee_check (argv[i], "--max-threshold", "-map"  ) )
+	{
+	  if (++i >= argc) 
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_set_max_threshold_str (xd, argv[i]))
+	    {
+	      xnee_verbose ((xd, "failed to set max threshold\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_BAD_THRESHOLD );
+	    }
+ 	  continue;
+	}
+      else if (xnee_check (argv[i], "--min-threshold", "-mip"  ) )
+	{
+	  if (++i >= argc) 
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_set_min_threshold_str (xd, argv[i]))
+	    {
+	      xnee_verbose ((xd, "failed to set min threshold\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_BAD_THRESHOLD );
+	    }
+ 	  continue;
+	}
+      else if (xnee_check (argv[i], "--tot-threshold", "-tap"  ) )
+	{
+	  if (++i >= argc) 
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_set_tot_threshold_str (xd, argv[i]))
+	    {
+	      xnee_verbose ((xd, "failed to set total threshold\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_BAD_THRESHOLD );
+	    }
  	  continue;
 	}
       else if(xnee_check(argv[i], "--err", "-e" )) 
@@ -352,6 +404,19 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--retype", "-rt" )) 
 	{
 	  xnee_set_retyper(xd);
+	}
+      else if(xnee_check(argv[i], "--retype-file", "-rtf" )) 
+	{
+	  if (++i >= argc)
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_type_file(xd, argv[i]) != 0 )
+	    {
+	      xnee_print_error ("Unable to open retype file (%s)\n", argv[i]);
+	    }
 	}
       else if(xnee_check(argv[i], "--all-clients", "-ac" )) 
 	{

@@ -33,6 +33,7 @@
 #include "libxnee/xnee_buffer.h"
 #include "libxnee/xnee_resolution.h"
 #include "libxnee/xnee_dl.h"
+#include "libxnee/xnee_km.h"
 
 int 
 xnee_ungrab_key (xnee_data* xd, int mode)
@@ -41,7 +42,9 @@ xnee_ungrab_key (xnee_data* xd, int mode)
   int modifier = 0 ;
   int window;
   int screen;
-    
+
+  
+  
   switch (mode)
     {
     case XNEE_GRAB_STOP:
@@ -77,6 +80,8 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       return XNEE_UNKNOWN_GRAB_MODE;
     }
 
+  if (key==0) 
+    return XNEE_OK;
   if ( xd->grab != 0 )
     {
       screen = DefaultScreen (xd->grab);
@@ -133,10 +138,11 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
 
   xnee_verbose((xd, "----> xnee_grab_key\n"));
 
-  xnee_verbose((xd, "----  xnee_grab_key mod_key=%s\n", mod_key));
   xnee_get_km_tuple (xd, &km, mod_key);
+  xnee_verbose((xd, "----  xnee_grab_key mod_key=%s\n", mod_key));
   xnee_verbose((xd, "----  xnee_grab_key mod=%d\n", km.modifier));
-
+  if (km.key==0) 
+    return XNEE_OK;
 
   
   /* get the key+modifier from xd

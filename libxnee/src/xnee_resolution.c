@@ -97,7 +97,7 @@ xnee_str_to_res(char *res_str, xnee_res *xr)
   int ret;
 
   if (res_str == NULL)
-    return XNEE_BAD_RESOLTION;
+    return XNEE_BAD_RESOLUTION;
 
   ret = sscanf(res_str, "%dx%d",
 	       &xr->x_res, 
@@ -135,7 +135,7 @@ xnee_str_to_res(char *res_str, xnee_res *xr)
     {
       ;
     }
-  return XNEE_BAD_RESOLTION;
+  return XNEE_BAD_RESOLUTION;
 }
 
 

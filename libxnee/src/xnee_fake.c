@@ -272,13 +272,13 @@ xnee_fake_button_event (xnee_data* xd, int button, Bool bo , int dtime)
   
   if (!xnee_is_recorder (xd))
     {
-      xnee_fake_sleep (dtime);
+      xnee_fake_sleep (dtime); 
       xnee_verbose((xd, "XTestFakeButtonEvent (%d, %d, %d, %d)) \n",
 		    (int) xd->fake, 
 		    (int) button, 
 		    (int) bo, 
 		    (int) dtime));
-      XTestFakeButtonEvent (xd->fake, button, True, 0);
+      XTestFakeButtonEvent (xd->fake, button, bo, 0);
       XFlush(xd->fake);
     }  
 
@@ -360,9 +360,9 @@ xnee_fake_motion_event (xnee_data* xd,
 int 
 xnee_type_file(xnee_data *xd, char *str )
 {
-  FILE *file = xd->data_file;
-  
 
+  FILE *file ;
+  
   char tmp[256] ;
   int i;
   xnee_key_code x_kc;
@@ -375,6 +375,10 @@ xnee_type_file(xnee_data *xd, char *str )
 
   
   xnee_verbose ((xd,"---> xnee_type_file\n"));
+  file = fopen (str, "r");
+  if (file==NULL)
+    return (XNEE_WRONG_PARAMS);
+
   xnee_setup_display (xd);
   xnee_replay_init (xd);   
   xnee_set_autorepeat (xd);

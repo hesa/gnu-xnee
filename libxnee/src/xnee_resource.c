@@ -251,7 +251,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
 	{
 	  xnee_verbose ((xd, "failed to set recorded resolution\n"));
 	  xnee_close_down(xd);
-	  exit(XNEE_BAD_RESOLTION );
+	  exit(XNEE_BAD_RESOLUTION );
 	}
       xnee_verbose ((xd, "recored resolution= %dx%d\n", 
 		     xnee_get_rec_resolution_x(xd),

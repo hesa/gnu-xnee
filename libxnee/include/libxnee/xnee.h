@@ -89,7 +89,7 @@ enum _xnee_mode {
 
 #define xnee_delay_timeout 5000 
 #define XNEE_DELAY 10
-#define XNEE_MISSING_DATA_DELAY (100*100)
+#define XNEE_MISSING_DATA_DELAY (10*5)
 
 /* this macro might be dangerous 
    .. don't use when incrementing variables (e.g i++) */
@@ -199,7 +199,8 @@ enum return_values
   XNEE_GRAB_DATA         ,
   XNEE_BAD_LOG_FILE      ,
   XNEE_BAD_SPEED         ,
-  XNEE_BAD_RESOLTION     ,
+  XNEE_BAD_RESOLUTION    ,
+  XNEE_BAD_THRESHOLD     ,
   XNEE_BAD_CONTEXT
 } _return_values;
   
@@ -445,6 +446,19 @@ typedef struct
 
 
 
+
+/*! \brief Holds a information about the sync state
+ *
+ */
+typedef struct
+{
+  int	 max   ;       /*!< max positive diff  */
+  int    min   ;       /*!< max negative diff  */
+  int    total ;       /*!< total diff  */
+} xnee_diff;
+
+
+
 /*! \brief Holds information about keycodes needed to fake a letter press
  *
  */
@@ -657,6 +671,13 @@ struct buffer_meta_data
   int cached_min  ;      
   /*!< a cached value of the minimum value in the buffer. 
     (-1 for unknown state) */
+
+
+  /* thresholds used during synch */
+  int sum_max_threshold;
+  int sum_min_threshold;
+  int tot_diff_threshold;
+  
 } ;
 
 

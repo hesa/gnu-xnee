@@ -10,7 +10,8 @@ LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib
 LIBS = -lX11 -lXext -lXtst -lpthread
 
 CLI_OBJS =  xnee/src/parse.o  xnee/src/main.o  
-COMM_OBJS = libxnee/src/xnee.o libxnee/src/xnee_record.o  libxnee/src/xnee_replay.o  libxnee/src/print.o libxnee/src/print_varargs.o libxnee/src/datastrings.o libxnee/src/xnee_dl.o  libxnee/src/xnee_sem.o  libxnee/src/xnee_setget.o libxnee/src/xnee_fake.o libxnee/src/xnee_km.o libxnee/src/xnee_resolution.o  libxnee/src/xnee_resource.o  libxnee/src/xnee_buffer.o  libxnee/src/xnee_callback.o  libxnee/src/xnee_km.o  libxnee/src/xnee_grab.o  libxnee/src/xnee_time.o 
+COMM_OBJS = libxnee/src/xnee.o libxnee/src/xnee_record.o  libxnee/src/xnee_replay.o  libxnee/src/print.o libxnee/src/print_varargs.o libxnee/src/datastrings.o libxnee/src/xnee_dl.o  libxnee/src/xnee_sem.o  libxnee/src/xnee_setget.o libxnee/src/xnee_fake.o libxnee/src/xnee_km.o libxnee/src/xnee_resolution.o  libxnee/src/xnee_resource.o  libxnee/src/xnee_buffer.o  libxnee/src/xnee_callback.o  libxnee/src/xnee_km.o  libxnee/src/xnee_grab.o  libxnee/src/xnee_time.o libxnee/src/xnee_threshold.o
+
 
 
 OBJS = ${COMM_OBJS} 

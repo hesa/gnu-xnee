@@ -230,24 +230,6 @@ XID
 xnee_client_id (Display *dpy); 
 
 
-/**
- * Prints the synchronisation status of the X11 data given by data_type and nr
- * 
- * @param xd         xnee's main structure
- * @param data_type  X11 data type (e.g event)
- * @param nr         nr of the data type (e.g 23)
- * @return int       0 means in sync. 
- */
-int
-xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
-
-
-
-int 
-xnee_update_buffer_cache(xnee_data *xd);
-
-int
-xnee_check_buffer_limits(xnee_data *xd);
 
 
 #endif   /* XNEE_REPLAY_H */

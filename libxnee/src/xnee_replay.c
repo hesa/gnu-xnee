@@ -37,6 +37,7 @@
 #include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_time.h"
 #include "libxnee/xnee_buffer.h"
+#include "libxnee/xnee_threshold.h"
 
 
 
@@ -110,19 +111,29 @@ xnee_replay_synchronize (xnee_data* xd)
        * check the buffer limits ....
        */
       diff = xnee_check_buffer_limits(xd);
+
       /*
        * handle diff in the buffers .....
        */
       if (diff!=0)
 	{
+	  static int last_diff;
+	  
+	  if ( (xd->meta_data.cached_min > xnee_get_min_threshold(xd))
+	       &&
+	       (xd->meta_data.cached_max < xnee_get_max_threshold(xd)))
+	    break;
+
+		  
 	  diff_counter++;
-	  if (diff_counter >= MAX_UNSYNC_LOOPS)
+	  if (diff_counter >= xnee_get_tot_threshold(xd))
 	    {
 	      time_out_counter++;
 	      /*
 		
 	       */
 	      diff_counter=0;
+
 	      /*
 		hmmm don't about that know ..... yet! 
 	       */
@@ -137,12 +148,15 @@ xnee_replay_synchronize (xnee_data* xd)
 		}
 	      else 
 		{
+		  last_diff = diff;
 		  break;
 		}
 	    }
 	  xnee_verbose ((xd, " ...diff => sleeping %d microsecs\n", 
 			 XNEE_MISSING_DATA_DELAY ));
 	  usleep (XNEE_MISSING_DATA_DELAY );
+	  last_diff = diff;
+
 	}
       else
 	{
@@ -150,7 +164,9 @@ xnee_replay_synchronize (xnee_data* xd)
 	    {
 	      xd->buf_verbose=True;
 	      xnee_replay_printbuffer(xd); 
-	      exit(0);
+	      xnee_close_down(xd);
+	      exit (XNEE_SYNCH_FAULT);
+	      /*	      exit(0);*/
 	    }
 	  diff_counter=0;
 	  time_out_counter=0;
@@ -375,7 +391,7 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
 	{
 	  xnee_verbose ((xd, "failed to set recorded resolution\n"));
 	  xnee_close_down(xd);
-	  exit(XNEE_BAD_RESOLTION );
+	  exit(XNEE_BAD_RESOLUTION );
 	}
       xnee_verbose ((xd, "recored resolution= %dx%d\n", 
 		     xnee_get_rec_resolution_x(xd),
@@ -452,7 +468,6 @@ xnee_replay_main_loop(xnee_data *xd)
 	}
     }
 	 
-  
   /**
    * all META DATA setting up our sessions is read ...
    * go on replaying
@@ -480,7 +495,7 @@ xnee_replay_main_loop(xnee_data *xd)
 	{
 	  if (xd->first_read_time==0)
             xd->first_read_time = xindata.newtime;
-          
+
 	  if (xnee_check_km (xd)==XNEE_GRAB_DATA)
 	    {
 	      xnee_verbose ((xd,"\n\nsomeone grabbed us\n\n"));
@@ -518,6 +533,7 @@ xnee_replay_main_loop(xnee_data *xd)
 				  {
 		  */
 		  xnee_replay_synchronize (xd);
+		  /*		  */
 		  /*		    }*/
 		  
 		  replayable = 

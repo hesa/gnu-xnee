@@ -13,7 +13,11 @@ Changes in 1.08
 	   '--pause-key [k m]'         key+modifier pauses xnee's current action
 	   '--pause-key [k m]'         key+modifier resume xnee's paused action
 	   '--insert-key [k m]'        key+modifier inserts a meta mark in the log file
-
+	   '--max-threshold [nr]'      sets the maximum threshold during sync
+	   '--min-threshold [nr]'      sets the maximum threshold during sync
+	   '--tot-threshold [nr]'      sets the total threshold during sync
+	   '--retype-file [file]'      retype the contents of file
+	   '--retype-help '            retype the help printout
         - synchronisation rewritten 
 
 Changes in 1.07

@@ -219,6 +219,8 @@ int
 xnee_setup_recording(xnee_data *xd);
 
 
+int
+xnee_unsetup_recording(xnee_data *xd);
 
 /**
  * Waits for data from X server 

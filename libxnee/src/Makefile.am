@@ -17,25 +17,27 @@ libxnee_a_SOURCES = xnee.c  \
 	xnee_resource.c \
 	xnee_time.c \
 	xnee_callback.c \
-	xnee_buffer.c 
+	xnee_buffer.c   \
+	xnee_threshold.c 
 
-EXTRA_DIST = ../include/libxnee/xnee.h \
-	../include/libxnee/print.h \
-	../include/libxnee/print_varargs.h  \
-	../include/libxnee/xnee_record.h  \
-	../include/libxnee/xnee_replay.h  \
-	../include/libxnee/datastrings.h  \
-	../include/libxnee/xnee_sem.h   \
-	../include/libxnee/xnee_dl.h   \
-	../include/libxnee/xnee_setget.h  \
+EXTRA_DIST = ../include/libxnee/xnee.h     \
+	../include/libxnee/print.h         \
+	../include/libxnee/print_varargs.h \
+	../include/libxnee/xnee_record.h   \
+	../include/libxnee/xnee_replay.h   \
+	../include/libxnee/datastrings.h   \
+	../include/libxnee/xnee_sem.h      \
+	../include/libxnee/xnee_dl.h       \
+	../include/libxnee/xnee_setget.h   \
 	../include/libxnee/xnee_resolution.h  \
-	../include/libxnee/xnee_resource.h   \
-	../include/libxnee/xnee_time.h  \
-	../include/libxnee/xnee_km.h  \
+	../include/libxnee/xnee_resource.h \
+	../include/libxnee/xnee_time.h     \
+	../include/libxnee/xnee_km.h       \
 	../include/libxnee/xnee_callback.h \
 	../include/libxnee/xnee_buffer.h   \
-	../include/libxnee/xnee_fake.h   \
-	../include/libxnee/xnee_grab.h 
+	../include/libxnee/xnee_fake.h     \
+	../include/libxnee/xnee_grab.h     \
+	../include/libxnee/xnee_threshold.h 
 
 
 if VERBOSE

@@ -358,7 +358,7 @@ xnee_check_km(xnee_data *xd)
        &&
        ( xd->grab_keys->grab))
     {
-
+	  
       /*
        * Has the user pressed STOP (mod + key) 
        */
@@ -424,6 +424,7 @@ xnee_check_km(xnee_data *xd)
 	}
       else
 	{
+
 	  return XNEE_GRAB_NODATA;
 	}
       
