@@ -219,7 +219,6 @@ build_cvs()
     mv /tmp/xnee_tar/Xnee-cvs-${DATE}.tar.gz ./
 }
 build_cvs
-exit
 
 if [ "$BUILD_RPM" != "true" ] ;
     then

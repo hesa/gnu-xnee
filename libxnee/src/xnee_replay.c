@@ -925,6 +925,7 @@ xnee_replay_init          (xnee_data* xd)
   xd->meta_data.total_diff=0;
   xd->meta_data.sum_max=0;
   xd->meta_data.sum_min=0;
+
   if ( xnee_no_rep_resolution(xd) == 0 )
   {
      int ret ; 

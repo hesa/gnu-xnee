@@ -177,7 +177,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  xnee_verbose((xd, "display=%s\n", xnee_get_display_name (xd)));
 	  continue;
 	}
-      else if (xnee_check (argv[i], "--recorded-resolution", "-rr"  ) )
+      else if (xnee_check (argv[i], "--recorded-resolution", "--recorded-resolution"  ) )
 	{
 	  if (++i >= argc) 
 	    {

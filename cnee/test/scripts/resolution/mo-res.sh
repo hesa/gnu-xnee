@@ -244,19 +244,6 @@ time_record 600 400 400 200 res-mouse.log
 
 
 
-export RECORD_RESOLUTION_X=`$getresx`
-export RECORD_RESOLUTION_Y=`$getresy`
-#export RECORD_RESOLUTION_ARG=
-export REPLAY_RESOLUTION_X=1600
-export REPLAY_RESOLUTION_Y=1440
-export REPLAY_RESOLUTION_ARG="--replay-resolution $REPLAY_RESOLUTION_X"x"$REPLAY_RESOLUTION_Y"
-get_in_position
-zero_device swmouse
-sleep 2
-time_replay
-sleep 2
-
-
 
 export RECORD_RESOLUTION_X=`$getresx`
 export RECORD_RESOLUTION_Y=`$getresy`

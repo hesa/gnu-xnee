@@ -244,14 +244,6 @@ xnee_resolution_newy (xnee_data *xd, int yval)
 int
 xnee_is_resolution_used (xnee_data *xd)
 {
-  printf ("1  %d==%d   %d    [%d %d]   [%d %d]\n",
-	  xd->res_info.is_used,XNEE_RESOLUTION_USED,
-	  xd->res_info.is_used==XNEE_RESOLUTION_USED,
-	  xnee_get_rec_resolution_x (xd),
-	  xnee_get_rec_resolution_y (xd),
-	  xnee_get_rep_resolution_x (xd),
-	  xnee_get_rep_resolution_y (xd)
-	  );
    if (xd==NULL)
    {
       return XNEE_MEMORY_FAULT;
