@@ -39,10 +39,12 @@
  *                                                            *
  **************************************************************/
 void 
-xnee_record_dispatch2(XPointer xpoint_xnee_data,
-			  XRecordInterceptData *data )
+xnee_record_dispatch2 (XPointer xpoint_xnee_data,
+		       XRecordInterceptData *data )
 {
-  printf ("."); fflush (stdout);
+  xnee_data           *xd ;
+  xd = (xnee_data *) (xpoint_xnee_data) ;
+  xd->data_fp (xd->out_file, "."); fflush (stdout);
   XRecordFreeData(data);
 }
 
@@ -209,7 +211,6 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   XRecordDatum        *xrec_data  ;
   xnee_data           *xd ;
   int                  data_type = 0;  
-  XEvent ev;
 
   XNEE_DEBUG ( (stderr ," --> xnee_record_dispatch()  \n"  ));
 
@@ -225,31 +226,18 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   xd = (xnee_data *) (xpoint_xnee_data) ;
   xrec_data = (XRecordDatum *) (data->data) ;
 
-  if (xd->grab!=NULL)
+  /* make sure we haven't been interupted by a
+     a key + modifier combination */
+  if (xnee_check_km(xd)==XNEE_GRAB_DATA)
     {
-      /*
-       * Has the user pressed STOP (mod + key) 
-       */
-      XFlush (xd->grab);
-      XAllowEvents (xd->grab,
-		    AsyncKeyboard,
-		    CurrentTime);
-      XFlush (xd->grab);
-  
-      if ( !XCheckMaskEvent ( xd->grab, 0xffffffff , &ev) == False)
-	{
-	  xnee_verbose((xd, "\n\n\tUSER PUSHED MOD + KEY ... leaving\n\n\n"));
-	  /* Since we've got called we have data .. we don't care about it. 
-	     Only freeeing the mem */
-	  XRecordFreeData(data);
-	  XRecordDisableContext(xd->control, 
-				xd->record_setup->rContext);
-	  xnee_stop_session(xd);
-	  return ;
-	}
+      XRecordFreeData(data);
+      XRecordDisableContext(xd->control, 
+			    xd->record_setup->rContext);
+      xnee_stop_session(xd);
+      return ;
     }
 
-
+  
   if ( xd->xnee_info->loops_left == 0 ) 
     {
       XRecordFreeData(data);
@@ -740,7 +728,15 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
   int len;
   int ret=0;
   int range_len=strlen(range);
-  xnee_verbose((xd, "--> parse_range (%d, %d, %s)\n", (int) xd, type, range));
+
+  printf ("error file=%s\n", xd->err_name);
+  printf ("error file=%d\n", xd->err_file);
+
+  xnee_verbose ((xd,"int arg=%d\n", xd));
+  xnee_verbose ((xd, "nt arg=%d\n", type));
+  xnee_verbose ((xd, "string arg=%s\n", range));
+
+  xnee_verbose((xd, "--> parse_range (%u, %d, %s)\n", (int) xd, type, range));
 
   while ( 1 ) {
     next=strspn (range, "0123456789abcdefghijklmnopqrstuvxyzABCDEFGHIJKLMNOPQRSTUVXYZ-");

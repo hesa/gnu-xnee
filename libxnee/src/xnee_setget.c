@@ -426,33 +426,99 @@ xnee_is_cont (xnee_data *xd)
   return XNEE_OK;
 }
 
+
+
  
 
 int
 xnee_set_stop_key (xnee_data *xd, int stop_key)
 {
-  xd->stop_key=stop_key;
+  xd->grab_keys->stop_key=stop_key;
   return XNEE_OK;
 }
 
 int
 xnee_get_stop_key (xnee_data *xd)
 {
-  return xd->stop_key;
+  return xd->grab_keys->stop_key;
 }
 
  
 int
 xnee_set_stop_mod (xnee_data *xd, int stop_mod)
 {
-  xd->stop_mod=stop_mod;
+  xd->grab_keys->stop_mod=stop_mod;
   return XNEE_OK;
 }
 
 int
 xnee_get_stop_mod (xnee_data *xd)
 {
-  return xd->stop_mod;
+  return xd->grab_keys->stop_mod;
+}
+
+ 
+
+
+
+
+int
+xnee_set_pause_key (xnee_data *xd, int pause_key)
+{
+  xd->grab_keys->pause_key=pause_key;
+  return XNEE_OK;
+}
+
+int
+xnee_get_pause_key (xnee_data *xd)
+{
+  return xd->grab_keys->pause_key;
+}
+
+ 
+int
+xnee_set_pause_mod (xnee_data *xd, int pause_mod)
+{
+  xd->grab_keys->pause_mod=pause_mod;
+  return XNEE_OK;
+}
+
+int
+xnee_get_pause_mod (xnee_data *xd)
+{
+  return xd->grab_keys->pause_mod;
+}
+
+ 
+
+
+
+
+int
+xnee_set_resume_key (xnee_data *xd, int resume_key)
+{
+  xd->grab_keys->resume_key=resume_key;
+  return XNEE_OK;
+}
+
+int
+xnee_get_resume_key (xnee_data *xd)
+{
+  return xd->grab_keys->resume_key;
+}
+
+ 
+int
+xnee_set_resume_mod (xnee_data *xd, int resume_mod)
+{
+  xd->grab_keys->resume_mod=resume_mod;
+  return XNEE_OK;
+}
+
+int
+xnee_get_resume_mod (xnee_data *xd)
+{
+  return xd->grab_keys->resume_mod;
 }
 
  

@@ -171,12 +171,6 @@ int main(int argc,char *argv[])
       xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
 
       /*
-       * Grab the stop stop key/mod (if any)
-       *
-       */
-      xnee_grab_stop_key (xd);
-      
-      /*
        * At last. Time to enter the main loop
        *
        */

@@ -1,6 +1,6 @@
 bin_PROGRAMS = xnee
 xnee_SOURCES = main.c parse.c parse.h 
-xnee_LDADD = ../../libxnee/src/libxnee.a  ${X_LIBS} -lXext  -lXtst -lX11 -lpthread
+xnee_LDADD = ../../libxnee/src/libxnee.a  ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE

@@ -160,7 +160,7 @@ xnee_record_print_request (xnee_data *xd, XRecordInterceptData *xrecintd )
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           req_type = xrec_data->type ;
   
-  fprintf (xd->out_file,"1,%d,%lu\n", req_type, xrecintd->server_time);
+  xd->data_fp (xd->out_file,"1,%d,%lu\n", req_type, xrecintd->server_time);
 }
 
 
@@ -176,7 +176,7 @@ xnee_human_print_request (xnee_data *xd, XRecordInterceptData *xrecintd )
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           req_type = xrec_data->type ;
   
-  fprintf (xd->out_file,"Request   %.3d\t%s\n", 
+  xd->data_fp (xd->out_file,"Request   %.3d\t%s\n", 
 	   req_type, 
 	   xnee_print_request(req_type));
 }
@@ -192,7 +192,7 @@ xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd )
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           event_type = xrec_data->type ;
 
-  fprintf (xd->out_file,"Event     %.3d\t%s\n", 
+  xd->data_fp (xd->out_file,"Event     %.3d\t%s\n", 
 	    event_type,
 	   xnee_print_event(event_type));
 }
@@ -209,7 +209,7 @@ void xnee_record_print_reply (xnee_data* xd, XRecordInterceptData *xrecintd )
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           rep_type = xrec_data->type ;
   
-  fprintf (xd->out_file,"2,%d,%lu\n", rep_type,xrecintd->server_time);
+  xd->data_fp (xd->out_file,"2,%d,%lu\n", rep_type,xrecintd->server_time);
 }
 
 
@@ -223,7 +223,7 @@ void xnee_human_print_reply (xnee_data* xd, XRecordInterceptData *xrecintd )
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           rep_type = xrec_data->type ;
   
-  fprintf (xd->out_file,"Reply       %d,%lu\n", rep_type,xrecintd->server_time);
+  xd->data_fp (xd->out_file,"Reply       %d,%lu\n", rep_type,xrecintd->server_time);
 }
 
 
@@ -239,7 +239,7 @@ void xnee_record_print_error (xnee_data *xd, XRecordInterceptData *xrecintd )
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           err_type = xrec_data->type ;
   
-  fprintf (xd->out_file,"3,%d,%lu\n", err_type,xrecintd->server_time);
+  xd->data_fp (xd->out_file,"3,%d,%lu\n", err_type,xrecintd->server_time);
 }
 
 /*
@@ -252,7 +252,7 @@ void xnee_human_print_error (xnee_data *xd, XRecordInterceptData *xrecintd )
   XRecordDatum *xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   int           err_type = xrec_data->type ;
   
-  fprintf (xd->out_file,"Error %s\n", xnee_print_error_code(err_type));
+  xd->data_fp (xd->out_file,"Error %s\n", xnee_print_error_code(err_type));
 }
 
 
@@ -531,7 +531,18 @@ xnee_print_xnee_settings (xnee_data* xd, FILE* out)
   fprintf (out,  "# everything:       %d\n",xd->xnee_info->everything );
   fprintf (out,  "# %s :       %d\n",XNEE_LOOPS_LEFT,xd->xnee_info->loops_left );
   fprintf (out,  "# %s:        %d\n",XNEE_NO_EXPOSE,xd->xnee_info->no_expose );
-  fprintf (out,  "# %s:         %d,%d\n",XNEE_STOP_KEY,xd->stop_mod,xd->stop_key );
+  fprintf (out,   "# %s:         %d,%d\n",
+	   XNEE_STOP_KEY,
+	   xd->grab_keys->stop_mod,
+	   xd->grab_keys->stop_key );
+  fprintf (out,   "# %s:         %d,%d\n",
+	   XNEE_PAUSE_KEY,
+	   xd->grab_keys->pause_mod,
+	   xd->grab_keys->pause_key );
+  fprintf (out,   "# %s:         %d,%d\n",
+	   XNEE_RESUME_KEY,
+	   xd->grab_keys->resume_mod,
+	   xd->grab_keys->resume_key );
   fprintf (out,  "# last-motion:      %d\n",xd->xnee_info->last_motion ); 
   fprintf (out,  "# first-last:       %d\n",xd->xnee_info->first_last ); 
   fprintf (out,  "# " XNEE_OUT_FILE ":        %s\n",(xd->out_name==NULL) ? "stdout" : xd->out_name );
@@ -574,26 +585,30 @@ void
 xnee_replay_printbuffer_impl (xnee_data *xd )
 {
   int i;
+  fprint_fptr  fp   = xd->buffer_verbose_fp ;
+  FILE        *file = xd->buffer_file       ;
+  int **       array= xd->data_buffer;
+
   if (xd->buf_verbose) 
     {
-      fprintf (stderr,"\n --- replay buffer ---\n");
-      fprintf (stderr,"\t- means from Xserver\n\t+ means from file  \n");
-      fprintf (stderr,"#     event  request  reply    error \n");
-      fprintf (stderr,"-------------------------------------\n");
+      fp (file,"\n --- replay buffer ---\n");
+      fp (file,"\t- means from Xserver\n\t+ means from file  \n");
+      fp (file,"#     event  request  reply    error \n");
+      fp (file,"-------------------------------------\n");
       for (i=0;i<XNEE_REPLAY_BUFFER_SIZE;i++)
 	{
 	  if (xd->data_buffer[XNEE_EVENT][i] ||
  	      xd->data_buffer[XNEE_REQUEST][i] ||
  	      xd->data_buffer[XNEE_REPLY][i] ||
  	      xd->data_buffer[XNEE_ERROR][i] )
-	    fprintf (stderr, "%.3d    %.3d     %.3d      %.3d    %.3d\n", i, 
+	    fp (file, "%.3d    %.3d     %.3d      %.3d    %.3d\n", i, 
 		     xd->data_buffer[XNEE_EVENT][i],
 		     xd->data_buffer[XNEE_REQUEST][i],
 		     xd->data_buffer[XNEE_REPLY][i],
 		     xd->data_buffer[XNEE_ERROR][i]
 		     );
 	}
-      fprintf (stderr,"\n");
+      fp (file,"\n");
     }
 }
 

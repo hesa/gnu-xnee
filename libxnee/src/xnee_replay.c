@@ -357,7 +357,6 @@ xnee_replay_synchronize (xnee_data* xd)
 	    }
 	  else
 	    {
-	      printf ("Seems to be in sync again .....\n");
 	      time_outs -= 1;
 	      if (time_outs<=0)
 		time_outs = 0;

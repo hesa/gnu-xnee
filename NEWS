@@ -10,6 +10,9 @@ Changes in 1.07
 	- replay delay rewritten
 	- Xnee can be configured (during configure) to:
 	  + exclude buffer verbose
+	- print functions replaced by function pointers
+	  in dispatch functions, 
+	- Added modifier+key binding to pause, resume 
 	
 Changes in 1.0.6
 	- data names can now be more then 10 chars long ... errrh

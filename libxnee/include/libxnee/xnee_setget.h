@@ -213,6 +213,39 @@ xnee_set_stop_mod (xnee_data *xd, int stop_mod);
 int
 xnee_get_stop_mod (xnee_data *xd);
 
+
+
+int
+xnee_set_pause_key (xnee_data *xd, int pause_key);
+
+int
+xnee_get_pause_key (xnee_data *xd);
+
+ 
+int
+xnee_set_pause_mod (xnee_data *xd, int pause_mod);
+
+int
+xnee_get_pause_mod (xnee_data *xd);
+
+
+
+int
+xnee_set_resume_key (xnee_data *xd, int resume_key);
+
+int
+xnee_get_resume_key (xnee_data *xd);
+
+ 
+int
+xnee_set_resume_mod (xnee_data *xd, int resume_mod);
+
+int
+xnee_get_resume_mod (xnee_data *xd);
+
+
+
+
  
 int
 xnee_set_sync (xnee_data *xd);

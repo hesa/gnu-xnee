@@ -144,28 +144,45 @@ enum _xnee_mode {
 /* 
  * Return values
  */
-enum return_values { 
-  XNEE_OK =           0,
-  XNEE_MEMORY_FAULT    ,
-  XNEE_FILE_NOT_FOUND  ,
-  XNEE_TIMED_OUT       ,
-  XNEE_USER_INTR       ,
-  XNEE_SYNCH_FAULT     ,
-  XNEE_WRONG_PARAMS    ,
-  XNEE_NO_REC_EXT      ,
-  XNEE_NO_TEST_EXT     ,
-  XNEE_NO_PROT_CHOOSEN ,
-  XNEE_NOT_OPEN_DISPLAY,
-  XNEE_AMBIGOUS_CMD    ,
-  XNEE_OUT_OF_SYNC     ,
-  XNEE_NOT_SYNCING     ,
-  XNEE_NO_PLUGIN_FILE  ,
-  XNEE_PLUGIN_FILE_ERROR,
-  XNEE_NO_RESOURCE_FILE,
-  XNEE_NO_MAIN_DATA    ,
-  XNEE_SYNTAX_ERROR    
+enum return_values 
+{ 
+  XNEE_OK =           0  ,
+  XNEE_MEMORY_FAULT      ,
+  XNEE_FILE_NOT_FOUND    ,
+  XNEE_TIMED_OUT         ,
+  XNEE_USER_INTR         ,
+  XNEE_SYNCH_FAULT       ,
+  XNEE_WRONG_PARAMS      ,
+  XNEE_NO_REC_EXT        ,
+  XNEE_NO_TEST_EXT       ,
+  XNEE_NO_PROT_CHOOSEN   ,
+  XNEE_NOT_OPEN_DISPLAY  ,
+  XNEE_AMBIGOUS_CMD      ,
+  XNEE_OUT_OF_SYNC       ,
+  XNEE_NOT_SYNCING       ,
+  XNEE_NO_PLUGIN_FILE    ,
+  XNEE_PLUGIN_FILE_ERROR ,
+  XNEE_NO_RESOURCE_FILE  ,
+  XNEE_NO_MAIN_DATA      ,
+  XNEE_SYNTAX_ERROR      , 
+  XNEE_UNKNOWN_GRAB_MODE ,
+  XNEE_NO_GRAB_DATA      ,
+  XNEE_GRAB_DATA
 } _return_values;
   
+
+/* 
+ * Grab modes 
+ */
+enum xnee_grab_modes 
+{
+  XNEE_GRAB_UNKOWN = 0,
+  XNEE_GRAB_STOP    ,
+  XNEE_GRAB_PAUSE   ,
+  XNEE_GRAB_RESUME  
+} _xnee_grab_modes;
+
+
 #define XNEE_HOME_URL     "http://www.gnu.org/software/xnee/"
 #define XNEE_MAIL         "info-xnee@gnu.org"
 #define XNEE_BUG_MAIL     "bug-xnee@gnu.org"
@@ -191,6 +208,8 @@ enum return_values {
 #define XNEE_ALL_CLIENTS          "all-clients"
 #define XNEE_LOOPS_LEFT           "loops-left"
 #define XNEE_STOP_KEY             "stop-key"
+#define XNEE_PAUSE_KEY            "pause-key"
+#define XNEE_RESUME_KEY           "resume-key"
 #define XNEE_EVERYTHING           "everything"
 #define XNEE_DISTRIBUTE           "distribute"
 #define XNEE_NO_EXPOSE            "no-expose"
@@ -329,8 +348,6 @@ typedef struct {
 
 
 
-
-
 /*! \brief Holds information about Record Extension setup
  *
  */
@@ -342,6 +359,17 @@ typedef struct
   int    xtest_event_basep   ;  /*!< First event number for this extension*/
 } xnee_testext_setup;
 
+
+
+
+/*! \brief Holds a integer tuple describing key + modifier
+ *
+ */
+typedef struct
+{
+  int	 key ;       /*!< key */
+  int    modifier ;  /*!< modifier key  */
+} xnee_km_tuple;
 
 
 
@@ -393,6 +421,9 @@ typedef callback_ptr *callback_ptrptr;
 typedef void (*synch_ptr)( XPointer, XRecordInterceptData *); 
 typedef synch_ptr *synch_ptrptr;                                         
 
+typedef int (*print_fptr)  ( const char*, ... ); 
+typedef int (*fprint_fptr) (FILE*,  const char*, ... ); 
+
 
 
 /**
@@ -417,6 +448,22 @@ typedef struct
   int data_ranges[XNEE_NR_OF_TYPES] ;       /*!< Count how many data ranges specified */
 
 } xnee_record_init_data ; 
+/**
+ * Holds information about Record Extension setup
+ */
+typedef struct
+{
+
+  int     stop_key     ;    /*!< key used to stop Xnee */
+  int     stop_mod     ;    /*!< modifier used to stop Xnee */
+
+  int     pause_key    ;    /*!< key used to pause Xnee */
+  int     pause_mod    ;    /*!< modifier used to pause Xnee */
+
+  int     resume_key   ;    /*!< key used to resume Xnee */
+  int     resume_mod   ;    /*!< modifier used to resume Xnee */
+
+} xnee_grab_keys;
 
 
 
@@ -465,6 +512,7 @@ typedef struct
   FILE    *out_file    ;    /*!< output file descriptor */
   FILE    *err_file    ;    /*!< error file descriptor */
   FILE    *rc_file     ;    /*!< resource file descriptor */
+  FILE    *buffer_file ;    /*!< verbose buffer printout file descriptor */
 
   Bool     verbose     ;    /*!< true if verbose mode */
   Bool     buf_verbose ;    /*!< true if verbose mode for buffer printouts */
@@ -484,6 +532,10 @@ typedef struct
     void (* sync_fun     ) (XPointer , XRecordInterceptData *); 
   */
 
+  fprint_fptr buffer_verbose_fp; /*!< pointer to buffer verbose fun */
+  fprint_fptr verbose_fp;        /*!< pointer to verbose fun */
+  fprint_fptr data_fp   ;        /*!< pointer to xnee protcol print fun */
+
   char    *display     ;    /*!< char representation of the Display */
   Display *data        ;    /*!< used for sending recored data between Xnee and Xserver*/
   Display *control     ;    /*!< used for sending info between Xnee and Xserver  */
@@ -493,8 +545,6 @@ typedef struct
                                  Needed to set the start time of the first event to 0 */
   int     cont         ;    /*!< A simple flag telling Xnee wether to keep 
 			         recording/replaying or top quit. */
-  int     stop_key     ;    /*!< Integer representation of the key used to stop Xnee */
-  int     stop_mod     ;    /*!< Integer representation of the modifier used to stop Xnee */
   Display **distr_list ;    /*!< array of displays to distribute events to */
   int     distr_list_size ; /*!< size of array of displays to distribute events to */
   sem_t   *buf_sem     ;    /*!< semaphore to protect the replay buffer */
@@ -508,6 +558,9 @@ typedef struct
   
   int data_buffer[4][XNEE_REPLAY_BUFFER_SIZE];
   struct buffer_meta_data meta_data[4];
+  
+  xnee_grab_keys           *grab_keys;
+
 } xnee_data ; 
 
 
@@ -793,23 +846,56 @@ xnee_stop_session( xnee_data* xd);
 /**
  * Grabs the modifier and key as specified on xd. 
  * These keys are mapped to call xnee_stop_session
- * @param xd    xnee's main structure
- * @return int  0 on success
+ * @param xd      xnee's main structure
+ * @param mode    action mode (stop, pause, resume)
+ * @param mod_key string representation of modifier + key
+ * @return int   XNEE_OK on success
  */
 int 
-xnee_grab_stop_key (xnee_data* xd );
+xnee_grab_key (xnee_data* xd , int mode, char *mod_key);
 
+
+int 
+xnee_ungrab_key (xnee_data* xd, int mode);
+int 
+xnee_ungrab_keys (xnee_data* xd);
 
 
 /**
  * Binds the string representation of modifier and key to 
  * call xnee_stop_session.
- * @param xd  
- * @param mod_and_key  
+ * @param xd     xnee's main structure
+ * @param km     key + modifier tuple
  * @return int  
  */
 int
-xnee_add_stop_key (xnee_data *xd, char * mod_and_key);
+xnee_add_stop_km (xnee_data *xd, xnee_km_tuple km);
+
+/**
+ * Binds the string representation of modifier and key to 
+ * call xnee_pause_session.
+ * @param xd     xnee's main structure
+ * @param km     key + modifier tuple
+ * @return int  
+ */
+int
+xnee_add_pause_km (xnee_data *xd, xnee_km_tuple km);
+
+
+
+
+/**
+ * Binds the string representation of modifier and key to 
+ * call xnee_resume_session.
+ * @param xd     xnee's main structure
+ * @param km     key + modifier tuple
+ * @return int  
+ */
+int
+xnee_add_resume_km (xnee_data *xd, xnee_km_tuple km);
+
+
+
 
 #define xnee_print_obsolete_mess(s) fprintf (stderr, s)
 
@@ -904,6 +990,20 @@ xnee_set_synchronize (xnee_data *xd,
 
 int
 rem_all_blanks (char *array, int size);
+
+
+
+int
+xnee_get_km_tuple (xnee_data     *xd, 
+		   xnee_km_tuple *km, 
+		   char          *mod_and_key);
+
+
+int
+xnee_get_grab_mode ( xnee_data *xd, int key, int modifier);
+
+int
+xnee_check_km(xnee_data *xd);
 
 #endif /*   XNEE_XNEE_H */
 

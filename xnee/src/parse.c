@@ -348,13 +348,11 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	{
 	  ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 				"ButtonPress-MotionNotify");
-	  continue;
 	}
       else if(xnee_check(argv[i], "--keyboard", "--keyboard")) 
 	{
 	  ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 				"KeyPress-KeyRelease");
-	  continue;
 	}
       else if(xnee_check(argv[i], "--out", "-o" )) 
 	{
@@ -381,7 +379,18 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else if(xnee_check(argv[i], "--stop-key", "-sk")) 
 	{
-	  xnee_add_stop_key (xd, argv[++i]);
+	  xnee_verbose ((xd, "Found -sk/--stop ... : %s\n", argv[i]));
+	  xnee_grab_key (xd, XNEE_GRAB_STOP, argv[++i]);
+	}
+      else if(xnee_check(argv[i], "--pause-key", "-pk")) 
+	{
+	  xnee_verbose ((xd, "Found -pk/--pause ... : %s\n", argv[i]));
+	  xnee_grab_key (xd, XNEE_GRAB_PAUSE, argv[++i]);
+	}
+      else if(xnee_check(argv[i], "--resume-key", "-rk")) 
+	{
+	  xnee_verbose ((xd, "Found -rk/--resume ... : %s\n", argv[i]));
+	  xnee_grab_key (xd, XNEE_GRAB_RESUME, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--time", "-t")) 
 	{
@@ -674,7 +683,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--stop_key", "-sk")) 
 	{
 	  xnee_print_obsolete_mess ( ("OBSOLETE: --stop_key\nUSE:--stop-key\n"));
-	  xnee_add_stop_key (xd, argv[++i]);
+	  xnee_grab_key (xd, XNEE_GRAB_STOP, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--human_printout", "-hp")) 
 	{
