@@ -294,7 +294,7 @@ xnee_add_to_list(char **arr, int pos, char *str)
 
 
 int
-xnee_delete_name_list(char **arr)
+xnee_delete_name_list()
 {
   int i ;
   for (i=2;error_names[i]!=NULL;i++)

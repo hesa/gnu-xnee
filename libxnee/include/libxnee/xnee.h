@@ -126,6 +126,7 @@ enum _xnee_mode {
 
 
 #define XNEE_USEC_PER_SEC        1000000
+#define XNEE_MSEC_PER_SEC        1000
 #define XNEE_FROM_LAST_READ 	'l'
 #define XNEE_FROM_FIRST_READ 	'f'
 #define XNEE_TOO_FAST_ADJ_PERCENTAGE		10
@@ -164,7 +165,7 @@ enum _xnee_mode {
 
 
 
-#define XNEE_FAKE_SLEEP(per)  usleep (per)
+#define XNEE_FAKE_SLEEP(per)  { if (per>1000)usleep (per*1000); }
 
 #define XNEE_TRUE  1
 #define XNEE_FALSE 0
@@ -448,6 +449,7 @@ typedef struct
   KeyCode kc ;       /*!< key to fake */ 
   int shift_press ;  /*!< is a SHIT press needed */ 
   int alt_press   ;  /*!< is a ALT press needed */ 
+  int alt_gr_press;  /*!< is a ALT GRAPH press needed */ 
   int ctrl_press  ;  /*!< is a CTRL press needed */ 
  
 } xnee_key_code;
@@ -497,6 +499,19 @@ typedef struct
   int  percent    ;  /*!< percentage of the original time (0-10000)  */
   int  is_used    ;  /*!< flag to say if we should scale time at all */
 } xnee_timescale_info;
+
+
+
+
+/*! \brief holds replay delay information.
+ *  Xnee chooses at replay/fake-time one of these to 
+ *  use as delay.
+ */
+typedef struct
+{
+  Time f_delay ;  /*!< time to wait before next event is faked */
+  Time s_delay  ; /*!< time to sleep before next event is faked */
+} xnee_delay_time;
 
 
 
@@ -801,7 +816,7 @@ xnee_add_display (Display * dpy, xnee_data* xd);
  * \todo (return values need to be changed) 
  */
 int
-xnee_init(xnee_data* xd, char *);
+xnee_init(xnee_data* xd);
 
 
 
@@ -1005,7 +1020,7 @@ rem_all_blanks (char *array, int size);
 
 
 int 
-xnee_process_count(xnee_data *xd, int mode);
+xnee_process_count(int mode);
 
 int 
 xnee_handle_km(xnee_data *xd);
@@ -1026,6 +1041,9 @@ xnee_str2keycode(xnee_data* xd, char *str );
 
 KeyCode
 xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc);
+
+int
+xnee_write_settings_to_file (xnee_data *xd, FILE *fp);
 
 #endif /*   XNEE_XNEE_H */
 

@@ -59,4 +59,11 @@ xnee_calc_sleep_amount(xnee_data *xd,
 #define xnee_is_normal_speed(xd)  (xd->speed_percent==100)
 #define xnee_get_speed(xd)  xd->speed_percent
 
+long 
+xnee_calc_sleep_amount_percent(xnee_data *xd, 
+			       Time last_diff, 
+			       Time first_diff, 
+			       Time record_last_diff, 
+			       Time recordFirst_diff );
+
 #endif /* XNEE_TIME_H */

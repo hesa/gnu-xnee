@@ -36,6 +36,8 @@
 void *
 xnee_dlopen (xnee_data *xd, char *dl, int flag)
 {
+  xnee_verbose ((xd, " ---> xnee_dlopen\n"));
+  xnee_verbose ((xd, " <--- xnee_dlopen\n"));
   return dlopen ((const char*)dl, flag);
 }
 
@@ -49,6 +51,8 @@ xnee_dlopen (xnee_data *xd, char *dl, int flag)
 void *
 xnee_dlsym (xnee_data *xd, void* handle, char *sym)
 {
+  xnee_verbose ((xd, " ---> xnee_dlsym\n"));
+  xnee_verbose ((xd, " <--- xnee_dlsym\n"));
   return dlsym (handle, sym);
 }
 
@@ -62,6 +66,8 @@ xnee_dlsym (xnee_data *xd, void* handle, char *sym)
 int 
 xnee_dlclose (xnee_data *xd, void* handle)
 {
+  xnee_verbose ((xd, " ---> xnee_dlclose\n"));
+  xnee_verbose ((xd, " <--- xnee_dlclose\n"));
   return dlclose (handle);
 }
 
@@ -75,6 +81,8 @@ xnee_dlclose (xnee_data *xd, void* handle)
 char* 
 xnee_dlerror (xnee_data *xd)
 {
+  xnee_verbose ((xd, " ---> xnee_dlerror\n"));
+  xnee_verbose ((xd, " <--- xnee_dlerror\n"));
   return dlerror();
 }
 

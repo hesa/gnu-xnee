@@ -216,6 +216,7 @@ is_last (xnee_data *xd,  char *mod_strs)
   int len = strlen (mod_strs);
   tmp=mod_strs;
 
+  xnee_verbose ((xd, " ---> is_last\n"));
   for (i=0;  (i<len) ; i++)
     {
       if (tmp[i]=='+')
@@ -223,6 +224,7 @@ is_last (xnee_data *xd,  char *mod_strs)
 	  return XNEE_OK;
 	}
     }
+  xnee_verbose ((xd, " <--- is_last\n"));
   return 1;
 }
 

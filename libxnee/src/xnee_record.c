@@ -49,13 +49,13 @@ xnee_record_dispatch2 (XPointer xpoint_xnee_data,
     {
       XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
-      xnee_process_count(NULL, XNEE_PROCESS_RESET);
+      xnee_process_count(XNEE_PROCESS_RESET);
       return;
     } 
 
   /*increment the process reply counter*/
-  xnee_process_count(NULL, XNEE_PROCESS_INC);
-  
+  xnee_process_count(XNEE_PROCESS_INC);
+  xpoint_xnee_data=0;
   printf( "."); 
 
   fflush (stdout);
@@ -199,15 +199,15 @@ xnee_record_handle_event ( xnee_data *xd, XRecordInterceptData *xrecintd)
 int
 handle_xerr(Display *dpy, XErrorEvent *errevent)
 {
-int protocol_error;	/* error code of error caught by error handler */
-int protocol_error_major;	/* major op code of error caught */
-int protocol_error_minor;	/* minor op code of error caught */
-
-    protocol_error = errevent->error_code;
-    protocol_error_major = errevent->request_code;
-    protocol_error_minor = errevent->minor_code;
-    printf ("Error recevied....\n");
-    return 1;
+  int protocol_error;	        /* error code of error caught by error handler */
+  int protocol_error_major;	/* major op code of error caught */
+  int protocol_error_minor;	/* minor op code of error caught */
+  
+  protocol_error = errevent->error_code;
+  protocol_error_major = errevent->request_code;
+  protocol_error_minor = errevent->minor_code;
+  printf ("Error recevied.... on display=%d\n", (int)dpy);
+  return 1;
 }
 
 
@@ -233,13 +233,13 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
     {
       XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
-      xnee_process_count(xd, XNEE_PROCESS_RESET);
+      xnee_process_count(XNEE_PROCESS_RESET);
       return;
     } 
   else
     {
       /*increment the process reply counter*/
-      xnee_process_count(xd, XNEE_PROCESS_INC);
+      xnee_process_count(XNEE_PROCESS_INC);
     }
   
   /* fix by Ton van Vliet */
@@ -322,13 +322,13 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
     {
       XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
-      xnee_process_count(xd, XNEE_PROCESS_RESET);
+      xnee_process_count(XNEE_PROCESS_RESET);
       return;
     } 
   else
     {
       /*increment the process reply counter*/
-      xnee_process_count(xd, XNEE_PROCESS_INC);
+      xnee_process_count(XNEE_PROCESS_INC);
     }
   
   /* fix by Ton van Vliet */

@@ -2,7 +2,7 @@ PACKAGE=\"xnee\"
 VERSION=\"1.07\"
 
 CC=gcc
-CFLAGS = -Wall -pedantic -pedantic-errors  -Werror -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src -g -DHAVE_STDARG_H=1 
+CFLAGS = -W -Wall -pedantic -pedantic-errors  -Werror -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src -g -DHAVE_STDARG_H=1 
 
 
 LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib

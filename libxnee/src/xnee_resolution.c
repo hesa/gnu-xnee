@@ -29,6 +29,7 @@
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
+#include "libxnee/print.h"
 #include "libxnee/xnee_resolution.h"
 
 int
@@ -156,26 +157,17 @@ xnee_res_cmp(xnee_res *xr1, xnee_res *xr2)
 int 
 xnee_resolution_differs (xnee_data *xd)
 {
-  static int res_diff = XNEE_RESOLUTION_UNSET ;
-  
-  if (res_diff==XNEE_RESOLUTION_UNUSED)
+  if (xnee_res_cmp(&xd->res_info.record,&xd->res_info.replay)==0)
     {
-      return XNEE_RESOLUTION_UNUSED;
+      /* diff */
+      return 1;
     }
-  else if (res_diff==XNEE_RESOLUTION_UNSET)
+  else
     {
-      if (xnee_res_cmp(&xd->res_info.record,&xd->res_info.replay)==1)
-	{
-	  /* diff */
-	  res_diff = XNEE_RESOLUTION_USED;
-	}
-      else
-	{
-	  /* no diff */
-	  res_diff = XNEE_RESOLUTION_UNUSED;
-	}
+      /* no diff */
+      return 0;
     }
-  return res_diff;
+  return XNEE_RESOLUTION_UNSET;
 }
 
 
@@ -206,6 +198,7 @@ xnee_resolution_newx (xnee_data *xd, int xval)
       return ( ( xval * xnee_get_rep_resolution_x (xd) ) 
 	       / xnee_get_rec_resolution_x (xd));
     }
+
   return xval;
 }
 

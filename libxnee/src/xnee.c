@@ -346,7 +346,7 @@ xnee_close_down(xnee_data* xd)
  *                                                            *
  **************************************************************/
 int 
-xnee_init(xnee_data* xd, char *name)
+xnee_init(xnee_data* xd)
 {
   if (xd == NULL) 
     {
@@ -383,6 +383,7 @@ xnee_init(xnee_data* xd, char *name)
   xd->distr_list_size = 0   ;
   xd->cont          = True ;
   xd->force_replay  = False;
+  xd->first_read_time =0;
   
   xd->speed_percent = 100 ; 
   xd->buf_sem = (sem_t *) malloc (sizeof(sem_t));
@@ -800,6 +801,7 @@ xnee_strip(xnee_data *xd, char *str)
   int i,j, blanks=0, len  ;
   len = strlen (str);
 
+  xnee_verbose ((xd," --> xnee_strip \"%s\"\n", str));
   /*
    * how many blanks do we have  */
   for (i=0 ; i<=len ; i++)
@@ -816,6 +818,7 @@ xnee_strip(xnee_data *xd, char *str)
 	}
     }
   str[len-blanks]='\0';
+  xnee_verbose ((xd," <-- xnee_strip \"%s\"\n", str));
   return 1;
 } 
 
@@ -834,6 +837,7 @@ xnee_rem_comment_start(xnee_data *xd, char *str)
 {
   int i,j, comms=0, len  ;
 
+  xnee_verbose ((xd," --> xnee_rem_comment_start \"%s\"\n", str));
   len = strlen (str);
   /*
    * how many comments do we have  */
@@ -851,6 +855,7 @@ xnee_rem_comment_start(xnee_data *xd, char *str)
     }
 
   str[len-comms]='\0';
+  xnee_verbose ((xd," <-- xnee_rem_comment_start \"%s\"\n", str));
   return 1;
 } 
 
@@ -996,12 +1001,10 @@ rem_all_blanks (char *array, int size)
  *                                                            *
  **************************************************************/
 int 
-xnee_get_record_config (xnee_data* xd, xnee_intercept_data * xindata) 
+xnee_get_record_config (xnee_data* xd) 
 {
   char tmp[256] ;
   int processing_meta_data = XNEE_TRUE;
-
-
 
   strcpy(tmp,"");
   if ( xd->data_file == NULL)
@@ -1070,10 +1073,10 @@ xnee_check_inSync (xnee_data *xd )
 
 
 int 
-xnee_process_count(xnee_data *xd, int mode)
+xnee_process_count(int mode)
 {
   static int continue_process = 0;
-
+  
   /* if we are to use make sure 
      xd != NULL */
 
@@ -1085,15 +1088,14 @@ xnee_process_count(xnee_data *xd, int mode)
     continue_process--;
   /* we need not care about XNEE_PROCESS_GET */
 
-  
-
   return continue_process;
 }
 
 int 
 xnee_handle_km(xnee_data *xd)
 {
-  printf ("key + modifier received\n");
+  xnee_verbose ((xd, " ---> xnee_handle_km\n"));
+  xnee_verbose ((xd, " <--- xnee_handle_km\n"));
   return XNEE_OK;
 }
 
@@ -1104,8 +1106,8 @@ xnee_process_replies(xnee_data *xd)
 
   int last_count;
   int count; 
-  last_count=xnee_process_count (xd, XNEE_PROCESS_GET);
-  xnee_process_count (xd, XNEE_PROCESS_RESET);
+  last_count=xnee_process_count (XNEE_PROCESS_GET);
+  xnee_process_count (XNEE_PROCESS_RESET);
 
   /* it is more important to handle all data
      in the data display than to check for 
@@ -1120,7 +1122,7 @@ xnee_process_replies(xnee_data *xd)
        *       user has presed any modifier+key
        *    4) number of data to record exceeded
        */
-      count=xnee_process_count (xd, XNEE_PROCESS_GET);
+      count=xnee_process_count (XNEE_PROCESS_GET);
       if ( 
 	  ( count <= 0) 
 	  || 
@@ -1133,7 +1135,7 @@ xnee_process_replies(xnee_data *xd)
 	}
       last_count=count;
     }
-  xnee_process_count (xd, XNEE_PROCESS_RESET);
+  xnee_process_count (XNEE_PROCESS_RESET);
   return XNEE_OK;
 }
 
@@ -1219,19 +1221,25 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
     return -1;
   
   kc->shift_press=0;
+  kc->alt_press=0;
+  kc->alt_gr_press=0;
   switch( token)
     {
     case ' ':
       kc->kc = xnee_str2keycode(xd,"space");
+      kc->shift_press=1;
       break;
     case '$':
       kc->kc = xnee_str2keycode(xd,"dollar");
+      kc->shift_press=1;
       break;
     case '%':
       kc->kc = xnee_str2keycode(xd,"percent");
+      kc->shift_press=1;
       break;
     case '&':
       kc->kc = xnee_str2keycode(xd,"ampersand");
+      kc->shift_press=1;
       break;
     case '-':
       kc->kc = xnee_str2keycode(xd,"minus");
@@ -1257,6 +1265,26 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
       break;
     case '.':
       kc->kc = xnee_str2keycode(xd,"period");
+      break;
+    case '#':
+      kc->shift_press=1;
+      kc->kc = xnee_str2keycode(xd,"numbersign");
+      break;
+    case '"':
+      kc->shift_press=1;
+      kc->kc = xnee_str2keycode(xd,"quotedbl");
+      break;
+    case '?':
+      kc->shift_press=1;
+      kc->kc = xnee_str2keycode(xd,"question");
+      break;
+    case '@':
+      kc->alt_gr_press=1;
+      kc->kc = xnee_str2keycode(xd,"at");
+      break;
+    case '!':
+      kc->shift_press=1;
+      kc->kc = xnee_str2keycode(xd,"exclamdown");
       break;
     default:
       buf[0]=token;

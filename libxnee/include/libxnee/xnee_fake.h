@@ -46,7 +46,7 @@ xnee_fake_motion_event (xnee_data* xd,
 			int screen, 
 			int x, 
 			int y, 
-			int dtime);
+			unsigned long dtime);
 
 
 /**
@@ -92,9 +92,8 @@ xnee_replay_event_handler (xnee_data *xd,  xnee_intercept_data* xid , int last_e
 
 
 
-int
-xnee_type_license (xnee_data *xd);
-
+int 
+xnee_type_file(xnee_data *xd, char *str );
 
 
 #endif /* XNEE_FAKE_H */

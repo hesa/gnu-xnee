@@ -169,12 +169,10 @@ xnee_has_xtest_extension (xnee_data *xd) ;
 /**
  * Inits the replaying data in xnee_data
  * @param xd       xnee's main structure
- * @param program  name of the program
  * @return void  
  */
 void  
-xnee_replay_init (xnee_data *xd, 
-		  char * program);
+xnee_replay_init (xnee_data *xd);
 
 
 

@@ -834,6 +834,7 @@ xnee_replay_printbuffer_impl (xnee_data *xd )
 void
 xnee_version(xnee_data* xd)
 {
+  xnee_verbose ((xd, " --> xnee_version\n"));
   fprintf (stderr, "%s ",PACKAGE);
   fprintf (stderr, "%s\n",VERSION);
   fprintf (stderr, "Copyright (C) 2000-2003 Henrik Sandklef (%s)\n", XNEE_MAIL);
@@ -844,5 +845,6 @@ xnee_version(xnee_data* xd)
   fprintf (stderr, "Xnee: Xnee's not an Event Emulator %s \n", XNEE_HOME_URL);
   fprintf (stderr, "GPL:  Gnu General Public License   %s\n",  GNU_HOME_URL);
   fprintf (stderr, "FSF:  Free Software Foundation     %s\n",  FSF_HOME_URL);
+  xnee_verbose ((xd, " <-- xnee_version\n"));
 }
 

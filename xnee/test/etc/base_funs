@@ -337,11 +337,11 @@ function verify_not_same()
     EXP_VAL=$1
     REAL_VAL=$2
 
-    MSG="$SCRIPT_NAME un comparing : \"$EXP_VAL == $REAL_VAL\" $3"
+    MSG="$SCRIPT_NAME un comparing : \"$EXP_VAL != $REAL_VAL\" $3"
 
     TOTAL_TEST=`expr $TOTAL_TEST + 1`
 
-    verbose "Comparing :"
+    verbose "Uncomparing :"
     verbose "  expected:  \"$EXP_VAL\""
     verbose "  real    :  \"$REAL_VAL\""
 
@@ -349,6 +349,41 @@ function verify_not_same()
 	then
 	verbose " Data is same: $MSG"
 	error_log " Data is same : $MSG"
+	ERR_TEST=`expr $ERR_TEST + 1`
+	return 1
+    fi
+
+    verbose "success...."
+    SUCC_TEST=`expr $SUCC_TEST + 1`
+}
+
+function verify_pos_alm_same()
+{
+    EXP_VAL=$1
+    REAL_VAL=$2
+    LIMIT=$3
+
+    MSG="$SCRIPT_NAME  verify_pos_alm_same : \"$EXP_VAL == $REAL_VAL\" and within range of $3"
+
+    TOTAL_TEST=`expr $TOTAL_TEST + 1`
+
+    verbose "verify_pos_alm_same:"
+    verbose "  expected:  \"$EXP_VAL\""
+    verbose "  real    :  \"$REAL_VAL\""
+
+    LOW_VAL=$(( $EXP_VAL - $LIMIT ))
+    HIGH_VAL=$(( $EXP_VAL + $LIMIT ))
+
+    if [ "$REAL_VAL" -gt "$HIGH_VAL" ];
+	then
+	verbose " Data too big: $MSG"
+	error_log " Data too big: $MSG"
+	ERR_TEST=`expr $ERR_TEST + 1`
+	return 1
+    elif [ "$REAL_VAL" -lt "$LOW_VAL" ];
+	then
+	verbose " Data too small: $MSG"
+	error_log " Data too small: $MSG"
 	ERR_TEST=`expr $ERR_TEST + 1`
 	return 1
     fi
@@ -368,6 +403,8 @@ function check_xgetter()
     fi
 }
 
+export getresx="./src/xgetter  --resolution-x"
+export getresy="./src/xgetter  --resolution-y"
 export getx="./src/xgetter  --mouse-position-root-x"
 export gety="./src/xgetter  --mouse-position-root-y"
 export getxy="./src/xgetter  --mouse-position-root-all"

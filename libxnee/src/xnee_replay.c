@@ -51,17 +51,12 @@ xnee_replay_m_delay (unsigned long usecs)
 /*
  *  internal use only 
  */
-unsigned long 
+Time
 xnee_delta_time ( xnee_intercept_data * xindata)
 {
-  unsigned int new ; 
-  unsigned int old ; 
-  new = xindata->newtime; 
-  old = xindata->oldtime; 
-
-  if ( new > old ) 
+  if ( xindata->newtime > xindata->oldtime ) 
     {
-      return (new-old); 
+      return ( xindata->newtime - xindata->oldtime); 
     }
   else 
     {
@@ -483,7 +478,9 @@ xnee_replay_main_loop(xnee_data *xd)
 	}
       else if (logread)
 	{
-	  
+	  if (xd->first_read_time==0)
+            xd->first_read_time = xindata.newtime;
+          
 	  if (xnee_check_km (xd)==XNEE_GRAB_DATA)
 	    {
 	      xnee_verbose ((xd,"\n\nsomeone grabbed us\n\n"));
@@ -779,7 +776,7 @@ xnee_has_xtest_extension (xnee_data *xd)
  *                                                            *
  **************************************************************/
 void 
-xnee_replay_init          (xnee_data* xd, char * name)
+xnee_replay_init          (xnee_data* xd)
 {
   int i, j;
   xd->first_replayed_event=1;
@@ -809,18 +806,6 @@ xnee_replay_init          (xnee_data* xd, char * name)
 
 
 
-
-/**************************************************************
- *                                                            *
- * xnee_zero_sync_data                                        *
- *                                                            *
- *                                                            *
- **************************************************************/
-void
-xnee_zero_sync_data (xnee_data* xd)
-{
-  ;
-}
 
 
 

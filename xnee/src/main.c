@@ -57,9 +57,9 @@ int main(int argc,char *argv[])
   xd = xnee_new_xnee_data();
 
   /*
-   * Init the structs. Use PACKAGE as a name for the program
+   * Init the structs. 
    */
-  xnee_init(xd, PACKAGE);
+  xnee_init(xd);
   
   /*
    * Init Recording variables
@@ -137,7 +137,7 @@ int main(int argc,char *argv[])
    */
   if ( ! xnee_is_recorder(xd) )
     {
-      xnee_replay_init (xd, argv[0]);   
+      xnee_replay_init (xd);   
     }
   
   

@@ -26,6 +26,11 @@
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_record.h"
+#include "libxnee/xnee_resolution.h"
+#include "libxnee/xnee_resource.h"
+#include "libxnee/xnee_km.h"
+#include "libxnee/xnee_grab.h"
+#include "libxnee/xnee_fake.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/datastrings.h"
 #include "parse.h"
@@ -123,7 +128,7 @@ static char *description[] = {
 
 
 
-
+/*
 static char *obsolete_help[] = {
   "--help, -h                     ", "Print this message", 
   "--display,d  displayname       ", "X server to contact (default is localhost)", 
@@ -166,6 +171,12 @@ static char *obsolete_help[] = {
   "--extension_reply_mainor_range, -erpmir  <X_LIST>   ","Set extension reply minor range to X_LIST",
   NULL 
 };
+*/
+
+
+static int
+xnee_type_help (xnee_data *xd);
+
 
 /**************************************************************
  *                                                            *
@@ -349,7 +360,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	    }
 	  if ( xnee_type_file(xd, argv[i]) != 0 )
 	    {
-	      xnee_print_error ("Unable to open plugin file (%s)\n", argv[i]);
+	      xnee_print_error ("Unable to open file \"%s\" for retyping \n", 
+				argv[i]);
 	    }
 	}
       else if(xnee_check(argv[i], "--all-clients", "-ac" )) 
@@ -945,11 +957,7 @@ xnee_usage (FILE *fd)
 	  
 	  if (descr!=NULL)
 	    fprintf (fd, "\t%s\n\n", *cpp);
-	  else 
-	    ;
 	}
-      else 
-	;
     }
   fprintf (fd, "\n  Report bugs to %s\n", XNEE_BUG_MAIL);
   
@@ -1026,11 +1034,7 @@ xnee_manpage (FILE *fd)
 	  
 	  if (descr!=NULL)
 	    fprintf (fd, "\n%s\n", *cpp);
-	  else 
-	    ;
 	}
-      else 
-	;
     }
 
   fprintf (fd ,".SH \"AUTHOR\" \n");
@@ -1066,13 +1070,12 @@ xnee_type_help (xnee_data *xd)
   char my_string[500];
   char **cpp;
 
-  KeyCode kc ;
   KeyCode shift_kc ;
   KeyCode return_kc ;
 
   xnee_verbose ((xd,"---> xnee_type_help\n"));
   xnee_setup_display (xd);
-  xnee_replay_init (xd, PACKAGE);   
+  xnee_replay_init (xd);   
   xnee_set_autorepeat (xd);
   if (!xnee_has_xtest_extension(xd))
     exit(XNEE_NO_TEST_EXT);
@@ -1084,7 +1087,7 @@ xnee_type_help (xnee_data *xd)
     {
       xnee_verbose ((xd,"string to fake %s\n", *cpp));
       strcpy(my_string,*cpp);
-      for (i=0;i<strlen(my_string);i++)
+      for (i=0;(size_t)i<strlen(my_string);i++)
 	{
 	  xnee_char2keycode(xd, my_string[i], &x_kc); 
 	  if (x_kc.shift_press)
