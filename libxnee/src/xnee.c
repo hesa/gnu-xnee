@@ -370,6 +370,12 @@ xnee_close_down(xnee_data* xd)
       xnee_free_file (xd, xd->out_name,  xd->out_file);
     }
 
+  if (xd->rt_file!=stdout)
+    {
+      xnee_verbose((xd ," --  xnee_close_down() free rt_file \n"  ));
+      xnee_free_file (xd, xd->rt_name,  xd->rt_file);
+    }
+
   if (xd->err_file!=stderr)
     {
       xnee_verbose((xd ," --  xnee_close_down() free err_file\n"  ));
@@ -422,12 +428,14 @@ xnee_init(xnee_data* xd)
   xd->out_file      = stdout ;
   xd->err_file      = stderr ;
   xd->rc_file       = NULL   ;
+  xd->rt_file       = NULL   ;
   xd->buffer_file   = stderr ;
 
   xd->data_name     = NULL  ;
   xd->out_name      = NULL  ;
   xd->err_name      = NULL  ;
   xd->rc_name       = NULL  ;
+  xd->rt_name       = NULL  ;
 
   xd->display       = getenv ("DISPLAY");
   xd->distr_list    = NULL  ;
@@ -1557,6 +1565,24 @@ xnee_open_files(xnee_data *xd)
 	    }
 	}
     }
+  else if (xnee_is_retyper(xd))
+    {
+      xnee_verbose((xd, "---  xnee_open_files: is retyper\n"));
+      file_name = xnee_get_rt_name(xd);
+      if (file_name!=NULL)
+	{
+	  xnee_verbose((xd, "---  xnee_open_files: handling retype (in)\n"));
+	  if (!xnee_check (file_name, "stdin", "STDIN"))
+	    {
+	      xnee_verbose((xd, "---  xnee_open_files: opening retype: %s\n", 
+			    xd->rt_name));
+	      XNEE_FCLOSE_IF_NOT_NULL(xd->rt_file); 
+	      xd->rt_file = fopen (xd->rt_name,"r");
+	      if (xd->rt_file==NULL)
+		return XNEE_FILE_NOT_FOUND;
+	    }
+	}
+    }
   return XNEE_OK;
 }
 
@@ -1769,8 +1795,10 @@ xnee_start(xnee_data *xd)
     }
   else if (xnee_is_retyper(xd))
     {
-       /* */
-       ;
+      if ( xnee_type_file(xd) != 0 )
+	{
+	  xnee_print_error ("Unable to open retype file\n");
+	}
     }
   else
     {

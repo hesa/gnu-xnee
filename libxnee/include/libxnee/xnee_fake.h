@@ -98,7 +98,7 @@ xnee_fake_relative_motion_event (xnee_data* xd,
 
 
 int 
-xnee_type_file(xnee_data *xd, char *str );
+xnee_type_file(xnee_data *xd );
 
 
 #endif /* XNEE_FAKE_H */

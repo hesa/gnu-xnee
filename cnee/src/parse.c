@@ -386,10 +386,16 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	      xnee_close_down(xd);
 	      exit(XNEE_WRONG_PARAMS);
 	    }
-	  if ( xnee_type_file(xd, argv[i]) != 0 )
+	  if ( xnee_set_rt_name (xd, argv[i]) != XNEE_OK)
 	    {
-	      xnee_print_error ("Unable to open retype file (%s)\n", argv[i]);
+	      xnee_print_error ("Unable to open retype file\n");
+	      xnee_verbose ((xd, "Could not open retype file\n"));
+	      xnee_verbose ((xd, "... leaving\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
 	    }
+	  continue; 
+	  
 	}
       else if(xnee_check(argv[i], "--all-clients", "-ac" )) 
 	{

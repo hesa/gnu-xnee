@@ -358,16 +358,19 @@ enum cont_proc_commands
 #define XNEE_SYNC_FUNCTION_NAME   "xnee_sync_fun"
 
 
-#define XNEE_FAKE_RELATIVE_MOTION "fake-relative-motion"
 #define XNEE_FAKE_MOTION          "fake-motion"
+#define XNEE_FAKE_X_ARG           "x"
+#define XNEE_FAKE_Y_ARG           "x"
 
 #define XNEE_FAKE_BUTTON_PRESS    "fake-button-press"
 #define XNEE_FAKE_BUTTON_RELEASE  "fake-button-release"
 #define XNEE_FAKE_BUTTON          "fake-button"
+#define XNEE_FAKE_BUTTON_ARG      "button"
 
 #define XNEE_FAKE_KEY_PRESS       "fake-key-press"
 #define XNEE_FAKE_KEY_RELEASE     "fake-key-release"
 #define XNEE_FAKE_KEY             "fake-key"
+#define XNEE_FAKE_KEY_ARG         "key"
 
 
 #define REPLAY_CALLBACK 1
@@ -726,11 +729,13 @@ typedef struct
   char    *err_name    ;    /*!< name of error file  (e.g stdout, /tmp/xnee.log*/
   char    *rc_name     ;    /*!< name of resource file (e.g netscape.xns, /tmp/xterm.xns*/
   char    *data_name   ;    /*!< name of data file (e.g */
+  char    *rt_name     ;    /*!< name of retype file (e.g stdout, /home/user/myfile.txt */
 
   FILE    *data_file   ;    /*!< data input file descriptor */
   FILE    *out_file    ;    /*!< output file descriptor */
   FILE    *err_file    ;    /*!< error file descriptor */
   FILE    *rc_file     ;    /*!< resource file descriptor */
+  FILE    *rt_file     ;    /*!< retype file descriptor */
   FILE    *buffer_file ;    /*!< verbose buffer printout file descriptor */
 
   Bool     verbose     ;    /*!< true if verbose mode */

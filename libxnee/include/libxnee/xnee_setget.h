@@ -58,6 +58,18 @@ char *
 xnee_get_out_name (xnee_data *xd);
 
 
+int
+xnee_set_rt_file (xnee_data *xd, FILE* rt);
+
+FILE*
+xnee_get_rt_file (xnee_data *xd);
+
+int
+xnee_set_rt_name (xnee_data *xd, char* rt_name);
+ 
+char *
+xnee_get_rt_name (xnee_data *xd);
+
 
 int
 xnee_set_err_file (xnee_data *xd, FILE* err);
@@ -86,6 +98,7 @@ xnee_set_rc_name (xnee_data *xd, char* rc_name);
  
 int
 xnee_set_rc_byname (xnee_data *xd, char* rc_name);
+ 
  
 char *
 xnee_get_rc_name (xnee_data *xd);

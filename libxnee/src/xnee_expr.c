@@ -38,6 +38,28 @@
 #include "libxnee/xnee_threshold.h"
 #include "libxnee/xnee_error.h"
 
+#define XNEE_PRESS   0  
+#define XNEE_RELEASE 1
+
+typedef struct 
+{
+  /* Mouse */
+  int x ;  /* mouse position's X coord */
+  int y ;  /* mouse position's Y coord */
+  int x_rel  ; /* X coord is relative  */
+  int y_rel  ; /* Y coord is relative  */
+  int button ; /* nr of button to fake */
+  int button_state ; /* XNEE_PRESS or XNEE_RELEASE  */
+
+  /* Keyboard */
+  int key    ; /* nr of key to fake */
+  int key_state    ;  /* XNEE_PRESS or XNEE_RELEASE  */
+
+  int valid ; /* 1 if whole struct is valid, else 0 */
+} xnee_script_s ;
+
+
+
 
 /*************************************************************
  * internal functions *
@@ -652,6 +674,126 @@ xnee_expression_handle_projinfo(xnee_data *xd, char *tmp)
 
 
 #define CHECK_EQUALITY(a,b) ( (a!=NULL) && (b!=NULL) && (strlen(a)==strlen(b)) && (strcmp(a,b)==0) )
+#define BUF_SIZE 100
+
+static int
+xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
+{
+  char buf[BUF_SIZE];
+  char var[BUF_SIZE];
+  char val[BUF_SIZE];
+  char *str = arg;
+  char *tmpp = NULL;
+  char *varp = NULL;
+  char *valp = NULL;
+  int len       = 0 ;
+  int more_vars = 1 ;
+  int i ; 
+  int ret;
+
+  if (arg == NULL)
+    return XNEE_SYNTAX_ERROR;
+
+  while (str!=NULL)
+    {
+
+      /* skip leading blanks */
+      while ( str[0] == ' ' ) str++ ;
+      
+
+      /****************
+       * Find varaiable 
+       */
+
+      /* find '=' */
+      tmpp = strstr(str, "=");
+
+      /* no '=' found, bail out */
+      if (tmpp==NULL)
+	return XNEE_SYNTAX_ERROR;
+
+      /* copy everything from str upto '=' into var */  
+      len = strlen(str)-strlen(tmpp);
+      strncpy (var,str,len);
+      var[len]='\0';
+      /* remove trailing blanks ... */
+      i=0;
+      while ( (i<len) && ( var[i] != ' ' ) && ( var[i] != '\t' ) ) i++;
+      var[i]='\0';
+      
+      /* variable is found. Great, move on to value */
+
+      /****************
+       * Find value 
+       */
+      str = strstr(str,"=");
+      /* no '=' found, bail out */
+      if (tmpp==NULL)
+	return XNEE_SYNTAX_ERROR;
+      str++;
+      /* skip leading blanks */
+      while ( str[0] == ' ' ) str++ ;
+
+      /* copy everything from str upto '=' into var */  
+      len = strlen(str);
+      strcpy (val,str);
+      val[len]='\0';
+      /* remove trailing blanks ... */
+      i=0;
+      while ( (i<len) && ( val[i] != ' ' ) && ( val[i] != '\t' ) && ( val[i] != '\n' )  ) i++;
+      val[i]='\0';
+
+      /* x=12 etc */
+      if (strncmp(var,XNEE_FAKE_X_ARG,strlen(XNEE_FAKE_X_ARG))==0)
+	{
+	  valp = &val[0];
+	  xss->x_rel=0;
+	  if ( (val[0]=='+') )
+	    {
+	      xss->x_rel=1;
+	      valp++;
+	    }
+	  else if ( (val[0]=='-') )
+	    {
+	      xss->x_rel=1;
+	    }
+	  xss->valid = sscanf (valp, "%d", &xss->x);
+	}
+      /* y=12 etc */
+      else if (strncmp(var,XNEE_FAKE_Y_ARG,strlen(XNEE_FAKE_Y_ARG))==0)
+	{
+	  valp = &val[0];
+	  xss->y_rel=0;
+	  if ( (val[0]=='+') )
+	    {
+	      xss->y_rel=1;
+	      valp++;
+	    }
+	  else if ( (val[0]=='-') )
+	    {
+	      xss->y_rel=1;
+	    }
+	  xss->valid = sscanf (valp, "%d", &xss->y);
+	}
+      else 
+	{
+	}
+
+      /* skip leading blanks */
+      if (str==NULL)
+	printf ("str == NULL\n");
+      
+      if (!xss->valid)
+	{
+	  return XNEE_SYNTAX_ERROR ;
+	}
+
+      str=strstr(str," ");
+      printf ("var='%s' val='%s'  ...  '%s",
+	      var, val, str);
+    }
+
+}
 
 static int
 xnee_expression_handle_prim(xnee_data *xd, char *str)
@@ -660,7 +802,8 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
   char *prim_args;
   char buf[32];
   int   prim_len = 0 ; 
-
+  xnee_script_s xss ;
+  
   xnee_verbose ((xd, "handling primitive: %s\n", str));
 
   prim_args = strstr(str," ");
@@ -668,26 +811,35 @@ xnee_expression_handle_prim(xnee_data *xd, char *str)
   if (prim_args==NULL)
   {
     printf ("no args found ... leaving\n");
-    return -1;
+    return 0;
   }
 
   prim_len  = strlen(str) - strlen(prim_args);
   strncpy(buf, str, prim_len);
   buf[prim_len]='\0';
   prim_args++;
+  
+  xnee_expression_handle_prim_sub(xd, prim_args, &xss);
 
-  if (CHECK_EQUALITY(buf, XNEE_FAKE_RELATIVE_MOTION))
+  if (CHECK_EQUALITY(buf, XNEE_FAKE_MOTION))
     {
-      printf ("Faking relative\n");  
+      printf ("Faking motion '%s'\n", prim_args);  
+      
       xnee_fake_relative_motion_event (xd,
 				       12, 
 				       12, 
 				       0);
+      printf ("after the parse... x=%d  valid=%d  rel=%d\n", 
+	      xss.x,
+	      xss.valid,
+	      xss.x_rel);
+
       ret = XNEE_PRIMITIVE_DATA ;
     }
-  else if (CHECK_EQUALITY(buf, XNEE_FAKE_MOTION))
+  else if (CHECK_EQUALITY(buf, XNEE_FAKE_BUTTON))
     {
-      printf ("Faking motion\n");  
+      printf ("Faking button\n");
+      
       ret = XNEE_PRIMITIVE_DATA ;
     }
   else

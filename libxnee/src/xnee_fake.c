@@ -423,11 +423,8 @@ xnee_fake_relative_motion_event (xnee_data* xd,
 }
 
 int 
-xnee_type_file(xnee_data *xd, char *str )
+xnee_type_file(xnee_data *xd)
 {
-
-  FILE *file ;
-  
   char tmp[256] ;
   int i;
   xnee_key_code x_kc;
@@ -436,27 +433,27 @@ xnee_type_file(xnee_data *xd, char *str )
   KeyCode return_kc ;
   KeyCode alt_kc ;
   KeyCode alt_gr_kc ;
-  
-
-  
+    
   xnee_verbose ((xd,"---> xnee_type_file\n"));
-  file = fopen (str, "r");
-  if (file==NULL)
-    return (XNEE_WRONG_PARAMS);
 
   xnee_setup_display (xd);
   xnee_replay_init (xd);   
   xnee_set_autorepeat (xd);
+
+  xnee_verbose ((xd,"--- xnee_type_file\n"));
+
   if (!xnee_has_xtest_extension(xd))
     exit(XNEE_NO_TEST_EXT);
   
+  xnee_verbose ((xd,"--- xnee_type_file\n"));
+
   shift_kc  = xnee_str2keycode (xd, "Shift_L");
   return_kc = xnee_str2keycode (xd, "Return");
   alt_kc  = xnee_str2keycode (xd, "Alt_L");
   alt_gr_kc = xnee_str2keycode (xd, "Mode_switch");
 
   xnee_verbose ((xd,"---> xnee_type_file loop\n"));
-  while (fgets(tmp, 256, file)!=NULL)
+  while (fgets(tmp, 256, xd->rt_file)!=NULL)
     {
       xnee_verbose ((xd,"  xnee_type_file loop read size=%d \"%s\"\n", 
 		     strlen(tmp),tmp));
@@ -488,5 +485,5 @@ xnee_type_file(xnee_data *xd, char *str )
 	}
     }
   xnee_verbose ((xd,"<--- xnee_type_file\n"));
-  exit(XNEE_OK);
+  return (XNEE_OK);
 }

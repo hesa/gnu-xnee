@@ -106,9 +106,39 @@ xnee_get_out_name (xnee_data *xd)
 }
 
 
+int
+xnee_set_rt_file (xnee_data *xd, FILE* rt)
+{
+  XNEE_FCLOSE_IF_NOT_NULL(xd->rt_file);
+  xd->rt_file=rt;
+  return XNEE_OK;
+}
 
+FILE*
+xnee_get_rt_file (xnee_data *xd)
+{
+  return xd->rt_file;
+}
 
 int
+xnee_set_rt_name (xnee_data *xd, char* rt_name)
+{
+  XNEE_FREE_IF_NOT_NULL(xd->rt_name);
+  xd->rt_name=strdup(rt_name);
+  if (xd->rt_name==NULL)
+    {
+      return XNEE_MEMORY_FAULT;
+    }
+  return XNEE_OK;
+}
+ 
+char *
+xnee_get_rt_name (xnee_data *xd)
+{
+  return xd->rt_name;
+}
+
+
 xnee_set_err_file (xnee_data *xd, FILE* err)
 {
   XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
@@ -203,6 +233,7 @@ xnee_set_rc_byname (xnee_data *xd, char *rc_name)
 
   return XNEE_OK;
 }
+
 
 
 int

@@ -16,6 +16,8 @@
 #include <libxnee/xnee.h>
 #include <gnee_xnee.h>
 
+#define GNEE "gnee"
+
 xnee_data   *ext_xd;
 gnee_xnee   *ext_gx;
 GtkWidget   *ext_gnee_window;
@@ -41,6 +43,7 @@ main (int argc, char *argv[])
     GList              *combo_list = NULL;
     GtkWidget          *event_group_combo;
     char *default_tmp_file;
+    int i ;
 
     xnee_data   *xd;
     gnee_xnee    gx; 
@@ -57,6 +60,7 @@ main (int argc, char *argv[])
 
     gtk_set_locale ();
     gtk_init (&argc, &argv);
+
 
     add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
 
@@ -127,6 +131,23 @@ main (int argc, char *argv[])
 
     xd = xnee_new_xnee_data();
     ext_xd = xd;
+
+
+    /* scan through the args .... */
+    for (i=0;i<argc;i++)
+      {
+	if (strcmp(argv[i],"--version")==0)
+	  {
+	    fprintf (stderr, "%s %s, part of project ", 
+		     GNEE,
+		     VERSION,
+		     PACKAGE);
+	    xnee_version(xd);
+	    exit(XNEE_OK);
+	  }
+      }
+
+
 
 
     /* TEST */

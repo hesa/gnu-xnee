@@ -1,13 +1,16 @@
 ###info_TEXINFOS=xnee.texi
 xnee_TEXINFOS=xnee_error.texi xnee_prot.texi version.texi  xnee_error.texi xnee_exampl.texi xnee_faq.texi xnee_install.texi xnee_intro.texi xnee_req.texi xnee_synch.texi xnee_usage.texi xnee_general.texi xnee_start.texi  xnee_intern.texi xnee_copying fdl.texi
 
-EXTRA_DIST = xnee_copying fdl.texi pics/*.dia pics/*.sh 
+EXTRA_DIST = xnee_copying fdl.texi *.dia 
 
 
 #MAKEINFO = @MAKEINFO@ --no-split
 TEXI2HTML = texi2html
 DVI2PS = dvi2ps
 PS2PDF = ps2pdf
+
+
+
 
 ###   TEXI2HTML_FLAGS = -split_chapter
 
@@ -20,29 +23,28 @@ CLEANFILES = xnee.acs  xnee.cvs  xnee.mss  xnee.prs \
              */*.png */*.eps */*.pdf *.png *.eps *.pdf 
 
 
-IMAGES = xndetail.eps xngener.eps xnrec.eps xnrep.eps xnswinp.eps \
-         xndetail.pdf xngener.pdf xnrec.pdf xnrep.pdf xnswinp.pdf \
-         xndetail.png xngener.png xnrec.png xnrep.png xnswinp.png
 
+
+IMG_DIA = xndetail.dia xngener.dia xnrec.dia xnrep.dia xnswinp.dia 
+IMG_EPS = xndetail.eps xngener.eps xnrec.eps xnrep.eps xnswinp.eps 
+IMG_PDF = xndetail.pdf xngener.pdf xnrec.pdf xnrep.pdf xnswinp.pdf 
+IMG_PNG = xndetail.png xngener.png xnrec.png xnrep.png xnswinp.png
+IMG_JPG = xndetail.jpg xngener.jpg xnrec.jpg xnrep.jpg xnswinp.jpg
+
+GEN_IMAGES = ${IMG_EPS} ${IMG_PDF} ${IMG_PNG} ${IMG_JPG}
+SRC_IMAGES = ${IMG_DIA}
 ##	
 ##  ALL
 ##
 
-doc:  images html info txt pdf ps
+doc:  ${DOC_TARGETS}
 
 
-images: ${IMAGES}
+images: ${SRC_IMAGES} ${GEN_IMAGES}
 
-DOC_DELIV=xnee-doc-${VERSION}
+%.jpg: %.eps
 
-${IMAGES}: pics/xndetail.dia pics/xngener.dia pics/xnrec.dia pics/xnrep.dia pics/xnswinp.dia
-	echo "Creating pics"
-	( cd pics ; ./dia_gen.sh ; cp *.png *.pdf *.eps ../ )
 
-doc-deliv: doc
-	-rm ${DOC_DELIV}.tar.gz
-	tar cvf ${DOC_DELIV}.tar *.png xnee.pdf xnee.ps xnee.html xnee.txt
-	gzip ${DOC_DELIV}.tar
 
 
 ## ----------------------------- ##
@@ -107,4 +109,29 @@ xnee.txt:
 	makeinfo -o xnee.txt --no-headers --no-split --no-validate xnee.texi
 
 
-all: doc 
+all: doc
+
+#all: ${SRC_IMAGES} ${GEN_IMAGES}
+
+${IMG_EPS}: %.eps: %.dia
+	dia --nosplash -e $@ $<
+
+${IMG_PDF}: %.pdf: %.eps
+	epstopdf --outfile $@ $<
+
+${IMG_PNG}: %.png: %.eps
+	convert -density 144x144 $< $@ 
+	( mv $@ `echo $@ | sed 's,\.png,_big\.png,g'` )
+	convert -density 32x32 $< $@ 
+	( mv $@ `echo $@ | sed 's,\.png,_small\.png,g'` )
+	convert -density 60x60 $< $@ 
+
+${IMG_JPG}: %.jpg: %.eps
+	convert -density 144x144 $< $@ 
+	( mv $@ `echo $@ | sed 's,\.jpg,_big\.jpg,g'` )
+	convert -density 32x32 $< $@ 
+	( mv $@ `echo $@ | sed 's,\.jpg,_small\.jpg,g'` )
+	convert -density 60x60 $< $@ 
+
+clean:
+	\rm -f ${GEN_IMAGES} *_big.* *_small.*

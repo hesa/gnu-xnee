@@ -1,4 +1,4 @@
 @set UPDATED 8 January 2004
 @set UPDATED-MONTH January 2004
-@set EDITION 2.0
-@set VERSION 2.0
+@set EDITION 2.0pre01
+@set VERSION 2.0pre01
