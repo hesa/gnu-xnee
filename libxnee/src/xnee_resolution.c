@@ -48,8 +48,8 @@ xnee_set_default_rep_resolution (xnee_data *xd)
 int
 xnee_no_rep_resolution (xnee_data *xd)
 {
-  return ((xd->res_info.replay.x_res == 0) && 
-	  ( xd->res_info.replay.y_res == 0));
+  return ( (xd->res_info.replay.x_res != 1) && 
+	   ( xd->res_info.replay.y_res != 1));
 }
  
  
@@ -75,7 +75,10 @@ xnee_get_rec_resolution_y (xnee_data *xd)
 int
 xnee_set_rep_resolution (xnee_data *xd, char *res_str)
 {
-  return xnee_str_to_res (res_str, &xd->res_info.replay);
+  int ret ;
+  ret = xnee_str_to_res (res_str, &xd->res_info.replay);
+
+  return ret;
 } 
 
 int
@@ -97,8 +100,15 @@ xnee_str_to_res(char *res_str, xnee_res *xr)
   int ret;
 
   if (res_str == NULL)
-    return XNEE_BAD_RESOLUTION;
+    {
+      return XNEE_BAD_RESOLUTION;
+    }
 
+  if ( ! (  ( xr->x_res == 1 ) && ( xr->y_res == 1 )))
+    {
+      return XNEE_OK;
+    }
+  
   ret = sscanf(res_str, "%dx%d",
 	       &xr->x_res, 
 	       &xr->y_res); 
@@ -234,6 +244,14 @@ xnee_resolution_newy (xnee_data *xd, int yval)
 int
 xnee_is_resolution_used (xnee_data *xd)
 {
+  printf ("1  %d==%d   %d    [%d %d]   [%d %d]\n",
+	  xd->res_info.is_used,XNEE_RESOLUTION_USED,
+	  xd->res_info.is_used==XNEE_RESOLUTION_USED,
+	  xnee_get_rec_resolution_x (xd),
+	  xnee_get_rec_resolution_y (xd),
+	  xnee_get_rep_resolution_x (xd),
+	  xnee_get_rep_resolution_y (xd)
+	  );
    if (xd==NULL)
    {
       return XNEE_MEMORY_FAULT;
@@ -278,8 +296,10 @@ xnee_resolution_init (xnee_data *xd)
 {
   xd->res_info.record.x_res=1;
   xd->res_info.record.y_res=1;
+
   xd->res_info.replay.x_res=1;
   xd->res_info.replay.y_res=1;
+
 /*   xnee_set_resolution_used(xd); */
   return XNEE_OK;
 }
