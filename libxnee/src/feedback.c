@@ -111,11 +111,10 @@ init_osd()
        osd_printerror ();
     }
    /*"-*-*-*-*-*-*-34-*-*-*-*-*-*-*"*/
-   if (xosd_set_font 
-       (osd, 
-	"-adobe-helvetica-bold-r-normal-*-*-320-*-*-p-*-iso8859-1"))
+   if (xosd_set_font (osd, 
+		      "-adobe-helvetica-bold-r-normal-*-*-320-*-*-p-*-iso8859-1"))
      {
-        xosd_set_font (osd, "fixed");
+       xosd_set_font (osd, "fixed");
      }
    if (0 != xosd_set_colour (osd, "yellow"))
      {
