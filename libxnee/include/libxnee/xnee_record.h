@@ -185,6 +185,15 @@ xnee_parse_range (xnee_data *xd, int type , char *range);
 int
 xnee_setup_recordext (xnee_data* xd);
 
+/**
+ * Closes down Record extension. After this a call to xnee_setup_recordext is possible
+ * to restart recording.
+ * @param xd   xnee's main structure
+ * @return int 0 on success. XNEE_NO_PROT_CHOOSEN if no data was choosen to record.
+ */
+int
+xnee_unsetup_recordext (xnee_data* xd);
+
 
 
 /**

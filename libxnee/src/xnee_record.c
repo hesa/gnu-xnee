@@ -867,8 +867,6 @@ xnee_setup_recording(xnee_data *xd)
   xd->record_setup->xids[0] = xnee_client_id (xd->control);
   xd->record_setup->xids[1] = xnee_client_id (xd->data);
   
-  xnee_verbose((xd, "EINAR 1\n"));
-
   /* 
    *Remove our clients displays from recording ...
    */
@@ -889,14 +887,15 @@ xnee_setup_recording(xnee_data *xd)
   xd->record_setup->rState=NULL; 
 */
 
-  xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n", xd->record_setup->rContext, (int) ( (xd->record_setup->rState) - (xd->record_setup->nclients) )));   
+  xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n", 
+		xd->record_setup->rContext, 
+		(int) ( (xd->record_setup->rState) - (xd->record_setup->nclients) )));   
   
   if (xd->xnee_info->interval != 0)
     {
       xnee_delay (xd->xnee_info->interval, "xnee:" );
     }
   
-  xnee_verbose((xd, "EINAR 2\n"));
   
   /* Enable context for async interception 
   XSynchronize(xd->data, True);  
@@ -905,6 +904,31 @@ xnee_setup_recording(xnee_data *xd)
   xnee_verbose((xd, "<---xnee_setup_recording\n"));
   XNEE_DEBUG ( (stderr ," <-- xnee_setup_recording()  \n"  ));
   return (0);
+}
+
+
+
+
+/**************************************************************
+ *                                                            *
+ * xnee_unsetup_recording                                     *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int
+xnee_unsetup_recording(xnee_data *xd)
+{
+
+  xnee_verbose((xd, "---> xnee_unsetup_recording\n"));
+
+  xnee_verbose((xd, "---  disabling context \n"));
+  XRecordDisableContext(xd->control, xd->record_setup->rContext);
+
+  xnee_verbose((xd, "---  freeing context \n"));
+  XRecordFreeContext(xd->control, xd->record_setup->rContext);
+
+  xnee_verbose((xd, "<--- xnee_unsetup_recording\n"));
+  return (XNEE_OK);
 }
 
 
@@ -970,12 +994,27 @@ xnee_record_async(xnee_data *xd)
   
   while (1) 
     {
+      int ret;
       /* has the user pressed a modifier+key */
       if (xnee_check_km (xd)==XNEE_GRAB_DATA)
 	{
-	  xnee_handle_km(xd);
+	  xnee_verbose  ((xd," HANDLING \n"));
+	  ret = xnee_handle_km(xd) ; 
+	  if (ret == XNEE_GRAB_STOP)
+	    {
+	      xnee_verbose  ((xd," breaking async loop since STOP \n"));
+	      break;
+	    }
+	  else if (ret == XNEE_GRAB_RESUME)
+	    {
+	      xnee_verbose  ((xd," starting async loop since RESUME \n"));
+	      XRecordEnableContextAsync(xd->data, 
+					xd->record_setup->rContext, 
+					xd->rec_callback, 
+					(XPointer) (xd) /* closure passed to Dispatch */);
+	    }
 	}
-      
+
       /* handle data in the RECORD buffer */
       xnee_process_replies(xd);
       
@@ -992,6 +1031,8 @@ xnee_record_async(xnee_data *xd)
     }
 
   XRecordDisableContext(xd->control, 
+			xd->record_setup->rContext);
+  XRecordFreeContext(xd->control, 
 			xd->record_setup->rContext);
   xnee_stop_session(xd);
 

@@ -12,6 +12,7 @@ Changes in 1.08
 	   '--speed-percent [percent]'   change the replaying speed
 	   '--pause-key [k m]'         key+modifier pauses xnee's current action
 	   '--pause-key [k m]'         key+modifier resume xnee's paused action
+	   '--insert-key [k m]'        key+modifier inserts a meta mark in the log file
 
         - synchronisation rewritten 
 

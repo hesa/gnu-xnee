@@ -376,12 +376,17 @@ xnee_check_km(xnee_data *xd)
 	  int    tmp_modifier;
 	  int    mode;
 
-
 	  XNextEvent (xd->grab, &my_event);
 	  if (my_event.xkey.send_event==1) 
 	    { 
 	      xnee_verbose ((xd , "send_event==true\n")); 
 	    }
+
+	  if (my_event.type == KeyPress )
+	    xnee_verbose ((xd , "##### KeyPress\n")); 
+	  else if (my_event.type == KeyRelease )
+	    xnee_verbose ((xd , "#### KeyRelease\n")); 
+
 	  tmp_modifier=my_event.xkey.state;
 	  tmp_code=my_event.xkey.keycode;
 	  xnee_verbose ((xd, "key      = %d\n", tmp_modifier));
@@ -406,6 +411,11 @@ xnee_check_km(xnee_data *xd)
 	    {
 	      xd->grab_keys->grabbed_action=XNEE_GRAB_RESUME;
 	    }
+	  else if ( ( tmp_modifier == xd->grab_keys->insert_mod ) &&
+	       ( tmp_code == xd->grab_keys->insert_key ) )
+	    {
+	      xd->grab_keys->grabbed_action=XNEE_GRAB_INSERT;
+	    }
 	  else 
 	    {
 	      xd->grab_keys->grabbed_action=XNEE_GRAB_NODATA;
@@ -429,28 +439,43 @@ xnee_check_km(xnee_data *xd)
 int 
 xnee_handle_km(xnee_data *xd)
 {
+  int ret=XNEE_OK;
   xnee_verbose ((xd, " ---> xnee_handle_km\n"));
 
   if (xd->grab_keys->grabbed_action==XNEE_GRAB_STOP)
     {
       xnee_verbose ((xd, " ---  xnee_handle_km: STOP \n"));
-      xnee_close_down(xd);
-      exit (XNEE_OK);
+      ret=XNEE_GRAB_STOP;
+      xnee_verbose ((xd, " <--- xnee_handle_km\n"));
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_PAUSE)
     {
       xnee_verbose ((xd, " ---  xnee_handle_km: PAUSE \n"));
-      XRecordDisableContext(xd->control, 
-			    xd->record_setup->rContext);
-
+      xnee_unsetup_recording (xd);
+      ret=XNEE_GRAB_PAUSE;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_RESUME)
     {
       xnee_verbose ((xd, " ---  xnee_handle_km: RESUME \n"));
-      XRecordEnableContext(xd->data, 
-			   xd->record_setup->rContext, 
-			   xd->rec_callback, 
-			   (XPointer) (xd) /* closure passed to Dispatch */);
+      xnee_setup_recording (xd);
+      ret=XNEE_GRAB_RESUME;
+    }
+  else if (xd->grab_keys->grabbed_action==XNEE_GRAB_INSERT)
+    {
+      time_t rawtime;
+      struct tm * timeinfo;
+
+      xnee_verbose ((xd, " ---  xnee_handle_km: MARK \n"));
+      time ( &rawtime );
+      timeinfo = localtime ( &rawtime );
+      fprintf (xd->out_file, "#XNEE INSERT MARK:%.4d-%.2d-%.2d:%.2d.%.2d.%.2d\n",
+	       timeinfo->tm_year + 1900 , 
+	       timeinfo->tm_mon + 1 , 
+	       timeinfo->tm_mday  ,
+	       timeinfo->tm_hour, 
+	       timeinfo->tm_min , 
+	       timeinfo->tm_sec  );
+      ret=XNEE_GRAB_INSERT;
     }
   else 
     {
@@ -458,7 +483,7 @@ xnee_handle_km(xnee_data *xd)
     }  
 
   xnee_verbose ((xd, " <--- xnee_handle_km\n"));
-  return XNEE_OK;
+  return ret;
 }
 
 

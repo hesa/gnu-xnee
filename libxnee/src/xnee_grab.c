@@ -65,6 +65,13 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       xd->grab_keys->resume_mod=0;
       xnee_verbose((xd, "----  xnee_grab_key RESUME mode\n"));
       break;
+    case XNEE_GRAB_INSERT:
+      key      = xd->grab_keys->insert_key;
+      modifier = xd->grab_keys->insert_mod;
+      xd->grab_keys->insert_key=0;
+      xd->grab_keys->insert_mod=0;
+      xnee_verbose((xd, "----  xnee_grab_key INSERT mode\n"));
+      break;
     default:
       xnee_print_error ("Unknown grab mode\n");
       return XNEE_UNKNOWN_GRAB_MODE;
@@ -103,6 +110,7 @@ xnee_ungrab_keys (xnee_data* xd)
   xnee_ungrab_key ( xd, XNEE_GRAB_STOP);
   xnee_ungrab_key ( xd, XNEE_GRAB_PAUSE);
   xnee_ungrab_key ( xd, XNEE_GRAB_RESUME);
+  xnee_ungrab_key ( xd, XNEE_GRAB_INSERT);
   
   xnee_verbose((xd, "<--- xnee_ungrab_stop_key\n"));
   return XNEE_OK;
@@ -153,6 +161,12 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
       xd->grab_keys->resume_mod=km.modifier;
       xnee_verbose((xd, "----  xnee_grab_key RESUME mode\n"));
       break;
+    case XNEE_GRAB_INSERT:
+      xd->grab_keys->grab=XNEE_GRAB_SET;
+      xd->grab_keys->insert_key=km.key;
+      xd->grab_keys->insert_mod=km.modifier;
+      xnee_verbose((xd, "----  xnee_grab_key RESUME mode\n"));
+      break;
     default:
       xnee_print_error ("Unknown grab mode\n");
       return XNEE_UNKNOWN_GRAB_MODE;
@@ -170,8 +184,6 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
 	}
     }
 
-  xnee_set_verbose (xd);
-  
   /* grab key + modifier */
   screen = DefaultScreen (xd->grab);
   window = RootWindow    (xd->grab, screen );
@@ -189,7 +201,6 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
 	    GrabModeSync );
   xnee_verbose((xd, "<---- xnee_grab_stop_key\n"));
 
-  xnee_unset_verbose (xd);
   return XNEE_OK;
 }
 
@@ -198,9 +209,6 @@ xnee_grab_key (xnee_data* xd, int mode, char *mod_key)
 int
 xnee_get_grab_mode (xnee_data *xd, int key, int modifier)
 {
-  
-
-
   if ( (key==xd->grab_keys->stop_key) && 
        (modifier==xd->grab_keys->stop_mod) )
     {
@@ -252,6 +260,9 @@ xnee_new_grab_keys()
 
   xgk->resume_key   = 0 ;
   xgk->resume_mod   = 0 ;
+
+  xgk->insert_key   = 0 ;
+  xgk->insert_mod   = 0 ;
 
   xgk->grab = XNEE_GRAB_NODATA;
   xgk->grabbed_action = XNEE_GRAB_NODATA;

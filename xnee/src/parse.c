@@ -71,6 +71,7 @@ static char *help[] = {
   "--stop-key mod,key, -sk        ", "When pressing modifier mod and key key Xnee exits" , 
   "--pause-key mod,key, -pk       ", "When pressing modifier mod and key key Xnee pauses its current action" , 
   "--resume-key mod,key, -rk      ", "When pressing modifier mod and key key Xnee resumes its paused action" , 
+  "--insert-key mod,key, -ik      ", "When pressing modifier mod and key key Xnee inserts a META mark in the log file" , 
   "--write-settings file          ", "Writes settings to a resource file",
   "--print-settings, -ps          ", "Prints Xnee settings and waits (for <ENTER>)", 
   "--print-event-names, -pens     ", "Prints X11 event number and name ", 
@@ -492,6 +493,11 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	{
 	  xnee_verbose ((xd, "Found -rk/--resume ... : %s\n", argv[i]));
 	  xnee_grab_key (xd, XNEE_GRAB_RESUME, argv[++i]);
+	}
+      else if(xnee_check(argv[i], "--insert-key", "-ik")) 
+	{
+	  xnee_verbose ((xd, "Found -ik/--insert ... : %s\n", argv[i]));
+	  xnee_grab_key (xd, XNEE_GRAB_INSERT, argv[++i]);
 	}
       else if(xnee_check(argv[i], "--time", "-t")) 
 	{

@@ -224,6 +224,7 @@ enum xnee_grab_modes
     XNEE_GRAB_STOP    ,
     XNEE_GRAB_PAUSE   ,
     XNEE_GRAB_RESUME  ,
+    XNEE_GRAB_INSERT  ,
     XNEE_GRAB_UNKOWN  = 15
   } _xnee_grab_modes;
 
@@ -609,6 +610,9 @@ typedef struct
 
   int     resume_key   ;    /*!< key used to resume Xnee */
   int     resume_mod   ;    /*!< modifier used to resume Xnee */
+
+  int     insert_key   ;    /*!< key used to insert a mark in Xnee's log */
+  int     insert_mod   ;    /*!< modifier used to insert a mark in Xnee's log */
 
 } xnee_grab_keys;
 
