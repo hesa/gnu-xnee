@@ -425,7 +425,8 @@ xnee_replay_main_loop(xnee_data *xd)
       else 
 	{
 	  ret = xnee_expression_handle_session(xd, ret_str, &xindata);
-	  if (ret == XNEE_REPLAY_DATA)
+
+	  if ( (ret == XNEE_REPLAY_DATA) || (ret == XNEE_PRIMITIVE_DATA) )
 	    {
 	      xnee_verbose((xd, 
 			    "We are finished reading settings"
@@ -463,13 +464,19 @@ xnee_replay_main_loop(xnee_data *xd)
    
    /**
     * all META DATA setting up our sessions is read ...
-   * go on replaying
-   *
-   * 
-   *       Think of this as the main loop
-   */
+    * go on replaying
+    *
+    * 
+    *       Think of this as the main loop
+    */
    while  ( (ret!=XNEE_SYNTAX_ERROR) && xd->cont ) 
     {
+
+      ret_str = fgets(tmp, 256, xd->data_file);
+      if (ret_str == NULL)
+	break;
+
+
       xnee_verbose((xd, "REPLAY str = '%s' ret=%d (last_log_read=%d) \n",
 		    ret_str, ret, last_logread));
       if (last_logread)
@@ -602,6 +609,7 @@ xnee_replay_main_loop(xnee_data *xd)
       xnee_verbose((xd, "  <-- Flushed after handled event\n"));
       last_logread = 0;
       ret = xnee_expression_handle_session(xd, ret_str, &xindata);
+
     }
   return XNEE_OK;
 }

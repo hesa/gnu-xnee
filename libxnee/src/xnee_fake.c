@@ -371,6 +371,57 @@ xnee_fake_motion_event (xnee_data* xd,
   return (XNEE_OK);
 }
 
+/**************************************************************
+ *                                                            *
+ * xnee_fake_realtive_motion_event                            *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+int
+xnee_fake_relative_motion_event (xnee_data* xd,
+				 int x, 
+				 int y, 
+				 unsigned long dtime)
+{
+  int i=0;
+  int size= xd->distr_list_size;
+
+  xnee_verbose((xd, "---> xnee_fake_relative_motion_event\n"));
+  if (!xnee_is_recorder (xd))
+    {
+      xnee_fake_sleep (dtime);
+      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%d, %d, %d, %lu))\n",
+		    (int) xd->fake, 
+		    (int) x,
+		    (int) y,
+		    0));
+      XTestFakeRelativeMotionEvent(xd->fake, 
+			   x, 
+			   y, 
+			   0);
+      XFlush(xd->fake);
+    }
+  
+  for (i=0; i<size ; i++)
+    {
+      XTestGrabControl (xd->distr_list[i].dpy, True); 
+
+      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%d, %d, %d, %lu))  **\n",
+		   (int) xd->distr_list[i].dpy, 
+		   (int) x,
+		   (int) y,
+		    10));
+      XTestFakeRelativeMotionEvent(xd->distr_list[i].dpy, 
+			   x, 
+			   y, 
+			   CurrentTime);
+      XFlush (xd->distr_list[i].dpy);
+      
+    }
+  xnee_verbose((xd, " <------- xnee_fake_relative_motion_event\n"));
+  return (XNEE_OK);
+}
+
 int 
 xnee_type_file(xnee_data *xd, char *str )
 {

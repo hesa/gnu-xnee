@@ -90,6 +90,11 @@ xnee_replay_event_handler (xnee_data *xd,  xnee_intercept_data* xid , int last_e
 
 
 
+int
+xnee_fake_relative_motion_event (xnee_data* xd,
+				 int x, 
+				 int y, 
+				 unsigned long dtime);
 
 
 int 

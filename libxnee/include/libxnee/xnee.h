@@ -98,6 +98,7 @@ enum _xnee_data_types {
   XNEE_SETTINGS_DATA     ,
   XNEE_MARK_DATA         ,
   XNEE_ACTION_DATA       ,
+  XNEE_PRIMITIVE_DATA    ,
   XNEE_PROJECT_INFORMATION_DATA,
   XNEE_NO_DATA          
 } xnee_data_types ;
@@ -355,6 +356,19 @@ enum cont_proc_commands
 #define XNEE_REPLAY_CALLBACK_NAME "xnee_replay_dispatch"
 #define XNEE_RECORD_CALLBACK_NAME "xnee_record_dispatch"
 #define XNEE_SYNC_FUNCTION_NAME   "xnee_sync_fun"
+
+
+#define XNEE_FAKE_RELATIVE_MOTION "fake-relative-motion"
+#define XNEE_FAKE_MOTION          "fake-motion"
+
+#define XNEE_FAKE_BUTTON_PRESS    "fake-button-press"
+#define XNEE_FAKE_BUTTON_RELEASE  "fake-button-release"
+#define XNEE_FAKE_BUTTON          "fake-button"
+
+#define XNEE_FAKE_KEY_PRESS       "fake-key-press"
+#define XNEE_FAKE_KEY_RELEASE     "fake-key-release"
+#define XNEE_FAKE_KEY             "fake-key"
+
 
 #define REPLAY_CALLBACK 1
 #define RECORD_CALLBACK 2

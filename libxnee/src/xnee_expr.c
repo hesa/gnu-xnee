@@ -60,6 +60,9 @@ static int
 xnee_expression_handle_mark(xnee_data *xd, char *tmp);
 
 static int
+xnee_expression_handle_prim(xnee_data *xd, char *tmp);
+
+static int
 xnee_expression_handle_projinfo(xnee_data *xd, char *tmp);
 
 /*************************************************************
@@ -86,6 +89,12 @@ xnee_expression_handle_session(xnee_data *xd,
 				  tmp,
 				  xindata);
   if (do_continue==XNEE_REPLAY_DATA) { return (XNEE_REPLAY_DATA); }
+
+  /* Is it a replayable event*/
+  do_continue = 
+    xnee_expression_handle_prim(xd, 
+				tmp);
+  if (do_continue==XNEE_PRIMITIVE_DATA) { return (XNEE_PRIMITIVE_DATA); }
 
   /* ok, we have some other data */
   do_continue = xnee_expression_handle_project(xd, 
@@ -232,10 +241,6 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   xnee_verbose ((xd, "handling settings: %s\n", tmp));
   len=strlen(tmp);
 
-
-#define XNEE_CHECK_SESS_EXPR(arg,str) ( (!strncmp(arg,str,strlen(arg))) &&  ( strlen(arg)==strlen(str) ))
-  
-  
   /* OK the string passed the first tests */
   range_tmp=strstr (tmp, " ");
 
@@ -646,5 +651,52 @@ xnee_expression_handle_projinfo(xnee_data *xd, char *tmp)
 
 
 
+#define CHECK_EQUALITY(a,b) ( (a!=NULL) && (b!=NULL) && (strlen(a)==strlen(b)) && (strcmp(a,b)==0) )
+
+static int
+xnee_expression_handle_prim(xnee_data *xd, char *str)
+{
+  int ret= 0 ;  
+  char *prim_args;
+  char buf[32];
+  int   prim_len = 0 ; 
+
+  xnee_verbose ((xd, "handling primitive: %s\n", str));
+
+  prim_args = strstr(str," ");
+
+  if (prim_args==NULL)
+  {
+    printf ("no args found ... leaving\n");
+    return -1;
+  }
+
+  prim_len  = strlen(str) - strlen(prim_args);
+  strncpy(buf, str, prim_len);
+  buf[prim_len]='\0';
+  prim_args++;
+
+  if (CHECK_EQUALITY(buf, XNEE_FAKE_RELATIVE_MOTION))
+    {
+      printf ("Faking relative\n");  
+      xnee_fake_relative_motion_event (xd,
+				       12, 
+				       12, 
+				       0);
+      ret = XNEE_PRIMITIVE_DATA ;
+    }
+  else if (CHECK_EQUALITY(buf, XNEE_FAKE_MOTION))
+    {
+      printf ("Faking motion\n");  
+      ret = XNEE_PRIMITIVE_DATA ;
+    }
+  else
+      printf ("Found crap \n");  
+  
+  
+
+
+  return ret;
+}
 
 
