@@ -1,5 +1,19 @@
-Xnee / NEWS 
+libxnee / NEWS 
 ----------------------------
+  This file contains major news about libxnee which is a part
+  of the Xnee project.
+
+  For more information about Xnee, http://www.gnu.org
+
+
+Changes in 
+        - '--enable-pedantic' option added to configure
+        - range allocation algorithm partly rewritten
+
+All text below concerns the old structure of Xnee
+------------------------------------------------------------------------------
+
+
 
 Changes in 1.08
 	- new options:

@@ -68,4 +68,10 @@ else
 BUF_VERBOSE_FLAG = -DNO_BUF_VERBOSE
 endif
 
-CFLAGS = -I../include ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG} 
+if PEDANTIC
+PEDANTIC_FLAGS =  -W -Wall -pedantic -pedantic-errors  -Werror
+else
+PEDANTIC_FLAGS = 
+endif
+
+CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG} 

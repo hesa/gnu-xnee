@@ -54,7 +54,9 @@ feedback(char *str, ... )
    va_end(ap);
    buf[conv]='\0';
    feedback_fp (buf);
+#ifdef  HAVE_XOSD
    osd_feedback (buf);
+#endif
    return XNEE_OK;
 }
 #else

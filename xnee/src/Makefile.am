@@ -6,7 +6,10 @@ LIBXNEE_DIR=@libxnee_dir@
 else
 LIBXNEE_DIR="./"
 endif
-xnee_LDADD =  -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl
+
+
+
+xnee_LDADD =  -L${LIBXNEE_DIR}/src  -lxnee ${X_LIBS} -lXext  -lXtst -lX11 -lpthread -ldl
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE
@@ -32,6 +35,12 @@ else
 BUF_VERBOSE_FLAG = -DNO_BUF_VERBOSE
 endif
 
+if PEDANTIC
+PEDANTIC_FLAGS =  -W -Wall -pedantic -pedantic-errors  -Werror
+else
+PEDANTIC_FLAGS = 
+endif
 
 
-CFLAGS =  -I${LIBXNEE_DIR}/include  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}
+
+CFLAGS =  -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}

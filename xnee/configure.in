@@ -37,12 +37,22 @@ AC_ARG_ENABLE(gprof,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-gprof) ;;
 esac],[gprof=false])
 
-AM_CONDITIONAL(VERBOSE, test x$verbose = xtrue)
-AM_CONDITIONAL(GCOV, test x$gcov = xtrue)
-AM_CONDITIONAL(GPROF, test x$gprof = xtrue)
-AM_CONDITIONAL(BUF_VERBOSE, test x$buffer_verbose = xtrue)
-AM_CONDITIONAL(HAVE_XOSD, test x$HAVE_XOSD_SUB = xtrue)
+AC_ARG_ENABLE(pedantic,
+[  --enable-pedantic          build xnee with support for pedantic compiling],
+[case "${enableval}" in
+  yes) pedantic=true ;;
+  no)  pedantic=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --enable-pedantic) ;;
+esac],[pedantic=false])
 
+
+
+AM_CONDITIONAL(VERBOSE,     test x$verbose = xtrue)
+AM_CONDITIONAL(GCOV,        test x$gcov = xtrue)
+AM_CONDITIONAL(GPROF,       test x$gprof = xtrue)
+AM_CONDITIONAL(PEDANTIC,    test x$pedantic = xtrue)
+AM_CONDITIONAL(BUF_VERBOSE, test x$buffer_verbose = xtrue)
+AM_CONDITIONAL(HAVE_XOSD,   test x$HAVE_XOSD_SUB = xtrue)
  
 # Process the option "--with-libxnee-dir="
 AC_ARG_WITH(libxnee-dir,

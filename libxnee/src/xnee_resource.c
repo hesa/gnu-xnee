@@ -50,6 +50,7 @@
 #include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_grab.h"
 #include "libxnee/xnee_km.h"
+#include "libxnee/xnee_range.h"
 #include "libxnee/datastrings.h"
 
 
