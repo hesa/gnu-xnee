@@ -55,6 +55,9 @@
 
 
 
+xnee_data *xd_global;
+
+
 /**************************************************************
  *                                                            *
  * xnee_get_max_range                                         *
@@ -352,6 +355,9 @@ xnee_init(xnee_data* xd)
     {
       return XNEE_MEMORY_FAULT;
     }
+
+  xd_global = xd ; 
+
   /*  xd->human_print = False  ; */
   xd->plugin_handle    = NULL;
   xd->rec_callback     = xnee_record_dispatch ;
@@ -441,6 +447,7 @@ xnee_stop_session( xnee_data* xd)
 {
   xnee_verbose((xd, " ---> xnee_stop_session\n" ));
   xnee_ungrab_keys(xd);
+  xnee_reset_autorepeat (xd);
   xnee_verbose((xd, " <--- xnee_stop_session\n" ));
   return (0);
 }
@@ -458,8 +465,13 @@ signal_handler(int sig)
 {
   switch (sig)
     {
+    case SIGTERM:
+      fprintf  (stderr,  "sighandler SIGTERM (%d)\n", sig);
+      xnee_reset_autorepeat (xd_global);
+      exit (sig);
     case SIGINT:
       fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
+      xnee_reset_autorepeat (xd_global);
       exit (sig);
     default:
       fprintf (stderr, 
@@ -1202,6 +1214,7 @@ xnee_reset_autorepeat (xnee_data *xd)
   
   return XNEE_OK;
 }
+
 
 KeyCode
 xnee_str2keycode(xnee_data* xd, char *str )
