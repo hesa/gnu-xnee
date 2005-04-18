@@ -60,7 +60,7 @@
 
 
 @menu
-* Introduction::         Introduction
+* Summary::              Summary
 * Getting started::      Getting started
 * General ideas::        General ideas
 * Installation::         Installation
@@ -77,63 +77,16 @@
 
 @shortcontents
 
-@node Introduction, Getting started, top, top
+@node Description, Getting started, top, top
 @include xnee_intro.texi
+@page
 @include xnee_start.texi
-@chapter Introduction
-
-@section Short description
-Xnee can record and replay user sessions in the X Windows System environment.
-
-Xnee is a suite of programs that can record, replay and
-distribute user actions under the X11 environment. 
-Think of it as a robot that can imitate the job you just 
-did. 
-
-The Xnee project consists of a library and two applications
-
-  @b{cnee} - command line program
-
-  @b{gnee} - graphical user interface program
-
-  @b{libxnee} - library used by xnee and gnee
-
-            
-            
-@section Xnee features
-@cindex features
-
-@b{Test tool}
-        Instead of performing test cases for a GUI (or CLI program) 
-        over and over again, the test cases can be automated. Simply record 
-        a user session and replay it later. 
-
-@b{Performance test tool}
-	If you want to simulate lots of simultaneous users in a network (or
-	a local machine) you can use Xnee. Simply record a user
-	session and start multiple instances of Xnee.
-
-@b{Demonstration tool}
-	You can use Xnee to demonstrate the features of your program. Simply 
-	record a user session and replay it later. 
-
-@b{Distribution tool}
-	If you want to send over your mouse/keyboard actions to another display
-	you can use the built-in distribution mechanism in Xnee. 
-
-@b{Macro recorder/replayer}
-	By binding a key and modifier combination (e.g using xkeymouse)
-  to replay a recorded session you will have a Window Manager and 
-  application independent macro.
-
-@b{File retyper}
-   Xnee can retype the contents of a file. This can be useful
-   during tests or if you want xnee to answer some command
-   session without having to record the session.
+@page
+@chapter Functional overview
 
 
-@section Description
-@cindex description
+@section Functional overview
+@cindex Functional overview
 The Xnee applications (gnee and xnee) receives X11 protocol data (e.g. events)
 from an X server (using libxnee) and print them to a file, called Xnee 
 Session File. Theses events are later read from the session file and replayed.
@@ -154,33 +107,19 @@ This picture gives an overview of Xnee and the files used.
 @end ifnotinfo
 
 
-@section Background
-@cindex background
-In order to verify that a program does the job it's supposed to do, 
-certain tests have to be made. 
-These tests are, IMHO, perhaps the most boring things a programmer 
-can do. To release the programmer from this burdon Xnee is made. 
-@*
-
-Xnee started out as a commad line program. During the development
-phase the main functionality was broken out to a library, called
-libxnee. The command line program kept the name xnee. The thought behind 
-making the library was to enable the writing of other clients than just 
-the command line. Today there is a GUI program, gnee, that uses the library.
-@*
-
-By using xnee your testcase(s) can be recorded and later on replayed.
-Xnee comes with other features For more information about these, read the 
-Introduction.
-
 
 @include xnee_general.texi
+@page
 @include xnee_install.texi
+@page
 @include xnee_exampl.texi
-@include xnee_usage.texi
+@page
 @include xnee_prot.texi
+@page
 @include xnee_intern.texi
+@page
 @include xnee_req.texi
+@page
 @node FAQ, Copying This Manual, Requirements, top
 @include xnee_faq.texi
 

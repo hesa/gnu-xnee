@@ -1,7 +1,4 @@
-@node     General ideas, Installation, Getting started, top
-@chapter  General ideas
-@cindex   General ideas
-This chapter will give information about key concepts in X11 and Xnee. It is
+In this section you will be given information about key concepts in X11 and Xnee. It is
 vital that you read through this chapter. 
 
 @section  Modes
@@ -133,31 +130,19 @@ reading the data number, s tring representation of the data is printed out.
 To enable this option, use the @code{--human-printouts}.
 
 
-@section  Invoking Xnee
 
-The mode(s) Xnee shall use and the ranges to use can be set by either:
-@itemize @bullet
-@item	command line options
-@item	project file (only applicable when in record mode)
-@item	session file (only applicable when in replay mode)
-@end itemize
+@section  Invoking Xnee
 
 @subsection  Command line syntax
 @cindex command line syntax
-To get information about how to use Xnee's command line options see the
-man page, info page or use the @code{--help} option.
+To get information about how to use Xnee's command line options please use the man page(s).
 
 @subsection  Project file
-To use a project file use the @code{--project} option,  e.g 
-@example
-@code{cnee --project xnee/projects/netscape.xnp}
-@end example
+To use a Project file use the @code{--project} option,  e.g @code{cnee --project xnee/projects/netscape.xns}
 
 @subsection  Session file
-To use a recorded session file use the @code{--file} option,  e.g 
-@example
-@code{cnee --file user1_session.xnee}
-@end example
+To use a session file use the @code{--file} option,  e.g 
+@code{cnee --file user1_session.xns}
 
 
 @section  Interupting Xnee
@@ -193,8 +178,74 @@ into the terminal window (e.g if a lot of motion events were recorded that
 will let you compete with Xnee on where the mouse pointer shall be located. 
 Beleive me, you'll end up lossing that battle). 
 
-@section  Using Xnee plugins 
+@subsection  Stop Xnee with key combination
+@cindex      Stop Xnee with key combination
+Xnee stops its current action when the user presses the key
+combination as specified during setup. Xnee will be shut gracefully.
+
+@subsection  Pause Xnee with key combination
+@cindex      Pause Xnee with key combination
+Xnee pause its current action when the user presses the key
+combination as specified during setup. Xnee will be in paused mode until
+the user stops or resumes Xnee.
+
+@subsection  Pause Xnee with key combination
+@cindex      Pause Xnee with key combination
+Xnee resumes its current paused action when the user presses the key
+combination as specified during setup. Xnee will continue where it was
+paused.
+
+@subsection  Insert marks Xnee with key combination
+@cindex      Insert marks Xnee with key combination
+When the user presses the key combination as specified during setup 
+Xnee will print a mark in the session file containing a time stamp. This 
+feature is intended be used when you want to mark an interresting time/event 
+during recording. After recording has finished you can add Xnee scripting 
+calls to Xnee which will be interpreted and executed as if they were recorded.
+
+
+@subsection Limit number of data to record
+There a a few ways to limit the number of data Xnee records.
+@itemize @bullet
+@item	limit the events to recored
+@item	limit the data to recored
+@item	limit the time to recored
+@item	send a signal to xnee (SIGTERM)
+@item	use a selfmade record callback function
+@end itemize
+
+@subsection Limit the events to record
+@cindex limit the events
+When having received the specified amount of events from the server, Xnee 
+stops the recording. For more information on how to use this option, read
+the man page for cnee or the user manual for gnee.
+
+@subsection Limit the data to record
+@cindex limit the data
+When having received the specified amount of data from the server, Xnee 
+stops the recording. For more information on how to use this option, read
+the man page for cnee or the user manual for gnee.
+
+@subsection Limit the time to record
+@cindex limit the events
+When having recorded for the specified amount of time from the server, Xnee 
+stops the recording. For more information on how to use this option, read
+the man page for cnee or the user manual for gnee.
+
+@subsection Send SIGTERM to Xnee
+@cindex SIGTERM
+The easiest way to send a signal to a process is by launching Xnee from a 
+terminal window (e.g xterm). By pressing Control-c xterm sends the 
+SIGTERM signal to Xnee. When replaying it can sometimes be hard to 
+move the pointer into the terminal window (e.g if a lot of motion 
+events were recorded that will let you compete with Xnee on where 
+the mouse pointer shall be located. Beleive me, you'll end up lossing 
+that battle).  
+
+
+@section  Xnee plugins 
 @cindex plugins
 Xnee supports plugins since version 1.07. For information about how to write 
 plugins, download the source code and look at the plugin example which shall 
 be delivered with Xnee.
+

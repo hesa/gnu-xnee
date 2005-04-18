@@ -328,50 +328,50 @@ is just an example.
 
 
 
-@section    Key and modofiers
+@section    Key
 
-@subsection Stop Xnee with key + modifier
-@cindex     Stop Xnee with key + modifier
-You can stop xnee by specifying a key and modifier combination. Make
-sure that this key modifier isn't grabbed by another X client (e.g by the
+@subsection Stop Xnee with key
+@cindex     Stop Xnee with key 
+You can stop xnee by specifying a key. Make
+sure that this key isn't grabbed by another X client (e.g by the
 Window Manager). Let's say that you want Xnee to stop recording if you press
 Control and h. 
 @example
-   @code{cnee --record --mouse --loops -1 --stop-key Control,h}
+   @code{cnee --record --mouse --loops -1 --stop-key h}
 @end example
-This will make xnee record mouse events until you press Control and h. 
+This will make xnee record mouse events until you press h. 
 All printouts are done to stdout so you can see that Xnee stops when you
-press the key and modifier. 
+press the key. 
 @*
 Move your mouse for a while and you'll see xnee print out lots of lines. 
 @*
-Press Control and h. 
+Press h. 
 @*
 Xnee will now have stopped recording.
 
 
-@subsection Pausing and resuming Xnee with key + modifier
-@cindex     Pausing and resuming Xnee with key + modifier
-You can pause and resum xnee by specifying a key and modifier combination. 
-Make sure that this key modifier isn't grabbed by another X client (e.g by 
+@subsection Pausing and resuming Xnee with key
+@cindex     Pausing and resuming Xnee with key
+You can pause and resum xnee by specifying a key. 
+Make sure that this key isn't grabbed by another X client (e.g by 
 the Window Manager). Let's say that you want Xnee to pause recording if you 
-press Control and p and to resume when pressing Comntrol and r. 
+press p and to resume when pressing Comntrol and r. 
 @example
-   @code{cnee --record --mouse --loops -1 --pause-key Control,p \}
-   @code{--resume-key Control,r}
+   @code{cnee --record --mouse --loops -1 --pause-key p \}
+   @code{--resume-key r}
 @end example
-This will make xnee record mouse events until you press Control and p. 
+This will make xnee record mouse events until you press p. 
 All printouts are done to stdout so you can see that Xnee stops when you
-press the key and modifier. 
+press the key. 
 @*
 Move your mouse for a while and you'll see xnee print out lots of lines. 
 @*
-Press Control and p. 
+Press p. 
 @*
 Xnee will now have paused recording. Move your mouse for a while and note that
 nothing is printed.
 @*
-Press Control and r. 
+Press r. 
 @*
 Xnee will now have resumed recording. Move your mouse for a while and note that
 xnee begins its printouts.
@@ -383,14 +383,14 @@ a macro functionality built in (e.g emacs).
 
 @subsection Define a simple macro
 @cindex     Define a simple macro
-There are plenty of tools that bind a key + modifier combination to 
+There are plenty of tools that bind a key combination to 
 different actions. For various reasons the author of this manual is familliar
 with xkeymouse so we will use xkeymouse in this example.
 @*
-The first thing to do is to decide which key + modifier combination to tie
+The first thing to do is to decide which key combination to tie
 to the wanted action. Let's say we want to use one of the funtion keys, F1. 
 We then have to find out which keycode belongs to that key. The action we will 
-bind to this key + modifier combination will be the replaying of a recorded
+bind to this key combination will be the replaying of a recorded
 session from the previous examples. 
 @*
 We use Xnee to find the keycode for F1. Start xnee.
