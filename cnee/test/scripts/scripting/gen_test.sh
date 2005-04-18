@@ -1,8 +1,25 @@
 #!/bin/bash
 
+
+# source useful funs
+if [ ! -f etc/base_funs ]; 
+then 
+    echo "Can't find the file: base_funs"  
+    echo "Start me up in the xnee test dir "
+    exit
+else 
+    . etc/base_funs
+fi 
+ 
+# name of myself
+MYNAME=replay/mouse.sh 
+ 
+init_test $MYNAME
+parse_me "$*"
+
+
 FAKE_MOTION="fake-motion"
 FAKE_KEY="fake-key"
-XNEE=./Xnee-1.08.95a/cnee/src/cnee 
 XNEE_ARGS="--replay --file stdin"
 
 TMP_X=0
@@ -195,15 +212,18 @@ function move_window()
 
 
 
-#move_square 1 100 1 
-#move_square 1 400 1
-#move_square 1 800 1
+move_square 1 100 1 
+move_square 1 400 1
+move_square 1 800 1
 
 
 
-#fake_string "This is a test and a hard place" 10
-fake_string "ls -lall" 200
+fake_string "This is a test and a hard place" 10
+fake_string "ls -al" 200
 
-#fake_buttons 
+get_in_position
+move_window
 
-#move_window
+
+fake_buttons 
+

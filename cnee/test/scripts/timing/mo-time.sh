@@ -122,13 +122,12 @@ timed_replay 10
 
 timed_replay 25
 
-timed_replay 50
-
 timed_replay 75
-#timed_replay 100
-#timed_replay 200
-#timed_replay 500
-#timed_replay 1000
+
+timed_replay 100
+timed_replay 200
+timed_replay 500
+timed_replay 1000
 
 result_log $MYNAME 
 
