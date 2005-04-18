@@ -1,4 +1,3 @@
-@node Installation, Examples, General ideas, top
 @chapter Installation
 
 @section Installation from source with the configure script

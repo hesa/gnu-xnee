@@ -1,4 +1,3 @@
-@node    Getting started, General ideas, Introduction, top
 @chapter Getting started
 
 @section Getting started 

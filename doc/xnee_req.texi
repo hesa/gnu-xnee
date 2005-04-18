@@ -1,4 +1,3 @@
-@node  Requirements , FAQ, Internals, top
 @chapter  Xnee Requirements
 @cindex requirements
 

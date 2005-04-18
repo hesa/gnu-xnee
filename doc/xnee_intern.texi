@@ -1,4 +1,3 @@
-@node Internals, Requirements, File format, top
 
 @chapter Xnee Internals
 @cindex  Xnee Internals

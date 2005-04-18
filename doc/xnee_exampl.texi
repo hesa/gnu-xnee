@@ -1,4 +1,3 @@
-@node Examples, Usage, Installation, top
 @chapter Examples
 
 @section Recorder

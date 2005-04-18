@@ -1,4 +1,3 @@
-@node File format, Internals, Usage, top
 @chapter File types and format
 
 The files used by Xnee are
