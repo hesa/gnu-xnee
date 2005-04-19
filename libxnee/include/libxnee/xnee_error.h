@@ -22,6 +22,8 @@
  * MA  02111-1307, USA.                                              
  ****/
 
+#ifndef XNEE_XNEE_ERROR_H
+#define XNEE_XNEE_ERROR_H
 
 #include <libxnee/xnee.h>
 
@@ -49,3 +51,6 @@ xnee_set_err_string (char *new_error, ...) __attribute__ ((format (printf, 1 ,2)
 
 void
 xnee_free_err_string (void);
+
+
+#endif /* XNEE_XNEE_ERROR_H */
