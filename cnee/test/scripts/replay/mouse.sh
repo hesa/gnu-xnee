@@ -62,6 +62,7 @@ function record_and_replay()
     verbose "   ### start point:    $XPOS $YPOS `date`"
     $XNEE --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record $SUM -o rep-mouse.log &
 
+    verbose " Sleeping 2 secs"
     sleep 2
     verbose "Start faking with swinput:"
 
@@ -79,6 +80,7 @@ function record_and_replay()
     verify_same     $SAVE_YPOS $YPOS
     verify_same     $(( $XPOS - $SAVE_XPOS )) $RIGHT_PIX
     
+    verbose " Sleeping $SLEEP_INTERVAL secs"
     sleep $SLEEP_INTERVAL
 
     save_pointer
@@ -94,6 +96,7 @@ function record_and_replay()
     verify_not_same  $SAVE_YPOS $YPOS
     verify_same     $(( $YPOS - $SAVE_YPOS )) $DOWN_PIX
 
+    verbose " Sleeping $SLEEP_INTERVAL secs"
     sleep $SLEEP_INTERVAL
 
     save_pointer
@@ -109,6 +112,7 @@ function record_and_replay()
     verify_same     $SAVE_YPOS $YPOS
     verify_same     $(( $SAVE_XPOS - $XPOS )) $LEFT_PIX
 
+    verbose " Sleeping $SLEEP_INTERVAL secs"
     sleep $SLEEP_INTERVAL
 
     verbose "  u $UP_PIX"
@@ -124,6 +128,7 @@ function record_and_replay()
     verify_not_same $SAVE_YPOS $YPOS
     verify_same     $(( $SAVE_YPOS - $YPOS )) $UP_PIX
 
+    verbose " Sleeping5 secs"
     sleep 5
     $KILLALL_1 $XNEE
     verbose "Making sure we have a valid log file...."
@@ -166,6 +171,7 @@ function record_and_replay()
     MYSLEEP=$(( $SLEEP_INTERVAL / 2 ))
     verbose "sleeping $MYSLEEP"
 
+    verbose " Sleeping $R_DELAY + $MYSLEEP secs"
     sleep $R_DELAY
     sleep $MYSLEEP
     get_pointer
@@ -175,6 +181,7 @@ function record_and_replay()
     verify_same     $(( $XPOS - $SAVE_XPOS )) $RIGHT_PIX
 
     save_pointer
+    verbose " Sleeping $SLEEP_INTERVAL + more secs"
     sleep $SLEEP_INTERVAL
     sleep $D_DELAY
     get_pointer
@@ -184,6 +191,7 @@ function record_and_replay()
     verify_same     $(( $YPOS - $SAVE_YPOS )) $DOWN_PIX
 
     save_pointer
+    verbose " Sleeping $SLEEP_INTERVAL + more secs"
     sleep $SLEEP_INTERVAL
     sleep $L_DELAY
     get_pointer
@@ -193,6 +201,7 @@ function record_and_replay()
     verify_same     $(( $SAVE_XPOS - $XPOS )) $LEFT_PIX
 
     save_pointer
+    verbose " Sleeping $SLEEP_INTERVAL + more secs"
     sleep $SLEEP_INTERVAL
     sleep $U_DELAY
     get_pointer

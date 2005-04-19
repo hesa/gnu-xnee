@@ -6,7 +6,7 @@ export LOG=./xnee_test.log
 export ERR_LOG=./xnee_test.err
 
 export MOUSE_DEVICE=/dev/swmouse
-export KEYBOARD_DEVICE=/dev/swmouse
+export KEYBOARD_DEVICE=/dev/swkeybd
 
 export KILL_1=kill_1
 export KILLALL_1=kill_1

@@ -13,6 +13,7 @@ export DEBUG=/tmp/xnee_build.log
 export XNEE_RELEASE=1
 export BUILD_RPM=false
 export PUT_WWW=false
+export DO_CVS=false
 
 export SUDO="sudo"
 
@@ -88,6 +89,13 @@ do
     elif [ "$1" == "--www" ] ;
     then
 	PUT_WWW=true
+    elif [ "$1" == "--cvs" ] ;
+    then
+	DO_CVS=true
+    elif [ "$1" == "--help" ] ;
+    then
+	echo "options available: --verbose, --fileverbose, --rpm, --www, --help"
+	exit 0
     fi
 
     shift
@@ -323,5 +331,8 @@ fi
 #check_version $XNEE_VERSION "xnee from Makefile.solaris"
 #mv xnee/src/xnee ./xnee.makefile_solaris
 
-build_cvs
+if [ "$DO_CVS" = "true" ]
+then
+    build_cvs
+fi
 

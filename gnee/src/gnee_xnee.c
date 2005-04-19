@@ -26,6 +26,7 @@
 
 #include <pthread.h>
 #include <support.h>
+#include <string.h>
 
 
 #include "gnee_xnee.h"
@@ -845,6 +846,7 @@ gx_get_default_filename()
   const char *default_user_name = "user";
   const char *file_prefix = "gnee_";
   const char *file_suffix = ".xns";
+
   char *ret_str;
   int   size = 0 ; 
 
@@ -854,14 +856,14 @@ gx_get_default_filename()
   tmp_dir = getenv("TMPIR");
   if (tmp_dir==NULL)
     {
-      tmp_dir=default_tmp_dir;
+      tmp_dir= (char *) default_tmp_dir;
     }
 
   /* set the user name */
   user_name = getlogin();
   if (user_name==NULL)
     {
-      user_name = default_user_name; 
+      user_name = (char *) default_user_name; 
     }
   
   size = strlen (tmp_dir) + 
@@ -874,11 +876,11 @@ gx_get_default_filename()
     {
       return NULL;
     }
-  
-  strncpy (ret_str, size, tmp_dir);
-  strncat (ret_str, size - strlen(ret_str), file_prefix);
-  strncat (ret_str, size - strlen(ret_str), user_name);
-  strncat (ret_str, size - strlen(ret_str), file_suffix);
+
+  strncpy (ret_str, tmp_dir, size);
+  strncat (ret_str, file_prefix, size - strlen(ret_str));
+  strncat (ret_str, user_name, size - strlen(ret_str));
+  strncat (ret_str, file_suffix, size - strlen(ret_str));
   return ret_str;
 }
 
