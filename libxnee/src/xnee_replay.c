@@ -40,6 +40,8 @@
 #include "libxnee/xnee_threshold.h"
 #include "libxnee/xnee_expr.h"
 #include "libxnee/xnee_error.h"
+#include "libxnee/xnee_session.h"
+#include "libxnee/xnee_utils.h"
 
 
 #ifdef USE_OBSOLETE

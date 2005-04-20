@@ -42,7 +42,38 @@ LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib
 LIBS = -lX11 -lXext -lXtst -lpthread ${XOSD_LIB}
 
 CLI_SRC =  cnee/src/parse.c  cnee/src/main.c  
-COMM_SRC = libxnee/src/xnee.c libxnee/src/xnee_record.c  libxnee/src/xnee_replay.c  libxnee/src/print.c libxnee/src/print_varargs.c libxnee/src/datastrings.c libxnee/src/xnee_dl.c  libxnee/src/xnee_sem.c  libxnee/src/xnee_setget.c libxnee/src/xnee_fake.c libxnee/src/xnee_km.c libxnee/src/xnee_resolution.c  libxnee/src/xnee_resource.c  libxnee/src/xnee_buffer.c  libxnee/src/xnee_callback.c  libxnee/src/xnee_km.c  libxnee/src/xnee_grab.c  libxnee/src/xnee_time.c libxnee/src/xnee_threshold.c libxnee/src/xnee_range.c libxnee/src/feedback.c libxnee/src/xnee_keysym.c libxnee/src/xnee_error.c libxnee/src/xnee_expr.c
+COMM_SRC =   libxnee/src/datastrings.c \
+  libxnee/src/feedback.c \
+  libxnee/src/print.c \
+  libxnee/src/print_varargs.c \
+  libxnee/src/xnee.c \
+  libxnee/src/xnee_buffer.c \
+  libxnee/src/xnee_callback.c \
+  libxnee/src/xnee_dl.c \
+  libxnee/src/xnee_error.c \
+  libxnee/src/xnee_expr.c \
+  libxnee/src/xnee_fake.c \
+  libxnee/src/xnee_grab.c \
+  libxnee/src/xnee_km.c \
+  libxnee/src/xnee_range.c \
+  libxnee/src/xnee_record.c \
+  libxnee/src/xnee_replay.c \
+  libxnee/src/xnee_resolution.c \
+  libxnee/src/xnee_resource.c \
+  libxnee/src/xnee_sem.c \
+  libxnee/src/xnee_setget.c \
+  libxnee/src/xnee_threshold.c \
+  libxnee/src/xnee_time.c \
+  libxnee/src/xnee_utils.c \
+  libxnee/src/xnee_keysym.c \
+  libxnee/src/xnee_strings.c \
+  libxnee/src/xnee_display.c \
+  libxnee/src/xnee_alloc.c \
+  libxnee/src/xnee_session.c \
+  libxnee/src/xnee_fileop.c \
+  libxnee/src/xnee_plugin.c \
+  libxnee/src/xnee_settings.c 
+
 
 CLI_OBJS      := $(CLI_SRC:%.c=%.o)
 COMM_OBJS     := $(COMM_SRC:%.c=%.o)

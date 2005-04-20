@@ -29,6 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include "libxnee/xnee_threshold.h"
 #include "libxnee/feedback.h"
 #include "libxnee/xnee_error.h"
+#include "libxnee/xnee_session.h"
 
 
 
@@ -903,7 +904,7 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "##############################################\n");
   fprintf (out,  "# display %s\n",
 	   (xd->display==NULL) ? "NULL"  : xd->display);
-  fprintf (out,  XNEE_DISTRIBUTE);
+  fprintf (out,  "%s\n" , XNEE_DISTRIBUTE);
   ret = xnee_print_distr_list(xd, out);
   XNEE_RETURN_IF_ERR(ret);
 

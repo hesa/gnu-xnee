@@ -52,6 +52,10 @@
 #include "libxnee/xnee_range.h"
 #include "libxnee/datastrings.h"
 #include "libxnee/xnee_expr.h"
+#include "libxnee/xnee_alloc.h"
+#include "libxnee/xnee_utils.h"
+#include "libxnee/xnee_session.h"
+#include "libxnee/xnee_display.h"
 
 
 

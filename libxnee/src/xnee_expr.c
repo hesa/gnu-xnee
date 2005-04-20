@@ -40,6 +40,9 @@
 #include "libxnee/xnee_keysym.h"
 #include "libxnee/xnee_fake.h"
 #include "libxnee/feedback.h"
+#include "libxnee/xnee_utils.h"
+#include "libxnee/xnee_plugin.h"
+#include "libxnee/xnee_display.h"
 
 
 

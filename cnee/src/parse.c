@@ -36,12 +36,17 @@
 #include "libxnee/datastrings.h"
 #include "libxnee/xnee_threshold.h"
 #include "libxnee/xnee_strings.h"
-#include "parse.h"
 #include "libxnee/print.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_error.h"
 #include "libxnee/xnee_keysym.h"
 #include "libxnee/feedback.h"
+#include "libxnee/xnee_session.h"
+#include "libxnee/xnee_plugin.h"
+#include "libxnee/xnee_display.h"
+#include "libxnee/xnee_utils.h"
+
+#include "parse.h"
 
 
 

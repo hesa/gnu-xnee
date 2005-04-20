@@ -53,6 +53,7 @@
 #include "libxnee/xnee_km.h"
 #include "libxnee/datastrings.h"
 #include "libxnee/xnee_range.h"
+#include "libxnee/xnee_session.h"
 
 
 static struct xnee_ranges  myxrs           ;
@@ -218,7 +219,7 @@ xnee_add_to_list2(int type, int ev)
       { 
          fprintf (stderr, "  PANIC in xnee_add_to_list2 ....\n") ; 
 	 fflush(stdout); 
-	 return ; 
+	 return XNEE_MEMORY_FAULT; 
       }
    }
    xrp->data[xrp->index++]=ev;

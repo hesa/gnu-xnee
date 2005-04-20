@@ -40,6 +40,7 @@
 #include "libxnee/xnee_km.h"
 #include "libxnee/xnee_grab.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_alloc.h"
 
 
 

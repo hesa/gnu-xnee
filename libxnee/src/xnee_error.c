@@ -24,6 +24,7 @@
 
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_error.h"
+#include "libxnee/xnee_alloc.h"
 
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>

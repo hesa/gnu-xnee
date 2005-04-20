@@ -55,13 +55,13 @@
 #include "libxnee/xnee_callback.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_session.h"
 #include "libxnee/xnee_error.h"
 #include "libxnee/xnee_display.h"
+#include "libxnee/xnee_utils.h"
+#include "libxnee/xnee_alloc.h"
 
 
-
-
-static int xnee_free_dyn_data(xnee_data *xd);
 
 
 /**************************************************************

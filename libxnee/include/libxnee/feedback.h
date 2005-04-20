@@ -31,6 +31,7 @@
 #include <unistd.h>
 
 #include "libxnee/xnee.h"
+#include "libxnee/xnee_alloc.h"
 
 #define FEEDBACK_DELAY     5
 #define FEEDBACK_TIMEOUT    3

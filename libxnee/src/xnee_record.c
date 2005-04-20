@@ -36,6 +36,8 @@
 #include "libxnee/feedback.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_error.h"
+#include "libxnee/xnee_session.h"
+#include "libxnee/xnee_utils.h"
 
 
 #ifdef DEBUG_DISPATCHER
