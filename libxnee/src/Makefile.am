@@ -66,6 +66,7 @@ EXTRA_DIST = ../include/libxnee/xnee.h     \
 	../include/libxnee/xnee_display.h \
 	../include/libxnee/xnee_settings.h \
 	../include/libxnee/xnee_plugin.h \
+	../include/libxnee/xnee_internal.h \
 	../include/libxnee/feedback.h 
 
 
