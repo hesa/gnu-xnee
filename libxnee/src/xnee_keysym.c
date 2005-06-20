@@ -18,8 +18,8 @@
  *                                                                   
  * You should have received a copy of the GNU General Public License 
  * along with this program; if not, write to the Free Software       
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,            
- * MA  02111-1307, USA.                                              
+ * Foundation, Inc., 51 Franklin Street, Boston,            
+ * MA  02110-1301, USA.                                              
  ****/
 
 #include <X11/Xlib.h>
@@ -85,9 +85,27 @@ xnee_str2keycode(xnee_data* xd, const char *str, xnee_key_code *kc)
     {
       kc->kc = XKeysymToKeycode(xd->fake, XK_Alt_L);
     }
+  else if (strncmp(str, XNEE_XK_UP, strlen(XNEE_XK_UP))==0)
+    {
+      kc->kc = XKeysymToKeycode(xd->fake, XK_Up);
+    }
+  else if (strncmp(str, XNEE_XK_DOWN, strlen(XNEE_XK_DOWN))==0)
+    {
+      kc->kc = XKeysymToKeycode(xd->fake, XK_Down);
+    }
+  else if (strncmp(str, XNEE_XK_LEFT, strlen(XNEE_XK_LEFT))==0)
+    {
+      kc->kc = XKeysymToKeycode(xd->fake, XK_Left);
+    }
+  else if (strncmp(str, XNEE_XK_RIGHT, strlen(XNEE_XK_RIGHT))==0)
+    {
+      kc->kc = XKeysymToKeycode(xd->fake, XK_Right);
+    }
   else  
     {
+	printf ("keycode...%s\n", str);
       kc->kc = XKeysymToKeycode(xd->fake,XStringToKeysym(str));
+      printf (" ..... kc=%d\n", kc->kc);
     }
 
   if (kc!=NULL)
