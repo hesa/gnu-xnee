@@ -1,6 +1,6 @@
-/*****
- *       Xnee's Not an Event Emulator                                
- *                                                                   
+/*****  
+ *       Xnee's Not an Event Emulator  
+ *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
@@ -23,58 +23,78 @@
  ****/
 
 
-#include <X11/extensions/XTest.h>
+#ifndef XNEE_XNEE_DISPLAY_H
+#define XNEE_XNEE_DISPLAY_H
 
 #include "libxnee/xnee.h"
-#include "libxnee/print.h"
-#include "libxnee/xnee_record.h"
-#include "libxnee/xnee_replay.h"
-#include "libxnee/xnee_sem.h"
-#include "libxnee/xnee_resolution.h"
 
-#ifndef XNEE_XNEE_BUFFER_H
-#define XNEE_XNEE_BUFFER_H
-
-int
-xnee_replay_buffer_max_diff (xnee_data* xd, int type);
-
-int
-xnee_replay_buffer_min_diff (xnee_data* xd, int type);
-
-int
-xnee_replay_buffer_tot_diff (xnee_data* xd, int type);
-
-void 
-xnee_replay_buffer_handler (xnee_data* xd, 
-			    int data_type, 
-			    int data_nr,
-			    Bool rec_or_rep);
 
 
 int 
-xnee_hard_update_buffer_cache(xnee_data *xd);
+xnee_setup_display (xnee_data *xd);
 
-
-
-int
-xnee_check_buffer_limits (xnee_data *xd);
 
 /**
- * Prints the synchronisation status of the X11 data given by data_type and nr
+ *  Set xnee_data->display to the value as 
+ *  specified in environment variable DISPLAY
  * 
- * @param xd         xnee's main structure
- * @param data_type  X11 data type (e.g event)
- * @param nr         nr of the data type (e.g 23)
- * @return int       0 means in sync. 
+ * @param xd    xnee's main structure
+ * @return void  
  */
-int
-xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
+void 
+xnee_set_default_display (xnee_data *xd);
 
 
 
+
+
+/**
+ * open a display for the host as specified in 
+ * xnee_program_data->program
+ * @param xd           xnee's main structure
+ * @return Display *   NULL if the display could not be opened
+ */
+Display * 
+xnee_open_display (xnee_data *xd);
+
+
+
+
+/**
+ * Adds a display to ditribution list
+ * @param xd    xnee's main structure
+ * @param disp  Display to add
+ * @return int  0 on success
+ */
 int 
-xnee_update_buffer_cache(xnee_data *xd);
+xnee_add_display_list (xnee_data* xd, char * disp);
 
 
 
-#endif /* XNEE_XNEE_BUFFER_H */
+
+
+/**
+ * Adds a display to ditribution list
+ * @param str  string representation of a display
+ * @param xd   xnee's main structure
+ * @return int XNEE_OK on success, XNEE_NOT_OPEN_DISPLAY if failure
+ */
+int 
+xnee_add_display_str (char *str , xnee_data* xd);
+
+
+
+
+/**
+ * Adds a display to ditribution list
+ * @param dpy    Display to add
+ * @param xd     xnee's main structure
+ * @return int   XNEE_OK on success, XNEE_NOT_OPEN_DISPLAY if failure
+ */
+int 
+xnee_add_display (Display * dpy, xnee_data* xd);
+
+
+
+#endif /*   XNEE_XNEE_DISPLAY_H  */
+

@@ -1,6 +1,6 @@
-/*****
- *       Xnee's Not an Event Emulator                                
- *                                                                   
+/*****  
+ *       Xnee's Not an Event Emulator  
+ *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
@@ -23,58 +23,95 @@
  ****/
 
 
-#include <X11/extensions/XTest.h>
-
-#include "libxnee/xnee.h"
-#include "libxnee/print.h"
-#include "libxnee/xnee_record.h"
-#include "libxnee/xnee_replay.h"
-#include "libxnee/xnee_sem.h"
-#include "libxnee/xnee_resolution.h"
-
-#ifndef XNEE_XNEE_BUFFER_H
-#define XNEE_XNEE_BUFFER_H
-
-int
-xnee_replay_buffer_max_diff (xnee_data* xd, int type);
-
-int
-xnee_replay_buffer_min_diff (xnee_data* xd, int type);
-
-int
-xnee_replay_buffer_tot_diff (xnee_data* xd, int type);
-
-void 
-xnee_replay_buffer_handler (xnee_data* xd, 
-			    int data_type, 
-			    int data_nr,
-			    Bool rec_or_rep);
-
-
-int 
-xnee_hard_update_buffer_cache(xnee_data *xd);
-
+#ifndef XNEE_XNEE_SESSION_H
+#define XNEE_XNEE_SESSION_H
 
 
 int
-xnee_check_buffer_limits (xnee_data *xd);
+xnee_prepare(xnee_data *xd);
+
+
+
+
 
 /**
- * Prints the synchronisation status of the X11 data given by data_type and nr
- * 
- * @param xd         xnee's main structure
- * @param data_type  X11 data type (e.g event)
- * @param nr         nr of the data type (e.g 23)
- * @return int       0 means in sync. 
+ * Returns the number of RecordRanges allocated so far
+ * @param xd    xnee's main structure
+ * @return int  number of RecordRanges allocated
  */
 int
-xnee_replay_buffer_status (xnee_data* xd, int data_type, int nr);
+xnee_get_max_range (xnee_data *xd);
+
+
+
+
+/**
+ * Init Xnee structures
+ * @param xd   xnee's main structure
+ * @return int 1 if successfull, else 0 
+ * \todo (return values need to be changed) 
+ */
+int
+xnee_init(xnee_data* xd);
+
+
+
+
+/**
+ * Close down all open files and displays
+ * @param xd     xnee's main structure
+ * @return void  
+ */
+void
+xnee_close_down(xnee_data *xd);
+
+
+
+/**
+ * Set variables so that Xnee can stop gracefully. 
+ * @param xd    xnee's main structure
+ * @return int  0 on success
+ */
+int 
+xnee_stop_session( xnee_data* xd);
 
 
 
 int 
-xnee_update_buffer_cache(xnee_data *xd);
+xnee_process_count(int mode);
+
+int 
+xnee_process_replies(xnee_data *xd);
+
+
+int
+xnee_rep_prepare(xnee_data *xd);
+
+int
+handle_xerr(Display *dpy, XErrorEvent *errevent);
 
 
 
-#endif /* XNEE_XNEE_BUFFER_H */
+/* internal use */
+void 
+signal_handler(int sig)  __attribute__ ((noreturn));
+
+
+
+int
+xnee_err_handler(Display* dpy, XErrorEvent* ev);
+
+
+int
+xnee_more_to_record(xnee_data *xd);
+
+
+/**
+ * Zeros the sync data in xd.
+ * @param xd     xnee's main structure
+ * @return void  
+ */
+void
+xnee_zero_sync_data (xnee_data* xd);
+
+#endif /* SESSION_*/
