@@ -99,18 +99,18 @@ move_between_lists(GtkTreeView* source_list,
 
         if (xd == NULL)
         {
-            g_print("xd is null\n");
+            GNEE_DEBUG(("xd is null\n"));
         }
 
         if (include)
         {
-	  g_print("will include '%s' %d \n", selection_value, type);
+	  GNEE_DEBUG(("will include '%s' %d \n", selection_value, type));
 	  xnee_add_range_str
 	    (xd, type, selection_value);
         }
         else
         {
-            g_print("will exclude '%s' %d \n", selection_value, type);
+            GNEE_DEBUG(("will exclude '%s' %d \n", selection_value, type));
             xnee_rem_data_from_range_str
                 (xd, -1, selection_value);            
         }

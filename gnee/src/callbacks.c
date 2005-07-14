@@ -715,7 +715,9 @@ on_ok_button1_clicked                  (GtkButton       *button,
  	      gx_add_resource (ext_xd ); 
 	    }
 	  else
-	    g_print (" Could not open project file %s\n", filename);
+	  {
+	      g_print (" Could not open project file %s\n", filename);
+	  }
 
           
 	  fclose (file);
