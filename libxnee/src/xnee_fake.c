@@ -44,6 +44,7 @@ static int loop_nr = 0;
 int
 xnee_reset_fake( xnee_data *xd)
 {
+    xmee_verbose((xd, "reset fake\n"));
     loop_nr = 0 ;
 }
 
