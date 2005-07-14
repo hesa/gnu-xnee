@@ -113,7 +113,7 @@ xnee_setup_xosd(xnee_data *xd)
       xnee_dlclose(xd, xosd_lib);
       return XNEE_XOSD_FAILURE ; 
     }
-  xosd_char(osd, "-adobe-helvetica-bold-r-normal-*-*-320-*-*-p-*-iso8859-1");
+  xosd_char(osd, "-*-terminus-medium-r-*-*-*-320-*-*-*-*-*-*");
 
   xosd_char = (xosd_char_fun) xnee_dlsym(xd, xosd_lib, "xosd_set_colour");
   if (xosd_char==NULL) 
