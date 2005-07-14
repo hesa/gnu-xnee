@@ -31,6 +31,7 @@
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_sem.h"
 #include "libxnee/xnee_buffer.h"
+#include "libxnee/xnee_threshold.h"
 #include "libxnee/xnee_resolution.h"
 
 

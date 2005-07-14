@@ -43,12 +43,6 @@ const int XNEE_MISSING_DATA_DELAY = (10*5);
 const int XNEE_MAX_SYNCH = 100 /* buffer size */;
 const int XNEE_MOTION_DELAY = 21 /* default value for delay during synch */;
 
-const int XNEE_BUFFER_MAX     = 6  ;
-const int XNEE_BUFFER_MIN     = 6  ;
-const int XNEE_BUFFER_SUM_MAX = 20 ;
-const int XNEE_BUFFER_SUM_MIN = 2  ;
-const int XNEE_BUFFER_TOT_MAX = 20 ;
-
 const int MAX_NOT_IN_SYNC = 2 ;
 const int MAX_OUT_OF_SYNC = 2 ;      /* number of data allowed to be out of sync */
 const int MAX_UNSYNC_LOOPS = 10 ;    /* number check-loops when out of sync 
