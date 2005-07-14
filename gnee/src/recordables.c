@@ -265,7 +265,7 @@ gnee_recordable2xd(GtkWidget* gnee_window,
     gtk_tree_model_get_iter_first (GTK_TREE_MODEL(incl_store), &incl_iter);
   
   
-  while (valid)
+  while (valid && incl_store && incl_valid)
     {
       gchar *str_data;
       
