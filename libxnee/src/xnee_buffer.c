@@ -194,6 +194,7 @@ xnee_replay_buffer_handler (xnee_data* xd,
 			    int data_nr,
 			    Bool rec_or_rep)
 {
+
   xnee_verbose((xd,"---> xnee_replay_buffer_handler "));
   if (rec_or_rep==XNEE_RECEIVED) 
     {
@@ -247,7 +248,8 @@ xnee_replay_buffer_handler (xnee_data* xd,
 	  if (xd->meta_data.cached_max == 
 	      xd->data_buffer[data_type][data_nr])
 	    {
-	      /* don't get it .... please read the above read again */
+	      /* don't get it?
+		 .... please read the above read again */
 	      xd->meta_data.cached_max=-1;
 	    }
 
@@ -378,8 +380,6 @@ xnee_update_buffer_cache(xnee_data *xd)
 			     xd->meta_data.cached_max));
 	      xd->meta_data.cached_max=real_max;
 	    }
-	    
-
 	}
     }
   /*
@@ -414,11 +414,15 @@ xnee_hard_update_buffer_cache(xnee_data *xd)
 	  
 	  real_min = xnee_replay_buffer_min_diff (xd,type);
 	  if (real_min<xd->meta_data.cached_min)
-	    xd->meta_data.cached_min=real_min;
+	  {
+	      xd->meta_data.cached_min=real_min;
+	  }
 
 	  real_max = xnee_replay_buffer_max_diff (xd,type);
 	  if (real_max>xd->meta_data.cached_max)
-	    xd->meta_data.cached_max=real_max;
+	  {
+	      xd->meta_data.cached_max=real_max;
+	  }
 	}
     }
   /*
@@ -441,19 +445,27 @@ xnee_check_buffer_limits (xnee_data *xd)
   int sum_min    = 0 ;
   int tot_diff   = 0 ;
   int diff       = 0 ;
-
-
-  /* HESA HESA HESA TO REMOVE 
-  xnee_hard_update_buffer_cache (xd);
-  */
-  xnee_hard_update_buffer_cache (xd);
-
+  static int upd_ctr = -1 ;
+  
+  if ( ( upd_ctr == -1 )  ||  ( upd_ctr > 10 ) )
+  {
+      xnee_verbose ((xd, " xnee_hard_update_buffer_cache\n"));
+      xnee_hard_update_buffer_cache (xd);
+      upd_ctr=0;
+  }
+  else
+  {
+      xnee_verbose ((xd, " xnee_update_buffer_cache\n"));
+      xnee_update_buffer_cache (xd);
+  }
+  upd_ctr++;
 
   cached_max = xd->meta_data.cached_max;
   cached_min = xd->meta_data.cached_min;
   sum_max    = xd->meta_data.sum_max;
   sum_min    = xd->meta_data.sum_min;
   tot_diff   = xd->meta_data.total_diff;
+
   xnee_verbose ((xd, "---> xnee_check_buffer_limits  button %d   key %d\n", 
 		 xd->button_pressed,
 		 xd->key_pressed
@@ -466,17 +478,17 @@ xnee_check_buffer_limits (xnee_data *xd)
 		 sum_min    ,
 		 tot_diff   ));
 
-  if ( cached_max > XNEE_BUFFER_MAX) 
+  if ( cached_max > xnee_get_max_threshold(xd)) 
     {
-      xnee_verbose ((xd, "cached_max %d > XNEE_BUFFER_MAX %d\n",
-		     cached_max , XNEE_BUFFER_MAX));
+      xnee_verbose ((xd, "cached_max %d > xnee_get_max_threshold(xd) %d\n",
+		     cached_max , xnee_get_max_threshold(xd)));
       xnee_replay_printbuffer(xd); 
       diff=cached_max;
     }
-  else if ( cached_min < XNEE_BUFFER_MIN) 
+  else if ( cached_min < xnee_get_min_threshold(xd)) 
     {
-      xnee_verbose ((xd, "cached_min %d < XNEE_BUFFER_MIN %d\n",
-		     cached_min , XNEE_BUFFER_MIN));
+      xnee_verbose ((xd, "cached_min %d < xnee_get_min_threshold(xd) %d\n",
+		     cached_min , xnee_get_min_threshold(xd)));
       xnee_replay_printbuffer(xd); 
       diff=cached_min;
     }
@@ -494,18 +506,19 @@ xnee_check_buffer_limits (xnee_data *xd)
 		     sum_min , XNEE_BUFFER_SUM_MIN));
       xnee_replay_printbuffer(xd); 
       diff=sum_min;
-      }*/
-  else if ( tot_diff > XNEE_BUFFER_TOT_MAX )
+      }
+  */
+  else if ( tot_diff > xnee_get_tot_threshold(xd) )
     {
-      xnee_verbose ((xd, "tot_diff %d > XNEE_BUFFER_TOT_MAX %d\n",
-		     tot_diff , XNEE_BUFFER_TOT_MAX));
+      xnee_verbose ((xd, "tot_diff %d > xnee_get_tot_threshold(xd) %d\n",
+		     tot_diff , xnee_get_tot_threshold(xd)));
       xnee_replay_printbuffer(xd); 
       diff=tot_diff;
     }
   else
     {
       xnee_verbose ((xd, "no diff  %d %d\n",
-		     tot_diff , XNEE_BUFFER_TOT_MAX));
+		     tot_diff , xnee_get_tot_threshold(xd)));
       xnee_replay_printbuffer(xd); 
       diff=0;
     }

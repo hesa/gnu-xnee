@@ -47,7 +47,9 @@ xnee_set_threshold_str (char *thresh_str, int *threshold)
   int ret;
   
   if (thresh_str == NULL)
-    return XNEE_BAD_RESOLUTION;
+  {
+      return XNEE_BAD_RESOLUTION;
+  }
 
   ret = sscanf(thresh_str, "%d",
 	       threshold); 
@@ -84,13 +86,13 @@ xnee_set_tot_threshold_str (xnee_data *xd, char *thresh_str)
 int
 xnee_set_max_threshold (xnee_data *xd, int thresh)
 {
-  return xnee_set_threshold (thresh, &xd->meta_data.sum_max_threshold);
+    return xnee_set_threshold (thresh, &xd->meta_data.sum_max_threshold);
 } 
 
 int
 xnee_set_min_threshold (xnee_data *xd, int thresh)
 {
-  return xnee_set_threshold (thresh, &xd->meta_data.sum_min_threshold);
+    return xnee_set_threshold (thresh, &xd->meta_data.sum_min_threshold);
 } 
 
 int

@@ -150,11 +150,6 @@ main (int argc, char *argv[])
 	  }
       }
 
-    /* TEST */
-    gx_add_event (gnee_window,"MotionNotify"); 
-    /* END OF TEST */
-
-    
     /* Set the signal handler the libxnee's built in */ 
     (void) signal (SIGINT, signal_handler);
 
@@ -175,12 +170,16 @@ main (int argc, char *argv[])
     
     gx_set_xosd_feedback();
     gnee_set_xosd_feedback();
+
+    gx_set_max_threshold(xd, 20) ;
+    gx_set_min_threshold(xd, -20) ;
+    gx_set_tot_threshold(xd, 20) ;
+    
     
     default_tmp_file=gx_get_default_filename();
     gnee_set_rec_file (default_tmp_file);
     gnee_set_rep_file (default_tmp_file);
     free (default_tmp_file);
-
 
     g_object_set_data(G_OBJECT(gnee_window), "xd", xd);
 

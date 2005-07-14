@@ -102,6 +102,7 @@ gnee_set_sb(char *sb_name, int val)
   GNEE_DEBUG(("gnee_set_sb\n"));
   spinbutton = (GtkSpinButton *) 
     lookup_widget (ext_gnee_window, sb_name);
+
   if (spinbutton!=NULL)
     {
       gtk_spin_button_set_value(spinbutton, val); 
@@ -578,6 +579,7 @@ int
 gx_start_replaying(xnee_data* xd)
 {
   int ret ; 
+
   GNEE_DEBUG(("gx_start_replaying\n"));
 
   GNEE_DEBUG(("Starting replayer\n"));

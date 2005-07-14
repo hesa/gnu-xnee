@@ -153,9 +153,9 @@ gx_set_variable_data(xnee_data *xd, gnee_xnee *gx);
 
 
 
-#define gx_set_max_threshold(xd,thresh) xnee_set_max_threshold(xd,thresh)
-#define gx_set_min_threshold(xd,thresh) xnee_set_min_threshold(xd,thresh)
-#define gx_set_tot_threshold(xd,thresh) xnee_set_tot_threshold(xd,thresh)
+#define gx_set_max_threshold(xd,thresh) xnee_set_max_threshold(xd,thresh); gnee_set_max_thresh(thresh); 
+#define gx_set_min_threshold(xd,thresh) xnee_set_min_threshold(xd,thresh); gnee_set_min_thresh(thresh); 
+#define gx_set_tot_threshold(xd,thresh) xnee_set_tot_threshold(xd,thresh); gnee_set_tot_thresh(thresh); 
 
 #define gnee_get_max_threshold(xd) xnee_get_max_threshold(xd)
 #define gnee_get_min_threshold(xd) xnee_get_min_threshold(xd)

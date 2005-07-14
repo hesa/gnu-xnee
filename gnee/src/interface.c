@@ -935,21 +935,21 @@ create_gnee_window (void)
                     (GtkAttachOptions) (0), 0, 0);
   gtk_misc_set_alignment (GTK_MISC (tot_thresh_label), 0, 0.5);
 
-  max_thresh_sb_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
+  max_thresh_sb_adj = gtk_adjustment_new (1, 0, 1000, 1, 10, 10);
   max_thresh_sb = gtk_spin_button_new (GTK_ADJUSTMENT (max_thresh_sb_adj), 1, 0);
   gtk_widget_show (max_thresh_sb);
   gtk_table_attach (GTK_TABLE (threshold_table), max_thresh_sb, 1, 2, 0, 1,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  min_thresh_sb_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
+  min_thresh_sb_adj = gtk_adjustment_new (1, -1000, 1000, 1, 10, 10);
   min_thresh_sb = gtk_spin_button_new (GTK_ADJUSTMENT (min_thresh_sb_adj), 1, 0);
   gtk_widget_show (min_thresh_sb);
   gtk_table_attach (GTK_TABLE (threshold_table), min_thresh_sb, 1, 2, 1, 2,
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  tot_thresh_sb_adj = gtk_adjustment_new (1, 0, 100, 1, 10, 10);
+  tot_thresh_sb_adj = gtk_adjustment_new (1, 0, 1000, 1, 10, 10);
   tot_thresh_sb = gtk_spin_button_new (GTK_ADJUSTMENT (tot_thresh_sb_adj), 1, 0);
   gtk_widget_show (tot_thresh_sb);
   gtk_table_attach (GTK_TABLE (threshold_table), tot_thresh_sb, 1, 2, 2, 3,

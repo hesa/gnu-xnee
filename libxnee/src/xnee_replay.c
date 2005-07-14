@@ -99,6 +99,7 @@ xnee_replay_synchronize (xnee_data* xd)
       return XNEE_OK;
     }
    
+
   /*****
    * Check to see if we are in sync
    */
@@ -131,7 +132,6 @@ xnee_replay_synchronize (xnee_data* xd)
 	       (xd->meta_data.cached_max < xnee_get_max_threshold(xd)))
 	    break;
 
-		  
 	  diff_counter++;
 	  if (diff_counter >= xnee_get_tot_threshold(xd))
 	    {
