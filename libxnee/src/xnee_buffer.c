@@ -226,6 +226,22 @@ xnee_replay_buffer_handler (xnee_data* xd,
 	    ( data_type == XNEE_EVENT ) && 
 	    ( data_nr   <= ButtonRelease ) ))
 	{
+	    if ( ( data_nr >= KeyPress )
+		 && 
+		 ( data_nr <= MotionNotify )
+		 && 
+		 xnee_is_replayer(xd))
+	    {
+		xnee_verbose((xd,"---  xnee_replay_buffer_handler : ignonring recorded data "));
+
+	      /*
+	       * release the protecting semaphore the buffer
+	       */
+	      xnee_sem_post (xd, xd->buf_sem);
+	      return;
+
+	    }
+	    
 	  if (data_nr==161)
 	    {
 	      fprintf (stderr, 

@@ -338,13 +338,14 @@ xnee_renew_xnee_data(xnee_data *xd)
     * Reset counters...
     */
    xd->first_read_time = 0;
-  xd->meta_data.sum_max    = 0;
-  xd->meta_data.sum_min    = 0;
-
-  xd->meta_data.total_diff = 0;
-  xd->meta_data.cached_max = 0;
-  xd->meta_data.cached_min = 0;
-
+   
+   xd->meta_data.sum_max    = 0;
+   xd->meta_data.sum_min    = 0;
+   
+   xd->meta_data.total_diff = 0;
+   xd->meta_data.cached_max = 0;
+   xd->meta_data.cached_min = 0;
+  
   return (XNEE_OK);
 }
 
