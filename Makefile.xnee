@@ -1,5 +1,5 @@
 PACKAGE=\"Xnee\"
-VERSION=\"1.08.99\"
+VERSION=\"2.00\"
 CC=gcc-3.2
 
 PEDANTIC_FLAGS =  -W -Wall -pedantic -Werror \

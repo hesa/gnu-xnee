@@ -333,7 +333,19 @@ xnee_renew_xnee_data(xnee_data *xd)
    ret = xnee_new_dyn_data(xd);
    XNEE_RETURN_IF_ERR (ret);
 
-   return (XNEE_OK);
+
+   /*
+    * Reset counters...
+    */
+   xd->first_read_time = 0;
+  xd->meta_data.sum_max    = 0;
+  xd->meta_data.sum_min    = 0;
+
+  xd->meta_data.total_diff = 0;
+  xd->meta_data.cached_max = 0;
+  xd->meta_data.cached_min = 0;
+
+  return (XNEE_OK);
 }
 
 int

@@ -192,8 +192,10 @@ xnee_start(xnee_data *xd)
        * ... wait to set up recording until all META data from file is read 
        * Thanks: Janice Waddick 
        */
+      
       xnee_verbose((xd, "Entering main loop (replayer)\n"));
       ret = xnee_replay_main_loop(xd, XNEE_REPLAY_READ_REPLAY_DATA);
+      xnee_verbose((xd,"finished replaying\n"));
       if (ret != XNEE_OK)
 	{
 	  ;
@@ -205,20 +207,13 @@ xnee_start(xnee_data *xd)
 	{
 	  xnee_print_error ("Unable to open retype file\n");
 	}
-      xnee_verbose((xd,"finished replaying\n"));
+      xnee_verbose((xd,"finished reptyping\n"));
     }
   else
     {
       return XNEE_MODE_NOT_SET;
     }
-  /*
-   * Close everything down .... free memory, tell X server we are leaving ...
-  if ( xd->recorder || xd->sync )
-    {
-      xnee_record_close_down(xd);
-    }
-   */
-   
+
    xnee_verbose((xd, "xnee_start : ungrab -----> \n"));
    ret = xnee_ungrab_keys (xd);
    XNEE_RETURN_IF_ERR (ret);

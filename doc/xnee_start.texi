@@ -12,7 +12,7 @@ Start a terminal emulator (e.g xterm) and then start Xnee,
 ....dont forget '&'.
 The file example1.xnr contains keyboard events recorded during 
 development of this manual. When replayed you'll see what was typed and of 
-course more important yu'll get i first glimpse of Xnee and its capabilities. 
+course more important you'll get i first glimpse of Xnee and its capabilities. 
 For information on where to find the example files, see below.
 
 @subsection Simple recording of Key presses

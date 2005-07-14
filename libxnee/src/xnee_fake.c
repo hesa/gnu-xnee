@@ -38,8 +38,14 @@
 #include "libxnee/xnee_display.h"
 
 
+static int loop_nr = 0;
 
 
+int
+xnee_reset_fake( xnee_data *xd)
+{
+    loop_nr = 0 ;
+}
 
 static void
 xnee_fake_sleep(unsigned long period)
@@ -77,7 +83,6 @@ xnee_replay_event_handler( xnee_data* xd,
 			   xnee_intercept_data* xindata, 
 			   long int last_elapsed)
 {
-  static int loop_nr = 0;
   
   int           return_value=0;
   unsigned long last_diff = 0;
@@ -108,8 +113,9 @@ xnee_replay_event_handler( xnee_data* xd,
   /* Synchronise the time */
   xnee_verbose((xd,"ev handler  new %lu   old %lu\n",xindata->newtime , xindata->oldtime ));
   record_last_diff = xnee_delta_time(xindata) ; 
+
   record_first_diff = ( xindata->newtime - xd->first_read_time ) ;
-  
+
   /* get the actual difference from last read - 
      we may have had to wait/sleep */
   last_diff = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
@@ -129,6 +135,7 @@ xnee_replay_event_handler( xnee_data* xd,
       record_first_diff = 0 ;
       loop_nr=2;
     }
+
   /* if the first event is also the 1st entry from recorded file 
      - reset time - should seldom happen */
   if ( (xd->first_replayed_event==XNEE_TRUE) && (last_elapsed == 0 )) 
@@ -139,7 +146,7 @@ xnee_replay_event_handler( xnee_data* xd,
 		     ));
       record_last_diff = 10 ; 
     }
-  speed = xnee_get_speed(xd); 
+  speed = xnee_get_replay_speed(xd); 
   
   if (speed==100)
     {
@@ -168,13 +175,15 @@ xnee_replay_event_handler( xnee_data* xd,
 				     record_last_diff, 
 				     record_first_diff ) ; 
     }
-  
-  
+
+/*   printf ("xnee_calc_sleep_amount : %lu : (%lu) : %lu %lu ?? %d\n",     */
+/* 	  last_diff, first_diff,  */
+/* 	  record_last_diff, record_first_diff, */
+/* 	  sleep_amt);    */
+
+
+
   xnee_verbose((xd, "---  xnee_replay_event_handler \n "));
-  
-
-
-  fflush( NULL );
   
   /* If we use the last args to the XTestFakexxx functions
    * it is harder to synchronize .... 
@@ -219,7 +228,7 @@ xnee_replay_event_handler( xnee_data* xd,
     }
   xnee_verbose((xd, "<--- xnee_replay_event_handler returning after handling of %d \n", 
 		xindata->u.event.type ));
-
+  
   return return_value ;
 }
 
@@ -396,6 +405,7 @@ xnee_fake_motion_event (xnee_data* xd,
   y = xnee_resolution_newy(xd,y);
 
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
+  xnee_verbose((xd, "---  delay = %d\n", dtime));
   if (!xnee_is_recorder (xd))
     {
 

@@ -43,6 +43,12 @@
 #include "libxnee/xnee_session.h"
 #include "libxnee/xnee_utils.h"
 
+static int time_out_counter = 0;
+static int diff_counter     = 0;
+
+static int last_diff;
+static int last_logread=1;
+
 
 #ifdef USE_OBSOLETE
 static void 
@@ -59,13 +65,13 @@ xnee_replay_m_delay (unsigned long usecs)
 Time
 xnee_delta_time ( xnee_intercept_data * xindata)
 {
-  if ( xindata->newtime > xindata->oldtime ) 
+    if ( xindata->newtime > xindata->oldtime ) 
     {
-      return ( xindata->newtime - xindata->oldtime); 
+	return ( xindata->newtime - xindata->oldtime); 
     }
-  else 
+    else 
     {
-      return 0 ;
+	return 0 ;
     }
 }
 
@@ -84,8 +90,6 @@ int
 xnee_replay_synchronize (xnee_data* xd)
 {
   int diff;
-  static int time_out_counter=0;
-  static int diff_counter=0;
 
   xnee_verbose((xd,"---> xnee_replay_synchronize sync=%d   FALSE=%d \n",
 		xd->sync, XNEE_FALSE));
@@ -122,8 +126,6 @@ xnee_replay_synchronize (xnee_data* xd)
        */
       if (diff!=0)
 	{
-	  static int last_diff;
-	  
 	  if ( (xd->meta_data.cached_min > xnee_get_min_threshold(xd))
 	       &&
 	       (xd->meta_data.cached_max < xnee_get_max_threshold(xd)))
@@ -379,7 +381,6 @@ int
 xnee_replay_main_loop(xnee_data *xd, int read_mode)
 {
   static char tmp[256] ;
-  static int last_logread=1;
   
 /*@reldef@*/
   xnee_intercept_data xindata ;
@@ -392,6 +393,10 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 
   xindata.oldtime = 0 ;
   xindata.newtime = 0 ;
+
+
+  xnee_reset_elapsed_time(xd);
+  xnee_reset_fake(xd);
 
   if ( xd->data_file == NULL)
     {
@@ -406,7 +411,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        while ( (logread != 0)  && ( xd->cont != 0 ) ) 
 	{
 	  ret_str = fgets(tmp, 256, xd->data_file);
-	  
+
 	  if ( ret_str == NULL)
           {
              ret = -1;
@@ -452,6 +457,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
       (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || 
       (read_mode==XNEE_REPLAY_READ_ALL_DATA))
     {
+	
       /* REMOVE ME... after testing.
 	 rep_prepare is done in xnee_prepare */
       /*    ret = xnee_rep_prepare(xd); */
@@ -467,6 +473,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
            ret = xnee_setup_rep_recording(xd);
            XNEE_RETURN_IF_ERR(ret);
 	}
+
       if ( xnee_is_verbose(xd) != 0)
 	{
            ret = xnee_print_sys_info(xd , xd->out_file);
@@ -487,7 +494,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	  if (last_logread != 0)
 	    {
 	      /* 
-	       * set value for forthcoming time calculations 
+	       * set value for hcoming time calculations 
 	       * Now replay starts off
 	       */
 	      xnee_verbose((xd, " -->  xnee_get_elapsed_time\n"));
@@ -651,6 +658,12 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	  last_logread = 0;
 	}
     }
+
+  xd->cont     = 1;  
+  last_logread = 1;
+  time_out_counter = 0;
+  diff_counter     = 0;
+
   return XNEE_OK;
 }
 
@@ -939,6 +952,8 @@ xnee_replay_init          (xnee_data* xd)
   xd->meta_data.total_diff=0;
   xd->meta_data.sum_max=0;
   xd->meta_data.sum_min=0;
+
+  xd->first_read_time = 0;
 
   if ( xnee_no_rep_resolution(xd) == 0 )
   {

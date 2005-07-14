@@ -139,7 +139,7 @@ xnee_str_to_res(char *res_str, xnee_res *xr)
   else if (xnee_check ("SVGA", res_str, res_str))
     {
       xr->x_res = 1024 ;
-      xr->y_res = 800 ;
+      xr->y_res = 768 ;
       return XNEE_OK;
     }
   else if (xnee_check ("XGA", res_str, res_str))

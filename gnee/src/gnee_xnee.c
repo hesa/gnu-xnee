@@ -18,8 +18,8 @@
  *                                                                   
  * You should have received a copy of the GNU General Public License 
  * along with this program; if not, write to the Free Software       
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,            
- * MA  02111-1307, USA.                                              
+ * Foundation, Inc., 51 Franklin Street, Boston,            
+ * MA  02110-1301, USA.                                              
  ****/
 
 #include <gtk/gtk.h>
@@ -64,18 +64,18 @@ gx_init_gx(gnee_xnee *gx)
   gx->use_rec_display = 0 ; 
   gx->use_rep_display = 0 ; 
 
-  gx->use_speed = 0 ; 
-  gx->speed = 100 ; 
+  gx->use_speed = 0 ;
+  gx->speed = 100 ;
 }
 
 static int 
-gx_is_using_rec_display(gnee_xnee *gx)  { return gx->use_rec_display; }
+gx_is_using_rec_display(gnee_xnee *gx)  { return (gx->use_rec_display!=0); }
 
 static int 
-gx_is_using_rep_display(gnee_xnee *gx)  { return gx->use_rep_display; }
+gx_is_using_rep_display(gnee_xnee *gx)  { return (gx->use_rep_display!=0); }
 
 static int 
-gx_is_using_speed(gnee_xnee *gx)        { return gx->use_speed;}
+gx_is_using_speed(gnee_xnee *gx)        { return (gx->use_speed!=0);}
 
 
 
@@ -283,7 +283,10 @@ gx_set_variable_data(xnee_data *xd, gnee_xnee *gx)
       gx_set_replay_display(xd, gx);
     }
 
-  
+  GNEE_DEBUG(( "Speed settings : %d (%d)   using=%d\n",
+	       xnee_get_replay_speed(xd),
+	       ext_gx->speed,
+	       ext_gx->use_speed));
 
 
   return GNEE_OK;
@@ -473,21 +476,33 @@ gx_set_xd_settings()
   gnee_set_replay_display();
   
   if (xnee_is_verbose(ext_xd))
-    gnee_set_verbose();
+  {
+      gnee_set_verbose();
+  }
   else
-    gnee_unset_verbose();
+  {
+      gnee_unset_verbose();
+  }
 
   gnee_set_interval();
 
   if (xnee_is_sync(ext_xd))
-    gnee_set_sync();
+  {
+      gnee_set_sync();
+  }
   else
-    gnee_unset_sync();
+  {
+      gnee_unset_sync();
+  }
 
   if (xnee_is_force_replay(ext_xd))
+  {
     gnee_set_force();
+  }
   else
+  {
     gnee_unset_force();
+  }
 }
 
 
@@ -575,7 +590,7 @@ gx_start_replaying(xnee_data* xd)
   ret = xnee_prepare(xd);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 
-  GNEE_DEBUG(("start recplatying\n"));
+  GNEE_DEBUG(("start replaying\n"));
 
   ret = xnee_start(xd);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
@@ -764,12 +779,14 @@ gx_display_errror(int err_nr)
 int 
 gx_set_use_speed (int val) 
 {
-  GNEE_DEBUG(("_speed (int val\n"));
-  ext_gx->use_speed=val;
+  GNEE_DEBUG(("gx_set_use_speed (%d)\n", val));
+
+  ext_gx->use_speed = val;
 
   if (val==0)
     {
-      gx_set_replay_speed(ext_xd, 100);
+	gx_set_replay_speed(ext_xd, 100);
+	;
     }
   else
     {
@@ -777,8 +794,9 @@ gx_set_use_speed (int val)
       int val ; 
 
       spinbutton = (GtkSpinButton *) 
-	lookup_widget (ext_gnee_window, "speed_spin");
+	  lookup_widget (ext_gnee_window, "speed_spin");
       val = gtk_spin_button_get_value_as_int(spinbutton); 
+      GNEE_DEBUG(("gx_set_replay_speed (%d\n", val));
       gx_set_replay_speed(ext_xd, val);
     }
   return GNEE_OK;
@@ -787,13 +805,17 @@ gx_set_use_speed (int val)
 int 
 gx_set_speed (int val) 
 {
-  GNEE_DEBUG(("gx_set_speed\n"));
-  if (ext_gx->use_speed)
+    GNEE_DEBUG(("gx_set_speed to %d\n", val));
+    if ( ext_gx->use_speed != 0 )
     {
-      gx_set_replay_speed(ext_xd, val);
+	gx_set_replay_speed(ext_xd, val);
+	ext_gx->speed = val ; 
     }
-  ext_gx->speed = val ; 
-  return GNEE_OK;
+    else
+    {
+	gx_set_replay_speed(ext_xd, 100);
+    }
+    return GNEE_OK;
 }
 
 

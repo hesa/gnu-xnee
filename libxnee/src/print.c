@@ -1065,7 +1065,7 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   
   /* Modes */
   fprintf (out,  "\n# Modes (currently not used)\n");
-  fprintf (out,    "%s       %d\n",
+  fprintf (out,    "#%s       %d\n",
 	   XNEE_SYNC_MODE,
 	   xd->sync ); 
 

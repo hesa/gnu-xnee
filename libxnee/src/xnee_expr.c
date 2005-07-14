@@ -665,13 +665,6 @@ xnee_expression_handle_comment(xnee_data *xd, char *tmp)
   xnee_verbose ((xd, "handling comment: %s\n", tmp));
   if (!strncmp("#",tmp,1))  /* # META data */
     {
-      /*
-	xnee_handle_resource_meta (xd, tmp); 
-	if (xnee_handle_meta_data (xd, tmp+1)!=-1) 
-	{ printf ("RETURN\n"); return 1; }
-	else
-	printf ("continue..with: %s\n", ++tmp);
-      */
       xnee_verbose ((xd, "meta data read: %s\n", tmp));
       return XNEE_META_DATA;
     }

@@ -104,9 +104,9 @@ The following directives are used in Xnee:
 
 @item
 @tab  #
-@tab  Ignored
+@tab  The whole line is ignored.
 @end multitable
-As long as the first token is @code{#} it is intrepreted as a comment, just
+As long as the first token is @code{#} the whole line is intrepreted as a comment, just
 as in bash.
 
 @subsection Settings 
@@ -329,12 +329,12 @@ Xnee Settings Arguments
 
 @item
 @tab  @code{integer}
-@tab  is an integer value
+@tab  is an integer value. 
 @tab  1
 
 @item
 @tab  @code{string}
-@tab  is a string
+@tab  is a string.
 @tab  localhost
 
 @item

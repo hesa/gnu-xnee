@@ -151,28 +151,24 @@ int get_type(GtkWidget* combo_label)
 		  strlen(events_string) ) == 0)
         {
 	  type = XNEE_EVENT;
-	  g_print("type is XNEE_DELIVERED_EVENT\n");
         }
       else if (strncmp(selection, 
 		       replies_string, 
 		       strlen(replies_string)) == 0)
         {
 	  type = XNEE_REPLY;
-	  g_print("type is XNEE_REPLY\n");
         }
       else if (strncmp(selection, 
 		       requests_string, 
 		       strlen(requests_string)) == 0)
         {
 	  type = XNEE_REQUEST;
-	  g_print("type is XNEE_REQUEST\n");
         }
       else if (strncmp(selection, 
 		       errors_string, 
 		       strlen(errors_string) ) == 0)
         {
 	  type = XNEE_ERROR;
-	  g_print("type is XNEE_ERROR\n");
         }
     }
   
@@ -1262,12 +1258,12 @@ on_speed_spin_change_value             (GtkSpinButton   *spinbutton,
   gint speed = 0 ; 
 
   GNEE_DEBUG(("on_speed_spin\n"));
-    speed = gtk_spin_button_get_value_as_int(spinbutton);
-    
-    if (ext_xd != NULL)
-      {
-	gx_set_speed (speed); 
-      }
+  speed = gtk_spin_button_get_value_as_int(spinbutton);
+  
+  if (ext_xd != NULL)
+  {
+      gx_set_speed (speed); 
+  }
 }
 
 
@@ -1285,18 +1281,22 @@ void
 on_skip_sync_cb_toggled                (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-  GNEE_DEBUG(("on_skip_sync\n"));
+  GNEE_DEBUG(("on_skip_sync "));
   if (ext_xd != NULL)
     {
       if (gtk_toggle_button_get_active(togglebutton))
-	{
+      {
+	  GNEE_DEBUG(("  SYNC ON"));
 	  gx_set_sync (ext_xd); 
 	}
       else
 	{
+	  GNEE_DEBUG(("  SYNC OFF "));
 	  gx_unset_sync (ext_xd); 
 	}
     }
+  GNEE_DEBUG(("     xd says=%d\n", 
+	      xnee_get_sync(ext_xd)));
 }
 
 

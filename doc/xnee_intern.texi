@@ -150,7 +150,7 @@ If Xnee receives one data from the X server (e.g the event MapNotify) it
 checks if the  buffer entry for the specific data is bigger than the 
 negative minimum value (after having decremented the buffer value). 
 
-Xnee also checks if the absolute sum of the diferences for every entry
+Xnee also checks if the absolute sum of the differences for every entry
 in the buffer is higher the a total threshold.
 
 If Xnee is getting out of sync it slows down the speed a bit and tries to 

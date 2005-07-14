@@ -220,13 +220,18 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
     }
 
   if (!strncmp("#",tmp,1))  /* # META data */
-    {
-/*       xnee_handle_resource_meta (xd, tmp); */
+  {
+      /*       xnee_handle_resource_meta (xd, tmp); */
       if (xnee_handle_meta_data (xd, tmp+1)!=-1) 
-	{ printf ("RETURN\n"); return 1; }
+      { 
+	  xnee_verbose((xd, "  xnee_handle_meta_data: handling #   return 1\n"));
+	  return 1; 
+      }
       else
-	printf ("continue..with: %s\n", ++tmp);
-    }
+      {
+	  xnee_verbose((xd, "  xnee_handle_meta_data: handling #\n"));
+      }
+  }
 
   rem_all_blanks (tmp, len);
   len=strlen(tmp);

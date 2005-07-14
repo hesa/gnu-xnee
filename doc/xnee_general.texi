@@ -32,7 +32,7 @@ either sent to the server (if it is a keyboard or a mouse event) or used to
 synchronise with (if any of the other data). 
 
 @ifnotinfo
-This picture gives an overview of Xnee and the files used when recording.
+This picture gives an overview of Xnee and the files used when replaying.
 @*
 @image{xnrep, 10cm}
 @end ifnotinfo
@@ -246,6 +246,6 @@ that battle).
 @section  Xnee plugins 
 @cindex plugins
 Xnee supports plugins since version 1.07. For information about how to write 
-plugins, download the source code and look at the plugin example which shall 
-be delivered with Xnee.
+plugins, download the source code and look at the plugin example which is 
+delivered with Xnee.
 

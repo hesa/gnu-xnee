@@ -103,9 +103,7 @@ xnee_str2keycode(xnee_data* xd, const char *str, xnee_key_code *kc)
     }
   else  
     {
-	printf ("keycode...%s\n", str);
       kc->kc = XKeysymToKeycode(xd->fake,XStringToKeysym(str));
-      printf (" ..... kc=%d\n", kc->kc);
     }
 
   if (kc!=NULL)

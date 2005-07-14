@@ -18,8 +18,8 @@
  *                                                                   
  * You should have received a copy of the GNU General Public License 
  * along with this program; if not, write to the Free Software       
- * Foundation, Inc., 59 Temple Place - Suite 330, Boston,            
- * MA  02111-1307, USA.                                              
+ * Foundation, Inc., 51 Franklin Street, Boston,            
+ * MA  02110-1301, USA.                                              
  ****/
 
 
@@ -702,7 +702,6 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if(xnee_check(argv[i], "--verbose", "-v")) 
 	{
            xnee_set_verbose(xd);
-           printf ("setting verbose on %d\n", (int)xd);
 	}
       else if(xnee_check(argv[i], "--buffer-verbose", "-bv")) 
 	{

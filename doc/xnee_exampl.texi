@@ -274,7 +274,7 @@ Start xnee
 @end example
 
 If you have setup authority correct on frodo and sam you will
-see all you mouse motions being done on thos displays as well.
+see all you mouse motions being done on those displays as well.
 
 
 @subsection Distribute the replaying of mouse motions 
@@ -515,7 +515,7 @@ Xnee will now record the mouse events on the display frodo:0.0.
 
 @subsection Replay to another display than the default
 @cindex     Replay to another display than the default
-If you want to replat to another display than the default, as set in the 
+If you want to replay to another display than the default, as set in the 
 DISPLAY variable, you use the @code{--display} option.
 @example
 @code{cnee --replay --display frodo:0.0 --file mouse-rec.xnl }

@@ -32,6 +32,9 @@
 #include "xnee_record.h"
 #include <X11/extensions/XTest.h>
 
+int
+xnee_reset_fake( xnee_data *xd);
+
 /**
  * Sends a faked moton event to the display in the distribution list as found in xd.
  * @param xd       xnee's main structure

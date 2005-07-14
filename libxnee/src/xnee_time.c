@@ -45,13 +45,27 @@
  *                                                            *
  *                                                            *
  **************************************************************/
+static  unsigned long last_read_msecec  = 0;  
+static  unsigned long last_read_sec     = 0;
+static  unsigned long first_read_msecec = 0; 
+static  unsigned long first_read_sec    = 0;
+
+
+int
+xnee_reset_elapsed_time(xnee_data *xd)
+{
+    
+    last_read_msecec       = 0;  
+    last_read_sec     = 0;
+    first_read_msecec = 0; 
+    first_read_sec    = 0;
+    return XNEE_OK;
+}
+
+
 long 
 xnee_get_elapsed_time(xnee_data *xd, char type )
 {
-  static  unsigned long last_read_msecec  = 0;  
-  static  unsigned long last_read_sec     = 0;
-  static  unsigned long first_read_msecec = 0; 
-  static  unsigned long first_read_sec    = 0;
   long    last_sec; 
   long    last_msec; 
   long    diff_sec; 
@@ -63,21 +77,23 @@ xnee_get_elapsed_time(xnee_data *xd, char type )
 
   xnee_verbose ((xd, " --- xnee_get_elapsed_time\n"));
 
+
   /* determine what value to get difference from */
   if ( type == XNEE_FROM_LAST_READ )
     {
-      last_sec = last_read_sec;
+      last_sec  = last_read_sec;
       last_msec = last_read_msecec;
     }
   else
     {
-      last_sec = first_read_sec;
+      last_sec  = first_read_sec;
       last_msec = first_read_msecec;
     }
 
   /* get current time */
   if(  gettimeofday( &cur_time, &zoneData) == 0 )
     {
+
       /* get difference between now and last */
       diff_sec = cur_time.tv_sec - last_sec;
       diff_msec = (cur_time.tv_usec/1000) - last_msec;
@@ -89,10 +105,10 @@ xnee_get_elapsed_time(xnee_data *xd, char type )
       /* if first time through - save values and return XNEE_OK */
       if ( last_sec == 0  )
 	{
-	  last_read_msecec = cur_time.tv_usec/1000;
-	  last_read_sec = cur_time.tv_sec;
+	  last_read_msecec  = cur_time.tv_usec/1000;
+	  last_read_sec     = cur_time.tv_sec;
 	  first_read_msecec = cur_time.tv_usec/1000;
-	  first_read_sec = cur_time.tv_sec;
+	  first_read_sec    = cur_time.tv_sec;
 /* 	  xnee_verbose ((xd, "1st elapsed time:%c _sec _msec: %d %d timeoffeset = 0\n",  */
 /* 		       type, cur_time.tv_sec, cur_time.tv_usec )); */
 	  return XNEE_OK;
@@ -102,12 +118,14 @@ xnee_get_elapsed_time(xnee_data *xd, char type )
       if ( type == XNEE_FROM_LAST_READ )
 	{
 	  last_read_msecec = cur_time.tv_usec/1000;
-	  last_read_sec = cur_time.tv_sec;
+	  last_read_sec    = cur_time.tv_sec;
     	}
-/*       xnee_verbose ((xd, "elapsed time type:%c current time _sec _msec: %d %d time_offset_msec: %d\n",  */
-/* 		   type, cur_time.tv_sec, cur_time.tv_usec, time_offset_msec )); */
+      /*       xnee_verbose ((xd, "elapsed time type:%c current time _sec _msec: %d %d time_offset_msec: %d\n",  */
+      /* 		   type, cur_time.tv_sec, cur_time.tv_usec, time_offset_msec )); */
       return time_offset_msec;
     }
+
+
 
   /* Shouldn't reach this point.... silent the compiler */
   return 0;
@@ -143,6 +161,7 @@ xnee_calc_sleep_amount(xnee_data *xd,
   /*  printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",  
 	  last_diff, first_diff, record_last_diff, recordFirst_diff ); 
   */
+
 
   /* determine where we are from first read  
    * either too fast or too slow */
@@ -241,9 +260,9 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
   
   xnee_verbose ((xd, "xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\n",  
 		 last_diff, first_diff, record_last_diff, recordFirst_diff )); 
-  /*  printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",  
-	  last_diff, first_diff, record_last_diff, recordFirst_diff ); 
-  */
+/*   printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",    */
+/*  	  last_diff, first_diff, record_last_diff, recordFirst_diff );   */
+  
 
   /* determine where we are from first read  
    * either too fast or too slow */
@@ -296,12 +315,12 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
 	{
 	  /* recorded wait more than we have waited so far */
 	  /* amount of wait left */
-	  sleep_amt = (record_last_diff - last_diff) / 8 ; 
+	    sleep_amt = (record_last_diff - last_diff) / 8  ; 
 	}
       else
 	{
 	  /* we have already waited the recorded amount of time */
-	  sleep_amt = 0;
+	    sleep_amt = 0;
 	}
     }
   else
@@ -309,8 +328,11 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
       sleep_amt=0;
     }
 
+/*   printf ("xnee_calc_sleep_amount: %d\n", (int)sleep_amt);  */
   xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", (int)sleep_amt )); 
+
   return ( sleep_amt );
+
 }
 
 
@@ -339,11 +361,6 @@ xnee_calc_sleep_amount_fast(xnee_data *xd,
   record_last_diff = 
     record_last_diff * xnee_get_speed(xd) / 100;
   
-  /*  printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: 
-      %lu record_last_diff: %lu recordFirst_diff: %lu\t",  
-      last_diff, first_diff, record_last_diff, recordFirst_diff ); 
-  */
-
 
   /* determine where we are from first read  
    * either too fast or too slow */
@@ -402,8 +419,7 @@ xnee_calc_sleep_amount_fast(xnee_data *xd,
       sleep_amt=0;
     }
     xnee_verbose (( xd, "xnee_calc_sleep_amount: %d\n", (int)sleep_amt )); 
-  /*
-    printf ("sleep_mt=%lu\n", sleep_amt);*/
+    
   return ( sleep_amt );
 }
 

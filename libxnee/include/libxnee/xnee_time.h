@@ -26,6 +26,12 @@
 #define XNEE_TIME_H
 
 
+
+
+int
+xnee_reset_elapsed_time(xnee_data *xd);
+
+
 /**
  * Returns the elapsed time from either the 1st read or the last call to this f'n
  * 

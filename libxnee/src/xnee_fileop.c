@@ -58,11 +58,13 @@ xnee_open_files(xnee_data *xd)
   char *file_name;
 
   xnee_verbose((xd, "---> xnee_open_files\n"));
+
   file_name = xnee_get_err_name(xd);
   if (file_name!=NULL)
     {
       xnee_verbose((xd, "---  xnee_open_files: handling err\n"));
-      if ((xnee_check (file_name, "stderr", "STDERR")!=XNEE_OK)!=0)
+      if ( ((xnee_check (file_name, "stderr", "STDERR")!=XNEE_OK) != 0) &&
+	   ((xnee_check (file_name, "", "")!=XNEE_OK) != 0) )
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: opening err: %s\n", 
 			xd->err_name));
