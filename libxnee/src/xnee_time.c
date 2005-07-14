@@ -55,6 +55,8 @@ int
 xnee_reset_elapsed_time(xnee_data *xd)
 {
     
+    xnee_verbose ((xd, " --- xnee_reset_elapsed_time \n"));
+
     last_read_msecec       = 0;  
     last_read_sec     = 0;
     first_read_msecec = 0; 

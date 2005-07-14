@@ -44,8 +44,9 @@ static int loop_nr = 0;
 int
 xnee_reset_fake( xnee_data *xd)
 {
-    xmee_verbose((xd, "reset fake\n"));
+    xnee_verbose((xd, "reset fake\n"));
     loop_nr = 0 ;
+    return XNEE_OK;
 }
 
 static void
@@ -406,7 +407,7 @@ xnee_fake_motion_event (xnee_data* xd,
   y = xnee_resolution_newy(xd,y);
 
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
-  xnee_verbose((xd, "---  delay = %d\n", dtime));
+  xnee_verbose((xd, "---  delay = %d\n", (int)dtime));
   if (!xnee_is_recorder (xd))
     {
 
