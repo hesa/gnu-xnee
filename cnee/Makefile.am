@@ -23,6 +23,7 @@ EXTRA_DIST = Makefile.cnee Makefile.cvs autotools/install-sh \
     test/scripts/record/mouse.sh \
     test/scripts/replay/keyboard.sh \
     test/scripts/replay/mouse.sh \
+    test/scripts/retype/keyboard.sh \
     test/scripts/resolution/mo-res.sh \
     test/scripts/timing/mo-time.sh \
     test/src/Makefile \
