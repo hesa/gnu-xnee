@@ -133,6 +133,7 @@ elif [ "$1" == "--function" ];
     then
     START=`date '+%s'`
     \rm -f $LOG $ERR_LOG
+    shift
     function_scripts "$*"
     STOP=`date '+%s'`
     scan_logs

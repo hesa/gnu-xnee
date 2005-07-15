@@ -129,17 +129,6 @@ function result_log()
 	
 }
 
-function kill_1
-{
-    PID=$1
-
-    kill -SIGINT $PID
-    sleep 1
-    kill -TERM   $PID
-    sleep 1
-    kill -kill   $PID
-}
-
 function killall_1
 {
     PROG=cnee
@@ -149,6 +138,37 @@ function killall_1
     killall -TERM   $PROG
     sleep 1
     killall -kill   $PROG
+}
+
+function do_kill_1()
+{
+    PID=$1
+    SIG=$2
+
+    kill -${SIG} ${PID}
+}
+
+
+function kill_1
+{
+    PID=$1
+
+    if [ $(ps auxww | grep -v grep | grep $PID | wc -l) -gt 0 ]
+	then
+	kill -SIGINT $PID
+	sleep 1
+    fi
+
+    if [ $(ps auxww | grep -v grep | grep $PID | wc -l) -gt 0 ]
+	then
+	kill -TERM   $PID
+	sleep 1
+    fi
+
+    if [ $(ps auxww | grep -v grep | grep $PID | wc -l) -gt 0 ]
+	then
+	kill -9   $PID
+    fi
 }
 
 function verbose()

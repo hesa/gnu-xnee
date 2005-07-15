@@ -42,10 +42,11 @@ function replay_file()
     RECORDED_FILE=$1
     
     verbose "replaying file $RECORDED_FILE"
-    rm /tmp/xnee_test.txt
     verbose "  launching xterm/cat"
-    xterm -e 'cat > /tmp/xnee_test.txt' &
-    sleep 5
+    launch_cat_wrapper    /tmp/xnee_test.txt
+    verbose "  .... we should have an xterm up and running  by now"
+
+    sleep 4
     verbose "  launching xnee"
     $XNEE --replay -f $RECORDED_FILE 
 
