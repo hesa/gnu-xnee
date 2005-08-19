@@ -153,7 +153,9 @@ xnee_start(xnee_data *xd)
 	 xnee_verbose((xd, "Entering main loop( recorder)\n"));
 	 ret = xnee_record_async(xd);
 	 if (ret != XNEE_OK)
-	   return ret;
+	   {
+	     return ret;
+	   }
        }
     }
   else if ( xnee_is_replayer(xd) != 0 )
@@ -198,7 +200,7 @@ xnee_start(xnee_data *xd)
       xnee_verbose((xd,"finished replaying\n"));
       if (ret != XNEE_OK)
 	{
-	  ;
+	  return ret;
 	}
     }
   else if ( xnee_is_retyper(xd) != 0 )
