@@ -1,0 +1,6 @@
+2005-08-18  Henrik Sandklef  <hesa@localhost.localdomain>
+
+	* libxnee/src/xnee_replay.c (xnee_replay_synchronize): 
+
+	"return;" replaced with "return ret;"
+
