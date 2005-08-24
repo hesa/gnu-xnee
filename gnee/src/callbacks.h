@@ -342,3 +342,11 @@ on_replay_settings_box_map             (GtkWidget       *widget,
 void
 on_record_settings_box_map             (GtkWidget       *widget,
                                         gpointer         user_data);
+
+void
+on_button5_clicked                     (GtkButton       *button,
+                                        gpointer         user_data);
+
+void
+on_about_ok_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data);

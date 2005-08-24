@@ -448,9 +448,15 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
 				 "about_window");
 
   if (about_box==NULL)
-    about_box = create_about_window();
+    {
+      about_box = create_about_window();
+    }
 
-  gtk_widget_show (about_box);
+
+  if (about_box!=NULL)
+    {
+      gtk_widget_show (about_box);
+    }
 }
 
 
@@ -1484,4 +1490,23 @@ on_record_settings_box_map             (GtkWidget       *widget,
 {
   ;
 }
+
+
+void
+on_button5_clicked                     (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  GtkWidget   *window;
+    
+  if (user_data)
+    {
+      window = lookup_widget(user_data, "about_window");
+    }
+
+  if (window)
+    {
+      gtk_widget_hide (window);
+    }
+}
+
 
