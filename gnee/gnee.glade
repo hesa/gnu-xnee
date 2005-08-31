@@ -3351,7 +3351,7 @@ which is what you would probably use anyway :)</property>
 </widget>
 
 <widget class="GtkWindow" id="about_window">
-  <property name="width_request">350</property>
+  <property name="width_request">500</property>
   <property name="height_request">180</property>
   <property name="visible">True</property>
   <property name="title" translatable="yes">about_window</property>
@@ -3633,12 +3633,12 @@ Jon-Erling Dahl &lt;joda@gadgeteer.nu&gt;</property>
 		<widget class="GtkTextView" id="textview1">
 		  <property name="visible">True</property>
 		  <property name="can_focus">True</property>
-		  <property name="editable">True</property>
+		  <property name="editable">False</property>
 		  <property name="overwrite">False</property>
-		  <property name="accepts_tab">True</property>
+		  <property name="accepts_tab">False</property>
 		  <property name="justification">GTK_JUSTIFY_LEFT</property>
 		  <property name="wrap_mode">GTK_WRAP_NONE</property>
-		  <property name="cursor_visible">True</property>
+		  <property name="cursor_visible">False</property>
 		  <property name="pixels_above_lines">0</property>
 		  <property name="pixels_below_lines">0</property>
 		  <property name="pixels_inside_wrap">0</property>
@@ -3997,6 +3997,8 @@ Public License instead of this License.
 
 	  <child>
 	    <widget class="GtkLabel" id="license_tab">
+	      <property name="width_request">62</property>
+	      <property name="height_request">22</property>
 	      <property name="visible">True</property>
 	      <property name="label" translatable="yes">License</property>
 	      <property name="use_underline">False</property>
