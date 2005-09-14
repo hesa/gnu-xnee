@@ -5,9 +5,9 @@ EXTRA_DIST = xnee_copying fdl.texi *.dia xnee.dox
 
 
 #MAKEINFO = @MAKEINFO@ --no-split
-TEXI2HTML = texi2html
-DVI2PS = dvi2ps
-PS2PDF = ps2pdf
+#TEXI2HTML = texi2html
+#DVI2PS = dvi2ps
+#PS2PDF = ps2pdf
 
 
 
@@ -97,13 +97,13 @@ api-doc: xnee.dox
 	-mkdir alldocs
 	-mkdir alldocs/devel
 	\rm -fr latex
-	doxygen xnee.dox 
+	$(DOXYGEN) xnee.dox 
 	cd latex && make ps && make pdf
 
 
 
 xnee.txt:
-	makeinfo -o xnee.txt --no-headers --no-split --no-validate xnee.texi
+	$(MAKEINFO) -o xnee.txt --no-headers --no-split --no-validate xnee.texi
 
 
 all: doc
@@ -111,24 +111,24 @@ all: doc
 #all: ${SRC_IMAGES} ${GEN_IMAGES}
 
 ${IMG_EPS}: %.eps: %.dia
-	dia --nosplash -e $@ $<
+	$(DIA) --nosplash -e $@ $<
 
 ${IMG_PDF}: %.pdf: %.eps
-	epstopdf --outfile $@ $<
+	$(EPSTOPDF) --outfile $@ $<
 
 ${IMG_PNG}: %.png: %.eps
-	convert -density 144x144 $< $@ 
+	$(CONVERT) -density 144x144 $< $@ 
 	( mv $@ `echo $@ | sed 's,\.png,_big\.png,g'` )
-	convert -density 32x32 $< $@ 
+	$(CONVERT) -density 32x32 $< $@ 
 	( mv $@ `echo $@ | sed 's,\.png,_small\.png,g'` )
-	convert -density 60x60 $< $@ 
+	$(CONVERT) -density 60x60 $< $@ 
 
 ${IMG_JPG}: %.jpg: %.eps
-	convert -density 144x144 $< $@ 
+	$(CONVERT) -density 144x144 $< $@ 
 	( mv $@ `echo $@ | sed 's,\.jpg,_big\.jpg,g'` )
-	convert -density 32x32 $< $@ 
+	$(CONVERT) -density 32x32 $< $@ 
 	( mv $@ `echo $@ | sed 's,\.jpg,_small\.jpg,g'` )
-	convert -density 60x60 $< $@ 
+	$(CONVERT) -density 60x60 $< $@ 
 
 clean:
 	\rm -f ${GEN_IMAGES} *_big.* *_small.*

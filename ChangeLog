@@ -1,3 +1,19 @@
+2005-09-14  Henrik Sandklef  <>
+
+	* configure.in (DOC_TARGETS, DOC_TARGETS): 
+
+	"Added checks for various binaries used when building manuals"
+
+	"Added X_LIBS to LIBS"
+
+	"Warns if progrs need by doc isn't found"
+
+2005-09-13  Henrik Sandklef  <>
+
+	* gnee/src/*.[hc]:
+
+	"Made sure copyright notice was present"
+
 2005-08-18  Henrik Sandklef  <hesa@localhost.localdomain>
 
 	* libxnee/src/xnee_replay.c (xnee_replay_synchronize): 
