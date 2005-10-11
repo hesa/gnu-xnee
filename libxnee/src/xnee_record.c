@@ -581,7 +581,13 @@ xnee_setup_recordext (xnee_data *xd)
   xd->record_setup->data_flags = XRecordFromServerTime 
     | XRecordFromClientTime  
     | XRecordFromClientSequence; 
+
+
+  ret = xnee_set_ranges(xd);
+  XNEE_RETURN_IF_ERR (ret);
+  
   ret = xnee_get_max_range(xd) ;
+
   if (ret==0)
     {
       xnee_verbose((xd, " --- xnee_setup_recordext Nothing to record \n"));
