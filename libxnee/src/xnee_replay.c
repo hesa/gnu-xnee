@@ -136,8 +136,8 @@ xnee_replay_synchronize (xnee_data* xd)
 	  if (diff_counter >= xnee_get_tot_threshold(xd))
 	    {
 	      time_out_counter++;
+
 	      /*
-		
 	       */
 	      diff_counter=0;
 
@@ -151,7 +151,8 @@ xnee_replay_synchronize (xnee_data* xd)
                      break;
                   }
 		  (void)fprintf (stderr,
-                                 "Can't synchronize anymore .... have to leave!\n");
+                                 "Can't synchronize anymore .... have to leave!  %d %d \n",
+				 time_out_counter , MAX_SKIPPED_UNSYNC);
 		  return XNEE_SYNCH_FAULT;
 		}
 	      else 
@@ -170,13 +171,13 @@ xnee_replay_synchronize (xnee_data* xd)
 	}
       else
 	{
-	  if (diff_counter!=0)
-	    {
-	      xd->buf_verbose=True;
-	      xnee_replay_printbuffer(xd); 
-	      return XNEE_SYNCH_FAULT;
-	      /*	      exit(0);*/
-	    }
+	  /* Thanks, Valia */ 
+/* 	  if (diff_counter!=0) */
+/* 	    { */
+/* 	      xd->buf_verbose=True; */
+/* 	      xnee_replay_printbuffer(xd);  */
+/* 	      return XNEE_SYNCH_FAULT; */
+/* 	    } */
 	  diff_counter=0;
 	  time_out_counter=0;
 	  break;
@@ -408,6 +409,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        (read_mode==XNEE_REPLAY_READ_ALL_DATA)
        )
     {
+
        while ( (logread != 0)  && ( xd->cont != 0 ) ) 
 	{
 	  ret_str = fgets(tmp, 256, xd->data_file);
@@ -458,6 +460,9 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
       (read_mode==XNEE_REPLAY_READ_ALL_DATA))
     {
 	
+      ret = xnee_set_ranges(xd);
+      XNEE_RETURN_IF_ERR (ret);
+
       /* REMOVE ME... after testing.
 	 rep_prepare is done in xnee_prepare */
       /*    ret = xnee_rep_prepare(xd); */
