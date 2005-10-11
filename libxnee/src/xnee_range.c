@@ -319,10 +319,9 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 	  ret = xnee_add_to_list2(type, start);
 	}
     }
-  /* ret=xnee_add_range (xd, type, start, stop); */
-  
-  xnee_verbose((xd, " <-- add_range_str (%d, %d, %s)\n", 
-		(int)xd,type, range));
+
+  xnee_verbose((xd, " <-- add_range_str (%d, %d, %s) max range=%d\n", 
+		(int)xd,type, range, xnee_get_max_range(xd)));
   return (ret);
 }
 
