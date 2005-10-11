@@ -112,7 +112,9 @@ xnee_handle_resource_meta (xnee_data *xd, char *meta_str)
   value += 1 ;  
   
   if (strlen(value)>2) 
-    XNEE_REMOVE_BEGINING_BLANKS(value);
+    {
+      XNEE_REMOVE_BEGINING_BLANKS(value);
+    }
   XNEE_REMOVE_TRAILING_CRAP(value);
 
   
@@ -377,7 +379,9 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       range=strstr (tmp, " ");
       range += 1 ;
       if (strlen(range)>0)
+	{
          xnee_add_display_list ( xd, range);
+	}
     }
   else if (!strncmp(XNEE_DEVICE_EVENT_STR,tmp,strlen(XNEE_DEVICE_EVENT_STR)))
     {
