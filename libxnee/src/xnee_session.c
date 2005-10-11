@@ -441,10 +441,10 @@ xnee_rep_prepare(xnee_data *xd)
   ret = xnee_print_distr_list(xd, NULL);
   XNEE_RETURN_IF_ERR (ret);
 
-  ret = xnee_set_ranges(xd);
-  XNEE_RETURN_IF_ERR (ret);
+/*   ret = xnee_set_ranges(xd); */
+/*   XNEE_RETURN_IF_ERR (ret); */
 
-  ret=xnee_setup_recordext (xd);
+  ret = xnee_setup_recordext (xd);
   
   if ( xnee_is_recorder(xd) != 0)
   {
