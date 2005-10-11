@@ -402,33 +402,37 @@ xnee_fake_motion_event (xnee_data* xd,
 {
   int i=0;
   int size= xd->distr_list_size;
-	  
-  x = xnee_resolution_newx(xd,x);
-  y = xnee_resolution_newy(xd,y);
+  int new_x;
+  int new_y;
 
+	  
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   xnee_verbose((xd, "---  delay = %d\n", (int)dtime));
   if (!xnee_is_recorder (xd))
     {
 
+      new_x = xnee_resolution_newx(xd,x);
+      new_y = xnee_resolution_newy(xd,y);
+
       xnee_fake_sleep (dtime);
       xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))\n",
 		    (int) xd->fake, 
 		    (int) screen, 
-		    (int) x,
-		    (int) y,
+		    (int) new_x,
+		    (int) new_y,
 		    0));
       XTestFakeMotionEvent(xd->fake, 
 			   screen, 
-			   x, 
-			   y, 
+			   new_x, 
+			   new_y, 
 			   0);
       XFlush(xd->fake);
     }
   
   for (i=0; i<size ; i++)
     {
-      XTestGrabControl (xd->distr_list[i].dpy, True); 
+
+/*       XTestGrabControl (xd->distr_list[i].dpy, True);  */
 
       xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))  **\n",
 		   (int) xd->distr_list[i].dpy, 
