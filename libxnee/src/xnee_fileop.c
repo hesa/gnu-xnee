@@ -63,15 +63,17 @@ xnee_open_files(xnee_data *xd)
   if (file_name!=NULL)
     {
       xnee_verbose((xd, "---  xnee_open_files: handling err\n"));
-      if ( ((xnee_check (file_name, "stderr", "STDERR")!=XNEE_OK) != 0) &&
-	   ((xnee_check (file_name, "", "")!=XNEE_OK) != 0) )
+      if ((xnee_check (file_name, "stderr", "STDERR") == XNEE_OK) &&
+	  ((xnee_check (file_name, "-", "-") == XNEE_OK) ) )
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: opening err: %s\n", 
 			xd->err_name));
 	  XNEE_FCLOSE_IF_NOT_NULL(xd->err_file); 
 	  xd->err_file = fopen (xd->err_name,"w");
 	  if (xd->err_file==NULL)
-	    return XNEE_FILE_NOT_FOUND;
+	    {
+	      return XNEE_FILE_NOT_FOUND;
+	    }
 	}
     }
 
