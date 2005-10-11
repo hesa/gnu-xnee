@@ -187,9 +187,11 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
   size_t next;
   size_t len;
   int ret=0;
-  size_t disp_len=strlen(disp);
-  xnee_verbose((xd, "xnee_add_display (%s, ... )\n", disp));
+  int disp_len=strlen(disp);
+  xnee_verbose((xd, "xnee_add_display (xd, %s, )\n", disp));
+
   while ( (1!=0) ) {
+
     next=strcspn (disp, ",");
     if (next==0) break; 
     strncpy(buf,disp,next);
@@ -199,17 +201,20 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
     disp_len=disp_len - next - 1;
     xnee_verbose((xd,  " ------------------------- (%s) %d    %d     %d\n", buf, len, disp_len, disp_len));
     ret=xnee_add_display_str (buf,xd);
-    xnee_verbose((xd,  " ------------------------- are we doing fine???\n"));
+    xnee_verbose((xd,  " ------------------------- are we doing fine??? ret=%d\n", ret));
+
     if (ret!=0) 
       {
 	xnee_verbose((xd, "Could not add all display for distribution ... returning\n"));
 	return (ret);
       }
-    if (disp_len==0) 
+
+    if (disp_len <= 0) 
       {
 	xnee_verbose((xd, "disp_len = %d\n", disp_len));
 	break;
       }
+
   }
   xnee_verbose((xd, "xnee_add_display_str ... finished\n"));
   return (0);  
