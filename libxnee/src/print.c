@@ -538,7 +538,7 @@ xnee_record_print_record_range (xnee_data *xd, /*@null@*/ FILE* out)
        (xd->record_setup->range_array==NULL) ||
        (xd->record_setup->xids==NULL) )
   {
-     return XNEE_NO_MAIN_DATA;
+    return XNEE_NO_MAIN_DATA; 
   }
 
   if (out == NULL)
