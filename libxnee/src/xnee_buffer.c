@@ -197,6 +197,17 @@ xnee_replay_buffer_handler (xnee_data* xd,
 			    Bool rec_or_rep)
 {
 
+  /*
+   * We don't use device event while synching 
+   *
+   */
+  if ( (data_type==XNEE_EVENT) &&
+       ( (data_nr>=KeyPress) || (data_nr<=MotionNotify)) )
+    {
+      return;
+    }
+
+
   xnee_verbose((xd,"---> xnee_replay_buffer_handler "));
   if (rec_or_rep==XNEE_RECEIVED) 
     {
