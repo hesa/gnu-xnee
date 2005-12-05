@@ -157,6 +157,9 @@ main (int argc, char *argv[])
     xd = xnee_new_xnee_data();
     ext_xd = xd;
 
+    /* Set the program name */
+    xnee_set_program_name (xd, XNEE_GUI);
+
     /* Set the cli parameters */
     xnee_set_application_parameters (xd, argv);
 

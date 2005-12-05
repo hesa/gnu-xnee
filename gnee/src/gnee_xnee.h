@@ -46,6 +46,7 @@
 
 
 #define GNEE_OK 0
+#define XNEE_GUI "gnee"
 
 typedef struct 
 {
