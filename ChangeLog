@@ -1,3 +1,47 @@
+2005-12-06  Henrik Sandklef  <>
+
+	* gnee/src/main.c
+	* gnee/src/gnee_xnee.c
+
+	Added macro for program name (gnee)
+
+2005-10-11  Henrik Sandklef  <>
+
+	* libxnee/src/xnee_buffer.c (xnee_replay_buffer_handler): 
+
+	Excluding device events from buffer handling in synchronisation
+
+	* libxnee/src/xnee_fake.c (xnee_fake_motion_event): 
+
+	removed recalculation of screen resolution when distributiing events
+
+	* libxnee/src/xnee_record.c (xnee_setup_recordext): 
+
+	Calling set_ranges before recording...
+
+	* libxnee/src/xnee_display.c (xnee_add_display_list): 
+
+	Changed == to <= in 
+	if (disp_len <= 0) 
+
+	* gnee/src/main.c (main): 
+
+	program name set to XNEE_GUI
+
+	* gnee/src/gnee_xnee.h: 
+
+	Added macro XNEE_GUI "gnee"
+
+	* doc/xnee_exampl.texi: 
+
+	"--loops" replaced by "--events-to-record"
+
+2005-09-15  Henrik Sandklef  <>
+
+	* libxnee/src/xnee_fileop.c (xnee_open_files): 
+
+	"Corrected parse error on "--err-file"
+
 2005-09-14  Henrik Sandklef  <>
 
 	* configure.in (DOC_TARGETS, DOC_TARGETS): 

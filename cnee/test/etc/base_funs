@@ -645,3 +645,17 @@ function remove_gcov_gprof_file()
 }
 
 
+launch_cat_wrapper()
+{
+    export FILE=$1
+
+    pwd
+    OLDPATH=$PATH
+    export PATH=${PATH}:$(pwd)/etc
+    echo "xterm -fn fixed -e cat_wrapper $FILE"
+    xterm -fn fixed -e cat_wrapper $FILE
+}
+
+
+
+

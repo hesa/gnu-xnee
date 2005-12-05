@@ -43,7 +43,7 @@ function replay_file()
     
     verbose "replaying file $RECORDED_FILE"
     verbose "  launching xterm/cat"
-    launch_cat_wrapper    /tmp/xnee_test.txt
+    launch_cat_wrapper    /tmp/xnee_test.txt&
     verbose "  .... we should have an xterm up and running  by now"
 
     sleep 4

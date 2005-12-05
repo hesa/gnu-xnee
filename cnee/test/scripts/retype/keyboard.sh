@@ -42,7 +42,7 @@ function retype_file()
     RECORDED_FILE=$1
     
     verbose "replaying file $RECORDED_FILE"
-    launch_cat_wrapper    /tmp/xnee_test.txt
+    launch_cat_wrapper    /tmp/xnee_test.txt&
 
     sleep 4
     verbose "  launching cnee"
