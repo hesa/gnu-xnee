@@ -1,8 +1,8 @@
-AC_INIT(Xnee,2.01,bug-xnee@gnu.org)
+AC_INIT(Xnee,2.02,bug-xnee@gnu.org)
 
 AC_CONFIG_AUX_DIR(./autotools/)
 
-AM_INIT_AUTOMAKE(Xnee,2.01)
+AM_INIT_AUTOMAKE(Xnee,2.02)
 
 
 AC_PROG_INSTALL
@@ -363,8 +363,6 @@ AC_OUTPUT([ Makefile ])
 
 if test x$doconly = xtrue || test x$builddoc = xtrue  ; 
 then
-    echo ldldldll ldk ljj
-    sleep 20
         AC_OUTPUT([ doc/Makefile ])
 fi
 
