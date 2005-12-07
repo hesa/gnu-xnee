@@ -48,7 +48,7 @@ Start a terminal emulator (e.g xterm)
 
 Start Xnee
 @example
-   @code{cnee --record --keyboard --mouse --loops 400 --out gnumeric.xnl&}
+   @code{cnee --record --keyboard --mouse --events-to-record 400 --out gnumeric.xnl&}
 @end example
 
 Start gnumeric
@@ -70,7 +70,7 @@ Start a terminal emulator (e.g xterm)
 
 Start Xnee
 @example
-   @code{cnee --record --keyboard --mouse --loops 400 --out gnumeric2.xnl\}
+   @code{cnee --record --keyboard --mouse --events-to-record 400 --out gnumeric2.xnl\}
    @code{--delivered-event-range Expose,MapRequest,LeaveNotify,EnterNotify  &}
 @end example
 
@@ -336,7 +336,7 @@ sure that this key isn't grabbed by another X client (e.g by the
 Window Manager). Let's say that you want Xnee to stop recording if you press
 Control and h. 
 @example
-   @code{cnee --record --mouse --loops -1 --stop-key h}
+   @code{cnee --record --mouse --events-to-record -1 --stop-key h}
 @end example
 This will make xnee record mouse events until you press h. 
 All printouts are done to stdout so you can see that Xnee stops when you
@@ -356,7 +356,7 @@ Make sure that this key isn't grabbed by another X client (e.g by
 the Window Manager). Let's say that you want Xnee to pause recording if you 
 press p and to resume when pressing Comntrol and r. 
 @example
-   @code{cnee --record --mouse --loops -1 --pause-key p \}
+   @code{cnee --record --mouse --events-to-record -1 --pause-key p \}
    @code{--resume-key r}
 @end example
 This will make xnee record mouse events until you press p. 
@@ -394,7 +394,7 @@ session from the previous examples.
 @*
 We use Xnee to find the keycode for F1. Start xnee.
 @example
-   @code{cnee --record --keyboard --loops 20}
+   @code{cnee --record --keyboard --events-to-record 20}
 @end example
 Press the F1 key and see what number was printed out. It will look something
 like this:

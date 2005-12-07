@@ -1599,7 +1599,6 @@ create_about_window (void)
   GtkWidget *vbox33;
   GtkWidget *notebook1;
   GtkWidget *vbox14;
-  GtkWidget *image4;
   GtkWidget *gnee_label;
   GtkWidget *about_label1;
   GtkWidget *vbox18;
@@ -1630,15 +1629,9 @@ create_about_window (void)
   gtk_widget_show (vbox14);
   gtk_container_add (GTK_CONTAINER (notebook1), vbox14);
 
-  image4 = create_pixmap (about_window, "gnee.png");
-  gtk_widget_show (image4);
-  gtk_box_pack_start (GTK_BOX (vbox14), image4, TRUE, TRUE, 0);
-  gtk_widget_set_size_request (image4, 21, 48);
-
-  gnee_label = gtk_label_new (_("<b>Gnee</b> is the graphical frontend to Xnee\n\nXnee is released under GPL version 2\n"));
+  gnee_label = gtk_label_new ("");
   gtk_widget_show (gnee_label);
   gtk_box_pack_start (GTK_BOX (vbox14), gnee_label, FALSE, FALSE, 0);
-  gtk_widget_set_size_request (gnee_label, 27, 60);
   gtk_label_set_use_markup (GTK_LABEL (gnee_label), TRUE);
 
   about_label1 = gtk_label_new (_("About"));
@@ -1715,7 +1708,6 @@ create_about_window (void)
   GLADE_HOOKUP_OBJECT (about_window, vbox33, "vbox33");
   GLADE_HOOKUP_OBJECT (about_window, notebook1, "notebook1");
   GLADE_HOOKUP_OBJECT (about_window, vbox14, "vbox14");
-  GLADE_HOOKUP_OBJECT (about_window, image4, "image4");
   GLADE_HOOKUP_OBJECT (about_window, gnee_label, "gnee_label");
   GLADE_HOOKUP_OBJECT (about_window, about_label1, "about_label1");
   GLADE_HOOKUP_OBJECT (about_window, vbox18, "vbox18");

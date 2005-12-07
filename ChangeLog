@@ -1,3 +1,14 @@
+2005-12-08  Henrik Sandklef  <>
+
+	* gnee/src/interfaces.c
+	* gnee/gnee.glade
+
+	Changed info about gnee and Xnee in about box
+
+	libxnee/src/print.c
+	
+	* Added year 2005 in printout
+	
 2005-12-06  Henrik Sandklef  <>
 
 	* gnee/src/main.c

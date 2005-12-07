@@ -466,7 +466,9 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
                                         gpointer         user_data)
 {
   GtkWidget          *about_box;
+  GtkWidget          *about_label_1;
   GNEE_DEBUG(("on_about1_activate\n"));
+  char buf[256];
 
   about_box      = lookup_widget(GTK_WIDGET(user_data),
 				 "about_window");
@@ -476,6 +478,18 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
       about_box = create_about_window();
     }
 
+  about_label_1 = lookup_widget(GTK_WIDGET(about_box),
+				"gnee_label");
+  if (about_label_1!=NULL)
+    {
+      sprintf(buf,"<b>%s %s</b>\n\n",
+	      XNEE_GUI, 
+	      VERSION);
+      strcat(buf, "is the graphical frontend to " PACKAGE "\n\n");
+      strcat(buf, PACKAGE " is Free Software released under GPL version 2\n");
+
+      gtk_label_set_markup((GtkLabel*)about_label_1, (gchar*)buf);
+    }
 
   if (about_box!=NULL)
     {

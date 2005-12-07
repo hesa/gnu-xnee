@@ -1184,8 +1184,8 @@ xnee_store_mouse_pos (xnee_data* xd )
 		     &mask);
   
   xd->data_fp (xd->out_file, 
-	        "%s " 
-	        "%s=%d " 
+	       "%s " 
+	       "%s=%d " 
 	       "%s=%d \n" ,
 	       XNEE_FAKE_MOTION,XNEE_FAKE_X_ARG,XNEE_FAKE_Y_ARG,
 	       rx, ry );
@@ -1205,8 +1205,8 @@ xnee_version(xnee_data* xd)
   xnee_verbose ((xd, " --> xnee_version\n"));
   fprintf (stderr, "%s ",PACKAGE);
   fprintf (stderr, "%s\n",VERSION);
-  fprintf (stderr, "Copyright (C) 2000,2001,2002,2003,2004 Henrik Sandklef \n");
-  fprintf (stderr, "Xnee and all its included programs come with ");
+  fprintf (stderr, "Copyright (C) 2000,2001,2002,2003,2004, 2005 Henrik Sandklef \n");
+  fprintf (stderr, "%s and all its included programs come with ", PACKAGE);
   fprintf (stderr, "NO WARRANTY,\nto the extent permitted by law.\n" );
   fprintf (stderr, "This is free software, and you may redistribute\n");
   fprintf (stderr, "copies of it under terms of GNU Genreal Public License.\n");
