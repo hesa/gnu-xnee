@@ -526,6 +526,7 @@ handle_xerr(Display *dpy, XErrorEvent *errevent)
 		       tmp, 
 		       100);
   fprintf (stderr, " %s\n", (char *)tmp);
+  fprintf (stderr, "This error can be ignored\n");
   return XNEE_OK;
 }
 
