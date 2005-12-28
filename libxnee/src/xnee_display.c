@@ -77,6 +77,9 @@ xnee_setup_display (xnee_data *xd)
     }
 
 
+  xnee_verbose((xd, "Freeing modifier mapping memory %d ", xd->map));
+  XFreeModifiermap(xd->map);
+
   xnee_verbose((xd," building modifier map on %d\n", (int)xd->fake)); 
   xd->map = XGetModifierMapping(xd->fake);
 
