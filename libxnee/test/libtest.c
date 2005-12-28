@@ -2,6 +2,27 @@
 
 #include "libxnee/xnee.h"
 #include "libxnee/datastrings.h"
+#include "libxnee/xnee.h"
+#include "libxnee/print.h"
+#include "libxnee/xnee_dl.h"
+#include "libxnee/xnee_sem.h"
+#include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_fake.h"
+#include "libxnee/datastrings.h"
+#include "libxnee/xnee_grab.h"
+#include "libxnee/xnee_km.h"
+#include "libxnee/xnee_resolution.h"
+#include "libxnee/xnee_resource.h"
+#include "libxnee/xnee_callback.h"
+#include "libxnee/xnee_range.h"
+#include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_error.h"
+#include "libxnee/xnee_display.h"
+#include "libxnee/xnee_sem.h"
+#include "libxnee/xnee_session.h"
+#include "libxnee/xnee_fileop.h"
+#include "libxnee/xnee_alloc.h"
+
 
 int global_succ = 0;
 int global_fail = 0;
@@ -85,12 +106,18 @@ int test_xnee_data()
   int i ; 
   int ret;
 
+  fprintf (stderr, "\t\t1\n");
   /* Set the signal handler the libxnee's built in */ 
-  (void) signal (SIGINT, signal_handler);
+  (void) signal (SIGINT, signal_handler); 
   
 
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
+  /* Set the program name */
+  xnee_set_program_name (xd, "libtest");
+  /* Set the cli parameters */
+  xnee_set_application_parameters (xd, NULL);
+
   if (xd!=NULL)
     {
       global_succ++;
@@ -101,13 +128,37 @@ int test_xnee_data()
       global_fail++;
     }
 
+  fprintf (stderr, "\t\t2\n");
   
-  for (i=0;i<10;i++)
+  for (i=0;i<1;i++)
   {
+    fprintf (stderr, "\t\tloop 2 i=%d %d\n", i, xd);
     xnee_set_verbose(xd);
+
+    xnee_set_out_name (xd, "/tmp/libtest.xns") ;
+    xnee_unset_verbose(xd);
+    xnee_parse_range (xd, XNEE_DELIVERED_EVENT,  
+		      "EnterNotify-MappingNotify"); 
+    xnee_parse_range (xd, XNEE_REQUEST,  
+		      "1-100"); 
+    xnee_parse_range (xd, XNEE_ERROR,  
+		      "1-17"); 
+    /*
+      xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
+      "ButtonPress-MotionNotify");
+      xnee_set_key (xd, XNEE_GRAB_STOP, "s");
+      xnee_set_key (xd, XNEE_GRAB_PAUSE, "p");
+      xnee_set_key (xd, XNEE_GRAB_RESUME, "r");
+    */
+
+    xnee_set_events_max (xd, 10);
+    xnee_set_data_max (xd, 10);
+
     xnee_set_recorder(xd);
+    xnee_prepare(xd);
     ret=xnee_start(xd);
-    exit(0);
+
+    fprintf (stderr, "\t\tloop 1b\n");
     if (ret==0)
       {
 	global_succ++;
@@ -120,32 +171,71 @@ int test_xnee_data()
 	 global_fail++;
        }
      
-     ret=xnee_renew_xnee_data(xd);
-     if (ret==0)
-       {
-	 global_succ++;
-       }
-     else
-       {
-	 fprintf (stdout, "failed to renew xnee_data\n");
+    fprintf (stderr, "\t\trenewing....\n");
+    ret=xnee_renew_xnee_data(xd);
+    if (ret==0)
+      {
+	global_succ++;
+      }
+    else
+      {
+	fprintf (stdout, "failed to renew xnee_data\n");
 	global_fail++;
+      }
+  }
+  
+  for (i=0;i<3;i++)
+  {
+    fprintf (stderr, "\t\tloop 2 i=%d %d\n", i, xd);
+    xnee_set_verbose(xd);
+
+    xnee_set_out_name (xd, "/tmp/libtest.xns") ;
+    xnee_unset_verbose(xd);
+    xnee_parse_range (xd, XNEE_DELIVERED_EVENT,  
+		      "EnterNotify-MappingNotify"); 
+    xnee_parse_range (xd, XNEE_REQUEST,  
+		      "1-100"); 
+     /*
+       xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
+       "ButtonPress-MotionNotify");
+     */
+    xnee_set_key (xd, XNEE_GRAB_STOP, "s");
+    xnee_set_key (xd, XNEE_GRAB_PAUSE, "p");
+    xnee_set_key (xd, XNEE_GRAB_RESUME, "r");
+    xnee_set_events_max (xd, 10);
+    xnee_set_data_max (xd, 10);
+
+    xnee_set_recorder(xd);
+    xnee_prepare(xd);
+    ret=xnee_start(xd);
+
+    fprintf (stderr, "\t\tloop 1b\n");
+    if (ret==0)
+      {
+	global_succ++;
        }
+    else
+      {
+	 fprintf (stdout, "failed to start %d   %s)\n", 
+		  ret,
+		  xnee_get_err_description(ret));
+	 global_fail++;
+       }
+     
+    fprintf (stderr, "\t\trenewing....\n");
+    ret=xnee_renew_xnee_data(xd);
+    if (ret==0)
+      {
+	global_succ++;
+      }
+    else
+      {
+	fprintf (stdout, "failed to renew xnee_data\n");
+	global_fail++;
+      }
   }
   
   
-  /* start up the action set during parsing the commnd line */
-  ret = xnee_start(xd);
-  if (ret==0)
-    {
-      global_succ++;
-    }
-  else
-    {
-      fprintf (stdout, "failed to start %d   %s)\n", 
-	       ret,
-	       xnee_get_err_description(ret));
-      global_fail++;
-    }
 }
 
 
@@ -163,13 +253,13 @@ int main()
   fprintf (stdout,"\txnee_data\n");
   test_xnee_data();
   
-  
+#ifdef ETTA_SUTTIVA_NOLLA  
   fprintf (stdout,"Press return \n");
   getchar();
 
   printf ("Sucesss:  %d\n", global_succ);
   printf ("Failures: %d\n", global_fail);
-
+#endif
 
   /* hey, we are fin(n)ished .... cloe down */
   xnee_close_down(xd);
