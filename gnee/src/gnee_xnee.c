@@ -541,12 +541,33 @@ gnee_reset_gnee()
 }
 
 
+
+
+int
+gnee_get_grab(xnee_data* xd)
+{
+  on_stop_k_combo_changed(NULL,
+			  ext_gnee_window);
+  on_pause_k_combo_changed(NULL,
+			   ext_gnee_window);
+  on_resume_k_combo_changed(NULL,
+			    ext_gnee_window);
+  on_mark_k_combo_changed(NULL,
+			    ext_gnee_window);
+  on_exec_k_combo_changed(NULL,
+			    ext_gnee_window);
+
+}
+
 int
 gx_start_recording(xnee_data* xd)
 {
   int ret;
   GNEE_DEBUG(("gx_start_recording\n"));
   
+  GNEE_DEBUG(("Setting grab state\n"));
+  gnee_get_grab(xd);
+
   GNEE_DEBUG(("Starting recorder\n"));
   xnee_set_recorder (xd);
 
@@ -565,7 +586,7 @@ gx_start_recording(xnee_data* xd)
   GNEE_DEBUG((" recorder stopped\n"));
  
   fflush(stdout);
- return 0;
+  return 0;
 }
 
 int
