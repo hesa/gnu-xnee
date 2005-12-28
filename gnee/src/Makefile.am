@@ -22,8 +22,9 @@ gnee_SOURCES = \
 	gnee_xnee.c gnee_xnee.h 
 
 gnee_CFLAGS = ${PEDANTIC_FLAGS} 
+AM_CFLAGS = ${PEDANTIC_FLAGS} 
 
-gnee_LDADD = @PACKAGE_LIBS@ $(INTLLIBS)  \
+gnee_LDADD = @PACKAGE_LIBS@   \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
 	 ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)
 
