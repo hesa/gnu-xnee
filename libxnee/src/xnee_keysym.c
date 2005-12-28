@@ -71,7 +71,6 @@ xnee_str2keycode(xnee_data* xd, const char *str, xnee_key_code *kc)
        str=tmp;
     }
 
-
   /* Xnee special syntax */
   if (strncmp(str, XNEE_XK_SPACE, strlen(XNEE_XK_SPACE))==0)
     {

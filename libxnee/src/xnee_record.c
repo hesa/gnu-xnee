@@ -578,10 +578,10 @@ xnee_setup_recordext (xnee_data *xd)
   }
 
   xnee_verbose((xd, " ---> xnee_setup_recordext\n"));
+
   xd->record_setup->data_flags = XRecordFromServerTime 
     | XRecordFromClientTime  
     | XRecordFromClientSequence; 
-
 
   ret = xnee_set_ranges(xd);
   XNEE_RETURN_IF_ERR (ret);
