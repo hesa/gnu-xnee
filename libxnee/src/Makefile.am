@@ -2,8 +2,6 @@ AUTOMAKE_OPTIONS = gnu
 
 lib_LIBRARIES = libxnee.a
 
-libxnee_INCLUDES = -I../include 
-
 libxnee_a_SOURCES = xnee.c  \
 	print.c  \
 	print_varargs.c  \
@@ -106,7 +104,7 @@ else
 PEDANTIC_FLAGS = 
 endif
 
-libxnee_a_CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS}  
+AM_CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS} ${DEBUG_FLAGS}
 
 
 
