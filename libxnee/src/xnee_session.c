@@ -132,6 +132,9 @@ xnee_close_down(xnee_data* xd)
     }
 #endif
 
+  xnee_verbose((xd, "Freeing modifier mapping memory %d ", xd->map));
+  XFreeModifiermap(xd->map);
+
   xnee_verbose((xd, "Closing displays on host "));
   if ( xd->display==NULL ) 
     {
@@ -149,7 +152,7 @@ xnee_close_down(xnee_data* xd)
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3 \n"  ));
       xnee_verbose((xd, "Closing displays control=%d \n", (int) xd->control));
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3.1 \n"  ));
-      /*      XCloseDisplay ( xd->control );*/
+      XCloseDisplay ( xd->control );
     }
 
   if ( xd->fake!=NULL)  
@@ -157,14 +160,21 @@ xnee_close_down(xnee_data* xd)
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3 \n"  ));
       xnee_verbose((xd, "Closing displays control=%d \n", (int) xd->fake));
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3.1 \n"  ));
-      /*      XCloseDisplay ( xd->control );*/
+      XCloseDisplay ( xd->fake );
     }
 
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.4 \n"  )); 
   if ( xd->data!=NULL)  
     {
       xnee_verbose((xd, "Closing displays data=%d \n", (int) xd->data));
-      /*      XCloseDisplay ( xd->data );*/
+      XCloseDisplay ( xd->data );
+    }
+  
+  XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.41 \n"  )); 
+  if ( xd->grab!=NULL)  
+    {
+      xnee_verbose((xd, "Closing displays data=%d \n", (int) xd->grab));
+      XCloseDisplay ( xd->grab );
     }
   
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.5 \n"  ));
@@ -487,6 +497,9 @@ xnee_rep_prepare(xnee_data *xd)
    *
    */
   ret = xnee_set_autorepeat (xd);
+  XNEE_RETURN_IF_ERR (ret);
+
+  ret = xnee_init_ranges();
   XNEE_RETURN_IF_ERR (ret);
 
   xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", XNEE_OK));
