@@ -150,4 +150,11 @@ xnee_rem_data_from_range_str (xnee_data *xd,
 int 
 xnee_refresh_ranges(xnee_data *xd);
 
+int 
+xnee_free_ranges(void);
+
+
+int 
+xnee_init_ranges(void);
+
 #endif 
