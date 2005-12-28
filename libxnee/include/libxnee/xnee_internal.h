@@ -68,7 +68,7 @@
 #  define  __attribute__(x)  /*NOTHING AT ALL*/
 #endif
 
-#define XNEE_FREE(a)               (void)xnee_free(a);   
+#define XNEE_FREE(a)               xnee_free(a);
 #define XNEE_FCLOSE(a)             (void)fclose(a); 
 
 #define XNEE_FREE_AND_NULL(a)      XNEE_FREE(a); a=NULL; 
