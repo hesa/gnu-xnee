@@ -108,7 +108,9 @@ xnee_bsort_all(void)
 {
    int i ; 
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
-      xnee_bsort (xrs->type[i].data, xrs->type[i].index);
+     {
+       xnee_bsort (xrs->type[i].data, xrs->type[i].index);
+     }
   return XNEE_OK;
 }
 
@@ -116,26 +118,28 @@ xnee_bsort_all(void)
 static int 
 xnee_init_list(struct xnee_range *xr, int size)
 {
-   xr->index = 0;
-   xr->size  = size;
-   xr->data = (int*) malloc (xr->size*sizeof(int));
-   return XNEE_OK;
+  xr->index = 0;
+  xr->size  = size;
+  xr->data  =  (int*) malloc (xr->size*sizeof(int));
+  return XNEE_OK;
 }
 
-static int 
-xnee_free_lists(void)
+int 
+xnee_free_ranges()
 {
    int i ; 
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
    {
-      free(xrs->type[i].data);
+     XNEE_FREE_AND_NULL(xrs->type[i].data);
+     xrs->type[i].data = NULL;
    }
-   need_init = 1;
+   need_init = 1 ;
+   
    return XNEE_OK;
 }
 
-static int 
-xnee_init_lists(void)
+int 
+xnee_init_ranges()
 {
    int i ; 
    xrs->alloc_size = 5;
@@ -153,8 +157,8 @@ int
 xnee_refresh_ranges(xnee_data *xd)
 {
   xnee_verbose((xd, "-->xnee_refresh_ranges\n"));
-  xnee_free_lists();
-  xnee_init_lists();
+  xnee_free_ranges();
+  xnee_init_ranges();
   xrs->nr_of_data = 0;
   xnee_verbose((xd, "<--xnee_refresh_ranges\n"));
   return XNEE_OK;
@@ -201,7 +205,9 @@ xnee_add_to_list2(int type, int ev)
    xrp = &xrs->type[type];
 
    if (need_init==1)
-      xnee_init_lists();
+     {
+       xnee_init_ranges();
+     }
       
    for (i=0;i<xrp->index;i++)
       if (xrp->data[i]==ev)
