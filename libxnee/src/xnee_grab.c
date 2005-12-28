@@ -239,8 +239,7 @@ xnee_free_grab_keys(/*@null@*/ xnee_grab_keys *grab_keys)
 {
   if (grab_keys!=NULL) 
     { 
-      (void)xnee_free(grab_keys);   
-      grab_keys=NULL;
+      XNEE_FREE_AND_NULL(grab_keys);   
   }
   return XNEE_OK;
 }

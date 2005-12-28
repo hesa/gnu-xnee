@@ -48,7 +48,7 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
 
   if (xd->plugin_name!=NULL)
     {
-      ret = xnee_free(xd->plugin_name);
+      ret = XNEE_FREE_AND_NULL(xd->plugin_name);
       XNEE_RETURN_IF_ERR(ret);
     }
   /*@ignore@*/

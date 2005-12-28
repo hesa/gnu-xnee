@@ -126,8 +126,7 @@ xnee_free_recordext_setup(xnee_data* xd)
                (record_setup->range_array != NULL ) &&
                (record_setup->range_array[i] != NULL ))
            {
-	     ret = xnee_free (record_setup->range_array[i]);
-	     record_setup->range_array[i] = 0 ;
+	     ret = XNEE_FREE_AND_NULL (record_setup->range_array[i]);
 	      if (ret!=XNEE_OK)
 		{
 		  xnee_print_error ("Could not free memory at  "
@@ -139,6 +138,7 @@ xnee_free_recordext_setup(xnee_data* xd)
 	   /*@end@*/
         }
      }
+     XNEE_FREE_AND_NULL (record_setup->range_array);
   }
 
 
@@ -228,15 +228,25 @@ int
 xnee_free_dyn_data(xnee_data *xd)
 {
    int ret;
+   int i ; 
    xnee_verbose((xd, "---> xnee_free_dyn_data\n"));
 
-/*    xnee_verbose((xd, " --- xnee_free_dyn_data: refreshing ranges\n")); */
+   if ( xd->grab_keys && xd->grab_keys->action_keys)
+   for (i=0;i<XNEE_GRAB_LAST;i++)
+     {
+       xnee_verbose((xd, " --- xnee_free_dyn_data: grab key str %d\n", i)); 
+       XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[i].str);
+     }
 
-   if (xnee_is_replayer(xd) != 0)
-   {
-      ret = xnee_refresh_ranges(xd); 
-      XNEE_RETURN_IF_ERR(ret);
-   }
+   xnee_verbose((xd, " --- xnee_free_dyn_data: program name\n")); 
+   XNEE_FREE_IF_NOT_NULL(xd->program_name);
+
+   xnee_verbose((xd, " --- xnee_free_dyn_data: program name\n")); 
+   XNEE_FREE_IF_NOT_NULL(xd->program_name);
+
+   xnee_verbose((xd, " --- xnee_free_dyn_data: refreshing ranges\n")); 
+   ret = xnee_free_ranges(); 
+   XNEE_RETURN_IF_ERR(ret);
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: replay_setup\n"));
    xnee_free_replay_setup(xd->replay_setup);
@@ -258,9 +268,6 @@ xnee_free_dyn_data(xnee_data *xd)
    xnee_verbose((xd, " --- xnee_free_dyn_data: xnee_info\n")); 
    ret = xnee_reset_xnee_info(xd);
    XNEE_RETURN_IF_ERR(ret);
-
-/*    ret = xnee_free ((void*)xd->xnee_info); */
-/*    XNEE_RETURN_IF_ERR(ret); */
 
    xnee_verbose((xd, "<--- xnee_free_dyn_data\n"));
    return XNEE_OK;
@@ -357,6 +364,5 @@ xnee_free( /*@only@*/  /*@out@*/ /*@null@*/ void *mem)
       return XNEE_MEMORY_FAULT;
    }
    free(mem);
-   mem=NULL;
    return XNEE_OK;
 }
