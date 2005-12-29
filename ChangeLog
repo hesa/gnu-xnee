@@ -62,7 +62,7 @@
 
 	Added reading of grabbed key boxes and adding those keys to xnee_data
 
-2005-12-08  Henrik Sandklef  <>
+2005-12-08  Henrik Sandklef  <hesa@gnu.org>
 
 	* gnee/src/interfaces.c
 	* gnee/gnee.glade
@@ -73,14 +73,14 @@
 	
 	* Added year 2005 in printout
 	
-2005-12-06  Henrik Sandklef  <>
+2005-12-06  Henrik Sandklef  <hesa@gnu.org>
 
 	* gnee/src/main.c
 	* gnee/src/gnee_xnee.c
 
 	Added macro for program name (gnee)
 
-2005-10-11  Henrik Sandklef  <>
+2005-10-11  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_buffer.c (xnee_replay_buffer_handler): 
 
