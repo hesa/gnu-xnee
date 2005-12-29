@@ -1,3 +1,63 @@
+2005-12-29    <hesa@gnu.org>
+
+	* libxnee/test/libtest.c: 
+
+	Rewrote some test code... sorry no more comments.
+	
+	* libxnee/test/Makefile: 
+
+	Removed xosd, altered include path
+
+	* libxnee/include/libxnee/xnee_internal.h: 
+
+	Removed cast to (void) from XNEE_FREE macro
+
+	* libxnee/Makefile.am : 
+
+	Removed Makefile.libxnee Makefile.cvs
+	
+	* include/libxnee/xnee_range.h: 
+
+	Renamed xnee_free_lists to xnee_free_ranges
+
+	* libxnee/src/xnee_session.c: 
+
+	Added closing of displays
+
+	* libxnee/src/xnee_range.c: 
+
+	Renamed xnee_free_lists to xnee_free_ranges
+
+	Freed memory allocated for ranges 
+	
+	* libxnee/src/xnee_alloc.c: 
+
+	Replaced xnee_free with XNEE_FREE_AND_NULL
+
+	* libxnee/src/xnee_grab.c: 
+
+	Replaced xnee_free with XNEE_FREE_AND_NULL
+
+	* libxnee/src/xnee_plugin.c: 
+
+	Replaced xnee_free with XNEE_FREE_AND_NULL
+
+	* libxnee/src/xnee_display.c: 
+
+	Freed allocated modifier mapping
+
+	* libxnee/src/Makefile.am: 
+
+	Added support for "-g" option to configure command
+
+	* gnee/src/Makefile.am: 
+
+	Removed INTLLIBS
+
+	* gnee/src/gnee_xnee.c: 
+
+	Added reading of grabbed key boxes and adding those keys to xnee_data
+
 2005-12-08  Henrik Sandklef  <>
 
 	* gnee/src/interfaces.c
