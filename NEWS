@@ -3,6 +3,12 @@ Changes in (coming) 2.03
 
   New features:
 
+     * Examples and handy shell scripts added to dist
+          share/xnee.sh
+          examples/example1.xns
+          examples/simple_bash.sh
+       All files are installed to .../share/Xnee/
+
   Build changes:
 
      * autotools/* added to all Makefile.am
@@ -10,6 +16,8 @@ Changes in (coming) 2.03
      * Makefile.xnee updated to build gnee (not only libxnee and cnee)
        This is an alternative Makefile if use don't want to use configure 
        && make 
+
+     * Added share to dirs to build a Makefile for
 
   Bugs fixed:
 

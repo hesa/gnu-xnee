@@ -1,4 +1,10 @@
-2005-12-29    <hesa@gnu.org>
+2005-12-29  Henrik Sandklef  <hesa@gnu.org>
+
+	* configure.in, Makefile.am, share/Makefile.am:
+
+	Added Examples and handy shell scripts added to dist
+          share/xnee.sh
+          examples/
 
 	* Makefile.xnee:
 
