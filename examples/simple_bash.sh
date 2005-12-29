@@ -3,15 +3,15 @@
 #
 # Cleverly trying to find cnee
 #
-if  [ -x cnee ]
+if  [ -f cnee ]
 then
     export CNEE=cnee
-elif [ -x ../cnee/src/cnee ]
+elif [ -f ../cnee/src/cnee ]
 then
     export CNEE=../cnee/src/cnee
-elif [ -x $(dirname $0)/../bin/cnee ]
+elif [ -f $(dirname $0)/../../bin/cnee ]
 then
-    export CNEE=$(dirname $0)/../bin/cnee
+    export CNEE=$(dirname $0)/../../bin/cnee
 else
     echo "Could not find cnee"
     exit 1
