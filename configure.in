@@ -351,7 +351,6 @@ then
 fi
 
 AC_SUBST(DOC_TARGETS)
-
 AC_SUBST(GUI_DIR)
 AC_SUBST(CLI_DIR)
 AC_SUBST(LIB_DIR)
@@ -360,6 +359,7 @@ AC_SUBST(FOO_DIR)
 
 
 AC_OUTPUT([ Makefile ])
+AC_OUTPUT([ share/Makefile ])
 
 if test x$doconly = xtrue || test x$builddoc = xtrue  ; 
 then

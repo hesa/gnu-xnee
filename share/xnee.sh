@@ -1,7 +1,79 @@
+########################################################################
+#    This file is part of GNU Xnee
+#
+#    GNU program is free software; 
+#    you can redistribute it and/or modify it under the terms of 
+#    the GNU General Public License as published by the 
+#    Free Software Foundation; either version 2, 
+#    or (at your option) any later version.
+#
+#    GNU program is distributed in the hope that it will be useful, 
+#    but WITHOUT ANY WARRANTY; without even the implied warranty of 
+#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. 
+#    See the GNU General Public License for more details.
+#
+#    You should have received a copy of the GNU General Public License
+#    along with program; see the file COPYING. If not, write to the 
+#      Free Software Foundation, Inc., 51 Franklin St, 
+#      Fifth Floor, Boston, MA 02110-1301 USA. 
+########################################################################
+
+########################################################################
+#
+# This file contains small shell script functions (bourne shell)
+# to ease up the use of Xnee sripting primitives.
+#
+# For more information, please go to http://www.gnu/.org/software/xnee
+#
+#
+# A script would use the functions something like this
+# 
+# #!/bin/sh
+#
+# # source the functions
+# . /usr/share/Xnee/xnee.sh
+#
+# xnee_init_file
+# echo "hey, I will now move the pointer"
+# xnee_move_mouse 12 
+# echo "hey, I will now press and release key l"
+# xnee_fake_key   l
+#
+# xnee_close_down
+#
+########################################################################
+
+
+########################################################################
+#
+# Basic settings
+#
+# MY_FIFO  file/fifo to use as communication between your prog and Xnee
+#
+# CNEE     Xnee command line program (cnee)
+#
+# MSEC     Delay (msecs) before ket/motion is faked
+#
+########################################################################
 MY_FIFO=/tmp/xnee_${USER}.$$
-CNEE=cnee
+CNEE=${CNEE:-cnee}
+MSEC=2
 
 
+
+
+########################################################################
+#
+# Function name:    xnee_init_fifo
+#
+# Arguments:        none
+#
+# Return value:     none
+#
+# Description:      Sets up a fifo to use for communication
+#                   with your script (using the fake primitives below
+#
+########################################################################
 xnee_init_fifo()
 {
     rm -f $MY_FIFO
@@ -10,6 +82,21 @@ xnee_init_fifo()
     CNEE_PID=$!
 }
 
+
+
+
+########################################################################
+#
+# Function name:    xnee_init_file
+#
+# Arguments:        none
+#
+# Return value:     none
+#
+# Description:      Sets up a file to use for communication
+#                   with your script (using the fake primitives below
+#
+########################################################################
 xnee_init_file()
 {
     rm -f $MY_FIFO
@@ -18,20 +105,61 @@ xnee_init_file()
     CNEE_PID=$!
 }
 
-fifo_write()
+
+
+
+########################################################################
+#
+# Function name:    xnee_write
+#
+# Arguments:        string str
+#
+# Return value:     none
+#
+# Description:      Writes str to the Xnee instance as invoked
+#                   by the xnee_init_file or xnee_init_fifo function
+#
+# Note:             Internal function
+########################################################################
+xnee_write()
 {
     echo "$*" >> $MY_FIFO
 }
 
-close_down()
+
+
+########################################################################
+#
+# Function name:    xnee_close_down
+#
+# Arguments:        none
+#
+# Return value:     none
+#
+# Description:      Closes file/fifo and shoots down cnee if still running
+#
+########################################################################
+xnee_close_down()
 {
-    rm -f $MY_FIFO
-    kill $CNEE_PID
+    rm -f $MY_FIFO 2>/dev/null >/dev/null
+    kill $CNEE_PID 2>/dev/null >/dev/null
 }
 
+
+
+########################################################################
+#
+# Function name:    xnee_move_mouse
+#
+# Arguments:        int x, int y
+#
+# Return value:     none
+#
+# Description:      Moves pointer to position (x,y)
+#
+########################################################################
 xnee_move_mouse()
 {
-    MSEC=2
     if [ "$2" = "" ]
 	then
 	return
@@ -39,41 +167,71 @@ xnee_move_mouse()
     X_POS=$1
     Y_POS=$2
 
-    fifo_write "fake-motion x=$X_POS y=$Y_POS msec=$MSEC" 
+    xnee_write "fake-motion x=$X_POS y=$Y_POS msec=$MSEC" 
 }
 
+########################################################################
+#
+# Function name:    xnee_fake_key
+#
+# Arguments:        charachter key
+#
+# Return value:     none
+#
+# Description:      Fakes press and release of key 'key' 
+#
+########################################################################
 xnee_fake_key()
 {
-    MSEC=2
     if [ "$1" = "" ]
 	then
 	return
     fi
     KEY=$1
 
-    fifo_write "fake-key key=$KEY msec=$MSEC"
+    xnee_write "fake-key key=$KEY msec=$MSEC"
 }
 
+########################################################################
+#
+# Function name:    xnee_fake_key_press
+#
+# Arguments:        charachter key
+#
+# Return value:     none
+#
+# Description:      Fakes press of key 'key' 
+#
+########################################################################
 xnee_fake_key_press()
 {
-    MSEC=2
     if [ "$1" = "" ]
 	then
 	return
     fi
     KEY=$1
 
-    fifo_write "fake-key-press key=$KEY msec=$MSEC"
+    xnee_write "fake-key-press key=$KEY msec=$MSEC"
 }
 
+########################################################################
+#
+# Function name:    xnee_fake_key_release
+#
+# Arguments:        charachter key
+#
+# Return value:     none
+#
+# Description:      Fakes release of key 'key' 
+#
+########################################################################
 xnee_fake_key_release()
 {
-    MSEC=2
     if [ "$1" = "" ]
 	then
 	return
     fi
     KEY=$1
 
-    fifo_write "fake-key-release key=$KEY msec=$MSEC"
+    xnee_write "fake-key-release key=$KEY msec=$MSEC"
 }
