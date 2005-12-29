@@ -1,5 +1,9 @@
 2005-12-29    <hesa@gnu.org>
 
+	* Makefile.xnee:
+
+	updated to build gnee (not only libxnee and cnee) 
+
 	* libxnee/test/libtest.c: 
 
 	Rewrote some test code... sorry no more comments.
