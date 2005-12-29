@@ -1,8 +1,19 @@
-PACKAGE=\"Xnee\"
-VERSION=\"2.01\"
-CC=gcc-3.2
+#
+# This is an unmaintained Makefile for the Xnee project
+#
+#  ...... if you do not wish to use configure you can use
+#  this one instead. You are on your own though :)
+#
 
-PEDANTIC_FLAGS =  -W -Wall -pedantic -Werror \
+PACKAGE=\"Xnee\"
+VERSION=\"2.03\"
+#
+# gnee uses config.h (copied from config.xnee)
+#
+CC=gcc
+
+#-Werror
+PEDANTIC_FLAGS =  -W -Wall -pedantic  \
 	-Wpointer-arith -Wcast-qual \
 	-Wstrict-prototypes -Wmissing-prototypes \
 	-Wmissing-declarations -Wmissing-noreturn \
@@ -15,6 +26,7 @@ PEDANTIC_FLAGS =  -W -Wall -pedantic -Werror \
         -Wbad-function-cast -Wcast-qual -Wcast-align \
         -Wredundant-decls -Wnested-externs 
 # -Wswitch-default -Wswitch-enum -Wendif-labels
+# -Werror
 
 LINT=splint
 LINT_TAR=Xnee-lint.tar
@@ -24,13 +36,18 @@ XOSD_LIB=
 
 # These flags seem to break compilation due to cygwin 
 # use on non-cygwin platform only
-SEMI_FLAGS = \
-        -pedantic-errors  
+#SEMI_FLAGS = \
+#        -pedantic-errors  
 
+
+
+GUI_C_FLAGS= -I. -Ilibxnee/include -Ignee/src -I/usr/include/gtk-2.0 -I/usr/lib/gtk-2.0/include -I/usr/include/atk-1.0 -I/usr/include/cairo -I/usr/include/pango-1.0 -I/usr/include/glib-2.0 -I/usr/lib/glib-2.0/include       -g  -DPACKAGE_DATA_DIR=\""/usr/local/share"\"   -DPACKAGE_LOCALE_DIR=\""/usr/local//locale"\"
+GUI_LD_FLAGS= -L. -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lpangocairo-1.0 -lfontconfig -lXinerama -lXi -lXrandr -lXext -lXcursor -lXfixes -lpango-1.0 -lcairo -lXrender -lX11 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lxnee
 
 CFLAGS =  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -DHAVE_STDARG_H=1 \
         -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src -g \
-        ${PEDANTIC_FLAGS}
+        ${PEDANTIC_FLAGS} 
+
 
 LINTFLAGS =  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -DHAVE_STDARG_H=1 \
         -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src \
@@ -42,6 +59,7 @@ LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib
 LIBS = -lX11 -lXext -lXtst -lpthread ${XOSD_LIB}
 
 CLI_SRC =  cnee/src/parse.c  cnee/src/main.c  
+GUI_SRC =  gnee/src/callbacks.c   gnee/src/gnee_xnee.c  gnee/src/interface.c  gnee/src/main.c  gnee/src/recordables.c  gnee/src/support.c
 COMM_SRC =   libxnee/src/datastrings.c \
   libxnee/src/feedback.c \
   libxnee/src/print.c \
@@ -76,6 +94,7 @@ COMM_SRC =   libxnee/src/datastrings.c \
 
 
 CLI_OBJS      := $(CLI_SRC:%.c=%.o)
+#GUI_OBJS      := $(GUI_SRC:%.c=%.o)
 COMM_OBJS     := $(COMM_SRC:%.c=%.o)
 
 CLI_LINT      := $(CLI_SRC:%.c=%.lint)
@@ -96,22 +115,34 @@ OBJS = ${COMM_OBJS}
 XNEELIB = libxnee.a
 
 XNEE_CLI= cnee/src/cnee  
+XNEE_GUI= gnee/src/gnee
 
-all : ${XNEE_CLI}
+all : config ${XNEE_CLI} ${XNEE_GUI}
 
 clean:
-	\rm -fr ${OBJS} ${CLI_OBJS} ${XNEE_CLI} ${XNEELIB} src/*/*~ *~ src/*/*.o */a.out core 
+	\rm -fr ${OBJS} ${CLI_OBJS} ${GUI_OBJS} ${XNEE_CLI} ${XNEE_GUI} ${XNEELIB} src/*/*~ *~ src/*/*.o */a.out core 
 
 lib : ${XNEELIB}
 
 ${XNEELIB}: ${OBJS} ${COMM_OBJS} 
 	ar -rv ${XNEELIB} ${OBJS} 
 
-bin : ${XNEE_CLI} 
+cli : ${XNEE_CLI}
+gui : ${XNEE_GUI}
+bin : cli gui
+bin2 : ${XNEE_CLI} ${XNEE_GUI}
 
 
 ${XNEE_CLI}: ${XNEELIB} ${CLI_OBJS}
 	${CC}  -o ${XNEE_CLI}  ${CLI_OBJS} ${LDFLAGS} ${LIBS} -L./ -lxnee ${LIBS}
+
+config:
+	cp config.xnee  config.h
+
+
+#${XNEE_GUI}: ${XNEELIB} ${GUI_OBJS}
+${XNEE_GUI}: ${GUI_OBJS} config.h
+	${CC}  -o ${XNEE_GUI} ${GUI_C_FLAGS} ${GUI_SRC} ${GUI_LD_FLAGS}  ${LIBS}
 
 
 lintsave: ${COMM_LINT}  ${CLI_LINT}
