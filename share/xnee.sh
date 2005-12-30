@@ -235,3 +235,71 @@ xnee_fake_key_release()
 
     xnee_write "fake-key-release key=$KEY msec=$MSEC"
 }
+
+########################################################################
+#
+# Function name:    xnee_fake_button_press
+#
+# Arguments:        integer nr
+#
+# Return value:     none
+#
+# Description:      Fakes press of buttton 'nr' 
+#
+########################################################################
+xnee_fake_button_press()
+{
+    if [ "$1" = "" ]
+	then
+	return
+    fi
+    BUTTON=$1
+
+    xnee_write "fake-buton-press button=$BUTTON msec=$MSEC"
+}
+
+
+########################################################################
+#
+# Function name:    xnee_fake_button_release
+#
+# Arguments:        integer nr
+#
+# Return value:     none
+#
+# Description:      Fakes release of buttton 'nr' 
+#
+########################################################################
+xnee_fake_button_release()
+{
+    if [ "$1" = "" ]
+	then
+	return
+    fi
+    BUTTON=$1
+
+    xnee_write "fake-buton-release button=$BUTTON msec=$MSEC"
+}
+
+
+########################################################################
+#
+# Function name:    xnee_fake_button
+#
+# Arguments:        integer nr
+#
+# Return value:     none
+#
+# Description:      Fakes press and release of buttton 'nr' 
+#
+########################################################################
+xnee_fake_button()
+{
+    if [ "$1" = "" ]
+	then
+	return
+    fi
+    BUTTON=$1
+
+    xnee_write "fake-buton button=$BUTTON msec=$MSEC"
+}
