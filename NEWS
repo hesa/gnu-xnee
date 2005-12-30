@@ -3,11 +3,13 @@ Changes in (coming) 2.03
 
   New features:
 
-     * Examples and handy shell scripts added to dist
+     * Handy shell functions for Xnee primitives
+
           share/xnee.sh
-          examples/example1.xns
+
+     * Example shell script added
+
           examples/simple_bash.sh
-       All files are installed to .../share/Xnee/
 
   Build changes:
 
@@ -18,6 +20,12 @@ Changes in (coming) 2.03
        && make 
 
      * Added share to dirs to build a Makefile for
+
+     * Examples and handy shell scripts added to dist
+          share/xnee.sh
+          examples/example1.xns
+          examples/simple_bash.sh
+       All files are installed to .../share/Xnee/
 
   Bugs fixed:
 
@@ -30,6 +38,8 @@ Changes in (coming) 2.03
   Minor updates
 
        * libxnee/test/libtest.c updated to test grabbing of keys.
+
+       * doc/xnee_example.texi updated with shell script info
 
 Changes in 2.02
 ==============================
