@@ -522,6 +522,45 @@ DISPLAY variable, you use the @code{--display} option.
 @end example
 Xnee will now replay the mouse events on the display frodo:0.0.
 
+@section    Shell scripts using Xnee
+@cindex     Shell scripts using Xnee
+Insted of onvoking Xnee for every time you need to fake events
+you can make use of the shell functions as delivered with Xnee. 
+With these functions you can start one instance of Xnee and fake
+device events whenever you need.
+@example
 
+@code{#!/bin/bash }
+@code{ }
+@code{# Source in handy functions }
+@code{. /usr/share/Xnee/xnee.sh }
+@code{ }
+@code{# Set up file for communication with Xnee }
+@code{xnee_init_file}
+@code{ }
+@code{# Loop and press buttons }
+@code{TMP=0 }
+@code{while [ $TMP -le 5]}
+@code{do}
+@code{  TMP=$(($TMP+1))}
+@code{  xnee_fake_button $TMP }
+@code{done}
+@code{ }
+@code{# Just a simple example ....don't bother to understand }
+@code{tar cvf /tmp/crap.tar *}
+@code{sleep 2}
+@code{ }
+@code{# Fake ls and Enter }
+@code{xnee_fake_key l}
+@code{xnee_fake_key s}
+@code{xnee_fake_key XK_Return}
+@code{ }
+@end example
+This example will fake press and release of the mouse button and 
+do fake press and release of ls followed by a press and release 
+of Enter.... and of course, you'll get a tar file in /tmp.
+
+
+Make sure that the path to the @code{xnee.sh} is correct.
 
 
