@@ -281,7 +281,7 @@ create_window1 (void)
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (0), 0, 0);
 
-  combobox1 = gtk_combo_box_new ();
+  combobox1 = gtk_combo_box_new_text ();
   gtk_widget_show (combobox1);
   gtk_table_attach (GTK_TABLE (table1), combobox1, 2, 3, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
