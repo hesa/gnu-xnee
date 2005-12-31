@@ -555,6 +555,9 @@ device events whenever you need.
 @code{xnee_fake_key s}
 @code{xnee_fake_key XK_Return}
 @code{ }
+@code{# Close down }
+@code{xnee_close_down }
+@code{ }
 @end example
 This example will fake press and release of the mouse button and 
 do fake press and release of ls followed by a press and release 
