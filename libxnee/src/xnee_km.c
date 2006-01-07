@@ -440,9 +440,13 @@ xnee_check_key(xnee_data *xd)
 	    }
 
 	  if (my_event.type == KeyPress )
-	    xnee_verbose ((xd , "##### KeyPress\n")); 
+	    {
+	      xnee_verbose ((xd , "##### KeyPress\n")); 
+	    }
 	  else if (my_event.type == KeyRelease )
-	    xnee_verbose ((xd , "#### KeyRelease\n")); 
+	    {
+	      xnee_verbose ((xd , "#### KeyRelease\n")); 
+	    }
 
 	  tmp_code=my_event.xkey.keycode;
 
