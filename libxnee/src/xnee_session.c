@@ -311,6 +311,8 @@ xnee_init(xnee_data* xd)
   XNEE_RETURN_IF_ERR(ret);
 
 
+  xd->in_use = 1;
+
   /* 
    * resolution */
   xnee_set_default_rec_resolution (xd);
