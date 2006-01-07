@@ -539,6 +539,7 @@ typedef struct
 
   XModifierKeymap *map ;
   
+  int              in_use;
 
 } xnee_data ; 
 
