@@ -65,49 +65,27 @@ version_check()
 build_all()
 {
     BUILD_BASE_DIR=$(pwd)
-    LIBXNEE_VERSION=$(ls -d libxnee*.tar.gz | sed 's,libxnee-\(.*\)\.tar\.gz,\1,g')
-    LIBXNEE_FILE=libxnee-$LIBXNEE_VERSION.tar.gz
-    LIBXNEE_DIR=libxnee-$LIBXNEE_VERSION
+    XNEE_VERSION=$(ls -d Xnee*.tar.gz | sed 's,Xnee-\(.*\)\.tar\.gz,\1,g')
+    XNEE_FILE=Xnee-$XNEE_VERSION.tar.gz
+    XNEE_DIR=Xnee-$XNEE_VERSION
     
-    CNEE_VERSION=$(ls -d cnee*.tar.gz | sed 's,cnee-\(.*\)\.tar\.gz,\1,g')
-    CNEE_FILE=cnee-$CNEE_VERSION.tar.gz
-    CNEE_DIR=cnee-$CNEE_VERSION
-    
-    GNEE_VERSION=$(ls -d gnee*.tar.gz | sed 's,gnee-\(.*\)\.tar\.gz,\1,g')
-    GNEE_FILE=gnee-$GNEE_VERSION.tar.gz
-    GNEE_DIR=gnee-$GNEE_VERSION
+#    DOC_VERSION=$(ls -d Xnee-doc-src*.tar.gz | sed 's,Xnee-doc-src-\(.*\)\.tar\.gz,\1,g')
+#    DOC_FILE=Xnee-doc-src-$DOC_VERSION.tar.gz
+#    DOC_DIR=Xnee-doc-src-2.0-$DOC_VERSION
 
-    DOC_VERSION=$(ls -d xnee-doc-src*.tar.gz | sed 's,xnee-doc-src-\(.*\)\.tar\.gz,\1,g')
-    DOC_FILE=xnee-doc-src-$DOC_VERSION.tar.gz
-    DOC_DIR=xnee-doc-src-2.0-$DOC_VERSION
-
-    log "Building libxnee ($LIBXNEE_VERSION)"
-    exec_and_check_status tar zxvf $LIBXNEE_FILE 
-    exec_and_check_status cd libxnee-$LIBXNEE_VERSION 
+    log "Building xnee ($XNEE_VERSION)"
+    exec_and_check_status tar zxvf $XNEE_FILE 
+#    exec_and_check_status cd Xnee-$XNEE_VERSION 
     exec_and_check_status ./configure
     exec_and_check_status make
-    cd ..
+#    cd ..
     
-    log "Building cnee (cnee $CNEE_VERSION based on libxnee $LIBXNEE_VERSION)"
-    exec_and_check_status tar zxvf $CNEE_FILE 
-    exec_and_check_status cd cnee-$CNEE_VERSION 
-    exec_and_check_status ./configure --with-libxnee-dir=${BUILD_BASE_DIR}/${LIBXNEE_DIR}
-    exec_and_check_status make
-    cd ..
-    
-    log "Building gnee (gnee $GNEE_VERSION based on libxnee $LIBXNEE_VERSION)"
-    exec_and_check_status tar zxvf $GNEE_FILE 
-    exec_and_check_status cd gnee-$GNEE_VERSION 
-    exec_and_check_status ./configure --with-libxnee-dir=${BUILD_BASE_DIR}/${LIBXNEE_DIR}
-    exec_and_check_status make
-    cd ..
-    
-    log "Building doc from $DOC_FILE in `pwd`"
-    exec_and_check_status tar zxvf $DOC_FILE 
-    exec_and_check_status cd xnee-doc-src-$DOC_VERSION 
-    exec_and_check_status ./configure
-    exec_and_check_status make
-    cd ..
+#    log "Building doc from $DOC_FILE in `pwd`"
+#    exec_and_check_status tar zxvf $DOC_FILE 
+#    exec_and_check_status cd Xnee-doc-src-$DOC_VERSION 
+#    exec_and_check_status ./configure
+#    exec_and_check_status make
+#    cd ..
     
     EXEC_CNEE_VERSION=$($CNEE_DIR/src/cnee --version 2>&1| grep using | grep cnee | awk ' { print $2 ; } ' )
     version_check "cnee" "$CNEE_VERSION" "$EXEC_CNEE_VERSION"
@@ -116,51 +94,22 @@ build_all()
 
 dist_all()
 {
-    log "Building libxnee dist"
-    exec_and_check_status cd libxnee
+    log "Building xnee dist"
     exec_and_check_status make -f Makefile.cvs 
     exec_and_check_status ./configure    
     exec_and_check_status make clean all dist
-    cd ..
-
-    log "Building cnee dist"
-    exec_and_check_status cd cnee
-    exec_and_check_status make -f Makefile.cvs 
-    exec_and_check_status ./configure    
-    exec_and_check_status make clean all dist
-    cd ..
-
-    log "Building gnee dist"
-    exec_and_check_status cd gnee
-    exec_and_check_status ./autogen.sh --with-libxnee-dir=${LIBXNEE_SRC_DIR}
-    exec_and_check_status make clean all dist
-    cd ..
-
-    log "Building doc dist"
-    exec_and_check_status cd doc
-    exec_and_check_status make -f Makefile.cvs 
-    exec_and_check_status ./configure    
-    exec_and_check_status make clean all dist doc-deliv
-    cd ..
-
 }
 
 clean_dist_files()
 {
-    rm -f libxnee/libxnee-*.tar.gz 
-    rm -f cnee/cnee-*.tar.gz 
-    rm -f gnee/gnee-*.tar.gz 
-    rm -f doc/xnee-doc-*.tar.gz 
+    rm -f doc/*.tar.gz 
 }
 
 deliver_dist()
 {
     exec_and_check_status rm -fr /tmp/xnee_rel
     exec_and_check_status mkdir /tmp/xnee_rel
-    exec_and_check_status cp libxnee/libxnee-*.tar.gz /tmp/xnee_rel/
-    exec_and_check_status cp cnee/cnee-*.tar.gz /tmp/xnee_rel/
-    exec_and_check_status cp gnee/gnee-*.tar.gz /tmp/xnee_rel/
-    exec_and_check_status cp doc/xnee-doc-*.tar.gz /tmp/xnee_rel/
+    exec_and_check_status cp Xnee-*.tar.gz /tmp/xnee_rel/
 }
 
 log "Starting build at `date`" 
