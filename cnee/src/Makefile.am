@@ -51,6 +51,8 @@ cnee_DEPENDENCIES = ${LIBXNEE_DIR}/src/libxnee.a
 test-cli:
 	(cd test ; ./test_all.sh)
 
+man1_MANS = cnee.1
+
 man: cnee.1
 
 cnee.1: cnee
