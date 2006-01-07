@@ -240,7 +240,7 @@ xnee_free_grab_keys(/*@null@*/ xnee_grab_keys *grab_keys)
   if (grab_keys!=NULL) 
     { 
       XNEE_FREE_AND_NULL(grab_keys);   
-  }
+    }
   return XNEE_OK;
 }
 
@@ -292,7 +292,7 @@ xnee_grab_all_keys (xnee_data* xd)
     {
       ak.key = 0 ;
 
-      xnee_verbose((xd, "----      xnee_grab_all_keys: i=%d  last=%d\n",i, XNEE_GRAB_LAST ));
+      xnee_verbose((xd, "\n\n----      xnee_grab_all_keys ---- \n"));
       xd->grab_keys->action_keys[i].key=0;
       xnee_verbose((xd, "----      xnee_grab_all_keys: i=%d\n",i ));
 
@@ -305,8 +305,7 @@ xnee_grab_all_keys (xnee_data* xd)
 
 	
  	  xnee_verbose((xd, "----       xnee_grab_all_keys \n" ));
-	  fflush(stderr);
- 	  xnee_verbose((xd, "---->      xnee_grab_all_keys %s\n",xd->grab_keys->action_keys[i].str ));
+ 	  xnee_verbose((xd, "---->      xnee_grab_all_keys \"%s\"\n",xd->grab_keys->action_keys[i].str ));
 	  xnee_get_action_key (xd, &ak, xd->grab_keys->action_keys[i].str);
  	  xnee_verbose((xd, "<----      xnee_grab_all_keys %s\n",xd->grab_keys->action_keys[i].str ));
       
@@ -466,7 +465,6 @@ xnee_mod_in_use (xnee_grab_keys *xgk)
 
   current_modifier_state = XNEE_MAX(current_modifier_state,
 			     xnee_mod_in_use_sub (&xgk->exec));
-
   return ;
 }
 #endif 
@@ -478,8 +476,12 @@ xnee_key_in_use (xnee_grab_keys *xgk, KeyCode kc)
 
   for (i=XNEE_GRAB_STOP;i<XNEE_GRAB_LAST;i++)
     {
+/*       printf (" compare: %d %d\n", */
+/* 	      xgk->action_keys[i].key, kc); */
       if (xgk->action_keys[i].key==kc)
-	return 1;
+	{
+	  return 1;
+	}
     }
   return 0;
 }
@@ -576,206 +578,64 @@ xnee_handle_grab_mouse(xnee_data *xd)
   return ret;
 }
 
-
-#ifdef USE_OBSOLETE
-
-
-static int 
-xnee_add_mod (KeyCode kc)
-{
-  if (mod_idx<8)
-    {
-      mod_kcs[mod_idx++]=kc;
-
-      return XNEE_OK;
-    }
-  else
-    {
-      return XNEE_BAD_GRAB_DATA;
-    }
-}
-
-static int 
-xnee_rem_mod (KeyCode kc)
-{
-  int i ;
-  int found = 0;
-  int pos ; 
-
-  for (i=0;i<8;i++)
-    {
-
-      if (mod_kcs[i]==0)
-	{
-	  break;
-	}
-      
-      if (mod_kcs[i]==kc)
-	{
-	  found=1;
-	  pos = i;
-	  break;
-	}
-    }
-  if (found)
-    {
-      mod_idx--;
-      i = XNEE_OK;
-      for (i=pos;i<8;i++)
-	{
-	  if ( i == 7 )
-	    {
-	      mod_kcs[i]=0;
-	    }
-	  else
-	    {
-	      mod_kcs[i]=mod_kcs[i+1];
-	    }
-	}
-    }
-  else
-    {
-      i= XNEE_BAD_GRAB_DATA;
-    }
-  
-  return i;
-}
-
-
-
-
-static int
-xnee_handle_grab_modifier(xnee_data *xd, KeyCode kc, int mode)
-{
-  xnee_grab_handle_buffer(xd, NULL, XNEE_GRAB_BUFFER_PRINT);
-  return XNEE_GRAB_DO_PRINT;
-}
-
-
-static int
-xnee_handle_grab_modifier(xnee_data *xd, KeyCode kc, int mode)
-{
-  int ret ;
-
-  xnee_verbose((xd, "---> xnee_handle_grab_modifier %d %d\n", kc, mode));
-  if (mode==XNEE_GRAB_KM_PRESS)
-    {
-      /* add this modifier to the buffer */
-      xnee_add_mod(kc);
-    }
-  else
-    {
-      /* remove this modifier from the buffer */
-      xnee_rem_mod(kc);
-    }
-
-  /* Update the global state */
-  xnee_mod_in_use(xd->grab_keys);
-  
-
-  if ( XNEE_GRAB_IS_OVERRIDE(xd) )
-    {
-      xnee_grab_handle_buffer(xd, NULL, XNEE_GRAB_BUFFER_PRINT);
-      ret = XNEE_GRAB_DO_PRINT ; 
-
-      if ( current_modifier_state == XNEE_GRAB_NONE_PRESSED )
-	XNEE_GRAB_UNSET_OVERRIDE(xd);
-      
-    }
-  else if ( current_modifier_state == XNEE_GRAB_NONE_PRESSED )
-    {
-      if ( grab_mode_used == 0 )
-	{
-	  xnee_grab_handle_buffer(xd , NULL , XNEE_GRAB_BUFFER_PRINT);
-	  ret = XNEE_GRAB_DO_PRINT ; 
-	}
-      else if ( grab_mode_used == 1 )
-	{
-	  xnee_grab_handle_buffer(xd , NULL , XNEE_GRAB_BUFFER_RESET);
-	  ret = XNEE_GRAB_DONT_PRINT ; 
-	}
-      else
-	{
-	  xnee_grab_handle_buffer(xd , NULL , XNEE_GRAB_BUFFER_PRINT);
-	  ret = XNEE_GRAB_DO_PRINT ; 
-	}
-      grab_mode_used=0;
-      XNEE_GRAB_UNSET_OVERRIDE(xd);
-  
-    }
-  else if ( current_modifier_state == XNEE_GRAB_NONE_IN_USE )
-    {
-      xnee_grab_handle_buffer(xd , NULL , XNEE_GRAB_BUFFER_PRINT);
-      XNEE_GRAB_SET_OVERRIDE(xd);
-      ret = XNEE_GRAB_DO_PRINT ; 
-    }
-  else if ( current_modifier_state == XNEE_GRAB_SOME_IN_USE )
-    {
-      if (grab_mode_used == 2 )
-	{
-	  ret = XNEE_GRAB_DO_PRINT ; 
-	}
-      else
-	{
-	  ret = XNEE_GRAB_DO_SAVE ; 
-	}
-    }
-  else if ( current_modifier_state == XNEE_GRAB_ALL_IN_USE )
-    {
-      ret = XNEE_GRAB_DO_SAVE ; 
-    }
-  
-  xnee_verbose((xd, "<--- xnee_handle_grab_modifier %d \n", ret));
-  return ret;
-}
-#endif
-
 static int
 xnee_handle_grab_key(xnee_data *xd, KeyCode kc, int mode)
 {
   int ret ;
 
-  xnee_verbose((xd, "---> xnee_handle_grab_key %d %d\n", kc, mode));
-  
+
+  xnee_verbose((xd, "---> xnee_handle_grab_key %d %d   modifier_state=%d\n", kc, mode, current_modifier_state));
+  current_modifier_state = XNEE_GRAB_ALL_IN_USE ;
 
   if ( XNEE_GRAB_IS_OVERRIDE(xd) )
     {
+      xnee_verbose((xd, "---  xnee_handle_grab_key 1\n"));
       xnee_grab_handle_buffer(xd, NULL, XNEE_GRAB_BUFFER_PRINT);
       ret = XNEE_GRAB_DO_PRINT ; 
     }
   else if ( current_modifier_state == XNEE_GRAB_NONE_PRESSED )
     {
+      xnee_verbose((xd, "---  xnee_handle_grab_key 2\n"));
       ret = XNEE_GRAB_DO_PRINT ; 
     }
   else if ( current_modifier_state == XNEE_GRAB_NONE_IN_USE )
     {
+      xnee_verbose((xd, "---  xnee_handle_grab_key 3\n"));
       ret = XNEE_GRAB_DO_PRINT ; 
     }
   else if ( current_modifier_state == XNEE_GRAB_SOME_IN_USE )
     {
-      
+      xnee_verbose((xd, "---  xnee_handle_grab_key 4\n"));
       ret = XNEE_GRAB_DO_SAVE ; 
     }
   else if ( current_modifier_state == XNEE_GRAB_ALL_IN_USE )
     {
-      if ( xnee_key_in_use ( xd->grab_keys , kc))
+      xnee_verbose((xd, "---  xnee_handle_grab_key 5\n"));
+      if (xnee_key_in_use ( xd->grab_keys , kc))
 	{
+	  xnee_verbose((xd, "---  xnee_handle_grab_key 5.1\n"));
 	  fprintf (stderr, PACKAGE " ("  VERSION 
 		   ") discarded a key %s (keycode=%d)\n",
 		   mode==XNEE_GRAB_KM_PRESS?"press":"release",
 		   kc);
 	  ret = XNEE_GRAB_DONT_PRINT ; 
 	  if (grab_mode_used==0)
-	    grab_mode_used = 1 ;
+	    {
+	      grab_mode_used = 1 ;
+	    }
 	}
       else
 	{
+	  xnee_verbose((xd, "---  xnee_handle_grab_key 5.2\n"));
 	  xnee_grab_handle_buffer(xd , NULL , XNEE_GRAB_BUFFER_PRINT);
 	  grab_mode_used = 2 ;
 	  ret = XNEE_GRAB_DO_PRINT ; 
 	}
     }
-  
+  else
+    {
+      xnee_verbose((xd, "---  xnee_handle_grab_key 6\n"));
+    }
   xnee_verbose((xd, "<--- xnee_handle_grab_key %d \n", ret));
   return ret;
 }
@@ -785,8 +645,9 @@ xnee_save_or_print(xnee_data *xd, KeyCode kc, int mode)
 {
   int ret; 
   KeySym ks ;
+
   xnee_verbose((xd, "---> xnee_save_or_print %d %d\n", kc, mode));
-  ks = XKeycodeToKeysym(xd->control, kc, 0);
+  ks = XKeycodeToKeysym(xd->grab, kc, 0);
   
 
   if ( mode == XNEE_GRAB_MOUSE )
