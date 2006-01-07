@@ -508,6 +508,19 @@ function press_key()
     sleep 0
 }
 
+function press_key_from_string()
+{
+    _STRING=$1
+    _LEN=${#_STRING}
+
+    TMP=0
+    while [ "$TMP" != "$_LEN" ];
+      do
+      press_key "${_STRING:$TMP:1}"
+      TMP=$(( $TMP + 1 ))
+    done
+}
+
 function fake_controld()
 {
     sleep 1
