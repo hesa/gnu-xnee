@@ -1,3 +1,43 @@
+2006-01-07  Henrik Sandklef  <>
+
+	* libxnee/include/libxnee/xnee.h:
+
+	Added in_use to xnee_data
+
+	* libxnee/src/xnee.c (xnee_start): 
+
+	Using in_use variable
+
+	* libxnee/src/xnee_grab.c: 
+
+	Grabbing on ->grab instead of ->control
+
+	Removed obsoleted code
+
+	Added some { }
+
+	* libxnee/src/xnee_record.c: 
+
+	removed obsoleted code
+	
+	* libxnee/src/xnee_record.c (xnee_record_dispatch): 
+
+	Using in_use variable
+	
+2006-01-07  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_session.c (xnee_init): 
+
+	Using in_use variable
+
+	* cnee/test/etc/base_funs: 
+
+	Added press_key_from_string
+
+	* cnee/src/Makefile.am (cnee.1): 
+
+	Added (built from cnee) man page to man1_MANS
+
 2005-12-31  Henrik Sandklef  <hesa@gnu.org>
 
 	* doc/xnee_example.texi:
