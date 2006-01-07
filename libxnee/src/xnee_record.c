@@ -144,6 +144,7 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
   out = xd->out_file;
   do_print = 1;
 
+
   XNEE_DEBUG ( (stderr ," -->xnee_record_handle_event()  \n"  ));
   if ( (xd->xnee_info.first_last!=0) && (xd->xnee_info.last_motion > 0) && (event_type==MotionNotify)) 
     {
@@ -351,9 +352,13 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   
   /* fix by Ton van Vliet */
   xd = (xnee_data *) (xpoint_xnee_data) ;
+
+  if (!xd->in_use)
+    {
+      return;
+    }
+
   xrec_data = (XRecordDatum *) (data->data) ;
-
-
 
   if ( xnee_more_to_record(xd)==0 ) 
     {
@@ -798,29 +803,29 @@ xnee_record_loop(xnee_data *xd)
    
    xnee_verbose((xd, " ---> xnee_record_loop()\n"));
   
-  /* 
-   * In case the key pressed to invoke Xnee is not released
-   * we wait 1/2 of a second and hopefully it is. If not
-   * the user is holding it pressed for "TOO" long.
+   /* 
+    * In case the key pressed to invoke Xnee is not released
+    * we wait 1/2 of a second and hopefully it is. If not
+    * the user is holding it pressed for "TOO" long.
+    */
+   /*@ ignore @*/
+   (void) usleep ( XNEE_DELAY_RECORDING );
+   /*@ end @*/
+   
+   ret = XRecordEnableContext(xd->data, 
+			      xd->record_setup->rContext, 
+			      xd->rec_callback, 
+			      (XPointer) (xd) /* closure passed to Dispatch */);
+   
+   XNEE_RETURN_IF_ERR(ret);
+   
+   xnee_verbose((xd, " <--- xnee_record_loop()\n"));
+   /*  while (1) 
+       {
+       XRecordProcessReplies (xd->data); 
+       }
    */
-  /*@ ignore @*/
-  (void) usleep ( XNEE_DELAY_RECORDING );
-  /*@ end @*/
-
-  ret = XRecordEnableContext(xd->data, 
-                             xd->record_setup->rContext, 
-                             xd->rec_callback, 
-                             (XPointer) (xd) /* closure passed to Dispatch */);
-  
-  XNEE_RETURN_IF_ERR(ret);
-  
-  xnee_verbose((xd, " <--- xnee_record_loop()\n"));
-  /*  while (1) 
-    {
-      XRecordProcessReplies (xd->data); 
-    }
-  */
-  return XNEE_OK;
+   return XNEE_OK;
 }
 
 
@@ -880,6 +885,7 @@ xnee_record_async(xnee_data *xd)
 	  if (ret == XNEE_GRAB_STOP)
 	    {
 	      xnee_verbose  ((xd," breaking async loop since STOP \n"));
+	      xd->in_use=0;
 	      break;
 	    }
 	  else if (ret == XNEE_GRAB_RESUME)
