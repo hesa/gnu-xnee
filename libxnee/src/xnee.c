@@ -90,6 +90,13 @@ xnee_start(xnee_data *xd)
 {
    int ret ;
 
+   if (xd==NULL)
+     {
+       return XNEE_NO_MAIN_DATA;
+     }
+
+   xd->in_use = 1;
+
 
    /* grab all keys that have been specified */
    ret = xnee_grab_all_keys (xd);
