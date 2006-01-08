@@ -1,4 +1,32 @@
-Changes in (coming) 2.03
+Changes in 2.04
+==============================
+
+  New features:
+
+     * info page for cnee
+
+  New Options
+
+     --infopage (prints texinfo page for cnee)
+
+  Build changes:
+
+  Bugs fixed:
+
+     * Grabbed (stop) keys are recorded to file
+
+  Command line options changes:
+
+  Test updates
+
+     * Added test scripts for test of grab
+
+          cnee/test/scripts/grab/*.sh
+
+  Minor updates
+
+
+Changes in 2.03
 ==============================
 
   New features:

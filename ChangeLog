@@ -1,4 +1,15 @@
-2006-01-07  Henrik Sandklef  <>
+2006-01-08  Henrik Sandklef  <hesa@gnu.org>
+
+	* doc/xnee_faq.texi: 
+
+	Changed faulty email addresses
+
+	* cnee/src/Makefile.am : 
+	* cnee/src/parse.c: 
+
+	Added support for generating info page for cnee
+
+2006-01-07  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/include/libxnee/xnee.h:
 
