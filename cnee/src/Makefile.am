@@ -1,5 +1,9 @@
 bin_PROGRAMS = cnee
 cnee_SOURCES = main.c parse.c parse.h 
+man1_MANS = cnee.1
+
+cnee_TEXINFOS = cnee.texi
+info_TEXINFOS = cnee.texi
 
 LIBXNEE_DIR = ../../libxnee
 
@@ -51,7 +55,11 @@ cnee_DEPENDENCIES = ${LIBXNEE_DIR}/src/libxnee.a
 test-cli:
 	(cd test ; ./test_all.sh)
 
-man1_MANS = cnee.1
+info: cnee.info 
+
+
+cnee.texi: cnee
+	./cnee --infopage > $@
 
 man: cnee.1
 

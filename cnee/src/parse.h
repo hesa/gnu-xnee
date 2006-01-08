@@ -59,8 +59,8 @@ xnee_parse_args (xnee_data* xd,
 
 
 /**
- * Prints Xnee's options with description with man(nroff) syntax. This is
- * used when generating the man page for Xnee. 
+ * Prints cnee's options with description with man(nroff) syntax. This is
+ * used when generating the man page for cnee. 
  * <br>Doing like this we need not update the man page for every new option.
  * This is done automagically by the make system att build/compile time.
  * @param fd         Where to print 
@@ -68,3 +68,12 @@ xnee_parse_args (xnee_data* xd,
  */
 void 
 xnee_manpage (FILE *fd);
+
+/**
+ * Prints Xnee's options with description with info syntax. This is
+ * used when generating the info page for cnee. 
+ * @param fd         Where to print 
+ * @return void  
+ */
+void 
+xnee_infopage (FILE *fd);

@@ -99,6 +99,7 @@ static char *help[] = {
   "--feedback-stderr, -fs         ", "Use stderr to feedback",
   "--feedback-none, -fn           ", "Dont' use feedback",
   "--manpage                      ", "Prints Xnee help text in format as used when generating man page", 
+  "--infopage                     ", "Prints Xnee help text in format as used when generating info page", 
   "--distribute, -di <LIST>       ", "Distribute recorded or replayed events to LIST where LIST is comma separated list of displays",
   "--device-event-range, -devera  <X_LIST> ", "Set device event range to X_LIST", 
   "--delivered-event-range, -devra    <X_LIST>", "Set delivered event range to X_LIST", 
@@ -139,7 +140,7 @@ static char *examples[] = {
 
 
 static char *description[] = {
-  "  " PACKAGE " can record and replay an X session." PACKAGE " also has the ability to ",
+  "  " XNEE_CLI " (part of the " PACKAGE " peoject) can record and replay an X session. " XNEE_CLI " also has the ability to ",
   "  distribute events to multiple displays.\n",
   NULL 
 };
@@ -563,6 +564,11 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  xnee_manpage (stdout);
 	  exit(XNEE_OK);
 	}
+      else if(xnee_check(argv[i], "--infopage", "--infopage")) 
+	{
+	  xnee_infopage (stdout);
+	  exit(XNEE_OK);
+	}
       else if(xnee_check(argv[i], "--help", "-h")) 
 	{
 	  xnee_usage (stdout);
@@ -873,7 +879,7 @@ xnee_usage (FILE *fd)
   char *command;
   char *descr;
 
-  fprintf (fd ,"USAGE: %s [OPTIONS]\n", PACKAGE );
+  fprintf (fd ,"USAGE: %s [OPTIONS]\n", XNEE_CLI );
   fprintf (fd ,"\n");
   fprintf (fd ,"DESCRIPTION\n");
   
@@ -936,7 +942,7 @@ xnee_manpage (FILE *fd)
   char *command;
   char *descr;
 
-  fprintf (fd ,".\\\" Copyright Henrik Sandklef 2002.\n");
+  fprintf (fd ,".\\\" Copyright Henrik Sandklef 2002, 2003, 2004, 2005, 2006\n");
   fprintf (fd ,".\\\"   \n");
   fprintf (fd ,".\\\" This file may be copied under the conditions described \n");
   fprintf (fd ,".\\\" in the LDP GENERAL PUBLIC LICENSE, Version 1, September 1998 \n");
@@ -1009,7 +1015,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
 
   fprintf (fd ,".SH \"SEE ALSO\"\n"); 
-  fprintf (fd ,".BR xev (1)\n");
+  fprintf (fd ,".BR xnee(info), xev (1)\n");
 
   fprintf (fd ,".SH \"VERSION\"\n");
   fprintf (fd ,PACKAGE " man page, version " VERSION "\n");
@@ -1018,6 +1024,115 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"This page describes\n");
   fprintf (fd ,".B Xnee.\n");
   fprintf (fd ,"Mail corrections and additions to %s\n", XNEE_BUG_MAIL );
+}
+
+/**************************************************************
+ *                                                            *
+ * xnee_infopage                                              *
+ *                                                            *
+ *                                                            *
+ **************************************************************/
+void 
+xnee_infopage (FILE *fd)
+{
+  char **cpp;
+  char *command;
+  char *descr;
+
+  fprintf (fd ,"\\input texinfo  @c -*- Texinfo -*-\n");
+
+  fprintf (fd ,"@c %**start of header\n");
+  fprintf (fd ,"@setfilename "XNEE_CLI".info\n");
+  fprintf (fd ," @set EDITION %s\n", VERSION);
+  fprintf (fd ," @set VERSION %s\n", VERSION);
+  fprintf (fd ,"@settitle " XNEE_CLI " Manual \n");
+  fprintf (fd ,"@setchapternewpage off\n");
+  fprintf (fd ,"@c %**end o\n");
+
+
+
+  fprintf (fd, "@ifinfo\n");
+  fprintf (fd, "@node Top, Options,, (dir)\n");
+  fprintf (fd, "@top \n");
+/*   fprintf (fd, "@include xnee_copying\n"); */
+  fprintf (fd, "@end ifinfo\n");
+
+
+  for (cpp = description; *cpp; cpp++) 
+    {
+      fprintf (fd, "%s\n", *cpp);
+    }
+  fprintf (fd, "Current version of " PACKAGE " is " VERSION "\n");
+
+
+
+  fprintf (fd, "@menu\n");
+  fprintf (fd, "* Options::        Options\n");
+  fprintf (fd, "* Examples::       Examples\n");
+  fprintf (fd, "* Bugs::           Bugs\n");
+  fprintf (fd, "* See also::       See also\n");
+  fprintf (fd, "@end menu\n");
+
+  fprintf (fd, "@contents\n");
+  fprintf (fd, "\n");
+  fprintf (fd ,"Copyright (C) 2002, 2003, 2004, 2005, 2006 Henrik Sandklef.\n");
+  fprintf (fd, "@*\n");
+  fprintf (fd, "@*\n");
+  fprintf (fd ,"This  is  free  software;  see the source for copying conditions. ");
+  fprintf (fd ,"There is NO warranty;");
+  fprintf (fd ,"not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
+
+
+  fprintf (fd, "@node Options, Examples, top, top \n");
+
+  for (cpp = help; *cpp; cpp++) 
+    {
+      fprintf (fd, "@code{  %s}\n", *cpp++);
+      fprintf (fd, "%s\n\n", *cpp);
+    }
+
+  for (cpp = explain; *cpp; cpp++) 
+    {
+      fprintf (fd, "%s\n", *cpp++);
+      fprintf (fd, "\t%s\n", *cpp);
+    }
+
+
+  fprintf (fd, "@node Examples, Bugs, Options, top \n");
+  for (cpp = examples; *cpp; cpp++) 
+    {
+      command=*cpp++;
+      descr=*cpp;
+      if (command != NULL )
+	{
+	  if (descr != NULL )
+	    fprintf (fd, "  %s\n", command);
+	  else
+	    {
+	      fprintf (fd, "  %s\n", command);
+	      break;
+	    }
+	  
+	  if (descr!=NULL)
+	    fprintf (fd, "\t%s\n\n", *cpp);
+	}
+    }
+  fprintf (fd ,"\n");
+
+  fprintf (fd, "@node Bugs, See also, Examples,top \n");
+  fprintf (fd, "If you envounter a bug, \n@*\n");
+  fprintf (fd, "report it to @email{xnee-bug@@gnu.org}\n@*\n");
+  fprintf (fd, "or go to the Xnee site at @url{http://svannah.gnu.org}\n@*\n");
+  fprintf (fd, "Before reporting the bug, make sure it is not already reported\n");
+
+  fprintf (fd, "@node See also, (dir), Bugs,top \n");
+  fprintf (fd ,"There are some other interesting programs out there\n@*\n@*\n");
+  fprintf (fd ,"Look at xev (1)\n@*\n");
+  fprintf (fd ,"Also make sure to read the Xnee manual\n");
+
+
+  fprintf (fd, "@bye\n");
+  return;
 }
 
 int
