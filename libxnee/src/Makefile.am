@@ -2,6 +2,12 @@ AUTOMAKE_OPTIONS = gnu
 
 lib_LIBRARIES = libxnee.a
 
+# Hmm, this really should work.
+# I want to exclude libxnee.a from getting installed
+#
+#     noinst_LIBRARIES = libxnee.a
+
+
 libxnee_a_SOURCES = xnee.c  \
 	print.c  \
 	print_varargs.c  \
@@ -131,3 +137,5 @@ testnames:
 	echo "HTML_INC_FILES=${HTML_INC_FILES}"
 
 devel-doc: devel-doc-src devel-doc-inc
+
+
