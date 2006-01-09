@@ -1,3 +1,39 @@
+2006-01-09    <hesa@gnu.org>
+
+	* Makefile.am (SUBDIRS): 
+	* configure.in: 
+
+	Added building of examples/Makefile sessions/Makefile
+
+	* libxnee/src/Makefile.am: 
+
+	Added note on noinst_LIBRARIES that does NOT work
+
+	* share/Makefile.am (XNEE_DATA_FILES): 
+
+	Moved examples and sessions dir to seperate Makefiles
+	
+	* examples/Makefile.am (simple_bash.sh): 
+
+	Added default paths to simple_bash.sh
+
+	* session/Makefile.am: 
+	
+	All files installs in share
+
+	* examples/Makefile.am: 
+
+	All files installs in share
+
+	* share/Makefile.am: 
+
+	Autogenerating xnee.sh with correct 
+	version number
+	
+	* configure.in: 
+
+	Adding finding of AWK and BASH
+
 2006-01-08  Henrik Sandklef  <hesa@gnu.org>
 
 	* doc/xnee_faq.texi: 

@@ -5,6 +5,8 @@ Changes in 2.04
 
      * info page for cnee
 
+     * Version number in shell functions (xnee.sh)
+
   New Options
 
      --infopage (prints texinfo page for cnee)
