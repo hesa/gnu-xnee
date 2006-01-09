@@ -15,6 +15,9 @@ AC_PATH_XTRA
 AC_FUNC_VPRINTF
 AC_CHECK_HEADERS(stdarg.h varargs.h, break)
 
+AC_PATH_PROG(AWK,awk)
+AC_PATH_PROG(BASH,bash,sh)
+
 # Add X libs 
 LIBS="$LIBS $X_LIBS"
 
