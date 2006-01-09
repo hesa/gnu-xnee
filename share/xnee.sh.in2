@@ -1,0 +1,31 @@
+
+
+
+
+
+########################################################################
+#
+# The rest of this script contains 
+# automagially generated code
+#
+########################################################################
+
+
+
+
+########################################################################
+#
+# Function name:    xnee_version
+#
+# Arguments:        none
+#
+# Return value:     none
+#
+# Description:      Prints the current version of Xnee
+#                   
+#
+########################################################################
+xnee_version()
+{
+	echo "__VERSIONTAG__"
+}	
