@@ -1,4 +1,4 @@
-SUBDIRS = ${LIB_DIR}  ${CLI_DIR} ${GUI_DIR} ${DOC_DIR} share
+SUBDIRS = ${LIB_DIR}  ${CLI_DIR} ${GUI_DIR} ${DOC_DIR} share examples sessions
 
 AUTOMAKE_OPTIONS = gnu
 

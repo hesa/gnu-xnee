@@ -362,6 +362,8 @@ AC_SUBST(FOO_DIR)
 
 
 AC_OUTPUT([ Makefile ])
+AC_OUTPUT([ examples/Makefile ])
+AC_OUTPUT([ sessions/Makefile ])
 AC_OUTPUT([ share/Makefile ])
 
 if test x$doconly = xtrue || test x$builddoc = xtrue  ; 
