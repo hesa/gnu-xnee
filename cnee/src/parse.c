@@ -140,7 +140,7 @@ static char *examples[] = {
 
 
 static char *description[] = {
-  "  " XNEE_CLI " (part of the " PACKAGE " peoject) can record and replay an X session. " XNEE_CLI " also has the ability to ",
+  "  " XNEE_CLI " (part of the " PACKAGE " project) can record and replay an X session. " XNEE_CLI " also has the ability to ",
   "  distribute events to multiple displays.\n",
   NULL 
 };
@@ -1120,15 +1120,16 @@ xnee_infopage (FILE *fd)
   fprintf (fd ,"\n");
 
   fprintf (fd, "@node Bugs, See also, Examples,top \n");
-  fprintf (fd, "If you envounter a bug, \n@*\n");
-  fprintf (fd, "report it to @email{xnee-bug@@gnu.org}\n@*\n");
-  fprintf (fd, "or go to the Xnee site at @url{http://svannah.gnu.org}\n@*\n");
-  fprintf (fd, "Before reporting the bug, make sure it is not already reported\n");
+  fprintf (fd, "If you envounter a bug, report it to ");
+  fprintf (fd, "@indent @ @ @ @email{xnee-bug@@gnu.org}\n@ \n");
+  fprintf (fd, "@indent or go to the Xnee site:\n");
+  fprintf (fd, "@indent @ @ @ @url{http://svannah.gnu.org}\n@\n");
+  fprintf (fd, "@indent Before reporting the bug, make sure it is not already reported\n");
 
   fprintf (fd, "@node See also, (dir), Bugs,top \n");
   fprintf (fd ,"There are some other interesting programs out there\n@*\n@*\n");
   fprintf (fd ,"Look at xev (1)\n@*\n");
-  fprintf (fd ,"Also make sure to read the Xnee manual\n");
+  fprintf (fd ,"Also make sure to read the Xnee manual or info page\n");
 
 
   fprintf (fd, "@bye\n");
