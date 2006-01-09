@@ -1,7 +1,6 @@
 bin_PROGRAMS = cnee
 cnee_SOURCES = main.c parse.c parse.h 
 man1_MANS = cnee.1
-
 cnee_TEXINFOS = cnee.texi
 info_TEXINFOS = cnee.texi
 
@@ -43,6 +42,8 @@ else
 PEDANTIC_FLAGS = 
 endif
 
+.info.texi:
+	makeinfo 
 
 AM_CFLAGS = -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${BUF_VERBOSE_FLAG}  ${USER_CFLAGS} ${GCOV_FLAG} ${GPROF_FLAG}
 
@@ -60,6 +61,7 @@ info: cnee.info
 
 cnee.texi: cnee
 	./cnee --infopage > $@
+
 
 man: cnee.1
 
