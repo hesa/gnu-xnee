@@ -109,211 +109,214 @@ The following directives are used in Xnee:
 As long as the first token is @code{#} the whole line is intrepreted as a comment, just
 as in bash.
 
+
 @subsection Settings 
 @cindex Settings
-@multitable  @columnfractions .0 .25 .15 .60
+
+@multitable @columnfractions .45 .15 .6
 @item 
-@tab @b{Settings directive}
+
+@b{Settings directive}
 @tab @b{Argument}
 @tab @b{Interpretation}
 
 @item
-@tab  data-to-record
+data-to-record
 @tab  integer
 @tab  Limits the number of data to record to to the integer value
 
 @item
-@tab  events-to-record
+events-to-record
 @tab  integer
 @tab  Limits the number of events to record to to the integer value
 
 @item
-@tab  time-to-record
+time-to-record
 @tab  integer
 @tab  Limits the number of seconds to record to to the integer value
 
 @item
-@tab  display
+display
 @tab  string
 @tab  Sets the display to record or replay to the string
 
 @item
-@tab  distribute
+distribute
 @tab  string 
 @tab  Distribute all recorded or replayed replayable events to the display given by the string
 
 @item
-@tab  file
+file
 @tab  string
 @tab  Read replay data from the file given by the string
 
 @item
-@tab  out-file
+out-file
 @tab  string
 @tab  Print recorded data to the file given by the string
 
 @item
-@tab  plugin
+plugin
 @tab  string
 @tab  Use the plugin given by the string
 
 @item
-@tab  first-last
+first-last
 @tab  boolean 
 @tab  Print only first and last of successive MotionNotify events
 
 @item
-@tab  verbose
+verbose
 @tab  boolean
 @tab  Use verbose debugging printout
 
 @item
-@tab  buffer-verbose
+buffer-verbose
 @tab  boolean
 @tab  Use verbose buffer verbose printouts (not built by default)
 
 @item
-@tab  time
+time
 @tab  integer
 @tab  Delay the start of the Xnee action 
 
 @item
-@tab  all-clients
+all-clients
 @tab  boolean
 @tab  Record all curret and future clients (default)
 
 @item
-@tab  future-clients
+future-clients
 @tab  boolean
 @tab  Record only future clients
 
 @item
-@tab  human-printout
+human-printout
 @tab  boolean
 @tab  Prints the recorded data in a (quite) more ser friendly format
 
 @item
-@tab  sync-mode
+sync-mode
 @tab  boolean
 @tab  Sets recording mode
 
 @item
-@tab  speed-percent
+speed-percent
 @tab  integer
 @tab  Sets the replaying speed percentage to the integer value
 
 @item
-@tab  stop-key
-@tab  string,string
+stop-key
+@tab  @acronym{string@comma{}string}
 @tab  Sets the stop key combination to the strings
 
 @item
-@tab  pause-key
-@tab  string,string
+pause-key
+@tab  @acronym{string@comma{}string}
 @tab  Sets the pause key combination to the strings
 
 @item
-@tab  resume-key
-@tab  string,string
+resume-key
+@tab  @acronym{string@comma{}string}
 @tab  Sets the resume key combination to the strings
 
 @item
-@tab  mark-key
-@tab  string,string
+mark-key
+@tab  @acronym{string@comma{}string}
 @tab  Sets the mark key combination to the strings
 
 @item
-@tab  exec-key
-@tab  string,string
+exec-key
+@tab  @acronym{string@comma{}string}
 @tab  Sets the execute key combination to strings
 
 @item
-@tab  replay-resolution
+replay-resolution
 @tab  string 
 @tab  Sets the replay resolution to the string 
 
 @item
-@tab  resolution-adjustment
+resolution-adjustment
 @tab  boolean
 @tab  Use resolution adjustment, even if the recored resolution differs from the one to replay to
 
 @item 
-@tab  event-range
+event-range
 @tab  range
 @tab  Sets the events to record
 
 @item 
-@tab  error-range
+error-range
 @tab  range
 @tab  Sets the errors to record to range*
 
 @item 
-@tab  request-range
+request-range
 @tab  range
 @tab  Sets the request to record to range*
 
 @item 
-@tab  reply-range
+reply-range
 @tab  range
 @tab  Sets the replies to record to range*
 
 @item
-@tab  extension-request-major-range
+extension-request-major-range
 @tab  range
 @tab  Sets the extension requests (major) to record to range*
 
 @item
-@tab  extension-request-minor-range
+extension-request-minor-range
 @tab  range
 @tab  Sets the extension requests (minor) to record to range*
 
 @item
-@tab  extension-reply-major-range
+extension-reply-major-range
 @tab  range
 @tab  Sets the extension replies (major) to record to range*
 
 @item
-@tab  extension-reply-minor-range
+extension-reply-minor-range
 @tab  range
 @tab  Sets the extension replies (minor) to record to range*
 
 @item
-@tab  force-replay
+force-replay
 @tab  boolean
 @tab  Continue to replay even if Xnee is out of sync
 
 @item
-@tab  max-threshold
+max-threshold
 @tab  integer 
 @tab  Sets the maximum synchronisation threshold 
 
 @item
-@tab  min-threshold
+min-threshold
 @tab  integer 
 @tab  Sets the minimum synchronisation threshold 
 
 @item
-@tab  total-threshold
+total-threshold
 @tab  integer 
 @tab  Sets the total maximum synchronisation threshold 
 
 @item
-@tab  events-to-record
+events-to-record
 @tab  integer 
 @tab  Sets the number of events to record
 
 @item
-@tab  data-to-record
+data-to-record
 @tab  integer 
 @tab  Sets the number of data to record
 
 @item
-@tab  time-to-record
+time-to-record
 @tab  integer 
 @tab  Sets the number of seconds to record
 
 @item
-@tab  store-mouse-position
+store-mouse-position
 @tab  
 @tab  If set, Xnee records the initial mouse position and makes sure that replaying starts from there
 
@@ -321,42 +324,38 @@ as in bash.
 
 Xnee Settings Arguments
 @cindex Xnee Settings Arguments
-@multitable  @columnfractions .0 .20 .50 .30
-@item 
-@tab @b{Settings argument}
+
+@multitable @columnfractions .30 .40 .30
+@item @b{Settings argument}
 @tab @b{Description}
 @tab @b{Example}
 
 @item
-@tab  @code{integer}
+@code{integer}
 @tab  is an integer value. 
 @tab  1
 
 @item
-@tab  @code{string}
+@code{string}
 @tab  is a string.
 @tab  localhost
 
 @item
-@tab  @code{boolean}
+@code{boolean}
 @tab  is a boolean value given by true/1 or false/0 
 @tab  true, false, 0, 1
 
 @item
-@tab  @code{subrange}
+@code{subrange}
 @tab  Subrange is gives a range of data by specifying a start and stop
       data. In the case of one data the stop data can be omitted.
 @tab  2-5 or MapNotify
 
 @item
-@tab  @code{range}
-@tab  Ranges are a comma separated list of subranges. 
-@tab  2-3,MotionNotify-MapNotify,GravityNotify,PropertyNotify,30
+@code{range}
+@tab Ranges are a comma separated list of subranges. 
+@tab 2-3,MotionNotify-MapNotify,GravityNotify,PropertyNotify,30
 
-@item
-@tab  
-@tab  
-@tab  
 
 @end multitable
 
@@ -366,51 +365,40 @@ Xnee Settings Arguments
 @cindex Replay directive
 @multitable  @columnfractions .0 .40 .60
 @item 
-@tab @b{Replay directive}
+@b{Replay directive}
 @tab @b{Interpretation}
 
-@item 
-@tab 0,0
+@item 0,0
 @tab not valid
 
-@item 
-@tab 0,1
+@item 0,1
 @tab not valid
 
-@item 
-@tab 0,2,keycode,time
+@item 0,2,keycode,time
 @tab KeyPress on key with keycode, used to replay
 
-@item 
-@tab 0,3,keycode,time
+@item 0,3,keycode,time
 @tab KeyRelease on key with keycode, used to replay
 
-@item 
-@tab 0,4,button nr,time
+@item 0,4,button nr,time
 @tab ButtonPress on button nr, used to replay
 
-@item 
-@tab 0,5,button nr,time
+@item 0,5,button nr,time
 @tab ButtonRelease on button nr, used to replay
 
-@item 
-@tab 0,6,x,y,time
+@item 0,6,x,y,time
 @tab MotionNotify on poistion (x,y), used to replay
 
-@item 
-@tab 0,7-XXX,time
+@item 0,7-XXX,time
 @tab MotionNotify on poistion (x,y), used to replay
 
-@item 
-@tab 1,request number,time
+@item 1,request number,time
 @tab Recorded request, used during synchronisation 
 
-@item 
-@tab 2,reply number,time
+@item 2,reply number,time
 @tab Recorded reply, used during synchronisation 
 
-@item 
-@tab 3,error number,time
+@item 3,error number,time
 @tab Recorded error, used during synchronisation 
 
 
@@ -421,81 +409,64 @@ time is the time on the server the data was to the recording Xnee client. This t
 @cindex   Script replay data 
 
 @multitable  @columnfractions .0 .40 .60
-@item 
-@tab @b{Primitive}
+@item @b{Primitive}
 @tab @b{Interpretation}
 
-@item 
-@tab fake-motion
+@item fake-motion
 @tab Fakes a mouse motion 
 
-@item 
-@tab fake-button-press
+@item fake-button-press
 @tab Fakes a button press
 
-@item 
-@tab fake-button-release
+@item fake-button-release
 @tab Fakes a button release
 
-@item 
-@tab fake-button
+@item fake-button
 @tab Fakes a button press and release
 
-@item 
-@tab fake-key-press
+@item fake-key-press
 @tab Fakes a key press
 
-@item 
-@tab fake-key-release
+@item fake-key-release
 @tab Fakes a key release
 
-@item 
-@tab fake-key
+@item fake-key
 @tab Fakes a key press and release
 
 @end multitable
 
 @multitable  @columnfractions .0 .20  .20 .60
-@item 
-@tab @b{Primitive variable}
+@item @b{Primitive variable}
 @tab @b{Primitive values}
 @tab @b{Interpretation}
 
-@item 
-@tab  x=value
+@item x=value
 @tab  integer
 @tab  Sets the x position used in fake-motion to value
 
-@item 
-@tab  x=value
+@item x=value
 @tab  +integer
 @tab  Set the relative motion (x direction) used in fake-motion to value
 
-@item 
-@tab  x=value
+@item x=value
 @tab  -integer
 @tab  Set the relative motion (x direction) used in fake-motion to value
 
-@item 
-@tab  y=value
+@item y=value
 @tab  Sets the y position used in fake-motion to value
 
-@item 
-@tab  y=value
+@item y=value
 @tab  +integer
 @tab  Set the relative motion (y direction) used in fake-motion to value
 
-@item 
-@tab  y=value
+@item y=value
 @tab  -integer
 @tab  Set the relative motion (y direction) used in fake-motion to value
 
-@item 
-@tab  button=value
+@item button=value
 @tab  set the button to fake with fake-button-press, fake-button-release and fake-button to value
 
-@item 
-@tab  key=value
+@item key=value
 @tab  set the key to fake with fake-key-press, fake-key-release and fake-key to value
 
 @end multitable
@@ -504,13 +475,12 @@ time is the time on the server the data was to the recording Xnee client. This t
 @subsection Mark 
 @cindex  Mark directive
 @multitable  @columnfractions .0 .20 .20 .60
-@item 
-@tab @b{First tokens}
+@item @b{First tokens}
 @tab @b{Arguments}
 @tab @b{Interpretation}
 
 @item
-@tab  Mark
+Mark
 @tab  time string
 @tab  Ignored. This feature is intended to let the user do whatever he/she
       wants to. This will obviously lead to modifying the source code etc.
@@ -520,13 +490,12 @@ time is the time on the server the data was to the recording Xnee client. This t
 @subsection Exec 
 @cindex  Exec directive
 @multitable  @columnfractions .0 .20 .20 .60
-@item 
-@tab @b{First tokens}
+@item @b{First tokens}
 @tab @b{Arguments}
 @tab @b{Interpretation}
 
 @item
-@tab  Exec
+Exec
 @tab  command string
 @tab  This is used during to replay to execute a given command. If no
       command string is found Xnee will try to
@@ -537,52 +506,51 @@ time is the time on the server the data was to the recording Xnee client. This t
 @subsection Project information 
 @cindex  Project information directive
 @multitable  @columnfractions .0 .45 .55
-@item 
-@tab @b{Project information directives}
+@item @b{Project information directives}
 @tab @b{Arguments}
 
 @item
-@tab  ProjectName
+ProjectName
 @tab  string s is the project name
 
 @item
-@tab  ProjectDescription
+ProjectDescription
 @tab  string s is the project description
 
 @item
-@tab  ProjectCreationDate
+ProjectCreationDate
 @tab  string s is the project creation date
 
 @item
-@tab  ProjectCreationProgram
+ProjectCreationProgram
 @tab  string s is the name of the program that create the project file
 
 @item
-@tab  ProjectCreationProgVersion
+ProjectCreationProgVersion
 @tab  string s is the version of the program that create the project file
 
 @item
-@tab  ProjectLastChangeDate
+ProjectLastChangeDate
 @tab  string s is the date of the last change of the project file
 
 @item
-@tab  ProjectLastChangeProgram
+ProjectLastChangeProgram
 @tab  string s is the name of the program that last changed of the project file
 
 @item
-@tab  ProjectLastChangeVersion
+ProjectLastChangeVersion
 @tab  string s is the version of the program that last changed of the project file
 
 @item
-@tab  ProjectCurrentChangeDate
+ProjectCurrentChangeDate
 @tab  string s is the date of the current change of the project file
 
 @item
-@tab  ProjectCurrentChangeProgram
+ProjectCurrentChangeProgram
 @tab  string s is the name of the program that current changed of the project file
 
 @item
-@tab  ProjectCurrentChangeVersion
+ProjectCurrentChangeVersion
 @tab  string s is the version of the program that current changed of the project file
 
 

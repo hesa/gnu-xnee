@@ -48,7 +48,8 @@ Start a terminal emulator (e.g xterm)
 
 Start Xnee
 @example
-   @code{cnee --record --keyboard --mouse --events-to-record 400 --out gnumeric.xnl&}
+   @code{cnee --record --keyboard --mouse --events-to-record 400 \}
+   @code{ --out gnumeric.xnl&}
 @end example
 
 Start gnumeric
@@ -70,7 +71,8 @@ Start a terminal emulator (e.g xterm)
 
 Start Xnee
 @example
-   @code{cnee --record --keyboard --mouse --events-to-record 400 --out gnumeric2.xnl\}
+   @code{cnee --record --keyboard --mouse --events-to-record 400 \}
+   @code{ --out gnumeric2.xnl\}
    @code{--delivered-event-range Expose,MapRequest,LeaveNotify,EnterNotify  &}
 @end example
 

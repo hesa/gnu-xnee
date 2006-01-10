@@ -53,10 +53,11 @@
 
 
 @ifinfo
-@node Top, Summary,, (dir)
+@node Top, Summary, (dir), (dir)
 @top 
-@include xnee_copying
 @end ifinfo
+
+@include xnee_copying
 
 
 @menu
