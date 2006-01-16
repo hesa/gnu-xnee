@@ -94,6 +94,7 @@ enum return_values
     XNEE_DATE_FAILURE      ,
     XNEE_SCREEN_MISSING    ,
     XNEE_RANGE_FAILURE     ,
+    XNEE_BAD_OFFSET        ,
     XNEE_LAST_ERROR
   } _return_values;
   
@@ -232,6 +233,7 @@ typedef struct
 {
   int	 x_res ;  /*!< Xserver resoluton:   x */
   int    y_res ;  /*!< Xserver resoluton:   y */
+
 } xnee_res;
 
 
@@ -255,6 +257,8 @@ typedef struct
   xnee_res record ;  /*!< resolution when recorded   */
   xnee_res replay ;  /*!< resolution when replaying */
   int  is_used    ;  /*!< flag to say if we should convert resolution at all */
+  int  x_offset ;    /*!< Xserver offset for X */
+  int  y_offset ;    /*!< Xserver offset for Y */
 } xnee_resolution_info;
 
 

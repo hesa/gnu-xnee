@@ -93,6 +93,7 @@ static char *help[] = {
   "--print-data-names, -pdn       ", "Prints X11 data number and name ", 
   "--recorded-resolution res      ", "Resolution used when recording",
   "--replay-resolution res        ", "Resolution to use when replaying",
+  "--replay-offset x,y            ", "Add an offset to X and Y when replaying",
   "--no-resolution-adjustment     ", "Don't use resolution adjustment",
   "--no-sync, -ns                 ", "Don't use synchornisation during replay",
   "--feedback-xosd, -fx           ", "Use xosd to feedback",
@@ -244,6 +245,25 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  xnee_verbose ((xd, "replay resolution= %dx%d\n", 
 			 xnee_get_rep_resolution_x(xd),
 			 xnee_get_rep_resolution_y(xd)));
+ 	  continue;
+	}
+      else if (xnee_check (argv[i], "--replay-offset", "-rr"  ) )
+	{
+	  if (++i >= argc) 
+	    {
+	      xnee_usage(stderr);
+	      xnee_close_down(xd);
+	      exit(XNEE_WRONG_PARAMS);
+	    }
+	  if ( xnee_set_replay_offset_str (xd, argv[i]))
+	    {
+	      xnee_verbose ((xd, "failed to set replay x_offset\n"));
+	      xnee_close_down(xd);
+	      exit(XNEE_BAD_OFFSET );
+	    }
+	  xnee_verbose ((xd, "replay offset= %dx%d\n", 
+			 xnee_get_replay_offset_x(xd),
+			 xnee_get_replay_offset_y(xd)));
  	  continue;
 	}
       else if (xnee_check (argv[i], "--max-threshold", "-map"  ) )

@@ -1020,3 +1020,51 @@ xnee_reset_autorepeat (xnee_data *xd)
 }
 
 
+int 
+xnee_set_replay_offset_str (xnee_data *xd, char *str)
+{
+  int x;
+  int y;
+  int ret;
+  xnee_verbose((xd, "replay offset str: %s\n", str));
+  ret = sscanf(str, "%d,%d",&x,&y);
+  
+  if (ret != 2 )
+    {
+      xnee_verbose((xd, "replay offset failed: %d\n", ret));
+      exit(ret);
+    }
+
+  xd->res_info.x_offset = x;
+  xd->res_info.y_offset = y;
+
+  xnee_verbose((xd, "replay offset OK: %dx%d\n", x,y));
+  return XNEE_OK;
+}
+
+int 
+xnee_set_replay_offset_x(xnee_data *xd, int offset)
+{
+  xd->res_info.x_offset = offset;
+  return XNEE_OK;
+}
+
+int 
+xnee_set_replay_offset_y(xnee_data *xd, int offset)
+{
+  xd->res_info.y_offset = offset;
+  return XNEE_OK;
+}
+
+int 
+xnee_get_replay_offset_x(xnee_data *xd)
+{
+  return xd->res_info.x_offset ;
+}
+
+int 
+xnee_get_replay_offset_y(xnee_data *xd)
+{
+  return xd->res_info.y_offset ;
+}
+

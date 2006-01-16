@@ -411,8 +411,8 @@ xnee_fake_motion_event (xnee_data* xd,
   if (!xnee_is_recorder (xd))
     {
 
-      new_x = xnee_resolution_newx(xd,x);
-      new_y = xnee_resolution_newy(xd,y);
+      new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
+      new_y = xnee_resolution_newy(xd,y) + xd->res_info.y_offset;
 
       xnee_fake_sleep (dtime);
       xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))\n",

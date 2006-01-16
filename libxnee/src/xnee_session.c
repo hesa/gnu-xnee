@@ -331,6 +331,9 @@ xnee_init(xnee_data* xd)
   xd->meta_data.tot_diff_threshold = XNEE_DEFAULT_TOT_THRESHOLD;
 
 
+  xd->res_info.x_offset = 0;
+  xd->res_info.y_offset = 0;
+
   /* Init Recording variables
    * Since those are used when recording and replaying. */
   xnee_record_init (xd);
