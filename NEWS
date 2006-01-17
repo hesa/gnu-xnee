@@ -7,15 +7,23 @@ Changes in 2.04
 
      * Version number in shell functions (xnee.sh)
 
-  New Options
+     * x,y offset during replay
+
+  New Options for cnee
 
      --infopage (prints texinfo page for cnee)
 
+     --replay-offset
+
   Build changes:
+
+  Doc changes:
 
   Bugs fixed:
 
      * Grabbed (stop) keys are recorded to file
+
+     * Faulty help text on grabbing keys fixed (cnee)
 
   Command line options changes:
 
@@ -26,6 +34,8 @@ Changes in 2.04
           cnee/test/scripts/grab/*.sh
 
   Minor updates
+
+     * Printing program_name to recorded session file
 
 
 Changes in 2.03

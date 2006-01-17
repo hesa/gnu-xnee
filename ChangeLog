@@ -1,8 +1,30 @@
-2006-01-17    <hesa@gnu.org>
+2006-01-17  Henrik Sandklef  <hesa@gnu.org>
+
+	* doc/xnee_prot.texi: 
+	* doc/xnee_exampl.texi: 
+
+	Added text for replay offset
+	
+	* libxnee/include/libxnee/xnee.h: 
+
+	Added return value: XNEE_BAD_OFFSET
+
+	* libxnee/src/xnee_error.c: 
+
+	Added error text on replay offset (x,y)
 
 	* cnee/src/parse.c (xnee_parse_args): 
 
+	Removed faulty help text on grabbing keys
 	Parsing of "--replay-offset"
+
+	* libxnee/src/print.c (xnee_print_sys_info): 
+
+	Added program name (if any) printout to recorded file
+
+	* libxnee/include/libxnee/print.h: 
+
+	New macros for verbose on function entry/inside/exit
 
 	* libxnee/src/xnee_fake.c (xnee_fake_motion_event): 
 
