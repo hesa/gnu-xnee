@@ -159,7 +159,8 @@ write_project_file()
 }
 
 
-int get_type(GtkWidget* combo_label)
+int 
+get_type(GtkWidget* combo_label)
 {
   int   type = 0 ;
   gchar *selection;
@@ -730,7 +731,9 @@ on_ok_button1_clicked                  (GtkButton       *button,
 
   GNEE_DEBUG(("on_ok_button1_clicked\n"));
   if (filename!=NULL)
-    free (filename);
+    {
+      free (filename);
+    }
 
   filename = strdup(gtk_file_selection_get_filename(GTK_FILE_SELECTION(fs)));
 
