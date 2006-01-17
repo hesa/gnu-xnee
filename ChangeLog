@@ -1,5 +1,9 @@
 2006-01-17  Henrik Sandklef  <hesa@gnu.org>
 
+	* libxnee/src/print.c: 
+
+	Prevent grabbing when replaying
+
 	* doc/xnee_prot.texi: 
 	* doc/xnee_exampl.texi: 
 

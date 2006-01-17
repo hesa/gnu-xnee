@@ -25,6 +25,10 @@ Changes in 2.04
 
      * Faulty help text on grabbing keys fixed (cnee)
 
+     * If sig received when replaying (and using key grab)
+       Xnee messed up X server. Removed grabs from recorded
+       session file
+
   Command line options changes:
 
   Test updates
