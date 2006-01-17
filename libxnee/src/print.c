@@ -463,6 +463,14 @@ xnee_print_sys_info(xnee_data *xd, FILE *out)
 	  timeinfo->tm_hour, 
 	   timeinfo->tm_min , 
 	   timeinfo->tm_sec  );
+  if ( xd->program_name!=NULL)
+    {
+      fprintf (out, "# Xnee program:           %s \n", xd->program_name);
+    }
+  else
+    {
+      fprintf (out, "# Xnee program:           <missing info> \n");
+    }
   fprintf (out, "# Xnee version:           %s \n", VERSION);
   fprintf (out, "# Xnee home:              %s \n", XNEE_HOME_URL);
   fprintf (out, "# Xnee info mailing list: %s \n", XNEE_MAIL);
