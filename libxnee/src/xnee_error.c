@@ -202,6 +202,10 @@ char error_descr_solut[256][256] =
     "Fatal error while adding data to range of recorded data",
     "Xnee could not add data to record. Report the problem",
 
+    /* XNEE_BAD_OFFSET */
+    "Fatal error while setting replay offset",
+    "Xnee could not adjust replay offsets. Report the problem",
+
     /* XNEE_LAST_ERROR */
     "Last error",
     "Internal state, report if you receive this",
