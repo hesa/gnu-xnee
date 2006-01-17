@@ -74,6 +74,8 @@ xnee_open_files(xnee_data *xd)
 	    {
 	      return XNEE_FILE_NOT_FOUND;
 	    }
+	  xnee_verbose((xd, "---  xnee_open_files: opening err: %s  OK\n", 
+			xd->err_name));
 	}
     }
 
