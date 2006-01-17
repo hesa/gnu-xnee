@@ -934,22 +934,22 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "##############################################\n");
   fprintf (out,  "#      Key Grabs                             #\n");
   fprintf (out,  "##############################################\n");
-  fprintf (out,  "%s         %s\n",
+  fprintf (out,  "# %s         %s\n",
 	   XNEE_STOP_KEY,  
 	   (xd->grab_keys->action_keys[XNEE_GRAB_STOP].str) ? xd->grab_keys->action_keys[XNEE_GRAB_STOP].str: "0" );
-  fprintf (out,   "%s        %s\n",
+  fprintf (out,   "# %s        %s\n",
 	   XNEE_PAUSE_KEY,
 	   (xd->grab_keys->action_keys[XNEE_GRAB_PAUSE].str) ? xd->grab_keys->action_keys[XNEE_GRAB_PAUSE].str: "0" );
-  fprintf (out,   "%s       %s\n",
+  fprintf (out,   "# %s       %s\n",
 	   XNEE_RESUME_KEY,
 	   (xd->grab_keys->action_keys[XNEE_GRAB_RESUME].str) ? xd->grab_keys->action_keys[XNEE_GRAB_RESUME].str: "0" );
-  fprintf (out,   "%s       %s\n",
+  fprintf (out,   "# %s       %s\n",
 	   XNEE_INSERT_KEY,
 	   (xd->grab_keys->action_keys[XNEE_GRAB_INSERT].str) ? xd->grab_keys->action_keys[XNEE_GRAB_INSERT].str: "0" );
-  fprintf (out,   "%s         %s\n",
+  fprintf (out,   "# %s         %s\n",
 	   XNEE_EXEC_KEY,
 	   (xd->grab_keys->action_keys[XNEE_GRAB_EXEC].str) ? xd->grab_keys->action_keys[XNEE_GRAB_EXEC].str: "0" );
-  fprintf (out,   "%s         %s\n",
+  fprintf (out,   "# %s         %s\n",
 	   XNEE_EXEC_PROGRAM,
 	   (xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str) 
 	   ? xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str: XNEE_EXEC_NO_PROG );
