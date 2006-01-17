@@ -236,6 +236,11 @@ replay-resolution
 @tab  Sets the replay resolution to the string 
 
 @item
+replay-offset
+@tab  int,int
+@tab  Sets the replay offset to (x,y) during replay
+
+@item
 resolution-adjustment
 @tab  boolean
 @tab  Use resolution adjustment, even if the recored resolution differs from the one to replay to

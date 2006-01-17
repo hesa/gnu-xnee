@@ -489,6 +489,21 @@ Xnee will now replay the events recorded in the sessions file
 @code{mouse-rec.xnl} as if the screen has a resolution of 800x600. 
 
 
+@subsection Using a offset when replaying
+@cindex     Using a offset when replaying
+If a session was recording a centered window with a window manager 
+and is to bo replayed without a window manager (still centered) you 
+can use the offset switch to make Xnee replay the events in order to
+get the coordinates right.
+@example
+@code{cnee --replay --file mouse-rec.xnl \ }
+@code{--replay-offset 12,-7}
+@end example
+Xnee will now replay the events recorded in the sessions file 
+@code{mouse-rec.xnl} and adding 12 to the x coordinate and subtract
+7 from the y coordinate. 
+
+
 @subsection Using no resolution translation
 @cindex     Using no resolution translation
 If a session was recorded on a screen with another resolution than the
