@@ -1060,14 +1060,14 @@ xnee_infopage (FILE *fd)
   char *descr;
 
   fprintf (fd ,"\\input texinfo  @c -*- Texinfo -*-\n");
-
-  fprintf (fd ,"@c %**start of header\n");
+  /* Thanks Peter for you remark on %% */
+  fprintf (fd ,"@c %%**start of header\n");
   fprintf (fd ,"@setfilename "XNEE_CLI".info\n");
-  fprintf (fd ," @set EDITION %s\n", VERSION);
-  fprintf (fd ," @set VERSION %s\n", VERSION);
+  fprintf (fd ,"@set EDITION %s\n", VERSION);
+  fprintf (fd ,"@set VERSION %s\n", VERSION);
   fprintf (fd ,"@settitle " XNEE_CLI " Manual \n");
   fprintf (fd ,"@setchapternewpage off\n");
-  fprintf (fd ,"@c %**end o\n");
+  fprintf (fd ,"@c %%**end o\n");
 
 
 
