@@ -59,7 +59,7 @@ test-cli:
 info: cnee.info 
 
 
-cnee.texi: cnee
+cnee.texi: cnee$(EXEEXT)
 	./cnee --infopage > $@
 
 
