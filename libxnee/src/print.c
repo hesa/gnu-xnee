@@ -949,7 +949,7 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,   "# %s         %s\n",
 	   XNEE_EXEC_KEY,
 	   (xd->grab_keys->action_keys[XNEE_GRAB_EXEC].str) ? xd->grab_keys->action_keys[XNEE_GRAB_EXEC].str: "0" );
-  fprintf (out,   "# %s         %s\n",
+  fprintf (out,   "%s         %s\n",
 	   XNEE_EXEC_PROGRAM,
 	   (xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str) 
 	   ? xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str: XNEE_EXEC_NO_PROG );
