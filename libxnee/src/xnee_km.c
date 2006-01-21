@@ -479,7 +479,12 @@ xnee_check_key(xnee_data *xd)
 int 
 xnee_handle_rec_key(xnee_data *xd)
 {
+  static int exec_counter = 0 ;
+  char *exec_prog ;
+  int len;
+
   int ret=XNEE_OK;
+
   xnee_verbose ((xd, " ---> xnee_handle_rec_km\n"));
 
 
@@ -533,18 +538,28 @@ xnee_handle_rec_key(xnee_data *xd)
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_EXEC)
     {
-      char *exec_prog;
+      exec_counter++;
+
+      len = strlen (xnee_get_exec_prog(xd));
+      len = len + 10 ; 
+    
+      exec_prog = (char*) calloc(len, sizeof(char));
+      
+      sprintf(exec_prog, "%s %d &", xnee_get_exec_prog(xd), exec_counter);
+      
       xnee_verbose ((xd, " ---  xnee_handle_rec_km: EXEC \n"));
       feedback (xd, "Xnee exec received");
-      exec_prog = xnee_get_exec_prog(xd);
+
       if (exec_prog==NULL)
-	fprintf (xd->out_file, "%s   \n",XNEE_EXEC_MARK);
+	{
+	  fprintf (xd->out_file, "%s\n",XNEE_EXEC_MARK);
+	}
       else
 	{
 	  fprintf (xd->out_file, "%s    %s\n", XNEE_EXEC_MARK, exec_prog);
 	  system ( exec_prog );
+	  free(exec_prog);
 	}
-
 
       ret=XNEE_GRAB_EXEC;
     }

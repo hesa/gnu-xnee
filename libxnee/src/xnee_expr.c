@@ -674,12 +674,25 @@ xnee_expression_handle_comment(xnee_data *xd, char *tmp)
 static int
 xnee_expression_handle_action(xnee_data *xd, char *tmp)
 {
+  static int exec_counter = 0 ;
+  char *exec_prog ;
+  int len;
+
   xnee_verbose ((xd, "handling action: %s\n", tmp));
+
   if (strncmp(XNEE_EXEC_MARK,tmp,strlen(XNEE_EXEC_MARK))==0)
   {
-    char *exec_prog ;
+    exec_counter++;
+    xnee_verbose ((xd, "handling exec %d\n", xnee_get_exec_prog(xd)));
+    
+    len = strlen (xnee_get_exec_prog(xd));
+    len = len + 10 ; 
+    
+    xnee_verbose ((xd, "handling exec\n"));
+    exec_prog = (char*) calloc(len, sizeof(char));
 
-    exec_prog = xnee_get_exec_prog(xd);
+    sprintf(exec_prog, "%s %d &", xnee_get_exec_prog(xd), exec_counter);
+
     if (exec_prog != NULL)
       {
 	system (exec_prog);
@@ -694,6 +707,11 @@ xnee_expression_handle_action(xnee_data *xd, char *tmp)
       }
     system("xterm -fg yellow -bg blue");
   }
+  else
+    {
+      xnee_verbose ((xd, "handling exec %d\n", xnee_get_exec_prog(xd)));
+      getchar();
+    }
   return -1;
 }
 
