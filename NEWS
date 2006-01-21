@@ -9,6 +9,9 @@ Changes in 2.04
 
      * x,y offset during replay
 
+     * Execution counter added as argument to the program 
+       executed by Xnee (using the --exec-* options).
+
   New Options for cnee
 
      --infopage (prints texinfo page for cnee)

@@ -1,4 +1,15 @@
-2006-01-19    <hesa@localhost.localdomain>
+	* libxnee/src/print.c: 
+	
+	Re-added printout of exec-str
+	
+2006-01-21    <hesa@gnu.org>
+
+	* libxnee/src/xnee_expr.c: 
+	* libxnee/src/xnee_km.c (xnee_handle_rec_key): 
+
+	Added nr of execution to program executed by Xnee
+
+2006-01-19    <hesa@gnu.org>
 
 	* cnee/src/Makefile.am (cnee.texi): 
 
