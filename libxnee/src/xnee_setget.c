@@ -627,7 +627,7 @@ xnee_set_exec_prog (xnee_data *xd, const char *prog)
 
   xnee_verbose((xd, "xnee_set_exec_prog\n"));
 
-  xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str =strdup(prog);
+  xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str = strdup(prog);
   return XNEE_OK;
 }
 
