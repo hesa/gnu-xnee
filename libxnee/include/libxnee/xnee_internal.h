@@ -100,6 +100,7 @@ enum _xnee_data_types {
   XNEE_ACTION_DATA       ,
   XNEE_PRIMITIVE_DATA    ,
   XNEE_PROJECT_INFORMATION_DATA,
+  XNEE_NEW_WINDOW_DATA,
   XNEE_NO_DATA          
 } xnee_data_types ;
 
@@ -178,6 +179,12 @@ enum _xnee_mode {
 #define XNEE_RETURN_VOID_IF_ERR(ret_val) \
    if (ret_val != XNEE_OK)               \
    {                                     \
+      const char *xnee_macro_tmp ;                                      \
+      (void) fprintf (stderr, "Xnee error\n");                          \
+      xnee_macro_tmp = xnee_get_err_description (ret);                  \
+      (void) fprintf (stderr, "Description: %s\n", xnee_macro_tmp );    \
+      xnee_macro_tmp = xnee_get_err_solution (ret) ;                    \
+      (void) fprintf (stderr, "Solution:    %s\n", xnee_macro_tmp);     \
       return;                            \
    }
 
