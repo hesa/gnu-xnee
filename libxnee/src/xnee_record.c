@@ -38,6 +38,7 @@
 #include "libxnee/xnee_error.h"
 #include "libxnee/xnee_session.h"
 #include "libxnee/xnee_utils.h"
+#include "libxnee/xnee_strings.h"
 
 
 #ifdef DEBUG_DISPATCHER
@@ -125,8 +126,15 @@ get_screen_nr(Display *dpy, Window recorded_root)
 int
 xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xrecintd)
 {
+   static int last_record_window_pos_win=0;
+   static int last_record_window_pos_par=0;
    XRecordDatum *xrec_data ;
    unsigned int  event_type ;
+   XWindowAttributes window_attributes_return;
+   int rx;
+   int ry;
+   Window dummy_window;
+   int new_window_pos;
    FILE *out ;
    KeyCode kc;
    int do_print;
@@ -138,7 +146,7 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
    {
       return XNEE_RECORD_FAILURE;
    }
-
+   
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   event_type = (unsigned int)xrec_data->type ;
   out = xd->out_file;
@@ -294,6 +302,90 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 		       xrecintd->server_time
 		       );
 	      break;
+	    case ReparentNotify:
+
+	      new_window_pos = xnee_get_new_window_pos(xd);
+	      
+
+	      /* 
+	       * new_window_pos == 0
+	       *   means print event to file
+	       *
+	       * new_window_pos == 1
+	       *   print NEW-WINDOW to file
+	       *
+	       * new_window_pos == 2
+	       *   means we shall print event
+	       *   and store NEW-WINDOW to file
+	       */
+	      if (new_window_pos == 0)
+		{
+		  fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
+			   event_type,
+			   xrecintd->server_time );
+		}
+	      else 
+		{
+		  /*
+		    printf ("serialised reparent: %d , %d (%d) ,%d (%d)\n",
+		    xrec_data->event.u.reparent.event,
+		    xrec_data->event.u.reparent.window,
+		    last_record_window_pos_win,
+		    xrec_data->event.u.reparent.parent,
+		    last_record_window_pos_par);
+		  */
+			  
+
+		  XGetWindowAttributes(xd->grab, 
+				       xrec_data->event.u.reparent.window,
+				       &window_attributes_return);
+
+		  XTranslateCoordinates (xd->grab, 
+					 xrec_data->event.u.reparent.window, 
+					 window_attributes_return.root, 
+					 -window_attributes_return.border_width,
+					 -window_attributes_return.border_width,
+					 &rx, 
+					 &ry, 
+					 &dummy_window);
+
+		  /* 
+		   * Prevent the same window pos to be printed more than once 
+		   */
+		  if ( (last_record_window_pos_win != 
+			xrec_data->event.u.reparent.window) ||
+		       (last_record_window_pos_par != 
+			xrec_data->event.u.reparent.parent) )
+		    {
+		      fprintf (out, 
+			       "%s:%d,%d:%d,%d,%d,%d,%d,%d:%dx%d+%d+%d\n", 
+			       XNEE_NEW_WINDOW_MARK,
+			       rx,
+			       ry,
+			       xrec_data->event.u.reparent.event,
+			       xrec_data->event.u.reparent.window,
+			       xrec_data->event.u.reparent.parent,
+			       xrec_data->event.u.reparent.x,
+			       xrec_data->event.u.reparent.y,
+			       xrec_data->event.u.reparent.override,
+			       window_attributes_return.x,
+			       window_attributes_return.y,
+			       window_attributes_return.width,
+			       window_attributes_return.height
+			       );
+		      last_record_window_pos_win = 
+			xrec_data->event.u.reparent.window;
+		      last_record_window_pos_par = 
+			xrec_data->event.u.reparent.parent;
+		    }
+		  if (new_window_pos == 2)
+		    {
+		      fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
+			       event_type,
+			       xrecintd->server_time );
+		    }
+		}
+	      break;
 	    default:
 	      XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 6  \n"  ));
 	      fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
@@ -397,12 +489,17 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
       break;   
     case XRecordClientStarted:
       xnee_verbose((xd,  "ClientStarted \n"));
+      fprintf(stderr,  "ClientStarted %d %d \n", 
+	      data->id_base, 
+	      data->data);
       break;
     case XRecordClientDied:
       xnee_verbose((xd,  "ClientDied \n"));
+      fprintf(stderr,  "ClientDied \n");
       break;
     case XRecordEndOfData:
       xnee_verbose((xd,  "EndOfData \n"));
+      fprintf(stderr,  "EndOfData \n");
       break; 
     default:
       xnee_print_error( "Case: Default reached in Dispatch (...) \n");
@@ -588,6 +685,11 @@ xnee_setup_recordext (xnee_data *xd)
     | XRecordFromClientTime  
     | XRecordFromClientSequence; 
 
+  if (xnee_is_recorder(xd)==False)
+    {
+      return XNEE_OK;
+    }
+  
   ret = xnee_set_ranges(xd);
   XNEE_RETURN_IF_ERR (ret);
   

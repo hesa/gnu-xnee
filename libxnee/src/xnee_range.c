@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 
+ *                 2005, 2006 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -58,8 +59,49 @@
 
 static struct xnee_ranges  myxrs           ;
 static int    need_init          =  1      ;
+static int    added_reparent     =  0      ;
 struct xnee_ranges *xrs          = &myxrs  ;
 
+static int
+xnee_do_workaround(xnee_data *xd)
+{
+  int ret = XNEE_OK; 
+
+  if (xnee_get_new_window_pos(xd)>0)
+    {
+      if ( xnee_is_type_nr_set(xd, XNEE_DELIVERED_EVENT, ReparentNotify))
+	{
+	  xnee_set_new_window_pos_value(xd,2);
+	}
+      else
+	{
+	  xnee_parse_range (xd, XNEE_DELIVERED_EVENT, "ReparentNotify");
+	  added_reparent = 1 ;
+	}
+    }
+  return ret;
+}
+
+static int
+xnee_undo_workaround(xnee_data *xd)
+{
+  int ret = XNEE_OK; 
+  int w_pos= xnee_get_new_window_pos(xd);
+
+  if (added_reparent)
+    {
+      xnee_rem_data_from_range_str (xd,
+				    XNEE_DELIVERED_EVENT,
+				    "ReparentNotify") ;
+    } 
+
+  if (w_pos > 0)
+    {
+      xnee_set_new_window_pos_value(xd,1);
+    }
+
+  return ret;
+}
 
 
 /**************************************************************
@@ -198,9 +240,13 @@ xnee_add_to_list2(int type, int ev)
    if (type==XNEE_EVENT)
      {
        if ((ev>=KeyPress)&&(ev<=MotionNotify))
-	 type=XNEE_DEVICE_EVENT;
+	 {
+	   type=XNEE_DEVICE_EVENT;
+	 }
        else
-	 type=XNEE_DELIVERED_EVENT;
+	 {
+	   type=XNEE_DELIVERED_EVENT;
+	 }
      }
    xrp = &xrs->type[type];
 
@@ -210,10 +256,12 @@ xnee_add_to_list2(int type, int ev)
      }
       
    for (i=0;i<xrp->index;i++)
-      if (xrp->data[i]==ev)
-      {
-         return XNEE_OK;
-      }
+     {
+       if (xrp->data[i]==ev)
+	 {
+	   return XNEE_OK;
+	 }
+     }
 
    if (xrp->index >=(xrp->size-1) )
    {
@@ -229,6 +277,12 @@ xnee_add_to_list2(int type, int ev)
       }
    }
    xrp->data[xrp->index++]=ev;
+   /*
+   printf (" added %d %d\n",
+	   type, ev);
+   xnee_print_list();
+
+   */
    return XNEE_OK;
 }
 
@@ -520,20 +574,43 @@ int
 xnee_get_nr_of_data (int type)
 {
    if (xrs->type==NULL)
-      return -1;
+     {
+       return -1;
+     }
    else
-      return xrs->type[type].index;
+     {
+       return xrs->type[type].index;
+     }
 }
 
 int *
 xnee_get_data (int type)
 {
    if (xrs->type==NULL)
-      return NULL;
+     {
+       return NULL;
+     }
    else
-      return xrs->type[type].data;
+     {
+       return xrs->type[type].data;
+     }
 }
 
+int 
+xnee_is_type_nr_set(xnee_data *xd, int type, int nr)
+{
+  int i ; 
+
+  for (i=0; i<xrs->type[type].index ;i++)
+    {
+      if ( xrs->type[type].data[i] == nr )
+	{
+	  return True;
+	}
+    }
+
+  return False;
+}
 
 
 int 
@@ -541,16 +618,24 @@ xnee_set_ranges(xnee_data *xd)
 {
    int i ; 
    int j ; 
-
+   int first = -1;
+   int last  = -1;
+   int this  ;
+   
 
    xnee_bsort_all();
+   
+   if (xnee_is_recorder(xd)!=False)
+     {
+       xnee_undo_workaround(xd);
+       xnee_do_workaround(xd);
+     }
 
 
-   for (j=0; j<XNEE_NR_OF_TYPES ;j++)
+  for (j=0; j<XNEE_NR_OF_TYPES ;j++)
    {
-      int first = -1;
-      int last  = -1;
-      int this  ;
+      first = -1;
+      last  = -1;
       for (i=0; i<xrs->type[j].index ;i++)
 	{
 	  this = xrs->type[j].data[i] ;
