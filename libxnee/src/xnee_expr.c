@@ -43,6 +43,7 @@
 #include "libxnee/xnee_utils.h"
 #include "libxnee/xnee_plugin.h"
 #include "libxnee/xnee_display.h"
+#include "libxnee/xnee_window.h"
 
 
 
@@ -74,6 +75,9 @@ xnee_expression_handle_prim(xnee_data *xd, char *tmp, xnee_intercept_data * xind
 
 static int
 xnee_expression_handle_projinfo(xnee_data *xd, char *tmp);
+
+static int
+xnee_expression_handle_newwindow(xnee_data *xd, char *tmp);
 
 /*************************************************************
  *    public api 
@@ -126,7 +130,11 @@ xnee_expression_handle_session(xnee_data *xd,
   do_continue = xnee_expression_handle_mark(xd, tmp);
   if (do_continue==XNEE_MARK_DATA) { return (do_continue); }
   
-  /* Is it a mark string */
+   /* Is it a new window */
+  do_continue = xnee_expression_handle_newwindow(xd, tmp);
+  if (do_continue==XNEE_NEW_WINDOW_DATA) { return (do_continue); }
+  
+  /* is it? ..., continue anyway */
   return (do_continue);
 }
 
@@ -309,9 +317,13 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   else if (!strncmp(XNEE_FIRST_LAST,tmp,strlen(XNEE_FIRST_LAST)))
     {
       if (xnee_check_true(range))
-	ret = xnee_set_first_last(xd);
+	{
+	  ret = xnee_set_first_last(xd);
+	}
       else if (xnee_check_false(range))
-	ret = xnee_unset_first_last(xd);
+	{
+	  ret = xnee_unset_first_last(xd);
+	}
       else
 	{
 	  xnee_verbose((xd, "First last mode is invalid ... bailing out\n"));
@@ -322,9 +334,13 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   else if (!strncmp(XNEE_SYNC_MODE,tmp,strlen(XNEE_SYNC_MODE)))
     {
       if (xnee_check_true(range))
+	{
 	  xd->sync = True;
+	}
       else if (xnee_check_false(range))
+	{
 	  xd->sync = False;
+	}
       else
 	{
 	  xnee_verbose((xd, "Sync is invalid ... bailing out\n"));
@@ -451,6 +467,10 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   else if (!strncmp(XNEE_RECORDED_RESOLUTION,tmp,strlen(XNEE_RECORDED_RESOLUTION)))
     {
       ret = xnee_set_rec_resolution (xd, range);
+    }
+  else if (!strncmp(XNEE_NEW_WINDOW,tmp,strlen(XNEE_NEW_WINDOW)))
+    {
+      xnee_set_new_window_pos_value ( xd, atoi(range));
     }
   else if (!strncmp(XNEE_LOOPS,tmp,strlen(XNEE_LOOPS))) 
     {
@@ -682,17 +702,9 @@ xnee_expression_handle_action(xnee_data *xd, char *tmp)
 
   if (strncmp(XNEE_EXEC_MARK,tmp,strlen(XNEE_EXEC_MARK))==0)
   {
-    exec_counter++;
-    xnee_verbose ((xd, "handling exec %d\n", xnee_get_exec_prog(xd)));
-    
-    len = strlen (xnee_get_exec_prog(xd));
-    len = len + 10 ; 
-    
-    xnee_verbose ((xd, "handling exec\n"));
-    exec_prog = (char*) calloc(len, sizeof(char));
 
-    sprintf(exec_prog, "%s %d &", xnee_get_exec_prog(xd), exec_counter);
 
+    exec_prog = xnee_get_exec_prog(xd);
     if (exec_prog != NULL)
       {
 	system (exec_prog);
@@ -722,6 +734,55 @@ xnee_expression_handle_mark(xnee_data *xd, char *tmp)
       return -1;
 }
 
+static int
+xnee_expression_handle_newwindow(xnee_data *xd, char *tmp)
+{
+
+  xnee_win_pos xwp;
+  int ret;
+
+  int event ;
+  int window ;
+  int parent ;
+  int rx;
+  int ry;
+  int x ;
+  int y ;
+  int override ;
+
+  xnee_verbose ((xd, "---> xnee_expression_handle_newwindow: %s\n", tmp));
+
+  if (strncmp(XNEE_NEW_WINDOW_MARK,tmp,strlen(XNEE_NEW_WINDOW_MARK))==0)
+    {
+      tmp = tmp+strlen(XNEE_NEW_WINDOW_MARK);
+      
+      sscanf (tmp,  ":%d,%d:%d,%d,%d,%d,%d,%d:%dx%d+%d+%d\n", 
+	      &xwp.x,
+	      &xwp.y,
+	      &event,
+	      &window,
+	      &parent,
+	      &x,
+	      &y,
+	      &override,
+	      &rx,
+	      &ry,
+	      &xwp.width,
+	      &xwp.height);
+
+      ret = xnee_window_add_session(xd, &xwp);
+      XNEE_RETURN_IF_ERR(ret);
+
+      ret = xnee_window_try_move(xd);
+      XNEE_RETURN_IF_ERR(ret);
+      
+      xnee_verbose ((xd, "<---  : xnee_expression_handle_newwindow\n"));
+      return XNEE_NEW_WINDOW_DATA;
+    }      
+
+  xnee_verbose ((xd, "<--- xnee_expression_handle_newwindow: %s\n", tmp));
+  return -1;
+}
 
 
 static char *
