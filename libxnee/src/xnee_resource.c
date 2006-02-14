@@ -212,6 +212,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
   int ret=1;  
   char *range;
   int len=0;
+  int val;
   
   len=strlen(tmp);
 
@@ -381,6 +382,22 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
       if (strlen(range)>0)
 	{
          xnee_add_display_list ( xd, range);
+	}
+    }
+  else if (!strncmp(XNEE_NEW_WINDOW,tmp,strlen(XNEE_NEW_WINDOW)))
+    {
+      range=strstr (tmp, " ");
+      range += 1 ;
+      if ( sscanf (range, "%d", &val) == 1)
+	{
+	  if (strlen(range)>0)
+	    {
+	      xnee_set_new_window_pos_value ( xd, range);
+	    }
+	}
+      else
+	{
+	  return XNEE_SYNTAX_ERROR;
 	}
     }
   else if (!strncmp(XNEE_DEVICE_EVENT_STR,tmp,strlen(XNEE_DEVICE_EVENT_STR)))

@@ -1068,3 +1068,34 @@ xnee_get_replay_offset_y(xnee_data *xd)
   return xd->res_info.y_offset ;
 }
 
+int
+xnee_get_new_window_pos (xnee_data *xd)
+{
+  xnee_verbose((xd, "xnee_set_new_window_pos()\n"));
+  return xd->xnee_info.store_window_pos;
+}
+
+int
+xnee_set_new_window_pos (xnee_data *xd)
+{
+  xnee_verbose((xd, "xnee_set_new_window_pos()\n"));
+  xd->xnee_info.store_window_pos=1;
+  return XNEE_OK;
+}
+
+int
+xnee_set_new_window_pos_value (xnee_data *xd, int val)
+{
+  xnee_verbose((xd, "xnee_set_new_window_pos(%d)\n", val));
+  xd->xnee_info.store_window_pos=val;
+  return XNEE_OK;
+}
+
+int
+xnee_unset_new_window_pos (xnee_data *xd)
+{
+  xnee_verbose((xd, "xnee_unset_new_window_pos()\n"));
+  xd->xnee_info.store_window_pos=0;
+  return XNEE_OK;
+}
+
