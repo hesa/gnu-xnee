@@ -38,6 +38,7 @@ libxnee_a_SOURCES = xnee.c  \
 	xnee_display.c \
 	xnee_settings.c \
 	xnee_plugin.c \
+	xnee_window.c \
 	feedback.c 
 
 EXTRA_DIST = ../include/libxnee/xnee.h     \
@@ -71,6 +72,7 @@ EXTRA_DIST = ../include/libxnee/xnee.h     \
 	../include/libxnee/xnee_settings.h \
 	../include/libxnee/xnee_plugin.h \
 	../include/libxnee/xnee_internal.h \
+	../include/libxnee/xnee_window.h \
 	../include/libxnee/feedback.h 
 
 
