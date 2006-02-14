@@ -1,5 +1,85 @@
-	* libxnee/src/print.c: 
+2006-02-14  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_strings.c: 
+
+	Added: XNEE_NEW_WINDOW_MARK, XNEE_NEW_WINDOW
+
+	* libxnee/src/xnee_session.c (xnee_init): 
+
+	Store window pos (xd->xnee_info.store_window_pos) defaults to 0
+
+	* cnee/src/parse.c: 
+
+	Added new option: --record-window-position (-rwp)
+
 	
+	* libxnee/include/libxnee/xnee_window.h: 
+
+	New file
+
+	* libxnee/include/libxnee/xnee_strings.h: 
+
+	Added: XNEE_NEW_WINDOW_MARK, XNEE_NEW_WINDOW
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+
+	Added functions: xnee_set_new_window_pos, 
+	xnee_unset_new_window_pos
+
+	* libxnee/include/libxnee/xnee_range.h: 
+
+	Added function: xnee_is_type_nr_set
+
+	* libxnee/include/libxnee/xnee_internal.h
+	(XNEE_RETURN_VOID_IF_ERR): 
+
+	Macro now prints out err description
+
+	* libxnee/include/libxnee/xnee.h: 
+
+	Added store_window_pos to xnee_record_init_data
+
+	* libxnee/src/Makefile.am: 
+
+	Added: xnee_window.c ../include/libxnee/xnee_window.h 
+
+	* libxnee/src/xnee_window.c: 
+
+	New file
+
+	* libxnee/src/xnee_resource.c: 
+	* libxnee/src/xnee_setget.c: 
+	* libxnee/src/xnee_replay.c: 
+	* libxnee/src/xnee_record.c: 
+
+	Added functions and code for new window pos. 
+
+	* libxnee/src/xnee_range.c (xnee_add_range_str): 
+
+	Added functions and code for new window pos. 
+
+	* libxnee/src/xnee_km.c: 
+
+	Corrected code for EXEC functionality. 
+
+	* libxnee/src/xnee_grab.c: 
+
+	Added inclusion of <X11/Xlib.h>
+
+	* libxnee/src/xnee_expr.c: 
+
+	Added functions and code for new window pos. 
+
+	Corrected code for EXEC functionality.
+	
+	* libxnee/src/xnee_error.c: 
+
+	Type fixed, Added error XNEE_WINDOW_POS_ADJ_ERROR
+
+	* libxnee/src/print.c: 
+
+	Added window pos printout
+
 	Re-added printout of exec-str
 	
 2006-01-21    <hesa@gnu.org>
