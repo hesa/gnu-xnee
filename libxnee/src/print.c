@@ -1077,6 +1077,15 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
 	   XNEE_SYNC_MODE,
 	   xd->sync ); 
 
+  /* New Window Position adjustment */
+  fprintf (out,  "\n# New Window Position adjustment\n");
+  fprintf (out,  "#   0 : not using window position adjustment\n");
+  fprintf (out,  "#   1 : only using window position adjustment\n");
+  fprintf (out,  "#   2 : window position adj. and recording ReparentNotify\n");
+  fprintf (out,    "%s       %d\n",
+	   XNEE_NEW_WINDOW,
+	   xd->xnee_info.store_window_pos ); 
+
   fprintf (out,  "\n# Human printout of X11 data (instead of Xnee format)\n");
   fprintf (out,  "%s  %d\n",
 	   XNEE_HUMAN_PRINTOUT,
