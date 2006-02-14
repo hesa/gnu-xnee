@@ -95,6 +95,7 @@ enum return_values
     XNEE_SCREEN_MISSING    ,
     XNEE_RANGE_FAILURE     ,
     XNEE_BAD_OFFSET        ,
+    XNEE_WINDOW_POS_ADJ_ERROR     ,
     XNEE_LAST_ERROR
   } _return_values;
   
@@ -377,7 +378,8 @@ typedef struct
 {
   Bool            first_last     ;  /*!< when true, only first and last motion events are printed */
   Bool            last_motion    ;  /*!< was the last event a motion event */
-  Bool            store_mouse_pos;  /*!< shall we save the mouse position before starting recording  */
+  int               store_mouse_pos;  /*!< shall we save the mouse position before starting recording */
+  Bool            store_window_pos;  /*!< shall we store every new window position   0=don't, 1=only for window pos, 2=window pos and user resuested recording*/
   unsigned long   server_time    ;  /*!< when the X11 data did occur          */
   int             x              ;  /*!< last MotionNotify RootX-value        */
   int             y              ;  /*!< last MotionNotify RootY-value        */
