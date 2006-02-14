@@ -42,21 +42,13 @@
 #include "libxnee/xnee_error.h"
 #include "libxnee/xnee_session.h"
 #include "libxnee/xnee_utils.h"
+#include "libxnee/xnee_window.h"
 
 static int time_out_counter = 0;
 static int diff_counter     = 0;
 
 static int last_diff;
 static int last_logread=1;
-
-
-#ifdef USE_OBSOLETE
-static void 
-xnee_replay_m_delay (unsigned long usecs)
-{
-  usleep ( usecs ) ;
-}
-#endif
 
 
 /*
@@ -190,44 +182,6 @@ xnee_replay_synchronize (xnee_data* xd)
 }
 
 
-#ifdef USE_OBSOLETE
-/**************************************************************
- *                                                            *
- * xnee_replay_read_protocol                                  *
- *                                                            *
- *                                                            *
- **************************************************************/
-int 
-xnee_replay_read_protocol (xnee_data* xd, xnee_intercept_data * xindata) 
-{
-  #define TMP_BUF_SIZE 256
-  char tmp[TMP_BUF_SIZE] ;
-  int eofile = 0 ;
-  char *ret;
-
-  strncpy(tmp, TMP_BUF_SIZE, "");
-  if ( xd->data_file == NULL)
-    {
-      xnee_verbose((xd, "Using stdin as file\n"));
-      xd->data_file=stdin;
-    }
-  ret = fgets(tmp, 256, xd->data_file);
-
-  if ( tmp == NULL) 
-    {
-      return -1;
-    }
-
-  /*
-    eofile = xnee_expression_handle_project(xd,
-    tmp,
-    xindata);
-    
-    xnee_verbose((xd,"replay data handled (or perhaps not) '%s'\n", tmp)); 
-  */
-  return eofile;
-}
-#endif
 
 
 
@@ -361,17 +315,6 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
 }
 
 
-#ifdef USE_OBSOLETE
-static int
-print_time(void)
-{
-  struct timeval tv;
-  gettimeofday(&tv, NULL); 
-  printf ("%lu:%lu\n", tv.tv_sec, tv.tv_usec);
-  return XNEE_OK;
-}
-#endif
-
 /**************************************************************
  *                                                            *
  * xnee_replay_main_loop                                      *
@@ -453,6 +396,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		}
 	    }
 	}
+       ret = xnee_set_ranges(xd);
+       XNEE_RETURN_IF_ERR (ret);
     }
 
   if ( 
@@ -819,10 +764,16 @@ xnee_setup_rep_recording(xnee_data *xd)
 void 
 xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
 {
+  static int last_record_window_pos_win=0;
+  static int last_record_window_pos_par=0;
+  
   XRecordDatum *xrec_data;
   int           type;
   xnee_data    *xd;
-  
+  int rec_window_pos = 0;
+  XWindowAttributes window_attributes_return;
+  int ret;
+
   if (!data->data)
     {
       return;
@@ -846,8 +797,59 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
 	{
 	  XNEE_SYNC_DEBUG ( (stderr, "DISPATCH EVENT   %d \n",type  ) );
 	  xnee_verbose((xd, "GOT A EVENT:       %d \n", type));
-/* 	  xnee_replay_buffer_handle (xd, XNEE_EVENT, type, XNEE_RECEIVED); */
- 	  xnee_replay_buffer_handler (xd, XNEE_EVENT, type, XNEE_RECEIVED); 
+	  
+	  if ( type == ReparentNotify )
+	    {
+	      rec_window_pos = xnee_get_new_window_pos(xd);
+	      /* rec_window_pos interpretation:
+	       *   0  used to sync
+	       *   1  used to adjust window pos
+	       *   2 both of the above 
+	       *   * error
+	       */
+	      if ( rec_window_pos == 0 )
+		{
+		  /* only sync */
+		  xnee_replay_buffer_handler (xd, XNEE_EVENT, type, XNEE_RECEIVED); 
+		}
+	      else if ( ( rec_window_pos == 1 ) || ( rec_window_pos == 2 ) )
+		{
+		  XGetWindowAttributes(xd->grab, 
+				       xrec_data->event.u.reparent.window,
+				       &window_attributes_return);
+
+		  /* 
+		   * Prevent the same window pos to be used more than once
+		   */
+		  if ( (last_record_window_pos_win != 
+			xrec_data->event.u.reparent.window) ||
+		       (last_record_window_pos_par != 
+			xrec_data->event.u.reparent.parent) )
+		    {
+
+		      xnee_window_add_attribute_received(xd, 
+							&window_attributes_return,
+							xrec_data->event.u.reparent.window);
+
+		      ret = xnee_window_try_move(xd);
+		      XNEE_RETURN_VOID_IF_ERR(ret);
+
+		      last_record_window_pos_win = 
+			xrec_data->event.u.reparent.window;
+		      last_record_window_pos_par = 
+			xrec_data->event.u.reparent.parent;
+		    }
+		}
+	      
+	      if ( rec_window_pos == 2 )
+		{
+		  xnee_replay_buffer_handler (xd, XNEE_EVENT, type, XNEE_RECEIVED); 
+		}
+	    }
+	  else
+	    {
+	      xnee_replay_buffer_handler (xd, XNEE_EVENT, type, XNEE_RECEIVED); 
+	    }
 	}
       else 
 	{
