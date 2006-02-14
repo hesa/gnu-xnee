@@ -268,6 +268,7 @@ xnee_init(xnee_data* xd)
   xd->sync          = True   ; 
   xd->mode          = XNEE_NOMODE   ; 
 
+  xd->xnee_info.store_window_pos = 0;
   
   /*@access FILE@*/
   xd->data_file     = (FILE*) stdin  ;
