@@ -557,4 +557,10 @@ xnee_set_application_parameters(xnee_data *xd, char **argv);
 char **
 xnee_get_application_parameters(xnee_data *xd);
 
+int
+xnee_set_new_window_pos (xnee_data *xd);
+
+int
+xnee_unset_new_window_pos (xnee_data *xd);
+
 #endif /* XNEE_SETGET_H */ 
