@@ -3,7 +3,8 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- * Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef 
+ * Copyright (C) 1999, 2000, 2001, 2002, 
+ *               2003, 2004, 2005, 2006 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -479,11 +480,11 @@ xnee_check_key(xnee_data *xd)
 int 
 xnee_handle_rec_key(xnee_data *xd)
 {
-  static int exec_counter = 0 ;
+
+  int    ret=XNEE_OK;
+  static int exec_ctr = 0; /* Keeps track of nr of exec grabs */
   char *exec_prog ;
   int len;
-
-  int ret=XNEE_OK;
 
   xnee_verbose ((xd, " ---> xnee_handle_rec_km\n"));
 
@@ -507,6 +508,7 @@ xnee_handle_rec_key(xnee_data *xd)
       break;
 
     case XNEE_GRAB_EXEC :
+      exec_ctr++;
       feedback (xd, "Xnee exec received");
       break;
 
@@ -538,21 +540,20 @@ xnee_handle_rec_key(xnee_data *xd)
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_EXEC)
     {
-      exec_counter++;
-
+      xnee_verbose ((xd, " ---  xnee_handle_rec_km: EXEC (nr %d)\n", exec_ctr));
       len = strlen (xnee_get_exec_prog(xd));
       len = len + 10 ; 
     
       exec_prog = (char*) calloc(len, sizeof(char));
       
-      sprintf(exec_prog, "%s %d &", xnee_get_exec_prog(xd), exec_counter);
+      sprintf(exec_prog, "%s %d &", xnee_get_exec_prog(xd), exec_ctr);
       
       xnee_verbose ((xd, " ---  xnee_handle_rec_km: EXEC \n"));
       feedback (xd, "Xnee exec received");
 
       if (exec_prog==NULL)
 	{
-	  fprintf (xd->out_file, "%s\n",XNEE_EXEC_MARK);
+	  fprintf (xd->out_file, "%s   \n",XNEE_EXEC_MARK);
 	}
       else
 	{
