@@ -127,7 +127,7 @@ char error_descr_solut[256][256] =
 
     /* XNEE_SYNTAX_ERROR */    
     "Xnee syntax error",
-    "Make sure all Xnee expressiona are valid",
+    "Make sure all Xnee expressions are valid",
 
     /* XNEE_UNKNOWN_GRAB_MODE */
     "Requested grab mode is unknown",
@@ -206,7 +206,11 @@ char error_descr_solut[256][256] =
     "Fatal error while setting replay offset",
     "Xnee could not adjust replay offsets. Report the problem",
 
-    /* XNEE_LAST_ERROR */
+    /* XNEE_WINDOW_POS_ADJ_ERROR */
+    "Fatal error while adjusting window position",
+    "Xnee could not adjust window position. Report the problem",
+
+   /* XNEE_LAST_ERROR */
     "Last error",
     "Internal state, report if you receive this",
 
@@ -217,7 +221,9 @@ const char *
 xnee_get_err_description (int error)
 {
   if ( (error<XNEE_OK) || (error>XNEE_LAST_ERROR))
-    return NULL;
+    {
+      return NULL;
+    }
   return error_descr_solut[error*2];
 }
 
@@ -225,7 +231,9 @@ const char *
 xnee_get_err_solution (int error)
 {
   if ( (error<XNEE_OK) || (error>XNEE_LAST_ERROR))
-    return NULL;
+    {
+      return NULL;
+    }
   return error_descr_solut[error*2+1];
 }
 
