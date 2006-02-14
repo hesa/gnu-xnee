@@ -35,10 +35,40 @@ typedef struct
 } xnee_win_pos;
 
 
+enum
+  {
+    XNEE_WINDOW_RECEIVED,
+    XNEE_WINDOW_SESSION
+  } xnee_window_types;
+
 
 int
-xnee_window_add_received(xnee_data *xd, 
-			 xnee_win_pos *xwp);
+xnee_window_add_attribue_impl(xnee_data    *xd, 
+			      XWindowAttributes *attributes,
+			      Window        win,
+			      int where);
+int
+xnee_window_add_impl(xnee_data    *xd, 
+		     xnee_win_pos *xwp,
+		     int where);
+
+int
+xnee_window_add_attribute_impl(xnee_data    *xd, 
+			       XWindowAttributes *attributes,
+			       Window win,
+			       int where);
+
+#define xnee_window_add_session(xd, xwp) \
+   xnee_window_add_impl(xd, xwp, XNEE_WINDOW_SESSION)
+
+#define xnee_window_add_received(xd, xwp) \
+   xnee_window_add_impl(xd, xwp, XNEE_WINDOW_RECEIVED)
+
+#define xnee_window_add_attribute_received(xd, xwp, win) \
+   xnee_window_add_attribute_impl(xd, xwp, win, XNEE_WINDOW_RECEIVED)
+
+#define xnee_window_add_attribute_session(xd, xwp, win) \
+   xnee_window_add_attribute_impl(xd, xwp, win, XNEE_WINDOW_SESSION)
 
 int
 xnee_window_try_move(xnee_data *xd);
