@@ -157,4 +157,7 @@ xnee_free_ranges(void);
 int 
 xnee_init_ranges(void);
 
+int 
+xnee_is_type_nr_set(xnee_data *xd, int type, int nr);
+
 #endif 
