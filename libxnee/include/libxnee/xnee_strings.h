@@ -59,6 +59,8 @@ extern const char*  XNEE_EXEC_KEY             ;
 extern const char*  XNEE_EXEC_PROGRAM         ;
 extern const char*  XNEE_EXEC_NO_PROG         ;
 extern const char*  XNEE_EXEC_MARK            ;
+extern const char*  XNEE_NEW_WINDOW_MARK      ;
+extern const char*  XNEE_NEW_WINDOW           ;
 extern const char*  XNEE_EVERYTHING           ;
 extern const char*  XNEE_DELAY_TIME           ;
 extern const char*  XNEE_SPEED_PERCENT        ;
