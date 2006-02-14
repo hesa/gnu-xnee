@@ -65,6 +65,7 @@ static char *help[] = {
   "--events-to-record <n>, -etr   ", "Intercept n numbers of events ( n<0 means forever)",
   "--data-to-record <n>, -dtr     ", "Intercept n numbers of data ( n<0 means forever)",
   "--seconds-to-record <n>, -str  ", "Intercept for n seconds ( n<0 means forever)",
+  "--record-window-position, -rwp ", "Store the position of every new window",
   "--verbose, -v                  ", "Verbose printout",
   "--buffer-verbose, -bv          ", "Verbose printout of replay buffer",
   "--time, -t  <secs>             ", "Delay start of application for <secs> seconds. Used to prevent recording of KeyRelease when starting Xnee from terminal",
@@ -526,6 +527,11 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	{
 	  xnee_verbose ((xd, "CHECK ME ...buffer overflow ..... --seconds-to-record\n"));
 	  xnee_set_time_max (xd, atoi(argv[++i]));
+	}
+      else if(xnee_check(argv[i], "--record-window-position", "-rwp")) 
+	{
+	  xnee_verbose ((xd, "--record-window-position\n"));
+	  xnee_set_new_window_pos (xd);
 	}
       else if(xnee_check(argv[i], "--stop-key", "-sk")) 
 	{
@@ -1140,7 +1146,7 @@ xnee_infopage (FILE *fd)
   fprintf (fd ,"\n");
 
   fprintf (fd, "@node Bugs, See also, Examples,top \n");
-  fprintf (fd, "If you envounter a bug, report it to ");
+  fprintf (fd, "If you encounter a bug, report it to ");
   fprintf (fd, "@indent @ @ @ @email{xnee-bug@@gnu.org}\n@ \n");
   fprintf (fd, "@indent or go to the Xnee site:\n");
   fprintf (fd, "@indent @ @ @ @url{http://svannah.gnu.org}\n@\n");
