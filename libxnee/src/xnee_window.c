@@ -26,6 +26,7 @@
 
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_window.h"
+#include "libxnee/print_varargs.h"
 #include "libxnee/print.h"
 
 /*
@@ -35,6 +36,14 @@
  *     received  - information as received during replay from RECORD
  */ 
 
+
+#ifdef  XNEE_DEBUG_WINDOW_CODE
+#define XNEE_WINDOW_DEBUG(a) printf a
+#else
+#define XNEE_WINDOW_DEBUG(a) 
+#endif
+
+#define MAX_NR_OF_MOVES     3
 #define XNEE_WINDOW_BUFFER_SIZE 10
 static int received_index = 0;
 static int session_index  = 0;
@@ -47,22 +56,31 @@ xnee_window_print_lists(void)
 {
   int i ; 
 
-  fprintf (stderr,"Session\n");
+  fprintf (stderr,"----  List of stored window --- \n");
+  fprintf (stderr,"|\n");
+  fprintf (stderr,"| -- Session -- \n");
   for (i=0; ( i<session_index ) && (i<XNEE_WINDOW_BUFFER_SIZE ) ;i++)
     {
-      fprintf (stderr,"  %d %d %d\n",
+      fprintf (stderr,"| %d  0x%X %d %d '%s'\n",
+	       i,
 	       session_windows[i].window,
 	       session_windows[i].x,
-	       session_windows[i].y);
+	       session_windows[i].y,
+	       session_windows[i].name?session_windows[i].name:"NO NAME");
     }
-  fprintf (stderr,"Received\n");
+  fprintf (stderr,"|\n");
+  fprintf (stderr,"| -- Received --\n");
   for (i=0;( i<received_index ) && (i<XNEE_WINDOW_BUFFER_SIZE ) ;i++)
     {
-      fprintf (stderr,"  %d %d %d\n",
-	      received_windows[i].window,
-	      received_windows[i].x,
-	      received_windows[i].y);
+      fprintf (stderr,"| %d 0x%X %d %d '%s'\n",
+	       i,
+	       received_windows[i].window,
+	       received_windows[i].x,
+	       received_windows[i].y,
+	       received_windows[i].name?received_windows[i].name:"NO NAME");
     }
+  fprintf (stderr,"--- End of list of windows ....\n");
+  fprintf (stderr,"\n");
 }
 
 
@@ -70,15 +88,38 @@ int
 xnee_window_add_attribute_impl(xnee_data    *xd, 
 			       XWindowAttributes *attributes,
 			       Window win,
+			       Window parent,
 			       int where)
 {
   xnee_win_pos  xwp;
+  char *win_name;
 
   xwp.x      = attributes->x;
   xwp.y      = attributes->y;
   xwp.width  = attributes->width;
   xwp.height = attributes->height;
   xwp.window = win;
+  xwp.parent = parent;
+
+  if (where == XNEE_WINDOW_RECEIVED)
+    {
+      XFlush(xd->grab);
+
+      if (!XFetchName(xd->grab, win, &win_name)) 
+	{ /* Get window name if any */
+	  xnee_verbose((xd," window has has no name\n"));
+	  win_name=NULL;
+	} 
+      else if (win_name) 
+	{
+	  xnee_verbose((xd," window has has name '%s'\n", win_name));
+	} 
+      xwp.name = win_name;
+    }
+  else
+    { 
+      xwp.name = NULL;
+    }
   
   return xnee_window_add_impl(xd, &xwp, where); 
 }
@@ -115,6 +156,45 @@ xnee_window_add_impl(xnee_data    *xd,
       return XNEE_WINDOW_POS_ADJ_ERROR;
     }
 
+  
+  memcpy(ptr,
+	 xwp,
+	 sizeof(xnee_win_pos));
+  
+  if ( where == XNEE_WINDOW_RECEIVED )
+    {
+      received_index++;
+    }
+  else
+    {
+      session_index++;
+    }
+
+  xnee_verbose((xd, "<--- xnee_window_add_impl\n"));
+  return XNEE_OK;
+}
+
+
+#ifdef CRAP
+int
+xnee_window_add_read(xnee_data    *xd, 
+		     xnee_win_pos *xwp)
+{
+  xnee_win_pos *ptr;
+
+  xnee_verbose((xd, "---> xnee_window_add_read\n"));
+
+  if ( session_index >= XNEE_WINDOW_BUFFER_SIZE )
+    {
+      xnee_verbose((xd, "<--- xnee_window_add_read ... error\n"));
+      return XNEE_WINDOW_POS_ADJ_ERROR;
+    }
+
+  
+  ptr = &session_windows[session_index];
+
+  ptr->rel_x  = xwp->rel_x;
+  ptr->rel_y  = xwp->rel_y;
   ptr->x      = xwp->x;
   ptr->y      = xwp->y;
   ptr->height = xwp->height;
@@ -133,6 +213,7 @@ xnee_window_add_impl(xnee_data    *xd,
   xnee_verbose((xd, "<--- xnee_window_add_impl\n"));
   return XNEE_OK;
 }
+#endif /* CRAP?  */ 
 
 
 int
@@ -164,6 +245,58 @@ xnee_window_add_read(xnee_data    *xd,
 }
 
 
+static int
+xnee_window_remove_window(xnee_data *xd, int rec_idx, int ses_idx)
+{
+  int i ; 
+
+  xnee_verbose((xd,"xnee_window_remove_window recorded:%d    session:%d\n",
+		rec_idx, ses_idx));
+
+  for (i=rec_idx; i<XNEE_WINDOW_BUFFER_SIZE;i++)
+    {
+      /*      XNEE_WINDOW_DEBUG(("Rem rece pos %d (%s,%d) and putting pos %d (%s) \n",
+	      i, received_windows[i].name,received_windows[i].window,
+	      i+1, received_windows[i+1].name));
+      */
+      XNEE_FREE_IF_NOT_NULL(received_windows[i].name);
+      memcpy(&received_windows[i],
+	     &received_windows[i+1],
+	     sizeof(xnee_win_pos));
+      if (received_windows[i+1].window==0)
+	{
+	  break;
+	}
+
+    }
+  
+  for (i=ses_idx; i<XNEE_WINDOW_BUFFER_SIZE;i++)
+    {
+      /*      XNEE_WINDOW_DEBUG(("Rem sess pos %d (%s,%d) and putting pos %d (%s) \n",
+	      i, session_windows[i].name,session_windows[i].window,
+	      i+1, session_windows[i+1].name));
+      */
+      if (session_windows[i].name!=NULL)
+	{
+	  XFree(session_windows[i].name);
+	}
+      memcpy(&session_windows[i],
+	     &session_windows[i+1],
+	     sizeof(xnee_win_pos));
+      if (session_windows[i+1].window==0)
+	{
+	  break;
+	}
+      
+    }
+  session_index--;
+  received_index--;
+      
+}
+
+
+
+
 int
 xnee_window_try_move(xnee_data *xd)
 {
@@ -171,6 +304,16 @@ xnee_window_try_move(xnee_data *xd)
   xnee_win_pos *sess_ptr;
   xnee_win_pos *rec_ptr;
 
+  int pos_x;
+  int pos_y;
+  int rx ;
+  int ry ;
+  int diff_x=0;
+  int diff_y=0;
+  int nr_of_moves = 0;
+  XWindowAttributes win_attributes;
+  Window child;
+  char *win_name = NULL;
 
   if (xnee_is_verbose(xd))
     {
@@ -194,25 +337,124 @@ xnee_window_try_move(xnee_data *xd)
   sess_ptr =  &session_windows[session_index-1];
   rec_ptr  =  &received_windows[received_index-1];
 
-  if ( rec_ptr->window != 0 )
-    {
-      xnee_verbose((xd, " XMoveWindow(%d,%d,%d,%d)\n", 
-		    xd->control,
-		    rec_ptr->window,
-		    sess_ptr->x,
-		    sess_ptr->y));
-      XMoveWindow(xd->control,
-		  rec_ptr->window,
-		  sess_ptr->x,
-		  sess_ptr->y);
-
-      session_index--;
-      received_index--;
-    }
-  else
+  
+  if ( rec_ptr->window == 0 )
     {
       return XNEE_WINDOW_POS_ADJ_ERROR;
     }
+  
+  XGetWindowAttributes(xd->grab, 
+		       rec_ptr->window,
+		       &win_attributes);
+  
+  XTranslateCoordinates (xd->grab, 
+			 rec_ptr->window, 
+			 win_attributes.root, 
+			 win_attributes.border_width,
+			 win_attributes.border_width,
+			 &rx, 
+			 &ry, 
+			 &child);
+  if ( (sess_ptr->x==rx) && (sess_ptr->y==ry) )
+    {
+      XNEE_WINDOW_DEBUG(("Windows are already loacted correctly :)   %d %d    %d %d\n",
+	      sess_ptr->x, 
+	      rx, 
+	      sess_ptr->y, 
+	      ry));
+      xnee_window_remove_window(xd, received_index-1, session_index-1);
+      return XNEE_OK;
+    }
+
+  
+  xnee_verbose((xd, "XMoveWindow(%d,0x%X, %d,%d)\n",
+		xd->grab,
+		rec_ptr->window,
+		sess_ptr->x ,
+		sess_ptr->y ));
+  XNEE_WINDOW_DEBUG(("XMoveWindow(%d,0x%X, %d,%d)\n",
+		xd->grab,
+		rec_ptr->window,
+		sess_ptr->x ,
+		sess_ptr->y ));
+  XMoveWindow(xd->grab,
+	      rec_ptr->window,
+	      sess_ptr->x ,
+	      sess_ptr->y );
+  
+  XFlush(xd->grab);
+  usleep(50*1000);
+  
+  XGetWindowAttributes(xd->grab, 
+		       rec_ptr->window,
+		       &win_attributes);
+  
+  XTranslateCoordinates (xd->grab, 
+			 rec_ptr->window, 
+			 win_attributes.root, 
+			 win_attributes.border_width,
+			 win_attributes.border_width,
+			 &rx, 
+			 &ry, 
+			 &child);
+  
+  
+  while ( nr_of_moves<MAX_NR_OF_MOVES)
+    {
+      
+      /*       requested   - actual - frame */
+
+      diff_x = sess_ptr->x - rx ;
+      diff_y = sess_ptr->y - ry ;
+
+      XNEE_WINDOW_DEBUG(("Requested   Actual   diff    attrib   window=0x%X\n", 
+			 rec_ptr->window));
+      XNEE_WINDOW_DEBUG(("   %.3d      %.3d      %.2d       %d\n",
+			 sess_ptr->x , rx , diff_x, win_attributes.x));
+      XNEE_WINDOW_DEBUG(("   %.3d      %.3d      %.2d       %d\n",
+			 sess_ptr->y , ry , diff_y, win_attributes.y));
+      XNEE_WINDOW_DEBUG(("\n"));
+      
+      if  ( !diff_x && !diff_y )
+	{
+	  xnee_window_remove_window(xd, received_index-1, session_index-1);
+	  xnee_verbose((xd,"leaving ..... all  (%d %d) is ok\n", diff_x, diff_y));
+	  break;
+	}
+
+      pos_x = sess_ptr->x + diff_x ;
+      pos_y = sess_ptr->y + diff_y ;
+
+      xnee_verbose((xd, "XMoveWindow(%d,0x%X, %d,%d)\n",
+		    xd->grab,
+		    rec_ptr->window,
+		    pos_x ,
+		    pos_y ));
+      XNEE_WINDOW_DEBUG(("XMoveWindow(%d,0x%X, %d,%d)\n",
+		    xd->grab,
+		    rec_ptr->window,
+		    pos_x ,
+		    pos_y ));
+      XMoveWindow(xd->grab, rec_ptr->window, pos_x, pos_y);
+
+      XFlush(xd->grab);
+      usleep(50*1000);
+      XGetWindowAttributes(xd->grab, 
+			   rec_ptr->window,
+			   &win_attributes);
+      
+      XTranslateCoordinates (xd->grab, 
+			     rec_ptr->window, 
+			     win_attributes.root, 
+			     win_attributes.border_width,
+			     win_attributes.border_width,
+			     &rx, 
+			     &ry, 
+			     &child);
+      nr_of_moves++;
+    }
+
+  xnee_verbose((xd, "<--- xnee_window_try_move:   moved %d times\n", nr_of_moves));
   return ret;
 }
 
