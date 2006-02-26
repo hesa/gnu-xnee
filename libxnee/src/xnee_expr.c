@@ -749,6 +749,7 @@ xnee_expression_handle_newwindow(xnee_data *xd, char *tmp)
   int x ;
   int y ;
   int override ;
+  char buf[256];
 
   xnee_verbose ((xd, "---> xnee_expression_handle_newwindow: %s\n", tmp));
 
@@ -756,19 +757,24 @@ xnee_expression_handle_newwindow(xnee_data *xd, char *tmp)
     {
       tmp = tmp+strlen(XNEE_NEW_WINDOW_MARK);
       
-      sscanf (tmp,  ":%d,%d:%d,%d,%d,%d,%d,%d:%dx%d+%d+%d\n", 
+      sscanf (tmp,  ":%d,%d:%d,%d,%d,%d,%d,%d:%dx%d+%d+%d:%d,%d:%s\n", 
 	      &xwp.x,
 	      &xwp.y,
-	      &event,
-	      &window,
-	      &parent,
+	      &xwp.event,
+	      &xwp.window,
+	      &xwp.parent,
 	      &x,
 	      &y,
 	      &override,
-	      &rx,
-	      &ry,
+	      &xwp.rel_x,
+	      &xwp.rel_y,
 	      &xwp.width,
-	      &xwp.height);
+	      &xwp.height,
+	      &xwp.border_h,
+	      &xwp.border_w,
+	      &buf);
+
+      xwp.name=strdup(buf);
 
       ret = xnee_window_add_session(xd, &xwp);
       XNEE_RETURN_IF_ERR(ret);
