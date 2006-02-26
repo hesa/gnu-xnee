@@ -508,6 +508,8 @@ typedef struct
   /*@null@*/ Display *grab        ;    /*!< used for holding the grabbed key/modifier */
   int first_replayed_event;  /*!< True if the event to replay is the first one. 
 			       Needed to set the start time of the first event to 0 */
+  int recall_recorded_win_pos; /*!< True if Xnee (during replay) shall use the recorded. 
+			            window position*/
   int     cont         ;     /*!< A simple flag telling Xnee wether to keep 
 			       recording/replaying or to quit. */
   /*@null@*/ xnee_distr *distr_list ;  /*!< array of displays to distribute events to */
