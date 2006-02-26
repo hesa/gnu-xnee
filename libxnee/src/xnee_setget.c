@@ -1099,3 +1099,29 @@ xnee_unset_new_window_pos (xnee_data *xd)
   return XNEE_OK;
 }
 
+
+int
+xnee_get_recall_window_pos (xnee_data *xd)
+{
+  xnee_verbose((xd, "xnee_get_recall_window_pos()\n"));
+  return xd->recall_recorded_win_pos;
+}
+
+
+int
+xnee_set_recall_window_pos (xnee_data *xd)
+{
+  xnee_verbose((xd, "xnee_set_recall_window_pos()\n"));
+  xd->recall_recorded_win_pos=1;
+  return XNEE_OK;
+}
+
+
+int
+xnee_unset_recall_window_pos (xnee_data *xd)
+{
+  xnee_verbose((xd, "xnee_unset_recall_window_pos()\n"));
+  xd->recall_recorded_win_pos=0;
+  return XNEE_OK;
+}
+
