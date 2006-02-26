@@ -563,4 +563,12 @@ xnee_set_new_window_pos (xnee_data *xd);
 int
 xnee_unset_new_window_pos (xnee_data *xd);
 
+int
+xnee_set_recall_window_pos (xnee_data *xd);
+
+int
+xnee_unset_recall_window_pos (xnee_data *xd);
+
+
+
 #endif /* XNEE_SETGET_H */ 
