@@ -315,12 +315,7 @@ xnee_add_resource_syntax(xnee_data *xd, char *tmp)
     {
       range=strstr (tmp, ":");
       range += 1 ;
-      printf ("   time before %s   %s  : %d\n", 
-	      tmp,
-	      range,
-	      atoi(range));
       xnee_set_time_max(xd, atoi(range));
-      printf ("   time after: %d\n", atoi(range));
     }
   else if (!strncmp(XNEE_STOP_KEY,tmp,strlen(XNEE_STOP_KEY)))
     {

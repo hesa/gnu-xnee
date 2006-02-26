@@ -294,6 +294,7 @@ xnee_init(xnee_data* xd)
   xd->distr_list_size = 0   ;
   xd->cont          = True ;
   xd->force_replay  = False;
+  xnee_unset_recall_window_pos (xd);
   xd->first_read_time =0;
   
   xd->speed_percent = 100 ; 
