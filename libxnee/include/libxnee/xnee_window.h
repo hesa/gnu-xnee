@@ -27,11 +27,18 @@
 
 typedef struct 
 {
-  int x ;
-  int y ;
-  int width ;
-  int height ;
-  int window ;
+  int   rel_x ;
+  int   rel_y ;
+  int   x ;
+  int   y ;
+  int   border_w;
+  int   border_h;
+  int   width ;
+  int   height ;
+  int   window ;
+  int   event ;
+  int   parent ;
+  char* name ;
 } xnee_win_pos;
 
 
@@ -56,6 +63,7 @@ int
 xnee_window_add_attribute_impl(xnee_data    *xd, 
 			       XWindowAttributes *attributes,
 			       Window win,
+			       Window parent,
 			       int where);
 
 #define xnee_window_add_session(xd, xwp) \
@@ -64,11 +72,11 @@ xnee_window_add_attribute_impl(xnee_data    *xd,
 #define xnee_window_add_received(xd, xwp) \
    xnee_window_add_impl(xd, xwp, XNEE_WINDOW_RECEIVED)
 
-#define xnee_window_add_attribute_received(xd, xwp, win) \
-   xnee_window_add_attribute_impl(xd, xwp, win, XNEE_WINDOW_RECEIVED)
+#define xnee_window_add_attribute_received(xd, xwp, win, par) \
+   xnee_window_add_attribute_impl(xd, xwp, win, par, XNEE_WINDOW_RECEIVED)
 
-#define xnee_window_add_attribute_session(xd, xwp, win) \
-   xnee_window_add_attribute_impl(xd, xwp, win, XNEE_WINDOW_SESSION)
+#define xnee_window_add_attribute_session(xd, xwp, win, par) \
+   xnee_window_add_attribute_impl(xd, xwp, win, par, XNEE_WINDOW_SESSION)
 
 int
 xnee_window_try_move(xnee_data *xd);
