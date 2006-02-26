@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
+ *                      2004, 2005, 2006 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -39,6 +40,7 @@
 #include "libxnee/xnee_session.h"
 #include "libxnee/xnee_utils.h"
 #include "libxnee/xnee_strings.h"
+#include "libxnee/xnee_display.h"
 
 
 #ifdef DEBUG_DISPATCHER
@@ -64,7 +66,6 @@ xnee_record_dispatch2 (XPointer xpoint_xnee_data,
   /*increment the process reply counter*/
   xnee_process_count(XNEE_PROCESS_INC);
   xpoint_xnee_data=0;
-  printf( "."); 
 
   fflush (stdout);
   XRecordFreeData(data);
@@ -73,15 +74,17 @@ xnee_record_dispatch2 (XPointer xpoint_xnee_data,
 #endif
 
 
+int
+xnee_get_screen_nr(xnee_data *xd, Display *dpy, Window recorded_root);
 
 /**************************************************************
  *                                                            *
- * get_screen_nr                                              *
+ * xnee_get_screen_nr                                         *
  *                                                            *
  *                                                            *
  **************************************************************/
-static unsigned int
-get_screen_nr(Display *dpy, Window recorded_root)
+int
+xnee_get_screen_nr(xnee_data *xd, Display *dpy, Window recorded_root)
 {
   int nr_screens  ;
   int this_screen ;
@@ -94,24 +97,24 @@ get_screen_nr(Display *dpy, Window recorded_root)
   this_screen  = -1 ; 
   i = 0 ;
   
-  do {
-    Screen *scr;
-    scr = ScreenOfDisplay(dpy,i);
-    disp_root = RootWindowOfScreen(scr);
-    if ( disp_root == recorded_root )
-      {
-	keep_looping = 0 ;
-	this_screen  = i; 
-      }
-    i++;
-  } while ( (i<nr_screens) && ( keep_looping ) );
+  do 
+    {
+      Screen *scr;
+      scr = ScreenOfDisplay(dpy,i);
+      disp_root = RootWindowOfScreen(scr);
+      if ( disp_root == recorded_root )
+	{
+	  keep_looping = 0 ;
+	  this_screen  = i; 
+	}
+      i++;
+    } while ( (i<nr_screens) && ( keep_looping ) );
   
   /* If we didn't find a screen, bail out */
   if ( this_screen == -1)
     {
-      /* FIX ME FIX ME.... 
-	 this may be intepreted as a screen nr */
-      return XNEE_SCREEN_MISSING;
+      xnee_verbose((xd, "Could not find a screen. (xnee_display:get_screen_nr()\n"));
+      return -1 ;
     }
   
   return this_screen;
@@ -140,6 +143,7 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
    int do_print;
    int ret ; 
    unsigned int screen ;
+   char *win_name;
 
 
    if ( xrecintd==NULL )
@@ -269,8 +273,15 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 	      break;
 	    case MotionNotify:  
                kc = 0;
-	       screen = get_screen_nr(xd->data,
-				      xrec_data->event.u.keyButtonPointer.root);
+	       screen = xnee_get_screen_nr(xd, 
+					   xd->data,
+					   xrec_data->event.u.keyButtonPointer.root);
+	       if (screen<0)
+		 {
+		   xnee_verbose((xd, "Could not find a screen, bailing out\n"));
+		   return XNEE_SCREEN_MISSING;
+		 }
+
 	       do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
 	       fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
 			event_type,
@@ -303,87 +314,74 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 		       );
 	      break;
 	    case ReparentNotify:
-
 	      new_window_pos = xnee_get_new_window_pos(xd);
-	      
 
-	      /* 
-	       * new_window_pos == 0
-	       *   means print event to file
-	       *
-	       * new_window_pos == 1
-	       *   print NEW-WINDOW to file
-	       *
-	       * new_window_pos == 2
-	       *   means we shall print event
-	       *   and store NEW-WINDOW to file
-	       */
-	      if (new_window_pos == 0)
+	      if (new_window_pos!=0)
 		{
 		  fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
 			   event_type,
 			   xrecintd->server_time );
 		}
-	      else 
+	      XGetWindowAttributes(xd->grab, 
+				   xrec_data->event.u.reparent.window,
+				   &window_attributes_return);
+	      
+	      XTranslateCoordinates (xd->grab, 
+				     xrec_data->event.u.reparent.window, 
+				     window_attributes_return.root, 
+				     -window_attributes_return.border_width,
+				     -window_attributes_return.border_width,
+				     &rx, 
+				     &ry, 
+				     &dummy_window);
+	      
+	      /* 
+	       * Prevent the same window pos to be printed more than once 
+	       */
+	      if ( (last_record_window_pos_win != 
+		    xrec_data->event.u.reparent.window) ||
+		   (last_record_window_pos_par != 
+		    xrec_data->event.u.reparent.parent) )
 		{
-		  /*
-		    printf ("serialised reparent: %d , %d (%d) ,%d (%d)\n",
-		    xrec_data->event.u.reparent.event,
-		    xrec_data->event.u.reparent.window,
-		    last_record_window_pos_win,
-		    xrec_data->event.u.reparent.parent,
-		    last_record_window_pos_par);
-		  */
-			  
-
-		  XGetWindowAttributes(xd->grab, 
-				       xrec_data->event.u.reparent.window,
-				       &window_attributes_return);
-
-		  XTranslateCoordinates (xd->grab, 
-					 xrec_data->event.u.reparent.window, 
-					 window_attributes_return.root, 
-					 -window_attributes_return.border_width,
-					 -window_attributes_return.border_width,
-					 &rx, 
-					 &ry, 
-					 &dummy_window);
-
-		  /* 
-		   * Prevent the same window pos to be printed more than once 
-		   */
-		  if ( (last_record_window_pos_win != 
-			xrec_data->event.u.reparent.window) ||
-		       (last_record_window_pos_par != 
-			xrec_data->event.u.reparent.parent) )
+		  
+		  XFlush(xd->grab);
+		  if (!XFetchName(xd->grab, xrec_data->event.u.reparent.window, &win_name)) 
+		    { /* Get window name if any */
+		      xnee_verbose((xd," window has has no name\n"));
+		      win_name=NULL;
+		    } 
+		  else if (win_name) 
 		    {
-		      fprintf (out, 
-			       "%s:%d,%d:%d,%d,%d,%d,%d,%d:%dx%d+%d+%d\n", 
-			       XNEE_NEW_WINDOW_MARK,
-			       rx,
-			       ry,
-			       xrec_data->event.u.reparent.event,
-			       xrec_data->event.u.reparent.window,
-			       xrec_data->event.u.reparent.parent,
-			       xrec_data->event.u.reparent.x,
-			       xrec_data->event.u.reparent.y,
-			       xrec_data->event.u.reparent.override,
-			       window_attributes_return.x,
-			       window_attributes_return.y,
-			       window_attributes_return.width,
-			       window_attributes_return.height
-			       );
-		      last_record_window_pos_win = 
-			xrec_data->event.u.reparent.window;
-		      last_record_window_pos_par = 
-			xrec_data->event.u.reparent.parent;
+		      xnee_verbose((xd," window has has name '%s'\n", win_name));
 		    }
-		  if (new_window_pos == 2)
+		  fprintf (out, 
+			   "%s:%d,%d:%d,%d,%d,%d,%d,%d:%dx%d+%d+%d:%d,%d:%s\n", 
+			   XNEE_NEW_WINDOW_MARK,
+			   rx,
+			   ry,
+			   xrec_data->event.u.reparent.event,
+			   xrec_data->event.u.reparent.window,
+			   xrec_data->event.u.reparent.parent,
+			   xrec_data->event.u.reparent.x,
+			   xrec_data->event.u.reparent.y,
+			   xrec_data->event.u.reparent.override,
+			   window_attributes_return.x,
+			   window_attributes_return.y,
+			   window_attributes_return.width,
+			   window_attributes_return.height,
+			   window_attributes_return.border_width,
+			   window_attributes_return.border_width,
+			   win_name?win_name:""
+			   );
+		  if (win_name) 
 		    {
-		      fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
-			       event_type,
-			       xrecintd->server_time );
-		    }
+		      xnee_verbose((xd," freeing window name\n"));
+		      XFree(win_name);
+		    } 
+		  last_record_window_pos_win = 
+		    xrec_data->event.u.reparent.window;
+		  last_record_window_pos_par = 
+		    xrec_data->event.u.reparent.parent;
 		}
 	      break;
 	    default:
@@ -396,7 +394,7 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 	    }
 	}
       XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 7  \n"  ));
-
+      
     }
   (void)fflush (out);
   if (((event_type==KeyPress) || (event_type==KeyRelease)
