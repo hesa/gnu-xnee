@@ -1,3 +1,64 @@
+2006-02-26  Henrik Sandklef  <hesa@gnu.org>
+
+	* cnee/src/parse.c: 
+
+	Added new option:
+
+	--recall-window-position, -rwp
+
+	Removed option:
+
+	--record-window-position, -rwp
+
+	* libxnee/src/xnee_window.c: 
+
+	Rewrote parts of the new window pos code
+
+	* libxnee/src/xnee_setget.c (xnee_unset_recall_window_pos): 
+
+	Added new functions:
+	  xnee_set_recall_window_pos (xnee_data *xd)
+	  xnee_unset_recall_window_pos (xnee_data *xd)
+
+	* libxnee/src/xnee_resource.c (xnee_get_creat_date): 
+
+	Removed debug printouts
+
+	* libxnee/src/xnee_replay.c: 
+
+	Added code to handle new window adjustment (or not).
+	
+	* libxnee/src/xnee_record.c: 
+
+	Removed faulty code, renamed get_screen_nr to xnee_get_screen_nr.
+	Handling of ReparentNotify rewritten to fit 
+	this feature being moved to replay
+
+	* libxnee/src/xnee_range.c: 
+
+	Handling of ReparentNotify rewritten to fit 
+	this feature being moved to replay
+
+	* libxnee/src/xnee_expr.c: 
+
+	Added handling of new variables in: xnee_win_pos
+
+	* libxnee/include/libxnee/xnee_window.h: 
+
+	Added: 
+	  rel_y rel_x border_w border_h event parent name to xnee_win_pos
+
+	* libxnee/include/libxnee/xnee_setget.h:
+
+	Added functions:
+	  xnee_unset_recall_window_pos
+
+	  xnee_set_recall_window_pos (xnee_data *xd);
+
+	* libxnee/include/libxnee/xnee.h (struct): 
+
+	Added variable recall_recorded_win_pos to xnee_data
+
 2006-02-14  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_strings.c: 

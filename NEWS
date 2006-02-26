@@ -1,3 +1,15 @@
+Changes in 2.04.90
+==============================
+
+  New features:
+
+     * Handled windows placed differently during replay than during record
+
+  New Options for cnee
+
+     --recall-window-position
+
+
 Changes in 2.04
 ==============================
 
