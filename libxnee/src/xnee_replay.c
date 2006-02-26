@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003
+ *                      2004, 2005, 2006 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -800,13 +801,13 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
 	  
 	  if ( type == ReparentNotify )
 	    {
-	      rec_window_pos = xnee_get_new_window_pos(xd);
+	      rec_window_pos = xnee_get_recall_window_pos(xd);
 	      /* rec_window_pos interpretation:
 	       *   0  used to sync
 	       *   1  used to adjust window pos
 	       *   2 both of the above 
-	       *   * error
-	       */
+		 *   * error
+		 */
 	      if ( rec_window_pos == 0 )
 		{
 		  /* only sync */
@@ -826,10 +827,13 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
 		       (last_record_window_pos_par != 
 			xrec_data->event.u.reparent.parent) )
 		    {
+		      xnee_verbose((xd, "   xnee_replay adding window 0x%X\n",
+			      xrec_data->event.u.reparent.window));
 
 		      xnee_window_add_attribute_received(xd, 
-							&window_attributes_return,
-							xrec_data->event.u.reparent.window);
+							 &window_attributes_return,
+							 xrec_data->event.u.reparent.window,
+							 xrec_data->event.u.reparent.parent);
 
 		      ret = xnee_window_try_move(xd);
 		      XNEE_RETURN_VOID_IF_ERR(ret);
