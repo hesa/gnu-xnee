@@ -62,22 +62,20 @@ static int    need_init          =  1      ;
 static int    added_reparent     =  0      ;
 struct xnee_ranges *xrs          = &myxrs  ;
 
+
 static int
 xnee_do_workaround(xnee_data *xd)
 {
   int ret = XNEE_OK; 
-
-  if (xnee_get_new_window_pos(xd)>0)
+  
+  if ( xnee_is_type_nr_set(xd, XNEE_DELIVERED_EVENT, ReparentNotify))
     {
-      if ( xnee_is_type_nr_set(xd, XNEE_DELIVERED_EVENT, ReparentNotify))
-	{
-	  xnee_set_new_window_pos_value(xd,2);
-	}
-      else
-	{
-	  xnee_parse_range (xd, XNEE_DELIVERED_EVENT, "ReparentNotify");
-	  added_reparent = 1 ;
-	}
+      xnee_set_new_window_pos(xd);
+    }
+  else
+    {
+      xnee_parse_range (xd, XNEE_DELIVERED_EVENT, "ReparentNotify");
+      added_reparent = 1 ;
     }
   return ret;
 }
@@ -93,11 +91,12 @@ xnee_undo_workaround(xnee_data *xd)
       xnee_rem_data_from_range_str (xd,
 				    XNEE_DELIVERED_EVENT,
 				    "ReparentNotify") ;
+      added_reparent = 0 ;
     } 
 
   if (w_pos > 0)
     {
-      xnee_set_new_window_pos_value(xd,1);
+      xnee_unset_new_window_pos(xd);
     }
 
   return ret;
