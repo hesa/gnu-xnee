@@ -216,10 +216,11 @@ xnee_reset_xnee_info(/*@null@*/ xnee_data *xd)
   {
      return XNEE_NO_MAIN_DATA;
   }
-  for (i=0;i<XNEE_NR_OF_TYPES;i++)
-    {
-      xd->xnee_info.data_ranges[i]=0;
-    }
+  /*   probably not neeeded
+       check if remove hesa hesa HESA HESA
+       xnee_free_ranges(xd);  
+  */
+
   return XNEE_OK;
 }
 
@@ -245,7 +246,7 @@ xnee_free_dyn_data(xnee_data *xd)
    XNEE_FREE_IF_NOT_NULL(xd->program_name);
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: refreshing ranges\n")); 
-   ret = xnee_free_ranges(); 
+   ret = xnee_free_ranges(xd); 
    XNEE_RETURN_IF_ERR(ret);
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: replay_setup\n"));
