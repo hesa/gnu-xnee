@@ -1,3 +1,27 @@
+2006-02-27  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_session.c: 
+
+	Reordered closing/freeing of file/mem due to mem leaks.
+
+	* libxnee/src/xnee_replay.c: 
+	* libxnee/src/xnee_record.c: 
+
+	Removed XRecordGetContext check
+
+	* libxnee/src/xnee_fileop.c (xnee_free_file): 
+
+	Rewrote closing of file and freeing og char *
+
+	* libxnee/src/xnee_alloc.c: 
+
+	Added xnee_data when calling xnee_free_ranges
+
+	* libxnee/src/xnee_range.c (xnee_free_ranges): 
+	* libxnee/include/libxnee/xnee_range.h: 
+
+	Added xnee_data as argument to xnee_free_ranges
+
 2006-02-26  Henrik Sandklef  <hesa@gnu.org>
 
 	* cnee/src/parse.c: 
