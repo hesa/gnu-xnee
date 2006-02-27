@@ -151,8 +151,7 @@ int
 xnee_refresh_ranges(xnee_data *xd);
 
 int 
-xnee_free_ranges(void);
-
+xnee_free_ranges(xnee_data *xd);
 
 int 
 xnee_init_ranges(void);

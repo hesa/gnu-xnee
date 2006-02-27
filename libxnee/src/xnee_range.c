@@ -166,7 +166,7 @@ xnee_init_list(struct xnee_range *xr, int size)
 }
 
 int 
-xnee_free_ranges()
+xnee_free_ranges(xnee_data *xd)
 {
    int i ; 
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
@@ -198,7 +198,7 @@ int
 xnee_refresh_ranges(xnee_data *xd)
 {
   xnee_verbose((xd, "-->xnee_refresh_ranges\n"));
-  xnee_free_ranges();
+  xnee_free_ranges(xd);
   xnee_init_ranges();
   xrs->nr_of_data = 0;
   xnee_verbose((xd, "<--xnee_refresh_ranges\n"));
@@ -247,13 +247,14 @@ xnee_add_to_list2(int type, int ev)
 	   type=XNEE_DELIVERED_EVENT;
 	 }
      }
-   xrp = &xrs->type[type];
 
+   xrp = &xrs->type[type];
+   
    if (need_init==1)
      {
        xnee_init_ranges();
      }
-      
+   
    for (i=0;i<xrp->index;i++)
      {
        if (xrp->data[i]==ev)
@@ -261,11 +262,11 @@ xnee_add_to_list2(int type, int ev)
 	   return XNEE_OK;
 	 }
      }
-
+   
+   
    if (xrp->index >=(xrp->size-1) )
    {
       xrp->size+=xrp->size;
-      
       xrp->data = (int*) realloc (xrp->data, 
                                   xrp->size*sizeof(int));
       if (xrp->data==NULL)
@@ -688,7 +689,10 @@ xnee_rem_from_list(int type, int ev)
    struct xnee_range *xrp;
 
    if (need_init==1)
-      return 0;
+     {
+       return XNEE_OK;
+     }
+
    xrp = &xrs->type[type];
 
    xnee_print_list();
