@@ -191,38 +191,22 @@ xnee_close_down(xnee_data* xd)
   xd->rc_file=NULL;
   xnee_verbose((xd ," --  xnee_close_down() free rc_file <-- %d\n", ret));
 
-  if (xd->err_file!=stdout)
-    {
-      xnee_verbose((xd ," --  xnee_close_down() free out_file \n"  ));
-      ret = xnee_free_file (xd, xd->out_name,  xd->out_file);
-      xd->out_file=NULL;
-      xnee_verbose((xd ," --  xnee_close_down() free out_file <-- %d\n", ret));
-    }
+  xnee_verbose((xd ," --  xnee_close_down() free rt_file \n"  ));
+  ret = xnee_free_file (xd, xd->rt_name,  xd->rt_file);
+  xd->rt_file=NULL;
+  xnee_verbose((xd ," --  xnee_close_down() free rt_file <-- %d\n", ret));
+  
+  xnee_verbose((xd ," --  xnee_close_down() free err_file\n"  ));
+  ret = xnee_free_file (xd, xd->err_name,  xd->err_file); 
+  xd->err_file=NULL;
+  xnee_verbose((xd ," --  xnee_close_down() free err_file <-- %d\n", ret));
 
-  if (xd->rt_file!=stdout)
-    {
-      xnee_verbose((xd ," --  xnee_close_down() free rt_file \n"  ));
-      ret = xnee_free_file (xd, xd->rt_name,  xd->rt_file);
-      xd->rt_file=NULL;
-      xnee_verbose((xd ," --  xnee_close_down() free rt_file <-- %d\n", ret));
-    }
-
-  if (xd->err_file!=stderr)
-    {
-      xnee_verbose((xd ," --  xnee_close_down() free err_file\n"  ));
-      ret = xnee_free_file (xd, xd->err_name,  xd->err_file); 
-      xd->err_file=NULL;
-      xnee_verbose((xd ," --  xnee_close_down() free err_file <-- %d\n", ret));
-    }
-
-  xnee_verbose((xd, "finished closing fds\n"));
-
+  ret = xnee_free_file (xd, xd->out_name,  xd->out_file);
+  xd->out_file=NULL;
 
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.6 \n"  ));
-  xnee_verbose((xd, "Freeeing data "));
   ret = xnee_free_xnee_data(xd);
   xd=NULL;
-
 }
 
 
@@ -506,7 +490,7 @@ xnee_rep_prepare(xnee_data *xd)
   ret = xnee_set_autorepeat (xd);
   XNEE_RETURN_IF_ERR (ret);
 
-  ret = xnee_init_ranges();
+  ret = xnee_refresh_ranges(xd);
   XNEE_RETURN_IF_ERR (ret);
 
   xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", XNEE_OK));
