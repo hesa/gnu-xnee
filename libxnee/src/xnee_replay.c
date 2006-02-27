@@ -705,7 +705,9 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "--- \t %d\n", (int)xrs->rContext));             
   xnee_verbose((xd, "--- \t %d\n", (int)xrs->rState));             
 
-  if( XRecordGetContext(xd->control, xrs->rContext, (XRecordState **) xrs->rState) == 0)
+  /*  if( XRecordGetContext(xd->control, 
+			xrs->rContext, 
+			(XRecordState **) xrs->rState) == 0)
     {
       xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
       exit(XNEE_BAD_CONTEXT);
@@ -713,7 +715,7 @@ xnee_setup_rep_recording(xnee_data *xd)
   
   xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n", 
 		xrs->rContext, (int) ( (xrs->rState) - (xrs->nclients) ) ));   
-  
+  */
   xnee_verbose((xd, "--- xnee_setup_rep_recording  freeing state \n"));             
 
   XRecordFreeState(xrs->rState); 

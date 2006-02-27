@@ -830,6 +830,15 @@ xnee_setup_recording(xnee_data *xd)
   XSynchronize(xd->data, True);  
   */
 
+  
+/*   xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n",  */
+/* 		xd->record_setup->rContext,  */
+/* 		(int) ( (xd->record_setup->rState) - (xd->record_setup->nclients) )));    */
+  
+  /* Enable context for async interception 
+     XSynchronize(xd->data, True);  
+  */
+  
   xnee_verbose((xd, "<---xnee_setup_recording\n"));
   XNEE_DEBUG ( (stderr ," <-- xnee_setup_recording()  \n"  ));
   return (0);
