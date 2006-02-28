@@ -1,3 +1,29 @@
+2006-02-28  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_range.c: 
+
+	return XNEE_OK, instead of 0
+
+	* libxnee/src/xnee_alloc.c: 
+
+	Memory leak fixed
+
+	* libxnee/src/xnee_fileop.c: 
+
+	Add verbose printout
+
+2006-02-28  Henrik Sandklef  <hesa@gnu.org>
+
+	* xnee/gnee/gnee.glade
+	* xnee/gnee/src/callbacks.c
+	* xnee/gnee/src/callbacks.h
+	* xnee/gnee/src/gnee_xnee.c
+	* xnee/gnee/src/gnee_xnee.h
+	* xnee/gnee/src/interface.c
+	* xnee/gnee/src/support.h
+
+	Added support for 'window position adjustment' and 'x,y offset'
+	
 2006-02-27  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_session.c: 
