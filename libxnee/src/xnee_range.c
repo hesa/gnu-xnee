@@ -523,8 +523,8 @@ xnee_add_range (xnee_data* xd,
    */
   xd->xnee_info.data_ranges[type]++;
   xnee_verbose((xd, "<--- xnee_add_range\n"));
-  return (0);
-  
+
+  return (XNEE_OK);
 }
 
 
