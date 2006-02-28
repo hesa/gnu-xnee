@@ -6,7 +6,7 @@
 #
 
 PACKAGE=\"Xnee\"
-VERSION=\"2.03\"
+VERSION=\"2.04.93\"
 #
 # gnee uses config.h (copied from config.xnee)
 #
@@ -90,7 +90,8 @@ COMM_SRC =   libxnee/src/datastrings.c \
   libxnee/src/xnee_session.c \
   libxnee/src/xnee_fileop.c \
   libxnee/src/xnee_plugin.c \
-  libxnee/src/xnee_settings.c 
+  libxnee/src/xnee_settings.c \
+  libxnee/src/xnee_window.c 
 
 
 CLI_OBJS      := $(CLI_SRC:%.c=%.o)
