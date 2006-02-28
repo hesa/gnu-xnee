@@ -216,11 +216,13 @@ xnee_reset_xnee_info(/*@null@*/ xnee_data *xd)
   {
      return XNEE_NO_MAIN_DATA;
   }
-  /*   probably not neeeded
-       check if remove hesa hesa HESA HESA
-       xnee_free_ranges(xd);  
-  */
-
+  for (i=0;i<XNEE_NR_OF_TYPES;i++)
+    {
+      xd->xnee_info.data_ranges[i]=0;
+    }
+ 
+  xnee_free_ranges(xd);  
+  
   return XNEE_OK;
 }
 
