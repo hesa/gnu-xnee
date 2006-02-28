@@ -46,6 +46,9 @@ extern xnee_data   *ext_xd;
 extern gnee_xnee   *ext_gx;
 extern GtkWidget   *ext_gnee_window;
 
+static int x_offset   = 0;
+static int y_offset   = 0;
+static int use_offset = 0;
 
 const char *events_string   = "Events";
 const char *replies_string  = "Replies";
@@ -646,17 +649,17 @@ on_wait_spinbutton_change_value        (GtkSpinButton   *spinbutton,
   GNEE_DEBUG(("on_wait_spinbutton\n"));
   delay = gtk_spin_button_get_value_as_int(spinbutton);
     
-    if (ext_xd != NULL)
-      {
-	if (use_delay)
-	  {
-	    gx_set_interval (ext_xd, delay);
-	  }
-	else
-	  {
-	    gx_set_interval (ext_xd, 0);
-	  }
-      }
+  if (ext_xd != NULL)
+    {
+      if (use_delay)
+	{
+	  gx_set_interval (ext_xd, delay);
+	}
+      else
+	{
+	  gx_set_interval (ext_xd, 0);
+	}
+    }
 }
 
 void
@@ -1550,4 +1553,84 @@ on_button5_clicked                     (GtkButton       *button,
     }
 }
 
+
+
+void
+on_new_win_check_toggled               (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  int use_recall;
+  GNEE_DEBUG(("on_new_win_checkbox\n"));
+  
+  use_recall = gtk_toggle_button_get_active(togglebutton);
+
+  if (ext_xd != NULL)
+    {
+      if (use_recall)
+	{
+	  gx_set_recall_window_pos(ext_xd); 
+	}
+      else
+	{
+	  gx_unset_recall_window_pos(ext_xd); 
+	}
+    }
+}
+
+
+
+void
+on_x_offs_spin_changed                 (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data)
+{
+  x_offset = gtk_spin_button_get_value_as_int(spinbutton);
+  
+  if (ext_xd != NULL)
+    {
+      if (use_offset)
+	{
+	  gx_set_replay_offset_x (ext_xd, x_offset);
+	}
+    }
+}
+
+
+void
+on_y_offs_spin_changed                 (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data)
+{
+  y_offset = gtk_spin_button_get_value_as_int(spinbutton);
+  
+  if (ext_xd != NULL)
+    {
+      if (use_offset)
+	{
+	  gx_set_replay_offset_y (ext_xd, y_offset);
+	}
+    }
+}
+
+
+void
+on_offset_toggle_toggled               (GtkToggleButton *togglebutton,
+                                        gpointer         user_data)
+{
+  GNEE_DEBUG(("%s\n", __func__));
+  
+  use_offset = gtk_toggle_button_get_active(togglebutton);
+
+  if (ext_xd != NULL)
+    {
+      if (use_offset)
+	{
+	  gx_set_replay_offset_x(ext_xd, x_offset); 	
+	  gx_set_replay_offset_y(ext_xd, y_offset); 
+	}
+      else
+	{
+	  gx_set_replay_offset_x(ext_xd, 0);
+	  gx_set_replay_offset_y(ext_xd, 0); 
+	}
+    }
+}
 

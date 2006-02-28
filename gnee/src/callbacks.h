@@ -374,3 +374,19 @@ on_button5_clicked                     (GtkButton       *button,
 void
 on_about_ok_button_clicked             (GtkButton       *button,
                                         gpointer         user_data);
+
+void
+on_new_win_check_toggled               (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);
+
+void
+on_x_offs_spin_changed                 (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_y_offs_spin_changed                 (GtkSpinButton   *spinbutton,
+                                        gpointer         user_data);
+
+void
+on_offset_toggle_toggled               (GtkToggleButton *togglebutton,
+                                        gpointer         user_data);

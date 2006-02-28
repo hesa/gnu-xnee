@@ -152,6 +152,11 @@ gx_set_variable_data(xnee_data *xd, gnee_xnee *gx);
 
 #define gx_set_replay_speed(xd,s)        xnee_set_replay_speed(xd,s)
 
+#define gx_set_replay_offset_x(xd,val)   xnee_set_replay_offset_x(xd,val)
+#define gx_set_replay_offset_y(xd,val)   xnee_set_replay_offset_y(xd,val)
+
+#define gx_set_recall_window_pos(xd)     xnee_set_recall_window_pos (xd)
+#define gx_unset_recall_window_pos(xd)   xnee_unset_recall_window_pos (xd)
 #define gx_set_interval(xd,i)            xnee_set_interval(xd,i)      
 #define gx_set_verbose(xd)               xnee_set_verbose(xd)
 #define gx_unset_verbose(xd)             xnee_unset_verbose(xd)
@@ -269,8 +274,6 @@ gx_set_xd_settings();
 
 int 
 gx_set_use_speed (int val) ;
-
-
 
 
 #endif /* GNEE_XNEE__H */
