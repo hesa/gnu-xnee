@@ -219,7 +219,7 @@ build_cvs()
     mkdir  /tmp/xnee_tar
     cd     /tmp/xnee_tar
     export CVS_RSH=ssh
-    cvs -dhesa@subversions.gnu.org:/cvsroot/xnee co xnee
+    cvs -dhesa@cvs.savannah.gnu.org:/cvsroot/xnee co xnee
     DATE=$(date '+%Y%m%d')
     tar cvf Xnee-cvs-${DATE}.tar *
     gzip Xnee-cvs-${DATE}.tar 
