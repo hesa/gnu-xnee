@@ -1,3 +1,10 @@
+2006-03-02  Henrik Sandklef  <hesa@gnu.org>
+
+	* gnee/src/callbacks.c: 
+
+	Added timeout to make the gnee window
+	get iconified before replaying.
+
 2006-02-28  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_range.c: 

@@ -1,9 +1,10 @@
-Changes in 2.04.90
+Changes in coming 2.05
 ==============================
 
   New features:
 
-     * Handled windows placed differently during replay than during record
+     * Handled that windows may be placed differently 
+       during replay than during record
 
   New Options for cnee
 
