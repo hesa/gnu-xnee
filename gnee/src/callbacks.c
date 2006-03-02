@@ -562,6 +562,12 @@ on_replay                              (GtkButton       *button,
       
       if (ext_xd != NULL)
         {
+	  /* This usleep is to prevent the 
+	   * window iconification to disturbe
+	   * replay.....
+	   */
+	  usleep(50*1000);
+
 	  gx_start_replaying(ext_xd);
         }
     }
