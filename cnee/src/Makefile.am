@@ -1,8 +1,19 @@
 bin_PROGRAMS = cnee
 cnee_SOURCES = main.c parse.c parse.h 
-man1_MANS = cnee.1
+man_MANS = cnee.1
 cnee_TEXINFOS = cnee.texi
-info_TEXINFOS = cnee.texi
+
+EXTRA_DIST=$(man_MANS)
+
+BUILT_SOURCES = cnee.info cnee.texi
+CLEAN_FILES   = cnee.info cnee.texi
+
+
+cnee.texi: cnee$(EXEEXT)
+	./cnee --infopage > $@
+
+cnee.info: cnee.texi
+	$(MAKEINFO) $< 
 
 LIBXNEE_DIR = ../../libxnee
 
@@ -42,8 +53,6 @@ else
 PEDANTIC_FLAGS = 
 endif
 
-.info.texi:
-	makeinfo 
 
 AM_CFLAGS = -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${BUF_VERBOSE_FLAG}  ${USER_CFLAGS} ${GCOV_FLAG} ${GPROF_FLAG}
 
@@ -56,12 +65,10 @@ cnee_DEPENDENCIES = ${LIBXNEE_DIR}/src/libxnee.a
 test-cli:
 	(cd test ; ./test_all.sh)
 
+.info.texi:
+	makeinfo 
+
 info: cnee.info 
-
-
-cnee.texi: cnee$(EXEEXT)
-	./cnee --infopage > $@
-
 
 man: cnee.1
 
