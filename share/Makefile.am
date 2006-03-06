@@ -1,4 +1,4 @@
-XNEE_DATA_FILES = xnee.sh.in1
+XNEE_DATA_FILES = xnee.sh
 EXTRA_DIST = $(XNEE_DATA_FILES) 
 pkgdata_DATA = $(XNEE_DATA_FILES)
 
