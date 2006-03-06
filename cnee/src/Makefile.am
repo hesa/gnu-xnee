@@ -2,6 +2,7 @@ bin_PROGRAMS = cnee
 cnee_SOURCES = main.c parse.c parse.h 
 man_MANS = cnee.1
 cnee_TEXINFOS = cnee.texi
+info_TEXINFOS = cnee.texi
 
 EXTRA_DIST=$(man_MANS)
 

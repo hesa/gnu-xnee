@@ -42,4 +42,3 @@ man:
 	cd ./cnee/src && make man
 
 
-
