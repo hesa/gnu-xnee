@@ -1,10 +1,12 @@
-Changes in 2.04.92
+Changes in coming 2.05
 ==============================
 
   New features:
 
      * Handled that windows may be placed differently 
        during replay than during record
+
+     * AUtomake fixes for generated files 
 
   New Options for cnee
 

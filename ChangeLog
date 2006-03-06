@@ -1,3 +1,17 @@
+2006-03-06    <hesa@localhost.localdomain>
+
+	* examples/Makefile.am: 
+
+	Bug fixes for handling generated example file
+
+	* share/Makefile.am: 
+
+	Bug fixes for handling generated sample file
+
+	* cnee/src/Makefile.am: 
+
+	Bug fixes for handling generated texinfo file
+
 2006-03-02  Henrik Sandklef  <hesa@gnu.org>
 
 	* gnee/src/callbacks.c: 
