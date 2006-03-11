@@ -1,13 +1,13 @@
 bin_PROGRAMS = cnee
 cnee_SOURCES = main.c parse.c parse.h 
+BUILT_SOURCES = cnee.texi
+CLEANFILES    = cnee.texi
 man_MANS = cnee.1
-cnee_TEXINFOS = cnee.texi
-info_TEXINFOS = cnee.texi
+#cnee_TEXINFOS = cnee.texi
+#info_TEXINFOS = cnee.texi
 
-EXTRA_DIST=$(man_MANS)
+EXTRA_DIST=$(man_MANS) cnee.info
 
-BUILT_SOURCES = cnee.info cnee.texi
-CLEAN_FILES   = cnee.info cnee.texi
 
 
 cnee.texi: cnee$(EXEEXT)
