@@ -79,6 +79,7 @@ xnee_get_max_range (xnee_data *xd)
   int max_val=0;
   for ( i=0 ; i<XNEE_NR_OF_TYPES ; i++)
     {
+/*       printf ("  get max range %d\n", xd->xnee_info.data_ranges[i]); */
       max_val=XNEE_MAX (xd->xnee_info.data_ranges[i], max_val);
     }
   xnee_verbose((xd, "Returning max_val=%d\n", max_val));
@@ -166,6 +167,7 @@ xnee_close_down(xnee_data* xd)
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.4 \n"  )); 
   if ( xd->data!=NULL)  
     {
+/*       printf ("close data in %s   ---> %d\n", __func__, xd->data); */
       xnee_verbose((xd, "Closing displays data=%d \n", (int) xd->data));
       XCloseDisplay ( xd->data );
     }
@@ -191,6 +193,7 @@ xnee_close_down(xnee_data* xd)
   xd->rc_file=NULL;
   xnee_verbose((xd ," --  xnee_close_down() free rc_file <-- %d\n", ret));
 
+
   xnee_verbose((xd ," --  xnee_close_down() free rt_file \n"  ));
   ret = xnee_free_file (xd, xd->rt_name,  xd->rt_file);
   xd->rt_file=NULL;
@@ -201,8 +204,10 @@ xnee_close_down(xnee_data* xd)
   xd->err_file=NULL;
   xnee_verbose((xd ," --  xnee_close_down() free err_file <-- %d\n", ret));
 
+  xnee_verbose((xd ," --  xnee_close_down() free out_file \n"  ));
   ret = xnee_free_file (xd, xd->out_name,  xd->out_file);
   xd->out_file=NULL;
+  xnee_verbose((xd ," --  xnee_close_down() free out_file <-- %d\n", ret));
 
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.6 \n"  ));
   ret = xnee_free_xnee_data(xd);

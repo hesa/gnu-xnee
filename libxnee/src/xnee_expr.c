@@ -268,6 +268,7 @@ xnee_expression_handle_replay(xnee_data *xd,
   return ret;
 }
 
+
 static int
 xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 {
@@ -276,8 +277,19 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   char *range_tmp = NULL;
   char *range = NULL;
   char range_buf[RANGE_BUF_SIZE];
+  char opt_buf[RANGE_BUF_SIZE];
+  char *opt;
   int len=0;
   
+
+  if (tmp==NULL)
+    {
+      return XNEE_WRONG_PARAMS;
+    }
+
+  printf ("---> %s %d\n", __func__, tmp);
+  printf ("---> %s %s\n", __func__, tmp);
+
   xnee_verbose ((xd, "handling settings: %s\n", tmp));
   len=strlen(tmp);
 
@@ -309,12 +321,24 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  range = NULL;
 	}
     }
+
+  if ( range!=NULL )
+    {
+      len=strlen(tmp) - strlen(range) - 1;
+    }
+  else
+    {
+      len=strlen(tmp) - 1;
+    }
+  strncpy (opt_buf, tmp, len);
+  opt_buf[len]='\0';
   
-  if (!strncmp(XNEE_DISPLAY,tmp,strlen(XNEE_DISPLAY)))
+
+  if (xnee_parse_check(xd, XNEE_DISPLAY,opt_buf))
     {
       ret = xnee_set_display_name (xd, range) ;
     }
-  else if (!strncmp(XNEE_FIRST_LAST,tmp,strlen(XNEE_FIRST_LAST)))
+  else if (xnee_parse_check(xd, XNEE_FIRST_LAST,opt_buf))
     {
       if (xnee_check_true(range))
 	{
@@ -331,7 +355,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  return XNEE_SYNTAX_ERROR;
 	}
     }
-  else if (!strncmp(XNEE_SYNC_MODE,tmp,strlen(XNEE_SYNC_MODE)))
+  else if (xnee_parse_check(xd, XNEE_SYNC_MODE, opt_buf))
     {
       if (xnee_check_true(range))
 	{
@@ -349,12 +373,16 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	}
       ret = XNEE_OK;
     }
-  else if (!strncmp(XNEE_HUMAN_PRINTOUT,tmp,strlen(XNEE_HUMAN_PRINTOUT)))
+  else if (xnee_parse_check(xd, XNEE_HUMAN_PRINTOUT,opt_buf))
     {
       if (xnee_check_true(range))
-	xnee_set_human_printout (xd);
+	{
+	  xnee_set_human_printout (xd);
+	}
       else if (xnee_check_false(range))
-	xnee_set_xnee_printout (xd);
+	{
+	  xnee_set_xnee_printout (xd);
+	}
       else
 	{
 	  xnee_verbose((xd, "Printout mode is invalid ... bailing out\n"));
@@ -363,7 +391,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	}
       ret = XNEE_OK;
     }
-  else if (!strncmp(XNEE_FORCE_REPLAY,tmp,strlen(XNEE_FORCE_REPLAY)))
+  else if (xnee_parse_check(xd, XNEE_FORCE_REPLAY,opt_buf))
     {
       if (xnee_check_true(range))
 	xd->force_replay = True;
@@ -377,7 +405,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	}
       ret = XNEE_OK;
     }
-  else if (!strncmp(XNEE_ALL_CLIENTS,tmp,strlen(XNEE_ALL_CLIENTS)))
+  else if (xnee_parse_check(xd, XNEE_ALL_CLIENTS,opt_buf))
     {
        if ( range==NULL)
           xd->all_clients = True;
@@ -393,7 +421,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
        }
       ret = XNEE_OK;
     }
-  else if (!strncmp(XNEE_FUTURE_CLIENTS,tmp,strlen(XNEE_FUTURE_CLIENTS)))
+  else if (xnee_parse_check(xd, XNEE_FUTURE_CLIENTS,opt_buf))
     {
        if ( range==NULL)
           xd->all_clients = False;
@@ -409,7 +437,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
        }
       ret = XNEE_OK;
     }
-  else if (!strncmp(XNEE_DIMENSION,tmp,strlen(XNEE_DIMENSION)))
+  else if (xnee_parse_check(xd, XNEE_DIMENSION,opt_buf))
     {
       ret = xnee_set_rec_resolution (xd, range); 
       if ( ret != XNEE_OK)
@@ -417,12 +445,20 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  ret = XNEE_BAD_RESOLUTION;
 	}
     }
-  else if (!strncmp(XNEE_VERBOSE,tmp,strlen(XNEE_VERBOSE)))  
+  else if (xnee_parse_check(xd, XNEE_VERBOSE,opt_buf))  
     {
-      if (xnee_check_true(range))
-	ret = xnee_set_verbose(xd);
+      if ( range == NULL )
+	{
+	  ret = xnee_set_verbose(xd);
+	}
+      else if (xnee_check_true(range))
+	{
+	  ret = xnee_set_verbose(xd);
+	}
       else if (xnee_check_false(range))
-	ret = xnee_unset_verbose(xd);
+	{
+	  ret = xnee_unset_verbose(xd);
+	}
       else
 	{
 	  xnee_verbose((xd, "Verbose mode is invalid ... bailing out\n"));
@@ -430,7 +466,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  return XNEE_SYNTAX_ERROR;
 	}
     }
-  else if (!strncmp(XNEE_BUFFER_VERBOSE,tmp,strlen(XNEE_BUFFER_VERBOSE)))  
+  else if (xnee_parse_check(xd, XNEE_BUFFER_VERBOSE,opt_buf))  
     {
       if (xnee_check_true(range))
 	ret = xnee_set_buf_verbose(xd);
@@ -443,16 +479,20 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  return XNEE_SYNTAX_ERROR;
 	}
     }
-  else if (!strncmp(XNEE_DELAY_TIME,tmp,strlen(XNEE_DELAY_TIME))) 
+  else if (xnee_parse_check(xd, XNEE_DELAY_TIME,opt_buf)) 
     {
       ret = xnee_set_interval(xd, atoi(range));
     }
-  else if (!strncmp(XNEE_ADJUST_RESOLUTION,tmp,strlen(XNEE_ADJUST_RESOLUTION))) 
+  else if (xnee_parse_check(xd, XNEE_ADJUST_RESOLUTION,opt_buf)) 
     {
       if (xnee_check_true(range))
-	ret = xnee_set_resolution_used (xd);
+	{
+	  ret = xnee_set_resolution_used (xd);
+	}
       else if (xnee_check_false(range))
-	ret = xnee_unset_resolution_used (xd);
+	{
+	  ret = xnee_unset_resolution_used (xd);
+	}
       else
 	{
 	  xnee_verbose((xd, "Resolution mode is invalid ... bailing out\n"));
@@ -460,40 +500,44 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  return XNEE_SYNTAX_ERROR;
 	}
     }
-  else if (!strncmp(XNEE_REPLAY_RESOLUTION,tmp,strlen(XNEE_REPLAY_RESOLUTION)))
+  else if (xnee_parse_check(xd, XNEE_REPLAY_RESOLUTION,opt_buf))
     {
       ret = xnee_set_rep_resolution (xd, range);
     }
-  else if (!strncmp(XNEE_RECORDED_RESOLUTION,tmp,strlen(XNEE_RECORDED_RESOLUTION)))
+  else if (xnee_parse_check(xd, XNEE_RECORDED_RESOLUTION,opt_buf))
     {
       ret = xnee_set_rec_resolution (xd, range);
     }
-  else if (!strncmp(XNEE_NEW_WINDOW,tmp,strlen(XNEE_NEW_WINDOW)))
+  else if (xnee_parse_check(xd, XNEE_REPLAY_OFFSET,opt_buf))
+    {
+      ret = xnee_set_replay_offset_str (xd, range);
+    }
+  else if (xnee_parse_check(xd, XNEE_RECALL_WINDOW_POS,opt_buf))
     {
       xnee_set_new_window_pos_value ( xd, atoi(range));
     }
-  else if (!strncmp(XNEE_LOOPS,tmp,strlen(XNEE_LOOPS))) 
+  else if (xnee_parse_check(xd, XNEE_LOOPS,opt_buf)) 
     {
       fprintf (stderr, "Obsolete option: '%s'\n", tmp);
       ret = xnee_set_events_max(xd, atoi(range));
     }
-  else if (!strncmp(XNEE_DATA_MAX,tmp,strlen(XNEE_DATA_MAX))) 
+  else if (xnee_parse_check(xd, XNEE_DATA_MAX,opt_buf)) 
     {
       ret = xnee_set_data_max(xd, atoi(range));
     }
-  else if (!strncmp(XNEE_EVENT_MAX,tmp,strlen(XNEE_EVENT_MAX))) 
+  else if (xnee_parse_check(xd, XNEE_EVENT_MAX,opt_buf)) 
     {
       ret = xnee_set_events_max(xd, atoi(range));
     }
-  else if (!strncmp(XNEE_TIME_MAX,tmp,strlen(XNEE_TIME_MAX))) 
+  else if (xnee_parse_check(xd, XNEE_TIME_MAX,opt_buf)) 
     {
       ret = xnee_set_time_max(xd, atoi(range));
     }
-  else if (!strncmp(XNEE_SPEED_PERCENT,tmp,strlen(XNEE_SPEED_PERCENT))) 
+  else if (xnee_parse_check(xd, XNEE_SPEED_PERCENT,opt_buf)) 
     {
       ret = xnee_set_replay_speed_str (xd, range);
     }
-  else if (!strncmp(XNEE_STOP_KEY,tmp,strlen(XNEE_STOP_KEY)))
+  else if (xnee_parse_check(xd, XNEE_STOP_KEY,opt_buf))
     {
       /* If there is a '0', we should not read it */
       if (!xnee_check_false(range))
@@ -505,7 +549,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  ret = XNEE_OK;
 	}
     }
-  else if (!strncmp(XNEE_PAUSE_KEY,tmp,strlen(XNEE_PAUSE_KEY)))
+  else if (xnee_parse_check(xd, XNEE_PAUSE_KEY,opt_buf))
     {
       /* If there is a '0', we should not read it */
       if (!xnee_check_false(range))
@@ -515,7 +559,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  ret = XNEE_OK;
 	}
     }
-  else if (!strncmp(XNEE_RESUME_KEY,tmp,strlen(XNEE_RESUME_KEY)))
+  else if (xnee_parse_check(xd, XNEE_RESUME_KEY,opt_buf))
     {
       if (!xnee_check_false(range))
 	  ret = xnee_set_key (xd, XNEE_GRAB_RESUME, range);
@@ -524,7 +568,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  ret = XNEE_OK;
 	}
     }
-  else if (!strncmp(XNEE_INSERT_KEY,tmp,strlen(XNEE_INSERT_KEY)))
+  else if (xnee_parse_check(xd, XNEE_INSERT_KEY,opt_buf))
     {
       if (!xnee_check_false(range))
 	  ret = xnee_set_key (xd, XNEE_GRAB_INSERT, range);
@@ -533,7 +577,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  ret = XNEE_OK;
 	}
     }
-  else if (!strncmp(XNEE_EXEC_KEY,tmp,strlen(XNEE_EXEC_KEY)))
+  else if (xnee_parse_check(xd, XNEE_EXEC_KEY,opt_buf))
     {
       if (!xnee_check_false(range))
 	ret = xnee_set_key (xd, XNEE_GRAB_EXEC, range);
@@ -542,7 +586,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 	  ret = XNEE_OK;
 	}
     }
-  else if (!strncmp(XNEE_EXEC_PROGRAM,tmp,strlen(XNEE_EXEC_PROGRAM)))
+  else if (xnee_parse_check(xd, XNEE_EXEC_PROGRAM,opt_buf))
     {
       if ( (strncmp(XNEE_EXEC_NO_PROG, range, strlen(XNEE_EXEC_NO_PROG))==0))
 	{
@@ -561,22 +605,22 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
    *  Don't use
    *
    */
-   else if (!strncmp(XNEE_STORE_MOUSE_POS,tmp,strlen(XNEE_STORE_MOUSE_POS)))  
+   else if (xnee_parse_check(xd, XNEE_STORE_MOUSE_POS,opt_buf))  
      {	  
        xnee_set_store_mouse_pos(xd);
      } 
-/*   else if (!strncmp(XNEE_KEYBOARD,tmp,strlen(XNEE_KEYBOARD)))  */
+/*   else if (xnee_parse_check(xd, XNEE_KEYBOARD,opt_buf))  */
 /*     {	  */
 /*       ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT,  */
 /* 			"KeyPress-KeyRelease"); */
       
 /*     } */
-/*   else if (!strncmp(XNEE_MOUSE,tmp,strlen(XNEE_MOUSE))) */
+/*   else if (xnee_parse_check(xd, XNEE_MOUSE,opt_buf)) */
 /*     { */
 /*       ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT,  */
 /* 			"ButtonPress-MotionNotify"); */
 /*     } */
-  else if (!strncmp(XNEE_PLUGIN,tmp,strlen(XNEE_PLUGIN))) 
+  else if (xnee_parse_check(xd, XNEE_PLUGIN,opt_buf)) 
     {
       /* If there is a '0', we should not read it */
       if (!xnee_check_false(range))
@@ -584,27 +628,27 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
       else
 	ret = XNEE_OK;
     }
-  else if (!strncmp(XNEE_OUT_FILE,tmp,strlen(XNEE_OUT_FILE))) 
+  else if (xnee_parse_check(xd, XNEE_OUT_FILE,opt_buf)) 
     {
       ret = xnee_set_out_name (xd, range);
     }
-  else if (!strncmp(XNEE_ERR_FILE,tmp,strlen(XNEE_ERR_FILE))) 
+  else if (xnee_parse_check(xd, XNEE_ERR_FILE,opt_buf)) 
     {
       ret = xnee_set_err_name (xd, range);
     }
-  else if (!strncmp(XNEE_FEEDBACK_XOSD,tmp,strlen(XNEE_FEEDBACK_XOSD))) 
+  else if (xnee_parse_check(xd, XNEE_FEEDBACK_XOSD,opt_buf)) 
     {
       ret = xnee_set_xosd_feedback(xd);
     }
-  else if (!strncmp(XNEE_FEEDBACK_STDERR,tmp,strlen(XNEE_FEEDBACK_STDERR))) 
+  else if (xnee_parse_check(xd, XNEE_FEEDBACK_STDERR,opt_buf)) 
     {
       ret = xnee_set_stderr_feedback(xd);
     }
-  else if (!strncmp(XNEE_FEEDBACK_NONE,tmp,strlen(XNEE_FEEDBACK_NONE))) 
+  else if (xnee_parse_check(xd, XNEE_FEEDBACK_NONE,opt_buf)) 
     {
       ret = xnee_set_no_feedback(xd);
     }
-  else if (!strncmp(XNEE_DISTRIBUTE,tmp,strlen(XNEE_DISTRIBUTE)))
+  else if (xnee_parse_check(xd, XNEE_DISTRIBUTE,opt_buf))
     {
        if ( (range==NULL ) || (strlen(range)==0) )
        {
@@ -615,52 +659,52 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
           ret = xnee_add_display_list ( xd, range);
        }
     }
-  else if (!strncmp(XNEE_DEVICE_EVENT_STR,tmp,strlen(XNEE_DEVICE_EVENT_STR)))
+  else if (xnee_parse_check(xd, XNEE_DEVICE_EVENT_STR,opt_buf))
     {
       ret = xnee_parse_range ( xd, XNEE_DEVICE_EVENT, range);
     }
-  else if (!strncmp(XNEE_DELIVERED_EVENT_STR,
-		    tmp,strlen(XNEE_DELIVERED_EVENT_STR)))
+  else if (xnee_parse_check(xd, XNEE_DELIVERED_EVENT_STR,
+		    opt_buf))
     {
       ret = xnee_parse_range ( xd, XNEE_DELIVERED_EVENT, range);
     }
-  else if (!strncmp(XNEE_ERROR_STR,tmp,strlen(XNEE_ERROR_STR))) 
+  else if (xnee_parse_check(xd, XNEE_ERROR_STR,opt_buf)) 
     {
       ret = xnee_parse_range ( xd, XNEE_ERROR, range);
     }
-  else if (!strncmp(XNEE_REQUEST_STR,tmp,strlen(XNEE_REQUEST_STR)))
+  else if (xnee_parse_check(xd, XNEE_REQUEST_STR,opt_buf))
     {
       ret = xnee_parse_range ( xd, XNEE_REQUEST, range);
     }
-  else if (!strncmp(XNEE_REPLY_STR,tmp,strlen(XNEE_REPLY_STR)))  
+  else if (xnee_parse_check(xd, XNEE_REPLY_STR,opt_buf))  
     {
       ret = xnee_parse_range ( xd, XNEE_REPLY, range);
     }
-  else if (!strncmp(XNEE_EXT_REQ_MAJ_STR,tmp,strlen(XNEE_EXT_REQ_MAJ_STR)))
+  else if (xnee_parse_check(xd, XNEE_EXT_REQ_MAJ_STR,opt_buf))
     {
       ret = xnee_parse_range ( xd, XNEE_EXT_REQUEST_MAJOR, range);
     }
-  else if (!strncmp(XNEE_EXT_REQ_MIN_STR,tmp,strlen(XNEE_EXT_REQ_MIN_STR)))
+  else if (xnee_parse_check(xd, XNEE_EXT_REQ_MIN_STR,opt_buf))
     {
       ret = xnee_parse_range ( xd, XNEE_EXT_REQUEST_MINOR, range);
     }
-  else if (!strncmp(XNEE_EXT_REP_MAJ_STR,tmp,strlen(XNEE_EXT_REP_MAJ_STR))) 
+  else if (xnee_parse_check(xd, XNEE_EXT_REP_MAJ_STR,opt_buf)) 
     {
       ret = xnee_parse_range ( xd, XNEE_EXT_REPLY_MAJOR, range);
     }
-  else if (!strncmp(XNEE_EXT_REP_MIN_STR,tmp,strlen(XNEE_EXT_REP_MIN_STR))) 
+  else if (xnee_parse_check(xd, XNEE_EXT_REP_MIN_STR,opt_buf)) 
     {
       ret = xnee_parse_range ( xd, XNEE_EXT_REPLY_MINOR, range);
     }
-  else if (!strncmp(XNEE_MAX_THRESHOLD,tmp,strlen(XNEE_MAX_THRESHOLD))) 
+  else if (xnee_parse_check(xd, XNEE_MAX_THRESHOLD,opt_buf)) 
     {
       ret = xnee_set_max_threshold (xd,atoi(range));
     }
-  else if (!strncmp(XNEE_MIN_THRESHOLD,tmp,strlen(XNEE_MIN_THRESHOLD))) 
+  else if (xnee_parse_check(xd, XNEE_MIN_THRESHOLD,opt_buf)) 
     {
       ret = xnee_set_min_threshold (xd,atoi(range));
     }
-  else if (!strncmp(XNEE_TOT_THRESHOLD,tmp,strlen(XNEE_TOT_THRESHOLD))) 
+  else if (xnee_parse_check(xd, XNEE_TOT_THRESHOLD,opt_buf)) 
     {
       ret = xnee_set_tot_threshold (xd,atoi(range));
     }
@@ -668,9 +712,14 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
     {
       ret=-1;
     }      
-  if (ret==XNEE_OK)
-    ret = XNEE_SETTINGS_DATA;
 
+  if (ret==XNEE_OK)
+    {
+      printf ("** xnee_expression_handle_settings SETTINGS DATA ret=%d\n", ret);
+      ret = XNEE_SETTINGS_DATA;
+    }
+
+  printf ("** xnee_expression_handle_settings ret=%d\n", ret);
   return ret;
 }
 
@@ -703,6 +752,8 @@ xnee_expression_handle_action(xnee_data *xd, char *tmp)
   if (strncmp(XNEE_EXEC_MARK,tmp,strlen(XNEE_EXEC_MARK))==0)
   {
 
+    xnee_verbose ((xd, "** handling action: %s==%s\n", tmp, XNEE_EXEC_MARK));
+
 
     exec_prog = xnee_get_exec_prog(xd);
     if (exec_prog != NULL)
@@ -717,13 +768,7 @@ xnee_expression_handle_action(xnee_data *xd, char *tmp)
 	system (exec_prog);
 	return XNEE_ACTION_DATA;
       }
-    system("xterm -fg yellow -bg blue");
   }
-  else
-    {
-      xnee_verbose ((xd, "handling exec %d\n", xnee_get_exec_prog(xd)));
-      getchar();
-    }
   return -1;
 }
 

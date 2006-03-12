@@ -273,7 +273,10 @@ xnee_handle_meta_data(xnee_data* xd, char * str)
 	   (strncmp (str, XNEE_STOP_KEY, strlen (XNEE_STOP_KEY)) == 0  )
 	   )
     {
-      ret = xnee_add_resource_syntax(xd, str);
+      printf (" *** HESA *** \n");
+      /* we shoule be able to remove this... at leats soon! */
+      /*       ret = xnee_add_resource_syntax(xd, str); */
+      ret = xnee_expression_handle_session(xd, str, NULL);
       XNEE_RETURN_IF_ERR(ret);
     }
   else if (strncmp (str, XNEE_DEVICE_EVENT_STR, strlen (XNEE_DEVICE_EVENT_STR)) == 0 )

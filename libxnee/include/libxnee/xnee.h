@@ -96,6 +96,7 @@ enum return_values
     XNEE_RANGE_FAILURE     ,
     XNEE_BAD_OFFSET        ,
     XNEE_WINDOW_POS_ADJ_ERROR     ,
+    XNEE_MISSING_ARG       ,
     XNEE_LAST_ERROR
   } _return_values;
   
@@ -144,7 +145,34 @@ struct data_description
   char *data_descr;
 };
 
+enum
+  {
+    XNEE_ANY_OPTION,
+    XNEE_GENERAL_OPTION,
+    XNEE_RECORD_OPTION,
+    XNEE_REPLAY_OPTION,
+    XNEE_SYNC_OPTION,
+    XNEE_GRAB_OPTION,
+    XNEE_MISC_OPTION,
+    XNEE_INTERNAL_OPTION,
+    XNEE_OBSOLETE_OPTION,
+    XNEE_RESOURCE_OPTION
+  } xnee_option_type;
 
+typedef struct
+{
+  char *option; 
+  char *short_option; 
+  char *args; 
+  char *description; 
+  int   type;
+} xnee_option_t;
+
+typedef struct
+{
+  xnee_option_t **options;
+  int             nr_of_options;
+} xnee_options_t;
 
 typedef struct 
 {

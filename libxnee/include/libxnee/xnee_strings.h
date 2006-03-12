@@ -25,6 +25,8 @@
 #ifndef XNEE_XNEE_STRINGS_H
 #define XNEE_XNEE_STRINGS_H
 
+#include "libxnee/xnee.h"
+
 extern const char*  XNEE_COMMENT_START_STR    ;
 extern const char   XNEE_COMMENT_START_CHAR   ;
 
@@ -70,8 +72,10 @@ extern const char*  XNEE_ADJUST_RESOLUTION    ;
 extern const char*  XNEE_DISTRIBUTE           ;
 extern const char*  XNEE_NO_EXPOSE            ;
 extern const char*  XNEE_NO_SYNC_MODE         ;
+extern const char*  XNEE_REPLAY_OFFSET        ;
 extern const char*  XNEE_USE_SYNC             ;
 extern const char*  XNEE_SYNC_MODE            ;
+extern const char*  XNEE_RECALL_WINDOW_POS    ;
 extern const char*  XNEE_HUMAN_PRINTOUT       ;
 extern const char*  XNEE_LOOPS                ;
 extern const char*  XNEE_FORCE_REPLAY         ;

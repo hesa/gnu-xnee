@@ -22,6 +22,9 @@
  * MA  02110-1301, USA.                                              
  ****/
 
+#include "libxnee/xnee.h"
+#include "libxnee/print_varargs.h"
+
 const char*  XNEE_HOME_URL             = "http://www.gnu.org/software/xnee/";
 const char*  XNEE_MAIL                 = "info-xnee@gnu.org";
 const char*  XNEE_BUG_MAIL             = "bug-xnee@gnu.org";
@@ -56,7 +59,6 @@ const char*  XNEE_EXEC_PROGRAM         = "exec-program";
 const char*  XNEE_EXEC_NO_PROG         = "xnee-exec-no-program";
 const char*  XNEE_EXEC_MARK            = "EXEC";
 const char*  XNEE_NEW_WINDOW_MARK      = "NEW-WINDOW";
-const char*  XNEE_NEW_WINDOW           = "record-window-position";
 const char*  XNEE_EVERYTHING           = "everything";
 const char*  XNEE_DELAY_TIME           = "time";
 const char*  XNEE_SPEED_PERCENT        = "speed-percent";
@@ -68,6 +70,8 @@ const char*  XNEE_NO_EXPOSE            = "no-expose";
 const char*  XNEE_NO_SYNC_MODE         = "no-sync";
 const char*  XNEE_USE_SYNC             = "sync";
 const char*  XNEE_SYNC_MODE            = "synchronised-replay";
+const char*  XNEE_RECALL_WINDOW_POS    = "recall-window-position";
+const char*  XNEE_REPLAY_OFFSET        = "replay-offset";
 const char*  XNEE_HUMAN_PRINTOUT       = "human-printout";
 const char*  XNEE_LOOPS                = "loops";
 const char*  XNEE_FORCE_REPLAY         = "force-replay";
@@ -148,6 +152,6 @@ const char*  XNEE_REAL_SCROLL       = "Scroll_L";
 const char*  XNEE_REAL_CAPS         = "Caps_Lock";
 const char*  XNEE_REAL_SHIFT        = "Shift_L";
 
-
-
 const char* NULL_STRING             = "NULL";
+
+

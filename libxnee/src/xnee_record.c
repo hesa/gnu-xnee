@@ -807,29 +807,20 @@ xnee_setup_recording(xnee_data *xd)
    */
   /*
     XRecordUnregisterClients( xd->control, 
-			    xd->record_setup->rContext,
-			    xd->record_setup->xids,2);
-  
-
-  if(!XRecordGetContext(xd->control, xd->record_setup->rContext, (XRecordState **) xd->record_setup->rState))
-  {
+    xd->record_setup->rContext,
+    xd->record_setup->xids,2);
+    
+    
+    if(!XRecordGetContext(xd->control, xd->record_setup->rContext, (XRecordState **) xd->record_setup->rState))
+    {
     xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
     exit(1);
-  }
+    }
   */
-/*
-  XRecordFreeState(xd->record_setup->rState); 
-  xd->record_setup->rState=NULL; 
-*/
-
-  xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n", 
-		xd->record_setup->rContext, 
-		(int) ( (xd->record_setup->rState) - (xd->record_setup->nclients) )));   
-  
-  /* Enable context for async interception 
-  XSynchronize(xd->data, True);  
+  /*
+    XRecordFreeState(xd->record_setup->rState); 
+    xd->record_setup->rState=NULL; 
   */
-
   
 /*   xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n",  */
 /* 		xd->record_setup->rContext,  */

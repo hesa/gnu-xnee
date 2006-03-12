@@ -36,7 +36,7 @@
 
 static char *latest_error = NULL ;
 
-char error_descr_solut[256][256] = 
+char error_descr_solut[128][256] = 
   {
     /* XNEE_OK */            
     "OK", 
@@ -209,6 +209,10 @@ char error_descr_solut[256][256] =
     /* XNEE_WINDOW_POS_ADJ_ERROR */
     "Fatal error while adjusting window position",
     "Xnee could not adjust window position. Report the problem",
+
+    /* XNEE_MISSING_ARG */
+    "Missing arguments when trying to parse",
+    "Xnee misses one or more arguments. Make sure your command line or file is correct",
 
    /* XNEE_LAST_ERROR */
     "Last error",

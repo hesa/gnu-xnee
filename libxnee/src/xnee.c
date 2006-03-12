@@ -74,10 +74,18 @@
 int 
 xnee_check ( const char *arg, const char *long_arg , const char *short_arg ) 
 {
+  const char *tmp_long  = long_arg;
+  const char *tmp_short = short_arg;
+  
+  if (tmp_short==NULL)
+    {
+      tmp_short = tmp_long;
+    }
+
   /* returns 1 if arg was equal to any of long_arg or short_arg, 
      else it returns 0*/
-   return (int) ( (strcmp ( arg, long_arg)  == 0 ) || 
-                  (strcmp ( arg, short_arg) == 0 ) ) ; 
+   return (int) ( (strcmp ( arg, tmp_long)  == 0 ) || 
+                  (strcmp ( arg, tmp_short) == 0 ) ) ; 
 }
 
 

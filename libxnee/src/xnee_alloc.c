@@ -108,7 +108,7 @@ xnee_free_recordext_setup(xnee_data* xd)
      record_setup = xd->record_setup;
      
      max = xnee_get_max_range(xd);
-     
+
      ret = xnee_unsetup_recording(xd);
      if (ret!=XNEE_OK)
        {
@@ -216,6 +216,7 @@ xnee_reset_xnee_info(/*@null@*/ xnee_data *xd)
   {
      return XNEE_NO_MAIN_DATA;
   }
+
   for (i=0;i<XNEE_NR_OF_TYPES;i++)
     {
       xd->xnee_info.data_ranges[i]=0;
@@ -304,6 +305,8 @@ xnee_new_xnee_data()
   
    ret = xnee_init(xd);
    XNEE_RETURN_NULL_IF_ERR(ret);
+
+   xnee_init_strings(xd);
 
    return xd;
 }

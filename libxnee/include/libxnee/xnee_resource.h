@@ -40,6 +40,8 @@
 #include "libxnee/datastrings.h"
 
 
+extern xnee_options_t  *xnee_options;
+
 #ifndef XNEE_RESOURCE_H
 #define XNEE_RESOURCE_H
 
@@ -58,7 +60,10 @@
 #define XNEE_RES_AUTHOR_NAME              "Author"
 #define XNEE_RES_AUTHOR_EMAIL             "Email"
 
- 
+#define XNEE_NO_SYNTAX  0
+#define XNEE_CLI_SYNTAX 1
+#define XNEE_XNS_SYNTAX 2
+#define XNEE_CLI_PREFIX "--"
 
 #define XNEE_RESOURCE_CHECK(a,b) strncmp(a,b,strlen(a))
 #define XNEE_REMOVE_BEGINING_BLANKS(val) \
@@ -87,19 +92,34 @@ xnee_free_xnee_resource_meta(xnee_resource_meta* xrm);
 int
 xnee_add_resource(xnee_data *xd);
 
+
 /**
- * Takes a Xnee setting in form of a string (with the resource format).
+ * Takes a Xnee setting in form of a string (using Xnee Session/Resource file format)
+ * @param xd  
+ * @param tmp  
+ * @return int  1 on success, 0 on failure.
+ * \todo (return values need to be changed) 
+ */
+#define xnee_add_resource_syntax(xd, tmp_str)  xnee_add_resource_syntax_impl(xd, tmp_str, XNEE_XNS_SYNTAX) 
+
+/**
+ * Takes a Xnee setting in form of a string as used by program (gnee, cnee)
+ * @param xd  
+ * @param tmp  
+ * @return int  1 on success, 0 on failure.
+ * \todo (return values need to be changed) 
+ */
+#define xnee_add_cli_syntax(xd, tmp_str)  xnee_add_resource_syntax_impl(xd, tmp_str, XNEE_CLI_SYNTAX) 
+
+/**
+ * Takes a Xnee setting in form of a string 
  * @param xd  
  * @param tmp  
  * @return int  1 on success, 0 on failure.
  * \todo (return values need to be changed) 
  */
 int
-xnee_add_resource_syntax(xnee_data *xd, char *tmp);
-
-
-
-
+xnee_add_resource_syntax_impl(xnee_data *xd, char *str, int syntax_type);
 
 int
 xnee_set_project_name(xnee_data *xd, char* project_name_str);
@@ -191,5 +211,37 @@ xnee_get_char_str(xnee_data *xd);
 
 int
 xnee_handle_resource_meta (xnee_data *xd, char *meta_str);
+
+int
+xnee_is_option(xnee_data *xd, 
+	       xnee_options_t *options, 
+	       const char *str, 
+	       int syntax_type);
+
+int
+xnee_is_resource_option(xnee_data *xd, const char *str, int syntax_type);
+
+
+int
+xnee_add_strings (xnee_data  *xd, 
+		  xnee_options_t  *options,
+		  const char *long_option, 
+		  const char *short_option, 
+		  char       *args,
+		  char       *option_descr,
+		  int         type);
+
+int
+xnee_find_option_entry (xnee_data  *xd, const char *option, xnee_options_t  *options);
+
+#define xnee_parse_check(xd, str, opt) \
+    xnee_parse_check_impl(xd, xnee_options, str, opt) 
+
+int 
+xnee_parse_check_impl(xnee_data *xd, 
+		      xnee_options_t *options,
+		      const char *str, 
+		      char *opt);
+
 
 #endif  /* XNEE_RESOURCE_H */

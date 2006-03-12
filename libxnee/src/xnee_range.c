@@ -159,9 +159,11 @@ xnee_bsort_all(void)
 static int 
 xnee_init_list(struct xnee_range *xr, int size)
 {
+/*   printf ("\t'%s'  need=%d\n", */
+/* 	  __func__, need_init); */
   xr->index = 0;
   xr->size  = size;
-  xr->data  =  (int*) malloc (xr->size*sizeof(int));
+  xr->data  = (int*) malloc (xr->size*sizeof(int));
   return XNEE_OK;
 }
 
@@ -169,6 +171,10 @@ int
 xnee_free_ranges(xnee_data *xd)
 {
    int i ; 
+
+/*    printf (" '%s'  delete  need=%d\n", */
+/* 	   __func__, need_init); */
+
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
    {
      XNEE_FREE_AND_NULL(xrs->type[i].data);
@@ -185,11 +191,16 @@ xnee_init_ranges()
    int i ; 
    xrs->alloc_size = 5;
    
+/*    printf ("--->'%s'  init ranges  need=%d\n", */
+/* 	   __func__, need_init); */
+
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
    {
-      xnee_init_list (&xrs->type[i], xrs->alloc_size);
+     xnee_init_list (&xrs->type[i], xrs->alloc_size);
    }
    need_init = 0 ;
+/*    printf ("<---'%s'  init ranges  need=%d\n", */
+/* 	   __func__, need_init); */
    return XNEE_OK;
 }
 
@@ -247,14 +258,13 @@ xnee_add_to_list2(int type, int ev)
 	   type=XNEE_DELIVERED_EVENT;
 	 }
      }
-
    xrp = &xrs->type[type];
-   
+
    if (need_init==1)
      {
        xnee_init_ranges();
      }
-   
+      
    for (i=0;i<xrp->index;i++)
      {
        if (xrp->data[i]==ev)
@@ -262,11 +272,11 @@ xnee_add_to_list2(int type, int ev)
 	   return XNEE_OK;
 	 }
      }
-   
-   
+
    if (xrp->index >=(xrp->size-1) )
    {
       xrp->size+=xrp->size;
+      
       xrp->data = (int*) realloc (xrp->data, 
                                   xrp->size*sizeof(int));
       if (xrp->data==NULL)
@@ -404,6 +414,8 @@ xnee_add_range (xnee_data* xd,
       int this_types_index=0;
   */
 
+/*   xnee_set_verbose(xd); */
+
   XRecordRange *range;
   int max_index=0;
   int alloc_nr=0;
@@ -523,7 +535,7 @@ xnee_add_range (xnee_data* xd,
    */
   xd->xnee_info.data_ranges[type]++;
   xnee_verbose((xd, "<--- xnee_add_range\n"));
-
+/*   xnee_unset_verbose(xd); */
   return (XNEE_OK);
 }
 

@@ -1077,13 +1077,15 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
 	   XNEE_SYNC_MODE,
 	   xd->sync ); 
 
-  /* New Window Position adjustment */
-  fprintf (out,  "\n# New Window Position adjustment\n");
-  fprintf (out,  "#   0 : not using window position adjustment\n");
-  fprintf (out,  "#   1 : only using window position adjustment\n");
-  fprintf (out,  "#   2 : window position adj. and recording ReparentNotify\n");
+  /* Replay offset */
+  fprintf (out,  "\n# Replay offset\n");
+  fprintf (out,    "#%S %dx%d\n",
+	   XNEE_REPLAY_OFFSET,
+	   xnee_get_replay_offset_x(xd),
+	   xnee_get_replay_offset_y(xd)); 
+
   fprintf (out,    "%s       %d\n",
-	   XNEE_NEW_WINDOW,
+	   XNEE_NEW_WINDOW_MARK,
 	   xd->xnee_info.store_window_pos ); 
 
   fprintf (out,  "\n# Human printout of X11 data (instead of Xnee format)\n");
