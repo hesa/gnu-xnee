@@ -1,13 +1,13 @@
 bin_PROGRAMS = cnee
-cnee_SOURCES = main.c parse.c parse.h 
-BUILT_SOURCES = cnee.texi
-CLEANFILES    = cnee.texi
+cnee_SOURCES = cnee_fake.c  cnee_printer.c  cnee_strings.c  main.c  parse.c
 man_MANS = cnee.1
-#cnee_TEXINFOS = cnee.texi
-#info_TEXINFOS = cnee.texi
+cnee_TEXINFOS = cnee.texi
+info_TEXINFOS = cnee.texi
 
-EXTRA_DIST=$(man_MANS) cnee.info
+EXTRA_DIST=$(man_MANS) ../include/cnee_fake.h ../include/cnee_printer.h ../include/parse.h
 
+BUILT_SOURCES = cnee.info cnee.texi
+CLEAN_FILES   = cnee.info cnee.texi
 
 
 cnee.texi: cnee$(EXEEXT)
@@ -55,7 +55,7 @@ PEDANTIC_FLAGS =
 endif
 
 
-AM_CFLAGS = -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${BUF_VERBOSE_FLAG}  ${USER_CFLAGS} ${GCOV_FLAG} ${GPROF_FLAG}
+AM_CFLAGS = -I../include -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${BUF_VERBOSE_FLAG}  ${USER_CFLAGS} ${GCOV_FLAG} ${GPROF_FLAG}
 
 cnee_LDADD =   -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)   
 
