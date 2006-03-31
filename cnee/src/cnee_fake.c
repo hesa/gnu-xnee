@@ -23,11 +23,9 @@
  * MA  02110-1301, USA.                                              
  ****/
 
+#include "cnee.h"
 #include "cnee_fake.h"
-
-extern xnee_options_t *cnee_options;
-extern xnee_options_t *xnee_options;
-
+#include "libxnee/xnee_resource.h"
 
 int
 xnee_type_help (xnee_data *xd)
@@ -55,21 +53,21 @@ xnee_type_help (xnee_data *xd)
       exit(XNEE_NO_TEST_EXT);
     }
 
-  for (i = 0; i<xnee_options->nr_of_options; i++) 
+  for (i = 0; xnee_options[i].key==XNEE_LAST_OPTION; i++) 
     {
-      if (xnee_options->options[i]->type==XNEE_GENERAL_OPTION)
+      if (xnee_options[i].type==XNEE_GENERAL_OPTION)
 	{
-	  option_long  = xnee_options->options[i]->option ;
-	  option_short = xnee_options->options[i]->short_option ;
-	  option_arg   = xnee_options->options[i]->args ;
-	  option_descr = xnee_options->options[i]->description ;
+	  option_long  = xnee_options[i].option ;
+	  option_short = xnee_options[i].short_option ;
+	  option_arg   = xnee_options[i].args ;
+	  option_descr = xnee_options[i].description ;
 	  snprintf (my_string, HELP_STR_SIZE, "%s,-%s %s\n",
 		    (option_long ? option_long  : empty_str),
 		    (option_short? option_short : empty_str),
 		    (option_arg  ? option_arg   : empty_str)
 		    );
 	  snprintf (my_string, HELP_STR_SIZE, 
-		    "\t%s\n\n",cnee_options->options[i]->option );
+		    "\t%s\n\n",cnee_options[i].option );
 	}
     }
 #ifdef EINAR
