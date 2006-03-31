@@ -25,14 +25,6 @@
 
 
 
-/**
- * Prints all flags/options that Xnee handles. Description of the flags is omitted.
- * @param fd      Where to print the flags
- * @return void  
- */
-void 
-xnee_flags (FILE *fd);
-
 
 /**
  * Prints all flags/options (with description) that Xnee handles.
@@ -49,9 +41,9 @@ xnee_usage (FILE* fd);
  * @param xd       xnee's main structure
  * @param argc     number of args in argv
  * @param argv     list arguments 
- * @return void  
+ * @return int     
  */
-void  
+int
 xnee_parse_args (xnee_data* xd, 
 		 int argc, 
 		 char **argv) ;
@@ -77,3 +69,33 @@ xnee_manpage (FILE *fd);
  */
 void 
 xnee_infopage (FILE *fd);
+
+
+
+enum {
+ CNEE_FILE_OPTION_KEY = 1          ,
+ CNEE_HELP_OPTION_KEY              ,
+ CNEE_FLAGS_OPTION_KEY             ,
+ CNEE_PROJECT_OPTION_KEY           ,
+ CNEE_VERSION_OPTION_KEY           ,
+ CNEE_RECORD_OPTION_KEY            ,
+ CNEE_REPLAY_OPTION_KEY            ,
+ CNEE_TYPE_HELP_OPTION_KEY         ,
+ CNEE_GEN_MANPAGE_OPTION_KEY       ,
+ CNEE_GEN_TEXIPAGE_OPTION_KEY      ,
+ CNEE_WRITE_SETTINGS_OPTION_KEY    ,
+ CNEE_PRINT_SETTINGS_OPTION_KEY    ,
+ CNEE_PRINT_E_NAMES_OPTION_KEY     ,
+ CNEE_PRINT_E_NAME_OPTION_KEY      ,
+ CNEE_PRINT_ERR_NAMES_OPTION_KEY   ,
+ CNEE_PRINT_ERR_NAME_OPTION_KEY    ,
+ CNEE_PRINT_REP_NAMES_OPTION_KEY   ,
+ CNEE_PRINT_REQ_NAMES_OPTION_KEY   ,
+ CNEE_PRINT_REQ_NAME_OPTION_KEY    ,
+ CNEE_PRINT_DATA_NAMES_OPTION_KEY  ,
+ CNEE_RETYPE_FILE_OPTION_KEY       ,
+ CNEE_REMOVE_EVENT_OPTION_KEY      ,
+ CNEE_DEMONSTRATION_OPTION_KEY     ,
+ XNEE_KEYBOARD_OPTION_KEY          ,
+ XNEE_MOUSE_OPTION_KEY
+} ;
