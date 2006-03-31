@@ -115,6 +115,11 @@ xnee_feedback_close(xnee_data *xd);
 int 
 xnee_feedback( xnee_data *, char *str, ... );
 
+const char *
+xnee_get_xosd_font_impl(xnee_data *xd);
+
+int
+xnee_set_xosd_font_impl(xnee_data *xd, char *font_str);
 
 #endif /* XNEE_FEEDBACK_H */
 
