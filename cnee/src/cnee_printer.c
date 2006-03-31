@@ -23,10 +23,24 @@
  * MA  02110-1301, USA.                                              
  ****/
 
+#include "cnee.h"
 #include "cnee_printer.h"
+#include "libxnee/xnee_resource.h"
 
-extern xnee_options_t *cnee_options;
-extern xnee_options_t *xnee_options;
+#define CNEE_TEXT_LENGTH 65
+#define CNEE_PRINT_INFO 1
+#define CNEE_PRINT_HELP 2
+#define CNEE_PRINT_MAN  3
+
+#define xnee_manpage_sub(fd, opt, type)  \
+    xnee_print_sub_impl(fd, opt, type, CNEE_PRINT_MAN)
+
+#define xnee_infopage_sub(fd, opt, type) \
+    xnee_print_sub_impl(fd, opt, type, CNEE_PRINT_INFO)
+
+#define xnee_usage_sub(fd, opt, type)    \
+    xnee_print_sub_impl(fd, opt, type, CNEE_PRINT_HELP)
+
 
 static char *explain[] = {
   "file_name" , "Name of a file (e.g /tmp/user1_session)" ,
@@ -40,9 +54,9 @@ static char *explain[] = {
 
 
 static char *examples[] = {
-  "" XNEE_CLI " --record --events-to-record 1000 -devera 2-6 -o /tmp/xnee.xns -e /tmp/xnee.log -v ", 
+  ""XNEE_CLI "--record --events-to-record 1000 -devera 2-6 -o /tmp/xnee.xns -e /tmp/xnee.log -v", 
   "Writes 1000 data to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log",
-  "" XNEE_CLI " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
+  ""XNEE_CLI " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
   "Read data from /tmp/xnee.xns, replay it and verbose print to file /tmp/xnee.log",
   "For more examples, read the Xnee manual",
   NULL 
@@ -66,15 +80,16 @@ void
 xnee_flags (FILE *fd)
 {
   int i ;
-  printf ("%s    %s:%d\n",
-	  __func__, __FILE__, __LINE__);
-  for (i = 0; i<xnee_options->nr_of_options; i++) 
+/*   printf ("%s    %s:%d\n", */
+/* 	  __func__, __FILE__, __LINE__); */
+
+  for (i = 0; xnee_options[i].key != XNEE_LAST_OPTION; i++) 
     {
-      fprintf (fd, "--%s\n",xnee_options->options[i]->option );
+      fprintf (fd, "--%s\n",xnee_options[i].option );
     }
-  for (i = 0; i<cnee_options->nr_of_options; i++) 
+  for (i = 0; cnee_options[i].key!=XNEE_LAST_OPTION; i++) 
     {
-      fprintf (fd, "--%s\n",cnee_options->options[i]->option );
+      fprintf (fd, "--%s\n",cnee_options[i].option );
     }
 }
 
@@ -109,8 +124,9 @@ xnee_usage_printer(FILE *fd, int tmp_size, char *pre, char *str)
 
 }
 
-static void
-xnee_usage_sub(FILE *fd, xnee_options_t *options, int type)
+
+void 
+xnee_print_sub_impl (FILE *fd, xnee_option_t *options, int type, int format )
 {
   int i ; 
   char *descr;
@@ -118,38 +134,62 @@ xnee_usage_sub(FILE *fd, xnee_options_t *options, int type)
   char *option_short;
   char *option_arg;
   char *option_descr;
-  char *empty_str="";
   char *dash_str=",-";
   #define USAGE_DESCR_SIZE 256
   char line_buf[USAGE_DESCR_SIZE];
 
-  #define SHORT_PREFIX(a) (a?dash_str:empty_str)
-  #define EMPTY_IF_NULL(a) (a?a:empty_str)
+  #define SHORT_PREFIX(a) (a?dash_str:XNEE_EMPTY_STRING)
 
-  for (i = 0; i<options->nr_of_options; i++) 
+  for (i = 0; options[i].key != XNEE_LAST_OPTION; i++) 
     {
-      if ( (options->options[i]->type==type)
+      if ( (options[i].type==type)
 	   ||
 	   (type==XNEE_ANY_OPTION) )
 	{
-	  option_long  = options->options[i]->option ;
-	  option_short = options->options[i]->short_option ;
-	  option_arg   = options->options[i]->args ;
-	  option_descr = options->options[i]->description ;
-	  fprintf (fd, "\t--%s%s%s %s\n",
-		   EMPTY_IF_NULL(option_long),
-		   SHORT_PREFIX(option_short),
-		   EMPTY_IF_NULL(option_short),
-		   EMPTY_IF_NULL(option_arg)
-		   );
+	  option_long  = options[i].option ;
+	  option_short = options[i].short_option ;
+	  option_arg   = options[i].args ;
+	  option_descr = options[i].description ;
+
 	  snprintf (line_buf, USAGE_DESCR_SIZE,
 		    "%s\n\n",EMPTY_IF_NULL(option_descr) );
-	  xnee_usage_printer(fd, 65, "\t  ", line_buf);
+
+	  if (format == CNEE_PRINT_INFO)
+	    {
+	      fprintf (fd, "@code{--%s%s %s %s}\n",
+		       EMPTY_IF_NULL(option_long),
+		       SHORT_PREFIX(option_short),
+		       EMPTY_IF_NULL(option_short),
+		       EMPTY_IF_NULL(option_arg)
+		       );
+	      fprintf(fd, "%s", line_buf);
+	    }
+	  else if (format == CNEE_PRINT_HELP)
+	    {
+	      fprintf (fd, "\t--%s%s%s %s\n",
+		       EMPTY_IF_NULL(option_long),
+		       SHORT_PREFIX(option_short),
+		       EMPTY_IF_NULL(option_short),
+		       EMPTY_IF_NULL(option_arg)
+		       );
+	      snprintf (line_buf, USAGE_DESCR_SIZE,
+			"%s\n",EMPTY_IF_NULL(option_descr) );
+	      xnee_usage_printer(fd, CNEE_TEXT_LENGTH, "\t", line_buf);
+	    }
+	  else if (format == CNEE_PRINT_MAN)
+	    {
+	      fprintf (fd, ".TP\n.B \"--%s%s %s %s\"",
+		       EMPTY_IF_NULL(option_long),
+		       SHORT_PREFIX(option_short),
+		       EMPTY_IF_NULL(option_short),
+		       EMPTY_IF_NULL(option_arg)
+		       );
+	      fprintf (fd, "\n%s\n",EMPTY_IF_NULL(option_descr) );
+	    }
+
 	}
     }
 }
-	       
-
 
 /**************************************************************
  *                                                            *
@@ -162,6 +202,7 @@ xnee_usage (FILE *fd)
 {
   char **cpp;
   char *command;
+  char *descr;
   int i ;
 
 
@@ -186,15 +227,13 @@ xnee_usage (FILE *fd)
   fprintf (fd ,"CNEE OPTIONS\n\n");
   xnee_usage_sub(fd, cnee_options, XNEE_ANY_OPTION);
 
-
-
-
-#ifdef EINAR
   fprintf (fd ,"COMMENTS\n");
   for (cpp = explain; *cpp; cpp++) 
     {
-      fprintf (fd, "  %s\n", *cpp++);
-      fprintf (fd, "\t%s\n", *cpp);
+      xnee_usage_printer(fd, CNEE_TEXT_LENGTH, "\t", *cpp++);
+      xnee_usage_printer(fd, CNEE_TEXT_LENGTH, "\t   ", *cpp);
+/*       fprintf (fd, "\t%s\n", *cpp++); */
+/*       fprintf (fd, "\t   %s\n", *cpp); */
     }
   fprintf (fd ,"\n");
 
@@ -207,19 +246,27 @@ xnee_usage (FILE *fd)
       if (command != NULL )
 	{
 	  if (descr != NULL )
-	    fprintf (fd, "  %s\n", command);
+	    {
+	      xnee_usage_printer(fd, CNEE_TEXT_LENGTH, "\t", command);
+	    }
 	  else
 	    {
-	      fprintf (fd, "  %s\n", command);
+	      xnee_usage_printer(fd, CNEE_TEXT_LENGTH, "\t", command);
 	      break;
 	    }
 	  
 	  if (descr!=NULL)
-	    fprintf (fd, "\t%s\n\n", *cpp);
+	    {
+	      xnee_usage_printer(fd, CNEE_TEXT_LENGTH, "\t  ", *cpp);
+	      fprintf (fd, "\n\n");
+	    }
 	}
     }
-#endif /* EINAR */
-  fprintf (fd, "\n  Report bugs to %s\n", XNEE_BUG_MAIL);
+  fprintf (fd, "\nAUTHORS\n");
+  fprintf (fd, "\t%s\n\n", XNEE_AUTHORS);
+
+  fprintf (fd, "\nREPORTING BUGS\n");
+  fprintf (fd, "\tReport bugs to %s\n\n", XNEE_BUG_MAIL);
   
 }
 
@@ -243,7 +290,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,".\\\" in the LDP GENERAL PUBLIC LICENSE, Version 1, September 1998 \n");
   fprintf (fd ,".\\\" that should have been distributed together with this file. \n");
   fprintf (fd ,".\\\" \n");
-  fprintf (fd ,".TH \"XNEE\" 1 2002 \"" PACKAGE"\" \n");
+  fprintf (fd ,".TH \"XNEE\" 1 2006 \"" PACKAGE"\" \n");
   fprintf (fd ,".SH \"NAME\" \n");
   fprintf (fd ,"xnee record, replays or distributes X11 data \n");
   fprintf (fd ,".SH \"SYNOPSIS\" \n");
@@ -260,15 +307,27 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,".I replay  \n");
   fprintf (fd ,"mode). \n");
   fprintf (fd ,"During record and replay Xnee can distribute the record/replayed events to multiple displays. \n");
-  fprintf (fd ,".SH \"OPTIONS\" \n");
 
-#ifdef EINAR
+  fprintf (fd ,".SH \"GENERAL OPTIONS\" \n");
+  xnee_manpage_sub(fd, xnee_options, XNEE_GENERAL_OPTION);
 
-  for (cpp = help; *cpp; cpp++) 
+  fprintf (fd ,".SH \"RECORD OPTIONS\" \n");
+  xnee_manpage_sub(fd, xnee_options, XNEE_RECORD_OPTION);
+ 
+  fprintf (fd ,".SH \"REPLAY OPTIONS\" \n");
+  xnee_manpage_sub(fd, xnee_options, XNEE_REPLAY_OPTION);
+
+  fprintf (fd ,".SH \"CNEE OPTIONS\" \n");
+  xnee_manpage_sub(fd, cnee_options, XNEE_ANY_OPTION);
+
+
+  /*
+    for (cpp = help; *cpp; cpp++) 
     {
-      fprintf (fd, ".TP\n.B \"%s\"\n", *cpp++);
-      fprintf (fd, "%s\n", *cpp);
+    fprintf (fd, ".TP\n.B \"%s\"\n", *cpp++);
+    fprintf (fd, "%s\n", *cpp);
     }
+  */
 
   fprintf (fd ,".SH \"COMMENTS\"\n");
   for (cpp = explain; *cpp; cpp++) 
@@ -280,6 +339,7 @@ xnee_manpage (FILE *fd)
 
 
   fprintf (fd, ".SH \"EXAMPLES\"\n");
+  
   for (cpp = examples; *cpp; cpp++) 
     {
       command=*cpp++;
@@ -298,8 +358,8 @@ xnee_manpage (FILE *fd)
 	    fprintf (fd, "\n%s\n", *cpp);
 	}
     }
+  
 
-#endif /* EINAR */
   fprintf (fd ,".SH \"AUTHOR\" \n");
   fprintf (fd ,"Henrik Sandklef.\n");
 
@@ -307,7 +367,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"Report bugs in the program to %s. \n", XNEE_BUG_MAIL);
 
   fprintf (fd ,".SH \"COPYRIGHT\"\n");
-  fprintf (fd ,"Copyright (C) 2002 Henrik Sandklef.\n");
+  fprintf (fd ,"Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006  Henrik Sandklef.\n");
   fprintf (fd ,"This  is  free  software;  see the source for copying conditions. ");
   fprintf (fd ,"There is NO warranty;");
   fprintf (fd ,"not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
@@ -323,6 +383,8 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,".B Xnee.\n");
   fprintf (fd ,"Mail corrections and additions to %s\n", XNEE_BUG_MAIL );
 }
+
+
 
 /**************************************************************
  *                                                            *
@@ -355,7 +417,6 @@ xnee_infopage (FILE *fd)
 /*   fprintf (fd, "@include xnee_copying\n"); */
   fprintf (fd, "@end ifinfo\n");
 
-#ifdef EINAR
   for (cpp = description; *cpp; cpp++) 
     {
       fprintf (fd, "%s\n", *cpp);
@@ -383,11 +444,11 @@ xnee_infopage (FILE *fd)
 
   fprintf (fd, "@node Options, Examples, top, top \n");
 
-  for (cpp = help; *cpp; cpp++) 
-    {
-      fprintf (fd, "@code{  %s}\n", *cpp++);
-      fprintf (fd, "%s\n\n", *cpp);
-    }
+  xnee_infopage_sub(fd, xnee_options, XNEE_GENERAL_OPTION);
+  xnee_infopage_sub(fd, xnee_options, XNEE_RECORD_OPTION);
+  xnee_infopage_sub(fd, xnee_options, XNEE_REPLAY_OPTION);
+  xnee_infopage_sub(fd, cnee_options, XNEE_ANY_OPTION);
+
 
   for (cpp = explain; *cpp; cpp++) 
     {
@@ -416,7 +477,7 @@ xnee_infopage (FILE *fd)
 	}
     }
   fprintf (fd ,"\n");
-#endif /* EINAR */
+
   fprintf (fd, "@node Bugs, See also, Examples,top \n");
   fprintf (fd, "If you encounter a bug, report it to ");
   fprintf (fd, "@indent @ @ @ @email{xnee-bug@@gnu.org}\n@ \n");

@@ -25,548 +25,465 @@
 
 
 #include "libxnee/xnee.h"
-#include "libxnee/xnee_setget.h"
-#include "libxnee/xnee_record.h"
-#include "libxnee/xnee_resolution.h"
 #include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_setget.h"
-#include "libxnee/xnee_km.h"
-#include "libxnee/xnee_grab.h"
-#include "libxnee/xnee_fake.h"
-#include "libxnee/xnee_replay.h"
-#include "libxnee/datastrings.h"
-#include "libxnee/xnee_threshold.h"
-#include "libxnee/xnee_strings.h"
-#include "libxnee/print.h"
-#include "libxnee/xnee_range.h"
-#include "libxnee/xnee_error.h"
-#include "libxnee/xnee_keysym.h"
-#include "libxnee/feedback.h"
-#include "libxnee/xnee_session.h"
-#include "libxnee/xnee_plugin.h"
-#include "libxnee/xnee_display.h"
-#include "libxnee/xnee_utils.h"
 
-#include "cnee_fake.h"
-#include "cnee_strings.h"
+/* #include "cnee_fake.h" */
+/* #include "cnee_strings.h" */
+
 #include "cnee_printer.h"
-
 #include "parse.h"
 
-enum 
+static xnee_option_t cnee_options_impl[] = 
   {
-    CNEE_NO_OPTION,
-    CNEE_RESOURCE_OPTION,
-    CNEE_CNEE_OPTION,
-  } cnee_option_type;
+    /* 
+     * Key 
+     * long option
+     * short option
+     * arg description
+     * description
+     * type of option (record/replay,general ... 
+     */
+    {
+      CNEE_FILE_OPTION_KEY,
+      "file",
+      "f",
+      "<file_name>", 
+      "Read data from file file_name (default is stdin)", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE,
+    },
+    { 
+      CNEE_HELP_OPTION_KEY,
+      "help",
+      "h",
+      NULL,
+      "Print this message", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_FLAGS_OPTION_KEY,
+      "flags",
+      NULL,
+      NULL, 
+      "Prints all flags/options xnee accepts",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    { 
+      CNEE_PROJECT_OPTION_KEY,
+      "project",
+      "pr",
+      "<file_name>", 
+      "Use project file file_name",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_VERSION_OPTION_KEY,
+      "version",
+      "V",
+      NULL,
+      "Print product information",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_RECORD_OPTION_KEY,
+      "record",
+      "rec",
+      NULL, 
+      "Set recording mode" , 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_REPLAY_OPTION_KEY,
+      "replay",
+      "rep",
+      NULL, 
+      "Set replaying mode" , 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
 
-enum 
-  {
-    XNEE_OPTION_IS_OPTION,
-    XNEE_OPTION_IS_ARG,
-    XNEE_OPTION_FLUSH
-  } xnee_option_parser_command;
+    { 
+      CNEE_RETYPE_FILE_OPTION_KEY,
+      "retype",
+      NULL,
+      "<file>", 
+      "Types (faking user) the contents of the specified file" , 
+      XNEE_MISC_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
 
-static xnee_options_t   cnee_options_impl;
-xnee_options_t  *cnee_options;
+    { 
+      CNEE_WRITE_SETTINGS_OPTION_KEY,
+      "write-settings file",
+      NULL,
+      NULL,
+      "Writes settings to a resource file",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+
+    { 
+      CNEE_PRINT_SETTINGS_OPTION_KEY,
+      "print-settings",
+      "ps",
+      NULL, 
+      "Prints Xnee settings and waits (for <ENTER>)", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_PRINT_E_NAMES_OPTION_KEY,
+      "print-event-names",
+      "pens",
+      NULL,
+      "Prints X11 event number and name ", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_PRINT_E_NAME_OPTION_KEY,
+      "print-event-name",
+      "pen",
+      "<ev>", 
+      "Prints X11 event number or name coresponding to ev", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_PRINT_ERR_NAMES_OPTION_KEY,
+      "print-error-names",
+      "perns",
+      NULL,
+      "Prints X11 error number and name ", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_PRINT_ERR_NAME_OPTION_KEY,
+      "print-error-name",
+      "pern",
+      "<er>",
+      "Prints X11 error number or name coresponding to er ", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_PRINT_REP_NAMES_OPTION_KEY,
+      "print-reply-names",
+      "pren",
+      NULL,
+      "Prints X11 reply number and name ", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_PRINT_REQ_NAMES_OPTION_KEY,
+      "print-request-names",
+      "prns",
+      NULL,
+      "Prints X11 request number and name ", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_PRINT_REQ_NAME_OPTION_KEY,
+      "print-request-name",
+      "prns",
+      "<req>", 
+      "Prints X11 request number or name  coresponding to req", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_KEYBOARD_OPTION_KEY,
+      "keyboard",
+      NULL, 
+      NULL, 
+      "Record the keyboard",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE,
+    },
+    { 
+      XNEE_MOUSE_OPTION_KEY,
+      "mouse",
+      NULL, 
+      NULL,
+      "Record mouse events", 
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_PRINT_DATA_NAMES_OPTION_KEY,
+      "print-data-names",
+      "pdn",
+      NULL, 
+      "Prints X11 data number and name ", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_GEN_MANPAGE_OPTION_KEY,
+      "manpage",
+      NULL,
+      NULL,
+      "Prints Xnee help text in format as used when generating man page", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_GEN_TEXIPAGE_OPTION_KEY,
+      "texipage",
+      NULL,
+      NULL,
+      "Prints Xnee help text in format as used when generating info page", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_TYPE_HELP_OPTION_KEY,
+      "type-help",
+      NULL,
+      NULL,
+      "Type this help message using faked keys (used to test xnee itself)",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_DEMONSTRATION_OPTION_KEY,
+      "demonstration",
+      "demo",
+      NULL,
+      "Let Xnee take you on a demonstration ride",
+      XNEE_GENERAL_OPTION
+    },
+  
+    {
+      XNEE_LAST_OPTION,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      XNEE_LAST_OPTION,
+      XNEE_LAST_OPTION
+    }
+
+  };
+
+
+xnee_option_t *cnee_options = &cnee_options_impl[0];
 static int need_init = 1;
 
+#define xnee_cli_key2string(key) \
+   xnee_key2string(xd, cnee_options, key)
 
-int
-xnee_parse_wrapper(xnee_data *xd, char *option, int type)
-{
-  int ret;
-#define XNEE_REMOVE_LEADING_CLI_DASHES(a) \
-  { if (a[0]=='-') a++; if (a[0]=='-') a++; }
-
-  XNEE_REMOVE_LEADING_CLI_DASHES(option);
-
-  if ( type == XNEE_RESOURCE_OPTION )
-    {
-      ret = xnee_expression_handle_project(xd, option);
-      if ( (ret!=XNEE_OK) && (ret!=XNEE_SETTINGS_DATA) )
-	{
-	  return (ret);
-	}
-    }
-  else if ( type == CNEE_CNEE_OPTION )
-    {
-      ret = xnee_cnee_parse_args(xd, option);
-
-      if (ret!=XNEE_OK)
-	{
-	  printf ("XNEE_USAGE (cnee)");
-	  /* 	  xnee_close_down(xd); */
-	  /* 	  exit(ret); */
-	}
-    }
-  else
-    {
-      printf ("** Panic in parser wrapper '%s' ....\n", option);
-    }
-  return ret;
-}
-
-int
-xnee_option_parse(xnee_data *xd, char *opt, int is_option, int type)
-{
-  static int option_type = 0;
-  int ret = XNEE_OK; 
-
-#define XNEE_OPTION_PARSE_BUF 200
-#define xnee_add_opt(o) { strcat(buf,o); strcat(buf," "); }
-  
-  static char buf [XNEE_OPTION_PARSE_BUF] =""; 
-
-  if (is_option==XNEE_OPTION_IS_OPTION)
-    {
-/*       printf (" IS OPTION\n"); */
-      if ( strlen(buf)!=0 )
-	{ 
-	  ret = xnee_parse_wrapper(xd, buf, option_type);
-	  buf[0]='\0'; 
-	} 
-      option_type = type ;
-      xnee_add_opt(opt);
-    }
-  else if (is_option==XNEE_OPTION_IS_ARG)
-    {
-/*       printf (" IS ARG\n"); */
-      xnee_add_opt(opt);
-      /*       printf ("\tAdding: '%s'\n", buf); */
-    }
-  else if (is_option==XNEE_OPTION_FLUSH)
-    {
-/*       printf (" IS FLUSH\n"); */
-      ret = xnee_parse_wrapper(xd, buf, option_type);
-      buf[0]='\0'; 
-    }
-
-  return XNEE_OK;
-}
-
-#define cnee_parse_check(xd, str, opt) \
-    xnee_parse_check_impl(xd, cnee_options, str, opt)
 
 
 int
-xnee_cnee_parse_args(xnee_data *xd, char *tmp)
+xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 {
-#define RANGE_BUF_SIZE 100
-  int ret=XNEE_SETTINGS_DATA;  
-  char *range_tmp = NULL;
-  char *range = NULL;
-  char range_buf[RANGE_BUF_SIZE];
-  char opt_buf[RANGE_BUF_SIZE];
-  char *opt;
-  int len=0;
-#define XNEE_PARSE_BUF 200
-  char buf [XNEE_PARSE_BUF] =""; 
+  int ret = XNEE_OK;
+  int entry ; 
+  int key; 
 
 
-  /* OK the string passed the first tests */
-  range_tmp=strstr (tmp, " ");
+  /* By default we set used nr of arguments to 0 */
+  *args_used = 0;
 
-  if (range_tmp!=NULL) 
+
+  entry = xnee_find_cli_option_entry(xd, 
+				     cnee_options,
+				     opt_and_args[0]);
+
+  if ( entry == XNEE_OPTION_NOT_FOUND )
     {
-      strncpy(range_buf, range_tmp, RANGE_BUF_SIZE );
+      return -1;
+    }
+
+
+  key = cnee_options[entry].key;
+
+  xnee_verbose((xd,
+		"Found cli entry for '%s' at position: %d\n", 
+		opt_and_args[0], entry));
+  xnee_verbose((xd,
+		"\tlong option: '%s'\n", 
+		EMPTY_IF_NULL(cnee_options[entry].option)));
+  xnee_verbose((xd,
+		"\tshort option:'%s'\n", 
+		EMPTY_IF_NULL(cnee_options[entry].short_option)));
+  xnee_verbose((xd,  
+		"\tlong option: '%s'\n", cnee_options[entry].option));
+  xnee_verbose((xd,  
+		"\tshort option:'%s'\n", cnee_options[entry].short_option));
       
-      len=strlen(range_buf);
-      
-      rem_begin_blanks (range_buf, len);
-      
-      len=strlen(range_buf);
-      do 
-	{
-	  range_buf[len-1]='\0';
-	} while ( 
-		 (range_buf[len-1]=='\n')
-		 || 
-		 (range_buf[len-1]=='\r')
-		 );
-	   
-      
-      range = &range_buf[0];
-      if (len==0)
-	{
-	  range = NULL;
-	}
-    }
 
-  if (range!=NULL)
-    {
-      len=strlen(tmp) - strlen(range) ;
-      strncpy (opt_buf, tmp, len);
-      opt_buf[len-1]='\0';
-    }
-  else
-    {
-      strncpy (opt_buf, tmp, strlen(tmp));
-      opt_buf[strlen(tmp)-1]='\0';
-    }
+  #define verbose_option(a)  \
+       xnee_verbose((xd,"%s:%d-->%s() Handling: '%s' \n", \
+		     __FILE__ , __LINE__, __func__, a ));
 
+  switch (key)
+    {
+    case XNEE_NO_OPTION_KEY:
+      ret = XNEE_SYNTAX_ERROR;
+      break;
+            
+    case CNEE_FILE_OPTION_KEY:
+      verbose_option("CNEE_FILE_OPTION_KEY");
+      ret = xnee_set_data_name (xd,opt_and_args[1] );
+      *args_used = 1;
+      break;
+      
+    case CNEE_HELP_OPTION_KEY:              
+      verbose_option("CNEE_HELP_OPTION_KEY");
+      xnee_usage (stdout);
+      ret = XNEE_OK_LEAVE;
+      break;
 
-  if (cnee_parse_check(xd, CNEE_FLAGS_OPTION_LONG,opt_buf))
-    {
-      xnee_usage(stdout);
-      xnee_close_down(xd);
-      exit(XNEE_OK);
-    }
-  else if(cnee_parse_check(xd,  CNEE_PROJECT_OPTION_LONG, opt_buf )) 
-    {
-      ret = xnee_set_rc_byname (xd, opt_buf);
-      if ( ret != XNEE_OK) 
-	{
-	  xnee_verbose((xd, "Could not open project file %s\n", opt_buf));
-	      
-	  if ( (strlen(opt_buf) + strlen (XNEE_RESOURCE_DIR) + 2 ) > 200)
-	    {
-	      return XNEE_FILE_NOT_FOUND;
-	    }
-	  strncpy ( buf , XNEE_RESOURCE_DIR, XNEE_PARSE_BUF );
-	  strncat ( buf ,  "/", XNEE_PARSE_BUF - strlen(buf));
-	  strncat ( buf , opt_buf, XNEE_PARSE_BUF - strlen(buf));
-	  xnee_verbose((xd, "\ttryingresource file %s\n", buf));
-	  ret = xnee_set_rc_name (xd, buf);
-	}
-	  
-      if ( xnee_get_rc_file (xd) != NULL) 
-	{
-	  ret = xnee_add_resource (xd );
-	      
-	  if (ret!=XNEE_OK)
-	    {
-	      xnee_verbose ((xd, "project file read: return value %d\n", 
-			     ret));
-	      if (ret == XNEE_SYNTAX_ERROR)
-		{
-		  char *tmp_str;
-		  xnee_verbose ((xd, "project file read: SYNTAX ERROR\n"));
-		  tmp_str = xnee_get_err_string();
-		  fprintf (stderr,"%s", tmp_str);
-		  XNEE_FREE_IF_NOT_NULL(tmp_str);
-		}
-	    }
-	}
-      else
-	{
-	  return (XNEE_FILE_NOT_FOUND);
-	}
-    }
-  else if(cnee_parse_check(xd,  "retype-file", opt_buf )) 
-    {
-      xnee_set_retyper(xd);
-      ret =  xnee_set_rt_name (xd, opt_buf) ;
-    }
-  else if(cnee_parse_check(xd,  "type-help", opt_buf )) 
-    {
-      ret = xnee_type_help(xd);
-    }
-  else if(cnee_parse_check(xd,  "record", opt_buf )) 
-    {
-      ret = xnee_set_recorder (xd);
-    }
-  else if(cnee_parse_check(xd,  "no-sync", opt_buf )) 
-    {
-      ret = xnee_unset_sync(xd);
-    }
-  else if(cnee_parse_check(xd,  "replay", opt_buf )) 
-    {
-      ret = xnee_set_replayer (xd);
-    }
-  else if(cnee_parse_check(xd,  "all-events", opt_buf )) 
-    {
-      ret = xnee_add_range (xd, XNEE_DEVICE_EVENT, 2,6);
-      ret = ret + xnee_add_range (xd, XNEE_DELIVERED_EVENT, 7,LASTEvent);
-    }
-  else if(cnee_parse_check(xd,  "print-settings", opt_buf)) 
-    {
-      xnee_print_xnee_settings (xd, xnee_get_err_file(xd)) ;
-      xnee_record_print_record_range (xd, xnee_get_err_file(xd)) ;
-      fprintf (stderr, "Press enter to continue:\n");
-      getchar();
-    }
-  else if(cnee_parse_check(xd,  "mouse", opt_buf)) 
-    {
-      ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
-			    "ButtonPress-MotionNotify");
-    }
-  else if(cnee_parse_check(xd,  "keyboard", opt_buf)) 
-    {
+    case CNEE_FLAGS_OPTION_KEY:             
+      verbose_option("CNEE_FLAGS_OPTION_KEY");
+      xnee_flags(stdout);
+      ret = XNEE_OK_LEAVE;
+      break;
+
+    case CNEE_PROJECT_OPTION_KEY:           
+      verbose_option("CNEE_PROJECT_OPTION_KEY");
+      ret = xnee_set_project_file(xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case CNEE_VERSION_OPTION_KEY:           
+      verbose_option("CNEE_VERSION_OPTION_KEY");
+      xnee_version(xd);
+      return XNEE_OK_LEAVE;
+      break;
+
+    case CNEE_RECORD_OPTION_KEY:            
+      verbose_option("CNEE_RECORD_OPTION_KEY");
+      ret = xnee_set_recorder(xd);
+      break;
+
+    case CNEE_REPLAY_OPTION_KEY:            
+      verbose_option("CNEE_REPLAY_OPTION_KEY");
+      ret = xnee_set_replayer(xd);
+      break;
+
+    case CNEE_TYPE_HELP_OPTION_KEY:         
+      verbose_option("CNEE_TYPE_HELP_OPTION_KEY");
+      break;
+
+    case CNEE_GEN_MANPAGE_OPTION_KEY:       
+      verbose_option("CNEE_GEN_MANPAGE_OPTION_KEY");
+      break;
+
+    case CNEE_GEN_TEXIPAGE_OPTION_KEY:      
+      verbose_option("CNEE_GEN_TEXIPAGE_OPTION_KEY");
+      break;
+
+    case CNEE_WRITE_SETTINGS_OPTION_KEY:    
+      verbose_option("CNEE_WRITE_SETTINGS_OPTION_KEY");
+      break;
+
+    case CNEE_PRINT_SETTINGS_OPTION_KEY:    
+      verbose_option("CNEE_PRINT_SETTINGS_OPTION_KEY");
+      break;
+
+    case CNEE_PRINT_E_NAMES_OPTION_KEY:     
+      verbose_option("CNEE_PRINT_E_NAMES_OPTION_KEY");
+      xnee_print_event_info(xd);
+      ret = XNEE_OK_LEAVE;
+      break;
+
+    case CNEE_PRINT_E_NAME_OPTION_KEY:      
+      verbose_option("CNEE_PRINT_E_NAME_OPTION_KEY");
+      xnee_print_data_str(xd, opt_and_args[1], XNEE_EVENT);
+      ret = XNEE_OK_LEAVE;
+      *args_used = 1;
+      break;
+
+    case CNEE_PRINT_ERR_NAMES_OPTION_KEY:   
+      verbose_option("CNEE_PRINT_ERR_NAMES_OPTION_KEY");
+      break;
+
+    case CNEE_PRINT_ERR_NAME_OPTION_KEY:    
+      verbose_option("CNEE_PRINT_ERR_NAME_OPTION_KEY");
+      xnee_print_data_str(xd, opt_and_args[1], XNEE_ERROR);
+      ret = XNEE_OK_LEAVE;
+      break;
+
+    case CNEE_PRINT_REP_NAMES_OPTION_KEY:   
+      verbose_option("CNEE_PRINT_REP_NAMES_OPTION_KEY");
+      xnee_print_reply_info(xd);
+      ret = XNEE_OK_LEAVE;
+      break;
+
+    case CNEE_PRINT_REQ_NAMES_OPTION_KEY:   
+      verbose_option("CNEE_PRINT_REQ_NAMES_OPTION_KEY");
+      xnee_print_request_info(xd);
+      ret = XNEE_OK_LEAVE;
+      break;
+
+    case CNEE_PRINT_REQ_NAME_OPTION_KEY:    
+      verbose_option("CNEE_PRINT_REQ_NAME_OPTION_KEY");
+      xnee_print_data_str(xd, opt_and_args[1], XNEE_REQUEST);
+      ret = XNEE_OK_LEAVE;
+      break;
+
+    case CNEE_PRINT_DATA_NAMES_OPTION_KEY:  
+      verbose_option("CNEE_PRINT_DATA_NAMES_OPTION_KEY");
+      break;
+
+    case CNEE_RETYPE_FILE_OPTION_KEY:       
+      verbose_option("CNEE_RETYPE_FILE_OPTION_KEY");
+      break;
+
+    case CNEE_REMOVE_EVENT_OPTION_KEY:      
+      verbose_option("CNEE_REMOVE_EVENT_OPTION_KEY");
+      break;
+
+    case CNEE_DEMONSTRATION_OPTION_KEY:     
+      verbose_option("CNEE_DEMONSTRATION_OPTION_KEY");
+      cnee_demonstration (xd);
+      ret = XNEE_OK_LEAVE;
+      break;
+
+    case XNEE_KEYBOARD_OPTION_KEY:          
+      verbose_option("XNEE_KEYBOARD_OPTION_KEY");
       ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 			    "KeyPress-KeyRelease");
-    }
-  else if(cnee_parse_check(xd,  "manpage", opt_buf)) 
-    {
-      xnee_manpage (stdout);
-      exit(XNEE_OK);
-    }
-  else if(cnee_parse_check(xd,  "infopage", opt_buf)) 
-    {
-      xnee_infopage (stdout);
-      exit(XNEE_OK);
-    }
-  else if(cnee_parse_check(xd,  "help", opt_buf)) 
-    {
-      xnee_usage (stdout);
-      exit(XNEE_OK);
-    }
-  else if(cnee_parse_check(xd,  "flags", opt_buf)) 
-    {
-      xnee_flags (stdout);
-      exit(XNEE_OK);
-    }
-  else if(cnee_parse_check(xd,  "remove-event", opt_buf)) 
-    {
-      fprintf (stderr, "Currently obsoleted function\n");
-      exit(XNEE_WRONG_PARAMS);
+      break;
 
+    case XNEE_MOUSE_OPTION_KEY: 
+      verbose_option("XNEE_MOUSE_OPTION_KEY");
+      ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
+			    "ButtonPress-MotionNotify");
+      break;
 
-      /* This is not a public option, but used to test libxnee
-       * However, it does nothing harmful so we keep it here
-       * and don't "#ifdef" it away since it may come in use
-       *
-       * And why not present it to the user.?
-       * I figure a 'normal user' will be confused by this option
-       */
-
-/*
-      ret=xnee_rem_data_from_range_str (xd, 
-					XNEE_DEVICE_EVENT, 
-					argv[++i]) ;
-*/
-    }
+    default:
+      ret = XNEE_NO_OPTION_KEY;
       
-  else if(cnee_parse_check(xd,  "version", opt_buf)) 
-    {
-      fprintf (stderr, XNEE_CLI " part of " );
-      xnee_version(xd);
-      exit(XNEE_OK);
     }
-  else if ( cnee_parse_check (xd,  "file", opt_buf))
-    {
-      ret= xnee_set_data_name (xd, opt_buf);
-      if (ret==XNEE_OK)
-	{
-	  xnee_verbose((xd, "Reading replay data from %s \n", 
-			xnee_get_data_name (xd)));
-	}
-    }
-  else if ( cnee_parse_check (xd,  "write-settings", "-ws"))
-    {
-      if (xnee_check (opt_buf, "stdout", "STDOUT"))
-	{
-	  xnee_write_settings_to_file (xd, stdout);
-	}
-      else if (xnee_check (opt_buf, "stderr", "STDERR"))
-	{
-	  xnee_write_settings_to_file (xd, stderr);
-	}
-      else
-	{
-	  FILE *file;
-	  file = fopen (opt_buf,"w");
-	  xnee_write_settings_to_file (xd, 
-				       file);
-	  fclose(file);
-	}
-      exit(XNEE_OK);
-    }
-  else 
-    {
-      fprintf (stderr, "Could not parse \"%s\"\n", opt_buf);
-      xnee_usage(stderr);
-      exit(XNEE_WRONG_PARAMS);
-    }
-  if (ret!=0) 
-    {
-      xnee_print_error ("Could not parse %s\n", opt_buf);
-      exit (ret);
-    }
+
   return ret;
 }
 
 
-
-
-xnee_option_t**
-cnee_init_options(xnee_data *xd)
-{
-  if (need_init==0)
-    {
-      return XNEE_OK;
-    }
-
-  cnee_options = &cnee_options_impl;
-
-  cnee_options = &cnee_options_impl;
-
-  xnee_add_strings(xd, 
-		   cnee_options,
-		   "file",
-		   "f", 
-		   "<file_name>", 
-		   "Read data from file file_name (default is stdin)", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "help",
-		   "h", 
-		   NULL,
-		   "Print this message", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "flags",
-		   NULL,
-		   NULL, 
-		   "Prints all flags/options xnee accepts",
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   CNEE_PROJECT_OPTION_LONG,
-		   CNEE_PROJECT_OPTION_SHORT,
-		   "<file_name>", 
-		   "Use project file file_name",
-		   XNEE_GENERAL_OPTION);
-
-
-  xnee_add_strings(xd, cnee_options,
-		   "version",
-		   "V", 
-		   NULL,
-		   "Print product information",
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "record",
-		   "re",
-		   NULL, 
-		   "Set recording mode" , 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "replay",
-		   "rep",
-		   NULL, 
-		   "Set replaying mode" , 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   CNEE_RETYPE_FILE_OPTION_LONG,
-		   NULL,
-		   "<file>", 
-		   "Types (faking user) the contents of the specified file" , 
-		   XNEE_MISC_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "write-settings file",
-		   NULL,
-		   NULL,
-		   "Writes settings to a resource file",
-		   XNEE_GENERAL_OPTION);
-
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-settings",
-		   "ps",
-		   NULL, 
-		   "Prints Xnee settings and waits (for <ENTER>)", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-event-names",
-		   "pens", 
-		   NULL,
-		   "Prints X11 event number and name ", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-event-name",
-		   "pen",
-		   "<ev>", 
-		   "Prints X11 event number or name coresponding to ev", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-error-names",
-		   "perns", 
-		   NULL,
-		   "Prints X11 error number and name ", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-error-name",
-		   "pern",
-		   "<er>",
-		   "Prints X11 error number or name coresponding to er ", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-reply-names",
-		   "pren", 
-		   NULL,
-		   "Prints X11 reply number and name ", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-request-names",
-		   "prns", 
-		   NULL,
-		   "Prints X11 request number and name ", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   XNEE_MOUSE,
-		   NULL, 
-		   NULL,
-		   "Record mouse events", 
-		   XNEE_RECORD_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   XNEE_KEYBOARD,
-		   NULL, 
-		   NULL,
-		   "Record keyboard events", 
-		   XNEE_RECORD_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-request-name",
-		   "prn",
-		   "<req>", 
-		   "Prints X11 request number or name  coresponding to req", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "print-data-names",
-		   "pdn",
-		   NULL, 
-		   "Prints X11 data number and name ", 
-		   XNEE_GENERAL_OPTION);
-
-  xnee_add_strings(xd, cnee_options,
-		   "manpage",
-		   NULL,
-		   NULL,
-		   "Prints Xnee help text in format as used when generating man page", 
-		   XNEE_GENERAL_OPTION);
-
-
-  xnee_add_strings(xd, cnee_options,
-		   "infopage",
-		   NULL,
-		   NULL,
-		   "Prints Xnee help text in format as used when generating info page", 
-		   XNEE_GENERAL_OPTION);
-
-
-  xnee_add_strings(xd, cnee_options,
-		   "type-help",
-		   NULL,
-		   NULL,
-		   "Type this help message using faked keys (used to test xnee itself)",
-		   XNEE_GENERAL_OPTION);
-}
 
 
 /**************************************************************
@@ -575,59 +492,50 @@ cnee_init_options(xnee_data *xd)
  *                                                            *
  *                                                            *
  **************************************************************/
-void  
+int
 xnee_parse_args (xnee_data* xd , int argc, char **argv )
 {                                         
 
   int i ;
-  int ret=0;
-  cnee_init_options(xd);
+  int ret;
   const char *descr;
   const char *err;
+  int entry ;
+  int args_used;
 
-  for (i = 1; i < argc; i++) 
+  char *last_opt = NULL;
+
+  for (i=1; i < argc; i++) 
     {
-      printf ("** parse '%s'\n", argv[i]);
-      /* Check if ordinary Xnee Resource Syntax option */
-      if ( xnee_is_resource_option(xd, argv[i], XNEE_CLI_SYNTAX) )
+      ret = xnee_parse_cnee_option(xd, &argv[i], &args_used);
+      if ( ret == XNEE_OK)
 	{
-	  ret = xnee_option_parse(xd, 
-				  argv[i], 
-				  XNEE_OPTION_IS_OPTION , 
-				  CNEE_RESOURCE_OPTION );	  
-	  printf ("** XNEE OPTION '%s'\n", argv [i]);
+	  i = i + args_used ;
+	  continue;
 	}
-      else if ( xnee_is_option(xd, cnee_options, argv[i], XNEE_CLI_SYNTAX) )
+      else if ( ret == XNEE_OK_LEAVE)
 	{
-	  ret = xnee_option_parse(xd, 
-				  argv[i], 
-				  XNEE_OPTION_IS_OPTION, 
-				  CNEE_CNEE_OPTION );	  
-	  printf ("** CNEE OPTION '%s'  ret=%d\n", argv [i], ret);
-	  
+	  return ret;
+	}
+
+      ret = xnee_parse_xns_option(xd, &argv[i], &args_used);
+      if ( ret == XNEE_OK )
+	{
+	  i = i + args_used;
+	  continue;
+	}
+      else if ( ret == XNEE_OK_LEAVE)
+	{
+	  return ret;
 	}
       else
 	{
-	  printf ("** 3: '%s' \n", argv[i]);
-	  ret = xnee_option_parse(xd, 
-				  argv[i], 
-				  XNEE_OPTION_IS_ARG, 
-				  CNEE_NO_OPTION);	  
-	}
-
-      if (ret != XNEE_OK)
-	{
 	  break;
 	}
+      
+
     }
-
-  ret = xnee_option_parse(xd, 
-			  NULL, 
-			  XNEE_OPTION_FLUSH, 
-			  CNEE_NO_OPTION);	  
-  
-
-
+      
   if (ret != XNEE_OK)
     {
       err = xnee_get_err_description(ret);
@@ -640,6 +548,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       xnee_close_down(xd);
       exit(XNEE_WRONG_PARAMS);
     }
+
+  return ret;
 }
 
 
