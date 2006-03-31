@@ -23,16 +23,36 @@
  ****/
 
 
-#include "libxnee/print.h"
 #include "libxnee/xnee.h"
-#include "libxnee/xnee_record.h"
-#include "libxnee/xnee_alloc.h"
-#include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_setget.h"
-#include "libxnee/xnee_fake.h"
-#include "libxnee/xnee_error.h"
-#include "libxnee/xnee_session.h"
+#include "libxnee/xnee_resource.h"
 #include "parse.h"
+
+
+void
+cnee_handle_err(xnee_data *xd, int error)
+{
+  int ret;
+  const char *err;
+  const char *descr;
+
+  if ( error != XNEE_OK_LEAVE )
+    {
+      err   = xnee_get_err_description(ret);
+      descr = xnee_get_err_solution(ret);
+      
+      fprintf (stderr, "Error number: %d\n", ret);
+      fprintf (stderr, "  Error:      %s\n", err);
+      fprintf (stderr, "  Solution:   %s\n", descr);
+      ret = XNEE_OK;
+    }
+  else
+    {
+      ret = error;
+    }
+  xnee_close_down(xd);
+  exit(ret);
+}
 
 
 
@@ -47,12 +67,6 @@ int main(int argc,char *argv[])
   int ret;
   xnee_data *xd ;
   
-  /* Set the signal handler the libxnee's built in */ 
-  (void) signal (SIGINT, signal_handler);
-  
-  /* Set the error handler the libxnee's built in */ 
-  (void) XSetErrorHandler (handle_xerr);  
-  
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
   if (xd==NULL)
@@ -61,13 +75,25 @@ int main(int argc,char *argv[])
   }
 
   /* Set the program name */
-  xnee_set_program_name (xd, XNEE_CLI);
+  ret = xnee_set_program_name (xd, XNEE_CLI);
+  if ( ret != XNEE_OK)
+    {
+      cnee_handle_err(xd, ret);
+    }
 
   /* Well .... parse the args */
-  xnee_parse_args (xd, argc, argv);
+  ret = xnee_parse_args (xd, argc, argv);
+  if ( ret != XNEE_OK)
+    {
+      cnee_handle_err(xd, ret);
+    }
 
   /* Set the cli parameters */
-  xnee_set_application_parameters (xd, argv);
+  ret = xnee_set_application_parameters (xd, argv);
+  if ( ret != XNEE_OK)
+    {
+      cnee_handle_err(xd, ret);
+    }
 
   ret = xnee_prepare(xd);
   if (ret==XNEE_OK)
