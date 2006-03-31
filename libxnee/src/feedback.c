@@ -52,13 +52,46 @@ typedef  void* (*xosd_char_fun)   (void*, char*)  ;
 typedef  void* (*xosd_print_fun) (void*, int, int, char *) ; 
 
 static xosd_print_fun xosd_print ;
+static char *xosd_font ;
+static char *xosd_default_font = "-*-terminus-medium-r-*-*-*-320-*-*-*-*-*-*";
+
+static xosd_create_fun  xosd_create = NULL ; 
+static xosd_int_fun     xosd_int    = NULL ; 
+static xosd_char_fun    xosd_char   = NULL ; 
+
+
+const char *
+xnee_get_xosd_font_impl(xnee_data *xd)
+{
+  return xosd_font;
+}
+
+int
+xnee_set_xosd_font_impl(xnee_data *xd, char *font_str)
+{
+  if ( (font_str==NULL) || strlen(font_str)<2)
+    {
+      return XNEE_XOSD_FAILURE;
+    }
+  xosd_font = strdup(font_str);
+  if ( xosd_font == NULL)
+    {
+      return XNEE_XOSD_FAILURE;
+    }
+  
+  if (xosd_char == NULL)
+    {
+      return XNEE_XOSD_FAILURE;
+    }
+
+  xosd_char(osd, xosd_font);
+
+  return XNEE_OK;
+}
 
 static int
 xnee_setup_xosd(xnee_data *xd)
 {
-  xosd_create_fun  xosd_create = NULL ; 
-  xosd_int_fun     xosd_int    = NULL ; 
-  xosd_char_fun    xosd_char   = NULL ; 
 
 
   xosd_lib = xnee_dlopen (xd, "libxosd.so", RTLD_LAZY);
@@ -113,7 +146,9 @@ xnee_setup_xosd(xnee_data *xd)
       xnee_dlclose(xd, xosd_lib);
       return XNEE_XOSD_FAILURE ; 
     }
-  xosd_char(osd, "-*-terminus-medium-r-*-*-*-320-*-*-*-*-*-*");
+
+  xnee_set_xosd_font(xd, xosd_default_font);
+  xosd_char(osd, xosd_font);
 
   xosd_char = (xosd_char_fun) xnee_dlsym(xd, xosd_lib, "xosd_set_colour");
   if (xosd_char==NULL) 
@@ -206,6 +241,7 @@ xnee_xosd_close(xnee_data *xd)
    {
       xnee_dlclose(xd, xosd_lib);
    }
+   XNEE_FREE_IF_NOT_NULL(xosd_font);
    return XNEE_OK;
 }
 
