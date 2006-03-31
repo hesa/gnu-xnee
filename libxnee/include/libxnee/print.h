@@ -318,4 +318,9 @@ xnee_print_xnee_resource_settings (xnee_data* xd, FILE* out) ;
 
 void 
 xnee_store_mouse_pos (xnee_data* xd );
+
+
+int
+xnee_print_xnee_data(xnee_data *xd);
+
 #endif /* XNEE_PRINT_H */
