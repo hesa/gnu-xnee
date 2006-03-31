@@ -26,6 +26,7 @@
 #ifndef XNEE_XNEE_H
 #define XNEE_XNEE_H
 
+#include <limits.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
@@ -97,8 +98,19 @@ enum return_values
     XNEE_BAD_OFFSET        ,
     XNEE_WINDOW_POS_ADJ_ERROR     ,
     XNEE_MISSING_ARG       ,
+    XNEE_OK_LEAVE          ,
     XNEE_LAST_ERROR
   } _return_values;
+
+
+enum bool_string_values
+  {
+    XNEE_BOOL_EXPLICIT_FALSE=0,
+    XNEE_BOOL_IMPLICIT_TRUE,
+    XNEE_BOOL_EXPLICIT_TRUE,
+    XNEE_BOOL_ERROR
+  } _bool_string_values;
+
   
 
 /** 
@@ -155,24 +167,27 @@ enum
     XNEE_GRAB_OPTION,
     XNEE_MISC_OPTION,
     XNEE_INTERNAL_OPTION,
-    XNEE_OBSOLETE_OPTION,
-    XNEE_RESOURCE_OPTION
+    XNEE_OBSOLETE_OPTION
   } xnee_option_type;
 
 typedef struct
 {
+  int   key;
   char *option; 
   char *short_option; 
   char *args; 
   char *description; 
   int   type;
+  int   visible;
 } xnee_option_t;
 
+/*
 typedef struct
 {
-  xnee_option_t **options;
+  xnee_option_t   **options;
   int             nr_of_options;
 } xnee_options_t;
+*/
 
 typedef struct 
 {
@@ -454,8 +469,9 @@ typedef struct
   XRecordContext      rContext;
   int 	data_flags;
   int	major_return;
-  int  minor_return ;
-  int  nclients; 
+  int   minor_return ;
+  int   nclients; 
+  int   active;
 } xnee_recordext_setup;
 
 
