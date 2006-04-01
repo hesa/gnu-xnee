@@ -22,46 +22,13 @@
  * MA  02110-1301, USA.                                              
  ****/
 
-
-#include <X11/extensions/XTest.h>
+#ifndef XNEE_THRESHOLD_H
+#define XNEE_THRESHOLD_H
 
 #include "libxnee/xnee.h"
-#include "libxnee/print.h"
-#include "libxnee/xnee_record.h"
-#include "libxnee/xnee_replay.h"
-#include "libxnee/xnee_sem.h"
-#include "libxnee/xnee_resolution.h"
 
+/* The headers have moved to xnee_setget.h */
 
-int
-xnee_set_max_threshold_str (xnee_data *xd, char *thresh_str);
-
-int
-xnee_set_min_threshold_str (xnee_data *xd, char *thresh_str);
-
-int
-xnee_set_tot_threshold_str (xnee_data *xd, char *thresh_str);
-
-int
-xnee_set_max_threshold (xnee_data *xd, int thresh);
-
-int
-xnee_set_min_threshold (xnee_data *xd, int thresh);
-
-int
-xnee_set_tot_threshold (xnee_data *xd, int thresh);
-
-
-
-
-
-int
-xnee_get_max_threshold (xnee_data *xd);
-
-int
-xnee_get_min_threshold (xnee_data *xd);
-
-int
-xnee_get_tot_threshold (xnee_data *xd);
+#endif /* XNEE_THRESHOLD_H */
 
 
