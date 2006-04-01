@@ -54,6 +54,7 @@ xnee_setup_display (xnee_data *xd)
       return XNEE_NOT_OPEN_DISPLAY;
     }
   
+
   
   if (xd->control!=NULL)
     {
@@ -66,6 +67,7 @@ xnee_setup_display (xnee_data *xd)
     }
   
   
+
   if (xd->fake!=NULL)
     {
       XCloseDisplay(xd->fake);
@@ -144,14 +146,14 @@ xnee_open_display(xnee_data* xd)
   const char *tmp;
 
   tmp = (const char*) ((xd->display!=NULL)?
-		 (xd->display):
-		 NULL_STRING);
-
+		       (xd->display):
+		       NULL_STRING);
+  
   if ( (tmp!=NULL) && (strlen(tmp)==0) )
     {
       tmp=NULL;
     }
-
+  
   xnee_verbose((xd,  "Open display %s \n", 
 		tmp?tmp:"" ));
   
@@ -166,8 +168,7 @@ xnee_open_display(xnee_data* xd)
 			       XDisplayName(tmp));
       return dpy;
     }
-
-
+  
   xnee_verbose((xd, "Display %s = %d\n", 
 		tmp?tmp:"", (int) dpy));
   return dpy;
@@ -191,6 +192,12 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
   size_t len;
   int ret=0;
   int disp_len=strlen(disp);
+
+  if (disp==NULL)
+    {
+      XNEE_WRONG_PARAMS;
+    }
+
   xnee_verbose((xd, "xnee_add_display (xd, %s, )\n", disp));
 
   while ( (1!=0) ) {
@@ -220,7 +227,7 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
 
   }
   xnee_verbose((xd, "xnee_add_display_str ... finished\n"));
-  return (0);  
+  return XNEE_OK;  
 }
 
 
