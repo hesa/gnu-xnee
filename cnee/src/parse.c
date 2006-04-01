@@ -386,14 +386,20 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_TYPE_HELP_OPTION_KEY:         
       verbose_option("CNEE_TYPE_HELP_OPTION_KEY");
+/*       xnee_set_retyper(xd); */
+/*       ret =  xnee_set_rt_name (xd, opt_buf) ; */
       break;
 
     case CNEE_GEN_MANPAGE_OPTION_KEY:       
+      xnee_manpage (stdout);
       verbose_option("CNEE_GEN_MANPAGE_OPTION_KEY");
+      return XNEE_OK_LEAVE;
       break;
 
     case CNEE_GEN_TEXIPAGE_OPTION_KEY:      
       verbose_option("CNEE_GEN_TEXIPAGE_OPTION_KEY");
+      xnee_infopage (stdout);
+      return XNEE_OK_LEAVE;
       break;
 
     case CNEE_WRITE_SETTINGS_OPTION_KEY:    
