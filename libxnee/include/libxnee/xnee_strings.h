@@ -27,11 +27,14 @@
 
 #include "libxnee/xnee.h"
 
+extern const char*  XNEE_EMPTY_STRING         ;
+
 extern const char*  XNEE_COMMENT_START_STR    ;
 extern const char   XNEE_COMMENT_START_CHAR   ;
 
 extern const char*  XNEE_HOME_URL             ;
 extern const char*  XNEE_MAIL                 ;
+extern const char*  XNEE_AUTHORS              ;
 extern const char*  XNEE_BUG_MAIL             ;
 extern const char*  XNEE_DEVEL_MAIL           ;
 extern const char*  GNU_HOME_URL              ;
@@ -88,6 +91,7 @@ extern const char*  XNEE_MOUSE                ;
 extern const char*  XNEE_KEYBOARD             ;
 extern const char*  XNEE_STORE_MOUSE_POS      ;
 extern const char*  XNEE_FEEDBACK_XOSD        ;
+extern const char*  XNEE_XOSD_FONT            ;
 extern const char*  XNEE_FEEDBACK_STDERR      ;
 extern const char*  XNEE_FEEDBACK_NONE        ;
 
@@ -161,5 +165,6 @@ extern const char*  XNEE_REAL_SHIFT       ;
 
 extern const char*  NULL_STRING           ;
 
+#define EMPTY_IF_NULL(a) (a?a:XNEE_EMPTY_STRING)
 
 #endif /* XNEE_XNEE_STRINGS_H */
