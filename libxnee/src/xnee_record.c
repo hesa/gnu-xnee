@@ -302,8 +302,9 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
                  
                  break;
 	    case CreateNotify:
-	      fprintf (out,"0,%u,0,0,0,0,0,%lu\n",
+	      fprintf (out,"0,%u,%lu,0,0,0,0,%lu\n",
 		       event_type,
+		       xrec_data->event.u.createNotify.window,
 		       xrecintd->server_time
 		       );
 	      break;
@@ -719,7 +720,8 @@ int
 xnee_has_record_extension(xnee_data *xd)
 {
   int ok=XNEE_OK;
-  (void)XSynchronize(xd->control,True);
+
+  (void)XSynchronize(xd->control,True); 
 
   if  ( (xd == NULL)
         ||
