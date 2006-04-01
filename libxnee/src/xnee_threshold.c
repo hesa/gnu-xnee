@@ -48,7 +48,7 @@ xnee_set_threshold_str (char *thresh_str, int *threshold)
   
   if (thresh_str == NULL)
   {
-      return XNEE_BAD_RESOLUTION;
+    return XNEE_BAD_THRESHOLD;
   }
 
   ret = sscanf(thresh_str, "%d",
