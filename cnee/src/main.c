@@ -36,6 +36,7 @@ cnee_handle_err(xnee_data *xd, int error)
   const char *err;
   const char *descr;
 
+
   if ( error != XNEE_OK_LEAVE )
     {
       err   = xnee_get_err_description(ret);
@@ -48,7 +49,7 @@ cnee_handle_err(xnee_data *xd, int error)
     }
   else
     {
-      ret = error;
+      return;
     }
   xnee_close_down(xd);
   exit(ret);
@@ -85,7 +86,14 @@ int main(int argc,char *argv[])
   ret = xnee_parse_args (xd, argc, argv);
   if ( ret != XNEE_OK)
     {
-      cnee_handle_err(xd, ret);
+      if (ret == XNEE_OK_LEAVE )
+	{
+	  exit (XNEE_OK);
+	}
+      else 
+	{
+	  cnee_handle_err(xd, ret);
+	}
     }
 
   /* Set the cli parameters */
@@ -94,6 +102,7 @@ int main(int argc,char *argv[])
     {
       cnee_handle_err(xd, ret);
     }
+
 
   ret = xnee_prepare(xd);
   if (ret==XNEE_OK)
@@ -117,7 +126,6 @@ int main(int argc,char *argv[])
   /* hey, we are fin(n)ished .... close down */
   xnee_close_down(xd);
   
-
   /* Since we are here, we can exit gracefully */
   exit(XNEE_OK); 
 }
