@@ -79,6 +79,10 @@ xnee_expression_handle_projinfo(xnee_data *xd, char *tmp);
 static int
 xnee_expression_handle_newwindow(xnee_data *xd, char *tmp);
 
+static int
+xnee_is_replayable(xnee_data *xd, char *tmp);
+
+
 /*************************************************************
  *    public api 
  *************************************************************/
@@ -161,6 +165,10 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp)
       return XNEE_BLANK_LINE;
     }
   
+  /* Is it a replayable data */
+  do_continue = xnee_is_replayable(xd, tmp);
+  if (do_continue) { return (XNEE_REPLAY_DATA); }
+  
 
   /* Is it a meta string */
   do_continue = xnee_expression_handle_comment(xd, tmp);
@@ -182,7 +190,6 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp)
   do_continue = xnee_expression_handle_projinfo(xd, tmp);
   if (do_continue==XNEE_PROJECT_INFORMATION_DATA) { return (do_continue); }
   
-
   return (XNEE_SYNTAX_ERROR);
 }
 
@@ -274,452 +281,48 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 {
   #define RANGE_BUF_SIZE 100
   int ret=XNEE_SETTINGS_DATA;  
+  char **ret_strptr;
   char *range_tmp = NULL;
   char *range = NULL;
   char range_buf[RANGE_BUF_SIZE];
   char opt_buf[RANGE_BUF_SIZE];
   char *opt;
   int len=0;
-  
+  char *my_tmp;
+  int   option_key;
 
   if (tmp==NULL)
     {
+      xnee_verbose ((xd, "handling settings: NULL returning\n"));
       return XNEE_WRONG_PARAMS;
     }
 
-  printf ("---> %s %d\n", __func__, tmp);
-  printf ("---> %s %s\n", __func__, tmp);
+  xnee_verbose ((xd, "handling settings: '%s'\n", tmp));
 
-  xnee_verbose ((xd, "handling settings: %s\n", tmp));
-  len=strlen(tmp);
 
-  /* OK the string passed the first tests */
-  range_tmp=strstr (tmp, " ");
-
-  if (range_tmp!=NULL) 
-    {
-      strncpy(range_buf, range_tmp, RANGE_BUF_SIZE );
-      
-      len=strlen(range_buf);
-      
-      rem_begin_blanks (range_buf, len);
-      
-      len=strlen(range_buf);
-      do 
-	{
-	  range_buf[len-1]='\0';
-	} while ( 
-		 (range_buf[len-1]=='\n')
-		 || 
-		 (range_buf[len-1]=='\r')
-		 );
-	   
-      
-      range = &range_buf[0];
-      if (len==0)
-	{
-	  range = NULL;
-	}
+  if ( xnee_is_replayable(xd, tmp) == XNEE_REPLAY_DATA) 
+    { 
+      return (XNEE_REPLAY_DATA); 
     }
 
-  if ( range!=NULL )
-    {
-      len=strlen(tmp) - strlen(range) - 1;
-    }
-  else
-    {
-      len=strlen(tmp) - 1;
-    }
-  strncpy (opt_buf, tmp, len);
-  opt_buf[len]='\0';
-  
+  my_tmp = tmp;
 
-  if (xnee_parse_check(xd, XNEE_DISPLAY,opt_buf))
+  ret_strptr = xnee_str2strptr(my_tmp, 1);
+
+  if (xnee_is_verbose(xd))
     {
-      ret = xnee_set_display_name (xd, range) ;
-    }
-  else if (xnee_parse_check(xd, XNEE_FIRST_LAST,opt_buf))
-    {
-      if (xnee_check_true(range))
-	{
-	  ret = xnee_set_first_last(xd);
-	}
-      else if (xnee_check_false(range))
-	{
-	  ret = xnee_unset_first_last(xd);
-	}
-      else
-	{
-	  xnee_verbose((xd, "First last mode is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_SYNC_MODE, opt_buf))
-    {
-      if (xnee_check_true(range))
-	{
-	  xd->sync = True;
-	}
-      else if (xnee_check_false(range))
-	{
-	  xd->sync = False;
-	}
-      else
-	{
-	  xnee_verbose((xd, "Sync is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-	}
-      ret = XNEE_OK;
-    }
-  else if (xnee_parse_check(xd, XNEE_HUMAN_PRINTOUT,opt_buf))
-    {
-      if (xnee_check_true(range))
-	{
-	  xnee_set_human_printout (xd);
-	}
-      else if (xnee_check_false(range))
-	{
-	  xnee_set_xnee_printout (xd);
-	}
-      else
-	{
-	  xnee_verbose((xd, "Printout mode is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-	}
-      ret = XNEE_OK;
-    }
-  else if (xnee_parse_check(xd, XNEE_FORCE_REPLAY,opt_buf))
-    {
-      if (xnee_check_true(range))
-	xd->force_replay = True;
-      else if (xnee_check_false(range))
-	xd->force_replay = False;
-      else
-	{
-	  xnee_verbose((xd, "Forced replay mode is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-	}
-      ret = XNEE_OK;
-    }
-  else if (xnee_parse_check(xd, XNEE_ALL_CLIENTS,opt_buf))
-    {
-       if ( range==NULL)
-          xd->all_clients = True;
-       else if (xnee_check_true(range))
-          xd->all_clients = True;
-       else if (xnee_check_false(range))
-          xd->all_clients = False;
-       else
-       {
-	  xnee_verbose((xd, "All clients mode is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-       }
-      ret = XNEE_OK;
-    }
-  else if (xnee_parse_check(xd, XNEE_FUTURE_CLIENTS,opt_buf))
-    {
-       if ( range==NULL)
-          xd->all_clients = False;
-       else if (xnee_check_true(range))
-          xd->all_clients = False;
-       else if (xnee_check_false(range))
-          xd->all_clients = True;
-       else
-       {
-	  xnee_verbose((xd, "Future clients mode is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-       }
-      ret = XNEE_OK;
-    }
-  else if (xnee_parse_check(xd, XNEE_DIMENSION,opt_buf))
-    {
-      ret = xnee_set_rec_resolution (xd, range); 
-      if ( ret != XNEE_OK)
-	{
-	  ret = XNEE_BAD_RESOLUTION;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_VERBOSE,opt_buf))  
-    {
-      if ( range == NULL )
-	{
-	  ret = xnee_set_verbose(xd);
-	}
-      else if (xnee_check_true(range))
-	{
-	  ret = xnee_set_verbose(xd);
-	}
-      else if (xnee_check_false(range))
-	{
-	  ret = xnee_unset_verbose(xd);
-	}
-      else
-	{
-	  xnee_verbose((xd, "Verbose mode is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_BUFFER_VERBOSE,opt_buf))  
-    {
-      if (xnee_check_true(range))
-	ret = xnee_set_buf_verbose(xd);
-      else if (xnee_check_false(range))
-	ret = xnee_unset_buf_verbose(xd);
-      else
-	{
-	  xnee_verbose((xd, "Buffer Verbose mode is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_DELAY_TIME,opt_buf)) 
-    {
-      ret = xnee_set_interval(xd, atoi(range));
-    }
-  else if (xnee_parse_check(xd, XNEE_ADJUST_RESOLUTION,opt_buf)) 
-    {
-      if (xnee_check_true(range))
-	{
-	  ret = xnee_set_resolution_used (xd);
-	}
-      else if (xnee_check_false(range))
-	{
-	  ret = xnee_unset_resolution_used (xd);
-	}
-      else
-	{
-	  xnee_verbose((xd, "Resolution mode is invalid ... bailing out\n"));
-	  xnee_set_err_string("Could not parse %s", tmp);
-	  return XNEE_SYNTAX_ERROR;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_REPLAY_RESOLUTION,opt_buf))
-    {
-      ret = xnee_set_rep_resolution (xd, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_RECORDED_RESOLUTION,opt_buf))
-    {
-      ret = xnee_set_rec_resolution (xd, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_REPLAY_OFFSET,opt_buf))
-    {
-      ret = xnee_set_replay_offset_str (xd, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_RECALL_WINDOW_POS,opt_buf))
-    {
-      xnee_set_new_window_pos_value ( xd, atoi(range));
-    }
-  else if (xnee_parse_check(xd, XNEE_LOOPS,opt_buf)) 
-    {
-      fprintf (stderr, "Obsolete option: '%s'\n", tmp);
-      ret = xnee_set_events_max(xd, atoi(range));
-    }
-  else if (xnee_parse_check(xd, XNEE_DATA_MAX,opt_buf)) 
-    {
-      ret = xnee_set_data_max(xd, atoi(range));
-    }
-  else if (xnee_parse_check(xd, XNEE_EVENT_MAX,opt_buf)) 
-    {
-      ret = xnee_set_events_max(xd, atoi(range));
-    }
-  else if (xnee_parse_check(xd, XNEE_TIME_MAX,opt_buf)) 
-    {
-      ret = xnee_set_time_max(xd, atoi(range));
-    }
-  else if (xnee_parse_check(xd, XNEE_SPEED_PERCENT,opt_buf)) 
-    {
-      ret = xnee_set_replay_speed_str (xd, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_STOP_KEY,opt_buf))
-    {
-      /* If there is a '0', we should not read it */
-      if (!xnee_check_false(range))
-	{
-	  ret = xnee_set_key (xd, XNEE_GRAB_STOP, range);
-	}
-      else
-	{
-	  ret = XNEE_OK;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_PAUSE_KEY,opt_buf))
-    {
-      /* If there is a '0', we should not read it */
-      if (!xnee_check_false(range))
-	ret = xnee_set_key (xd, XNEE_GRAB_PAUSE, range);
-      else
-	{
-	  ret = XNEE_OK;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_RESUME_KEY,opt_buf))
-    {
-      if (!xnee_check_false(range))
-	  ret = xnee_set_key (xd, XNEE_GRAB_RESUME, range);
-      else
-	{
-	  ret = XNEE_OK;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_INSERT_KEY,opt_buf))
-    {
-      if (!xnee_check_false(range))
-	  ret = xnee_set_key (xd, XNEE_GRAB_INSERT, range);
-      else
-	{
-	  ret = XNEE_OK;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_EXEC_KEY,opt_buf))
-    {
-      if (!xnee_check_false(range))
-	ret = xnee_set_key (xd, XNEE_GRAB_EXEC, range);
-      else
-	{
-	  ret = XNEE_OK;
-	}
-    }
-  else if (xnee_parse_check(xd, XNEE_EXEC_PROGRAM,opt_buf))
-    {
-      if ( (strncmp(XNEE_EXEC_NO_PROG, range, strlen(XNEE_EXEC_NO_PROG))==0))
-	{
-	  xnee_verbose((xd, "found no program to exec\n"));
-	}
-      else
-	{
-	  xnee_verbose((xd, "found program to exec: %s\n", range));
- 	  ret = xnee_set_exec_prog (xd, range); 
-	}
+      xnee_print_strptr(ret_strptr);
     }
 
-  /* These are specific to xnee 
-   *
-   *
-   *  Don't use
-   *
-   */
-   else if (xnee_parse_check(xd, XNEE_STORE_MOUSE_POS,opt_buf))  
-     {	  
-       xnee_set_store_mouse_pos(xd);
-     } 
-/*   else if (xnee_parse_check(xd, XNEE_KEYBOARD,opt_buf))  */
-/*     {	  */
-/*       ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT,  */
-/* 			"KeyPress-KeyRelease"); */
-      
-/*     } */
-/*   else if (xnee_parse_check(xd, XNEE_MOUSE,opt_buf)) */
-/*     { */
-/*       ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT,  */
-/* 			"ButtonPress-MotionNotify"); */
-/*     } */
-  else if (xnee_parse_check(xd, XNEE_PLUGIN,opt_buf)) 
-    {
-      /* If there is a '0', we should not read it */
-      if (!xnee_check_false(range))
-	ret = xnee_use_plugin (xd, range);
-      else
-	ret = XNEE_OK;
-    }
-  else if (xnee_parse_check(xd, XNEE_OUT_FILE,opt_buf)) 
-    {
-      ret = xnee_set_out_name (xd, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_ERR_FILE,opt_buf)) 
-    {
-      ret = xnee_set_err_name (xd, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_FEEDBACK_XOSD,opt_buf)) 
-    {
-      ret = xnee_set_xosd_feedback(xd);
-    }
-  else if (xnee_parse_check(xd, XNEE_FEEDBACK_STDERR,opt_buf)) 
-    {
-      ret = xnee_set_stderr_feedback(xd);
-    }
-  else if (xnee_parse_check(xd, XNEE_FEEDBACK_NONE,opt_buf)) 
-    {
-      ret = xnee_set_no_feedback(xd);
-    }
-  else if (xnee_parse_check(xd, XNEE_DISTRIBUTE,opt_buf))
-    {
-       if ( (range==NULL ) || (strlen(range)==0) )
-       {
-          ret = XNEE_OK ;
-       }
-       else
-       {
-          ret = xnee_add_display_list ( xd, range);
-       }
-    }
-  else if (xnee_parse_check(xd, XNEE_DEVICE_EVENT_STR,opt_buf))
-    {
-      ret = xnee_parse_range ( xd, XNEE_DEVICE_EVENT, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_DELIVERED_EVENT_STR,
-		    opt_buf))
-    {
-      ret = xnee_parse_range ( xd, XNEE_DELIVERED_EVENT, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_ERROR_STR,opt_buf)) 
-    {
-      ret = xnee_parse_range ( xd, XNEE_ERROR, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_REQUEST_STR,opt_buf))
-    {
-      ret = xnee_parse_range ( xd, XNEE_REQUEST, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_REPLY_STR,opt_buf))  
-    {
-      ret = xnee_parse_range ( xd, XNEE_REPLY, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_EXT_REQ_MAJ_STR,opt_buf))
-    {
-      ret = xnee_parse_range ( xd, XNEE_EXT_REQUEST_MAJOR, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_EXT_REQ_MIN_STR,opt_buf))
-    {
-      ret = xnee_parse_range ( xd, XNEE_EXT_REQUEST_MINOR, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_EXT_REP_MAJ_STR,opt_buf)) 
-    {
-      ret = xnee_parse_range ( xd, XNEE_EXT_REPLY_MAJOR, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_EXT_REP_MIN_STR,opt_buf)) 
-    {
-      ret = xnee_parse_range ( xd, XNEE_EXT_REPLY_MINOR, range);
-    }
-  else if (xnee_parse_check(xd, XNEE_MAX_THRESHOLD,opt_buf)) 
-    {
-      ret = xnee_set_max_threshold (xd,atoi(range));
-    }
-  else if (xnee_parse_check(xd, XNEE_MIN_THRESHOLD,opt_buf)) 
-    {
-      ret = xnee_set_min_threshold (xd,atoi(range));
-    }
-  else if (xnee_parse_check(xd, XNEE_TOT_THRESHOLD,opt_buf)) 
-    {
-      ret = xnee_set_tot_threshold (xd,atoi(range));
-    }
-  else 
-    {
-      ret=-1;
-    }      
+  option_key = xnee_option2key(xd, ret_strptr);
+
+  xnee_free_strptr(ret_strptr);
 
   if (ret==XNEE_OK)
     {
-      printf ("** xnee_expression_handle_settings SETTINGS DATA ret=%d\n", ret);
       ret = XNEE_SETTINGS_DATA;
     }
 
-  printf ("** xnee_expression_handle_settings ret=%d\n", ret);
   return ret;
 }
 
@@ -1181,3 +784,17 @@ xnee_expression_handle_prim(xnee_data *xd, char *str, xnee_intercept_data * xind
 }
 
 
+static int
+xnee_is_replayable(xnee_data *xd, char *tmp)
+{
+  char first_c ; 
+
+  first_c = tmp[0];
+
+
+  if ( ( first_c >= '0' ) && ( first_c<='3' ) )
+    {
+      return 1;
+    }
+  return 0;
+}
