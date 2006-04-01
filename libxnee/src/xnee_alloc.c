@@ -306,8 +306,14 @@ xnee_new_xnee_data()
    ret = xnee_init(xd);
    XNEE_RETURN_NULL_IF_ERR(ret);
 
-   xnee_init_strings(xd);
+/*    xnee_init_strings(xd); */
 
+  /* Set the signal handler the libxnee's built in */ 
+  (void) signal (SIGINT, signal_handler);
+  
+  /* Set the error handler the libxnee's built in */ 
+  (void) XSetErrorHandler (handle_xerr);  
+  
    return xd;
 }
 
@@ -372,3 +378,6 @@ xnee_free( /*@only@*/  /*@out@*/ /*@null@*/ void *mem)
    free(mem);
    return XNEE_OK;
 }
+
+
+
