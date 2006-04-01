@@ -139,7 +139,7 @@ int*
 xnee_get_list(int type);
 
 int 
-xnee_rem_from_list(int type, int ev);
+xnee_rem_from_list(xnee_data *xd, int type, int ev);
 
 
 int
