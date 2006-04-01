@@ -1,17 +1,19 @@
 bin_PROGRAMS = cnee
 cnee_SOURCES = cnee_fake.c  cnee_printer.c  cnee_strings.c  cnee_demo.c  main.c  parse.c
 man_MANS = cnee.1
-cnee_TEXINFOS = cnee.texi
-info_TEXINFOS = cnee.texi
-
-EXTRA_DIST=$(man_MANS) ../include/cnee_fake.h  ../include/cnee_demo.h ../include/cnee_printer.h  ../include/cnee_strings.h ../include/parse.h 
 
 BUILT_SOURCES = cnee.info cnee.texi
 CLEAN_FILES   = cnee.info cnee.texi
 
+texi_TEXINFOS = cnee.texi
+#info_TEXINFOS = cnee.texi
+
+EXTRA_DIST=$(man_MANS) ../include/cnee_fake.h  ../include/cnee_demo.h ../include/cnee_printer.h  ../include/cnee_strings.h ../include/parse.h 
+
+
 
 cnee.texi: cnee$(EXEEXT)
-	./cnee --infopage > $@
+	./cnee --texipage > $@
 
 cnee.info: cnee.texi
 	$(MAKEINFO) $< 
