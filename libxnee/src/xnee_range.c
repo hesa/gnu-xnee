@@ -62,19 +62,34 @@ static int    need_init          =  1      ;
 static int    added_reparent     =  0      ;
 struct xnee_ranges *xrs          = &myxrs  ;
 
+static int 
+xnee_add_to_list2(xnee_data *xd, int type, int ev);
+
+int
+xnee_add_range (xnee_data* xd, int type, 
+		int start, int stop);
+int 
+xnee_rem_from_list(xnee_data *xd, int type, int ev);
 
 static int
 xnee_do_workaround(xnee_data *xd)
 {
   int ret = XNEE_OK; 
-  
+  int active_state;
   if ( xnee_is_type_nr_set(xd, XNEE_DELIVERED_EVENT, ReparentNotify))
     {
       xnee_set_new_window_pos(xd);
     }
   else
     {
-      xnee_parse_range (xd, XNEE_DELIVERED_EVENT, "ReparentNotify");
+      active_state = xd->record_setup->active;
+      xnee_add_to_list2(xd, XNEE_DELIVERED_EVENT, ReparentNotify);
+      /* Reset active state, since we don't want to record anything
+       * if nothing specified.
+       * We don't want to record the ReparentNotify (as added to
+       * achieve new window pos only)....
+       */
+      xd->record_setup->active = active_state ;
       added_reparent = 1 ;
     }
   return ret;
@@ -88,9 +103,7 @@ xnee_undo_workaround(xnee_data *xd)
 
   if (added_reparent)
     {
-      xnee_rem_data_from_range_str (xd,
-				    XNEE_DELIVERED_EVENT,
-				    "ReparentNotify") ;
+      xnee_rem_from_list(xd, XNEE_DELIVERED_EVENT, ReparentNotify);
       added_reparent = 0 ;
     } 
 
@@ -241,11 +254,13 @@ xnee_print_list(void)
 
 
 static int 
-xnee_add_to_list2(int type, int ev)
+xnee_add_to_list2(xnee_data *xd, int type, int ev)
 {
    int i ;
    struct xnee_range *xrp;
 
+   /* An item is added, set recording active */
+   xd->record_setup->active = 1;
    
    if (type==XNEE_EVENT)
      {
@@ -380,13 +395,13 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 	{
 	  for (i=start;i<=stop;i++)
 	    {
-	      ret = xnee_add_to_list2(type, i);
+	      ret = xnee_add_to_list2(xd, type, i);
 	    }
 	}
       else if (start!=0)
 	{
 	  xnee_verbose((xd, " --  add_range_str 4\n" ));
-	  ret = xnee_add_to_list2(type, start);
+	  ret = xnee_add_to_list2(xd, type, start);
 	}
     }
 
@@ -405,17 +420,10 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
  **************************************************************/
 int
 xnee_add_range (xnee_data* xd, 
-		int type, 
-		int start, 
-		int stop)
+		     int type, 
+		     int start, 
+		     int stop)
 {
-
-  /*  
-      int this_types_index=0;
-  */
-
-/*   xnee_set_verbose(xd); */
-
   XRecordRange *range;
   int max_index=0;
   int alloc_nr=0;
@@ -423,17 +431,11 @@ xnee_add_range (xnee_data* xd,
   XRecordRange *r_range; 
   xnee_verbose((xd, "---> xnee_add_range %d %d %d\n", type, start, stop));
   
-  XNEE_DEBUG ( (stderr ," --> xnee_add_range()  \n"  ));
   /* increment the counter to ensure we allocate enough memory */
   alloc_nr=xd->xnee_info.data_ranges[type]  ;
   max_index=xnee_get_max_range(xd) - 1 ;
   
-  
-
   xnee_verbose((xd, "  MAX %d ALLOC %d\n", max_index, alloc_nr));
-  
-
-
 
   if (alloc_nr>max_index)
   {
@@ -499,7 +501,6 @@ xnee_add_range (xnee_data* xd,
     {
       range->core_replies.first = start;
       range->core_replies.last = stop;
-
     }
   else if ( type == XNEE_EXT_REQUEST_MAJOR ) 
     {
@@ -643,11 +644,13 @@ xnee_set_ranges(xnee_data *xd)
        xnee_do_workaround(xd);
      }
 
-
-  for (j=0; j<XNEE_NR_OF_TYPES ;j++)
-   {
+   
+   
+   for (j=0; j<XNEE_NR_OF_TYPES ;j++)
+     {
       first = -1;
       last  = -1;
+
       for (i=0; i<xrs->type[j].index ;i++)
 	{
 	  this = xrs->type[j].data[i] ;
@@ -693,7 +696,7 @@ xnee_set_ranges(xnee_data *xd)
 
 
 int 
-xnee_rem_from_list(int type, int ev)
+xnee_rem_from_list(xnee_data *xd, int type, int ev)
 {
    int i ; 
    int j ; 
@@ -773,7 +776,7 @@ xnee_rem_data_from_range_str (xnee_data *xd,
    
    xnee_verbose ((xd, "xnee range removing : %d of type %d\n", 
 		  rem_data, type ));
-   xnee_rem_from_list(type, rem_data);
+   xnee_rem_from_list(xd, type, rem_data);
 
 
    return XNEE_OK;
