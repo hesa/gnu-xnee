@@ -214,6 +214,10 @@ char error_descr_solut[128][256] =
     "Missing arguments when trying to parse",
     "Xnee misses one or more arguments. Make sure your command line or file is correct",
 
+    /* XNEE_OK_LEAVE */            
+    "OK, Xnee will quit as soon as possible", 
+    "No need to do anything",
+
    /* XNEE_LAST_ERROR */
     "Last error",
     "Internal state, report if you receive this",
