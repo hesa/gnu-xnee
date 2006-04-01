@@ -52,7 +52,7 @@ xnee_verbosef (xnee_data *xd, /*@null@*/ char * msg,  ...)
      return;
   }
 
-  if (xd->verbose!=0) 
+  if ( (xd->verbose!=0) && (xd->err_file!=NULL) )
     {
       va_start(ap, msg);
       (void)xd->verbose_fp ( xd->err_file, msg, ap );
@@ -72,7 +72,7 @@ xnee_verbosef (xnee_data *xd, valist)
      return;
   }
 
-  if (xd->verbose) 
+  if ( (xd->verbose!=0) && (xd->err_file!=NULL) )
     {
       va_start(argp);
       fmt = va_arg(argp, char *);
