@@ -33,11 +33,6 @@
 int  
 xnee_free_file (xnee_data *xd, /*@null@*/ char *file_name, /*@null@*/ FILE* file)
 {
-  xnee_verbose((xd, "Closing file=%s fd=%d\n", 
-		file_name, 
-		(int)file));
-  
-
    /*  @owned@  */ /* char *tmp = file_name ; */
    if ( file_name != NULL) 
    {
@@ -45,12 +40,12 @@ xnee_free_file (xnee_data *xd, /*@null@*/ char *file_name, /*@null@*/ FILE* file
          .... it won't believe us else */
       /*@access FILE@*/
        XNEE_FREE_IF_NOT_NULL (file_name); 
-    }
-   if (file!=NULL)
-     {
-       XNEE_FCLOSE_IF_NOT_NULL ( file ) ;
-     }
 
+       if (file!=NULL)
+	 {
+	   XNEE_FCLOSE_IF_NOT_NULL ( file ) ;
+	 }
+    }
   return XNEE_OK;
 }
 
