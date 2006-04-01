@@ -99,6 +99,35 @@ rem_blanks (char *array, int size);
 XID 
 xnee_client_id (Display *dpy);
 
+#define XNEE_ATOI_FUNCTION(func, xd, str, xnee_macro_in_ret_val) \
+        { \
+          int my_xnee_atio_macro_function_ret ; \
+          if ( sscanf(str, "%d", &my_xnee_atio_macro_function_ret) == 1) \
+             xnee_macro_in_ret_val = func(xd, my_xnee_atio_macro_function_ret); \
+          else {\
+                xnee_macro_in_ret_val = XNEE_WRONG_PARAMS ; \
+               }\
+        }
+ 
 
+
+
+
+
+
+
+
+char **
+xnee_str2strptr (char *tmp, int fill_option);
+
+void
+xnee_print_strptr( char **strptr);
+
+int
+xnee_free_strptr(char **strptr);
+
+
+int
+xnee_boolstr2int(xnee_data *xd, char *str);
 
 #endif /*  XNEE_XNEE_UTILS_H */
