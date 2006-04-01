@@ -208,16 +208,13 @@ xnee_close_down(xnee_data* xd)
   xnee_verbose((xd ," --  xnee_close_down() free rt_file <-- %d\n", ret));
   
   xnee_verbose((xd ," --  xnee_close_down() free err_file\n"  ));
+
   ret = xnee_free_file (xd, xd->err_name,  xd->err_file); 
   xd->err_file=NULL;
-  xnee_verbose((xd ," --  xnee_close_down() free err_file <-- %d\n", ret));
 
-  xnee_verbose((xd ," --  xnee_close_down() free out_file \n"  ));
   ret = xnee_free_file (xd, xd->out_name,  xd->out_file);
   xd->out_file=NULL;
-  xnee_verbose((xd ," --  xnee_close_down() free out_file <-- %d\n", ret));
 
-  XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.6 \n"  ));
   ret = xnee_free_xnee_data(xd);
   xd=NULL;
 }
