@@ -34,12 +34,14 @@
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_alloc.h"
+#include "libxnee/feedback.h"
 
 
 
 int
 xnee_set_display_name (xnee_data *xd, const char *disp)
 {
+
   if (disp==NULL)
     {
       return XNEE_OK;
@@ -502,6 +504,12 @@ int
 xnee_set_key (xnee_data *xd, int mode, const char* km)
 {
   xnee_verbose((xd, "---> xnee_set_key\n"));
+
+  if (km==NULL)
+    {
+      return XNEE_UNKNOWN_GRAB_MODE;
+    }
+
   switch (mode)
     {
     case XNEE_GRAB_STOP:
@@ -623,6 +631,11 @@ xnee_get_exec_prog (xnee_data *xd)
 int
 xnee_set_exec_prog (xnee_data *xd, const char *prog)
 {
+  if (prog==NULL)
+    {
+      return XNEE_SYNTAX_ERROR;
+    }
+
   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str);
 
   xnee_verbose((xd, "xnee_set_exec_prog\n"));
@@ -822,6 +835,12 @@ xnee_set_replay_speed_str (xnee_data *xd, const char *speed_str)
 {
   int speed;
   int ret  ; 
+
+  if (speed_str==NULL)
+    {
+      return XNEE_SYNTAX_ERROR;
+    }
+
   ret = sscanf(speed_str, "%d", &speed);
   
   if (ret == 1)
@@ -1027,6 +1046,12 @@ xnee_set_replay_offset_str (xnee_data *xd, char *str)
   int y;
   int ret;
   xnee_verbose((xd, "replay offset str: %s\n", str));
+
+  if (str==NULL)
+    {
+      return XNEE_WRONG_PARAMS;
+    }
+
   ret = sscanf(str, "%d,%d",&x,&y);
   
   if (ret != 2 )
@@ -1124,4 +1149,504 @@ xnee_unset_recall_window_pos (xnee_data *xd)
   xd->recall_recorded_win_pos=0;
   return XNEE_OK;
 }
+
+
+int
+xnee_set_project_file(xnee_data *xd, char *name)
+{
+  #define XNEE_PARSE_BUF 200
+  char buf [XNEE_PARSE_BUF]; 
+  int ret;
+
+  if (name == NULL)
+    {
+      ret = XNEE_WRONG_PARAMS;
+    }
+
+  ret = xnee_set_rc_byname (xd, name);
+  if ( ret != XNEE_OK) 
+    {
+      xnee_verbose((xd, "Could not open project file %s\n", name));
+	      
+      if ( (strlen(name) + strlen (XNEE_RESOURCE_DIR) + 2 ) > 200)
+	{
+	  xnee_verbose ((xd, "ERROR: Filename too big\n"));
+	  xnee_verbose ((xd, "... leaving.\n"));
+	  xnee_close_down(xd);
+	  exit(XNEE_WRONG_PARAMS);
+	}
+      strncpy ( buf , XNEE_RESOURCE_DIR, XNEE_PARSE_BUF );
+      strncat ( buf ,  "/", XNEE_PARSE_BUF - strlen(buf));
+      strncat ( buf , name, XNEE_PARSE_BUF - strlen(buf));
+      xnee_verbose((xd, "\ttryingresource file %s\n", buf));
+      ret = xnee_set_rc_name (xd, buf);
+    }
+	  
+  if ( xnee_get_rc_file (xd) != NULL) 
+    {
+      ret = xnee_add_resource (xd );
+	      
+      if (ret!=XNEE_OK)
+	{
+	  xnee_verbose ((xd, "project file read: return value %d\n", 
+			 ret));
+	  if (ret == XNEE_SYNTAX_ERROR)
+	    {
+	      char *tmp_str;
+	      xnee_verbose ((xd, "project file read: SYNTAX ERROR\n"));
+	      tmp_str = xnee_get_err_string();
+	      fprintf (stderr,"%s", tmp_str);
+	      XNEE_FREE_IF_NOT_NULL(tmp_str);
+	    }
+	}
+    }
+  else
+    {
+      xnee_print_error ("Unable to open resource file\n");
+      xnee_verbose ((xd, "Could not open resource file\n"));
+      xnee_verbose ((xd, "... leaving\n"));
+      ret = XNEE_WRONG_PARAMS;
+    }
+  return ret;
+}
+
+
+
+char *
+xnee_get_project_name(xnee_data *xd){
+  if (xd->xrm.project_name!=NULL)
+    return xd->xrm.project_name;
+  else
+    return "none";
+}
+
+char *
+xnee_get_project_descr(xnee_data *xd){
+  if (xd->xrm.project_descr!=NULL)
+    return xd->xrm.project_descr;
+  else
+    return "none";
+}
+
+char *
+xnee_get_creat_date(xnee_data *xd)
+{
+  time_t rawtime;
+  struct tm * timeinfo;
+#define XNEE_DATE_BUF_SIZE 100
+  static char buf[XNEE_DATE_BUF_SIZE];
+
+  if (xd->xrm.creat_date!=NULL)  
+    {
+      return xd->xrm.creat_date;
+    }
+  time ( &rawtime );
+  timeinfo = localtime ( &rawtime );
+  snprintf(buf, XNEE_DATE_BUF_SIZE,
+	   "%.4d-%.2d-%.2d",
+	   timeinfo->tm_year + 1900 , 
+	   timeinfo->tm_mon + 1 , 
+	   timeinfo->tm_mday  );
+  
+  return buf;
+}
+
+char *
+xnee_get_creat_program(xnee_data *xd)
+{
+  if (xd->xrm.creat_prog!=NULL)  
+    return xd->xrm.creat_prog;
+  else
+    return xnee_get_program_name(xd);
+}
+
+char *
+xnee_get_creat_prog_vers(xnee_data *xd)
+{
+  if (xd->xrm.creat_prog_vers!=NULL)  
+    return xd->xrm.creat_prog_vers;
+  else
+    return VERSION;
+}
+
+char *
+xnee_get_last_date(xnee_data *xd)
+{
+  if (xd->xrm.last_date!=NULL)  
+    return xd->xrm.last_date;
+  else
+    return "none";
+}
+
+char *
+xnee_get_last_program(xnee_data *xd)
+{
+  if (xd->xrm.last_prog!=NULL)  
+    return xd->xrm.last_prog;
+  else
+    return "none";
+}
+
+char *
+xnee_get_last_prog_vers(xnee_data *xd){
+  if (xd->xrm.last_prog_vers!=NULL)  
+    return xd->xrm.last_prog_vers;
+  else
+    return "none";
+}
+
+char *
+xnee_get_author_name(xnee_data *xd){
+  if (xd->xrm.author_name!=NULL)  
+    return xd->xrm.author_name;
+  else
+    return "none";
+}
+
+char *
+xnee_get_author_email(xnee_data *xd){
+  if (xd->xrm.author_email!=NULL)  
+    return xd->xrm.author_email;
+  else
+    return "none";
+}
+
+
+int
+xnee_set_project_name(xnee_data *xd, char *str)
+{
+  if (str==NULL)
+    {
+      return XNEE_NO_PROJECT_FILE;
+    }
+
+  XNEE_FREE_IF_NOT_NULL(xd->xrm.project_name);
+  xd->xrm.project_name=strdup(str);
+  return XNEE_OK;
+}
+
+int
+xnee_set_plugin_name(xnee_data *xd, char *str)
+{
+  if (str==NULL)
+    {
+      return XNEE_NO_PLUGIN_FILE;
+    }
+
+  return xnee_use_plugin(xd, str);
+}
+
+int
+xnee_set_project_descr(xnee_data *xd, char *str){
+  xd->xrm.project_descr=strdup(str);
+  return XNEE_OK;
+}
+
+int
+xnee_set_creat_date(xnee_data *xd, char *str){
+  XNEE_FREE_IF_NOT_NULL(xd->xrm.creat_date);
+  xd->xrm.creat_date=strdup(str);
+  return XNEE_OK;
+}
+
+int
+xnee_set_creat_program(xnee_data *xd, char *str){
+  XNEE_FREE_IF_NOT_NULL(xd->xrm.creat_prog_vers);
+  xd->xrm.creat_prog=strdup(str);
+  return XNEE_OK;
+}
+
+int
+xnee_set_creat_prog_vers(xnee_data *xd, char *str){
+  xd->xrm.creat_prog_vers=strdup(str);
+  return XNEE_OK;
+}
+
+int
+xnee_set_last_date(xnee_data *xd, char *str)
+{
+  XNEE_FREE_IF_NOT_NULL(xd->xrm.last_date);
+  xd->xrm.last_date=strdup(str);
+  return XNEE_OK;
+}
+
+int
+xnee_set_last_program(xnee_data *xd, char *str){
+  xd->xrm.last_prog=strdup(str);
+  return XNEE_OK;
+}
+int
+xnee_set_last_prog_vers(xnee_data *xd, char *str)
+{
+  xd->xrm.last_prog_vers=strdup(str);
+  return XNEE_OK;
+}
+int
+xnee_set_author_name(xnee_data *xd, char *str){
+  xd->xrm.author_name=strdup(str);
+  return XNEE_OK;
+}
+
+int
+xnee_set_author_email(xnee_data *xd, char *str){
+  xd->xrm.author_email=strdup(str);
+  return XNEE_OK;
+}
+
+int
+xnee_set_first_list_str(xnee_data *xd, char *str)
+{
+  int ret = XNEE_OK;  
+
+  ret = xnee_boolstr2int(xd, str);
+  if (ret == XNEE_BOOL_ERROR)
+    {
+      ret = XNEE_SYNTAX_ERROR;
+    }
+  else
+    {
+      if (ret)
+	{
+	  ret = xnee_set_first_last(xd);
+	}
+      else
+	{
+	  ret = xnee_unset_first_last(xd);
+	}
+    }
+  return ret;
+}
+
+
+int
+xnee_set_all_clients_str(xnee_data *xd, char *str)
+{
+  int ret = XNEE_OK;
+
+  ret = xnee_boolstr2int(xd, str);
+  if (ret == XNEE_BOOL_ERROR)
+    {
+      ret = XNEE_SYNTAX_ERROR;
+    }
+  else
+    {
+      if (ret)
+	{
+	  ret = xnee_set_all_clients(xd);
+	}
+      else
+	{
+	  ret = xnee_unset_all_clients(xd);
+	}
+    }
+  
+  return ret;
+}
+
+
+int
+xnee_set_future_clients_str(xnee_data *xd, char *str)
+{
+  int ret = XNEE_OK;
+
+  ret = xnee_boolstr2int(xd, str);
+  if (ret == XNEE_BOOL_ERROR)
+    {
+      ret = XNEE_SYNTAX_ERROR;
+    }
+  else
+    {
+      if (ret)
+	{
+	  ret = xnee_set_future_clients(xd);
+	}
+      else
+	{
+	  ret = xnee_unset_future_clients(xd);
+	}
+    }
+  return ret;
+}
+
+int
+xnee_set_future_clients(xnee_data *xd)
+{
+  /* Setting future clients is the same as unsetting 
+     all_clients*/
+  return xnee_unset_all_clients(xd);
+}
+
+int
+xnee_unset_future_clients(xnee_data *xd)
+{
+  /* Unsetting future clients is the same as setting
+     all_clients*/
+  return xnee_set_all_clients(xd);
+}
+
+
+int 
+xnee_set_events_max_str (xnee_data *xd, char *str)
+{
+  int ret;
+  
+  ret = xnee_str2int (xd, str);
+
+  if ( ret == INT_MAX )
+    {
+      ret = XNEE_SYNTAX_ERROR ;
+    }
+  else
+    {
+      ret = xnee_set_events_max(xd, ret);
+    }
+  return ret;
+}
+
+int 
+xnee_set_data_max_str (xnee_data *xd, char *str)
+{
+  int ret;
+  
+  ret = xnee_str2int (xd, str);
+
+  if ( ret == INT_MAX )
+    {
+      ret = XNEE_SYNTAX_ERROR ;
+    }
+  else
+    {
+      ret = xnee_set_data_max(xd, ret);
+    }
+  return ret;
+}
+
+int 
+xnee_set_time_max_str (xnee_data *xd, char *str)
+{
+  int ret;
+  
+  ret = xnee_str2int (xd, str);
+
+  if ( ret == INT_MAX )
+    {
+      ret = XNEE_SYNTAX_ERROR ;
+    }
+  else
+    {
+      ret = xnee_set_time_max(xd, ret);
+    }
+  return ret;
+}
+
+int 
+xnee_set_resolution_str (xnee_data *xd, char *str)
+{
+  int ret = XNEE_OK;
+
+  ret = xnee_boolstr2int(xd, str);
+  if (ret == XNEE_BOOL_ERROR)
+    {
+      ret = XNEE_SYNTAX_ERROR;
+    }
+  else
+    {
+      if (ret)
+	{
+	  ret = xnee_set_resolution_used(xd);
+	}
+      else
+	{
+	  ret = xnee_unset_resolution_used(xd);
+	}
+    }
+  return ret;
+}
+
+
+int 
+xnee_set_sync_mode_str (xnee_data *xd, char *str)
+{
+  int ret = XNEE_OK;
+
+  ret = xnee_boolstr2int(xd, str);
+  if (ret == XNEE_BOOL_ERROR)
+    {
+      ret = XNEE_SYNTAX_ERROR;
+    }
+  else
+    {
+      if (ret)
+	{
+	  ret = xnee_set_sync_mode(xd);
+	}
+      else
+	{
+	  ret = xnee_unset_sync_mode(xd);
+	}
+    }
+  return ret;
+}
+
+int 
+xnee_unset_sync_mode_str (xnee_data *xd, char *str)
+{
+  int ret = XNEE_OK;
+
+  ret = xnee_boolstr2int(xd, str);
+  if (ret == XNEE_BOOL_ERROR)
+    {
+      ret = XNEE_SYNTAX_ERROR;
+    }
+  else
+    {
+      if (ret)
+	{
+	  ret = xnee_unset_sync_mode(xd);
+	}
+      else
+	{
+	  ret = xnee_set_sync_mode(xd);
+	}
+    }
+  return ret;
+}
+
+
+int 
+xnee_set_sync_mode(xnee_data *xd)
+{
+  xd->sync = True;
+  return XNEE_OK;
+}
+
+int 
+xnee_unset_sync_mode(xnee_data *xd)
+{
+  xd->sync = False;
+  return XNEE_OK;
+}
+
+int 
+xnee_set_unsync_mode(xnee_data *xd)
+{
+  xd->sync = False;
+  return XNEE_OK;
+}
+
+
+
+
+const char *
+xnee_get_xosd_font(xnee_data *xd)
+{
+  return xnee_get_xosd_font_impl(xd);
+}
+
+int
+xnee_set_xosd_font(xnee_data *xd, char *font_str)
+{
+  return xnee_set_xosd_font_impl(xd, font_str);
+}
+
 
