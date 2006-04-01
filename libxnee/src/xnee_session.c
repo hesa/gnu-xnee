@@ -77,13 +77,21 @@ xnee_get_max_range (xnee_data *xd)
 {
   int i=0;
   int max_val=0;
-  for ( i=0 ; i<XNEE_NR_OF_TYPES ; i++)
+
+  if (!xd->record_setup->active)
     {
-/*       printf ("  get max range %d\n", xd->xnee_info.data_ranges[i]); */
-      max_val=XNEE_MAX (xd->xnee_info.data_ranges[i], max_val);
+      max_val = 0;
     }
-  xnee_verbose((xd, "Returning max_val=%d\n", max_val));
-  /* Returns the number of RecordRanges allocated so far */
+  else
+    {
+      for ( i=0 ; i<XNEE_NR_OF_TYPES ; i++)
+	{
+	  max_val=XNEE_MAX (xd->xnee_info.data_ranges[i], max_val);
+	}
+      xnee_verbose((xd, "Returning max_val=%d\n", max_val));
+      /* Returns the number of RecordRanges allocated so far */
+    }
+
   return max_val;
 }
 
@@ -226,7 +234,8 @@ int
 xnee_init(xnee_data* xd)
 {
   int ret ; 
-  
+  int i ; 
+
   if (xd == NULL) 
     {
       return XNEE_MEMORY_FAULT;
@@ -297,6 +306,11 @@ xnee_init(xnee_data* xd)
   /*  Not done until needed
       xnee_init_names();
   */
+
+  for (i=0;i<XNEE_NR_OF_TYPES;i++)
+    {
+      xd->xnee_info.data_ranges[i]=0;
+    }
 
   ret = xnee_grab_keys_init(xd);
   XNEE_RETURN_IF_ERR(ret);
