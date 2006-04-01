@@ -40,10 +40,12 @@
 #include "libxnee/datastrings.h"
 
 
-extern xnee_options_t  *xnee_options;
-
 #ifndef XNEE_RESOURCE_H
 #define XNEE_RESOURCE_H
+
+extern xnee_option_t  *xnee_options;
+
+
 
 #define XNEE_RES_PROJECT                 "ProjectName"
 #define XNEE_RES_DESCRIPTION             "ProjectDescription"
@@ -64,6 +66,17 @@ extern xnee_options_t  *xnee_options;
 #define XNEE_CLI_SYNTAX 1
 #define XNEE_XNS_SYNTAX 2
 #define XNEE_CLI_PREFIX "--"
+#define xnee_find_resource_option_entry(xd, option, options) \
+        xnee_find_option_entry_impl    (xd, option, options, XNEE_CLI_SYNTAX)
+#define xnee_find_cli_option_entry(xd, option, options)      \
+        xnee_find_option_entry_impl(xd, option, options, XNEE_CLI_SYNTAX) 
+
+
+#define       XNEE_OPTION_VISIBLE   1
+#define       XNEE_LAST_OPTION      -1
+#define       XNEE_OPTION_NOT_FOUND -1
+
+
 
 #define XNEE_RESOURCE_CHECK(a,b) strncmp(a,b,strlen(a))
 #define XNEE_REMOVE_BEGINING_BLANKS(val) \
@@ -82,6 +95,68 @@ xnee_new_xnee_resource_meta(xnee_resource_meta* xrm);
 int
 xnee_free_xnee_resource_meta(xnee_resource_meta* xrm);
 
+enum XNEE_OPTION_KEYS 
+  {
+    XNEE_NO_OPTION_KEY=0      ,
+    XNEE_ERR_FILE_KEY         ,
+    XNEE_OUT_FILE_KEY         ,
+    XNEE_DISPLAY_KEY          ,
+    XNEE_FIRST_LAST_KEY       ,
+    XNEE_ALL_EVENTS_KEY       ,
+    XNEE_ALL_CLIENTS_KEY      ,
+    XNEE_FUTURE_CLIENTS_KEY   ,
+    XNEE_DIMENSION_KEY        ,
+    XNEE_EVENT_MAX_KEY        ,
+    XNEE_DATA_MAX_KEY         ,
+    XNEE_TIME_MAX_KEY         ,
+/*     XNEE_LOOPS_LEFT_KEY       , */
+    XNEE_STOP_KEY_KEY         ,
+    XNEE_PAUSE_KEY_KEY        ,
+    XNEE_RESUME_KEY_KEY       ,
+    XNEE_INSERT_KEY_KEY       ,
+    XNEE_EXEC_KEY_KEY         ,
+    XNEE_EXEC_PROGRAM_KEY     ,
+    XNEE_EXEC_MARK_KEY        ,
+    XNEE_NEW_WINDOW_MARK_KEY  ,
+    XNEE_EVERYTHING_KEY       ,
+    XNEE_DELAY_TIME_KEY       ,
+    XNEE_SPEED_PERCENT_KEY    ,
+    XNEE_RECORDED_RESOLUTION_KEY,
+    XNEE_REPLAY_RESOLUTION_KEY,
+    XNEE_ADJUST_RESOLUTION_KEY,
+    XNEE_DISTRIBUTE_KEY       ,
+    XNEE_NO_EXPOSE_KEY        ,
+    XNEE_NO_SYNC_MODE_KEY     ,
+/*     XNEE_USE_SYNC_KEY         , */
+    XNEE_SYNC_MODE_KEY        ,
+    XNEE_RECALL_WINDOW_POS_KEY,
+    XNEE_REPLAY_OFFSET_KEY    ,
+    XNEE_HUMAN_PRINTOUT_KEY   ,
+    XNEE_LOOPS_KEY            ,
+    XNEE_FORCE_REPLAY_KEY     ,
+    XNEE_RESOURCE_KEY         ,
+    XNEE_PLUGIN_KEY           ,
+    XNEE_ERROR_FD_KEY         ,
+    XNEE_VERBOSE_KEY          ,
+    XNEE_BUFFER_VERBOSE_KEY   ,
+    XNEE_STORE_MOUSE_POS_KEY  ,
+    XNEE_XOSD_FONT_KEY        ,
+    XNEE_FEEDBACK_XOSD_KEY    ,
+    XNEE_FEEDBACK_STDERR_KEY  ,
+    XNEE_FEEDBACK_NONE_KEY    ,
+    XNEE_MAX_THRESHOLD_KEY    ,
+    XNEE_MIN_THRESHOLD_KEY    ,
+    XNEE_TOT_THRESHOLD_KEY    ,
+    XNEE_REQUEST_STR_KEY      ,
+    XNEE_DEVICE_EVENT_STR_KEY ,
+    XNEE_DELIVERED_EVENT_STR_KEY,
+    XNEE_ERROR_STR_KEY        ,
+    XNEE_REPLY_STR_KEY        ,
+    XNEE_EXT_REQ_MAJ_STR_KEY  ,
+    XNEE_EXT_REQ_MIN_STR_KEY  ,
+    XNEE_EXT_REP_MAJ_STR_KEY  ,
+    XNEE_EXT_REP_MIN_STR_KEY      
+  };
 
 
 /**
@@ -146,72 +221,10 @@ int
 xnee_set_char(xnee_data *xd, char* char_str);
 
 
-char *
-xnee_get_project_name(xnee_data *xd);
-
-char *
-xnee_get_project_descr(xnee_data *xd);
-
-char *
-xnee_get_creat_date(xnee_data *xd);
-
-char *
-xnee_get_creat_program(xnee_data *xd);
-
-char *
-xnee_get_creat_prog_date(xnee_data *xd);
-
-char *
-xnee_get_last_date(xnee_data *xd);
-
-char *
-xnee_get_last_program(xnee_data *xd);
-
-char *
-xnee_get_last_prog_vers(xnee_data *xd);
-
-char *
-xnee_get_author_name(xnee_data *xd);
-
-char *
-xnee_get_author_email(xnee_data *xd);
-
-char *
-xnee_get_char(xnee_data *xd);
-
-char *
-xnee_get_project_name_str(xnee_data *xd);
-
-char *
-xnee_get_project_descr_str(xnee_data *xd);
-
-char *
-xnee_get_creat_date_str(xnee_data *xd);
-
-char *
-xnee_get_creat_prog_vers(xnee_data *xd);
-
-char *
-xnee_get_last_date_str(xnee_data *xd);
-
-char *
-xnee_get_last_prog_str(xnee_data *xd);
-
-char *
-xnee_get_last_prog_date_str(xnee_data *xd);
-
-char *
-xnee_get_author_name_str(xnee_data *xd);
-
-char *
-xnee_get_author_email_str(xnee_data *xd);
-
-char *
-xnee_get_char_str(xnee_data *xd);
-
 int
 xnee_handle_resource_meta (xnee_data *xd, char *meta_str);
 
+/*
 int
 xnee_is_option(xnee_data *xd, 
 	       xnee_options_t *options, 
@@ -242,6 +255,20 @@ xnee_parse_check_impl(xnee_data *xd,
 		      xnee_options_t *options,
 		      const char *str, 
 		      char *opt);
+
+*/
+
+
+
+const char *
+xnee_key2string(xnee_data      *xd, 
+		xnee_option_t  *options, 
+		int             key);
+
+
+#define xnee_xns_key2string(key) \
+   xnee_key2string(xd, xnee_options, key)
+
 
 
 #endif  /* XNEE_RESOURCE_H */
