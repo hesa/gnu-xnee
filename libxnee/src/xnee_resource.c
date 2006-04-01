@@ -58,12 +58,546 @@
 #include "libxnee/xnee_display.h"
 #include "libxnee/print.h"
 
-static int needs_init=1;
-static xnee_options_t xnee_options_impl;
-xnee_options_t *xnee_options;
+#define  INC_ARGS_USED(a, str) if(str!=NULL) a=1; else a=0;
 
-xnee_options_t*
-xnee_init_strings(xnee_data *xd);
+
+static int needs_init=1;
+
+static xnee_option_t xnee_options_impl[] = 
+  {
+    /* 
+     * Key 
+     * long option
+     * short option
+     * arg description
+     * description
+     * type of option (record/replay,general ... 
+     */
+    {  
+      XNEE_ERR_FILE_KEY,
+      "err-file",
+      "e",
+      "<file>",
+      "Redirect all Xnee verbose output file_name"
+      "(default is stderr)", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    {
+      XNEE_OUT_FILE_KEY,
+      "out-file",
+      "o",
+      "<file>",
+      "Redirect all Xnee data to file_name"
+      "(default is stdout)", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },    
+    {
+      XNEE_DISPLAY_KEY,
+      "display",
+      "d",
+      "<displayname>",
+      "X server to contact (default is localhost)",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },    
+    { 
+      XNEE_DIMENSION_KEY,
+      "Dimension",
+      NULL,
+      "<displayname>",
+      "Dimension when recorded",
+      XNEE_INTERNAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      XNEE_LOOPS_KEY,
+      "loops-left",
+      NULL,
+      "<nr>",
+      "Nr of events to record (obsolete)",
+      XNEE_OBSOLETE_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    {
+      XNEE_FIRST_LAST_KEY,
+      "first-last",
+      NULL,
+      NULL,
+      "Print only first and last of multiple successive" 
+      "MotionEvent",		  
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    {
+      XNEE_ALL_EVENTS_KEY,
+      "all-events",
+      NULL,
+      NULL,
+      "Intercept all events",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    {
+      XNEE_ALL_CLIENTS_KEY,
+      "all-client",
+      NULL,
+      NULL,
+      "Record all client's data (default)", 
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    {
+      XNEE_FUTURE_CLIENTS_KEY,
+      "future-clients",
+      NULL,
+      NULL,
+      "Record future client's data", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    {
+      XNEE_EVENT_MAX_KEY,
+      "events-to-record",
+      "etr",
+      "<n>",
+      "Intercept n numbers of events ( n<0 means forever)",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },    
+    {
+      XNEE_DATA_MAX_KEY,
+      "data-to-record",
+      "dtr",
+      "<n>",
+      "Intercept n numbers of data ( n<0 means forever)", 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_TIME_MAX_KEY,
+      "seconds-to-record",
+      "str", 
+      "<n>",
+      "Intercept for n seconds ( n<0 means forever)"	,
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_STOP_KEY_KEY,
+      "stop-key",
+      "sk",
+      "<key>",
+      "When pressing key Xnee exits", 
+      XNEE_GRAB_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_PAUSE_KEY_KEY,
+      "pause-key",
+      "pk",
+      "<key>",
+      "When pressing key Xnee pauses its current action", 
+      XNEE_GRAB_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_RESUME_KEY_KEY,
+      "resume-key",
+      "rk",
+      "<key>",
+      "When pressing key Xnee resumes its paused action", 
+      XNEE_GRAB_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_INSERT_KEY_KEY,
+      "insert-key",
+      "ik",
+      "<key>", 
+      "When pressing key Xnee inserts a META mark"
+      "in the session file" , 
+      XNEE_GRAB_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_EXEC_KEY_KEY,
+      "exec-key",
+      "ek",
+      "<key>",
+      "When pressing modifier mod and key key Xnee inserts "
+      "an exec mark into the session file" ,
+      XNEE_GRAB_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_EXEC_PROGRAM_KEY,
+      "exec-key",
+      "ep",
+      "<programname>", 
+      "Program to start when pressing the grabbed exec key",
+      XNEE_GRAB_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+
+    {
+      XNEE_DELAY_TIME_KEY,
+      "time",
+      "t",
+      "<secs>",
+      "Delay start of application for <secs> seconds. Used to "
+      "prevent recording of KeyRelease when starting Xnee from"
+      "terminal",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_SPEED_PERCENT_KEY,
+      "speed-percent",
+      "sp",
+      "<speed>",
+      "Set replaying speed percentage is set to speed",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_RECORDED_RESOLUTION_KEY,
+      "recorded-resolution",
+      NULL,
+      "<res>", 
+      "Resolution to use when recording is set to res",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_REPLAY_RESOLUTION_KEY,
+      "replay-resolution",
+      NULL,
+      "<res>", 
+      "Resolution to use when replaying is set to res",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_ADJUST_RESOLUTION_KEY,
+      "resolution-adjustment",
+      NULL, 
+      NULL, 
+      "Use resolution adjustment",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_DISTRIBUTE_KEY,
+      "distribute",
+      "di",
+      "<LIST>",
+      "Distribute recorded or replayed events to LIST where"
+      "LIST is comma separated list of displays",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    { 
+      XNEE_SYNC_MODE_KEY,
+      "synchronised-replay",
+      NULL,
+      NULL,
+      "Synchronise during replay",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_NO_SYNC_MODE_KEY,
+      "no-synchronise",
+      "ns", 
+      NULL,
+      "Don't use synchornisation during replay",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_ALL_CLIENTS_KEY,
+      "all-clients",
+      "ac", 
+      NULL,
+      "Record all client's data (default)",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_FUTURE_CLIENTS_KEY,
+      "future-clients",
+      "fc", 
+      NULL,
+      "Record future client's data (default)",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_RECALL_WINDOW_POS_KEY,
+      "recall-window-position",
+      "rcp",
+      NULL,
+      "Recall the recorded window position to be used"
+      "during replay",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_HUMAN_PRINTOUT_KEY,
+      "human-printout",
+      "hp", 
+      NULL,
+      "Prints human readable",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_FORCE_REPLAY_KEY,
+      "force-replay",
+      "fp", 
+      NULL,
+      "Keep replaying even if we are out of sync"
+      ".... dangerous",   
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_PLUGIN_KEY,
+      "plugin",
+      "p",
+      "<name", 
+      "Use the plugin name",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_VERBOSE_KEY,
+      "verbose",
+      "v", 
+      NULL,
+      "Enable verbose printout",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_BUFFER_VERBOSE_KEY,
+      "buffer-verbose",
+      "bv", 
+      NULL,
+      "Enable verbose printout of replay buffer",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+  
+    {
+      XNEE_STORE_MOUSE_POS_KEY,
+      "store-mouse-position",
+      "smp", 
+      NULL, 
+      "Store the initial position of the mouse",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+  
+    {
+      XNEE_FEEDBACK_XOSD_KEY,
+      "feedback-xosd",
+      "fx",  
+      NULL, 
+      "Use xosd to feedback",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_FEEDBACK_STDERR_KEY,
+      "feedback-stderr",
+      "fs", 
+      NULL, 
+      "Use stderr to feedback",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_FEEDBACK_NONE_KEY,
+      "feedback-none",
+      "fn", 
+      NULL, 
+      "Dont' use feedback",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_REQUEST_STR_KEY,
+      "request-range",
+      "reqra",
+      "<X_LIST>", 
+      "Set request range to X_LIST",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_REPLY_STR_KEY,
+      "reply-range",
+      "repra",
+      "<X_LIST>", 
+      "Set reply range to X_LIST",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_DEVICE_EVENT_STR_KEY,
+      "device-event-range",
+      "devera",
+      "<X_LIST>", 
+      "Set device event range to X_LIST",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_DELIVERED_EVENT_STR_KEY,
+      "delivered-event-range",
+      "devra",
+      "<X_LIST>",
+      "Set delivered event range to X_LIST", 
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+  
+    {
+      XNEE_ERROR_STR_KEY,
+      "error-range",
+      "erra",
+      "<X_LIST>", 
+      "Set error range to X_LIST",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_EXT_REQ_MAJ_STR_KEY,
+      "extension-request-major-range",
+      "erqmar",
+      "<X_LIST>",
+      "Set extension request major range to X_LIST",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_EXT_REQ_MIN_STR_KEY,
+      "extension-request-major-range",
+      "erqmir",
+      "<X_LIST>", 
+      "Set extension request minor range to X_LIST", 
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_EXT_REP_MAJ_STR_KEY,
+      "extension-request-major-range",
+      "erpmar",
+      "<X_LIST>", 
+      "Set extension reply major range to X_LIST", 
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_EXT_REP_MIN_STR_KEY,
+      "extension-request-major-range",
+      "erpmir",
+      "<X_LIST>", 
+      "Set extension reply minor range to X_LIST", 
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+
+    {
+      XNEE_MAX_THRESHOLD_KEY,
+      "max-threshold",
+      "mat",
+      "<nr>", 
+      "Set the maximum threshold for sync to nr",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_MIN_THRESHOLD_KEY,
+      "min-threshold",
+      "mit",
+      "<nr>", 
+      "Set the minimum threshold for sync to tnr",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_TOT_THRESHOLD_KEY,
+      "tot-threshold",
+      "tot",
+      "<nr>", 
+      "Set the total threshold for sync to nr",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    
+    {
+      XNEE_REPLAY_OFFSET_KEY,
+      "xnee_replay_offset",
+      "ro",
+      "<x,y>",
+      "Set the replay offset to (x,y)",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    {
+      XNEE_LAST_OPTION,
+      NULL,
+      NULL,
+      NULL,
+      NULL,
+      XNEE_LAST_OPTION,
+      XNEE_LAST_OPTION
+    }
+  } ;
+
+xnee_option_t *xnee_options = xnee_options_impl;
+
+
 
 
 int
@@ -83,6 +617,7 @@ xnee_free_xnee_resource_meta(xnee_resource_meta* xrm)
   return XNEE_OK;
 }
 
+		  
 
 
 /**************************************************************
@@ -204,7 +739,7 @@ xnee_handle_resource_meta (xnee_data *xd, char *meta_str)
   return XNEE_OK;
 }
 
-
+#ifdef OBSOLETED_CODE
 
 /**************************************************************
  *                                                            *
@@ -239,6 +774,7 @@ xnee_add_resource_syntax_impl2(xnee_data *xd, char *tmp, int syntax_type)
 	  xnee_verbose((xd, "  xnee_handle_meta_data: handling #\n"));
 	}
     }
+
   if (syntax_type==XNEE_CLI_SYNTAX)
     {
       while (tmp[0]=='-')
@@ -465,6 +1001,8 @@ xnee_add_resource_syntax_impl2(xnee_data *xd, char *tmp, int syntax_type)
   return ret;
 }
 
+#endif /*  OBSOLETED_CODE */
+
 
 /**************************************************************
  *                                                            *
@@ -504,183 +1042,67 @@ xnee_add_resource(xnee_data *xd)
 }
 
 
-char *
-xnee_get_project_name(xnee_data *xd){
-  if (xd->xrm.project_name!=NULL)
-    return xd->xrm.project_name;
-  else
-    return "none";
-}
 
-char *
-xnee_get_project_descr(xnee_data *xd){
-  if (xd->xrm.project_descr!=NULL)
-    return xd->xrm.project_descr;
-  else
-    return "none";
-}
 
-char *
-xnee_get_creat_date(xnee_data *xd)
+int
+xnee_key2id(xnee_data      *xd, 
+	    xnee_option_t  *options, 
+	    int             key)
 {
-  time_t rawtime;
-  struct tm * timeinfo;
-#define XNEE_DATE_BUF_SIZE 100
-  static char buf[XNEE_DATE_BUF_SIZE];
-
-  if (xd->xrm.creat_date!=NULL)  
-    {
-      return xd->xrm.creat_date;
-    }
-  time ( &rawtime );
-  timeinfo = localtime ( &rawtime );
-  snprintf(buf, XNEE_DATE_BUF_SIZE,
-	   "%.4d-%.2d-%.2d",
-	   timeinfo->tm_year + 1900 , 
-	   timeinfo->tm_mon + 1 , 
-	   timeinfo->tm_mday  );
+  int i ;
   
-  return buf;
-}
-
-char *
-xnee_get_creat_program(xnee_data *xd)
-{
-  if (xd->xrm.creat_prog!=NULL)  
-    return xd->xrm.creat_prog;
-  else
-    return xnee_get_program_name(xd);
-}
-
-char *
-xnee_get_creat_prog_vers(xnee_data *xd)
-{
-  if (xd->xrm.creat_prog_vers!=NULL)  
-    return xd->xrm.creat_prog_vers;
-  else
-    return VERSION;
-}
-
-char *
-xnee_get_last_date(xnee_data *xd)
-{
-  if (xd->xrm.last_date!=NULL)  
-    return xd->xrm.last_date;
-  else
-    return "none";
-}
-
-char *
-xnee_get_last_program(xnee_data *xd)
-{
-  if (xd->xrm.last_prog!=NULL)  
-    return xd->xrm.last_prog;
-  else
-    return "none";
-}
-
-char *
-xnee_get_last_prog_vers(xnee_data *xd){
-  if (xd->xrm.last_prog_vers!=NULL)  
-    return xd->xrm.last_prog_vers;
-  else
-    return "none";
-}
-
-char *
-xnee_get_author_name(xnee_data *xd){
-  if (xd->xrm.author_name!=NULL)  
-    return xd->xrm.author_name;
-  else
-    return "none";
-}
-
-char *
-xnee_get_author_email(xnee_data *xd){
-  if (xd->xrm.author_email!=NULL)  
-    return xd->xrm.author_email;
-  else
-    return "none";
-}
-
-
-int
-xnee_set_project_name(xnee_data *xd, char *str){
-  XNEE_FREE_IF_NOT_NULL(xd->xrm.project_name);
-  xd->xrm.project_name=strdup(str);
-  return XNEE_OK;
-}
-
-int
-xnee_set_project_descr(xnee_data *xd, char *str){
-  xd->xrm.project_descr=strdup(str);
-  return XNEE_OK;
-}
-
-int
-xnee_set_creat_date(xnee_data *xd, char *str){
-  XNEE_FREE_IF_NOT_NULL(xd->xrm.creat_date);
-  xd->xrm.creat_date=strdup(str);
-  return XNEE_OK;
-}
-
-int
-xnee_set_creat_program(xnee_data *xd, char *str){
-  XNEE_FREE_IF_NOT_NULL(xd->xrm.creat_prog_vers);
-  xd->xrm.creat_prog=strdup(str);
-  return XNEE_OK;
-}
-
-int
-xnee_set_creat_prog_vers(xnee_data *xd, char *str){
-  xd->xrm.creat_prog_vers=strdup(str);
-  return XNEE_OK;
-}
-
-int
-xnee_set_last_date(xnee_data *xd, char *str)
-{
-  XNEE_FREE_IF_NOT_NULL(xd->xrm.last_date);
-  xd->xrm.last_date=strdup(str);
-  return XNEE_OK;
-}
-
-int
-xnee_set_last_program(xnee_data *xd, char *str){
-  xd->xrm.last_prog=strdup(str);
-  return XNEE_OK;
-}
-int
-xnee_set_last_prog_vers(xnee_data *xd, char *str)
-{
-  xd->xrm.last_prog_vers=strdup(str);
-  return XNEE_OK;
-}
-int
-xnee_set_author_name(xnee_data *xd, char *str){
-  xd->xrm.author_name=strdup(str);
-  return XNEE_OK;
-}
-
-int
-xnee_set_author_email(xnee_data *xd, char *str){
-  xd->xrm.author_email=strdup(str);
-  return XNEE_OK;
+  for (i=0;options[i].key!=XNEE_LAST_OPTION;i++)
+    {
+      if ( options[i].key == key )
+	{
+	  return i;
+	}
+    }  
+  return XNEE_OPTION_NOT_FOUND; 
 }
 
 
 int
 xnee_is_resource_option(xnee_data *xd, const char *str, int syntax_type)
 {
+  int id ;
+
   /*   printf ("'%s'     %s:%d  (%s)  str=%s (%lu)\n", */
   /* 	  str, __FILE__, __LINE__, __func__, str, str); */
 
-  xnee_is_option(xd, xnee_options, str, syntax_type);
+  id = xnee_option2id(xd, xnee_options, str, syntax_type);
+
+  if (id==XNEE_OPTION_NOT_FOUND)
+    {
+      return 0;
+    }
+  return id;
 }
 
+
+const char *
+xnee_key2string(xnee_data      *xd, 
+		xnee_option_t  *options, 
+		int             key)
+{
+  int id ;
+
+  id = xnee_key2id(xd, options, key);
+
+  xnee_verbose((xd, "Looking for %d ===> %d  '%s'\n",
+	  key, id, options[id].option));
+
+  if ( id == XNEE_OPTION_NOT_FOUND )
+    {
+      return XNEE_EMPTY_STRING;
+    }
+  return options[id].option;
+}
+
+
 int
-xnee_is_option(xnee_data *xd, 
-	       xnee_options_t *options, 
+xnee_option2id(xnee_data *xd, 
+	       xnee_option_t *options, 
 	       const char *str, 
 	       int syntax_type)
 {
@@ -705,7 +1127,7 @@ xnee_is_option(xnee_data *xd,
 	}
     }
 
-  for (i=0;i<options->nr_of_options;i++)
+  for (i=0;options[i].key!=XNEE_LAST_OPTION;i++)
     {
       /*       printf ("\t opt=%d %s %s %s\n", i,  
 	       tmp, 
@@ -713,637 +1135,540 @@ xnee_is_option(xnee_data *xd,
 	       options->options[i]->short_option); 
       */
       if (xnee_check(tmp,
-		     options->options[i]->option,
-		     options->options[i]->short_option))
+		     options[i].option,
+		     options[i].short_option))
 	{
-	  
-	  return 1;
+	  return i;
 	}
     }
-  return 0;
+  return XNEE_OPTION_NOT_FOUND; 
 }
-
-
-
-xnee_options_t*
-xnee_init_strings(xnee_data *xd)
-{
-  if (needs_init==0)
-    {
-      return xnee_options;
-    }
-
-  xnee_options = &xnee_options_impl;
-
-  xnee_add_strings(xd,
-		   xnee_options,
-		   XNEE_ERR_FILE,
-		   "e",
-		   "<file>",
-		   "Redirect all Xnee verbose output file_name"
-		   "(default is stderr)", 
-		   XNEE_GENERAL_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options, XNEE_OUT_FILE,
-		   "o",
-		   "<file>",
-		   "Redirect all Xnee data to file_name"
-		   "(default is stdout)", 
-		   XNEE_GENERAL_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options, XNEE_DISPLAY,
-		   "d",
-		   "<displayname>",
-		   "X server to contact (default is localhost)",
-		   XNEE_GENERAL_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options, XNEE_DIMENSION,
-		   NULL,
-		   "<displayname>",
-		   "Dimension when recorded",
-		   XNEE_INTERNAL_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options, XNEE_LOOPS,
-		   NULL,
-		   "<nr>",
-		   "Nr of events to record (obsolete)",
-		   XNEE_OBSOLETE_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_FIRST_LAST,
-		   NULL,
-		   NULL,
-		   "Print only first and last of multiple successive" 
-		   "MotionEvent",		  
-		   XNEE_RECORD_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   "all-events",
-		   NULL,
-		   NULL,
-		   "Intercept all events",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_ALL_EVENTS,
-		   NULL,
-		   NULL,
-		   "Record all client's data (default)", 
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_FUTURE_CLIENTS,
-		   NULL,
-		   NULL,
-		   "Record future client's data", 
-		   XNEE_GENERAL_OPTION
-		   );
-      
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_EVENT_MAX,
-		   "etr",
-		   "<n>",
-		   "Intercept n numbers of events ( n<0 means forever)",
-		   XNEE_RECORD_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_DATA_MAX,
-		   "dtr",
-		   "<n>",
-		   "Intercept n numbers of data ( n<0 means forever)", 
-		   XNEE_GENERAL_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_TIME_MAX,
-		   "str", 
-		   "<n>",
-		   "Intercept for n seconds ( n<0 means forever)"	,
-		   XNEE_RECORD_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_STOP_KEY,
-		   "sk",
-		   "<key>",
-		   "When pressing key Xnee exits", 
-		   XNEE_GRAB_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_PAUSE_KEY,
-		   "pk",
-		   "<key>",
-		   "When pressing key Xnee pauses its current action", 
-		   XNEE_GRAB_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_RESUME_KEY,
-		   "rk",
-		   "<key>",
-		   "When pressing key Xnee resumes its paused action", 
-		   XNEE_GRAB_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_INSERT_KEY,
-		   "ik",
-		   "<key>", 
-		   "When pressing key Xnee inserts a META mark"
-		   "in the session file" , 
-		   XNEE_GRAB_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_EXEC_KEY,
-		   "ek",
-		   "<key>",
-		   "When pressing modifier mod and key key Xnee inserts "
-		   "an exec mark into the session file" ,
-		   XNEE_GRAB_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_EXEC_PROGRAM,
-		   "ep",
-		   "<programname>", 
-		   "Program to start when pressing the grabbed exec key",
-		   XNEE_GRAB_OPTION
-		   );
-
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_DELAY_TIME,
-		   "t",
-		   "<secs>",
-		   "Delay start of application for <secs> seconds. Used to "
-		   "prevent recording of KeyRelease when starting Xnee from"
-		   "terminal",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_SPEED_PERCENT,
-		   "sp",
-		   "<speed>",
-		   "Set replaying speed percentage is set to speed",
-		   XNEE_REPLAY_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_RECORDED_RESOLUTION,
-		   NULL,
-		   "<res>", 
-		   "Resolution to use when recording is set to res",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_REPLAY_RESOLUTION,
-		   NULL,
-		   "<res>", 
-		   "Resolution to use when replaying is set to res",
-		   XNEE_REPLAY_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_ADJUST_RESOLUTION,
-		   NULL, 
-		   NULL, 
-		   "Use resolution adjustment",
-		   XNEE_REPLAY_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_DISTRIBUTE,
-		   "di",
-		   "<LIST>",
-		   "Distribute recorded or replayed events to LIST where"
-		   "LIST is comma separated list of displays",
-		   XNEE_GENERAL_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options, XNEE_SYNC_MODE,
-		   NULL,
-		   NULL,
-		   "Synchronise during replay",
-		   XNEE_REPLAY_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_NO_SYNC_MODE,
-		   "ns", 
-		   NULL,
-		   "Don't use synchornisation during replay",
-		   XNEE_REPLAY_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_ALL_CLIENTS,
-		   "ac", 
-		   NULL,
-		   "Record all client's data (default)",
-		   XNEE_GENERAL_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_FUTURE_CLIENTS,
-		   "fc", 
-		   NULL,
-		   "Record future client's data (default)",
-		   XNEE_GENERAL_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_RECALL_WINDOW_POS,
-		   "rcp",
-		   NULL,
-		   "Recall the recorded window position to be used"
-		   "during replay",
-		   XNEE_REPLAY_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_HUMAN_PRINTOUT,
-		   "hp", 
-		   NULL,
-		   "Prints human readable",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_FORCE_REPLAY,
-		   "fp", 
-		   NULL,
-		   "Keep replaying even if we are out of sync"
-		   ".... dangerous",   
-		   XNEE_REPLAY_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_PLUGIN,
-		   "p",
-		   "<name", 
-		   "Use the plugin name",
-		   XNEE_GENERAL_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_VERBOSE,
-		   "v", 
-		   NULL,
-		   "Enable verbose printout",
-		   XNEE_GENERAL_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_BUFFER_VERBOSE,
-		   "bv", 
-		   NULL,
-		   "Enable verbose printout of replay buffer",
-		   XNEE_REPLAY_OPTION
-		   );
-  
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_KEYBOARD,
-		   NULL, 
-		   NULL, 
-		   "Record the keyboard",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_STORE_MOUSE_POS,
-		   "smp", 
-		   NULL, 
-		   "Store the initial position of the mouse",
-		   XNEE_RECORD_OPTION
-		   );
-  
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_FEEDBACK_XOSD,
-		   "fx",  
-		   NULL, 
-		   "Use xosd to feedback",
-		   XNEE_GENERAL_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_FEEDBACK_STDERR,
-		   "fs", 
-		   NULL, 
-		   "Use stderr to feedback",
-		   XNEE_GENERAL_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_FEEDBACK_NONE,
-		   "fn", 
-		   NULL, 
-		   "Dont' use feedback",
-		   XNEE_GENERAL_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_REQUEST_STR,
-		   "reqra",
-		   "<X_LIST>", 
-		   "Set request range to X_LIST",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_REPLIES_STR,
-		   "repra",
-		   "<X_LIST>", 
-		   "Set reply range to X_LIST",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_DEVICE_EVENT_STR,
-		   "devera",
-		   "<X_LIST>", 
-		   "Set device event range to X_LIST",
-		   XNEE_GENERAL_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_DELIVERED_EVENT_STR,
-		   "devra",
-		   "<X_LIST>",
-		   "Set delivered event range to X_LIST", 
-		   XNEE_RECORD_OPTION
-		   );
-  
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_ERROR_STR,
-		   "erra",
-		   "<X_LIST>", 
-		   "Set error range to X_LIST",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_REPLIES_STR,
-		   "repra",
-		   "<X_LIST>", 
-		   "Set reply range to X_LIST",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_EXT_REQ_MAJ_STR,
-		   "erqmar",
-		   "<X_LIST>",
-		   "Set extension request major range to X_LIST",
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_EXT_REQ_MIN_STR,
-		   "erqmir",
-		   "<X_LIST>", 
-		   "Set extension request minor range to X_LIST", 
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_EXT_REP_MAJ_STR,
-		   "erpmar",
-		   "<X_LIST>", 
-		   "Set extension reply major range to X_LIST", 
-		   XNEE_RECORD_OPTION
-		   );
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_EXT_REP_MIN_STR,
-		   "erpmir",
-		   "<X_LIST>", 
-		   "Set extension reply minor range to X_LIST", 
-		   XNEE_RECORD_OPTION
-		   );
-
-
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_MAX_THRESHOLD,
-		   "mat",
-		   "<nr>", 
-		   "Set the maximum threshold for sync to nr",
-		   XNEE_REPLAY_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_MIN_THRESHOLD,
-		   "mit",
-		   "<nr>", 
-		   "Set the minimum threshold for sync to tnr",
-		   XNEE_REPLAY_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_TOT_THRESHOLD,
-		   "tot",
-		   "<nr>", 
-		   "Set the total threshold for sync to nr",
-		   XNEE_REPLAY_OPTION
-		   );
-    
-  xnee_add_strings(xd, xnee_options,
-		   XNEE_REPLAY_OFFSET,
-		   "ro",
-		   "<x,y>",
-		   "Set the replay offset to (x,y)",
-		   XNEE_REPLAY_OPTION
-		   );
-    
-  needs_init=0;
-  return xnee_options;
-}
- 
 
 
 int
-xnee_add_strings (xnee_data  *xd, 
-		  xnee_options_t  *options,		  
-		  const char *option, 
-		  const char *short_option, 
-		  char       *args,
-		  char       *option_descr,
-		  int         type)
+xnee_option2key(xnee_data *xd, 
+		const char *str)
 {
+  int id ;
 
-  if ( (option==NULL) || (option_descr==NULL) )
-    {
-      xnee_verbose((xd, "Option or description to add is NULL\n"));
-      return XNEE_SYNTAX_ERROR;
-    }
+  id = xnee_option2id(xd,  xnee_options, 
+		      str, XNEE_XNS_SYNTAX);
 
-  if (options->nr_of_options==0)
+  if ( id == XNEE_OPTION_NOT_FOUND )
     {
-      options->options = calloc(1, sizeof(xnee_option_t*));
+      return XNEE_NO_OPTION_KEY;
     }
-  else
-    {
-      options->options = realloc(options->options, 
-				 (options->nr_of_options+1)*sizeof(xnee_option_t*));
-    }
-  
-  if (options!=NULL)
-    {
-      options->options[options->nr_of_options] = 
-	(xnee_option_t *)
-	calloc(1, sizeof(xnee_option_t));
-      options->nr_of_options++;
-    }
-  else
-    {
-      return XNEE_MEMORY_FAULT;
-    }
-  options->options[options->nr_of_options-1]->type   = type; 
-  options->options[options->nr_of_options-1]->option = (char*)option;
-  options->options[options->nr_of_options-1]->short_option = (char*)short_option; 
-  options->options[options->nr_of_options-1]->description = option_descr; 
-
-  if (args!=NULL)
-    {
-      options->options[options->nr_of_options-1]->args   = args;
-    }
-  if ( (options->options[options->nr_of_options-1]->option==NULL) ||
-       (options->options[options->nr_of_options-1]->description==NULL) )
-    {
-      return XNEE_MEMORY_FAULT;
-    }
-
-  return XNEE_OK;
+  return xnee_options[id].key;
 }
 
-int
-xnee_find_option_entry (xnee_data  *xd, 
-			const char *option, 
-			xnee_options_t  *options)
-{
 
+
+
+int
+xnee_find_option_entry_impl (xnee_data     *xd, 
+			     xnee_option_t *options,
+			     const char    *option, 
+			     int            syntax_type)
+{
   int i ; 
+  int long_match  = 0;
+  int short_match = 0;
+
+  XNEE_VERBOSE_ENTER_FUNCTION();
+
+
+  XNEE_VERBOSE_IN_FUNCTION(option);
 
   if (options==NULL)
     {
       return XNEE_MEMORY_FAULT;
     }
 
-  for (i=0;i<options->nr_of_options;i++)
+  if (syntax_type==XNEE_CLI_SYNTAX)
     {
-      if (!strncmp(option,  
-		   options->options[i]->option,
-		   strlen(options->options[i]->option)))
+      if (option[0]=='-')
 	{
-	  /*	  printf ("** Found option %s at %d in option array  (%s)\n", 
-		  option, i, options->options[i]->option);
-	  */
+	  option++;
+	}
+      else
+	{
+	  return XNEE_OPTION_NOT_FOUND;
+	}
+      if (option[0]=='-')
+	{
+	  option++;
+	}
+    }
+
+  for (i=0;options[i].key!=XNEE_LAST_OPTION;i++)
+    {
+      xnee_verbose((xd, "\tCompare '%s'  '%s'\n",
+		    options[i].option,
+		    option));
+
+      long_match = (!strncmp(option,  
+			     options[i].option,
+			     strlen(options[i].option))) &&
+	(strlen(options[i].option)==strlen(option));
+
+      if ( options[i].short_option != NULL )
+	{
+	  short_match = (!strncmp(option,  
+				  options[i].short_option,
+				  strlen(options[i].short_option))) &&
+	    (strlen(options[i].short_option)==strlen(option));
+	}
+      if (long_match || short_match )
+	{
+	  xnee_verbose((xd,"** Found key: %d   for option %s "
+			"at %d in option array  (%s)\n", 
+			options[i].key, option, i, options[i].option));
 	  return i;
 	}
     }
-  return -1;
-}
 
-int 
-xnee_parse_check_opts(xnee_data *xd,         
-		      const char *opt, 
-		      const char *short_opt, 
-		      char *user_str)
-{
-  int ret ;
-  int user_len;
-  int opt_len;
-  int len;
-
-  XNEE_VERBOSE_ENTER_FUNCTION();
-
-
-  xnee_verbose((xd, "%s: '%s' '%s' '%s' = %d\n",
-		__func__, 
-		opt,
-		short_opt,
-		user_str,
-		ret));
-
-  user_len = strlen(user_str);
-  opt_len = strlen(opt);
-
-  if ( opt_len > user_len)
-    {
-      len = user_len;
-    }
-  else
-    {
-      len = opt_len;
-    }
-  ret = (!strncmp(opt,user_str,len)) &&
-    (user_len == opt_len);
-  xnee_verbose((xd, "%s: ret(1) = %d\n", __func__, ret));
-
-  user_len = strlen(user_str);
-  opt_len = strlen(short_opt);
-
-  if ( opt_len > user_len)
-    {
-      len = user_len;
-    }
-  else
-    {
-      len = opt_len;
-    }
-
-  ret = ret || 
-    ( (strncmp(short_opt,user_str,len)==0)
-      &&
-      (user_len == opt_len));
-
-  xnee_verbose((xd, "%s: ret(2) = %d\n", __func__, ret));
-
-  
-  
   XNEE_VERBOSE_LEAVE_FUNCTION();
-  return ret;
+  return XNEE_OPTION_NOT_FOUND;
 }
 
 
-int 
-xnee_parse_check_impl(xnee_data *xd, 
-		      xnee_options_t *options,
-		      const char *opt, 
-		      char *user_str)
+
+int
+xnee_parse_xns_option(xnee_data *xd, char **opt_and_args, int *args_used)
 {
-  int pos; 
-  int ret;
-  char *short_opt;
+  int ret = XNEE_OK;
+  int key; 
+  int entry ; 
+  char **str_ptr ;
+  int tmp_int1;
+  int tmp_int2;
 
-  pos = xnee_find_option_entry(xd, opt, options);
-  if (pos<0)
+  entry = xnee_find_resource_option_entry(xd, 
+					  xnee_options,
+					  opt_and_args[0]);
+  if ( entry == XNEE_OPTION_NOT_FOUND )
     {
-      short_opt=NULL;
+      return -1 ;
     }
-  else
-    {
-      short_opt = options->options[pos]->short_option;
-    }
-
-  if (short_opt==NULL)
-    {
-      short_opt = (char *)opt;
-    }
-  ret = xnee_parse_check_opts(xd, opt, short_opt, user_str);
   
+  key = xnee_options[entry].key;
+
+  xnee_verbose((xd, "Found xns entry for '%s' at position: %d\n", 
+		opt_and_args[0], entry));
+  xnee_verbose((xd, "\tlong option: '%d'\n", 
+		xnee_options[entry].option));
+  xnee_verbose((xd, "\tshort option:'%d'\n", 
+		xnee_options[entry].short_option));
+  xnee_verbose((xd, "\tlong option: '%s'\n", 
+		EMPTY_IF_NULL(xnee_options[entry].option)));
+  xnee_verbose((xd, "\tshort option:'%s'\n", 
+		EMPTY_IF_NULL(xnee_options[entry].short_option)));
+  
+	       
+  /*
+    #define verbose_option(a)  \
+    xnee_verbose((xd, "%s:%d %s Handling: '%s' \n", \
+    __FILE__ , __LINE__, __func__, a ));
+  */
+#define verbose_option(a)  \
+       xnee_verbose((xd,"%s:%d-->%s() Handling: '%s' \n", \
+		     __FILE__ , __LINE__, __func__, a ));
+  
+  ret = XNEE_SYNTAX_ERROR;
+	       
+  switch (key)
+    {
+    case XNEE_NO_OPTION_KEY:
+      ret = XNEE_SYNTAX_ERROR;
+      break;
+      
+    case XNEE_ERR_FILE_KEY:
+      verbose_option("XNEE_ERR_FILE_KEY");
+      ret = xnee_set_err_name (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_OUT_FILE_KEY:
+      verbose_option("XNEE_OUT_FILE_KEY");
+      ret = xnee_set_out_name (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_DISPLAY_KEY:
+      verbose_option("XNEE_DISPLAY_KEY");
+      ret = xnee_set_display_name (xd, opt_and_args[1]) ;
+      *args_used = 1;
+      break;
+
+    case XNEE_FIRST_LAST_KEY:
+      verbose_option("XNEE_FIRST_LAST_KEY");
+      ret = xnee_set_first_list_str(xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_ALL_EVENTS_KEY:
+      verbose_option("XNEE_ALL_EVENTS_KEY");
+      ret = xnee_set_all_clients(xd);
+      INC_ARGS_USED(*args_used, opt_and_args[1]);
+      break;
+
+    case XNEE_ALL_CLIENTS_KEY:
+      verbose_option("XNEE_ALL_CLIENTS_KEY");
+      ret = xnee_set_all_clients_str(xd, opt_and_args[1]);
+      INC_ARGS_USED(*args_used, opt_and_args[1]);
+      break;
+
+    case XNEE_FUTURE_CLIENTS_KEY:
+      verbose_option("XNEE_FUTURE_CLIENTS_KEY");
+      ret = xnee_set_future_clients_str(xd, opt_and_args[1]);
+      INC_ARGS_USED(*args_used, opt_and_args[1]);
+      break;
+
+    case XNEE_DIMENSION_KEY:
+      verbose_option("XNEE_DIMENSION_KEY");
+      ret = xnee_set_rec_resolution (xd, opt_and_args[1]); 
+      *args_used = 1;
+      break;
+
+    case XNEE_EVENT_MAX_KEY:
+      verbose_option("XNEE_EVENT_MAX_KEY");
+      ret = xnee_set_events_max_str (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_DATA_MAX_KEY:
+      verbose_option("XNEE_DATA_MAX_KEY");
+      ret = xnee_set_data_max_str (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_TIME_MAX_KEY:
+      verbose_option("XNEE_TIME_MAX_KEY");
+      ret = xnee_set_time_max_str (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_STOP_KEY_KEY:
+      verbose_option("XNEE_STOP_KEY_KEY");
+      ret = xnee_set_key (xd, XNEE_GRAB_STOP, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_PAUSE_KEY_KEY:
+      verbose_option("XNEE_PAUSE_KEY_KEY");
+      ret = xnee_set_key (xd, XNEE_GRAB_PAUSE, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_RESUME_KEY_KEY:
+      verbose_option("XNEE_RESUME_KEY_KEY");
+      ret = xnee_set_key (xd, XNEE_GRAB_RESUME, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_INSERT_KEY_KEY:
+      verbose_option("XNEE_INSERT_KEY_KEY");
+      ret = xnee_set_key (xd, XNEE_GRAB_INSERT, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_EXEC_KEY_KEY:
+      verbose_option("XNEE_EXEC_KEY_KEY");
+      ret = xnee_set_key (xd, XNEE_GRAB_EXEC, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_EXEC_PROGRAM_KEY:
+      verbose_option("XNEE_EXEC_PROGRAM_KEY");
+      xnee_set_exec_prog (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_DELAY_TIME_KEY:
+      verbose_option("XNEE_DELAY_TIME_KEY");
+      XNEE_ATOI_FUNCTION(xnee_set_interval, xd, opt_and_args[1], ret);
+      *args_used = 1;
+      break;
+
+    case XNEE_SPEED_PERCENT_KEY:
+      verbose_option("XNEE_SPEED_PERCENT_KEY");
+      ret = xnee_set_replay_speed_str (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_RECORDED_RESOLUTION_KEY:
+      verbose_option("XNEE_RECORDED_RESOLUTION_KEY");
+      ret = xnee_set_rec_resolution (xd, opt_and_args[1]); 
+      *args_used = 1;
+      break;
+
+    case XNEE_REPLAY_RESOLUTION_KEY:
+      verbose_option("XNEE_REPLAY_RESOLUTION_KEY");
+      ret = xnee_set_rep_resolution (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_ADJUST_RESOLUTION_KEY:
+      verbose_option("XNEE_ADJUST_RESOLUTION_KEY");
+      ret = xnee_set_resolution_str (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_DISTRIBUTE_KEY:
+      verbose_option("XNEE_DISTRIBUTE_KEY");
+      ret = xnee_add_display_list (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_NO_SYNC_MODE_KEY:
+      verbose_option("XNEE_NO_SYNC_MODE_KEY");
+      ret = xnee_unset_sync_mode_str (xd, opt_and_args[1]);
+      INC_ARGS_USED(*args_used, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_SYNC_MODE_KEY:
+      verbose_option("XNEE_SYNC_MODE_KEY");
+      ret = xnee_set_sync_mode_str (xd, opt_and_args[1]);
+      INC_ARGS_USED(*args_used, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_RECALL_WINDOW_POS_KEY:
+      verbose_option("XNEE_RECALL_WINDOW_POS_KEY");
+      xnee_set_recall_window_pos(xd);
+      *args_used = 0;
+      break;
+
+    case XNEE_REPLAY_OFFSET_KEY:
+      verbose_option("XNEE_REPLAY_OFFSET_KEY");
+      ret = xnee_set_replay_offset_str (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_HUMAN_PRINTOUT_KEY:
+      verbose_option("XNEE_HUMAN_PRINTOUT_KEY");
+      ret = xnee_set_human_printout(xd);
+      *args_used = 0;
+      break;
+
+    case XNEE_LOOPS_KEY:
+      verbose_option("XNEE_LOOPS_KEY");
+      ret = xnee_set_events_max_str (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+
+    case XNEE_FORCE_REPLAY_KEY:
+      verbose_option("XNEE_FORCE_REPLAY_KEY");
+      xnee_set_force_replay(xd);
+      *args_used = 0;
+      break;
+
+    case XNEE_RESOURCE_KEY:
+      verbose_option("XNEE_RESOURCE_KEY");
+      ret = xnee_set_project_name(xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_PLUGIN_KEY:
+      verbose_option("XNEE_PLUGIN_KEY");
+      ret = xnee_set_plugin_name(xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_ERROR_FD_KEY:
+      verbose_option("XNEE_ERROR_FD_KEY");
+      ret = xnee_set_err_name (xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_VERBOSE_KEY:
+      verbose_option("XNEE_VERBOSE_KEY");
+      ret = xnee_set_verbose(xd);
+      *args_used = 0;
+      break;
+
+    case XNEE_BUFFER_VERBOSE_KEY:
+      verbose_option("XNEE_BUFFER_VERBOSE_KEY");
+      ret = xnee_set_buf_verbose(xd);
+      *args_used = 0;
+      break;
+
+    case XNEE_STORE_MOUSE_POS_KEY:
+      verbose_option("XNEE_STORE_MOUSE_POS_KEY");
+      ret = xnee_set_store_mouse_pos(xd);
+      *args_used = 0;
+      break;
+
+    case XNEE_XOSD_FONT_KEY:
+      verbose_option("XNEE_XOSD_FONT_KEY");
+      ret = xnee_set_xosd_font(xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_FEEDBACK_XOSD_KEY:
+      verbose_option("XNEE_FEEDBACK_XOSD_KEY");
+      ret = xnee_set_xosd_feedback(xd);
+      *args_used = 0;
+      break;
+
+    case XNEE_FEEDBACK_STDERR_KEY:
+      verbose_option("XNEE_FEEDBACK_STDERR_KEY");
+      ret = xnee_set_stderr_feedback(xd);
+      *args_used = 0;
+      break;
+
+    case XNEE_FEEDBACK_NONE_KEY:
+      verbose_option("XNEE_FEEDBACK_NONE_KEY");
+      ret = xnee_set_no_feedback(xd);
+      *args_used = 1;
+      break;
+
+    case XNEE_MAX_THRESHOLD_KEY:
+      verbose_option("XNEE_MAX_THRESHOLD_KEY");
+      ret = xnee_set_max_threshold_str(xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_MIN_THRESHOLD_KEY:
+      verbose_option("XNEE_MIN_THRESHOLD_KEY");
+      ret = xnee_set_min_threshold_str(xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_TOT_THRESHOLD_KEY:
+      verbose_option("XNEE_TOT_THRESHOLD_KEY");
+      ret = xnee_set_tot_threshold_str(xd, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_REQUEST_STR_KEY:
+      verbose_option("XNEE_REQUEST_STR_KEY");
+      ret = xnee_parse_range(xd, XNEE_REQUEST, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_REPLY_STR_KEY:
+      verbose_option("XNEE_REPLY_STR_KEY");
+      ret = xnee_parse_range(xd, XNEE_REPLY, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_DEVICE_EVENT_STR_KEY:
+      verbose_option("XNEE_DEVICE_EVENT_STR_KEY");
+      ret = xnee_parse_range(xd, XNEE_DEVICE_EVENT, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_DELIVERED_EVENT_STR_KEY:
+      verbose_option("XNEE_DELIVERED_EVENT_STR_KEY");
+      ret = xnee_parse_range(xd, XNEE_DELIVERED_EVENT, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_ERROR_STR_KEY:
+      verbose_option("XNEE_ERROR_STR_KEY");
+      ret = xnee_parse_range(xd, XNEE_ERROR, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_EXT_REQ_MAJ_STR_KEY:
+      verbose_option("XNEE_EXT_REQ_MAJ_STR_KEY");
+      ret = xnee_parse_range ( xd, XNEE_EXT_REQUEST_MAJOR, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_EXT_REQ_MIN_STR_KEY:
+      verbose_option("XNEE_EXT_REQ_MIN_STR_KEY");
+      ret = xnee_parse_range ( xd, XNEE_EXT_REQUEST_MINOR, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_EXT_REP_MAJ_STR_KEY:
+      verbose_option("XNEE_EXT_REP_MAJ_STR_KEY");
+      ret = xnee_parse_range ( xd, XNEE_EXT_REPLY_MAJOR, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_EXT_REP_MIN_STR_KEY:
+      verbose_option("XNEE_EXT_REP_MIN_STR_KEY");
+      ret = xnee_parse_range ( xd, XNEE_EXT_REPLY_MINOR, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+
+
+
+
+      /*
+	case XNEE_REPLAY_CALLBACK_NAME_KEY:
+	verbose_option("XNEE_REPLAY_CALLBACK_NAME_KEY");
+	*args_used = 1;
+	break;
+
+	case XNEE_RECORD_CALLBACK_NAME_KEY:
+	verbose_option("XNEE_RECORD_CALLBACK_NAME_KEY");
+	*args_used = 1;
+	break;
+
+	case XNEE_SYNC_FUNCTION_NAME_KEY:
+	verbose_option("XNEE_SYNC_FUNCTION_NAME_KEY");
+	*args_used = 1;
+	break;
+
+      */
+
+      /* ********** Below you'll find ********** 
+       *
+       *            non-valid options 
+       * 
+       * ****************************************/
+
+    case XNEE_EXEC_MARK_KEY:
+      verbose_option("XNEE_EXEC_MARK_KEY");
+      *args_used = 1;
+      fprintf (stderr, "%s can not be used as a command line option\n",
+	       XNEE_EXEC_MARK);
+      ret = XNEE_SYNTAX_ERROR;
+      break;
+
+    case XNEE_NEW_WINDOW_MARK_KEY:
+      verbose_option("XNEE_NEW_WINDOW_MARK_KEY");
+      fprintf (stderr, "%s can not be used as a command line option\n",
+	       XNEE_NEW_WINDOW_MARK);
+      ret = XNEE_SYNTAX_ERROR;
+      *args_used = 1;
+      break;
+
+    case XNEE_EVERYTHING_KEY:
+      verbose_option("XNEE_EVERYTHING_KEY");
+      fprintf (stderr, "\everyting' is an obsoleted option\n");
+      ret = XNEE_SYNTAX_ERROR;
+      *args_used = 1;
+      break;
+
+    case XNEE_NO_EXPOSE_KEY:
+      verbose_option("XNEE_NO_EXPOSE_KEY");
+      fprintf (stderr, "\no-expose' is an obsoleted option\n");
+      ret = XNEE_SYNTAX_ERROR;
+      *args_used = 1;
+      break;
+
+
+      /*    case XNEE_USE_SYNC_KEY:
+	    verbose_option("XNEE_USE_SYNC_KEY");
+	    fprintf (stderr, "\invalid key' is an obsoleted option\n");
+	    ret = XNEE_SYNTAX_ERROR;
+	    *args_used = 1;
+	    break;
+      */
+
+    default:
+      ret = XNEE_SYNTAX_ERROR;
+      break;
+    }
+
+
   return ret;
 }
-
