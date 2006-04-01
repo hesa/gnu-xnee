@@ -484,6 +484,9 @@ xnee_get_replay_speed(xnee_data *xd);
 
 
 int 
+xnee_set_events_max_str (xnee_data *xd, char *str);
+
+int 
 xnee_set_events_max (xnee_data *xd, int loops);
 
 int 
@@ -568,6 +571,146 @@ xnee_set_recall_window_pos (xnee_data *xd);
 
 int
 xnee_unset_recall_window_pos (xnee_data *xd);
+
+char *
+xnee_get_project_name(xnee_data *xd);
+
+char *
+xnee_get_project_descr(xnee_data *xd);
+
+char *
+xnee_get_creat_date(xnee_data *xd);
+
+char *
+xnee_get_creat_program(xnee_data *xd);
+
+char *
+xnee_get_creat_prog_date(xnee_data *xd);
+
+char *
+xnee_get_last_date(xnee_data *xd);
+
+char *
+xnee_get_last_program(xnee_data *xd);
+
+char *
+xnee_get_last_prog_vers(xnee_data *xd);
+
+char *
+xnee_get_author_name(xnee_data *xd);
+
+char *
+xnee_get_author_email(xnee_data *xd);
+
+char *
+xnee_get_char(xnee_data *xd);
+
+char *
+xnee_get_project_name_str(xnee_data *xd);
+
+char *
+xnee_get_project_descr_str(xnee_data *xd);
+
+char *
+xnee_get_creat_date_str(xnee_data *xd);
+
+char *
+xnee_get_creat_prog_vers(xnee_data *xd);
+
+char *
+xnee_get_last_date_str(xnee_data *xd);
+
+char *
+xnee_get_last_prog_str(xnee_data *xd);
+
+char *
+xnee_get_last_prog_date_str(xnee_data *xd);
+
+char *
+xnee_get_author_name_str(xnee_data *xd);
+
+char *
+xnee_get_author_email_str(xnee_data *xd);
+
+char *
+xnee_get_char_str(xnee_data *xd);
+
+int
+xnee_set_first_list_str(xnee_data *xd, char *str);
+
+int
+xnee_set_all_clients_str(xnee_data *xd, char *str);
+
+
+int
+xnee_set_future_clients_str(xnee_data *xd, char *str);
+
+int
+xnee_set_future_clients(xnee_data *xd);
+
+int
+xnee_unset_future_clients(xnee_data *xd);
+
+int 
+xnee_set_data_max_str (xnee_data *xd, char *str);
+
+int 
+xnee_set_time_max_str (xnee_data *xd, char *str);
+
+int 
+xnee_set_sync_mode_str (xnee_data *xd, char *str);
+
+int 
+xnee_unset_sync_mode_str (xnee_data *xd, char *str);
+
+int 
+xnee_set_sync_mode(xnee_data *xd);
+
+int 
+xnee_unset_sync_mode(xnee_data *xd);
+
+int
+xnee_set_buf_verbose(xnee_data *xd);
+
+int
+xnee_unset_buf_verbose(xnee_data *xd);
+
+const char *
+xnee_get_xosd_font(xnee_data *xd);
+
+int
+xnee_set_xosd_font(xnee_data *xd, char *font_str);
+
+int
+xnee_set_max_threshold_str (xnee_data *xd, char *thresh_str);
+
+int
+xnee_set_min_threshold_str (xnee_data *xd, char *thresh_str);
+
+int
+xnee_set_tot_threshold_str (xnee_data *xd, char *thresh_str);
+
+int
+xnee_set_max_threshold (xnee_data *xd, int thresh);
+
+int
+xnee_set_min_threshold (xnee_data *xd, int thresh);
+
+int
+xnee_set_tot_threshold (xnee_data *xd, int thresh);
+
+
+
+
+
+int
+xnee_get_max_threshold (xnee_data *xd);
+
+int
+xnee_get_min_threshold (xnee_data *xd);
+
+int
+xnee_get_tot_threshold (xnee_data *xd);
 
 
 
