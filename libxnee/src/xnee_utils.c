@@ -171,8 +171,9 @@ xnee_rem_comment_start(xnee_data *xd, char *str)
   size_t len  ;
 
   if (str==NULL)
-    return 1;
-
+    {
+      return 1;
+    }
   xnee_verbose ((xd," --> xnee_rem_comment_start \"%s\"\n", str));
 
 
@@ -313,3 +314,165 @@ xnee_client_id (Display *dpy)
 
 
 
+char **
+xnee_str2strptr (char *tmp, int fill_option)
+{
+  char **ret ; 
+  char *blank_ptr1;
+  char *str;
+  ret = NULL; 
+  int size=0; 
+  int str_size=0 ; 
+  int leave = 0;
+
+  while (*tmp)
+    {
+      /* rem leading blanks */
+      while(tmp[0]==' ') 
+	{
+	  if (tmp[0]==' ')
+	    tmp++;
+	}
+
+      blank_ptr1 = strstr(tmp, " ");
+
+      ret= (char**) realloc(ret,(size+2)*sizeof(char*));
+
+      if (ret == NULL )
+	{
+	  break;
+	}
+
+      if (blank_ptr1 != NULL)
+	{
+	  str_size = strlen(tmp) - strlen(blank_ptr1) + 1 ;
+	}
+      else
+	{
+	  str_size = strlen(tmp) + 1;
+	}
+
+      if ( (size==0) && fill_option )
+	{
+	  str =  (char*) calloc(str_size, sizeof(char)+2);
+	  strcpy (str, "--");
+	  strncat(str, tmp, str_size-1);
+	}
+      else
+	{
+	  str =  (char*) calloc(str_size, sizeof(char));
+	  strncpy(str, tmp, str_size-1);
+	}
+
+      ret[size]   = str;
+      ret[size+1] = NULL; 
+      size++;
+
+      tmp = blank_ptr1;
+      if (tmp==NULL)
+	{
+	  break;
+	}
+      tmp++;
+    }
+
+  return ret;
+}
+
+
+void
+xnee_print_strptr( char **strptr)
+{
+  int i = 0 ; 
+
+  if (strptr==NULL)
+    {
+      return;
+    }
+
+  fprintf (stderr, "Option: '%s'\n", strptr[0]);
+
+  for (i=1; strptr[i] != NULL ; i++)
+    {
+      if ( strptr[i] != NULL ) 
+	{
+	  fprintf (stderr, "\targument: '%s'\n", strptr[i]);
+	}
+      else break;
+    }
+}
+
+int
+xnee_free_strptr(char **strptr)
+{
+  int i = 0 ; 
+
+  if (strptr==NULL)
+    {
+      return XNEE_OK;
+    }
+
+  for (i=0; strptr[i] != NULL ; i++)
+    {
+      if ( strptr[i] != NULL ) 
+	{
+	  free(strptr[i]);
+	}
+      else 
+	{
+	  break;
+	}
+    }
+  free(strptr);
+
+  return XNEE_OK;
+}
+
+int
+xnee_boolstr2int(xnee_data *xd, char *str)
+{
+  int ret;
+
+  XNEE_VERBOSE_ENTER_FUNCTION();
+  if (str==NULL)
+    {
+      ret = XNEE_BOOL_IMPLICIT_TRUE;
+    }
+  else if (xnee_check_true(str))
+    {
+      ret = XNEE_BOOL_EXPLICIT_TRUE;
+    }
+  else if (xnee_check_false(str))
+    {
+      ret = XNEE_BOOL_EXPLICIT_FALSE;
+    }
+  else
+    {
+      ret = XNEE_BOOL_ERROR;
+    }
+  XNEE_VERBOSE_LEAVE_FUNCTION();
+  return ret;
+}
+
+
+int
+xnee_str2int(xnee_data *xd, char *str)
+{
+  int ret=XNEE_OK;
+
+  if (str==NULL)
+    {
+      /* Set return value to error */
+      ret = INT_MAX;
+    }
+  else
+    {
+      /* scan the string */
+      if ( !sscanf(str, "%d", &ret) == 1 )
+	{
+	  /* If scan failed, set return value to error */
+	  ret = INT_MAX;
+	}
+    }
+  return ret;
+}
