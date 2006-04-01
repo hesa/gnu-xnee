@@ -24,32 +24,21 @@
  ****/
 
 
-#include "libxnee/xnee.h"
-#include "libxnee/xnee_setget.h"
-#include "libxnee/xnee_record.h"
-#include "libxnee/xnee_resolution.h"
-#include "libxnee/xnee_resource.h"
-#include "libxnee/xnee_setget.h"
-#include "libxnee/xnee_km.h"
-#include "libxnee/xnee_grab.h"
-#include "libxnee/xnee_fake.h"
-#include "libxnee/xnee_replay.h"
-#include "libxnee/datastrings.h"
-#include "libxnee/xnee_threshold.h"
-#include "libxnee/xnee_strings.h"
-#include "libxnee/print.h"
-#include "libxnee/xnee_range.h"
-#include "libxnee/xnee_error.h"
-#include "libxnee/xnee_keysym.h"
-#include "libxnee/feedback.h"
-#include "libxnee/xnee_session.h"
-#include "libxnee/xnee_plugin.h"
-#include "libxnee/xnee_display.h"
-#include "libxnee/xnee_utils.h"
-
 #ifndef CNEE_PRINTER_H
 #define CNEE_PRINTER_H
 
 
 
-#endif /* CNEE_FAKE_H */
+#include <stdio.h>
+#include "libxnee/xnee.h"
+
+/**
+ * Prints all flags/options that Xnee handles. Description of the flags is omitted.
+ * @param fd      Where to print the flags
+ * @return void  
+ */
+void 
+xnee_flags (FILE *fd);
+
+
+#endif /* CNEE_PRINTER_H */
