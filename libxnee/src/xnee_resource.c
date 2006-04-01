@@ -126,7 +126,7 @@ static xnee_option_t xnee_options_impl[] =
       NULL,
       NULL,
       "Print only first and last of multiple successive" 
-      "MotionEvent",		  
+      " MotionEvent",		  
       XNEE_RECORD_OPTION,
       XNEE_OPTION_VISIBLE
     },
@@ -307,7 +307,7 @@ static xnee_option_t xnee_options_impl[] =
       "di",
       "<LIST>",
       "Distribute recorded or replayed events to LIST where"
-      "LIST is comma separated list of displays",
+      " LIST is comma separated list of displays",
       XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
@@ -358,7 +358,7 @@ static xnee_option_t xnee_options_impl[] =
       "rcp",
       NULL,
       "Recall the recorded window position to be used"
-      "during replay",
+      " during replay",
       XNEE_REPLAY_OPTION,
       XNEE_OPTION_VISIBLE
     },
@@ -379,7 +379,7 @@ static xnee_option_t xnee_options_impl[] =
       "fp", 
       NULL,
       "Keep replaying even if we are out of sync"
-      ".... dangerous",   
+      "  .... dangerous",   
       XNEE_REPLAY_OPTION,
       XNEE_OPTION_VISIBLE
     },
