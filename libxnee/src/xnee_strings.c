@@ -27,6 +27,7 @@
 
 const char*  XNEE_HOME_URL             = "http://www.gnu.org/software/xnee/";
 const char*  XNEE_MAIL                 = "info-xnee@gnu.org";
+const char*  XNEE_AUTHORS              = "Henrik Sandklef";
 const char*  XNEE_BUG_MAIL             = "bug-xnee@gnu.org";
 const char*  XNEE_DEVEL_MAIL           = "xnee-devel@gnu.org";
 const char*  GNU_HOME_URL              = "http://www.gnu.org/";
@@ -37,71 +38,11 @@ const char*  XNEE_RESOURCE_DIR         = "/usr/local/lib/xnee/resources" ;
 const char*  XNEE_COMMENT_START_STR    = "#";
 const char   XNEE_COMMENT_START_CHAR   = '#';
 
-const char*  XNEE_ERR_FILE             = "err-file";
-const char*  XNEE_OUT_FILE             = "out-file";
-
-const char*  XNEE_DISPLAY              = "display";
-const char*  XNEE_FIRST_LAST           = "first-last";
-const char*  XNEE_ALL_EVENTS           = "all-events";
-const char*  XNEE_ALL_CLIENTS          = "all-clients";
-const char*  XNEE_FUTURE_CLIENTS       = "future-clients";
-const char*  XNEE_DIMENSION            = "Dimension";
-const char*  XNEE_EVENT_MAX            = "events-to-record";
-const char*  XNEE_DATA_MAX             = "data-to-record";
-const char*  XNEE_TIME_MAX             = "seconds-to-record";
-const char*  XNEE_LOOPS_LEFT           = "loops-left";
-const char*  XNEE_STOP_KEY             = "stop-key";
-const char*  XNEE_PAUSE_KEY            = "pause-key";
-const char*  XNEE_RESUME_KEY           = "resume-key";
-const char*  XNEE_INSERT_KEY           = "insert-key";
-const char*  XNEE_EXEC_KEY             = "exec-key";
-const char*  XNEE_EXEC_PROGRAM         = "exec-program";
 const char*  XNEE_EXEC_NO_PROG         = "xnee-exec-no-program";
 const char*  XNEE_EXEC_MARK            = "EXEC";
 const char*  XNEE_NEW_WINDOW_MARK      = "NEW-WINDOW";
-const char*  XNEE_EVERYTHING           = "everything";
-const char*  XNEE_DELAY_TIME           = "time";
-const char*  XNEE_SPEED_PERCENT        = "speed-percent";
-const char*  XNEE_RECORDED_RESOLUTION  = "recorded-resolution";
-const char*  XNEE_REPLAY_RESOLUTION    = "replay-resolution";
-const char*  XNEE_ADJUST_RESOLUTION    = "resolution-adjustment";
-const char*  XNEE_DISTRIBUTE           = "distribute";
-const char*  XNEE_NO_EXPOSE            = "no-expose";
-const char*  XNEE_NO_SYNC_MODE         = "no-sync";
-const char*  XNEE_USE_SYNC             = "sync";
-const char*  XNEE_SYNC_MODE            = "synchronised-replay";
-const char*  XNEE_RECALL_WINDOW_POS    = "recall-window-position";
-const char*  XNEE_REPLAY_OFFSET        = "replay-offset";
-const char*  XNEE_HUMAN_PRINTOUT       = "human-printout";
-const char*  XNEE_LOOPS                = "loops";
-const char*  XNEE_FORCE_REPLAY         = "force-replay";
-const char*  XNEE_RESOURCE             = "resource";
-const char*  XNEE_PLUGIN               = "plugin";
-const char*  XNEE_ERROR_FD             = "stderr";
-const char*  XNEE_VERBOSE              = "verbose";
-const char*  XNEE_BUFFER_VERBOSE       = "buffer-verbose";
-const char*  XNEE_MOUSE                = "mouse";
-const char*  XNEE_KEYBOARD             = "keyboard";
-const char*  XNEE_STORE_MOUSE_POS      = "store-mouse-position";
-const char*  XNEE_FEEDBACK_XOSD        = "feedback-xosd";
-const char*  XNEE_FEEDBACK_STDERR      = "feedback-stderr";
-const char*  XNEE_FEEDBACK_NONE        = "feedback-none";
 
-const char*  XNEE_REQUEST_STR          = "request-range";
-const char*  XNEE_REPLIES_STR          = "reply-range";
-const char*  XNEE_DEVICE_EVENT_STR     = "device-event-range";
-const char*  XNEE_DELIVERED_EVENT_STR  = "delivered-event-range";
-const char*  XNEE_ERROR_STR            = "error-range";
-const char*  XNEE_REPLY_STR            = "reply-range";
-const char*  XNEE_EXT_REQ_MAJ_STR      = "extension-request-major-range";
-const char*  XNEE_EXT_REQ_MIN_STR      = "extension-request-minor-range";
-const char*  XNEE_EXT_REP_MAJ_STR      = "extension-reply-major-range";
-const char*  XNEE_EXT_REP_MIN_STR      = "extension-reply-minor-range";
 const char*  XNEE_META_END	       = "META-END"  /* Marks the end of the META DATA in the recorded file*/ ;
-
-const char*  XNEE_MAX_THRESHOLD        = "max-threshold";
-const char*  XNEE_MIN_THRESHOLD        = "min-threshold";
-const char*  XNEE_TOT_THRESHOLD        = "tot-threshold";
 
 const char*  XNEE_REPLAY_CALLBACK_NAME = "xnee_replay_dispatch";
 const char*  XNEE_RECORD_CALLBACK_NAME = "xnee_record_dispatch";
@@ -154,4 +95,5 @@ const char*  XNEE_REAL_SHIFT        = "Shift_L";
 
 const char* NULL_STRING             = "NULL";
 
+const char* XNEE_EMPTY_STRING       = "" ;
 
