@@ -1,5 +1,5 @@
 bin_PROGRAMS = cnee
-cnee_SOURCES = cnee_fake.c  cnee_printer.c  cnee_strings.c  cnee_demo.c  main.c  parse.c
+cnee_SOURCES = cnee_fake.c  cnee_printer.c  cnee_strings.c  cnee_demo.c  main.c  parse.c  cnee_demo.c
 man_MANS = cnee.1
 
 BUILT_SOURCES = cnee.info cnee.texi
