@@ -106,15 +106,16 @@ int test_xnee_data()
   int i ; 
   int ret;
 
-  fprintf (stderr, "\t\t1\n");
   /* Set the signal handler the libxnee's built in */ 
   (void) signal (SIGINT, signal_handler); 
   
 
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
+
   /* Set the program name */
   xnee_set_program_name (xd, "libtest");
+
   /* Set the cli parameters */
   xnee_set_application_parameters (xd, NULL);
 
@@ -128,14 +129,11 @@ int test_xnee_data()
       global_fail++;
     }
 
-  fprintf (stderr, "\t\t2\n");
-  
   for (i=0;i<1;i++)
   {
-    fprintf (stderr, "\t\tloop 2 i=%d %d\n", i, xd);
     xnee_set_verbose(xd);
 
-    xnee_set_out_name (xd, "/tmp/libtest.xns") ;
+    xnee_set_out_name (xd, "/tmp/libtest.xns") ; 
     xnee_unset_verbose(xd);
     xnee_parse_range (xd, XNEE_DELIVERED_EVENT,  
 		      "EnterNotify-MappingNotify"); 
@@ -158,7 +156,6 @@ int test_xnee_data()
     xnee_prepare(xd);
     ret=xnee_start(xd);
 
-    fprintf (stderr, "\t\tloop 1b\n");
     if (ret==0)
       {
 	global_succ++;
@@ -171,7 +168,6 @@ int test_xnee_data()
 	 global_fail++;
        }
      
-    fprintf (stderr, "\t\trenewing....\n");
     ret=xnee_renew_xnee_data(xd);
     if (ret==0)
       {
@@ -186,7 +182,6 @@ int test_xnee_data()
   
   for (i=0;i<3;i++)
   {
-    fprintf (stderr, "\t\tloop 2 i=%d %d\n", i, xd);
     xnee_set_verbose(xd);
 
     xnee_set_out_name (xd, "/tmp/libtest.xns") ;
@@ -209,7 +204,6 @@ int test_xnee_data()
     xnee_prepare(xd);
     ret=xnee_start(xd);
 
-    fprintf (stderr, "\t\tloop 1b\n");
     if (ret==0)
       {
 	global_succ++;
@@ -222,7 +216,6 @@ int test_xnee_data()
 	 global_fail++;
        }
      
-    fprintf (stderr, "\t\trenewing....\n");
     ret=xnee_renew_xnee_data(xd);
     if (ret==0)
       {
@@ -242,10 +235,8 @@ int test_xnee_data()
 
 int main()
 {
-
-
+  
   fprintf (stdout,"Testing:\n");
-
 
   fprintf (stdout,"\tdatastrings\n");
   test_datastrings();
@@ -253,12 +244,13 @@ int main()
   fprintf (stdout,"\txnee_data\n");
   test_xnee_data();
   
+  fprintf (stdout, "Sucesss:  %d\n", global_succ);
+  fprintf (stdout, "Failures: %d\n", global_fail);
+
 #ifdef ETTA_SUTTIVA_NOLLA  
   fprintf (stdout,"Press return \n");
   getchar();
 
-  printf ("Sucesss:  %d\n", global_succ);
-  printf ("Failures: %d\n", global_fail);
 #endif
 
   /* hey, we are fin(n)ished .... cloe down */
