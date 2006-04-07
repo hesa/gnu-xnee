@@ -253,7 +253,7 @@ xnee_print_list(void)
 }
 
 
-static int 
+int 
 xnee_add_to_list2(xnee_data *xd, int type, int ev)
 {
    int i ;
