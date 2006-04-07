@@ -721,8 +721,6 @@ xnee_has_record_extension(xnee_data *xd)
 {
   int ok=XNEE_OK;
 
-  (void)XSynchronize(xd->control,True); 
-
   if  ( (xd == NULL)
         ||
         (xd->control == NULL)
