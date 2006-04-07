@@ -290,6 +290,8 @@ xnee_unset_all_clients (xnee_data *xd);
 int
 xnee_get_all_clients (xnee_data *xd);
 
+int
+xnee_is_future_clients_str(xnee_data *xd);
 
 int
 xnee_is_all_clients (xnee_data *xd);
@@ -470,6 +472,8 @@ xnee_set_xnee_printout (xnee_data *xd);
 
 #define xnee_is_human_printout(xd) (xd->rec_callback == xnee_human_dispatch)
 #define xnee_is_xnee_printout(xd)  (xd->rec_callback == xnee_record_dispatch)
+#define xnee_is_autorepeat(xd) (xd->autorepeat_saved!=0)
+
 
 int
 xnee_set_replay_speed_str (xnee_data *xd, const char *speed_str);
@@ -479,6 +483,21 @@ xnee_set_replay_speed (xnee_data *xd, int speed);
 
 int
 xnee_get_replay_speed(xnee_data *xd);
+
+int 
+xnee_set_replay_offset_str (xnee_data *xd, char *str);
+
+int 
+xnee_set_replay_offset_x(xnee_data *xd, int offset);
+
+int 
+xnee_set_replay_offset_y(xnee_data *xd, int offset);
+
+int 
+xnee_get_replay_offset_x(xnee_data *xd);
+
+int 
+xnee_get_replay_offset_y(xnee_data *xd);
 
 
 
@@ -528,6 +547,9 @@ xnee_get_time_left (xnee_data *xd);
 int
 xnee_set_store_mouse_pos(xnee_data *xd);
 
+int
+xnee_unset_store_mouse_pos(xnee_data *xd);
+
 Bool
 xnee_is_store_mouse_pos(xnee_data *xd);
 
@@ -562,6 +584,9 @@ xnee_get_application_parameters(xnee_data *xd);
 
 int
 xnee_set_new_window_pos (xnee_data *xd);
+
+int
+xnee_get_new_window_pos_value (xnee_data *xd);
 
 int
 xnee_unset_new_window_pos (xnee_data *xd);
@@ -667,6 +692,16 @@ int
 xnee_set_sync_mode(xnee_data *xd);
 
 int 
+xnee_get_sync_mode(xnee_data *xd);
+
+
+int 
+xnee_set_unsync_mode(xnee_data *xd);
+
+int 
+xnee_get_unsync_mode(xnee_data *xd);
+
+int 
 xnee_unset_sync_mode(xnee_data *xd);
 
 int
@@ -700,6 +735,17 @@ int
 xnee_set_tot_threshold (xnee_data *xd, int thresh);
 
 
+int
+xnee_set_rec_resolution_y (xnee_data *xd, int res);
+
+int
+xnee_set_rec_resolution_x (xnee_data *xd, int res);
+
+int
+xnee_set_rep_resolution_y (xnee_data *xd, int res);
+
+int
+xnee_set_rep_resolution_x (xnee_data *xd, int res);
 
 
 
@@ -712,6 +758,23 @@ xnee_get_min_threshold (xnee_data *xd);
 int
 xnee_get_tot_threshold (xnee_data *xd);
 
+int
+xnee_set_rec_resolution (xnee_data *xd, char *res_str);
+ 
+int
+xnee_get_rec_resolution_x (xnee_data *xd);
 
+int
+xnee_get_rec_resolution_y (xnee_data *xd);
+
+int
+xnee_set_rep_resolution (xnee_data *xd, char *res_str);
+
+int
+xnee_get_rep_resolution_x (xnee_data *xd);
+
+int
+xnee_get_rep_resolution_y (xnee_data *xd);
+ 
 
 #endif /* XNEE_SETGET_H */ 
