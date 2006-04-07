@@ -923,7 +923,10 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
       fprintf (out,  "#  ");
       for (i=0;xd->app_args[i]!=NULL;i++)
 	{
-	  fprintf (out,  "%s ", xd->app_args[i]);
+	  if ( xd->app_args[i] != NULL)
+	    {
+	      fprintf (out,  "%s ", xd->app_args[i]);
+	    }
 	}
       fprintf (out,  "\n");
     }
