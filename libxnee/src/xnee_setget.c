@@ -47,7 +47,7 @@ xnee_set_display_name (xnee_data *xd, const char *disp)
       return XNEE_OK;
     }
 
-
+  XNEE_FREE_IF_NOT_NULL(xd->display);
   xd->display=strdup(disp);
 
   if (xd->display==NULL)
@@ -86,7 +86,10 @@ xnee_get_grab_display(xnee_data *xd)
 int
 xnee_set_out_file (xnee_data *xd, FILE* out)
 {
-  XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
+  if ( xd->out_file != xd->saved_out_file )
+    {
+      XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
+    }
   xd->out_file=out;
   return XNEE_OK;
 }
@@ -152,7 +155,10 @@ xnee_get_rt_name (xnee_data *xd)
 int
 xnee_set_err_file (xnee_data *xd, FILE* err)
 {
-  XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
+  if ( xd->err_file != xd->saved_err_file )
+    {
+      XNEE_FCLOSE_IF_NOT_NULL(xd->out_file);
+    }
   xd->err_file=err;
   return XNEE_OK;
 }
@@ -360,6 +366,12 @@ int
 xnee_get_all_clients (xnee_data *xd)
 {
   return xd->all_clients;
+}
+
+int
+xnee_is_future_clients (xnee_data *xd)
+{
+  return !xd->all_clients;
 }
 
 
@@ -582,12 +594,23 @@ int
 xnee_set_extra_str (xnee_data *xd, int idx, const char *str)
 {
   if ( (idx<0) && (idx>XNEE_GRAB_LAST) )
-    return XNEE_BAD_GRAB_DATA;
-
-  xnee_verbose((xd, "xnee_set_extra_str\n"));
-
-  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[idx].extra_str);
-  xd->grab_keys->action_keys[idx].extra_str = strdup(str);
+    {
+      return XNEE_BAD_GRAB_DATA;
+    }
+  if (str==NULL)
+    {
+      return XNEE_SYNTAX_ERROR;
+    }
+  if ( ( xd != NULL ) && 
+       ( xd->grab_keys!= NULL) )
+    {
+      XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[idx].extra_str);
+      xd->grab_keys->action_keys[idx].extra_str = strdup(str);
+    }
+  else
+    {
+      return XNEE_BAD_GRAB_DATA;
+    }
   return XNEE_OK;
 }
 
@@ -631,17 +654,9 @@ xnee_get_exec_prog (xnee_data *xd)
 int
 xnee_set_exec_prog (xnee_data *xd, const char *prog)
 {
-  if (prog==NULL)
-    {
-      return XNEE_SYNTAX_ERROR;
-    }
-
-  XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str);
-
-  xnee_verbose((xd, "xnee_set_exec_prog\n"));
-
-  xd->grab_keys->action_keys[XNEE_GRAB_EXEC].extra_str = strdup(prog);
-  return XNEE_OK;
+  int ret ; 
+  ret = xnee_set_extra_str (xd, XNEE_GRAB_EXEC, prog);
+  return ret;
 }
 
  
@@ -880,6 +895,13 @@ xnee_set_store_mouse_pos(xnee_data *xd)
   return XNEE_OK;
 }
 
+int
+xnee_unset_store_mouse_pos(xnee_data *xd)
+{
+  xd->xnee_info.store_mouse_pos = False ; 
+  return XNEE_OK;
+}
+
 Bool
 xnee_is_store_mouse_pos(xnee_data *xd)
 {
@@ -942,8 +964,6 @@ xnee_get_application_parameters(xnee_data *xd)
 }
 
 
-
-
 int
 xnee_set_autorepeat (xnee_data *xd)
 {
@@ -994,7 +1014,6 @@ xnee_set_autorepeat (xnee_data *xd)
   XAutoRepeatOff(xd->fake);
   /*@ end @*/
   xd->autorepeat_saved=1;  
-
 
   return XNEE_OK;
 }
@@ -1117,6 +1136,12 @@ xnee_set_new_window_pos_value (xnee_data *xd, int val)
 }
 
 int
+xnee_get_new_window_pos_value (xnee_data *xd)
+{
+  return xd->xnee_info.store_window_pos;
+}
+
+int
 xnee_unset_new_window_pos (xnee_data *xd)
 {
   xnee_verbose((xd, "xnee_unset_new_window_pos()\n"));
@@ -1213,19 +1238,28 @@ xnee_set_project_file(xnee_data *xd, char *name)
 
 
 char *
-xnee_get_project_name(xnee_data *xd){
+xnee_get_project_name(xnee_data *xd)
+{
   if (xd->xrm.project_name!=NULL)
-    return xd->xrm.project_name;
+    {
+      return xd->xrm.project_name;
+    }
   else
-    return "none";
+    {
+      return (char*)XNEE_EMPTY_STRING;
+    }
 }
 
 char *
 xnee_get_project_descr(xnee_data *xd){
   if (xd->xrm.project_descr!=NULL)
-    return xd->xrm.project_descr;
+    {
+      return xd->xrm.project_descr;
+    }
   else
-    return "none";
+    {
+      return (char*)XNEE_EMPTY_STRING;
+    }
 }
 
 char *
@@ -1335,6 +1369,8 @@ xnee_set_plugin_name(xnee_data *xd, char *str)
 
   return xnee_use_plugin(xd, str);
 }
+
+
 
 int
 xnee_set_project_descr(xnee_data *xd, char *str){
@@ -1485,6 +1521,7 @@ xnee_unset_future_clients(xnee_data *xd)
 }
 
 
+
 int 
 xnee_set_events_max_str (xnee_data *xd, char *str)
 {
@@ -1621,6 +1658,12 @@ xnee_set_sync_mode(xnee_data *xd)
 }
 
 int 
+xnee_get_sync_mode(xnee_data *xd)
+{
+  return xd->sync ;
+}
+
+int 
 xnee_unset_sync_mode(xnee_data *xd)
 {
   xd->sync = False;
@@ -1634,8 +1677,11 @@ xnee_set_unsync_mode(xnee_data *xd)
   return XNEE_OK;
 }
 
-
-
+int 
+xnee_get_unsync_mode(xnee_data *xd)
+{
+  return xd->sync ;
+}
 
 const char *
 xnee_get_xosd_font(xnee_data *xd)
@@ -1650,3 +1696,72 @@ xnee_set_xosd_font(xnee_data *xd, char *font_str)
 }
 
 
+int
+xnee_set_rec_resolution (xnee_data *xd, char *res_str)
+{
+  return xnee_str_to_res (res_str, &xd->res_info.record);
+}
+ 
+int
+xnee_get_rec_resolution_x (xnee_data *xd)
+{
+  return xd->res_info.record.x_res;
+}
+
+int
+xnee_get_rec_resolution_y (xnee_data *xd)
+{
+  return xd->res_info.record.y_res;
+}
+
+int
+xnee_set_rec_resolution_y (xnee_data *xd, int res)
+{
+  xd->res_info.record.y_res = res;
+  return XNEE_OK;
+}
+
+int
+xnee_set_rec_resolution_x (xnee_data *xd, int res)
+{
+  xd->res_info.record.x_res = res;
+  return XNEE_OK;
+}
+
+
+int
+xnee_set_rep_resolution_y (xnee_data *xd, int res)
+{
+  xd->res_info.replay.y_res = res;
+  return XNEE_OK;
+}
+
+int
+xnee_set_rep_resolution_x (xnee_data *xd, int res)
+{
+  xd->res_info.replay.x_res = res;
+  return XNEE_OK;
+}
+
+
+int
+xnee_set_rep_resolution (xnee_data *xd, char *res_str)
+{
+  int ret ;
+  ret = xnee_str_to_res (res_str, &xd->res_info.replay);
+
+  return ret;
+} 
+
+int
+xnee_get_rep_resolution_x (xnee_data *xd)
+{
+  return xd->res_info.replay.x_res;
+}
+
+int
+xnee_get_rep_resolution_y (xnee_data *xd)
+{
+  return xd->res_info.replay.y_res;
+}
+ 
