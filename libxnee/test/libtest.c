@@ -38,7 +38,6 @@ int test_datastrings()
   /*****************************************/
   test_succ=0;
   test_fail=0;
-  fprintf (stderr, "\t\trequests\n");
   for (nr=1;xnee_print_request(nr)!=NULL;nr++)
     {
        char *rec_name = xnee_int2request(nr);
@@ -58,7 +57,6 @@ int test_datastrings()
     }
 
 
-  fprintf (stderr, "\t\tevents\n");
   for (nr=2;xnee_print_event(nr)!=NULL;nr++)
   {
        char *rec_name = xnee_int2event(nr);
@@ -77,7 +75,6 @@ int test_datastrings()
        }
   }
   
-  fprintf (stderr, "\t\terrors\n");
   for (nr=2;xnee_int2error(nr)!=NULL;nr++)
   {
      char *rec_name = xnee_int2error(nr);
@@ -129,7 +126,7 @@ int test_xnee_data()
       global_fail++;
     }
 
-  for (i=0;i<1;i++)
+  for (i=0;i<100;i++)
   {
     xnee_set_verbose(xd);
 
@@ -180,7 +177,7 @@ int test_xnee_data()
       }
   }
   
-  for (i=0;i<3;i++)
+  for (i=0;i<100;i++)
   {
     xnee_set_verbose(xd);
 
@@ -236,17 +233,12 @@ int test_xnee_data()
 int main()
 {
   
-  fprintf (stdout,"Testing:\n");
+  fprintf (stdout,"Starting test\n");
 
-  fprintf (stdout,"\tdatastrings\n");
   test_datastrings();
   
-  fprintf (stdout,"\txnee_data\n");
   test_xnee_data();
   
-  fprintf (stdout, "Sucesss:  %d\n", global_succ);
-  fprintf (stdout, "Failures: %d\n", global_fail);
-
 #ifdef ETTA_SUTTIVA_NOLLA  
   fprintf (stdout,"Press return \n");
   getchar();
@@ -256,7 +248,10 @@ int main()
   /* hey, we are fin(n)ished .... cloe down */
   xnee_close_down(xd);
 
+  fprintf (stdout, "\tSucesss:  %d\n", global_succ);
+  fprintf (stdout, "\tFailures: %d\n", global_fail);
+
+
   /* Since we are here, we can exit gracefully */
   exit(XNEE_OK); 
-   
 }
