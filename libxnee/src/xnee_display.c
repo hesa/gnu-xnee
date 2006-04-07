@@ -125,8 +125,17 @@ xnee_setup_display (xnee_data *xd)
 void 
 xnee_set_default_display (xnee_data *xd)
 {
-   xd->display = getenv ((const char*)"DISPLAY");
-   return ;
+  char *tmp;
+  tmp = getenv ((const char*)"DISPLAY");
+  if ( tmp != NULL )
+    {
+      xd->display = strdup(tmp);
+    }
+  else
+    {
+      xd->display = NULL;
+    }
+  return ;
 }
 
 
