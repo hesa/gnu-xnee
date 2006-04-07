@@ -26,4 +26,10 @@
 #ifndef CNEE_STRINGS_H
 #define CNEE_STRINGS_H
 
+extern char *explain[] ;
+
+extern char *examples[] ;
+
+extern char *description[] ;
+
 #endif /* CNEE_STRINGS_H */
