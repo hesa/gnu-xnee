@@ -40,8 +40,8 @@ int main(int argc, char **argv)
 
   test_all();
 
-  printf ("Nr of tests:%d    (%d failures)\n", 
-	  total, fails);
+  fprintf (stdout, "\tSucesss:  %d\n", total);
+  fprintf (stdout, "\tFailures: %d\n", fails);
 
   xnee_close_down(xd);
 
