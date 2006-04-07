@@ -66,46 +66,6 @@ xnee_no_rep_resolution (xnee_data *xd)
 }
  
  
-int
-xnee_set_rec_resolution (xnee_data *xd, char *res_str)
-{
-  return xnee_str_to_res (res_str, &xd->res_info.record);
-}
- 
-int
-xnee_get_rec_resolution_x (xnee_data *xd)
-{
-  return xd->res_info.record.x_res;
-}
-
-int
-xnee_get_rec_resolution_y (xnee_data *xd)
-{
-  return xd->res_info.record.y_res;
-}
-
-
-int
-xnee_set_rep_resolution (xnee_data *xd, char *res_str)
-{
-  int ret ;
-  ret = xnee_str_to_res (res_str, &xd->res_info.replay);
-
-  return ret;
-} 
-
-int
-xnee_get_rep_resolution_x (xnee_data *xd)
-{
-  return xd->res_info.replay.x_res;
-}
-
-int
-xnee_get_rep_resolution_y (xnee_data *xd)
-{
-  return xd->res_info.replay.y_res;
-}
- 
 
 int 
 xnee_str_to_res(char *res_str, xnee_res *xr)
