@@ -232,7 +232,8 @@ xnee_init(xnee_data* xd)
 {
   int ret ; 
   int i ; 
-
+  char *tmp;
+  
   if (xd == NULL) 
     {
       return XNEE_MEMORY_FAULT;
@@ -269,8 +270,10 @@ xnee_init(xnee_data* xd)
   xd->data_file     = (FILE*) stdin  ;
   /*@access FILE@*/
   xd->out_file      = (FILE*) stdout ;
+  xd->saved_out_file= (FILE*) stdout ;
   /*@access FILE@*/
   xd->err_file      = (FILE*) stderr ;
+  xd->saved_err_file= (FILE*) stderr ;
   /*@access FILE@*/
   xd->rc_file       = NULL   ;
   /*@access FILE@*/
@@ -284,7 +287,15 @@ xnee_init(xnee_data* xd)
   xd->rc_name       = NULL  ;
   xd->rt_name       = NULL  ;
 
-  xd->display       = getenv ("DISPLAY");
+  tmp = getenv ((const char*)"DISPLAY");
+  if ( tmp != NULL )
+    {
+      xd->display = strdup(tmp);
+    }
+  else
+    {
+      xd->display = NULL;
+    }
   xd->distr_list    = NULL  ;
   xd->distr_list_size = 0   ;
   xd->cont          = True ;
@@ -309,9 +320,7 @@ xnee_init(xnee_data* xd)
       xd->xnee_info.data_ranges[i]=0;
     }
 
-  ret = xnee_grab_keys_init(xd);
-  XNEE_RETURN_IF_ERR(ret);
-
+  xnee_new_grab_keys(xd);
 
   xd->in_use = 1;
 
