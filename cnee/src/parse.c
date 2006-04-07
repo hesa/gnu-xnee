@@ -34,6 +34,10 @@
 #include "cnee_printer.h"
 #include "parse.h"
 
+static int
+cnee_write_settings_to_file(xnee_data *xd, char *file_name);
+
+
 static xnee_option_t cnee_options_impl[] = 
   {
     /* 
@@ -111,25 +115,22 @@ static xnee_option_t cnee_options_impl[] =
 
     { 
       CNEE_RETYPE_FILE_OPTION_KEY,
-      "retype",
+      "retype-file",
       NULL,
       "<file>", 
       "Types (faking user) the contents of the specified file" , 
       XNEE_MISC_OPTION,
       XNEE_OPTION_VISIBLE
     },
-
     { 
       CNEE_WRITE_SETTINGS_OPTION_KEY,
-      "write-settings file",
+      "write-settings",
       NULL,
-      NULL,
+      "<file>",
       "Writes settings to a resource file",
       XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
-
-
     { 
       CNEE_PRINT_SETTINGS_OPTION_KEY,
       "print-settings",
@@ -306,7 +307,6 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
   /* By default we set used nr of arguments to 0 */
   *args_used = 0;
 
-
   entry = xnee_find_cli_option_entry(xd, 
 				     cnee_options,
 				     opt_and_args[0]);
@@ -337,6 +337,8 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
   #define verbose_option(a)  \
        xnee_verbose((xd,"%s:%d-->%s() Handling: '%s' \n", \
 		     __FILE__ , __LINE__, __func__, a ));
+
+  
 
   switch (key)
     {
@@ -386,8 +388,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_TYPE_HELP_OPTION_KEY:         
       verbose_option("CNEE_TYPE_HELP_OPTION_KEY");
-/*       xnee_set_retyper(xd); */
-/*       ret =  xnee_set_rt_name (xd, opt_buf) ; */
+      ret = xnee_type_help(xd);
       break;
 
     case CNEE_GEN_MANPAGE_OPTION_KEY:       
@@ -404,10 +405,15 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_WRITE_SETTINGS_OPTION_KEY:    
       verbose_option("CNEE_WRITE_SETTINGS_OPTION_KEY");
+      ret = cnee_write_settings_to_file(xd, opt_and_args[1]);
+      if (ret==XNEE_OK) ret = XNEE_OK_LEAVE;
+      *args_used = 1;
       break;
 
     case CNEE_PRINT_SETTINGS_OPTION_KEY:    
       verbose_option("CNEE_PRINT_SETTINGS_OPTION_KEY");
+      ret = xnee_write_settings_to_file(xd, stdout);
+      if (ret==XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_PRINT_E_NAMES_OPTION_KEY:     
@@ -425,6 +431,8 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_PRINT_ERR_NAMES_OPTION_KEY:   
       verbose_option("CNEE_PRINT_ERR_NAMES_OPTION_KEY");
+      xnee_print_error_info(xd);
+      ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_PRINT_ERR_NAME_OPTION_KEY:    
@@ -453,15 +461,24 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_PRINT_DATA_NAMES_OPTION_KEY:  
       verbose_option("CNEE_PRINT_DATA_NAMES_OPTION_KEY");
+      xnee_print_data_info (xd) ;
+      ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_RETYPE_FILE_OPTION_KEY:       
       verbose_option("CNEE_RETYPE_FILE_OPTION_KEY");
+      xnee_set_retyper(xd);  
+      ret =  xnee_set_rt_name (xd, opt_and_args[1]); 
+      *args_used = 1;
       break;
 
     case CNEE_REMOVE_EVENT_OPTION_KEY:      
       verbose_option("CNEE_REMOVE_EVENT_OPTION_KEY");
-      break;
+      ret=xnee_rem_data_from_range_str (xd,
+					XNEE_DEVICE_EVENT,
+					opt_and_args[1]) ;
+      *args_used = 1;
+     break;
 
     case CNEE_DEMONSTRATION_OPTION_KEY:     
       verbose_option("CNEE_DEMONSTRATION_OPTION_KEY");
@@ -561,3 +578,32 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 
 
 
+static int
+cnee_write_settings_to_file(xnee_data *xd, char *file_name)
+{
+  int ret ; 
+  int f_ret;
+  FILE *fd;
+
+  if ( (xd==NULL) || (file_name==NULL) )
+    {
+      return XNEE_MISSING_ARG;
+    }
+
+  XNEE_VERBOSE_ENTER_FUNCTION();
+
+  fd = fopen (file_name, "w");
+
+  if (fd==NULL)
+    {
+      return XNEE_FILE_NOT_FOUND;
+    }
+
+  ret = xnee_write_settings_to_file(xd, fd);
+  
+  f_ret = fclose(fd);
+
+  XNEE_VERBOSE_LEAVE_FUNCTION();
+
+  return (f_ret||ret);
+}
