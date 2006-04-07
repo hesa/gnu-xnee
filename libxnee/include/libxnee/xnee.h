@@ -524,6 +524,9 @@ typedef struct
   /*@null@*/ /*@dependent@*/FILE    *rt_file     ;    /*!< retype file descriptor */
   /*@null@*/ /*@dependent@*/FILE    *buffer_file ;    /*!< verbose buffer printout file descriptor */
 
+  FILE    *saved_out_file    ;    /*!< output file descriptor */
+  FILE    *saved_err_file    ;    /*!< error file descriptor */
+
   char   **app_args    ;
 
   Bool     verbose     ;    /*!< true if verbose mode */
@@ -625,6 +628,19 @@ xnee_check_true(char *expr);
 
 int 
 xnee_check_false(char *expr);
+
+
+
+/**
+ * Allocates a new xnee_data structure. 
+ * To free the memory, xnee_free_xnee_data can be used.
+ * @return xnee_data * NULL if alloc failed
+ */
+/*@null@   The implementation of this function is located in xnee_alloc.c*/
+
+xnee_data*
+xnee_new_xnee_data(void);
+
 
 
 #define DEBUG_XNEE_DATA                                        
