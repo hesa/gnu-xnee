@@ -73,18 +73,12 @@ xnee_set_xosd_font_impl(xnee_data *xd, char *font_str)
     {
       return XNEE_XOSD_FAILURE;
     }
+  XNEE_FREE_IF_NOT_NULL(xosd_font);
   xosd_font = strdup(font_str);
   if ( xosd_font == NULL)
     {
       return XNEE_XOSD_FAILURE;
     }
-  
-  if (xosd_char == NULL)
-    {
-      return XNEE_XOSD_FAILURE;
-    }
-
-  xosd_char(osd, xosd_font);
 
   return XNEE_OK;
 }
