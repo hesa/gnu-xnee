@@ -42,3 +42,5 @@ man:
 	cd ./cnee/src && make man
 
 
+test:
+	cd libxnee/test && make clean all test
