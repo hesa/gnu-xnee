@@ -199,10 +199,8 @@ xnee_new_dyn_data(xnee_data *xd)
    xd->record_setup  = xnee_new_recordext_setup(); 
    XNEE_CHECK_ALLOCED_MEMORY_INT(xd->record_setup);
    
-   xd->grab_keys     = xnee_new_grab_keys();
+   xd->grab_keys     = xnee_new_grab_keys(xd);
    XNEE_CHECK_ALLOCED_MEMORY_INT(xd->grab_keys);
-   
-   xnee_grab_keys_init(xd);
    
    return XNEE_OK;
 }
@@ -235,11 +233,14 @@ xnee_free_dyn_data(xnee_data *xd)
    int i ; 
    xnee_verbose((xd, "---> xnee_free_dyn_data\n"));
 
+
    if ( xd->grab_keys && xd->grab_keys->action_keys)
-   for (i=0;i<XNEE_GRAB_LAST;i++)
      {
-       xnee_verbose((xd, " --- xnee_free_dyn_data: grab key str %d\n", i)); 
-       XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[i].str);
+       for (i=0;i<XNEE_GRAB_LAST;i++)
+	 {
+	   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[i].str);
+	   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[i].extra_str);
+	 }
      }
 
    xnee_verbose((xd, " --- xnee_free_dyn_data: program name\n")); 
@@ -371,7 +372,7 @@ xnee_renew_xnee_data(xnee_data *xd)
 int
 xnee_free( /*@only@*/  /*@out@*/ /*@null@*/ void *mem)
 {
-   if (mem==NULL)
+  if ( (mem==NULL) || (mem==0x1) )
    {
       return XNEE_MEMORY_FAULT;
    }
