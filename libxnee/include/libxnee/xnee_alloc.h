@@ -28,16 +28,6 @@
 
 
 
-/**
- * Allocates a new xnee_data structure. 
- * To free the memory, xnee_free_xnee_data can be used.
- * @return xnee_data * NULL if alloc failed
- */
-/*@null@*/
-xnee_data*
-xnee_new_xnee_data(void);
-
-
 
 /**
  * Fres xnee_data structure. 
