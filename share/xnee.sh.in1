@@ -255,7 +255,7 @@ xnee_fake_button_press()
     fi
     BUTTON=$1
 
-    xnee_write "fake-buton-press button=$BUTTON msec=$MSEC"
+    xnee_write "fake-button-press button=$BUTTON msec=$MSEC"
 }
 
 
@@ -278,7 +278,7 @@ xnee_fake_button_release()
     fi
     BUTTON=$1
 
-    xnee_write "fake-buton-release button=$BUTTON msec=$MSEC"
+    xnee_write "fake-button-release button=$BUTTON msec=$MSEC"
 }
 
 
@@ -301,5 +301,5 @@ xnee_fake_button()
     fi
     BUTTON=$1
 
-    xnee_write "fake-buton button=$BUTTON msec=$MSEC"
+    xnee_write "fake-button button=$BUTTON msec=$MSEC"
 }
