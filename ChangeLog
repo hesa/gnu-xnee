@@ -1,4 +1,275 @@
-2006-03-06    <hesa@localhost.localdomain>
+2006-04-07  Henrik Sandklef  <hesa@localhost.localdomain>
+
+	* cnee/src/cnee_printer.c
+
+	Removed strings 
+
+	* pnee/Makefile.am
+
+	Not building po dir 
+
+	* button share/xnee.sh.in1 
+
+	Typo fix: buton -> 
+
+	* libxnee/src/xnee_display.c
+
+	Copying returned str from getenv 
+
+	* libxnee/src/xnee_fileop.c
+
+	Making sure not to close stdout/stderr 
+	
+	* libxnee/src/xnee_grab.c
+
+	Removed xnee_new_grab_keys(). Setting new grab keys in init 
+
+	* libxnee/src/xnee_record.c
+
+	Removed call to XSynchronize 
+	
+	* libxnee/src/xnee_resolution.c 
+
+	Moved funs to xnee_setget.c 
+
+	* libxnee/src/xnee_session.c
+
+	Making sure not to close stdout/stderr 
+
+	* libxnee/src/xnee_setget.c
+
+	some new funs. moved some funs to this file 
+
+	* libxnee/test/libtest.c
+
+	Removed comments 
+	* libxnee/test/test_setget.c
+
+	Restructured comments 
+
+	* libxnee/src/xnee_alloc.c
+
+	Added checks when freeing mem 
+
+	* libxnee/src/print.c: 
+
+	Added null ptr check
+
+	* libxnee/src/feedback.c: 
+
+	Minor updates
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+
+	Added new set/get funs 
+	Moved some funs to this file.
+
+	* libxnee/include/libxnee/xnee_grab.h: 
+
+	Added xnee_data to: xnee_new_grab_keys
+
+	* libxnee/include/libxnee/xnee_alloc.h: 
+
+	Removed header for xnee_new_data from here
+
+	* libxnee/include/libxnee/xnee.h: 
+
+	Added header for xnee_new_data
+
+	* cnee/src/parse.c: 
+
+	Implemented last unimplemented options
+	with new xnee_option struct
+
+	* cnee/src/cnee_printer.c: 
+
+	Removed strings : explain, examples description 
+
+	* cnee/src/cnee_fake.c: 
+
+	Added functions: xnee_type_help_sub, cnee_fake_string
+
+	* cnee/src/Makefile.am (bin_PROGRAMS): 
+
+	Added cnee_demo.h
+
+	* cnee/include/parse.h: 
+
+	Added option key contants (enum)
+
+	* cnee/include/cnee_strings.h: 
+	* cnee/src/cnee_strings.c:
+
+	Added strings : explain, examples description 
+
+	* Makefile.am: 
+
+	Added test rule
+
+2006-03-01    <hesa@gnu.org>
+
+	* libxnee/src/xnee_session.c
+
+	Removing verbose printouts
+
+	* libxnee/src/xnee_resource.c
+
+	Adding space in printout
+
+	* libxnee/src/xnee_fileop.c
+
+	Removing verbose printout
+
+	* libxnee/src/print_varargs.c
+
+	Make sure fd is OK before printing
+
+	* cnee/src/parse.c
+
+	Added body to cnee options: --texipage, --manpage
+
+	* cnee/src/main.c
+
+	Handling XNEE_OK_LEAVE after parse
+
+	* cnee/src/Makefile.a
+
+	texi_TEXINFOS
+
+	* libxnee/include/libxnee/xnee_range.h
+
+	Added xne_data as arg to xnee_rem_from_list
+
+	* libxnee/include/libxnee/xnee_utils.h
+
+	New funs: xnee_str2int xnee_boolstr2int xnee_free_strptr 
+	xnee_print_strptr xnee_str2strptr  
+	New macro: XNEE_ATOI_FUNCTION 
+
+	* libxnee/include/libxnee/xnee_threshold.h
+
+	Moved set/get funs to xnee_setget.[hc]
+
+	* libxnee/include/libxnee/xnee_strings.h
+
+	New strings: XNEE_EMPTY_STRING XNEE_AUTHORS XNEE_XOSD_FONT
+
+	* libxnee/include/libxnee/xnee_setget.h
+
+	setget funs moved to this file
+
+	* libxnee/include/libxnee/xnee_resource.h
+
+	Removed obsoleted code. Rewrote code to fit new xnee_option_t
+	struct. Moved setget funs to xnee_setget files
+
+	* cnee/include/cnee_printer.h
+
+	Removed includes. Added: xnee_flags
+
+	* libxnee/src/xnee_utils.c
+
+	New funs: xnee_str2int xnee_boolstr2int xnee_free_strptr 
+	xnee_print_strptr xnee_str2strptr
+
+	* libxnee/src/xnee_threshold.c
+
+	Minor indent fix
+
+	* libxnee/src/xnee_strings.c
+
+	Removed obsoleted strings. Minor adjustments
+
+	* libxnee/src/xnee_setget.c
+
+	setget funs moved to this file
+
+	* libxnee/src/xnee_session.c
+
+	Rewrote code to fit new xnee_option_t struct.
+
+	* libxnee/src/xnee_resource.c
+	* libxnee/src/xnee_replay.c
+	Removed obsoleted code. Rewrote code to fit new 
+	xnee_option_t struct. Moved setget funs to 
+	xnee_setget files
+
+	* libxnee/src/xnee_replay.c
+
+	Removed obsoleted code
+
+	* libxnee/src/xnee_record.c
+
+	Added more info on CreatNotify printout
+
+	* libxnee/src/xnee_range.c
+
+	Rewrote to code fit new xnee_option struct
+
+	* libxnee/src/xnee_expr.c
+
+	Rewrote expr handling code to fit new xnee_option struct
+
+	* libxnee/src/xnee_error.c
+
+	new error: XNEE_OK_LEAVE
+
+	* libxnee/src/xnee_display.c
+
+	Added null ptr check
+
+	* libxnee/src/xnee_alloc.c
+
+	Added error/signal handlers to init xnee_dtaa code 
+
+	* libxnee/include/libxnee/xnee.h
+
+	new enum bool_string_values. Added new xnee_options code
+
+	* libxnee/src/feedback.c
+
+	new fun: xnee_get_xosd_font_impl xnee_set_xosd_font_impl 
+
+	* libxnee/src/print.c
+
+	New fun: xnee_print_xnee_data. Adjusted code to new xnee_option struct
+
+	* libxnee/include/libxnee/print.h
+
+	New fun: xnee_print_xnee_data
+
+	* libxnee/include/libxnee/print.h
+
+	New fun: xnee_get_xosd_font_impl
+
+	* libxnee/include/libxnee/feedback.h
+
+	New fun: xnee_get_xosd_font_impl
+	* cnee/src/parse.h
+
+	Added keys for cnee options
+	* cnee/src/parse.c
+
+	Changed print functions to new xnee_options struct
+	* cnee/src/main.c
+
+	Removed signal/error handlers to libxnee. 
+
+
+	* cnee/src/cnee_printer.c
+
+	Changed print functions to new xnee_options struct
+
+	* cnee/include/cnee_fake.h
+
+	Removed includes. Added fun xnee_flags
+
+	* cnee/include/cnee_strings.h    
+
+	Removed string constants
+
+	
+2006-03-06    <hesa@gnu.org>
 
 	* examples/Makefile.am: 
 
