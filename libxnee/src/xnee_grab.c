@@ -211,7 +211,7 @@ xnee_get_grab_mode (xnee_data *xd, int key)
  *                                                            *
  **************************************************************/
 xnee_grab_keys  *
-xnee_new_grab_keys()
+xnee_new_grab_keys(xnee_data *xd)
 {
   xnee_grab_keys* xgk = 
     (xnee_grab_keys*) malloc (sizeof (xnee_grab_keys));
@@ -224,6 +224,10 @@ xnee_new_grab_keys()
   xgk->grab = XNEE_GRAB_NODATA;
   xgk->grabbed_action = XNEE_GRAB_NODATA;
 
+  xd->grab_keys= xgk;
+
+  xnee_grab_keys_init(xd);
+   
   return xgk;
 }
 
@@ -338,10 +342,11 @@ xnee_grab_all_keys (xnee_data* xd)
 
 
 
-int
+static int
 xnee_grab_keys_init(xnee_data *xd)
 {
   int i ;
+
   xd->grab_keys->grab           = 0 ; 
   xd->grab_keys->grabbed_action = 0 ; 
 
