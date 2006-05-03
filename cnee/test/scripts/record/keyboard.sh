@@ -1,13 +1,13 @@
 #/bin/sh
 #
 #
-# Filename:   record/keyboard-rec.sh
+# Filename:   record/keyboard.sh
 # Generated:  Sun Mar 16 21:57:36 CET 2003
 # 
 # Description:
 #
 #  Test the Xnee functionality
-#       record keyboard motions
+#       record keyboard 
 #
 #
  
@@ -79,16 +79,14 @@ function test_keyboard()
     TMP=0
     while [ "$TMP" != "$LEN" ];
     do
-      echo ${STR:$TMP:1} | grep -e '[A-Z]'  2>/dev/null 1>/dev/null
-      if [ "$?" == "0" ]
-	  then 
-	  CAPS=$(( $CAPS + 1))
-      fi
+      CAPS_ADD=$(echo ${STR:$TMP:1} | sed 's,[a-z],,g' | grep -c -e "[A-Z]")
+      CAPS=$(( $CAPS + $CAPS_ADD ))
       TMP=$(( $TMP + 1 ))
     done
 
     verbose "CAPS=$CAPS"
     verbose "LEN=$LEN"
+
     LEN=$(( $LEN + $CAPS)) 
     TLEN=$(( $LEN * 2 ))
     verbose "TLEN=$TLEN"

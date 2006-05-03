@@ -42,8 +42,12 @@ function check_nr_of_loops()
     LOGFILE=$2
 
     
-    NR=`grep -e '^0,6' $LOGFILE | wc -l | sed 's,[ \t]*,,g'`
+    NR=`grep -c -e '^0,6' $LOGFILE | sed 's,[ \t]*,,g'`
 
+
+    echo "loops in file:   $NR"
+    echo "expected         $EXPECTED"
+    
     verify_same $EXPECTED $NR $LOGFILE 
 }
 
@@ -72,6 +76,7 @@ function check_intervals()
 	  if [ "$DIFF" != "$EXP_DIFF" ]
 	      then
 	      MSG=" Comparing intervals in file $FILE $FIELD i=$i: $DIFF"
+	      echo " Data differs: $MSG"
 	      verbose " Data differs: $MSG"
 	      error_log " Data differs: $MSG"
 	      ERR_TEST=`expr $ERR_TEST + 1`
@@ -102,12 +107,15 @@ function test_mouse()
       do
       echo "$DIRECTION" > /dev/swmouse
       TMP=`expr $TMP + 1 `
+      sleep 0
     done
     sleep 2
 
+    echo "check loops"
     check_nr_of_loops $PIX $FILE 
+    sleep 1
+    echo "check intervals"
     check_intervals   $PIX $DIRECTION $FILE $FIELD $EXP_DIFF
-
 }
 
 
@@ -122,7 +130,6 @@ verify_device swmouse
 rm m*.log
 
 NR_OF_PIX=250
-HALF_WAYS=200
 
 
 verbose "find a nice start position ..."
@@ -136,7 +143,6 @@ zero_device swmouse
 verbose  "starting...."
 move_mouse      d  $NR_OF_PIX
 test_mouse      u  $NR_OF_PIX mu.log 4 1
-
 
 move_mouse      r  $NR_OF_PIX
 test_mouse      l  $NR_OF_PIX ml.log 3 1

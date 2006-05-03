@@ -593,7 +593,7 @@ function move_mouse()
     DIR=$1
     while [ "$TMP" != "$PIX" ];
     do
-      echo "$DIR" > $MOUSE_DEVICE
+      echo "$DIR 1" > $MOUSE_DEVICE
       TMP=`expr $TMP + 1 `
       sleep 0
     done
@@ -602,18 +602,18 @@ function move_mouse()
 #start with the mouse in such a position that in can move around enough
 function get_in_position()
 {
-    fast_move_mouse  u 1000
-    fast_move_mouse  l 1000
+    fast_move_mouse  u 500
+    fast_move_mouse  l 500
     sleep 0
-    fast_move_mouse  u 1000
-    fast_move_mouse  l 1000
+    fast_move_mouse  u 500
+    fast_move_mouse  l 500
     sleep 0
-    fast_move_mouse  u 1000
-    fast_move_mouse  l 1000
+    fast_move_mouse  u 500
+    fast_move_mouse  l 500
     sleep 0
     move_mouse  d 300
     move_mouse  r 300
-    sleep 3
+    sleep 1
 }
 
 
@@ -635,7 +635,7 @@ function fast_move_mouse()
 {
     DIR=$1
     PIX=$2
-    echo "$DIR$PIX" > $MOUSE_DEVICE
+    echo "$DIR $PIX" > $MOUSE_DEVICE
 }
 
 

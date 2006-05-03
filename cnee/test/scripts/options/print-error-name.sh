@@ -100,8 +100,6 @@ do
 done
 
 
-
-
 # loop through all errors and run them in a Xnee renaming pipe 
 # Make sure that 2 == 2   
 # after this has been done:  2 --xnee--> BadFont --xnee--> 2
@@ -143,6 +141,8 @@ do
 done
 
 
+echo " ================= 12 "
+
 #
 # negative tests
 #
@@ -151,6 +151,7 @@ do
   ERR_=`echo $i | sed 's,\([-0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[-0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
+  echo $XNEE $LONG_ARG $NAME_
   XNEE_ERR=`$XNEE $LONG_ARG $NAME_`
   STATUS=$?
   check_retval_false $STATUS 0
@@ -162,6 +163,7 @@ do
   fi
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
 
+  echo $XNEE $LONG_ARG $ERR_
   XNEE_ERR_NAME=`$XNEE $LONG_ARG $ERR_`
   STATUS=$?
   check_retval_false $STATUS 0
