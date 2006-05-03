@@ -591,13 +591,13 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "--- xnee_setup_rep_recording  setting rstate \n"));             
   xd->record_setup->rState=NULL; 
 
-  /*
+  
   xnee_verbose((xd, "XSync()\n"));
   XSync  (xd->control, False); 
   xnee_verbose((xd, "XFlush()\n"));
   XFlush (xd->control); 
   XSynchronize(xd->data, True);  
-  */
+  
 
   
   xnee_verbose((xd, "--- xnee_setup_rep_recording enabling async \n"));             
