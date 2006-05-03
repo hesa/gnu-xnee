@@ -80,9 +80,16 @@ xnee_print_error_info (xnee_data *xd)
   while (tmp!=NULL)
     {
       if (tmp!=NULL)
-	fprintf (xd->out_file,"%.2d\t%s\n",i,tmp);
+	{
+	  fprintf (xd->out_file,"%.2d\t%s\n",i,tmp);
+	}
       i++;
       tmp = xnee_print_error_code(i) ; 
+    }
+
+  if (tmp==NULL)
+    {
+      return XNEE_WRONG_PARAMS;
     }
   return XNEE_OK;
 }
@@ -111,6 +118,10 @@ xnee_print_request_info (xnee_data *xd)
 	}
       i++;
       tmp = xnee_print_request(i); 
+    }
+  if (tmp==NULL)
+    {
+      return XNEE_WRONG_PARAMS;
     }
   return XNEE_OK;
 }
@@ -1299,7 +1310,14 @@ xnee_print_data_str(xnee_data *xd, char *tmp, int type)
       else
 	{
 	  data = (char*) xnee_int2data (type, data_nr);
-	  fprintf (stdout, "%s\n", data);
+	  if ( data != NULL)
+	    {
+	      fprintf (stdout, "%s\n", data);
+	    }
+	  else
+	    {
+	      ret = XNEE_WRONG_PARAMS;
+	    }
 	}
     }
   else
@@ -1317,5 +1335,6 @@ xnee_print_data_str(xnee_data *xd, char *tmp, int type)
 	}
     }
   XNEE_VERBOSE_LEAVE_FUNCTION();
+
   return ret;
 }
