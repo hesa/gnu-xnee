@@ -203,7 +203,7 @@ static xnee_option_t cnee_options_impl[] =
     { 
       CNEE_PRINT_REQ_NAME_OPTION_KEY,
       "print-request-name",
-      "prns",
+      "prn",
       "<req>", 
       "Prints X11 request number or name  coresponding to req", 
       XNEE_GENERAL_OPTION,
@@ -418,51 +418,51 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_PRINT_E_NAMES_OPTION_KEY:     
       verbose_option("CNEE_PRINT_E_NAMES_OPTION_KEY");
-      xnee_print_event_info(xd);
-      ret = XNEE_OK_LEAVE;
+      ret = xnee_print_event_info(xd);
+      if (ret==XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_PRINT_E_NAME_OPTION_KEY:      
       verbose_option("CNEE_PRINT_E_NAME_OPTION_KEY");
-      xnee_print_data_str(xd, opt_and_args[1], XNEE_EVENT);
-      ret = XNEE_OK_LEAVE;
+      ret = xnee_print_data_str(xd, opt_and_args[1], XNEE_EVENT);
+      if (ret==XNEE_OK) ret = XNEE_OK_LEAVE;
       *args_used = 1;
       break;
 
     case CNEE_PRINT_ERR_NAMES_OPTION_KEY:   
       verbose_option("CNEE_PRINT_ERR_NAMES_OPTION_KEY");
-      xnee_print_error_info(xd);
-      ret = XNEE_OK_LEAVE;
+      ret = xnee_print_error_info(xd);
+      if (ret == XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_PRINT_ERR_NAME_OPTION_KEY:    
       verbose_option("CNEE_PRINT_ERR_NAME_OPTION_KEY");
-      xnee_print_data_str(xd, opt_and_args[1], XNEE_ERROR);
-      ret = XNEE_OK_LEAVE;
+      ret = xnee_print_data_str(xd, opt_and_args[1], XNEE_ERROR);
+      if (ret == XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_PRINT_REP_NAMES_OPTION_KEY:   
       verbose_option("CNEE_PRINT_REP_NAMES_OPTION_KEY");
-      xnee_print_reply_info(xd);
-      ret = XNEE_OK_LEAVE;
+      ret = xnee_print_reply_info(xd);
+      if (ret == XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_PRINT_REQ_NAMES_OPTION_KEY:   
       verbose_option("CNEE_PRINT_REQ_NAMES_OPTION_KEY");
-      xnee_print_request_info(xd);
-      ret = XNEE_OK_LEAVE;
+      ret = xnee_print_request_info(xd);
+      if (ret == XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_PRINT_REQ_NAME_OPTION_KEY:    
       verbose_option("CNEE_PRINT_REQ_NAME_OPTION_KEY");
-      xnee_print_data_str(xd, opt_and_args[1], XNEE_REQUEST);
-      ret = XNEE_OK_LEAVE;
+      ret = xnee_print_data_str(xd, opt_and_args[1], XNEE_REQUEST);
+      if (ret == XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_PRINT_DATA_NAMES_OPTION_KEY:  
       verbose_option("CNEE_PRINT_DATA_NAMES_OPTION_KEY");
-      xnee_print_data_info (xd) ;
-      ret = XNEE_OK_LEAVE;
+      ret = xnee_print_data_info (xd) ;
+      if (ret == XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
 
     case CNEE_RETYPE_FILE_OPTION_KEY:       
@@ -520,7 +520,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 {                                         
 
   int i ;
-  int ret;
+  int ret = XNEE_WRONG_PARAMS;
   const char *descr;
   const char *err;
   int entry ;
@@ -537,6 +537,10 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  continue;
 	}
       else if ( ret == XNEE_OK_LEAVE)
+	{
+	  return ret;
+	}
+      else if ( ret == XNEE_WRONG_PARAMS)
 	{
 	  return ret;
 	}

@@ -32,27 +32,21 @@
 void
 cnee_handle_err(xnee_data *xd, int error)
 {
-  int ret;
   const char *err;
   const char *descr;
 
 
   if ( error != XNEE_OK_LEAVE )
     {
-      err   = xnee_get_err_description(ret);
-      descr = xnee_get_err_solution(ret);
+      err   = xnee_get_err_description(error);
+      descr = xnee_get_err_solution(error);
       
-      fprintf (stderr, "Error number: %d\n", ret);
+      fprintf (stderr, "Error number: %d\n", error);
       fprintf (stderr, "  Error:      %s\n", err);
       fprintf (stderr, "  Solution:   %s\n", descr);
-      ret = XNEE_OK;
-    }
-  else
-    {
-      return;
     }
   xnee_close_down(xd);
-  exit(ret);
+  exit(error);
 }
 
 
