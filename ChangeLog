@@ -1,3 +1,29 @@
+2006-05-04  Henrik Sandklef  <hesa@localhost.localdomain>
+
+	* Makefile.am
+
+	Added ChangeLog to dist
+	
+	* libxnee/src/print.c
+
+	Handles faulty input values
+	
+	* libxnee/src/xnee_replay.c
+
+	Reintroduced calls to XSync
+	
+	* cnee/src/main.c
+
+	Error handle handles correct error
+	
+	* cnee/src/parse.c
+
+	Leaving cnee efter printed data (using --print-xxx)
+
+	* cnee/test
+
+	Various test script fixes
+
 2006-04-07  Henrik Sandklef  <hesa@localhost.localdomain>
 
 	* cnee/src/cnee_printer.c
