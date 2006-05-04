@@ -18,27 +18,14 @@ CLEANFILES = xnee.acs  xnee.cvs  xnee.mss  xnee.prs \
              */*.png */*.eps */*.pdf *.png *.eps *.pdf 
 
 
-
-
-IMG_DIA = xndetail.dia xngener.dia xnrec.dia xnrep.dia xnswinp.dia 
+IMG_DIA = pics/xndetail.dia pics/xngener.dia pics/xnrec.dia pics/xnrep.dia pics/xnswinp.dia 
 IMG_EPS = xndetail.eps xngener.eps xnrec.eps xnrep.eps xnswinp.eps 
 IMG_PDF = xndetail.pdf xngener.pdf xnrec.pdf xnrep.pdf xnswinp.pdf 
 IMG_PNG = xndetail.png xngener.png xnrec.png xnrep.png xnswinp.png
 IMG_JPG = xndetail.jpg xngener.jpg xnrec.jpg xnrep.jpg xnswinp.jpg
 
-GEN_IMAGES = ${IMG_EPS} ${IMG_PDF} ${IMG_PNG} ${IMG_JPG}
-SRC_IMAGES = ${IMG_DIA}
-##	
-##  ALL
-##
-
-doc: html pdf ps txt
-
-
-images: ${SRC_IMAGES} ${GEN_IMAGES}
-
-%.jpg: %.eps
-
+GEN_IMAGES = $(IMG_EPS) $(IMG_PDF) $(IMG_PNG) $(IMG_JPG)
+MANUALS = xnee.html xnee.pdf xnee.ps xnee.txt
 
 
 
@@ -46,20 +33,9 @@ images: ${SRC_IMAGES} ${GEN_IMAGES}
 ## Other documentation formats.  ##
 ## ----------------------------- ##
 
-html: xnee.html 
-
-pdf:  xnee.pdf 
-
-info: xnee.info 
-
-txt:  xnee.txt  
-
-ps:   xnee.ps 
-
-
 
 # HTML
-xnee.html: xnee.texi images
+xnee.html: xnee.texi $(GEN_IMAGES)
 	$(TEXI2HTML) $(TEXI2HTML_FLAGS) $(srcdir)/xnee.texi
 
 
@@ -68,12 +44,12 @@ xnee.html: xnee.texi images
 #	-$(TEXI2DVI) --pdf --batch $(srcdir)/xnee.texi
 
 # PDF for Debian
-xnee.pdf: xnee.ps 
+xnee.pdf: xnee.ps $(GEN_IMAGES)
 	$(PS2PDF)  $(srcdir)/xnee.ps
 
 
 # DVI
-xnee.dvi: images
+xnee.dvi: $(GEN_IMAGES)
 	$(TEXI2DVI) --batch $(srcdir)/xnee.texi
 
 
@@ -82,9 +58,40 @@ xnee.dvi: images
 #	pdf2ps $(srcdir)/xnee.pdf
 
 # PS for Debian
-xnee.ps: xnee.dvi
+xnee.ps: xnee.dvi $(GEN_IMAGES)
 	$(DVI2PS) -c xnee.ps $(srcdir)/xnee.dvi
 
+
+
+
+%.eps:%.dia
+	echo "creating EPS"
+	$(DIA) --nosplash -e $@ $<
+
+%.pdf: %.eps
+	echo "creating PDF"
+	$(EPSTOPDF) --outfile $@ $<
+
+%.png: %.eps
+	echo "creating PNG"
+	$(CONVERT) -density 144x144 $< $@ 
+	( mv $@ `echo $@ | sed 's,\.png,_big\.png,g'` )
+	$(CONVERT) -density 32x32 $< $@ 
+	( mv $@ `echo $@ | sed 's,\.png,_small\.png,g'` )
+	$(CONVERT) -density 60x60 $< $@ 
+%.jpg: %.eps
+	echo "creating JPG"
+	$(CONVERT) -density 144x144 $< $@ 
+	( mv $@ `echo $@ | sed 's,\.jpg,_big\.jpg,g'` )
+	$(CONVERT) -density 32x32 $< $@ 
+	( mv $@ `echo $@ | sed 's,\.jpg,_small\.jpg,g'` )
+	$(CONVERT) -density 60x60 $< $@ 
+
+
+${IMG_EPS}: ${IMG_DIA}
+${IMG_PDF}: ${IMG_EPS} 
+${IMG_PNG}: ${IMG_EPS}
+${IMG_JPG}: ${IMG_EPS}
 
 
 api-doc: xnee.dox 
@@ -100,30 +107,10 @@ api-doc: xnee.dox
 xnee.txt:
 	$(MAKEINFO) -o xnee.txt --no-headers --no-split --no-validate xnee.texi
 
+manual: $(MANUALS)
+all: $(GEN_IMAGES) 
+default: all
 
-all: doc
 
-#all: ${SRC_IMAGES} ${GEN_IMAGES}
-
-${IMG_EPS}: %.eps: %.dia
-	$(DIA) --nosplash -e $@ $<
-
-${IMG_PDF}: %.pdf: %.eps
-	$(EPSTOPDF) --outfile $@ $<
-
-${IMG_PNG}: %.png: %.eps
-	$(CONVERT) -density 144x144 $< $@ 
-	( mv $@ `echo $@ | sed 's,\.png,_big\.png,g'` )
-	$(CONVERT) -density 32x32 $< $@ 
-	( mv $@ `echo $@ | sed 's,\.png,_small\.png,g'` )
-	$(CONVERT) -density 60x60 $< $@ 
-
-${IMG_JPG}: %.jpg: %.eps
-	$(CONVERT) -density 144x144 $< $@ 
-	( mv $@ `echo $@ | sed 's,\.jpg,_big\.jpg,g'` )
-	$(CONVERT) -density 32x32 $< $@ 
-	( mv $@ `echo $@ | sed 's,\.jpg,_small\.jpg,g'` )
-	$(CONVERT) -density 60x60 $< $@ 
-
-clean:
-	\rm -f ${GEN_IMAGES} *_big.* *_small.*
+clean:  
+	\rm -f *.pdf *.ps *.jpg *.png *.info
