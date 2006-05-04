@@ -1,8 +1,30 @@
-2006-05-04  Henrik Sandklef  <hesa@localhost.localdomain>
+2006-05-04  Henrik Sandklef  <hesa@gnu.org>
+
+	* configure.in
+
+	Added libxnee/test/Makefile for generation
+
+	* doc/Makefile.am
+
+	Better handling of various manual formats 
+
+	* cnee/src/cnee_demo.c
+
+	Made printout look more nice
+
+	* libxnee/Makefile.am
+
+	Excluded libxnee.a from dist
 
 	* Makefile.am
 
+	Added libxnee/test to dist
 	Added ChangeLog to dist
+	Altered manual rule
+	
+	* libxnee/src/xnee_resource.c
+
+	Deleted obsoleted code
 	
 	* libxnee/src/print.c
 
