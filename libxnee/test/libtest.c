@@ -36,12 +36,14 @@ int test_datastrings()
   char tmp[32];
 
   /*****************************************/
+  printf ("\n Test 1: ");
   test_succ=0;
   test_fail=0;
   for (nr=1;xnee_print_request(nr)!=NULL;nr++)
     {
        char *rec_name = xnee_int2request(nr);
        int received   = xnee_request2int(rec_name);
+       printf (".");
        if (received!=nr)
        {
           fprintf (stdout,"\t%.2d --> %20s --> %d \n",
@@ -57,10 +59,12 @@ int test_datastrings()
     }
 
 
+  printf ("\n Test 2: ");
   for (nr=2;xnee_print_event(nr)!=NULL;nr++)
   {
        char *rec_name = xnee_int2event(nr);
        int received   = xnee_event2int(rec_name);
+       printf (".");
        if (received!=nr)
        {
           fprintf (stdout,"\t%.2d --> %20s --> %d \n",
@@ -75,10 +79,12 @@ int test_datastrings()
        }
   }
   
+  printf ("\n Test 3: ");
   for (nr=2;xnee_int2error(nr)!=NULL;nr++)
   {
      char *rec_name = xnee_int2error(nr);
      int received   = xnee_error2int(rec_name);
+     printf (".");
      if (received!=nr)
      {
         fprintf (stdout,"\t%.2d --> %20s --> %d \n",
@@ -103,18 +109,24 @@ int test_xnee_data()
   int i ; 
   int ret;
 
+  printf ("\nPreparing Test 4: ");
   /* Set the signal handler the libxnee's built in */ 
   (void) signal (SIGINT, signal_handler); 
+  printf (".");
   
 
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
+  printf (".");
 
   /* Set the program name */
   xnee_set_program_name (xd, "libtest");
+  printf (".");
 
   /* Set the cli parameters */
   xnee_set_application_parameters (xd, NULL);
+  printf (".");
+
 
   if (xd!=NULL)
     {
@@ -125,9 +137,12 @@ int test_xnee_data()
       fprintf (stdout, "failed to alloc xnee_data\n");
       global_fail++;
     }
+  printf (".");
 
-  for (i=0;i<100;i++)
+  printf ("\n Test 4: ");
+  for (i=0;i<10;i++)
   {
+    printf (".");
     xnee_set_verbose(xd);
 
     xnee_set_out_name (xd, "/tmp/libtest.xns") ; 
@@ -177,8 +192,10 @@ int test_xnee_data()
       }
   }
   
-  for (i=0;i<100;i++)
+  printf ("\n Test 5: ");
+  for (i=0;i<10;i++)
   {
+    printf (".");
     xnee_set_verbose(xd);
 
     xnee_set_out_name (xd, "/tmp/libtest.xns") ;
@@ -225,7 +242,7 @@ int test_xnee_data()
       }
   }
   
-  
+  printf ("\n");
 }
 
 
