@@ -1,12 +1,6 @@
 AUTOMAKE_OPTIONS = gnu
 
-lib_LIBRARIES = libxnee.a
-
-# Hmm, this really should work.
-# I want to exclude libxnee.a from getting installed
-#
-#     noinst_LIBRARIES = libxnee.a
-
+noinst_LIBRARIES = libxnee.a
 
 libxnee_a_SOURCES = xnee.c  \
 	print.c  \
