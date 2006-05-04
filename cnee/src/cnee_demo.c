@@ -28,10 +28,12 @@
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_resource.h"
 
+#include "parse.h"
 #include "cnee_strings.h"
 
 
 #define CNEE_DEMO_DELAYED_START 3
+xnee_option_t *cnee_options ;
 
 static char *
 cnee_get_default_filename()
@@ -183,16 +185,13 @@ cnee_demonstration (xnee_data *xd)
   fprintf (stderr, "By the way, you can find the recorded file here:\n\t%s\n",
 	   file);
   fprintf (stderr, "To replay that file again, type the following command\n");
-  /*
+
   fprintf (stderr, 
 	   "\t"
 	   XNEE_CLI " --%s --%s %s\n", 
-	   CNEE_REPLAY_OPTION_LONG,
-	   CNEE_FILE_OPTION_LONG,
+	   xnee_key2string(xd, cnee_options, CNEE_REPLAY_OPTION_KEY),
+	   xnee_key2string(xd, cnee_options, CNEE_FILE_OPTION_KEY),
 	   file);
-  */
-
-  fprintf (stderr, "GET RID OF THIS PRINTOUT ....\n");
 
   xnee_free (file);
 
