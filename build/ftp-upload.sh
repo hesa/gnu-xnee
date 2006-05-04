@@ -54,6 +54,8 @@ upload()
 
     log "Start an ftp session:"
     echo "          ftp ftp-upload.gnu.org"
+    echo "User: anonymous"
+
 
     log "Type the following commands:"
     if [ "$ALPHA" = "true" ];
