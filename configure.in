@@ -373,7 +373,7 @@ fi
 
 if test x$buildlib = xtrue ; 
 then
-        AC_OUTPUT([ libxnee/Makefile libxnee/src/Makefile ])
+        AC_OUTPUT([ libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile ])
 fi
 
 if test x$buildcli = xtrue ; 
