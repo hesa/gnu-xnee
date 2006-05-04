@@ -36,7 +36,7 @@ devel-doc:
 
 
 manual: 
-	cd ./doc/ && $(MAKE) all
+	cd ./doc/ && $(MAKE) all manual
 
 man:
 	cd ./cnee/src && make man
