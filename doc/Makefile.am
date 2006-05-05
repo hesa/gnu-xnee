@@ -18,7 +18,7 @@ CLEANFILES = xnee.acs  xnee.cvs  xnee.mss  xnee.prs \
              */*.png */*.eps */*.pdf *.png *.eps *.pdf 
 
 
-IMG_DIA = pics/xndetail.dia pics/xngener.dia pics/xnrec.dia pics/xnrep.dia pics/xnswinp.dia 
+IMG_DIA = xndetail.dia xngener.dia xnrec.dia xnrep.dia xnswinp.dia 
 IMG_EPS = xndetail.eps xngener.eps xnrec.eps xnrep.eps xnswinp.eps 
 IMG_PDF = xndetail.pdf xngener.pdf xnrec.pdf xnrep.pdf xnswinp.pdf 
 IMG_PNG = xndetail.png xngener.png xnrec.png xnrep.png xnswinp.png
