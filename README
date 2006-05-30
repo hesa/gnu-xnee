@@ -1,7 +1,9 @@
 Xnee / README
 -------------
 
-Xnee is a GNU package. For more information about GNU, please visit 
+Xnee is a GNU package. 
+
+For more information about GNU, please visit 
 	http://www.gnu.org
 
 
@@ -18,21 +20,26 @@ A command line program using libxnee
 3) gnee (gnee's not an emulator either)
 A GUI program using libxnee
 
+4) pnee 
+A Gnome Panel Applet
 
 
 
 To build these three programs do the following:
 -----------------------------------------------
 
-libxnee:
-  Go to the directory libxnee and read the INSTALL file
+./configure 
+make
+make install 
 
-xnee:
-  Go to the directory xnee and read the INSTALL file
 
-gnee:
-  Go to the directory gnee and read the INSTALL file
- 
+if you need help on the configure options, do 
+./configure --help
+
+Typically you can:
+   * disable building gnee (--disable-gui) 
+   * disblae building documentation (--disable-doc)
+
 
 
 
