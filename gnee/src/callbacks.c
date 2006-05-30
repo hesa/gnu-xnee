@@ -471,8 +471,8 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
 {
   GtkWidget          *about_box;
   GtkWidget          *about_label_1;
-  GNEE_DEBUG(("on_about1_activate\n"));
   char buf[256];
+  GNEE_DEBUG(("on_about1_activate\n"));
 
   about_box      = lookup_widget(GTK_WIDGET(user_data),
 				 "about_window");

@@ -317,13 +317,13 @@ xnee_client_id (Display *dpy)
 char **
 xnee_str2strptr (char *tmp, int fill_option)
 {
-  char **ret ; 
-  char *blank_ptr1;
-  char *str;
-  ret = NULL; 
   int size=0; 
   int str_size=0 ; 
   int leave = 0;
+  char **ret ; 
+  char *blank_ptr1;
+  char *str;
+  ret = NULL;
 
   while (*tmp)
     {
