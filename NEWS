@@ -1,16 +1,21 @@
 Changes in coming 2.05
 ==============================
 
+  New Options for cnee
+
+     --recall-window-position
+
   New features:
 
      * Handled that windows may be placed differently 
        during replay than during record
 
-     * AUtomake fixes for generated files 
+  Bugs fixed:
 
-  New Options for cnee
+     * Automake fixes for generated files 
 
-     --recall-window-position
+     * Xnee records when gnee window is iconified
+
 
 
 Changes in 2.04

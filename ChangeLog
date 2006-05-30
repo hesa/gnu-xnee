@@ -46,7 +46,7 @@
 
 	Various test script fixes
 
-2006-04-07  Henrik Sandklef  <hesa@localhost.localdomain>
+2006-04-07  Henrik Sandklef  <hesa@gnu.org>
 
 	* cnee/src/cnee_printer.c
 
