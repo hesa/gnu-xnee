@@ -36,7 +36,9 @@ To use this file to record, simply type
 
 @section Xnee Session file
 @cindex  Session file
-The Xnee session files are the printouts from a recorded session following the Xnee File Format. For information and specification on this format read the Xnee File Format chapter.
+The Xnee session files are the printouts from a recorded session
+following the Xnee File Format. For information and specification on
+this format read the Xnee File Format chapter.
 
 
 
@@ -236,9 +238,14 @@ replay-resolution
 @tab  Sets the replay resolution to the string 
 
 @item
-replay-offset
-@tab  int,int
-@tab  Sets the replay offset to (x,y) during replay
+replay-resolution
+@tab  string 
+@tab  Sets the replay resolution to the string 
+
+@item
+recall-window-position
+@tab  
+@tab  Use window position recall during replay
 
 @item
 resolution-adjustment
@@ -408,7 +415,8 @@ Xnee Settings Arguments
 
 
 @end multitable
-time is the time on the server the data was to the recording Xnee client. This time is used to keep the speed intact during replay.
+time is the time on the server the data was to the recording Xnee
+client. This time is used to keep the speed intact during replay.
 
 @subsection Script replay data 
 @cindex   Script replay data 

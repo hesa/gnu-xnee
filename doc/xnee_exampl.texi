@@ -504,6 +504,20 @@ Xnee will now replay the events recorded in the sessions file
 7 from the y coordinate. 
 
 
+@subsection Using a window position recall
+@cindex     Using a window position recall
+For some reason a replayed window may pop up at a different position
+as when recorded. Xnee can try to solve this by adding the
+@code{recall-window-position} option during replay.
+@example
+@code{cnee --replay --file mouse-rec.xnl \ }
+@code{--recall-window-position}
+@end example
+If a window pops up at a different position when replaying (as whe
+recorded) Xnee moves the new window to the same position as when
+recorded.
+
+
 @subsection Using no resolution translation
 @cindex     Using no resolution translation
 If a session was recorded on a screen with another resolution than the
