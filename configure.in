@@ -1,8 +1,8 @@
-AC_INIT(Xnee,2.04.99,bug-xnee@gnu.org)
+AC_INIT(Xnee,2.05,bug-xnee@gnu.org)
 
 AC_CONFIG_AUX_DIR(./autotools/)
 
-AM_INIT_AUTOMAKE(Xnee,2.04.99)
+AM_INIT_AUTOMAKE(Xnee,2.05)
 
 
 AC_PROG_INSTALL
