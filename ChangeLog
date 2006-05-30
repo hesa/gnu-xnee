@@ -1,3 +1,19 @@
+2006-05-30  Henrik Sandklef  <hesa@gnu.org>
+
+	* README
+
+	Corrected build documentation
+
+	* gnee/src/callbacks.c	
+	* src/xnee_utils.c
+
+	All decls after defs
+	
+	* doc/xnee_proto.texi
+	* doc/xnee_example.texi
+
+	Added doc for recall window position
+	
 2006-05-04  Henrik Sandklef  <hesa@gnu.org>
 
 	* configure.in
