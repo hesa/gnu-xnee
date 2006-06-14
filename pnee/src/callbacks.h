@@ -13,6 +13,9 @@ pnee_set_err_file(char *filename);
 char *
 pnee_get_default_filename();
 
+char *
+pnee_get_default_err_name();
+
 void
 on_setting_ok_clicked                  (GtkButton       *button,
                                         gpointer         user_data);

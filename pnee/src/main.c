@@ -5,6 +5,7 @@
 #include <gtk/gtkimage.h>
 #include <gtk/gtkimage.h>
 
+/* #define FAKED_MAIN */
 #include <panel-applet.h>
 
 #include "xnee_panel.h"
@@ -40,13 +41,13 @@ static const char Context_menu_xml [] =
    "   <menuitem name=\"Record Item\" "
    "             verb=\"Record\" "
    "           _label=\"_Record session...\"\n"
-   "          pixtype=\"apps\" "
-   "          pixname=\"xnee-stop\"/>\n"
+   "          pixtype=\"stock\" "
+   "          pixname=\"gtk-media-record\"/>\n"
    "   <menuitem name=\"Replay Item\" "
    "             verb=\"Replay\" "
    "           _label=\"_Replay session...\"\n"
    "          pixtype=\"stock\" "
-   "          pixname=\"xnee-start\"/>\n"
+   "          pixname=\"gtk-media-play\"/>\n"
    "   <menuitem name=\"Properties Item\" "
    "             verb=\"Properties\" "
    "           _label=\"_Preferences...\"\n"
@@ -114,26 +115,17 @@ pnee_setup()
 int
 pnee_prepare_record()
 {
-  int ret;
-  GtkEntry *file_text ; 
-  char *str;
-
   pnee_setup();
 
   XNEE_VERBOSE_ENTER_FUNCTION();
 
-  fprintf (stderr, "hejsan 3\n");
-
   xnee_parse_range (xd, XNEE_DEVICE_EVENT,  
 		      "KeyPress-MotionNotify"); 
-  fprintf (stderr, "hejsan 20\n");
-
   xnee_set_events_max (xd, 200);
   xnee_set_data_max (xd, 200);
   xnee_set_recorder(xd);
   xnee_prepare(xd);
 
-  fprintf (stderr, "hejsan 10\n");
   XNEE_VERBOSE_LEAVE_FUNCTION();
   return 0;
 }
@@ -141,7 +133,6 @@ pnee_prepare_record()
 int
 pnee_prepare_replay()
 {
-  int ret;
   gchar * my_file;
   GtkFileChooserButton *file_text ; 
   
@@ -172,9 +163,19 @@ pnee_prepare_replay()
 
 
 int
-display_about_dialog()
+display_about_dialog(void)
 {
+  static GtkWidget *pnee_about = NULL ;
   XNEE_VERBOSE_ENTER_FUNCTION();
+
+  if ( pnee_about == NULL)
+    {
+      pnee_about = create_pnee_about();
+    }
+
+  gtk_widget_show (pnee_about);
+
+
   XNEE_VERBOSE_LEAVE_FUNCTION();
   return 0;
 }
@@ -222,6 +223,7 @@ display_properties_dialog()
   return 0;
 }
 
+#ifndef FAKED_MAIN
 static const BonoboUIVerb myexample_menu_verbs [] = {
         BONOBO_UI_VERB ("Record", pnee_start_recording),
         BONOBO_UI_VERB ("Replay", pnee_start_replaying),
@@ -229,7 +231,7 @@ static const BonoboUIVerb myexample_menu_verbs [] = {
         BONOBO_UI_VERB ("About", display_about_dialog),
         BONOBO_UI_VERB_END
 };
-
+#endif
 
 static gboolean
 on_button_press (GtkWidget      *event_box, 
@@ -275,7 +277,7 @@ on_button_press (GtkWidget      *event_box,
 }
 
 
-
+#ifndef FAKED_MAIN
 static gboolean
 myexample_applet_fill (PanelApplet *applet,
 		       const gchar *iid,
@@ -284,7 +286,7 @@ myexample_applet_fill (PanelApplet *applet,
   GtkWidget *label;
   
   XNEE_VERBOSE_ENTER_FUNCTION();
-  if (strcmp (iid, "OAFIID:ExampleApplet") != 0)
+  if (strcmp (iid, "OAFIID:pnee") != 0)
     {
       return FALSE;
     }
@@ -302,9 +304,8 @@ myexample_applet_fill (PanelApplet *applet,
   XNEE_VERBOSE_LEAVE_FUNCTION();
   return TRUE;
 }
+#endif
 
-
-#define FAKED_MAIN
 #ifdef FAKED_MAIN
 int
 read_cmd()
@@ -340,7 +341,7 @@ main (int argc, char *argv[])
 }
 
 #else
-PANEL_APPLET_BONOBO_FACTORY ("OAFIID:XneeApplet_Factory",
+PANEL_APPLET_BONOBO_FACTORY ("OAFIID:pnee_Factory",
                              PANEL_TYPE_APPLET,
                              "The Xnee Applet",
                              "0",
