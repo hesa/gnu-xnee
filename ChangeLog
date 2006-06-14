@@ -1,3 +1,19 @@
+2006-06-14  Henrik Sandklef  <hesa@gnu.org>
+	
+	* configure.in 
+	* Makefile.am
+	* Makefile.cvs
+	
+	Support for Gnome Panel Applet
+
+	* gnee/src/support.h 
+	* gnee/src/interface.h 
+	* gnee/src/interface.c 
+	* gnee/src/callbacks.c 
+	* gnee/gnee.glade 
+
+       Replace About window with new one
+	
 2006-05-30  Henrik Sandklef  <hesa@gnu.org>
 
 	* README
