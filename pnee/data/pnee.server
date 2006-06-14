@@ -1,0 +1,26 @@
+<oaf_info>
+<oaf_server iid="OAFIID:pnee_Factory" type="exe"
+            location="/usr/lib/gnome-panel/pnee">
+
+        <oaf_attribute name="repo_ids" type="stringv">
+                <item value="IDL:Bonobo/GenericFactory:1.0"/>
+                <item value="IDL:Bonobo/Unknown:1.0"/>
+        </oaf_attribute>
+        <oaf_attribute name="name" type="string" value="pnee - X11 Event Recorder/Replayer"/>
+        <oaf_attribute name="description" type="string" value="Factory to create the Xnee applet"/>
+</oaf_server>
+
+<oaf_server iid="OAFIID:pnee" type="factory"
+            location="OAFIID:pnee_Factory">
+
+        <oaf_attribute name="repo_ids" type="stringv">
+                <item value="IDL:GNOME/Vertigo/PanelAppletShell:1.0"/>
+                <item value="IDL:Bonobo/Control:1.0"/>
+                <item value="IDL:Bonobo/Unknown:1.0"/>
+        </oaf_attribute>
+        <oaf_attribute name="name" type="string" value="Pnee - X Event Recorder/Replayer"/>
+        <oaf_attribute name="description" type="string" value="An example applet 2"/>
+        <oaf_attribute name="panel:category" type="string" value="Amusements"/>
+        <oaf_attribute name="panel:icon" type="string" value="xnee-stop.png"/>
+</oaf_server>
+</oaf_info>
