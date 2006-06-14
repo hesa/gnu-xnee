@@ -475,11 +475,11 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
   GNEE_DEBUG(("on_about1_activate\n"));
 
   about_box      = lookup_widget(GTK_WIDGET(user_data),
-				 "about_window");
+				 "gnee_about");
 
   if (about_box==NULL)
     {
-      about_box = create_about_window();
+      about_box = create_gnee_about();
     }
 
   about_label_1 = lookup_widget(GTK_WIDGET(about_box),
@@ -883,11 +883,11 @@ on_about_ok_button_clicked             (GtkButton       *button,
 
   GNEE_DEBUG(("on_about_ok\n"));
   about_box      = lookup_widget(GTK_WIDGET(user_data),
-				 "about_window");
+				 "gnee_about");
   
 
   if (about_box==NULL)
-    about_box = create_about_window();
+    about_box = create_gnee_about();
 
   gtk_widget_hide (about_box);
   
@@ -1550,7 +1550,7 @@ on_button5_clicked                     (GtkButton       *button,
     
   if (user_data)
     {
-      window = lookup_widget(user_data, "about_window");
+      window = lookup_widget(user_data, "gnee_about");
     }
 
   if (window)

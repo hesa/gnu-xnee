@@ -4,5 +4,5 @@
 
 GtkWidget* create_gnee_window (void);
 GtkWidget* create_fileselection1 (void);
-GtkWidget* create_about_window (void);
 GtkWidget* create_dialog1 (void);
+GtkWidget* create_gnee_about (void);
