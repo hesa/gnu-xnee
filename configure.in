@@ -234,7 +234,7 @@ dnl	AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [The gettext package]
 	dnl Add the languages which your application supports here.
 dnl	ALL_LINGUAS=""
 dnl	AM_GLIB_GNU_GETTEXT
-		GUI_DIR=gnee
+	GUI_DIR=gnee
 
 else
 	GUI_DIR=
@@ -259,7 +259,7 @@ dnl	AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [The gettext package]
 	dnl Add the languages which your application supports here.
 dnl	ALL_LINGUAS=""
 dnl	AM_GLIB_GNU_GETTEXT
-		GNOME_APPLET_DIR=pnee
+	GNOME_APPLET_DIR=pnee
 
 else
 	GNOME_APPLET_DIR=
@@ -423,11 +423,12 @@ fi
 if test x$buildgapplet = xtrue ; 
 then
 #	IT_PROG_INTLTOOL
-	AC_PROG_INTLTOOL([0.34])
+#	AC_PROG_INTLTOOL([0.34])
+	AC_PROG_INTLTOOL
 	PANEL_FLAGS=`pkg-config  --cflags libpanelapplet-2.0`
 	PANEL_LD_FLAGS=`pkg-config  --libs libpanelapplet-2.0`
 	AC_PATH_PROG(GCONFTOOL, gconftool-2)
-	AM_GCONF_SOURCE_2
+#	AM_GCONF_SOURCE_2
 	AC_SUBST(PANEL_FLAGS)
 	AC_SUBST(PANEL_LD_FLAGS)
         AC_OUTPUT([ pnee/Makefile pnee/src/Makefile ])

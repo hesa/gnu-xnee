@@ -11,10 +11,10 @@ EXTRA_DIST = \
 @INTLTOOL_DESKTOP_RULE@
 @INTLTOOL_SCHEMAS_RULE@
 
-INTLTOOL_BUILT = \
-        intltool-extract \
-        intltool-merge \
-        intltool-update
+#INTLTOOL_BUILT = \
+#        intltool-extract \
+#        intltool-merge \
+#        intltool-update
 
 Applicationsdir = $(datadir)/applications
 Applications_in_files = pnee.desktop.in 
