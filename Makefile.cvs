@@ -1,4 +1,7 @@
 generate:
+	@echo "*** intltoolize (in pnee) ** "
+	cd pnee && intltoolize --automake  --copy --force
+
 	@echo "*** Retrieving configure tests needed by configure.in"
 	@aclocal -I ./autotools/
 	@ # echo "*** Scanning for include statements"
@@ -12,6 +15,7 @@ generate:
 	@-rm -f config.cache config.h
 	@echo "*** Create date/time stamp"
 	@touch stamp-h.in
+
 	@echo "*** Finished"
 	@echo "    Don't forget to run ./configure"
 	@echo "    If you haven't done so in a while, run ./configure --help"
