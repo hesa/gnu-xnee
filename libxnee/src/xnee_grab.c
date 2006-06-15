@@ -317,7 +317,8 @@ xnee_grab_all_keys (xnee_data* xd)
 	  if (ak.key!=0) 
 	    {
 	      xd->grab_keys->action_keys[i].key = ak.key;
-	      xnee_verbose((xd, "----  xnee_grab_all_keys %d\n",i));
+	      xnee_verbose((xd, "----  xnee_grab_all_keys on key=%d   (%dth one)\n",
+			    xd->grab_keys->action_keys[i].key, i));
 	      xd->grab_keys->grab=XNEE_GRAB_SET;
 	      
 	      XGrabKey (xd->grab,  
@@ -380,100 +381,6 @@ static int     last_modifier_state     = 0 ;
 
 
 
-
-#ifdef USE_OBSOLETE
-static KeyCode mod_kcs[8];
-static int     mod_idx = 0 ;
-
-static int 
-xnee_mod_in_use_sub (xnee_km_tuple *km)
-{
-  int i ;
-  int j ;
-  int found = 0;
-  int nr_of_found = 0;
-  int ret ;
-
-  for (i=0;i<km->kcs_idx;i++)
-    {
-      for (j=0;j<mod_idx;j++)
-	{
-	  if ( 
-	      (km->kcs[i][0]==mod_kcs[j])
-	      ||
-	      (km->kcs[i][1]==mod_kcs[j])
-	      )
-	    {
-	      found = 1;
-	    }
-	}
-      if (found)
-	{
-	  found = 0;
-	  nr_of_found++;
-	}
-    }
-
-  /* No modiifiers pressed at all */
-  if ( mod_idx == 0 )
-    {
-      ret = XNEE_GRAB_NONE_PRESSED ;
-    }
-
-  /* Modifier pressed that is not grabbed by xnee  */
-  else if ( ( mod_idx > nr_of_found ) && (mod_idx>0) )
-    { 
-      ret = XNEE_GRAB_NONE_IN_USE ;
-    }
-
-  /* All modifier pressed that is grabbed by xnee  */
-  else if ( (nr_of_found==km->kcs_idx) && 
-	    ((km->kcs_idx)==mod_idx) && 
-	    (nr_of_found!=0) )
-    {
-      ret = XNEE_GRAB_ALL_IN_USE ;
-    }
-
-  /* Some modifier pressed that is grabbed by xnee  */
-  else if ( nr_of_found!=0 )
-    {
-      ret = XNEE_GRAB_SOME_IN_USE ;
-    }
-  else
-    {
-      ret = XNEE_GRAB_SOME_IN_USE ;
-    }
-
-/*   printf ("   SUB: %d %d %d : RETURN %d \n", nr_of_found, km->kcs_idx, mod_idx, ret);     */
-
-  return ret;
-}
-
-
-static void
-xnee_mod_in_use (xnee_grab_keys *xgk)
-{
-  last_modifier_state = current_modifier_state;
-
-  current_modifier_state = XNEE_GRAB_NONE_PRESSED ;
-
-  current_modifier_state = XNEE_MAX(current_modifier_state,
-			     xnee_mod_in_use_sub (&xgk->stop));
-
-  current_modifier_state = XNEE_MAX(current_modifier_state,
-			     xnee_mod_in_use_sub (&xgk->pause));
-
-  current_modifier_state = XNEE_MAX(current_modifier_state,
-			     xnee_mod_in_use_sub (&xgk->resume));
-
-  current_modifier_state = XNEE_MAX(current_modifier_state,
-			     xnee_mod_in_use_sub (&xgk->insert));
-
-  current_modifier_state = XNEE_MAX(current_modifier_state,
-			     xnee_mod_in_use_sub (&xgk->exec));
-  return ;
-}
-#endif 
 
 static int
 xnee_key_in_use (xnee_grab_keys *xgk, KeyCode kc)

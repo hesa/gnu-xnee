@@ -425,7 +425,6 @@ xnee_check_key(xnee_data *xd)
 		    SyncKeyboard,
 		    CurrentTime);
       XFlush (xd->grab);
-      
 
       if ( XCheckMaskEvent ( xd->grab, 0xffffffff , &ev) == True)
 	{
@@ -678,6 +677,7 @@ xnee_get_action_key (xnee_data     *xd,
   ak->key = XKeysymToKeycode (xd->grab, ks);
   
   xnee_verbose((xd, " <--- xnee_get_action_key %s gives us %d \n", key, ak->key));
+
   return XNEE_OK;
 }
 
@@ -687,7 +687,8 @@ xnee_km_check_not_same(xnee_data *xd, char *str, int start)
 {
   int ret  = 0 ;
   char *tmp_ptr = NULL ; 
-  
+
+
   if (start!=XNEE_GRAB_UNKOWN)
     {
       if (start == XNEE_GRAB_STOP)

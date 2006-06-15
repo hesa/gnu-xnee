@@ -56,6 +56,7 @@ xnee_verbosef (xnee_data *xd, /*@null@*/ char * msg,  ...)
     {
       va_start(ap, msg);
       (void)xd->verbose_fp ( xd->err_file, msg, ap );
+      fflush(xd->err_file);
     }
 }
 
