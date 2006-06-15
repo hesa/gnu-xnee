@@ -63,6 +63,10 @@ pnee_get_default_filename()
   user_name = getlogin();
   if (user_name==NULL)
     {
+      user_name= getenv("USER");
+    }
+  if (user_name==NULL)
+    {
       user_name = (char *) default_user_name; 
     }
   
@@ -110,10 +114,16 @@ pnee_get_default_err_name()
 
   /* set the user name */
   user_name = getlogin();
+  fprintf (stderr, "user_name = '%s'\n", user_name);
+  if (user_name==NULL)
+    {
+      user_name= getenv("USER");
+    }
   if (user_name==NULL)
     {
       user_name = (char *) default_user_name; 
     }
+  fprintf (stderr, "user_name = '%s'\n", user_name);
   
   size = strlen (tmp_dir) + 
     strlen (user_name)    + 
@@ -182,8 +192,7 @@ pnee_set_err_file(char *filename)
 {
   GtkEntry *file_text ; 
   XNEE_VERBOSE_ENTER_FUNCTION();
-  
-/*   xnee_set_err_name (xd, filename); */
+  xnee_set_err_name (xd, filename); 
   XNEE_VERBOSE_LEAVE_FUNCTION();
 }
 

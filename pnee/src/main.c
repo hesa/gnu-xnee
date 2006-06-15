@@ -16,6 +16,7 @@
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_session.h"
+#include "libxnee/xnee_fileop.h"
 
 #ifdef HAVE_CONFIG_H
 #  include <config.h>
@@ -78,7 +79,11 @@ pnee_setup()
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
 
+  default_err_file=pnee_get_default_err_name();
   xnee_set_verbose(xd);
+  pnee_set_err_file (default_err_file);
+  xnee_open_files(xd);
+
   XNEE_VERBOSE_ENTER_FUNCTION();
 
   fs = create_filechooserdialog1();
@@ -99,15 +104,13 @@ pnee_setup()
 
   default_tmp_file=pnee_get_default_filename();
 
-  default_err_file=pnee_get_default_err_name();
-  pnee_set_err_file (default_err_file);
 
   pnee_set_rec_file (default_tmp_file);
   pnee_set_rep_file (default_tmp_file);
 
   free (default_tmp_file);
   free (default_err_file);
-  
+
   XNEE_VERBOSE_LEAVE_FUNCTION();
   return 0;
 }
