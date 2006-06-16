@@ -31,7 +31,7 @@ install-data-local: pnee.server
 	  done \
 	fi
 	mkdir -p $(PANEL_SERVER_DIR)
-	cp pnee.server   $(PANEL_SERVER_DIR)
+	cp pnee.server   $(PANEL_SERVER_DIR)/
 
 dist-hook:
 	if test -d pixmaps; then \

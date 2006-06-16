@@ -20,7 +20,7 @@
         </oaf_attribute>
         <oaf_attribute name="name" type="string" value="Pnee - X Event Recorder/Replayer"/>
         <oaf_attribute name="description" type="string" value="Event recorder and replayer for X11 "/>
-        <oaf_attribute name="panel:category" type="string" value="Amusements"/>
+        <oaf_attribute name="panel:category" type="string" value="Utility"/>
         <oaf_attribute name="panel:icon" type="string" value="xnee-pnee.png"/>
 </oaf_server>
 </oaf_info>

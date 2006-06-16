@@ -5,7 +5,8 @@ Changes in coming 2.06
 
   Build changes:
 
-     * Options for pnee added
+     * configure option for pnee added
+	--enable-gnome-applet
 
   Minor updates
 
