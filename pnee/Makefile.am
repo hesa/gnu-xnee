@@ -1,33 +1,26 @@
 ## Process this file with automake to produce Makefile.in
 
 SUBDIRS = src 
-#po
 
 EXTRA_DIST = \
 	autogen.sh \
 	pnee.glade \
-	pnee.gladep 
+	pnee.gladep \
+        data/pnee.server.in
 
-@INTLTOOL_DESKTOP_RULE@
-@INTLTOOL_SCHEMAS_RULE@
+CLEAN_FILES=pnee.server
 
-#INTLTOOL_BUILT = \
-#        intltool-extract \
-#        intltool-merge \
-#        intltool-update
+clean-local:
+	rm -f pnee.server
 
-Applicationsdir = $(datadir)/applications
-Applications_in_files = pnee.desktop.in 
-Applications_DATA = $(Applications_in_files:.desktop.in=.desktop)
+all: pnee.server
 
-schemadir=$(GCONF_SCHEMA_FILE_DIR)
-schema_DATA=pnee.schemas
+pnee.server: data/pnee.server.in
+	cat data/pnee.server.in | \
+	sed 's,APPLET_DIR,$(PANEL_APPLET_DIR)/pnee,g' \
+	> pnee.server
 
-CLEANFILES=$(Applications_DATA) $(schema_DATA)
-install-schemas:
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) $(GCONFTOOL) --makefile-install-rule $(schema_DATA) || true
-
-install-data-local_sub:
+install-data-local: pnee.server
 	@$(NORMAL_INSTALL)
 	if test -d $(srcdir)/pixmaps; then \
 	  $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/pixmaps; \
@@ -37,10 +30,8 @@ install-data-local_sub:
 	    fi \
 	  done \
 	fi
-
-install-data-local: install-schemas install-data-local_sub
-
-
+	mkdir -p $(PANEL_SERVER_DIR)
+	cp pnee.server   $(PANEL_SERVER_DIR)
 
 dist-hook:
 	if test -d pixmaps; then \
