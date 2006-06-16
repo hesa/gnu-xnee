@@ -242,6 +242,7 @@ fi
 
 if test x$buildgapplet = xtrue ; 
 then
+#	PKG_CHECK_MODULES(GNOME, $GNOME_MODULES)
 		AC_ISC_POSIX
 		AC_PROG_CC
 		AM_PROG_CC_STDC
@@ -252,7 +253,7 @@ then
 				AC_SUBST(PACKAGE_CFLAGS)
 					AC_SUBST(PACKAGE_LIBS)
 
-dnl	GETTEXT_PACKAGE=gnee
+dnl	GETTEXT_PACKAGE=pnee
 dnl	AC_SUBST(GETTEXT_PACKAGE)
 dnl	AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [The gettext package])
 
@@ -305,6 +306,19 @@ then
 fi
 
 
+
+show_doc_program()
+{
+    PROG_VAR_TO_CHECK=$1
+    PROG_TO_CHECK=$2
+    MESS=$3
+    if test "x$PROG_VAR_TO_CHECK" = "x" 
+    then
+	echo "       ***** $PROG_TO_CHECK missing, $MESS"
+    else
+	echo "       $PROG_TO_CHECK  - $PROG_VAR_TO_CHECK"
+    fi
+}
 
 DOC_NOT_BUILT_WARNING=false
 check_program()
@@ -400,37 +414,122 @@ AC_OUTPUT([ examples/Makefile ])
 AC_OUTPUT([ sessions/Makefile ])
 AC_OUTPUT([ share/Makefile ])
 
+EXCLUDED_COMPONENTS=""
+INCLUDED_COMPONENTS=""
+add_excl()
+{
+	EXCLUDED_COMPONENTS="${EXCLUDED_COMPONENTS}\n        $1"
+}
+
+add_incl()
+{
+	INCLUDED_COMPONENTS="${INCLUDED_COMPONENTS}\n        $1"
+}
+
 if test x$doconly = xtrue || test x$builddoc = xtrue  ; 
 then
         AC_OUTPUT([ doc/Makefile ])
+	add_incl "doc"
+else
+	add_excl "doc"
 fi
 
 if test x$buildlib = xtrue ; 
 then
         AC_OUTPUT([ libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile ])
+	add_incl "libxnee"
+else
+	add_excl "libxnee"
 fi
 
 if test x$buildcli = xtrue ; 
 then
         AC_OUTPUT([ cnee/Makefile cnee/src/Makefile ])
+	add_incl "cli"
+else
+	add_excl "cli"
 fi
 
 if test x$buildgui = xtrue ; 
 then
         AC_OUTPUT([ gnee/Makefile gnee/src/Makefile ])
+	add_incl "gnee"
+else
+	add_excl "gnee"
 fi
+
 
 if test x$buildgapplet = xtrue ; 
 then
-#	IT_PROG_INTLTOOL
-#	AC_PROG_INTLTOOL([0.34])
-	AC_PROG_INTLTOOL
-	PANEL_FLAGS=`pkg-config  --cflags libpanelapplet-2.0`
-	PANEL_LD_FLAGS=`pkg-config  --libs libpanelapplet-2.0`
+	AM_GCONF_SOURCE_2
+	PANEL_APPLET_DIR="${libdir}/gnome-panel"
+	PANEL_SERVER_DIR="$(libdir)/bonobo/servers"
+	AC_SUBST(PANEL_SERVER_DIR)
+	AC_SUBST(PANEL_APPLET_DIR)
 	AC_PATH_PROG(GCONFTOOL, gconftool-2)
-#	AM_GCONF_SOURCE_2
+	PANEL_FLAGS=`pkg-config --cflags libpanelapplet-2.0`
+	PANEL_LD_FLAGS=`pkg-config  --libs libpanelapplet-2.0`
 	AC_SUBST(PANEL_FLAGS)
 	AC_SUBST(PANEL_LD_FLAGS)
         AC_OUTPUT([ pnee/Makefile pnee/src/Makefile ])
+	add_incl "pnee"
+else
+	add_excl "pnee"
 fi
+
+
+
+#
+# Final words 
+#
+#
+#
+echo " " 
+echo " " 
+echo " Configuration of Xnee finished "
+echo " ============================== "
+echo " "
+echo "   Xnee Developer flags"
+echo "   -------------------------------------"
+echo "    VERBOSE_FLAG         $VERBOSE_FLAG"
+echo "    GCOV_FLAG            $GCOV_FLAG"
+echo "    GPROF_FLAG           $GPROF_FLAG"
+echo "    BUF_VERBOSE_FLAG     $BUF_VERBOSE_FLAG"
+echo "    PEDANTIC_FLAGS       $PEDANTIC_FLAGS"
+echo "    LIBDL                $LIBDL"
+echo "    LIBSEMA              $LIBSEMA"
+echo "    X11_LIBS             $X11_LIBS"
+echo "    PANEL_SERVER_DIR     $PANEL_SERVER_DIR"
+echo "    PANEL_APPLET_DIR     $PANEL_APPLET_DIR"
+#echo "    GUI_DIR              $GUI_DIR"
+#echo "    GNOME_APPLET_DIR     $GNOME_APPLET_DIR"
+#echo "    CLI_DIR              $CLI_DIR"
+#echo "    LIB_DIR              $LIB_DIR"
+#echo "    DOC_DIR              $DOC_DIR"
+echo " "
+echo "   Programs used to build documentation "
+echo "   -------------------------------------"
+	show_doc_program "$DIA" "dia"  "Can't generate pictures from dia sources"
+	show_doc_program "$TEXI2HTML" "texi2html"  "can not generate html pages"
+	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
+	show_doc_program "$PS2PDF" "ps2pdf"  "can not generate pdf"
+	show_doc_program "$EPSTOPDF" "epstopdf"  "can not generate pdf"
+	show_doc_program "$CONVERT" "convert"  "can not generate convert between formats"
+	show_doc_program "$MAKEINFO" "makeinfo"  "can not make info pages"
+echo ""
+echo "   Building the following components "
+echo "   -------------------------------------"
+printf "    $INCLUDED_COMPONENTS"
+echo " "
+echo " "
+echo "   Excluding the following components "
+echo "   -------------------------------------"
+printf "    $EXCLUDED_COMPONENTS"
+echo " "
+echo " If the settings are not ok, configure again"
+echo "     ./configure <your options>"
+echo " "
+echo " To list all the configure options: "
+echo "     ./configure --help"
+echo " "
 
