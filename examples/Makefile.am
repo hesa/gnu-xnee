@@ -2,6 +2,8 @@ XNEE_DATA_FILES = simple_bash.sh
 EXTRA_DIST = simple_bash.sh.in1 
 pkgdata_DATA = simple_bash.sh
 
+CLEAN_FILES=simple_bash.sh
+
 simple_bash.sh: simple_bash.sh.in1
 	echo "#!" "$(BASH)"                     > simple_bash.sh
 	echo " "                               >> simple_bash.sh 
