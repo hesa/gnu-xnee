@@ -215,18 +215,21 @@ LIB_DIR=
 DOC_DIR=
 GUI_DIR=
 
+if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
+then
+	AC_ISC_POSIX
+	AC_PROG_CC
+	AM_PROG_CC_STDC
+	AC_HEADER_STDC
+	AC_PATH_XTRA
+	pkg_modules="gtk+-2.0 >= 2.0.0"
+	PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
+	AC_SUBST(PACKAGE_CFLAGS)
+	AC_SUBST(PACKAGE_LIBS)
+fi
+
 if test x$buildgui = xtrue ; 
 then
-		AC_ISC_POSIX
-		AC_PROG_CC
-		AM_PROG_CC_STDC
-		AC_HEADER_STDC
-		AC_PATH_XTRA
-		pkg_modules="gtk+-2.0 >= 2.0.0"
-			PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
-				AC_SUBST(PACKAGE_CFLAGS)
-					AC_SUBST(PACKAGE_LIBS)
-
 dnl	GETTEXT_PACKAGE=gnee
 dnl	AC_SUBST(GETTEXT_PACKAGE)
 dnl	AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [The gettext package])
@@ -240,28 +243,17 @@ else
 	GUI_DIR=
 fi
 
-if test x$buildgapplet = xtrue ; 
+if test x$buildgapplet ; 
 then
-#	PKG_CHECK_MODULES(GNOME, $GNOME_MODULES)
-		AC_ISC_POSIX
-		AC_PROG_CC
-		AM_PROG_CC_STDC
-		AC_HEADER_STDC
-		AC_PATH_XTRA
-		pkg_modules="gtk+-2.0 >= 2.0.0"
-			PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
-				AC_SUBST(PACKAGE_CFLAGS)
-					AC_SUBST(PACKAGE_LIBS)
 
 dnl	GETTEXT_PACKAGE=pnee
 dnl	AC_SUBST(GETTEXT_PACKAGE)
 dnl	AC_DEFINE_UNQUOTED(GETTEXT_PACKAGE,"$GETTEXT_PACKAGE", [The gettext package])
 
-	dnl Add the languages which your application supports here.
+dnl Add the languages which your application supports here.
 dnl	ALL_LINGUAS=""
 dnl	AM_GLIB_GNU_GETTEXT
 	GNOME_APPLET_DIR=pnee
-
 else
 	GNOME_APPLET_DIR=
 fi
@@ -463,7 +455,7 @@ if test x$buildgapplet = xtrue ;
 then
 	AM_GCONF_SOURCE_2
 	PANEL_APPLET_DIR="${libdir}/gnome-panel"
-	PANEL_SERVER_DIR="$(libdir)/bonobo/servers"
+	PANEL_SERVER_DIR="${libdir}/bonobo/servers"
 	AC_SUBST(PANEL_SERVER_DIR)
 	AC_SUBST(PANEL_APPLET_DIR)
 	AC_PATH_PROG(GCONFTOOL, gconftool-2)
@@ -507,8 +499,10 @@ echo "    PANEL_APPLET_DIR     $PANEL_APPLET_DIR"
 #echo "    LIB_DIR              $LIB_DIR"
 #echo "    DOC_DIR              $DOC_DIR"
 echo " "
-echo "   Programs used to build documentation "
-echo "   -------------------------------------"
+if test x$builddoc = xtrue ; 
+then
+	echo "   Programs used to build documentation "
+	echo "   -------------------------------------"
 	show_doc_program "$DIA" "dia"  "Can't generate pictures from dia sources"
 	show_doc_program "$TEXI2HTML" "texi2html"  "can not generate html pages"
 	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
@@ -516,6 +510,7 @@ echo "   -------------------------------------"
 	show_doc_program "$EPSTOPDF" "epstopdf"  "can not generate pdf"
 	show_doc_program "$CONVERT" "convert"  "can not generate convert between formats"
 	show_doc_program "$MAKEINFO" "makeinfo"  "can not make info pages"
+fi
 echo ""
 echo "   Building the following components "
 echo "   -------------------------------------"
@@ -525,6 +520,7 @@ echo " "
 echo "   Excluding the following components "
 echo "   -------------------------------------"
 printf "    $EXCLUDED_COMPONENTS"
+echo " "
 echo " "
 echo " If the settings are not ok, configure again"
 echo "     ./configure <your options>"
