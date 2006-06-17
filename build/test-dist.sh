@@ -69,7 +69,7 @@ cd    $BUILD_DIR
 
 
 GUI=--enable-gui
-NO_GUI=--disbable-gui
+NO_GUI=--disable-gui
 CLI=--enable-cli
 NO_CLI=--disable-cli
 APPLET=--enable-gnome-applet
