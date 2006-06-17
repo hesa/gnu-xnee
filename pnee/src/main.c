@@ -8,7 +8,6 @@
 /* #define FAKED_MAIN */
 #include <panel-applet.h>
 
-#include "xnee_panel.h"
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_alloc.h"
 #include "libxnee/print_varargs.h"
@@ -83,6 +82,7 @@ pnee_setup()
   xnee_set_verbose(xd);
   pnee_set_err_file (default_err_file);
   xnee_open_files(xd);
+  xnee_unset_recall_window_pos (xd);
 
   XNEE_VERBOSE_ENTER_FUNCTION();
 
