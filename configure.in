@@ -25,6 +25,7 @@ AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="")])
 AC_CHECK_LIB(c, sem_init, LIBSEMA="", [AC_CHECK_LIB(pthread, sem_init, LIBSEMA="")])
 AC_CHECK_LIB(Xtst, XTestFakeMotionEvent, LIBXTST="-lXtst",[AC_CHECK_LIB(Xext,XTestFakeMotionEvent , LIBXTST="-lXext")])
 
+GENERATION_DIRS=""
 
 if test "x$LIBXTST" = "x" ; 
 then
@@ -400,11 +401,8 @@ AC_SUBST(LIB_DIR)
 AC_SUBST(DOC_DIR)
 AC_SUBST(FOO_DIR)
 
-
-AC_OUTPUT([ Makefile ])
-AC_OUTPUT([ examples/Makefile ])
-AC_OUTPUT([ sessions/Makefile ])
-AC_OUTPUT([ share/Makefile ])
+MAKEFILES_TO_GEN=""
+MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN Makefile examples/Makefile sessions/Makefile share/Makefile"
 
 EXCLUDED_COMPONENTS=""
 INCLUDED_COMPONENTS=""
@@ -420,7 +418,7 @@ add_incl()
 
 if test x$doconly = xtrue || test x$builddoc = xtrue  ; 
 then
-        AC_OUTPUT([ doc/Makefile ])
+	MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN doc/Makefile"
 	add_incl "doc"
 else
 	add_excl "doc"
@@ -436,7 +434,7 @@ fi
 
 if test x$buildcli = xtrue ; 
 then
-        AC_OUTPUT([ cnee/Makefile cnee/src/Makefile ])
+	MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN cnee/Makefile cnee/src/Makefile"
 	add_incl "cli"
 else
 	add_excl "cli"
@@ -444,7 +442,7 @@ fi
 
 if test x$buildgui = xtrue ; 
 then
-        AC_OUTPUT([ gnee/Makefile gnee/src/Makefile ])
+	MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN gnee/Makefile gnee/src/Makefile"
 	add_incl "gnee"
 else
 	add_excl "gnee"
@@ -463,12 +461,15 @@ then
 	PANEL_LD_FLAGS=`pkg-config  --libs libpanelapplet-2.0`
 	AC_SUBST(PANEL_FLAGS)
 	AC_SUBST(PANEL_LD_FLAGS)
-        AC_OUTPUT([ pnee/Makefile pnee/src/Makefile ])
+	MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN pnee/Makefile pnee/src/Makefile"
 	add_incl "pnee"
 else
 	add_excl "pnee"
 fi
 
+echo "Making the following Makefiles:"
+echo "  $MAKEFILES_TO_GEN"
+AC_OUTPUT([ $MAKEFILES_TO_GEN ])
 
 
 #
@@ -519,8 +520,13 @@ echo " "
 echo " "
 echo "   Excluding the following components "
 echo "   -------------------------------------"
+if test x$EXCLUDED_COMPONENTS = x ;
+then
+echo "        no components are excluded from build"
+else
 printf "    $EXCLUDED_COMPONENTS"
 echo " "
+fi
 echo " "
 echo " If the settings are not ok, configure again"
 echo "     ./configure <your options>"
@@ -528,4 +534,10 @@ echo " "
 echo " To list all the configure options: "
 echo "     ./configure --help"
 echo " "
+echo " "
+echo " If the above is ok, proceed with the build:"
+echo "      make"
+echo " and (perhaps as root)"
+echo "      make install"
+
 
