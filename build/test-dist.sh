@@ -63,8 +63,14 @@ cd    $BUILD_DIR
 
 
 config_and_make
+config_and_make --enable-doc-only
+
+
 config_and_make --disable-doc
 config_and_make --enable-gnome-panel
 config_and_make --disable-gui --disable-cli --disable-gnome-panel
-config_and_make --disable-gui --disable-cli --disable-gnome-panel --disable-doc
+config_and_make --disable-gui --enable-cli --disable-gnome-panel --enable-doc
+config_and_make --disable-gui --enable-cli --disable-gnome-panel --disable-doc
+config_and_make --enable-gui --enable-cli --enable-gnome-panel --enable-doc
+config_and_make --enable-gui --enable-cli --enable-gnome-panel --enable-doc
 
