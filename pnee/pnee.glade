@@ -817,7 +817,7 @@
   <property name="destroy_with_parent">False</property>
   <property name="name" translatable="yes">Pnee</property>
   <property name="copyright" translatable="yes">© 2005, 2006 Henrik Sandklef &lt;hesa@gnu.org&gt;</property>
-  <property name="comments" translatable="yes">Pnee is a Gnome Panel Applet for the GNU Xnee project.  </property>
+  <property name="comments" translatable="yes">Pnee is a GNU Xnee Applet  </property>
   <property name="license" translatable="yes">		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
@@ -1160,7 +1160,7 @@ library.  If this is what you want to do, use the GNU Lesser General
 Public License instead of this License.
 </property>
   <property name="wrap_license">False</property>
-  <property name="website">www.gnu.org/software/xnee</property>
+  <property name="website">http://www.gnu.org/software/xnee</property>
   <property name="website_label" translatable="yes"></property>
   <property name="authors">Henrik Sandklef &lt;hesa@gnu.org&gt;</property>
   <property name="documenters">None, 

@@ -34,8 +34,11 @@ exit_if_error()
 
 config_and_make()
 {
-    CONFIG_FLAGS=$1
+    SUB_START_TIME=$(date '+%s')
+    CONFIG_FLAGS=$*
     
+    rm -fr ./$XNEE_DIR/
+
     tar zxvf $XNEE_DIST
     exit_if_error $? " untar the file $XNEE_DIST"
 
@@ -55,6 +58,9 @@ config_and_make()
     exit_if_error $? " make install"
 
     cd -
+    SUB_STOP_TIME=$(date '+%s')
+    echo "   make took $(($SUB_STOP_TIME - $SUB_START_TIME)) seconds"  >> $LOG_FILE 
+    echo " " >> $LOG_FILE 
 }
 
 
@@ -62,15 +68,39 @@ mkdir $BUILD_DIR
 cd    $BUILD_DIR
 
 
-config_and_make
-config_and_make --enable-doc-only
+GUI=--enable-gui
+NO_GUI=--disbable-gui
+CLI=--enable-cli
+NO_CLI=--disable-cli
+APPLET=--enable-gnome-applet
+NO_APPLET=--disable-gnome-applet
+DOC=--enable-doc
+NO_DOC=--disable-doc
 
+START_TIME=$(date '+%s')
 
-config_and_make --disable-doc
-config_and_make --enable-gnome-panel
-config_and_make --disable-gui --disable-cli --disable-gnome-panel
-config_and_make --disable-gui --enable-cli --disable-gnome-panel --enable-doc
-config_and_make --disable-gui --enable-cli --disable-gnome-panel --disable-doc
-config_and_make --enable-gui --enable-cli --enable-gnome-panel --enable-doc
-config_and_make --enable-gui --enable-cli --enable-gnome-panel --enable-doc
+#config_and_make
+#config_and_make --enable-doc-only
+
+config_and_make   $GUI       $CLI       $APPLET       $DOC
+config_and_make   $GUI       $CLI       $APPLET       $NO_DOC
+config_and_make   $GUI       $CLI       $NO_APPLET    $DOC
+config_and_make   $GUI       $CLI       $NO_APPLET    $NO_DOC
+config_and_make   $GUI       $NO_CLI    $APPLET       $DOC
+config_and_make   $GUI       $NO_CLI    $APPLET       $NO_DOC
+config_and_make   $GUI       $NO_CLI    $NO_APPLET    $DOC
+config_and_make   $GUI       $NO_CLI    $NO_APPLET    $NO_DOC
+config_and_make   $NO_GUI    $CLI       $APPLET       $DOC
+config_and_make   $NO_GUI    $CLI       $APPLET       $NO_DOC
+config_and_make   $NO_GUI    $CLI       $NO_APPLET    $DOC
+config_and_make   $NO_GUI    $CLI       $NO_APPLET    $NO_DOC
+config_and_make   $NO_GUI    $NO_CLI    $APPLET       $DOC
+config_and_make   $NO_GUI    $NO_CLI    $APPLET       $NO_DOC
+config_and_make   $NO_GUI    $NO_CLI    $NO_APPLET    $DOC
+config_and_make   $NO_GUI    $NO_CLI    $NO_APPLET    $NO_DOC
+
+STOP_TIME=$(date '+%s')
+echo "Tested for $(($STOP_TIME - $START_TIME)) seconds"  >> $LOG_FILE
+echo "Tested for $(($STOP_TIME - $START_TIME)) seconds" 
+
 

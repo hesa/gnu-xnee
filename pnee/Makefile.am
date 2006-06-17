@@ -6,7 +6,7 @@ EXTRA_DIST = \
 	autogen.sh \
 	pnee.glade \
 	pnee.gladep \
-        data/pnee.server.in
+        data/pnee.server.in 
 
 CLEAN_FILES=pnee.server
 
