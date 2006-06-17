@@ -203,7 +203,7 @@ int test_xnee_data()
     xnee_parse_range (xd, XNEE_DELIVERED_EVENT,  
 		      "EnterNotify-MappingNotify"); 
     xnee_parse_range (xd, XNEE_REQUEST,  
-		      "1-100"); 
+		      "1-110"); 
      /*
        xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
        "ButtonPress-MotionNotify");
