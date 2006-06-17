@@ -1,3 +1,9 @@
+2006-06-17    <hesa@gnu.org>
+
+	* configure.in: 
+
+	Preventing multiple generation of Makefiles
+
 2006-06-17  Henrik Sandklef  <hesa@gnu.org>
 
 	* pnee/*
