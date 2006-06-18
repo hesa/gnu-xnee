@@ -1,5 +1,10 @@
 
 pnee:
   point to cnee if pnee user want more functionality
-  
+
+
+libxnee:
+
+doc:
+	build doc by default    
 

@@ -16,6 +16,8 @@ BUILD_DIR=.
 LOG_FILE=$(pwd)/build.log
 rm $LOG_FILE
 
+SUCC=0
+
 exit_if_error()
 {
     RET=$1
@@ -29,15 +31,19 @@ exit_if_error()
 	exit
     else
 	printf " Success:   $MESS \n"  >> $LOG_FILE
+	SUCC=$(( $SUCC + 1 ))
     fi
 }
+
 
 config_and_make()
 {
     SUB_START_TIME=$(date '+%s')
+    NR_OF_BUILDS=$(( $NR_OF_BUILDS + 1 ))
     CONFIG_FLAGS=$*
     
     rm -fr ./$XNEE_DIR/
+    exit_if_error $? " removing $XNEE_DIR"
 
     tar zxvf $XNEE_DIST
     exit_if_error $? " untar the file $XNEE_DIST"
@@ -59,7 +65,7 @@ config_and_make()
 
     cd -
     SUB_STOP_TIME=$(date '+%s')
-    echo "   make took $(($SUB_STOP_TIME - $SUB_START_TIME)) seconds"  >> $LOG_FILE 
+    echo "   make (nr $NR_OF_BUILDS, $SUCC tests)  took $(($SUB_STOP_TIME - $SUB_START_TIME)) seconds"  >> $LOG_FILE 
     echo " " >> $LOG_FILE 
 }
 
@@ -76,31 +82,55 @@ APPLET=--enable-gnome-applet
 NO_APPLET=--disable-gnome-applet
 DOC=--enable-doc
 NO_DOC=--disable-doc
+VERB=--enable-verbose
+NO_VERB=--disable-verbose
 
 START_TIME=$(date '+%s')
+NR_OF_BUILDS=0
 
-#config_and_make
-#config_and_make --enable-doc-only
+config_and_make
+config_and_make --enable-doc-only
 
-config_and_make   $GUI       $CLI       $APPLET       $DOC
-config_and_make   $GUI       $CLI       $APPLET       $NO_DOC
-config_and_make   $GUI       $CLI       $NO_APPLET    $DOC
-config_and_make   $GUI       $CLI       $NO_APPLET    $NO_DOC
-config_and_make   $GUI       $NO_CLI    $APPLET       $DOC
-config_and_make   $GUI       $NO_CLI    $APPLET       $NO_DOC
-config_and_make   $GUI       $NO_CLI    $NO_APPLET    $DOC
-config_and_make   $GUI       $NO_CLI    $NO_APPLET    $NO_DOC
-config_and_make   $NO_GUI    $CLI       $APPLET       $DOC
-config_and_make   $NO_GUI    $CLI       $APPLET       $NO_DOC
-config_and_make   $NO_GUI    $CLI       $NO_APPLET    $DOC
-config_and_make   $NO_GUI    $CLI       $NO_APPLET    $NO_DOC
-config_and_make   $NO_GUI    $NO_CLI    $APPLET       $DOC
-config_and_make   $NO_GUI    $NO_CLI    $APPLET       $NO_DOC
-config_and_make   $NO_GUI    $NO_CLI    $NO_APPLET    $DOC
-config_and_make   $NO_GUI    $NO_CLI    $NO_APPLET    $NO_DOC
+config_and_make  $VERB      $GUI       $CLI       $APPLET       $DOC
+config_and_make  $VERB      $GUI       $CLI       $APPLET       $NO_DOC
+config_and_make  $VERB      $GUI       $CLI       $NO_APPLET    $DOC
+config_and_make  $VERB      $GUI       $CLI       $NO_APPLET    $NO_DOC
+config_and_make  $VERB      $GUI       $NO_CLI    $APPLET       $DOC
+config_and_make  $VERB      $GUI       $NO_CLI    $APPLET       $NO_DOC
+config_and_make  $VERB      $GUI       $NO_CLI    $NO_APPLET    $DOC
+config_and_make  $VERB      $GUI       $NO_CLI    $NO_APPLET    $NO_DOC
+config_and_make  $VERB      $NO_GUI    $CLI       $APPLET       $DOC
+config_and_make  $VERB      $NO_GUI    $CLI       $APPLET       $NO_DOC
+config_and_make  $VERB      $NO_GUI    $CLI       $NO_APPLET    $DOC
+config_and_make  $VERB      $NO_GUI    $CLI       $NO_APPLET    $NO_DOC
+config_and_make  $VERB      $NO_GUI    $NO_CLI    $APPLET       $DOC
+config_and_make  $VERB      $NO_GUI    $NO_CLI    $APPLET       $NO_DOC
+config_and_make  $VERB      $NO_GUI    $NO_CLI    $NO_APPLET    $DOC
+config_and_make  $VERB      $NO_GUI    $NO_CLI    $NO_APPLET    $NO_DOC
+config_and_make  $NO_VERB   $GUI       $CLI       $APPLET       $DOC
+config_and_make  $NO_VERB   $GUI       $CLI       $APPLET       $NO_DOC
+config_and_make  $NO_VERB   $GUI       $CLI       $NO_APPLET    $DOC
+config_and_make  $NO_VERB   $GUI       $CLI       $NO_APPLET    $NO_DOC
+config_and_make  $NO_VERB   $GUI       $NO_CLI    $APPLET       $DOC
+config_and_make  $NO_VERB   $GUI       $NO_CLI    $APPLET       $NO_DOC
+config_and_make  $NO_VERB   $GUI       $NO_CLI    $NO_APPLET    $DOC
+config_and_make  $NO_VERB   $GUI       $NO_CLI    $NO_APPLET    $NO_DOC
+config_and_make  $NO_VERB   $NO_GUI    $CLI       $APPLET       $DOC
+config_and_make  $NO_VERB   $NO_GUI    $CLI       $APPLET       $NO_DOC
+config_and_make  $NO_VERB   $NO_GUI    $CLI       $NO_APPLET    $DOC
+config_and_make  $NO_VERB   $NO_GUI    $CLI       $NO_APPLET    $NO_DOC
+config_and_make  $NO_VERB   $NO_GUI    $NO_CLI    $APPLET       $DOC
+config_and_make  $NO_VERB   $NO_GUI    $NO_CLI    $APPLET       $NO_DOC
+config_and_make  $NO_VERB   $NO_GUI    $NO_CLI    $NO_APPLET    $DOC
+config_and_make  $NO_VERB   $NO_GUI    $NO_CLI    $NO_APPLET    $NO_DOC
 
 STOP_TIME=$(date '+%s')
-echo "Tested for $(($STOP_TIME - $START_TIME)) seconds"  >> $LOG_FILE
-echo "Tested for $(($STOP_TIME - $START_TIME)) seconds" 
-
-
+both()
+{
+    echo "$*"
+    echo "$*" >> $LOG_FILE
+}
+both "Tested for $(($STOP_TIME - $START_TIME)) seconds"  
+both "Tested $NR_OF_BUILDS different config/builds"
+both "       sub tests: $SUCC"
+both ".... bye"

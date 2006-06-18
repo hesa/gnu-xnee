@@ -1,8 +1,22 @@
 2006-06-17    <hesa@gnu.org>
 
+	* build/test-dist.sh
+
+	New file
+
+	* libxnee/src/xnee_expr.c
+
+	0 replaced with XNEE_OK
+	
 	* configure.in: 
 
 	Preventing multiple generation of Makefiles
+	Fixed errors in test exprs
+	Updated version number to 2.05.90
+
+	* libxnee/test/libtest.c
+
+	Recording more data
 
 2006-06-17  Henrik Sandklef  <hesa@gnu.org>
 

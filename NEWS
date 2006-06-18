@@ -8,9 +8,14 @@ Changes in coming 2.06
      * configure option for pnee added
 	--enable-gnome-applet
 
+     * New script build/test-dist.sh
+       verifies dist file
+
   Minor updates
 
      * New About window for Gnee
+
+
 
 Changes in 2.05
 ==============================
