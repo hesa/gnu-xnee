@@ -1,7 +1,8 @@
 
 pnee:
   point to cnee if pnee user want more functionality
-
+  
+  handle that user can start replay before recording is finished
 
 libxnee:
 
