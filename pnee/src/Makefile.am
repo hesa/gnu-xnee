@@ -6,9 +6,10 @@ INCLUDES = \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	@PACKAGE_CFLAGS@ -I../../libxnee/include
 
+
 PNEE=pnee
 noinst_PROGRAMS = $(PNEE)
-pnee_CFLAGS = -DHAVE_STDARG $(PANEL_FLAGS) -Wall -g
+pnee_CFLAGS = -DHAVE_STDARG $(PANEL_FLAGS) -Wall -g -DPNEE_PIXDIR=\""$(datadir)/pixmaps/Xnee"\"
 pnee_SOURCES = \
 	main.c \
 	support.c support.h \

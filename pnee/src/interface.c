@@ -449,3 +449,37 @@ create_pnee_about (void)
   return pnee_about;
 }
 
+GtkWidget*
+create_pnee_panel (void)
+{
+  GtkWidget *pnee_panel;
+  GtkWidget *pnee_panel_box;
+  GtkWidget *pnee_panel_img;
+  GtkWidget *pnee_progress;
+
+  pnee_panel = gtk_window_new (GTK_WINDOW_TOPLEVEL);
+  gtk_window_set_title (GTK_WINDOW (pnee_panel), "window1");
+
+  pnee_panel_box = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (pnee_panel_box);
+  gtk_container_add (GTK_CONTAINER (pnee_panel), pnee_panel_box);
+
+  pnee_panel_img = gtk_image_new_from_stock ("gtk-media-record", GTK_ICON_SIZE_BUTTON);
+  gtk_widget_show (pnee_panel_img);
+  gtk_box_pack_start (GTK_BOX (pnee_panel_box), pnee_panel_img, TRUE, TRUE, 0);
+
+  pnee_progress = gtk_progress_bar_new ();
+  gtk_widget_show (pnee_progress);
+  gtk_box_pack_start (GTK_BOX (pnee_panel_box), pnee_progress, FALSE, FALSE, 0);
+  gtk_progress_bar_set_text (GTK_PROGRESS_BAR (pnee_progress), "Xnee Event Recorder and Replayer");
+  gtk_progress_bar_set_ellipsize (GTK_PROGRESS_BAR (pnee_progress), PANGO_ELLIPSIZE_MIDDLE);
+
+  /* Store pointers to all widgets, for use by lookup_widget(). */
+  GLADE_HOOKUP_OBJECT_NO_REF (pnee_panel, pnee_panel, "pnee_panel");
+  GLADE_HOOKUP_OBJECT (pnee_panel, pnee_panel_box, "pnee_panel_box");
+  GLADE_HOOKUP_OBJECT (pnee_panel, pnee_panel_img, "pnee_panel_img");
+  GLADE_HOOKUP_OBJECT (pnee_panel, pnee_progress, "pnee_progress");
+
+  return pnee_panel;
+}
+

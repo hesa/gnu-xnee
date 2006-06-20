@@ -293,6 +293,7 @@ pnee_set_events_to_record (GtkToggleButton *togglebutton,
     {
       nr = gtk_spin_button_get_value_as_int(window);
       xnee_set_events_max (xd, nr) ;
+      fprintf (stderr, "Setting max nr events to record: %d\n", nr);
       xnee_verbose((xd, " -- : setting events to record: %d\n", nr));
     }
   XNEE_VERBOSE_LEAVE_FUNCTION();
