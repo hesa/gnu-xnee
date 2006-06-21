@@ -29,6 +29,10 @@
 #include "libxnee/xnee_replay.h"
 
 
+#define xnee_set_events_replayed(xd,n)   xd->xnee_info.replayed_events=n;
+#define xnee_inc_events_replayed(xd)     xd->xnee_info.replayed_events++;
+#define xnee_get_events_replayed(xd)     xd->xnee_info.replayed_events;
+
 /** 
  * 
  * 
@@ -532,8 +536,10 @@ xnee_get_time_max (xnee_data *xd);
 int 
 xnee_get_time_left (xnee_data *xd);
 
-#define xnee_inc_events_recorded(xd)   xd->xnee_info.events_recorded++;
-#define xnee_dec_events_recorded(xd)   xd->xnee_info.events_recorded--;
+#define xnee_set_events_recorded(xd,e)  xd->xnee_info.events_recorded=e;
+#define xnee_get_events_recorded(xd)    xd->xnee_info.events_recorded;
+#define xnee_inc_events_recorded(xd)    xd->xnee_info.events_recorded++;
+#define xnee_dec_events_recorded(xd)    xd->xnee_info.events_recorded--;
 #define xnee_zero_events_recorded(xd)   xd->xnee_info.events_recorded=0;
 
 #define xnee_inc_data_recorded(xd)   xd->xnee_info.data_recorded++;
