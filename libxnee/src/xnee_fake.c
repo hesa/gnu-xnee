@@ -194,18 +194,23 @@ xnee_replay_event_handler( xnee_data* xd,
   switch (xindata->u.event.type)
     {
     case KeyPress:
+      xnee_inc_events_replayed(xd);      
       xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_PRESS, sleep_amt );
       break;
     case KeyRelease:
+      xnee_inc_events_replayed(xd);      
       xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_RELEASE, sleep_amt);
       break;
     case ButtonPress:
+      xnee_inc_events_replayed(xd);      
       xnee_fake_button_event (xd, xindata->u.event.button, XNEE_PRESS, sleep_amt);
       break;
     case ButtonRelease:
+      xnee_inc_events_replayed(xd);      
       xnee_fake_button_event (xd, xindata->u.event.button, XNEE_RELEASE, sleep_amt);
       break;
     case MotionNotify:
+      xnee_inc_events_replayed(xd);      
       screen = xindata->u.event.screen_nr ; 
       x      = (int) xindata->u.event.x ; 
       y      = (int) xindata->u.event.y ; 
