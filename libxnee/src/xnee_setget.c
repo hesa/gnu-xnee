@@ -620,7 +620,7 @@ xnee_set_key_str (xnee_data *xd, int idx, const char *str)
   if ( (idx<0) && (idx>XNEE_GRAB_LAST) )
     return XNEE_BAD_GRAB_DATA;
 
-  xnee_verbose((xd, "xnee_set_key_str\n"));
+  xnee_verbose((xd, "xnee_set_key_str (xd, %d, %s)\n", idx, str));
 
   XNEE_FREE_IF_NOT_NULL(xd->grab_keys->action_keys[idx].str);
   xd->grab_keys->action_keys[idx].str = strdup(str);

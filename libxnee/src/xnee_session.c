@@ -356,8 +356,7 @@ xnee_init(xnee_data* xd)
   (void) signal (SIGINT, signal_handler);
   
   /* Set the error handler the libxnee's built in */ 
-  (void) XSetErrorHandler (handle_xerr);  
-
+  (void) XSetErrorHandler (handle_xerr); 
 
   xnee_verbose((xd, "<--- xnee_init\n"));
   return XNEE_OK;
@@ -480,6 +479,9 @@ xnee_rep_prepare(xnee_data *xd)
         return ret;
       }
   }
+
+
+  xnee_set_events_replayed(xd,0);
 
   if ( xnee_is_replayer(xd) != 0 )
   {
