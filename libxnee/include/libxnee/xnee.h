@@ -435,9 +435,15 @@ typedef struct
   unsigned int    interval       ;  /*!< how many seconds to record           */
   unsigned int    size           ;  /*!< max size of file                     */
 
+  int             replayed_events;
+
   int data_ranges[XNEE_NR_OF_TYPES] ;  /*!< Count how many data ranges specified */
 
+
 } xnee_record_init_data ; 
+
+
+
 
 /**
  * 
