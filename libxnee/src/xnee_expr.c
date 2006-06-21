@@ -705,7 +705,7 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 static int
 xnee_expression_handle_prim(xnee_data *xd, char *str, xnee_intercept_data * xindata)
 {
-  int ret= XNEE_OK ;  
+  int ret= 0 ;  
   char *prim_args;
   char buf[32];
   int   prim_len = 0 ; 
