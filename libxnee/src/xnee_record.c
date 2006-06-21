@@ -158,7 +158,9 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 
 
   XNEE_DEBUG ( (stderr ," -->xnee_record_handle_event()  \n"  ));
-  if ( (xd->xnee_info.first_last!=0) && (xd->xnee_info.last_motion > 0) && (event_type==MotionNotify)) 
+  if ( (xd->xnee_info.first_last!=0) && 
+       (xd->xnee_info.last_motion > 0) && 
+       (event_type==MotionNotify)) 
     {
       XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 0  \n"  ));
       xd->xnee_info.x           = xrec_data->event.u.keyButtonPointer.rootX ;
@@ -196,6 +198,8 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 	      kc = xrec_data->event.u.u.detail;
 
 	      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_PRESS);
+	      fprintf(stderr, "  record: dop_print=%d\n",
+		      do_print);
 	      if (do_print==XNEE_GRAB_DO_PRINT)
 		{
 		  fprintf (out,"0,%u,0,0,0,%d,0,%lu\n",
@@ -220,6 +224,10 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
                   }
 		  ret = xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
                   XNEE_RETURN_IF_ERR(ret);
+		}
+	      else if (do_print==XNEE_GRAB_DONT_PRINT)
+		{
+		  fprintf(stderr, "Missed grab?\n");
 		}
 	      break;
 	    case KeyRelease:
@@ -638,6 +646,8 @@ xnee_record_init (xnee_data *xd)
   xd->xnee_info.size            = 0      ;
   xd->xnee_info.size            = 0      ;
 
+  xd->xnee_info.replayed_events = 0      ;
+
   for ( i=0 ; i< XNEE_NR_OF_TYPES ; i++) 
     {
       xd->xnee_info.data_ranges[i] = 0 ;       /* Count how many data specified */
@@ -776,7 +786,7 @@ xnee_setup_recording(xnee_data *xd)
 
   XNEE_DEBUG ( (stderr ," --> xnee_setup_recording()  \n"  ));
 
-  (void)XSynchronize(xd->control, True); /* so we get errors at convenient times */
+  (void)XSynchronize(xd->control, True); 
 
   if (xd->all_clients!=0)
     {
@@ -826,9 +836,6 @@ xnee_setup_recording(xnee_data *xd)
 /* 		xd->record_setup->rContext,  */
 /* 		(int) ( (xd->record_setup->rState) - (xd->record_setup->nclients) )));    */
   
-  /* Enable context for async interception 
-     XSynchronize(xd->data, True);  
-  */
   
   xnee_verbose((xd, "<---xnee_setup_recording\n"));
   XNEE_DEBUG ( (stderr ," <-- xnee_setup_recording()  \n"  ));
