@@ -1,3 +1,43 @@
+2006-06-21    <hesa@gnu.org>
+
+	* pnee/
+
+	A lot, still under heavy devel phase.....
+	
+	* libxnee/src/xnee_expr.c
+
+	0 --> XNEE_OK, when returning from fun
+
+	* libxnee/include/libxnee/print.h
+
+	New macro for printf debugging: XNEE_VERBOSE_MARK 
+
+	* libxnee/include/libxnee/xnee.h 
+
+	variable (replayed_events) to set/get nr of recorded/replayed events
+	
+	* libxnee/src/xnee_fake.c
+
+	Using new macros to set/get nr of recorded/replayed events
+
+	* libxnee/include/libxnee/xnee_setget.h 
+
+	New macros to set/get nr of recorded/replayed events 
+
+	* libxnee/src/xnee_grab.c
+	* libxnee/include/libxnee/xnee_grab.h
+
+	Added fun to read out grabbed keys
+
+	* libxnee/src/xnee_record.c
+
+	Preparing for reading of replayed events during replay
+
+	* libxnee/src/xnee_setget.c
+	* libxnee/src/xnee_session.c
+
+	"Setting replayed events to 0" 
+
 2006-06-17    <hesa@gnu.org>
 
 	* build/test-dist.sh
