@@ -82,10 +82,12 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       xnee_verbose((xd, "data     %d\n", (int)xd->grab));
       xnee_verbose((xd, "stop key %d\n", xd->grab_keys->action_keys[mode].key));
       xnee_verbose((xd, "stop mod %d\n", AnyModifier));
+
       XUngrabKey (xd->grab,  
 		  xd->grab_keys->action_keys[mode].key,            
 		  AnyModifier,
 		  window);
+
       xd->grab_keys->grab=1;
       xd->grab_keys->action_keys[mode].key=0;
     }
@@ -278,6 +280,7 @@ xnee_grab_all_keys (xnee_data* xd)
       return XNEE_BAD_GRAB_DATA;
     }
 
+
   /* make sure we have a display to grab on*/
   if (xd->grab==NULL)
     {
@@ -303,6 +306,9 @@ xnee_grab_all_keys (xnee_data* xd)
 
       if (xd->grab_keys->action_keys[i].str != NULL )
 	{
+
+	  
+
  	  xnee_verbose((xd, "----      DEBUG STARTING\n" ));
  	  xnee_verbose((xd, "----      xnee_grab_all_keys %d \n",ak.key));
 
@@ -379,7 +385,19 @@ static int     last_modifier_state     = 0 ;
   ( XNEE_OVERRIDE_TRUE == xnee_grab_handle_override(xd, XNEE_OVERRIDE_GET) )
 
 
+void
+xnee_print_grabbed_keys(xnee_data *xd)
+{
+  int i ;
 
+  for (i=XNEE_GRAB_STOP;i<XNEE_GRAB_LAST;i++)
+    {
+      fprintf(stderr, "  %d    %d  '%s'\n",
+	      i, 
+	      xd->grab_keys->action_keys[i].key,
+	      xd->grab_keys->action_keys[i].str)  ;
+    }
+}
 
 
 static int
@@ -389,8 +407,8 @@ xnee_key_in_use (xnee_grab_keys *xgk, KeyCode kc)
 
   for (i=XNEE_GRAB_STOP;i<XNEE_GRAB_LAST;i++)
     {
-/*       printf (" compare: %d %d\n", */
-/* 	      xgk->action_keys[i].key, kc); */
+/*       fprintf (stderr, "\t --- compare: %d %d\n",  */
+/*  	      xgk->action_keys[i].key, kc);  */
       if (xgk->action_keys[i].key==kc)
 	{
 	  return 1;
@@ -496,7 +514,6 @@ xnee_handle_grab_key(xnee_data *xd, KeyCode kc, int mode)
 {
   int ret ;
 
-
   xnee_verbose((xd, "---> xnee_handle_grab_key %d %d   modifier_state=%d\n", kc, mode, current_modifier_state));
   current_modifier_state = XNEE_GRAB_ALL_IN_USE ;
 
@@ -575,10 +592,10 @@ xnee_save_or_print(xnee_data *xd, KeyCode kc, int mode)
 	ret = xnee_handle_grab_modifier(xd, kc, mode);
       }
 #endif
-    else
-      {
-	xnee_verbose((xd, "--- xnee_save_or_print treat an ordinary key\n")); 
-	ret = xnee_handle_grab_key(xd, kc, mode); 
+  else
+    {
+      xnee_verbose((xd, "--- xnee_save_or_print treat an ordinary key\n")); 
+      ret = xnee_handle_grab_key(xd, kc, mode); 
     }
 
 /*   if ( ret == XNEE_GRAB_DO_SAVE ) */

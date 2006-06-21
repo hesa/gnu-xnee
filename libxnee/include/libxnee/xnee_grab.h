@@ -76,7 +76,8 @@ int
 xnee_get_grab_mode ( xnee_data *xd, int key);
  
 
-
+void
+xnee_print_grabbed_keys(xnee_data *xd);
 
 #endif /* XNEE_GRAB_H */
 
