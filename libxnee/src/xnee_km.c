@@ -487,7 +487,6 @@ xnee_handle_rec_key(xnee_data *xd)
 
   xnee_verbose ((xd, " ---> xnee_handle_rec_km\n"));
 
-
   switch ( xd->grab_keys->grabbed_action )
     {
     case XNEE_GRAB_STOP :
@@ -677,7 +676,7 @@ xnee_get_action_key (xnee_data     *xd,
   ak->key = XKeysymToKeycode (xd->grab, ks);
   
   xnee_verbose((xd, " <--- xnee_get_action_key %s gives us %d \n", key, ak->key));
-
+  
   return XNEE_OK;
 }
 
