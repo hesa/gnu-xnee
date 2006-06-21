@@ -1,5 +1,6 @@
 #include <string.h>
 
+#include <gdk/gdk.h>
 #include <gnome.h>
 #include <gtk/gtk.h>
 #include <gtk/gtklabel.h>
@@ -47,12 +48,12 @@ typedef enum _pnee_update_actions
     PNEE_UPDATE_REPLAY
   } pnee_update_actions;
 
-
-void
-pnee_start_recording(void *);
-
-int
-pnee_start_replaying(void);
+typedef enum _pnee_button_type
+  {
+    PNEE_BUTTON_RECORD,
+    PNEE_BUTTON_REPLAY,
+    PNEE_BUTTON_STOP
+  } pnee_button_type;
 
 typedef struct
 {
@@ -92,25 +93,63 @@ xnee_data *xd ;
 GtkWidget *pnee_pref;
 extern GtkWidget* fs;
 
-#define _IN  gdk_threads_enter()
-#define _OUT gdk_threads_leave()
 
-#define pnee_set_no_action() _IN; action_state=PNEE_ACTION_NONE ; _OUT
-#define pnee_set_recording() _IN; action_state=PNEE_ACTION_RECORD ; _OUT
-#define pnee_set_replaying() _IN; action_state=PNEE_ACTION_REPLAY ; _OUT
-#define pnee_is_recording() (action_state==PNEE_ACTION_RECORD) 
-#define pnee_is_replaying() (action_state==PNEE_ACTION_REPLAY)
-pnee_actions action_state = PNEE_ACTION_NONE;
+static volatile pnee_actions action_state = PNEE_ACTION_NONE;
+static volatile pnee_update_actions update_state = PNEE_UPDATE_NONE;
+
+
+#define DEBUG_MARK()  fprintf(stderr, "  ---  %s:%d  %s()\n", __FILE__, __LINE__, __func__);
+
+#define _IN  fprintf (stderr, "********** Taking sem (at %d)\n", __LINE__); fflush(stderr); gdk_threads_enter(); fprintf (stderr, "**********  sem taken (at %d)\n", __LINE__); fflush(stderr) 
+#define _OUT  fprintf (stderr, "********** Releasing sem\n"); fflush(stderr); gdk_threads_leave()
+
+/*
+#define pnee_set_no_action()  _IN; DEBUG_MARK(); action_state=PNEE_ACTION_NONE   ;   DEBUG_MARK();  _OUT
+#define pnee_set_no_action_no_thread() _IN; action_state=PNEE_ACTION_NONE ; _OUT
+#define pnee_set_recording() _IN; action_state=PNEE_ACTION_RECORD ;    _OUT
+#define pnee_set_replaying() _IN; action_state=PNEE_ACTION_REPLAY ;    _OUT
+*/
+#define pnee_set_no_action()  DEBUG_MARK(); action_state=PNEE_ACTION_NONE 
+#define pnee_set_no_action_no_thread() action_state=PNEE_ACTION_NONE 
+#define pnee_set_recording()  action_state=PNEE_ACTION_RECORD 
+#define pnee_set_replaying()  action_state=PNEE_ACTION_REPLAY 
+#define pnee_is_recording()  (action_state==PNEE_ACTION_RECORD)
+#define pnee_is_replaying()  (action_state==PNEE_ACTION_REPLAY) 
+#define pnee_is_ready()      (action_state==PNEE_ACTION_NONE) 
 
 
 #define pnee_set_update_no_action() update_state=PNEE_UPDATE_NONE 
 #define pnee_set_update_recording() update_state=PNEE_UPDATE_RECORD 
 #define pnee_set_update_replaying() update_state=PNEE_UPDATE_REPLAY 
-pnee_update_actions update_state = PNEE_UPDATE_NONE;
 
+#define PTHREAD_RETURN_VAL void*
+#define PTHREAD_RETURN return NULL
 
-
+#define THREAD_WAIT_READY   { while (action_state!=PNEE_ACTION_NONE) { usleep (1000*50); fprintf(stderr, "twr "); }
+#define RETURN_IF_THREAD_BUSY   { if (action_state!=PNEE_ACTION_NONE) { fprintf(stderr, "\n\n ********** thread busy (%d) , leaving\n\n", action_state); return ; } }
+ 
+ 
+/*
+ */
 extern gchar *filename;
+ 
+sem_t action_mutex;
+ 
+PTHREAD_RETURN_VAL
+pnee_start_recording(void *pnee_applet);
+ 
+PTHREAD_RETURN_VAL
+pnee_start_replaying(void *pnee_applet);
+
+PTHREAD_RETURN_VAL
+pnee_progress_updater(void *pnee_applet);
+
+int
+pnee_update_progress(pnee_panel_applet *pnee_applet, 
+                     double perc);
+
+int 
+pnee_setup(void);
 
 
 static const char Context_menu_xml [] =
@@ -137,113 +176,179 @@ static const char Context_menu_xml [] =
    "          pixname=\"gnome-stock-about\"/>\n"
    "</popup>\n";
 
-#define pnee_show_states()       fprintf(stderr, " pnee : %d %d \n", action_state, update_state);
+#define pnee_show_states()       \
+     fprintf(stderr,       \
+	     " pnee status : %d %d  threads: %x %x \n", \
+	     action_state, \
+	     update_state, \
+	     (int)pnee_applet_impl.xnee_thread, \
+	     (int)pnee_applet_impl.xnee_updater);
 
 
 #ifdef PNEE_DEBUGGER
-void
+PTHREAD_RETURN_VAL
 pnee_debugger(void *data)
 {
   while (1)
     {
+      fprintf(stderr, "  debugger thread:: ");
       pnee_show_states();
       usleep (1000*1000);
     }
+  PTHREAD_RETURN;
 }
 #endif /* PNEE_DEBUGGER */
 
-void 
-pnee_progress_updater(void *pnee_applet)
+PTHREAD_RETURN_VAL
+pnee_progress_updater(void *pnee_applet_in)
 {
   gint max ;
   gint curr;
   gdouble perc ;
+  GtkWidget *wid;
+  GdkWindow *win; 
 
-  if ( pnee_is_replaying() )
+  while (1)
     {
-      pnee_set_update_replaying();
-    }
-  else if ( pnee_is_recording() )
-    {
-      pnee_set_update_recording();
-    }
-  
-  if ( !pnee_is_replaying() && !pnee_is_recording() )
-    {
-      pnee_set_update_no_action()  ;
-      return;
-    }
-
-  while ( pnee_is_replaying() || pnee_is_recording()  )
-    {
-      max  = xnee_get_events_max(xd);
-      if ( pnee_is_replaying() )
+      while ( pnee_is_replaying() || pnee_is_recording()  )
 	{
-	  curr = xnee_get_events_replayed(xd);
+	  if ( pnee_is_replaying() )
+	    {
+	      pnee_set_update_replaying();
+	    }
+	  else if ( pnee_is_recording() )
+	    {
+	      pnee_set_update_recording();
+	    }
+	  
+	  max  = xnee_get_events_max(xd);
+	  if ( pnee_is_replaying() )
+	    {
+	      curr = xnee_get_events_replayed(xd);
+	    }
+	  else
+	    {
+	      curr = xnee_get_events_recorded (xd);
+	    }
+	  
+	  perc = (gdouble) curr / (gdouble) max ;
+	  
+	  fprintf(stderr, " update: %d %d ===>  perc = %f \n", 
+		  curr, max, perc);
+	  
+	  pnee_update_progress(pnee_applet, perc);
+	  
+	  usleep(1000*200);
 	}
-      else
+      pnee_set_update_no_action();
+
+      pnee_update_progress(pnee_applet, 0.0);
+      wid = pnee_applet->progress;
+      if (pnee_applet->progress)
 	{
-	  curr = xnee_get_events_recorded (xd);
+	  win = gtk_widget_get_root_window (wid); 
 	}
-      
-      perc = (gdouble) curr / (gdouble) max ;
-      
-      fprintf(stderr, " update: %d %d ===>  perc = %f \n", 
-	      curr, max, perc);
-      
-      pnee_update_progress(pnee_applet, perc);
-      
-      usleep(1000*500);
+      if (win!=NULL)
+	{
+/* 	  gdk_window_process_updates (win, TRUE); */
+	}
+      usleep(1000*1000);
     }
 
-  pnee_set_update_no_action();
-  pnee_update_progress(pnee_applet, 1.0);
-  fprintf(stderr, "***  updater thread is fini!\n");
+  PTHREAD_RETURN;
 }
 
-void
-pnee_stop_pressed(GtkWidget *w, pnee_panel_applet * pnee_applet)
+
+PTHREAD_RETURN_VAL
+pnee_stop_pressed_impl(void *pnee_applet)
 {
-  int ev_max = 0;
+  gint ev_max;
+
+  XNEE_VERBOSE_ENTER_FUNCTION();
+  
+  pnee_setup();
   
   pnee_set_no_action();
-  
-  pnee_update_progress(pnee_applet, 0,0);
+
+  fprintf(stderr, "stop pressed 0\n");
       
   fprintf(stderr, "stop pressed\n");
-  fprintf(stderr, "stop pressed  xd=%d\n", xd);
+  fprintf(stderr, "stop pressed  xd=%d\n", (int)xd);
 
   ev_max = xnee_get_events_max(xd);
   xnee_set_events_recorded (xd, ev_max);
+
+  pnee_update_progress(pnee_applet, 0.0);
+  XNEE_VERBOSE_LEAVE_FUNCTION();
+  PTHREAD_RETURN;
 }
 
 void
-pnee_rec_pressed(GtkWidget *w, pnee_panel_applet * pnee_applet)
+pnee_stop_pressed(void)
 {
+  pthread_create (&pnee_applet->xnee_thread, 
+		  NULL, 
+		  pnee_stop_pressed_impl, 
+		  NULL);
+  return;
+}
+
+
+void 
+pnee_rec_pressed(void)
+{
+
+  sem_wait (&action_mutex);
+  fprintf(stderr, " get mutex !!!!!!!!!!!!!!!!!!!!!!!!\n");
+  
+  if (!pnee_is_ready())
+    {
+      
+      fprintf(stderr, " Skipping create !!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      sem_post (&action_mutex);
+      return;
+    }
+
+  pnee_set_recording();
+  sem_post (&action_mutex);
+
+  fprintf(stderr, " Creating record thread !!!!!!!!!!!!!!!!!!!!!!!!\n");
+
+
   pnee_update_progress(pnee_applet, 0.0);
   pthread_create (&pnee_applet->xnee_thread, 
 		  NULL, 
 		  pnee_start_recording, 
 		  NULL);
 
-  pthread_create (&pnee_applet->xnee_updater, 
-		  NULL, 
-		  pnee_progress_updater,
-		  pnee_applet);
-
+  return;
 }
 
 void
-pnee_rep_pressed(GtkWidget *w, pnee_panel_applet * pnee_applet)
+pnee_rep_pressed(void)
 {
-    pthread_create (&pnee_applet->xnee_thread, 
-		    NULL, 
-		    pnee_start_replaying, 
-		    NULL);
-  pthread_create (&pnee_applet->xnee_updater, 
+
+  sem_wait (&action_mutex);
+  fprintf(stderr, " get mutex !!!!!!!!!!!!!!!!!!!!!!!!\n");
+  
+  if (!pnee_is_ready())
+    {
+      
+      fprintf(stderr, " Skipping create !!!!!!!!!!!!!!!!!!!!!!!!!\n");
+      sem_post (&action_mutex);
+      return;
+    }
+
+  pnee_set_replaying();
+  sem_post (&action_mutex);
+
+  fprintf(stderr, " Creating replay thread !!!!!!!!!!!!!!!!!!!!!!!!\n");
+  pnee_update_progress(pnee_applet, 0.0);
+  pthread_create (&pnee_applet->xnee_thread, 
 		  NULL, 
-		  pnee_progress_updater,
+		  pnee_start_replaying, 
 		  pnee_applet);
+  return;
 }
 
 gboolean
@@ -261,7 +366,7 @@ cb_button_press(GtkWidget *w, GdkEventButton *event, GtkWidget *applet)
 
 
 static void
-register_stock_icons(pnee_panel_applet *pnee_applet, 
+register_stock_icons(pnee_panel_applet *pnee_applet_in, 
 		     GtkIconFactory *factory)
 {
     gint i;
@@ -273,8 +378,8 @@ register_stock_icons(pnee_panel_applet *pnee_applet,
 	GdkPixbuf *pixbuf;
 	GtkIconSet *icon_set;
         GError *error = NULL;
-
-        sprintf(file_name, "%s/%s%s", PNEE_PIXDIR, items[i] );
+	
+        sprintf(file_name, "%s/%s", PNEE_PIXDIR, items[i] );
 	fprintf (stderr, "Trying to load file: %s\n", file_name);
 	pixbuf = gdk_pixbuf_new_from_file(file_name, &error);
         if (pixbuf == NULL)
@@ -292,7 +397,7 @@ register_stock_icons(pnee_panel_applet *pnee_applet,
 
 
 static void
-init_stock_icons(pnee_panel_applet *pnee_applet)
+init_stock_icons(pnee_panel_applet *pnee_applet_in)
 {
     GtkIconFactory *factory;
 
@@ -310,11 +415,11 @@ init_stock_icons(pnee_panel_applet *pnee_applet)
 
 
 void
-pnee_create_button(pnee_panel_applet *pnee_applet,
+pnee_create_button(pnee_panel_applet *pnee_applet_in,
 		   const gchar *tooltip_str, 
 		   const gchar *id, 
 		   GCallback    press_callback, 
-		   int mode)
+		   pnee_button_type mode)
 {
   GtkWidget *button;	
   GtkWidget *image;	
@@ -322,7 +427,7 @@ pnee_create_button(pnee_panel_applet *pnee_applet,
 
   /* Button */
   button = gtk_button_new();
-  fprintf (stderr, " button %d\n", button);
+  fprintf (stderr, " button %d\n", (int)button);
   gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
   gtk_container_set_border_width (GTK_CONTAINER (button), 0);
 
@@ -344,21 +449,21 @@ pnee_create_button(pnee_panel_applet *pnee_applet,
 
   gtk_widget_show(button);
 
-  if (mode == 0 )
+  if (mode == PNEE_BUTTON_RECORD )
     {
       fprintf(stderr, "Adding to rec\n");
       pnee_applet->rec_button=button;
       pnee_applet->rec_image=image;
       pnee_applet->rec_tooltip=tooltip;
     }
-  else if (mode == 1 )
+  else if (mode == PNEE_BUTTON_REPLAY )
     {
       fprintf(stderr, "Adding to replay\n");
       pnee_applet->rep_button=button;
       pnee_applet->rep_image=image;
       pnee_applet->rep_tooltip=tooltip;
     } 
-  else if (mode == 2 )
+  else if (mode == PNEE_BUTTON_STOP )
     {
       fprintf(stderr, "Adding to stop\n");
       pnee_applet->stop_button=button;
@@ -368,17 +473,59 @@ pnee_create_button(pnee_panel_applet *pnee_applet,
 }
 
 
+int
+pnee_handle_xerr(Display *dpy, XErrorEvent *errevent)
+{
+  int ret ; 
+  /*@out@*/ char tmp[100]="";
+
+  if (errevent->type==0)
+    {
+       return XNEE_OK; 
+    }
+  else if (errevent->type==161)
+    {
+       return XNEE_OK; 
+    }
+
+  fprintf (stderr, "Error received:\n");
+  fprintf (stderr, "\terror type       %u (0x%x)\n", 
+	  errevent->type,errevent->type);
+  fprintf (stderr, "\terror code       %u (0x%x)\n", 
+	  errevent->error_code,errevent->error_code);
+  fprintf (stderr, "\terror code major %u (0x%x)\n", 
+	  errevent->request_code,errevent->request_code);
+  fprintf (stderr, "\terror code minor %u (0x%x)\n", 
+	  errevent->minor_code,errevent->minor_code);
+  fprintf (stderr, "\tdisplay          %d (0x%x)\n", 
+	  (int)dpy, (unsigned int)dpy);
+
+  ret = XGetErrorText (dpy, 
+		       (int) errevent->error_code, 
+		       tmp, 
+		       100);
+  fprintf (stderr, " %s\n", (char *)tmp);
+  fprintf (stderr, "This error can be ignored\n");
+
+  usleep(1000*1000);
+
+  return XNEE_OK;
+}
+
 int 
-pnee_setup()
+pnee_setup(void)
 {
   char *default_tmp_file;
   char *default_err_file;
   static int already_setup = 0;
 
+  XNEE_VERBOSE_ENTER_FUNCTION();
+
   if (already_setup)
     {
-      return 0;
+      XNEE_VERBOSE_IN_FUNCTION("already_setup");
       XNEE_VERBOSE_LEAVE_FUNCTION();
+      return 0;
     }
   already_setup = 1 ;
 
@@ -386,18 +533,24 @@ pnee_setup()
   xd = xnee_new_xnee_data();
 
   default_err_file=pnee_get_default_err_name();
+
+  (void) XSetErrorHandler (pnee_handle_xerr);  
+
   xnee_set_verbose(xd);
   pnee_set_err_file (default_err_file); 
   xnee_open_files(xd);
   xnee_unset_recall_window_pos (xd);
   xnee_set_events_max (xd, 200);
   xnee_set_data_max (xd, -1);
+  xnee_set_key (xd, XNEE_GRAB_STOP, "F5");
+  xnee_set_key (xd, XNEE_GRAB_PAUSE, "p");
+  xnee_set_key (xd, XNEE_GRAB_RESUME, "r");
+  xnee_set_interval(xd, 1);
 
   XNEE_VERBOSE_ENTER_FUNCTION();
 
   fs = create_filechooserdialog1();
 
-  xnee_set_key (xd, XNEE_GRAB_STOP, "a");
 
   /* Set the program name */
   xnee_set_program_name (xd, "pnee");
@@ -419,12 +572,11 @@ pnee_setup()
   free (default_tmp_file);
   free (default_err_file);
 
-  /* init threads 
-  fprintf(stderr, " ****** g_thread_init ******\n");
-  g_thread_init (NULL);
-  */
+  /* init threads   */
   fprintf(stderr, " ****** gdk_thread_init ******\n");
   gdk_threads_init ();
+  gdk_threads_leave();
+
 
   XNEE_VERBOSE_LEAVE_FUNCTION();
   return 0;
@@ -478,8 +630,10 @@ pnee_prepare_replay()
 }
 
 
-int
-display_about_dialog(void)
+void
+display_about_dialog(BonoboUIComponent           *component,
+		     gpointer                     user_data,
+		     const char                  *cname)
 {
   static GtkWidget *pnee_about = NULL ;
   XNEE_VERBOSE_ENTER_FUNCTION();
@@ -493,16 +647,19 @@ display_about_dialog(void)
 
 
   XNEE_VERBOSE_LEAVE_FUNCTION();
-  return 0;
+  return ;
 }
 
-void
+PTHREAD_RETURN_VAL
 pnee_start_recording(void *data)
 {
   int ret ;
 
   pnee_set_recording();
   pnee_set_update_no_action();
+
+  /* HESA REMOVE THE LINE BELOW */
+  xnee_print_grabbed_keys(xd);
 
   xnee_set_events_recorded(xd,0);
   fprintf(stderr, " ---> recording %d events\n", 
@@ -527,11 +684,11 @@ pnee_start_recording(void *data)
   pnee_set_no_action();
   fprintf(stderr, " <--- recording \n");
   pnee_show_states();
-  return 0;
+  PTHREAD_RETURN;
 }
 
-int
-pnee_start_replaying(void)
+PTHREAD_RETURN_VAL
+pnee_start_replaying(void *pnee_applet)
 {
   int ret;
 
@@ -553,11 +710,13 @@ pnee_start_replaying(void)
   pnee_set_no_action();
   fprintf(stderr, " <--- replaying \n");
   pnee_show_states();
-  return 0;
+  PTHREAD_RETURN;
 }
 
-int
-display_properties_dialog()
+void
+display_properties_dialog(BonoboUIComponent           *component,
+			  gpointer                     user_data,
+			  const char                  *cname)
 {
   XNEE_VERBOSE_ENTER_FUNCTION();
   if (pnee_pref==NULL)
@@ -567,80 +726,55 @@ display_properties_dialog()
 
   gtk_widget_show (pnee_pref);
   XNEE_VERBOSE_LEAVE_FUNCTION();
-  return 0;
+  return ;
 }
 
 #ifndef FAKED_MAIN
-static const BonoboUIVerb myexample_menu_verbs [] = {
-        BONOBO_UI_VERB ("Record", pnee_start_recording),
-        BONOBO_UI_VERB ("Replay", pnee_start_replaying),
-        BONOBO_UI_VERB ("Properties", display_properties_dialog),
-        BONOBO_UI_VERB ("About", display_about_dialog),
-        BONOBO_UI_VERB_END
-};
+static const BonoboUIVerb myexample_menu_verbs [] = 
+  {
+    /*    BONOBO_UI_VERB ("Record",      pnee_start_recording),
+    BONOBO_UI_VERB ("Replay",      pnee_start_replaying),
+    */
+    BONOBO_UI_VERB ("Properties",  display_properties_dialog),
+    BONOBO_UI_VERB ("About",       display_about_dialog),
+    BONOBO_UI_VERB_END
+  };
 #endif
 
-static gboolean
-on_button_press (GtkWidget      *event_box, 
-		 GdkEventButton *event,
-		 gpointer        data)
+
+int
+pnee_update_progress(pnee_panel_applet *pnee_applet_in, 
+		     double perc)
 {
-  static int window_shown;
-  static GtkWidget *window, *box, *image, *label;
-  /* Don't react to anything other than the left mouse button;
-     return FALSE so the event is passed to the default handler */
-
-
-  XNEE_VERBOSE_ENTER_FUNCTION();
-
-  if (event->button != 1)
+  /*
+  fprintf(stderr, "Updating to %f  on %u %u  ", 
+	  perc, 
+	  pnee_applet, 
+	  pnee_applet->progress); fflush(stderr);
+  */
+  if ( (pnee_applet!=0) && (pnee_applet->progress!=0) )
     {
-      return FALSE;
-    }
-  
-  if (!window_shown) 
-    {
-      window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
-      box = GTK_BOX (gtk_vbox_new (TRUE, 12));
-      gtk_container_add (GTK_CONTAINER (window), box);
-      
-      image = GTK_IMAGE (gtk_image_new_from_file ("/usr/share/pixmaps/mypicture.png"));
-      gtk_box_pack_start (GTK_BOX (box), image, TRUE, TRUE, 12);
-      
-      label = gtk_label_new ("Hello World");
-      gtk_box_pack_start (GTK_BOX (box), label, TRUE, TRUE, 12);
-      
-      gtk_widget_show_all (window);
+      gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pnee_applet->progress), 
+				    perc);
+/*       fprintf(stderr, "OK\n");fflush(stderr); */
     }
   else
     {
-      gtk_widget_hide (GTK_WIDGET (window));
+      fprintf(stderr, "Update FAILED\n");fflush(stderr);
     }
-  
-  window_shown = !window_shown;
-
-  XNEE_VERBOSE_LEAVE_FUNCTION();
-  return TRUE;
-}
-
-void
-pnee_update_progress(pnee_panel_applet *pnee_applet, 
-		     double perc)
-{
-  gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pnee_applet->progress), 
-				perc);
+  return 0;
 }
 
 
 void 
-pnee_panel_applet_create (pnee_panel_applet *pnee_applet)
+pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in)
 {
-    GtkTooltips *tooltips;
-    GtkIconInfo *icon_info;
-    AtkObject *atk_obj;
+  GtkTooltips *tooltips;
+  AtkObject *atk_obj;
+  sem_init(&action_mutex, 0, 1);
 
-    pnee_setup();
-
+  pnee_setup();
+    
 #ifdef PNEE_DEBUGGER
   pthread_create (&pnee_applet->xnee_debugger, 
 		  NULL, 
@@ -648,6 +782,10 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet)
 		  NULL);
 #endif /* PNEE_DEBUGGER */
 
+    pthread_create (&pnee_applet->xnee_updater, 
+		    NULL, 
+		    pnee_progress_updater,
+		    pnee_applet);
     
 
     init_stock_icons(pnee_applet);
@@ -655,10 +793,6 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet)
     panel_applet_set_flags (pnee_applet->applet, 
 			    PANEL_APPLET_EXPAND_MINOR);
 
-    panel_applet_set_background_widget(pnee_applet->applet,
-                                       GTK_WIDGET(pnee_applet->applet));
-
-/*     pnee_applet->container = gtk_alignment_new (0.5, 0.5, 0, 0); */
     pnee_applet->container = gtk_vbox_new (FALSE,0);
     gtk_container_add (GTK_CONTAINER (pnee_applet->applet), 
 		       pnee_applet->container);
@@ -671,14 +805,6 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet)
     if (GTK_IS_ACCESSIBLE (atk_obj))
 	   atk_object_set_name (atk_obj, _("GNU Xnee panel"));
 
-/*     pnee_applet->size = panel_applet_get_size (pnee_applet->applet); */
-
-/*     pnee_applet->orient = panel_applet_get_orient (pnee_applet->applet); */
-    
-  
-/*    label = gtk_label_new ("Xnee");
-    gtk_container_add (GTK_CONTAINER (applet), label); 
-*/
   
     gtk_widget_show_all (GTK_WIDGET (pnee_applet->applet));
     
@@ -687,27 +813,6 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet)
 			     myexample_menu_verbs,
 			     pnee_applet->applet);
     
-    /* 
-    
-    panel_applet_setup_menu_from_file (pnee_applet->applet,
-                                       DATADIR,
-			               "GNOME_GWeatherApplet.xml",
-                                       NULL,
-			               weather_applet_menu_verbs,
-			               pnee_applet);
-    
-      if (panel_applet_get_locked_down (pnee_applet->applet)) {
-      BonoboUIComponent *popup_component;
-      
-      popup_component = panel_applet_get_popup_component (pnee_applet->applet);
-      
-      bonobo_ui_component_set_prop (popup_component,
-				    "/commands/Props",
-				    "hidden", "1",
-				    NULL);
-    }
-    */
-
     pnee_applet->tooltips = tooltips;
 
     /* Create the visual stuff */
@@ -715,8 +820,6 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet)
     gtk_progress_bar_set_orientation(GTK_PROGRESS_BAR(pnee_applet->progress),
 				     GTK_PROGRESS_LEFT_TO_RIGHT);
     gtk_widget_set_size_request(pnee_applet->progress, 10, 5);
-
-/*     pnee_applet->label =  gtk_label_new ("."); */
 
     gtk_container_set_border_width (GTK_CONTAINER (pnee_applet->container), 0);
     pnee_applet->button_box = gtk_hbox_new(FALSE, 0);
@@ -726,19 +829,19 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet)
 		       "Start recording" , 
 		       "pnee-record.png" , 
 		       pnee_rec_pressed  ,
-		       0);
+		       PNEE_BUTTON_RECORD);
 
     pnee_create_button(pnee_applet,
 		       "Start replaying" , 
 		       "pnee-replay.png" , 
 		       pnee_rep_pressed  ,
-		       1);
+		       PNEE_BUTTON_REPLAY);
 
     pnee_create_button(pnee_applet,
 		       "Stop" , 
 		       "pnee-stop.png" , 
 		       pnee_stop_pressed  ,
-		       2);
+		       PNEE_BUTTON_STOP);
 
 /*       pnee_applet->rec_image = gtk_image_new_from_file("pnee-record.png"); */
 
@@ -759,18 +862,7 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet)
     gtk_box_pack_start (GTK_BOX (pnee_applet->container),   
 			  pnee_applet->progress, TRUE, TRUE, 0); 
 
-    /*
-    gtk_widget_show (pnee_applet->progress);
-    gtk_box_pack_start (GTK_BOX (pnee_applet->box), 
-			pnee_applet->progress, FALSE, FALSE, 0);
-			gtk_progress_bar_set_text (GTK_PROGRESS_BAR (pnee_applet->progress), 
-			       "Xnee Event Recorder and Replayer");
-    */
-    /*
-    gtk_progress_bar_set_ellipsize (GTK_PROGRESS_BAR (pnee_applet->progress), 
-				    PANGO_ELLIPSIZE_MIDDLE);
-    */
-    gtk_widget_show_all (pnee_applet->applet);
+    gtk_widget_show_all (pnee_applet->container);
 
     return;
 }
@@ -783,7 +875,6 @@ pnee_applet_fill (PanelApplet *applet,
 		  const gchar *iid,
 		  gpointer data)
 {
-  GtkWidget *label;
   pnee_applet = &pnee_applet_impl;  
   
   XNEE_VERBOSE_ENTER_FUNCTION();
