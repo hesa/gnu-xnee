@@ -439,6 +439,7 @@ typedef struct
 
   int data_ranges[XNEE_NR_OF_TYPES] ;  /*!< Count how many data ranges specified */
 
+  int             interrupt ;
 
 } xnee_record_init_data ; 
 

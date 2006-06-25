@@ -647,6 +647,8 @@ xnee_record_init (xnee_data *xd)
   xd->xnee_info.size            = 0      ;
 
   xd->xnee_info.replayed_events = 0      ;
+  xd->xnee_info.interrupt       = 0;
+
 
   for ( i=0 ; i< XNEE_NR_OF_TYPES ; i++) 
     {
@@ -985,6 +987,18 @@ xnee_record_async(xnee_data *xd)
   
   for (;;) 
     {
+      /* Interrupt variable set? */
+      if (xnee_get_interrupt_action(xd))
+	{
+	  xnee_verbose((xd, "interrupt (record) variable was set (%d)\n",
+			xnee_get_interrupt_action(xd)));
+	  xnee_unset_interrupt_action(xd);
+	  xnee_verbose((xd, "leaving loop  (%d)\n", 
+			xnee_get_interrupt_action(xd)));
+	  break;
+	}
+
+
       /* has the user pressed a modifier+key */
       if (xnee_check_key (xd)==XNEE_GRAB_DATA)
 	{

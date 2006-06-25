@@ -335,6 +335,17 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
               }
 	      
 	      
+	      /* Interrupt variable set? */
+	      if (xnee_get_interrupt_action(xd))
+		{
+		  xnee_verbose((xd, "interrupt (replay) variable was set (%d)\n",
+				xnee_get_interrupt_action(xd)));
+		  xnee_unset_interrupt_action(xd);
+		  xnee_verbose((xd, "leaving loop  (%d)\n", 
+				xnee_get_interrupt_action(xd)));
+		  return XNEE_OK;
+		}
+
 	      /*
 	       *
 	       * Do we have any grabbed key that have been pressed?

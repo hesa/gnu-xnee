@@ -782,5 +782,10 @@ xnee_get_rep_resolution_x (xnee_data *xd);
 int
 xnee_get_rep_resolution_y (xnee_data *xd);
  
+#define xnee_set_interrupt_action(xd)  (xd->xnee_info.interrupt=1)
+
+#define xnee_unset_interrupt_action(xd) (xd->xnee_info.interrupt=0)
+
+#define xnee_get_interrupt_action(xd) (xd->xnee_info.interrupt)
 
 #endif /* XNEE_SETGET_H */ 
