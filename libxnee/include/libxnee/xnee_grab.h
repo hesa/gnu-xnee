@@ -39,7 +39,7 @@ xnee_new_grab_keys(xnee_data *xd);
 int
 xnee_free_grab_keys(/*@null@*/ xnee_grab_keys *grab_keys);
 
-static int
+int
 xnee_grab_keys_init(xnee_data *xd);
 
 int 

@@ -349,7 +349,7 @@ xnee_grab_all_keys (xnee_data* xd)
 
 
 
-static int
+int
 xnee_grab_keys_init(xnee_data *xd)
 {
   int i ;
