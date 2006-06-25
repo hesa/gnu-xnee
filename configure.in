@@ -1,8 +1,8 @@
-AC_INIT(Xnee,2.05.90,bug-xnee@gnu.org)
+AC_INIT(Xnee,2.05.93,bug-xnee@gnu.org)
 
 AC_CONFIG_AUX_DIR(./autotools/)
 
-AM_INIT_AUTOMAKE(Xnee,2.05.90)
+AM_INIT_AUTOMAKE(Xnee,2.05.93)
 
 
 AC_PROG_INSTALL
@@ -461,6 +461,7 @@ then
 	PANEL_LD_FLAGS=`pkg-config  --libs libpanelapplet-2.0`
 	AC_SUBST(PANEL_FLAGS)
 	AC_SUBST(PANEL_LD_FLAGS)
+#        AC_OUTPUT([ pnee/Makefile pnee/src/Makefile  pnee/pixmaps/Makefile ])
 	MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN pnee/Makefile pnee/src/Makefile"
 	add_incl "pnee"
 else
