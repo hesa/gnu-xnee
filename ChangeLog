@@ -1,3 +1,24 @@
+2006-06-25    <hesa@gnu.org>
+
+	* src/xnee_replay.c  
+	Added support to stop action using a variable
+
+       * src/xnee_record.c  
+       Added support to stop action using a variable
+
+	* include/libxnee/xnee_setget.h  
+	Added support to stop action using a variable
+
+       * include/libxnee/xnee.h  
+	Added support to stop action using a variable
+
+       * include/libxnee/xnee_grab.h
+       Changed macro XNEE_VERBOSE_MARK to take no arg 
+
+	* pnee/
+
+	Splash before record/replay start
+
 2006-06-21    <hesa@gnu.org>
 
 	* pnee/

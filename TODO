@@ -1,15 +1,9 @@
 
 pnee:
-  point to cnee if pnee user want more functionality
   
-  handle that user can start replay before recording is finished
-
-  make sure "stop" interrupts replay
-
-  why doesn't pnee load the correct file after pne replay?
-    - it does after record!
 
 libxnee:
+  xnee_info contains record and replay things, but is handled in xnee_record.c
 
 doc:
 	build doc by default    
