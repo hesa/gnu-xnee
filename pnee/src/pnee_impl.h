@@ -1,5 +1,31 @@
+/*****
+ *       Xnee's Not an Event Emulator                                
+ *                                                                   
+ * Xnee enables recording and replaying of X protocol data           
+ *                                                                   
+ *        Copyright (C) 2005, 2006 Henrik Sandklef 
+ *                                                                   
+ * This program is free software; you can redistribute it and/or     
+ * modify it under the terms of the GNU General Public License       
+ * as published by the Free Software Foundation; either version 2    
+ * of the License, or any later version.                             
+ *                                                                   
+ *                                                                   
+ * This program is distributed in the hope that it will be useful,   
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of    
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     
+ * GNU General Public License for more details.                      
+ *                                                                   
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software       
+ * Foundation, Inc., 51 Franklin Street, Boston,            
+ * MA  02110-1301, USA.                                              
+ ****/
+
+
 #ifndef PNEE_IMPL_H
 #define PNEE_IMPL_H
+
 #include <string.h>
 
 #include <gdk/gdk.h>
@@ -26,103 +52,32 @@
 #include "libxnee/xnee_session.h"
 #include "libxnee/xnee_fileop.h"
 
-#include <callbacks.h>
 #include <interface.h>
+#include <pnee_types.h>
 
 #define PTHREAD_RETURN_VAL void*
 #define PTHREAD_RETURN return NULL
 
 
-typedef enum _pnee_actions
-  {
-    PNEE_ACTION_NONE,
-    PNEE_ACTION_RECORD,
-    PNEE_ACTION_REPLAY
-  } pnee_actions;
-
-
-typedef enum _pnee_update_actions
-  {
-    PNEE_UPDATE_NONE,
-    PNEE_UPDATE_RECORD,
-    PNEE_UPDATE_REPLAY
-  } pnee_update_actions;
-
-typedef enum _pnee_button_type
-  {
-    PNEE_BUTTON_RECORD,
-    PNEE_BUTTON_REPLAY,
-    PNEE_BUTTON_STOP
-  } pnee_button_type;
-
-typedef struct
-{
-  PanelApplet *applet;
-  GtkWidget *button_box;	
-  GtkWidget *label;	
-  GtkWidget *container;
-  GtkTooltips *tooltips;
-
-  GtkWidget *rec_button;
-  GtkWidget *rep_button;
-  GtkWidget *stop_button;
-
-  GtkWidget *rec_image;
-  GtkWidget *rep_image;
-  GtkWidget *stop_image;
-
-  GtkTooltips* rec_tooltip;
-  GtkTooltips* rep_tooltip;
-  GtkTooltips* stop_tooltip;
-  GtkWidget *progress;
-
-  GtkIconSize icon_size;
-
-  pthread_t  xnee_thread;
-  pthread_t  xnee_updater;
-
-  sem_t      action_mutex;
-  GtkWidget *pnee_pref;
-
-  volatile pnee_actions action_state ;
-  volatile pnee_update_actions update_state ;
-
-
-  xnee_data *xd ;
-
-/* #define FAKED_MAIN */
-#define PNEE_DEBUGGER
-#ifdef PNEE_DEBUGGER
-  pthread_t xnee_debugger;
-#endif /* PNEE_DEBUGGER */
-} pnee_panel_applet;
+#include <callbacks.h>
 
 extern GtkWidget* fs;
 extern gchar *filename;
 extern pnee_panel_applet *pnee_applet;
 
 
-#define THREAD_WAIT_READY   { while (action_state!=PNEE_ACTION_NONE) { usleep (1000*50); fprintf(stderr, "twr "); }
-#define RETURN_IF_THREAD_BUSY   { if (action_state!=PNEE_ACTION_NONE) { fprintf(stderr, "\n\n ********** thread busy (%d) , leaving\n\n", action_state); return ; } }
-
 #define DEBUG_MARK()  fprintf(stderr, "  ---  %s:%d  %s()\n", __FILE__, __LINE__, __func__);
 
-#define _IN  fprintf (stderr, "********** Taking sem (at %d)\n", __LINE__); fflush(stderr); gdk_threads_enter(); fprintf (stderr, "**********  sem taken (at %d)\n", __LINE__); fflush(stderr) 
-#define _OUT  fprintf (stderr, "********** Releasing sem\n"); fflush(stderr); gdk_threads_leave()
+#define _IN   gdk_threads_enter() 
+#define _OUT  gdk_threads_leave()
 
-/*
-#define pnee_set_no_action()  _IN; DEBUG_MARK(); action_state=PNEE_ACTION_NONE   ;   DEBUG_MARK();  _OUT
-#define pnee_set_no_action_no_thread() _IN; action_state=PNEE_ACTION_NONE ; _OUT
-#define pnee_set_recording() _IN; action_state=PNEE_ACTION_RECORD ;    _OUT
-#define pnee_set_replaying() _IN; action_state=PNEE_ACTION_REPLAY ;    _OUT
-*/
-#define pnee_set_no_action(p)  DEBUG_MARK(); p->action_state=PNEE_ACTION_NONE 
-#define pnee_set_no_action_no_thread(p) p->action_state=PNEE_ACTION_NONE 
-#define pnee_set_recording(p)  p->action_state=PNEE_ACTION_RECORD 
-#define pnee_set_replaying(p)  p->action_state=PNEE_ACTION_REPLAY 
-#define pnee_is_recording(p)   (p->action_state==PNEE_ACTION_RECORD)
-#define pnee_is_replaying(p)   (p->action_state==PNEE_ACTION_REPLAY) 
-#define pnee_is_ready(p)       (p->action_state==PNEE_ACTION_NONE) 
+#define pnee_set_no_action(p)            p->action_state=PNEE_ACTION_NONE 
+#define pnee_set_no_action_no_thread(p)  p->action_state=PNEE_ACTION_NONE 
+#define pnee_set_recording(p)            p->action_state=PNEE_ACTION_RECORD 
+#define pnee_set_replaying(p)            p->action_state=PNEE_ACTION_REPLAY 
+#define pnee_is_recording(p)             (p->action_state==PNEE_ACTION_RECORD)
+#define pnee_is_replaying(p)             (p->action_state==PNEE_ACTION_REPLAY) 
+#define pnee_is_ready(p)                 (p->action_state==PNEE_ACTION_NONE) 
 
 
 #define pnee_set_update_no_action(p) p->update_state=PNEE_UPDATE_NONE 
@@ -130,6 +85,7 @@ extern pnee_panel_applet *pnee_applet;
 #define pnee_set_update_replaying(p) p->update_state=PNEE_UPDATE_REPLAY 
 
 #define GCHAR_TO_CHAR(a) ((char *) (a))
+
 
 #define pnee_show_states(p)       \
      fprintf(stderr,       \

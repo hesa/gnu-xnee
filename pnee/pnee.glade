@@ -817,7 +817,9 @@
   <property name="destroy_with_parent">False</property>
   <property name="name" translatable="yes">Pnee</property>
   <property name="copyright" translatable="yes">© 2005, 2006 Henrik Sandklef &lt;hesa@gnu.org&gt;</property>
-  <property name="comments" translatable="yes">Pnee is a GNU Xnee Applet  </property>
+  <property name="comments" translatable="yes">Pnee is a GNU Xnee Applet  
+....for more features check out gnee and cnee
+</property>
   <property name="license" translatable="yes">		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
 
@@ -1171,11 +1173,12 @@ please contact hesa@gnu.org if you want to contribute</property>
 please contact hesa@gnu.org if you want to contribute</property>
 </widget>
 
-<widget class="GtkWindow" id="pnee_panel">
+<widget class="GtkWindow" id="delay">
+  <property name="border_width">3</property>
   <property name="visible">True</property>
-  <property name="title" translatable="yes">window1</property>
-  <property name="type">GTK_WINDOW_TOPLEVEL</property>
-  <property name="window_position">GTK_WIN_POS_NONE</property>
+  <property name="title" translatable="yes">pnee delay</property>
+  <property name="type">GTK_WINDOW_POPUP</property>
+  <property name="window_position">GTK_WIN_POS_CENTER</property>
   <property name="modal">False</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
@@ -1188,36 +1191,19 @@ please contact hesa@gnu.org if you want to contribute</property>
   <property name="urgency_hint">False</property>
 
   <child>
-    <widget class="GtkVBox" id="pnee_panel_box">
+    <widget class="GtkVBox" id="del_progr_win">
       <property name="visible">True</property>
       <property name="homogeneous">False</property>
       <property name="spacing">0</property>
 
       <child>
-	<widget class="GtkImage" id="pnee_panel_img">
-	  <property name="visible">True</property>
-	  <property name="stock">gtk-media-record</property>
-	  <property name="icon_size">4</property>
-	  <property name="xalign">0.5</property>
-	  <property name="yalign">0.5</property>
-	  <property name="xpad">0</property>
-	  <property name="ypad">0</property>
-	</widget>
-	<packing>
-	  <property name="padding">0</property>
-	  <property name="expand">True</property>
-	  <property name="fill">True</property>
-	</packing>
-      </child>
-
-      <child>
-	<widget class="GtkProgressBar" id="pnee_progress">
+	<widget class="GtkProgressBar" id="delay_progr">
 	  <property name="visible">True</property>
 	  <property name="orientation">GTK_PROGRESS_LEFT_TO_RIGHT</property>
 	  <property name="fraction">0</property>
 	  <property name="pulse_step">0.10000000149</property>
-	  <property name="text" translatable="yes">Xnee Event Recorder and Replayer</property>
-	  <property name="ellipsize">PANGO_ELLIPSIZE_MIDDLE</property>
+	  <property name="text" translatable="yes">Delayd start of pnee</property>
+	  <property name="ellipsize">PANGO_ELLIPSIZE_NONE</property>
 	</widget>
 	<packing>
 	  <property name="padding">0</property>

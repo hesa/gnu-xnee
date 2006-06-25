@@ -14,7 +14,8 @@ pnee_SOURCES = \
 	main.c \
 	support.c support.h \
 	interface.c interface.h \
-	callbacks.c callbacks.h 
+	callbacks.c callbacks.h \
+	pnee_impl.c pnee_impl.h pnee_types.h 
 
 pnee_LDADD =  -L../../ -L../../libxnee/src @PACKAGE_LIBS@ $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst
 
