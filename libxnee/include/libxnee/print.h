@@ -29,7 +29,7 @@ Foundation, Inc., 51 Franklin Street, Boston, MA  02110-1301, USA.
 #define XNEE_VERBOSE_ENTER_FUNCTION() xnee_verbose((xd, " ---> %s\n", __func__ ))
 #define XNEE_VERBOSE_LEAVE_FUNCTION() xnee_verbose((xd, " <--- %s\n", __func__ ))
 #define XNEE_VERBOSE_IN_FUNCTION(str) xnee_verbose((xd, "      %s: \"%s\"\n", __func__ , str))
-#define XNEE_VERBOSE_MARK(str)        xnee_verbose((xd, "      %s:%d  %s()\n", __FILE__, __LINE__, __func__ ))
+#define XNEE_VERBOSE_MARK()           xnee_verbose((xd, "      %s:%d  %s()\n", __FILE__, __LINE__, __func__ ))
 
 
 /**
