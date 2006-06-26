@@ -2,7 +2,7 @@ SUBDIRS = ${LIB_DIR}  ${CLI_DIR} ${GUI_DIR} ${GNOME_APPLET_DIR} ${DOC_DIR} share
 
 AUTOMAKE_OPTIONS = gnu
 
-EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/* projects/test.xnp sessions/example1.xns README BUGS FAQ EXAMPLES doc/Makefile.am ChangeLog 
+EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/* projects/test.xnp sessions/example1.xns README README.debian BUGS FAQ EXAMPLES doc/Makefile.am ChangeLog 
 
 
 

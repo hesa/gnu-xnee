@@ -426,7 +426,7 @@ fi
 
 if test x$buildlib = xtrue ; 
 then
-        AC_OUTPUT([ libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile ])
+        MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile"
 	add_incl "libxnee"
 else
 	add_excl "libxnee"
@@ -462,16 +462,26 @@ then
 	AC_SUBST(PANEL_FLAGS)
 	AC_SUBST(PANEL_LD_FLAGS)
 #        AC_OUTPUT([ pnee/Makefile pnee/src/Makefile  pnee/pixmaps/Makefile ])
-	MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN pnee/Makefile pnee/src/Makefile"
+	MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN pnee/Makefile pnee/src/Makefile pnee/pixmaps/Makefile"
 	add_incl "pnee"
 else
 	add_excl "pnee"
 fi
 
+AC_SUBST(MAKEFILES_TO_GEN)
 echo "Making the following Makefiles:"
 echo "  $MAKEFILES_TO_GEN"
-AC_OUTPUT([ $MAKEFILES_TO_GEN ])
+#AC_OUTPUT([ $MAKEFILES_TO_GEN ])
+AC_OUTPUT([ Makefile libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile examples/Makefile sessions/Makefile share/Makefile doc/Makefile cnee/Makefile cnee/src/Makefile gnee/Makefile gnee/src/Makefile pnee/Makefile pnee/src/Makefile pnee/pixmaps/Makefile  ])
 
+#
+# Trick to fool automake
+#
+if test "x$dummy_variable_xnee" = "x_dummy_value_xnee" ;
+then 
+     echo
+#     AC_CONFIG_FILES([ Makefile examples/Makefile sessions/Makefile share/Makefile doc/Makefile cnee/Makefile cnee/src/Makefile gnee/Makefile gnee/src/Makefile pnee/Makefile pnee/src/Makefile pnee/pixmaps/Makefile  ])
+fi
 
 #
 # Final words 

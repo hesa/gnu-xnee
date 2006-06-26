@@ -1,0 +1,6 @@
+To compile for Debian (Debian based distros (e.g Ubuntu)) don't forget to set the prefix during configure. Otherwise pnee (Gnome Panel Applet) will not be started.
+
+
+Example:
+	./configure --enable-gnome-applet --prefix=/usr
+

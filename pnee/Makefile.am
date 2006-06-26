@@ -2,7 +2,6 @@
 
 SUBDIRS = pixmaps src
 
-
 EXTRA_DIST = \
 	autogen.sh \
 	pnee.glade \

@@ -26,7 +26,6 @@ EXTRA_DIST = Makefile.cnee Makefile.cvs autotools/* \
     test/scripts/retype/keyboard.sh \
     test/scripts/resolution/mo-res.sh \
     test/scripts/timing/mo-time.sh \
-    test/src/Makefile \
     test/src/xgetter.c 
 
 

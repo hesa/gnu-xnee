@@ -38,9 +38,6 @@ if you need help on the configure options, do
 
 Typically you can:
    * disable building gnee (--disable-gui) 
-   * disblae building documentation (--disable-doc)
-
-
-
-
+   * disable building documentation (--disable-doc)
+   * enable building of pnee (--enable-gnome-applet)
 
