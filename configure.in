@@ -1,8 +1,6 @@
-AC_INIT(Xnee,2.05.93,bug-xnee@gnu.org)
-
+AC_INIT(Xnee,2.05.95,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
-
-AM_INIT_AUTOMAKE(Xnee,2.05.93)
+AM_INIT_AUTOMAKE(Xnee,2.05.95)
 
 
 AC_PROG_INSTALL
@@ -14,7 +12,7 @@ AC_PATH_X
 AC_PATH_XTRA
 AC_FUNC_VPRINTF
 AC_CHECK_HEADERS(stdarg.h varargs.h, break)
-
+AC_EXEEXT
 AC_PATH_PROG(AWK,awk)
 AC_PATH_PROG(BASH,bash,sh)
 
@@ -22,7 +20,7 @@ AC_PATH_PROG(BASH,bash,sh)
 LIBS="$LIBS $X_LIBS"
 
 AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="")])
-AC_CHECK_LIB(c, sem_init, LIBSEMA="", [AC_CHECK_LIB(pthread, sem_init, LIBSEMA="")])
+AC_CHECK_LIB(c, sem_init, LIBSEMA="CCC", [AC_CHECK_LIB(pthread, sem_init, LIBSEMA="-lpthread")])
 AC_CHECK_LIB(Xtst, XTestFakeMotionEvent, LIBXTST="-lXtst",[AC_CHECK_LIB(Xext,XTestFakeMotionEvent , LIBXTST="-lXext")])
 
 GENERATION_DIRS=""
@@ -58,7 +56,7 @@ AC_ARG_ENABLE(gnome-applet,
   yes) buildgapplet=true ;;
   no)  buildgapplet=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --disable-gnome-applet) ;;
-esac],[buildgapplet=false])
+esac],[buildgapplet=true])
 
 AC_ARG_ENABLE(doc,
 [  --enable-doc       build Xnee documentation],
@@ -314,84 +312,116 @@ show_doc_program()
 }
 
 DOC_NOT_BUILT_WARNING=false
+MISSING_PROGRAMS=""
+
+give_deb_hint()
+{
+    if test "x$DEBS_TO_INSTALL" != "x" 
+	then
+	echo "  **       If you are using Debian or Debian based distro "
+	echo "  **       (e.g Ubuntu), try:"
+	echo "               apt-get install $DEBS_TO_INSTALL"
+	echo "  **"
+    fi
+}
+
+help_on_missing_progrs()
+{
+    PROG=$1
+    DISABLE_OPT=$2
+    echo "  ** Suggested solutions:" 
+    echo "  **    1) Build Xnee without $PROG,"
+    echo "  **      ./configure $DISABLE_OPT"
+    echo "  **"
+    echo "  **    2) Install the missing programs/packages"
+    give_deb_hint
+    echo "  **    3) If the programs/packages are installed (and not found) make sure they can be found in the PATH or other environment variable"    
+    echo "  **"
+}
+
+
 check_program()
 {
     PROG_VAR_TO_CHECK=$1
     PROG_TO_CHECK=$2
-    COMMENT_ON_FAIL=$3
     
     if test "x$PROG_VAR_TO_CHECK" = "x" 
 	then
-	echo ""
-	echo " **** Warning **** "
-	echo " * "
-	echo " * Failed to to find $PROG_TO_CHECK"
-	echo " * "
-	echo "$COMMENT_ON_FAIL"
-	echo " * "
-	echo " ****************** "
-	echo " "
-	#exit 1
-	DOC_NOT_BUILT_WARNING=true
+	MISSING_PROGRAMS="$MISSING_PROGRAMS $PROG_TO_CHECK"
     fi
 }
 
+DEBS_TO_INSTALL=""
 check_doc_program()
 {
-    check_program "$1" "$2" " * Suggested solutions: 
- *    1) Build Xnee without documentation,
- *      ./configure --disable-doc
- *
- *   2) Install $2
- *
- *   3) If $2 is installed (and not found) make sure $2 is in the PATH variable"
+    PROG_VAR_TO_CHECK=$1
+    PROG_TO_CHECK=$2
+    DEBS=$3    
+
+    if test "x$PROG_VAR_TO_CHECK" = "x" 
+	then
+	DOC_NOT_BUILT_WARNING=true
+	MISSING_PROGRAMS="$MISSING_PROGRAMS $PROG_TO_CHECK"
+	DEBS_TO_INSTALL="$DEBS_TO_INSTALL $DEBS"
+    fi
 }
 
 DOC_TARGETS="info txt"
 if test x$builddoc = xtrue ; 
 then
 	AC_PATH_PROG(DIA,dia,,)
-	check_doc_program "$DIA" "dia"
+	check_doc_program "$DIA" "dia" "dia"
 
 	AC_PATH_PROG(TEXI2HTML,texi2html,,)
-	check_doc_program "$TEXI2HTML" "texi2html"
+	check_doc_program "$TEXI2HTML" "texi2html" "texi2html"
 
 	AC_PATH_PROG(DVI2PS,dvi2ps,,)
-	check_doc_program "$DVI2PS" "dvi2ps"
+	check_doc_program "$DVI2PS" "dvi2ps" "dvi2ps"
 
 	AC_PATH_PROG(PS2PDF,ps2pdf,,)
-	check_doc_program "$PS2PDF" "ps2pdf"
+	check_doc_program "$PS2PDF" "ps2pdf" "gs-common"
 
 	AC_PATH_PROG(EPSTOPDF,epstopdf,,)
-	check_doc_program "$EPSTOPDF" "epstopdf"
+	check_doc_program "$EPSTOPDF" "epstopdf" "tetex-bin"
 
 	AC_PATH_PROG(CONVERT,convert,,)
-	check_doc_program "$CONVERT" "convert"
+	check_doc_program "$CONVERT" "convert" "imagemagick"
 
 #	AC_PATH_PROG(DOXYGEN,doxygen,,)
-#	check_doc_program "$DOXYGEN" "doxygen"
+#	check_doc_program "$DOXYGEN" "doxygen"  "doxygen"
 
 	AC_PATH_PROG(MAKEINFO,makeinfo,,)
-	check_doc_program "$MAKEINFO" "makeinfo"
+	check_doc_program "$MAKEINFO" "makeinfo" "texi2html"
 
 
 	if test x$DOC_NOT_BUILT_WARNING = xtrue ;
 	    then
 	    echo " "
-	    echo " "
-	    echo "          WARNING"
-	    echo " " 
-	    echo " ** Documents are not built ** "
-	    echo " "
-	    echo " "
+	    echo "  ********** ERROR **********"
+	    echo "  ** Documents can not be built ** "
+	    echo "  ** " 
+	    echo "  ** The following programs are missing:"
+	    for i in $MISSING_PROGRAMS 
+	      do
+	      echo "  **    $i "
+	    done
+	    echo "  ** " 
+	    help_on_missing_progrs documentation "--disable-doc"
+	    echo "  ** " 
+	    echo "  ********** ERROR **********"
 	    DOC_DIR=""
 	    DOC_TARGETS=""
 	    builddoc=false
 	    doconly=false
+	    CNEE_INFO=""
+	    echo "...  configuration failed"
+	    exit 1
 	else
 	    DOC_TARGETS="images html info txt pdf ps"
+	    CNEE_INFO="cnee.info"
 	fi
 fi
+
 
 AC_SUBST(DOC_TARGETS)
 AC_SUBST(GUI_DIR)
@@ -400,6 +430,8 @@ AC_SUBST(CLI_DIR)
 AC_SUBST(LIB_DIR)
 AC_SUBST(DOC_DIR)
 AC_SUBST(FOO_DIR)
+AC_SUBST(CNEE_INFO)
+AC_SUBST(XNEE_DOC_DIR)
 
 MAKEFILES_TO_GEN=""
 MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN Makefile examples/Makefile sessions/Makefile share/Makefile"
@@ -457,8 +489,24 @@ then
 	AC_SUBST(PANEL_SERVER_DIR)
 	AC_SUBST(PANEL_APPLET_DIR)
 	AC_PATH_PROG(GCONFTOOL, gconftool-2)
-	PANEL_FLAGS=`pkg-config --cflags libpanelapplet-2.0`
-	PANEL_LD_FLAGS=`pkg-config  --libs libpanelapplet-2.0`
+	PANEL_APPLET=libpanelapplet-2.0
+	PANEL_FLAGS=`pkg-config --cflags $PANEL_APPLET`
+	PANEL_LD_FLAGS=`pkg-config  --libs $PANEL_APPLET`
+	pkg-config $PANEL_APPLET
+	if test x$? != x0 ;
+	    then
+	    echo "  ********** ERROR **********"
+	    echo "  ** pnee can not be built ** "
+	    echo "  ** " 
+	    echo "  ** The following programs/packages are missing:"
+	    echo "  **    $PANEL_APPLET"
+	    echo "  ** " 
+	    DEBS_TO_INSTALL="libgnome-desktop-2 libpanel-applet2-dev"
+	    help_on_missing_progrs pnee "--disable-gnome-applet"
+	    echo "  ** " 
+	    echo "  ********** ERROR **********"
+	    exit 1
+	fi
 	AC_SUBST(PANEL_FLAGS)
 	AC_SUBST(PANEL_LD_FLAGS)
 #        AC_OUTPUT([ pnee/Makefile pnee/src/Makefile  pnee/pixmaps/Makefile ])
@@ -475,15 +523,6 @@ echo "  $MAKEFILES_TO_GEN"
 AC_OUTPUT([ Makefile libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile examples/Makefile sessions/Makefile share/Makefile doc/Makefile cnee/Makefile cnee/src/Makefile gnee/Makefile gnee/src/Makefile pnee/Makefile pnee/src/Makefile pnee/pixmaps/Makefile  ])
 
 #
-# Trick to fool automake
-#
-if test "x$dummy_variable_xnee" = "x_dummy_value_xnee" ;
-then 
-     echo
-#     AC_CONFIG_FILES([ Makefile examples/Makefile sessions/Makefile share/Makefile doc/Makefile cnee/Makefile cnee/src/Makefile gnee/Makefile gnee/src/Makefile pnee/Makefile pnee/src/Makefile pnee/pixmaps/Makefile  ])
-fi
-
-#
 # Final words 
 #
 #
@@ -492,6 +531,8 @@ echo " "
 echo " " 
 echo " Configuration of Xnee finished "
 echo " ============================== "
+echo "    PACKAGE              $PACKAGE"
+echo "    VERSION              $VERSION"
 echo " "
 echo "   Xnee Developer flags"
 echo "   -------------------------------------"
@@ -528,27 +569,26 @@ echo "   Building the following components "
 echo "   -------------------------------------"
 printf "    $INCLUDED_COMPONENTS"
 echo " "
-echo " "
+if test "x$EXCLUDED_COMPONENTS" != "x" ;
+then
 echo "   Excluding the following components "
 echo "   -------------------------------------"
-if test "x$EXCLUDED_COMPONENTS" = "x" ;
-then
-echo "        no components are excluded from build"
-else
 printf "    $EXCLUDED_COMPONENTS"
 echo " "
 fi
 echo " "
-echo " If the settings are not ok, configure again"
-echo "     ./configure <your options>"
+echo "   Settings ok?"
+echo "   -------------------------------------"
+echo "    If the settings are not ok, configure again"
+echo "       ./configure <your options>"
 echo " "
-echo " To list all the configure options: "
-echo "     ./configure --help"
+echo "    To list all the configure options: "
+echo "       ./configure --help"
 echo " "
+echo "   Compile and install"
+echo "   -------------------------------------"
+echo "    If the above settings are ok, proceed with the build:"
+echo "       make"
+echo "    and (perhaps as root)"
+echo "       make install"
 echo " "
-echo " If the above is ok, proceed with the build:"
-echo "      make"
-echo " and (perhaps as root)"
-echo "      make install"
-
-
