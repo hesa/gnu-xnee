@@ -30,7 +30,7 @@
 
 
 char *explain[] = {
-  "file_name" , "Name of a file (e.g /tmp/user1_session)" ,
+  "file_name" , "Name of a file (e.g /tmp/my_file.xns)" ,
   "display_name" , "Name of a display (e.g 192.168.1.12:0" ,
   "secs" , "Seconds (e.g 10)" ,
   "n" , "Integer number (e.g 100)" ,
@@ -41,8 +41,8 @@ char *explain[] = {
 
 
 char *examples[] = {
-  ""XNEE_CLI "--record --events-to-record 1000 -devera 2-6 -o /tmp/xnee.xns -e /tmp/xnee.log -v", 
-  "Writes 1000 data to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log",
+  ""XNEE_CLI "--record --events-to-record 1000 --mouse --keyboard -o /tmp/xnee.xns -e /tmp/xnee.log -v", 
+  "Records 1000 events (keyboard and mouse) to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log",
   ""XNEE_CLI " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
   "Read data from /tmp/xnee.xns, replay it and verbose print to file /tmp/xnee.log",
   "For more examples, read the Xnee manual",
