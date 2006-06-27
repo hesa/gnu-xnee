@@ -1,21 +1,26 @@
-bin_PROGRAMS = cnee
-cnee_SOURCES = cnee_fake.c  cnee_printer.c  cnee_strings.c  cnee_demo.c  main.c  parse.c  
+CNEE=cnee
+bin_PROGRAMS = $(CNEE)
+cnee_SOURCES = cnee_fake.c  cnee_printer.c  cnee_strings.c  cnee_demo.c  main.c  parse.c  ../include/cnee_fake.h  ../include/cnee_demo.h ../include/cnee_printer.h  ../include/cnee_strings.h ../include/parse.h  ../include/cnee.h 
 man_MANS = cnee.1
 
-BUILT_SOURCES = cnee.info cnee.texi
+BUILT_SOURCES = cnee.texi 
 CLEAN_FILES   = cnee.info cnee.texi
 
-texi_TEXINFOS = cnee.texi
+doc_DATA = $(CNEE_INFO)
+docdir = $(datadir)/info
+
+texi_TEXINFOS = cnee.texi 
 #info_TEXINFOS = cnee.texi
 
-EXTRA_DIST=$(man_MANS) ../include/cnee_fake.h  ../include/cnee_demo.h ../include/cnee_printer.h  ../include/cnee_strings.h ../include/parse.h  ../include/cnee.h 
 
+EXTRA_DIST=$(man_MANS) $(TEXINF_FILES)
 
-
-cnee.texi: cnee$(EXEEXT)
-	./cnee --texipage > $@
+cnee.texi: $(CNEE)$(EXEEXT)
+	@echo "Generating texi file from: $(CNEE)$(EXEEXT)"
+	./$(CNEE)$(EXEEXT) --texipage > $@
 
 cnee.info: cnee.texi
+	@echo "Generating info file from cnee.texi"
 	$(MAKEINFO) $< 
 
 LIBXNEE_DIR = ../../libxnee
@@ -59,7 +64,7 @@ endif
 
 AM_CFLAGS = -I../include -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${BUF_VERBOSE_FLAG}  ${USER_CFLAGS} ${GCOV_FLAG} ${GPROF_FLAG}
 
-cnee_LDADD =   -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)   
+cnee_LDADD =   -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} 
 
 cnee_LDFLAGS = ${GCOV_FLAG} ${GPROF_FLAG}
 
@@ -68,12 +73,12 @@ cnee_DEPENDENCIES = ${LIBXNEE_DIR}/src/libxnee.a
 test-cli:
 	(cd test ; ./test_all.sh)
 
-.info.texi:
-	makeinfo 
+#.info.texi:
+#	makeinfo 
 
-info: cnee.info 
+info: $(CNEE_INFO)
 
-man: cnee.1
+man: $(CNEE_MAN_FILES)
 
-cnee.1: cnee
-	./cnee --manpage > $@
+cnee.1: $(CNEE)$(EXEEXT)
+	./$(CNEE)$(EXEEXT) --manpage > $@

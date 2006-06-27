@@ -2,40 +2,7 @@ AUTOMAKE_OPTIONS = gnu
 
 noinst_LIBRARIES = libxnee.a
 
-libxnee_a_SOURCES = xnee.c  \
-	print.c  \
-	print_varargs.c  \
-	xnee_record.c  \
-	xnee_replay.c   \
-	datastrings.c  \
-	xnee_sem.c  \
-	xnee_dl.c \
-	xnee_setget.c \
-	xnee_resolution.c \
-	xnee_fake.c \
-	xnee_km.c \
-	xnee_grab.c \
-	xnee_resource.c \
-	xnee_time.c \
-	xnee_callback.c \
-	xnee_buffer.c   \
-	xnee_threshold.c \
-	xnee_range.c \
-	xnee_expr.c \
-	xnee_error.c \
-	xnee_keysym.c \
-	xnee_strings.c \
-	xnee_session.c \
-	xnee_utils.c \
-	xnee_alloc.c \
-	xnee_fileop.c \
-	xnee_display.c \
-	xnee_settings.c \
-	xnee_plugin.c \
-	xnee_window.c \
-	feedback.c 
-
-EXTRA_DIST = ../include/libxnee/xnee.h     \
+LIBXNEE_H_FILES=../include/libxnee/xnee.h     \
 	../include/libxnee/print.h         \
 	../include/libxnee/xnee_error.h    \
 	../include/libxnee/print_varargs.h \
@@ -69,6 +36,42 @@ EXTRA_DIST = ../include/libxnee/xnee.h     \
 	../include/libxnee/xnee_window.h \
 	../include/libxnee/feedback.h 
 
+
+libxnee_a_SOURCES = xnee.c  \
+	print.c  \
+	print_varargs.c  \
+	xnee_record.c  \
+	xnee_replay.c   \
+	datastrings.c  \
+	xnee_sem.c  \
+	xnee_dl.c \
+	xnee_setget.c \
+	xnee_resolution.c \
+	xnee_fake.c \
+	xnee_km.c \
+	xnee_grab.c \
+	xnee_resource.c \
+	xnee_time.c \
+	xnee_callback.c \
+	xnee_buffer.c   \
+	xnee_threshold.c \
+	xnee_range.c \
+	xnee_expr.c \
+	xnee_error.c \
+	xnee_keysym.c \
+	xnee_strings.c \
+	xnee_session.c \
+	xnee_utils.c \
+	xnee_alloc.c \
+	xnee_fileop.c \
+	xnee_display.c \
+	xnee_settings.c \
+	xnee_plugin.c \
+	xnee_window.c \
+	feedback.c \
+	$(LIBXNEE_H_FILES)
+
+#EXTRA_DIST = 
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE
@@ -111,7 +114,7 @@ AM_CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV
 
 
 HTML_SRC_FILES = $(libxnee_a_SOURCES:%.c=%.c.html)
-HTML_INC_FILES = $(EXTRA_DIST:%.h=%.h.html)
+HTML_INC_FILES = $(LIBXNEE_H_FILES:%.h=%.h.html)
 
 %.c.html:%.c
 	$(SRC_HIGHLIGHT)  -f html -n  --line-number-ref -d -t "$<" -H header.html   $<
