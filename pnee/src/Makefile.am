@@ -9,7 +9,7 @@ INCLUDES = \
 
 PNEE=pnee
 noinst_PROGRAMS = $(PNEE)
-pnee_CFLAGS = -DHAVE_STDARG $(PANEL_FLAGS) -Wall -g -DPNEE_PIXDIR=\""$(datadir)/pixmaps/Xnee"\"
+pnee_CFLAGS = -DHAVE_STDARG $(PANEL_FLAGS) -Wall -g -DPNEE_PIXDIR=\""$(datadir)/xnee/pixmaps"\"
 pnee_SOURCES = \
 	main.c \
 	support.c support.h \
@@ -17,7 +17,7 @@ pnee_SOURCES = \
 	callbacks.c callbacks.h \
 	pnee_impl.c pnee_impl.h pnee_types.h 
 
-pnee_LDADD =  -L../../ -L../../libxnee/src @PACKAGE_LIBS@ $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst
+pnee_LDADD =  -L../../ -L../../libxnee/src @PACKAGE_LIBS@ $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   
 
 install-exec-local: $(PNEE)	
 	mkdir -p $(PANEL_APPLET_DIR)
