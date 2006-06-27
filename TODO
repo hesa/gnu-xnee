@@ -1,15 +1,9 @@
 
 pnee:
-  1) build pnee by default    
-  2) on err > exit with a hint to do "./configure --disable-pnee"
-  3) try to give a Debian solution
         
 libxnee:
   xnee_info contains record and replay things, but is handled in xnee_record.c
 
 doc:
-  1) build doc by default    
-  2) on err > exit with a hint to do "./configure --disable-doc"
-  3) try to give a Debian solution
 
 

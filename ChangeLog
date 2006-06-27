@@ -1,3 +1,40 @@
+2006-06-27    <hesa@gnu.org>
+
+	* libxnee/src/print.c
+
+	Adjusted printout 
+
+	* libxnee/src/Makefile.am
+
+	Better installation handling 
+
+	* cnee/src/Makefile.am
+	
+	Better installation handling 
+
+	* src/cnee_strings.c
+
+	Fixed help strings 
+
+	* pnee/src/Makefile.am
+
+	Fixed sem lib while linking  
+
+	* sessions/Makefile.am 
+	* share/Makefile.am 
+	* examples/Makefile.am
+
+	Adjusted install path  
+
+	* doc/Makefile.am
+
+	Better installation handling 
+
+	* configure.in
+	
+	Better installation handling. Exits after failure.... 
+
+
 2006-06-26    <hesa@gnu.org>
 
 	* README.debian

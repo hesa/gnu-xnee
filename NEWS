@@ -13,10 +13,14 @@ Changes in coming 2.06
 
      * New file (README.Debian) for Debian users
 
+     * configure exits if not all doc generating
+       programs are found
+
   Minor updates
 
      * New About window for Gnee
 
+     * Examples (help printout) are updated
 
 
 Changes in 2.05
