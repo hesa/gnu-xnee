@@ -11,6 +11,8 @@ Changes in coming 2.06
      * New script build/test-dist.sh
        verifies dist file
 
+     * New file (README.Debian) for Debian users
+
   Minor updates
 
      * New About window for Gnee
