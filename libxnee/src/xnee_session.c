@@ -531,7 +531,10 @@ handle_xerr(Display *dpy, XErrorEvent *errevent)
   int ret ; 
   /*@out@*/ char tmp[100]="";
 
-  if (errevent->type==0)
+/*   fprintf (stderr, "Error received:  %d\n",  */
+/* 	   errevent->error_code); */
+
+  /*  if (errevent->type==0)
     {
        return XNEE_OK; 
     }
@@ -539,6 +542,7 @@ handle_xerr(Display *dpy, XErrorEvent *errevent)
     {
        return XNEE_OK; 
     }
+  */
 
   fprintf (stderr, "Error received:\n");
   fprintf (stderr, "\terror type       %u (0x%x)\n", 
