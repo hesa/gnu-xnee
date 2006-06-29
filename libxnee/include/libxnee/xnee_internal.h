@@ -188,6 +188,12 @@ enum _xnee_mode {
       return;                            \
    }
 
+#define XNEE_SILENTLY_RETURN_VOID_IF_ERR(ret_val) \
+   if (ret_val != XNEE_OK)               \
+   {                                     \
+      return;                            \
+   }
+
 /*
  * Resolution states
  *
