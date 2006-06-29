@@ -315,7 +315,9 @@ xnee_new_xnee_data()
   /* Set the error handler the libxnee's built in */ 
   (void) XSetErrorHandler (handle_xerr);  
   
-   return xd;
+  xnee_set_xnee_data (xd);
+    
+  return xd;
 }
 
 
