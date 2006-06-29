@@ -144,7 +144,7 @@ char error_descr_solut[128][256] =
 
     /* XNEE_BAD_GRAB_DATA */  
     "Bad grab data",
-    "You have requested to grab the same key+modifier more than once",
+    "You have requested to grab the same key more than once or one already grabbed",
 
     /* XNEE_BAD_SESSION_FILE */   
     "Bad session file",
@@ -217,6 +217,10 @@ char error_descr_solut[128][256] =
     /* XNEE_OK_LEAVE */            
     "OK, Xnee will quit as soon as possible", 
     "No need to do anything",
+
+    /* XNEE_GRAB_CONFUSION */            
+    "Xnee have reached a point where it is confused over the grabs done",
+    "Make sure you do not grab something already grabbed. If you are sure about this, report the problem (include recorded session file and verbose printout file)",
 
    /* XNEE_LAST_ERROR */
     "Last error",
