@@ -38,6 +38,8 @@
 
 
 
+static xnee_data *xd_saved;
+
 int
 xnee_set_display_name (xnee_data *xd, const char *disp)
 {
@@ -1763,5 +1765,17 @@ int
 xnee_get_rep_resolution_y (xnee_data *xd)
 {
   return xd->res_info.replay.y_res;
+}
+ 
+xnee_data*
+xnee_get_xnee_data (void)
+{
+  return xd_saved;
+}
+
+int
+xnee_set_xnee_data (xnee_data *xd)
+{
+  xd_saved = xd;
 }
  
