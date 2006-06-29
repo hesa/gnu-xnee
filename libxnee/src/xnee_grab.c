@@ -84,14 +84,25 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       xnee_verbose((xd, "stop mod %d\n", AnyModifier));
 
       XUngrabKey (xd->grab,  
-		  xd->grab_keys->action_keys[mode].key,            
+/* 		  xd->grab_keys->action_keys[mode].key,             */
+		  AnyKey,
 		  AnyModifier,
 		  window);
+      /* Force erors, if any!!!*/
+      XSync(xd->grab, True);
+      XFlush(xd->grab);
 
       xd->grab_keys->grab=1;
       xd->grab_keys->action_keys[mode].key=0;
     }
   return XNEE_OK;
+}
+
+
+static int
+xnee_ungrab_err_handler(Display* dpy, XErrorEvent* ev)
+{
+  xnee_set_interrupt_error(xnee_get_xnee_data(), XNEE_BAD_GRAB_DATA) ;
 }
 
 /**************************************************************
@@ -103,7 +114,10 @@ xnee_ungrab_key (xnee_data* xd, int mode)
 int 
 xnee_ungrab_keys (xnee_data* xd)
 {
+  void *old_err_handler;
   xnee_verbose((xd, "---> xnee_ungrab_keys\n")); 
+
+  old_err_handler = XSetErrorHandler(xnee_ungrab_err_handler);
 
   xnee_ungrab_key ( xd, XNEE_GRAB_STOP);
   xnee_ungrab_key ( xd, XNEE_GRAB_PAUSE);
@@ -111,6 +125,8 @@ xnee_ungrab_keys (xnee_data* xd)
   xnee_ungrab_key ( xd, XNEE_GRAB_INSERT);
   xnee_ungrab_key ( xd, XNEE_GRAB_EXEC);
   
+  XSetErrorHandler(old_err_handler);
+
   xnee_verbose((xd, "<--- xnee_ungrab_keys\n"));
   return XNEE_OK;
 }
@@ -126,6 +142,7 @@ xnee_ungrab_keys (xnee_data* xd)
 int 
 xnee_grab_key (xnee_data* xd, int mode, char *key)
 {
+  int ret;
   int window;
   int screen;
   xnee_action_key ak;
@@ -173,15 +190,19 @@ xnee_grab_key (xnee_data* xd, int mode, char *key)
   xnee_verbose((xd, "window   %d\n", window));
   xnee_verbose((xd, "screen   %d\n", screen));
 
-  XGrabKey (xd->grab,  
+
+  ret = XGrabKey (xd->grab,  
 	    ak.key,            
 	    AnyModifier,
 	    window,       
 	    False,  
 	    GrabModeSync,
 	    GrabModeSync );
+  xnee_verbose((xd, "<---- xnee_grab_key\n"));
 
-  xnee_verbose((xd, "<---- xnee_grab_stop_key\n"));
+  /* Force erors, if any!!!*/
+  XSync(xd->grab, True);
+  XFlush(xd->grab);
 
   return XNEE_OK;
 }
@@ -252,6 +273,11 @@ xnee_free_grab_keys(/*@null@*/ xnee_grab_keys *grab_keys)
 }
 
 
+static int
+xnee_grab_err_handler(Display* dpy, XErrorEvent* ev)
+{
+  xnee_set_interrupt_error(xnee_get_xnee_data(), XNEE_BAD_GRAB_DATA) ;
+}
 
 
 /**************************************************************
@@ -268,6 +294,12 @@ xnee_grab_all_keys (xnee_data* xd)
   int ret;
   int i ; 
   xnee_action_key ak;
+  void *old_err_handler;
+
+#define SET_OLD_ERR_HANDLER() \
+    XSetErrorHandler(old_err_handler);
+
+  old_err_handler = XSetErrorHandler(xnee_grab_err_handler);
 
   xnee_verbose((xd, "----> xnee_grab_all_keys 1\n"));
 
@@ -277,6 +309,7 @@ xnee_grab_all_keys (xnee_data* xd)
     {
       xnee_verbose((xd, "----  xnee_grab_all_keys: "
 		    "trying to grab same key + modifier   return=%d  (ok=%d)\n", ret, XNEE_OK));
+      SET_OLD_ERR_HANDLER();
       return XNEE_BAD_GRAB_DATA;
     }
 
@@ -288,6 +321,7 @@ xnee_grab_all_keys (xnee_data* xd)
       if (xd->grab==NULL)
 	{
 	  xnee_verbose((xd, "could not open display for grab...\n"));
+      SET_OLD_ERR_HANDLER();
 	  return XNEE_NOT_OPEN_DISPLAY;
 	}
     }
@@ -323,10 +357,19 @@ xnee_grab_all_keys (xnee_data* xd)
 	  if (ak.key!=0) 
 	    {
 	      xd->grab_keys->action_keys[i].key = ak.key;
-	      xnee_verbose((xd, "----  xnee_grab_all_keys on key=%d   (%dth one)\n",
+	      xnee_verbose((xd, 
+			    "----  xnee_grab_all_keys on key=%d"
+			    "(%dth one)\n",
 			    xd->grab_keys->action_keys[i].key, i));
 	      xd->grab_keys->grab=XNEE_GRAB_SET;
 	      
+	      xnee_verbose((xd, "---  xnee_grab_key\n"));
+	      xnee_verbose((xd, "window   %d\n", window));
+	      xnee_verbose((xd, "screen   %d\n", screen));
+	      xnee_verbose((xd, "data     %d\n", (int)xd->grab));
+	      xnee_verbose((xd, "stop key %d\n", xd->grab_keys->action_keys[i].key));
+	      xnee_verbose((xd, "stop mod %d\n", AnyModifier));
+
 	      XGrabKey (xd->grab,  
 			xd->grab_keys->action_keys[i].key,            
 			AnyModifier,
@@ -334,6 +377,11 @@ xnee_grab_all_keys (xnee_data* xd)
 			True,  
 			GrabModeSync,
 			GrabModeSync );
+
+	      /* Force erors, if any!!!*/
+	      XSync(xd->grab, True);
+	      XFlush(xd->grab);
+
 	    }
 	}
       else
@@ -344,6 +392,7 @@ xnee_grab_all_keys (xnee_data* xd)
 
   xnee_verbose((xd, "<----  xnee_grab_all_keys \n"));
   
+  SET_OLD_ERR_HANDLER();
   return XNEE_OK;
 }
 
@@ -407,8 +456,8 @@ xnee_key_in_use (xnee_grab_keys *xgk, KeyCode kc)
 
   for (i=XNEE_GRAB_STOP;i<XNEE_GRAB_LAST;i++)
     {
-/*       fprintf (stderr, "\t --- compare: %d %d\n",  */
-/*  	      xgk->action_keys[i].key, kc);  */
+      /*        fprintf (stderr, "\t --- compare: grabbed: %d    %d :received\n",   */
+      /* 		xgk->action_keys[i].key, kc);  fflush(stderr); */
       if (xgk->action_keys[i].key==kc)
 	{
 	  return 1;
@@ -514,6 +563,8 @@ xnee_handle_grab_key(xnee_data *xd, KeyCode kc, int mode)
 {
   int ret ;
 
+/*   xnee_set_verbose(xd); */
+
   xnee_verbose((xd, "---> xnee_handle_grab_key %d %d   modifier_state=%d\n", kc, mode, current_modifier_state));
   current_modifier_state = XNEE_GRAB_ALL_IN_USE ;
 
@@ -544,10 +595,6 @@ xnee_handle_grab_key(xnee_data *xd, KeyCode kc, int mode)
       if (xnee_key_in_use ( xd->grab_keys , kc))
 	{
 	  xnee_verbose((xd, "---  xnee_handle_grab_key 5.1\n"));
-	  fprintf (stderr, PACKAGE " ("  VERSION 
-		   ") discarded a key %s (keycode=%d)\n",
-		   mode==XNEE_GRAB_KM_PRESS?"press":"release",
-		   kc);
 	  ret = XNEE_GRAB_DONT_PRINT ; 
 	  if (grab_mode_used==0)
 	    {
@@ -567,6 +614,7 @@ xnee_handle_grab_key(xnee_data *xd, KeyCode kc, int mode)
       xnee_verbose((xd, "---  xnee_handle_grab_key 6\n"));
     }
   xnee_verbose((xd, "<--- xnee_handle_grab_key %d \n", ret));
+/*   xnee_unset_verbose(xd); */
   return ret;
 }
 
@@ -579,7 +627,6 @@ xnee_save_or_print(xnee_data *xd, KeyCode kc, int mode)
   xnee_verbose((xd, "---> xnee_save_or_print %d %d\n", kc, mode));
   ks = XKeycodeToKeysym(xd->grab, kc, 0);
   
-
   if ( mode == XNEE_GRAB_MOUSE )
       {
 	xnee_verbose((xd, "--- xnee_save_or_print treat a mouse\n"));
