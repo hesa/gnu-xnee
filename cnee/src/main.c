@@ -29,12 +29,11 @@
 #include "parse.h"
 
 
-void
-cnee_handle_err(xnee_data *xd, int error)
+static int 
+cnee_handle_err(Display *d, int error)
 {
   const char *err;
   const char *descr;
-
 
   if ( error != XNEE_OK_LEAVE )
     {
@@ -45,7 +44,6 @@ cnee_handle_err(xnee_data *xd, int error)
       fprintf (stderr, "  Error:      %s\n", err);
       fprintf (stderr, "  Solution:   %s\n", descr);
     }
-  xnee_close_down(xd);
   exit(error);
 }
 
@@ -61,7 +59,7 @@ int main(int argc,char *argv[])
 {
   int ret;
   xnee_data *xd ;
-  
+
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
   if (xd==NULL)
@@ -97,6 +95,7 @@ int main(int argc,char *argv[])
       cnee_handle_err(xd, ret);
     }
 
+  XSetErrorHandler(cnee_handle_err);
 
   ret = xnee_prepare(xd);
   if (ret==XNEE_OK)
@@ -107,7 +106,7 @@ int main(int argc,char *argv[])
 
   if ( ret != XNEE_OK)
   {
-    xnee_print_error (PACKAGE " failed to start\n");
+    xnee_print_error (PACKAGE " failed\n");
     xnee_print_error ("   Error number:    %d\n", ret);
     xnee_print_error ("   Error string:    '%s'\n", 
 		      xnee_get_err_description(ret));
