@@ -99,6 +99,7 @@ enum return_values
     XNEE_WINDOW_POS_ADJ_ERROR     ,
     XNEE_MISSING_ARG       ,
     XNEE_OK_LEAVE          ,
+    XNEE_GRAB_CONFUSION    ,
     XNEE_LAST_ERROR
   } _return_values;
 
