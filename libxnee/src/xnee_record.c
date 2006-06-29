@@ -198,8 +198,7 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 	      kc = xrec_data->event.u.u.detail;
 
 	      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_PRESS);
-	      fprintf(stderr, "  record: dop_print=%d\n",
-		      do_print);
+
 	      if (do_print==XNEE_GRAB_DO_PRINT)
 		{
 		  fprintf (out,"0,%u,0,0,0,%d,0,%lu\n",
@@ -227,7 +226,7 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 		}
 	      else if (do_print==XNEE_GRAB_DONT_PRINT)
 		{
-		  fprintf(stderr, "Missed grab?\n");
+		  return XNEE_GRAB_CONFUSION;
 		}
 	      break;
 	    case KeyRelease:
@@ -469,7 +468,6 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
       xnee_inc_data_recorded(xd);
     }
 
- 
   /* if NOT XRECORDEndOffData or XRECORDClientDied  set data_type */  
   if(data->data_len!=0) 
     {
@@ -487,7 +485,13 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
 	{
 	  xnee_inc_events_recorded(xd);
 	  ret = xnee_record_handle_event (xd, data) ;
-          XNEE_RETURN_VOID_IF_ERR (ret);
+	  /* 
+	   * Nothing will happen if we get XNEE_OK and set
+	   *   the interrupt var to that value.
+	   * If ret!=XNEE_OK, we must set it!!! 
+	   */ 
+	  xnee_set_interrupt_error(xd, ret);
+          XNEE_SILENTLY_RETURN_VOID_IF_ERR (ret);
 	}
       else
 	{ 
@@ -513,6 +517,9 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
       break;  
     } 
   XRecordFreeData(data);
+
+
+
   XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
 } 
  
@@ -988,13 +995,15 @@ xnee_record_async(xnee_data *xd)
   for (;;) 
     {
       /* Interrupt variable set? */
-      if (xnee_get_interrupt_action(xd))
+      if (xnee_is_interrupt_action(xd))
 	{
+	  ret = xnee_get_interrupt_action(xd);
 	  xnee_verbose((xd, "interrupt (record) variable was set (%d)\n",
-			xnee_get_interrupt_action(xd)));
+			ret));
+	  
 	  xnee_unset_interrupt_action(xd);
 	  xnee_verbose((xd, "leaving loop  (%d)\n", 
-			xnee_get_interrupt_action(xd)));
+			ret));
 	  break;
 	}
 
@@ -1002,6 +1011,7 @@ xnee_record_async(xnee_data *xd)
       /* has the user pressed a modifier+key */
       if (xnee_check_key (xd)==XNEE_GRAB_DATA)
 	{
+
 	  ret = xnee_handle_rec_key(xd) ; 
 	  if (ret == XNEE_GRAB_STOP)
 	    {
@@ -1045,7 +1055,14 @@ xnee_record_async(xnee_data *xd)
 /* 			xd->record_setup->rContext); */
 /*   XRecordFreeContext(xd->control,  */
 /* 			xd->record_setup->rContext); */
-  ret = xnee_stop_session(xd);
+  if (ret ==XNEE_OK)
+    {
+      ret = xnee_stop_session(xd);
+    }
+  else
+    {
+      xnee_stop_session(xd);
+    }
 
   xnee_verbose((xd, " <--- xnee_record_async()\n"));
   return (ret);
