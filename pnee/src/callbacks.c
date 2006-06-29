@@ -152,12 +152,15 @@ pnee_set_rec_file(char *filename)
 
   XNEE_VERBOSE_ENTER_FUNCTION();
   
+  _IN;
   file_text = (GtkEntry*) lookup_widget(GTK_WIDGET(pnee_applet->pnee_pref),
 					"entry3");
-  
+  _OUT;
   xnee_verbose((xd, " setting filename to gui: %s\n", filename));
+  _IN;
   gtk_entry_set_text (file_text, 
 		      filename);
+  _OUT;
 
   xnee_verbose((xd, " setting filename in xd:  %s\n", filename));
   xnee_set_out_name (xd, filename);
@@ -170,14 +173,19 @@ pnee_set_rep_file(char *my_filename)
 {
   GtkFileChooserButton *file_text ; 
   XNEE_VERBOSE_ENTER_FUNCTION();
+
+  fprintf(stderr, "  setting rep file: '%s' \n", filename);
   
   if (my_filename!=NULL)
     {
+      _IN;
       file_text = (GtkFileChooserButton*) lookup_widget(GTK_WIDGET(pnee_applet->pnee_pref),
 							"rep_choose_but");
-      
+      _OUT;
+      _IN;
       gtk_file_chooser_set_filename(GTK_FILE_CHOOSER(file_text),  
 				    my_filename); 
+      _OUT;
       
       xnee_verbose((xd, " setting date name to:%s\n", my_filename));
       xnee_set_data_name (xd, my_filename);
@@ -432,8 +440,10 @@ on_rec_file_button_clicked             (GtkButton       *button,
                                         gpointer         user_data)
 {
   XNEE_VERBOSE_ENTER_FUNCTION();
+  _IN;
   gtk_file_chooser_set_action (GTK_FILE_CHOOSER(fs),GTK_FILE_CHOOSER_ACTION_SAVE); 
   gtk_widget_show (fs);
+  _OUT;
   file_choosen=PNEE_FILE_RECORD;
   XNEE_VERBOSE_LEAVE_FUNCTION();
 }
@@ -444,8 +454,10 @@ on_rep_file_button_clicked             (GtkButton       *button,
                                         gpointer         user_data)
 {
   XNEE_VERBOSE_ENTER_FUNCTION();
+  _IN;
   gtk_file_chooser_set_action (GTK_FILE_CHOOSER(fs),GTK_FILE_CHOOSER_ACTION_OPEN); 
   gtk_widget_show (fs);
+  _OUT;
   file_choosen=PNEE_FILE_REPLAY;
   XNEE_VERBOSE_LEAVE_FUNCTION();
 }
@@ -456,7 +468,9 @@ on_f_cancel_button_clicked             (GtkButton       *button,
                                         gpointer         user_data)
 {
   XNEE_VERBOSE_ENTER_FUNCTION();
+  _IN;
   gtk_widget_hide (fs);
+  _OUT;
   XNEE_VERBOSE_LEAVE_FUNCTION();
   file_choosen=PNEE_FILE_NONE;
 }
@@ -479,7 +493,8 @@ on_f_ok_button_clicked                 (GtkButton       *button,
     }
   else if ( file_choosen == PNEE_FILE_REPLAY )
     {
-      XNEE_VERBOSE_IN_FUNCTION("got rep file ");
+      XNEE_VERBOSE_IN_FUNCTION("got rep file  ");
+      fprintf(stderr, "  setting rep file: c\n");
       xnee_set_data_name(xd, GCHAR_TO_CHAR(filename));
       pnee_set_rep_file (GCHAR_TO_CHAR(filename));
     }
@@ -680,8 +695,6 @@ pnee_rec_pressed(void)
   pnee_set_recording(pnee_applet);
   sem_post (&pnee_applet->action_mutex);
 
-  pnee_update_progress(pnee_applet, 0.0);
-
   pthread_create (&pnee_applet->xnee_thread, 
 		  NULL, 
 		  pnee_start_recording, 
@@ -704,7 +717,6 @@ pnee_rep_pressed(void)
   pnee_set_replaying(pnee_applet);
   sem_post (&pnee_applet->action_mutex);
 
-  pnee_update_progress(pnee_applet, 0.0);
   pthread_create (&pnee_applet->xnee_thread, 
 		  NULL, 
 		  pnee_start_replaying, 

@@ -67,16 +67,22 @@ extern pnee_panel_applet *pnee_applet;
 
 
 #define DEBUG_MARK()  fprintf(stderr, "  ---  %s:%d  %s()\n", __FILE__, __LINE__, __func__);
+#define DEBUG_IN()   fprintf(stderr, "  ----> IN   %s:%d  %s()\n", __FILE__, __LINE__, __func__);
+#define DEBUG_IN2()  fprintf(stderr, "  <---  IN   %s:%d  %s()\n", __FILE__, __LINE__, __func__);
+#define DEBUG_OUT()  fprintf(stderr, "  ----> OUT  %s:%d  %s()\n", __FILE__, __LINE__, __func__);
+#define DEBUG_OUT2() fprintf(stderr, "  <---- OUT  %s:%d  %s()\n", __FILE__, __LINE__, __func__);
 
-#define _IN   gdk_threads_enter() 
-#define _OUT  gdk_threads_leave()
+#define _IN   DEBUG_IN(); gdk_threads_enter(); DEBUG_IN2()
+#define _OUT  DEBUG_OUT(); gdk_threads_leave(); DEBUG_OUT2()
 
 #define pnee_set_no_action(p)            p->action_state=PNEE_ACTION_NONE 
 #define pnee_set_no_action_no_thread(p)  p->action_state=PNEE_ACTION_NONE 
 #define pnee_set_recording(p)            p->action_state=PNEE_ACTION_RECORD 
 #define pnee_set_replaying(p)            p->action_state=PNEE_ACTION_REPLAY 
+#define pnee_set_configure(p)            p->action_state=PNEE_ACTION_CONFIGURE 
 #define pnee_is_recording(p)             (p->action_state==PNEE_ACTION_RECORD)
 #define pnee_is_replaying(p)             (p->action_state==PNEE_ACTION_REPLAY) 
+#define pnee_is_configure(p)             (p->action_state==PNEE_ACTION_CONFIGURE) 
 #define pnee_is_ready(p)                 (p->action_state==PNEE_ACTION_NONE) 
 
 

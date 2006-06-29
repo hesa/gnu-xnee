@@ -47,7 +47,7 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in);
 
 static const char Context_menu_xml [] =
    "<popup name=\"button3\">\n"
-   "   <menuitem name=\"Record Item\" "
+/*   "   <menuitem name=\"Record Item\" "
    "             verb=\"Record\" "
    "           _label=\"_Record session...\"\n"
    "          pixtype=\"stock\" "
@@ -56,7 +56,7 @@ static const char Context_menu_xml [] =
    "             verb=\"Replay\" "
    "           _label=\"_Replay session...\"\n"
    "          pixtype=\"stock\" "
-   "          pixname=\"gtk-media-play\"/>\n"
+   "          pixname=\"gtk-media-play\"/>\n"*/
    "   <menuitem name=\"Properties Item\" "
    "             verb=\"Properties\" "
    "           _label=\"_Preferences...\"\n"
@@ -75,8 +75,9 @@ static const char Context_menu_xml [] =
 #ifndef FAKED_MAIN
 static const BonoboUIVerb myexample_menu_verbs [] = 
   {
-    /*    BONOBO_UI_VERB ("Record",      pnee_start_recording),
-    BONOBO_UI_VERB ("Replay",      pnee_start_replaying),
+    /*    
+	  BONOBO_UI_VERB ("Record",      pnee_start_recording),
+	  BONOBO_UI_VERB ("Replay",      pnee_start_replaying),
     */
     BONOBO_UI_VERB ("Properties",  display_properties_dialog),
     BONOBO_UI_VERB ("About",       display_about_dialog),
@@ -112,9 +113,10 @@ pnee_applet_fill (PanelApplet *applet,
 void 
 pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in)
 {
-  GtkTooltips *tooltips;
+/*   GtkTooltips *tooltips; */
   AtkObject *atk_obj;
-  sem_init(&pnee_applet->action_mutex, 0, 1);
+  sem_init(&pnee_applet->action_mutex, 0, 10);
+  sem_init(&pnee_applet->update_mutex, 0, 1);
 
   pnee_setup(pnee_applet_in);
     
@@ -127,11 +129,6 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in)
 		  pnee_applet);
 #endif /* PNEE_DEBUGGER */
 
-    pthread_create (&pnee_applet->xnee_updater, 
-		    NULL, 
-		    pnee_progress_updater,
-		    pnee_applet);
-    
     init_stock_icons(pnee_applet);
 
     panel_applet_set_flags (pnee_applet->applet, 
@@ -141,9 +138,9 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in)
     gtk_container_add (GTK_CONTAINER (pnee_applet->applet), 
 		       pnee_applet->container);
 
-    tooltips = gtk_tooltips_new();
+/*     tooltips = gtk_tooltips_new(); */
 
-    gtk_tooltips_set_tip(tooltips, GTK_WIDGET(pnee_applet->applet), _("GNU Xnee applet"), NULL);
+/*     gtk_tooltips_set_tip(tooltips, GTK_WIDGET(pnee_applet->applet), _("GNU Xnee applet"), NULL); */
 
     atk_obj = gtk_widget_get_accessible (GTK_WIDGET (pnee_applet->applet));
     if (GTK_IS_ACCESSIBLE (atk_obj))
@@ -157,7 +154,7 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in)
 			     myexample_menu_verbs,
 			     pnee_applet->applet);
     
-    pnee_applet->tooltips = tooltips;
+/*     pnee_applet->tooltips = tooltips; */
 
     /* Create the visual stuff */
     pnee_applet->progress = gtk_progress_bar_new ();
@@ -170,13 +167,13 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in)
     gtk_container_set_border_width (GTK_CONTAINER (pnee_applet->button_box), 0);
 
     pnee_create_button(pnee_applet,
-		       "Start recording" , 
+		       "Record" , 
 		       "pnee-record.png" , 
 		       pnee_rec_pressed  ,
 		       PNEE_BUTTON_RECORD);
 
     pnee_create_button(pnee_applet,
-		       "Start replaying" , 
+		       "Play" , 
 		       "pnee-replay.png" , 
 		       pnee_rep_pressed  ,
 		       PNEE_BUTTON_REPLAY);
@@ -207,6 +204,11 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in)
 			  pnee_applet->progress, TRUE, TRUE, 0); 
 
     gtk_widget_show_all (pnee_applet->container);
+
+    pthread_create (&pnee_applet->xnee_updater, 
+		    NULL, 
+		    pnee_progress_updater,
+		    pnee_applet);
 
     return;
 }

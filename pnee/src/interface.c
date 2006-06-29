@@ -192,7 +192,7 @@ create_pnee_pref (void)
   gtk_widget_set_size_request (entry5, 4, -1);
   gtk_tooltips_set_tip (tooltips, entry5, "Grab a key to stop recording", NULL);
   gtk_entry_set_max_length (GTK_ENTRY (entry5), 5);
-  gtk_entry_set_text (GTK_ENTRY (entry5), "F1");
+  gtk_entry_set_text (GTK_ENTRY (entry5), "F5");
 
   record_label = gtk_label_new ("<b>Record</b>");
   gtk_widget_show (record_label);

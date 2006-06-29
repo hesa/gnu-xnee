@@ -44,24 +44,32 @@ GtkWidget*
 create_delay_splash_impl (void)
 {
   
+  _IN;
   my_delay = gtk_window_new (GTK_WINDOW_POPUP);
   gtk_container_set_border_width (GTK_CONTAINER (my_delay), 3);
   gtk_window_set_title (GTK_WINDOW (my_delay), "pnee delay");
   gtk_window_set_position (GTK_WINDOW (my_delay), GTK_WIN_POS_CENTER);
+  _OUT;
 
+  _IN;
   my_del_progr_win = gtk_vbox_new (FALSE, 0);
   gtk_widget_show (my_del_progr_win);
   gtk_container_add (GTK_CONTAINER (my_delay), my_del_progr_win);
+  _OUT;
 
+  _IN;
   my_delay_label = gtk_label_new ("Pnee - a GNU Xnee Applet");
   gtk_widget_show (my_delay_label);
   gtk_box_pack_start (GTK_BOX (my_del_progr_win), my_delay_label, FALSE, FALSE, 0);
 /*   gtk_label_set_text (GTK_LABEL (my_delay_progr), "Delayd start of pnee"); */
+  _OUT;
 
+  _IN;
   my_delay_progr = gtk_progress_bar_new ();
   gtk_widget_show (my_delay_progr);
   gtk_box_pack_start (GTK_BOX (my_del_progr_win), my_delay_progr, FALSE, FALSE, 0);
   gtk_progress_bar_set_text (GTK_PROGRESS_BAR (my_delay_progr), "Delayd start of pnee");
+  _OUT;
 
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
@@ -93,8 +101,8 @@ delay_start(int mode)
   int delay_time = START_VAL;
   int ctr=0;
   
-  _IN;
   create_delay_splash();
+  _IN;
   gtk_widget_show_all(my_delay);
   _OUT;
 
@@ -109,9 +117,6 @@ delay_start(int mode)
 					 0.0); 
 	  _OUT;
 	  
-	  _IN;
-	  gtk_widget_hide_all(my_delay); 
-	  _OUT;
 	  return;
 	}
 
@@ -126,12 +131,19 @@ delay_start(int mode)
 	}
 
 
+      
+      fprintf(stderr, "  delay_start->\n");
+      sem_wait (&pnee_applet->update_mutex);
+      fprintf(stderr, "  delay_start -- %u\n", (int) my_delay_progr);
       _IN;
       gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR(my_delay_progr), 
 				     perc); 
       gtk_progress_bar_set_text (GTK_PROGRESS_BAR(my_delay_progr), 
 				 buf); 
       _OUT;
+      fprintf(stderr, "  delay_start -- \n");
+      sem_post (&pnee_applet->update_mutex);
+      fprintf(stderr, "  <-delay_start\n");
 
       usleep(1000*1000);
       delay_time--;
@@ -156,8 +168,7 @@ pnee_start_recording(void *pnee_applet_in)
 {
   int ret ;
   pnee_panel_applet *pa = (pnee_panel_applet *) pnee_applet_in;
-
-
+ 
   create_delay_splash();  
   delay_start(PNEE_DELAY_RECORD);
 
@@ -172,6 +183,7 @@ pnee_start_recording(void *pnee_applet_in)
 
   ret=xnee_start(pa->xd);
   
+  fprintf(stderr, "  setting rep file:  a\n" );
   pnee_set_rep_file (xnee_get_data_name(pa->xd));
 
   pnee_show_states(pa);
@@ -244,23 +256,14 @@ pnee_progress_updater(void *pnee_applet_in)
 	  
 	  perc = (gdouble) curr / (gdouble) max ;
 	  
+	  fprintf(stderr, "  updater internal\n");
  	  pnee_update_progress(pa, perc); 
-	  
 	  usleep(1000*200);
 	}
+
+      fprintf(stderr, "  updater sec\n");
       pnee_set_update_no_action(pa);
       pnee_update_progress(pa, 0.0);
-      /*
-	wid = pnee_applet->progress;
-	if (pnee_applet->progress)
-	{
-	win = gtk_widget_get_root_window (wid); 
-	}
-	if (win!=NULL)
-	{
-	gdk_window_process_updates (win, TRUE); 
-	}
-      */
       usleep(1000*1000);
     }
 }
@@ -269,21 +272,18 @@ int
 pnee_update_progress(pnee_panel_applet *pnee_applet_in, 
 		     double perc)
 {
-
-/*   fprintf(stderr, "Updating to %f  on %u %u  ",  */
-/* 	  perc,  */
-/* 	  (unsigned int)pnee_applet_in,  */
-/* 	  (unsigned int)pnee_applet_in->progress); fflush(stderr); */
-
   if ( (pnee_applet_in!=0) && (pnee_applet_in->progress!=0) )
     {
+      fprintf(stderr, "  update->\n");
+      sem_wait (&pnee_applet->update_mutex);
+      _IN;
+      fprintf(stderr, "  update -- %u\n", (int) pnee_applet_in->progress);
       gtk_progress_bar_set_fraction(GTK_PROGRESS_BAR(pnee_applet_in->progress), 
 				    perc);
-/*       fprintf(stderr, "OK\n");fflush(stderr); */
-    }
-  else
-    {
-/*       fprintf(stderr, "Update FAILED\n");fflush(stderr); */
+      fprintf(stderr, "  update -- \n");
+      _OUT;
+      sem_post (&pnee_applet->update_mutex);
+      fprintf(stderr, "  <-update\n");
     }
   return 0;
 }
@@ -316,17 +316,23 @@ pnee_create_button(pnee_panel_applet *pnee_applet_in,
 
   /* Button */
   button = gtk_button_new();
+  _IN;
   gtk_button_set_relief(GTK_BUTTON(button), GTK_RELIEF_HALF);
   gtk_container_set_border_width (GTK_CONTAINER (button), 0);
+  _OUT;
 
   /* Image */
+  _IN;
   image = gtk_image_new_from_stock(id, pnee_applet->icon_size);
   tooltip= gtk_tooltips_new();
   gtk_widget_show(image);
+  _OUT;
 
   /* Tooltip */
+  _IN;
   gtk_container_add(GTK_CONTAINER(button), image);
   gtk_tooltips_set_tip(tooltip, button, tooltip_str, NULL);
+  _OUT;
 
   /* callback */
   g_signal_connect(button, "button_press_event",
@@ -335,7 +341,9 @@ pnee_create_button(pnee_panel_applet *pnee_applet_in,
 		   G_CALLBACK(press_callback), 
 		   pnee_applet);
 
+  _IN;
   gtk_widget_show(button);
+  _OUT;
 
   if (mode == PNEE_BUTTON_RECORD )
     {
@@ -397,24 +405,20 @@ pnee_handle_xerr(Display *dpy, XErrorEvent *errevent)
   return XNEE_OK;
 }
 
-int 
-pnee_setup(pnee_panel_applet *pnee_panel_in)
+
+int
+pnee_xnee_init(pnee_panel_applet *pnee_panel_in)
 {
+
   char *default_tmp_file;
   char *default_err_file;
-  static int already_setup = 0;
 
-  if (already_setup)
-    {
-      return 0;
-    }
-  already_setup = 1 ;
+  default_tmp_file=pnee_get_default_filename();
+  default_err_file=pnee_get_default_err_name();
 
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
   pnee_panel_in->xd = xd;
-
-  default_err_file=pnee_get_default_err_name();
 
   (void) XSetErrorHandler (pnee_handle_xerr);  
 
@@ -422,16 +426,9 @@ pnee_setup(pnee_panel_applet *pnee_panel_in)
   pnee_set_err_file (default_err_file); 
   xnee_open_files(pnee_panel_in->xd);
   xnee_unset_recall_window_pos (pnee_panel_in->xd);
-  xnee_set_events_max (pnee_panel_in->xd, 200);
+  xnee_set_events_max (pnee_panel_in->xd, 600);
   xnee_set_data_max (pnee_panel_in->xd, -1);
   xnee_set_key (pnee_panel_in->xd, XNEE_GRAB_STOP, "F5");
-  /*
-    xnee_set_key (pnee_panel->xd, XNEE_GRAB_PAUSE, "p");
-    xnee_set_key (pnee_panel->xd, XNEE_GRAB_RESUME, "r");
-  */
-
-
-  fs = create_filechooserdialog1();
 
 
   /* Set the program name */
@@ -440,26 +437,42 @@ pnee_setup(pnee_panel_applet *pnee_panel_in)
   /* Set the cli parameters */
   xnee_set_application_parameters (pnee_panel_in->xd, NULL);
 
-  if (pnee_panel_in->pnee_pref==NULL)
-    {
-      pnee_panel_in->pnee_pref = 
-	create_pnee_pref ();
-    }
-
-  default_tmp_file=pnee_get_default_filename();
-
-
   pnee_set_rec_file (default_tmp_file);
   pnee_set_rep_file (default_tmp_file);
 
   free (default_tmp_file);
   free (default_err_file);
 
+}
+
+
+
+
+int 
+pnee_setup(pnee_panel_applet *pnee_panel_in)
+{
+  static int already_setup = 0;
+
+  if (already_setup)
+    {
+      return 0;
+    }
+  already_setup = 1 ;
+
+  fs = create_filechooserdialog1();
+
+
+  if (pnee_panel_in->pnee_pref==NULL)
+    {
+      pnee_panel_in->pnee_pref = 
+	create_pnee_pref ();
+    }
+
+  pnee_xnee_init(pnee_panel_in);
+
   /* init threads   */
   gdk_threads_init ();
   gdk_threads_leave();
-
-/*   create_delay_start(pnee_panel_in);  */
 
   return 0;
 }
@@ -485,10 +498,14 @@ pnee_prepare_replay(void)
   
   pnee_setup(pnee_applet);
 
+  _IN;
   file_text = (GtkFileChooserButton*) lookup_widget(GTK_WIDGET(pnee_applet->pnee_pref),
 						    "rep_choose_but");
-  
+  _OUT;
+
+  _IN;
   my_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(file_text)); 
+  _OUT;
       
   
   if (my_file!=NULL)
@@ -527,12 +544,10 @@ pnee_stop_pressed_impl(void *pnee_applet_in)
       xnee_set_interrupt_action(xd);
     }
 
-
   pnee_set_no_action(pa);
 
   pnee_set_no_action_no_thread(pa);
   pnee_set_update_no_action(pa);
-  pnee_update_progress(pa, 0.0);
 
   PTHREAD_RETURN;
 }
@@ -542,9 +557,8 @@ cb_button_press(GtkWidget *w, GdkEventButton *event, GtkWidget *applet)
 {
     if ((event->button == 3) || (event->button == 2))
     {
-	gtk_propagate_event(applet, (GdkEvent *) event);
-
-	return TRUE;
+      gtk_propagate_event(applet, (GdkEvent *) event);
+      return TRUE;
     }
 
     return FALSE;
@@ -600,6 +614,16 @@ display_about_dialog(BonoboUIComponent           *component,
 {
   static GtkWidget *pnee_about = NULL ;
 
+  /*
+   * Prevent about to showwhile in action
+   */ 
+  if ( pnee_is_replaying(pnee_applet) || 
+       pnee_is_recording(pnee_applet) )
+    {
+      fprintf(stderr, "************** about blocked ");
+      return;
+    }
+
   if ( pnee_about == NULL)
     {
       pnee_about = create_pnee_about();
@@ -617,6 +641,16 @@ display_properties_dialog(BonoboUIComponent           *component,
 			  gpointer                     user_data,
 			  const char                  *cname)
 {
+  /*
+   * Prevent properties to showwhile in action
+   */ 
+  if ( pnee_is_replaying(pnee_applet) || 
+       pnee_is_recording(pnee_applet) )
+    {
+      fprintf(stderr, "*****************  properties blocked ");
+      return;
+    }
+
   if (pnee_applet->pnee_pref==NULL)
     {
       pnee_applet->pnee_pref = create_pnee_pref();

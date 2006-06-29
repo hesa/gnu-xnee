@@ -30,7 +30,8 @@ typedef enum _pnee_actions
   {
     PNEE_ACTION_NONE,
     PNEE_ACTION_RECORD,
-    PNEE_ACTION_REPLAY
+    PNEE_ACTION_REPLAY,
+    PNEE_ACTION_CONFIGURE
   } pnee_actions;
 
 
@@ -75,6 +76,7 @@ typedef struct
   pthread_t  xnee_updater;
 
   sem_t      action_mutex;
+  sem_t      update_mutex;
   GtkWidget *pnee_pref;
 
   volatile pnee_actions action_state ;
