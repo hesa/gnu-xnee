@@ -24,4 +24,6 @@ doc:
   "It's simple, just make sure that you record the window get focus." 
   ---> "It's simple, just make sure that you record the window getting focus."
 
- FAQ: add note on recording th ctrl press when interrupting using ctrl-c 
+ FAQ: add note on recording th ctrl press when interrupting using ctrl-c >>>>>>> 1.14
+
+ Add text on "recall windo pos"
