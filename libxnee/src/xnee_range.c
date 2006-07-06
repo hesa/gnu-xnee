@@ -76,6 +76,7 @@ xnee_do_workaround(xnee_data *xd)
 {
   int ret = XNEE_OK; 
   int active_state;
+
   if ( xnee_is_type_nr_set(xd, XNEE_DELIVERED_EVENT, ReparentNotify))
     {
       xnee_set_new_window_pos(xd);
@@ -83,6 +84,7 @@ xnee_do_workaround(xnee_data *xd)
   else
     {
       active_state = xd->record_setup->active;
+
       xnee_add_to_list2(xd, XNEE_DELIVERED_EVENT, ReparentNotify);
       /* Reset active state, since we don't want to record anything
        * if nothing specified.
@@ -302,12 +304,11 @@ xnee_add_to_list2(xnee_data *xd, int type, int ev)
       }
    }
    xrp->data[xrp->index++]=ev;
-   /*
+
    printf (" added %d %d\n",
 	   type, ev);
    xnee_print_list();
 
-   */
    return XNEE_OK;
 }
 
@@ -536,7 +537,9 @@ xnee_add_range (xnee_data* xd,
    */
   xd->xnee_info.data_ranges[type]++;
   xnee_verbose((xd, "<--- xnee_add_range\n"));
-/*   xnee_unset_verbose(xd); */
+
+  xnee_record_print_record_range(xd, stderr);
+
   return (XNEE_OK);
 }
 
@@ -638,21 +641,21 @@ xnee_set_ranges(xnee_data *xd)
 
    xnee_bsort_all();
    
-   if (xnee_is_recorder(xd)!=False)
+   if (xnee_is_replayer(xd))
      {
        xnee_undo_workaround(xd);
        xnee_do_workaround(xd);
      }
 
-   
-   
    for (j=0; j<XNEE_NR_OF_TYPES ;j++)
      {
       first = -1;
       last  = -1;
 
+   
       for (i=0; i<xrs->type[j].index ;i++)
 	{
+
 	  this = xrs->type[j].data[i] ;
 	  
 	  if (first == -1)
@@ -690,6 +693,7 @@ xnee_set_ranges(xnee_data *xd)
 	    }
 	}
    } 
+
    return XNEE_OK;
 }
 
