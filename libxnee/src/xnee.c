@@ -104,6 +104,9 @@ xnee_start(xnee_data *xd)
        return XNEE_NO_MAIN_DATA;
      }
 
+   ret = xnee_prepare(xd);
+   XNEE_RETURN_IF_ERR(ret);
+
    xd->in_use = 1;
 
 
@@ -168,6 +171,7 @@ xnee_start(xnee_data *xd)
        {
 	 xnee_verbose((xd, "Entering main loop( recorder)\n"));
 	 ret = xnee_record_async(xd);
+
 	 if (ret != XNEE_OK)
 	   {
 	     return ret;
@@ -204,6 +208,12 @@ xnee_start(xnee_data *xd)
       XTestGrabControl (xnee_get_control_display(xd), True);
       XTestGrabControl (xnee_get_data_display(xd), True);
       /*@end@*/
+
+/*       ret = xnee_rep_prepare(xd); */
+/*       XNEE_RETURN_IF_ERR (ret); */
+      
+
+       xnee_record_print_record_range (xd, stderr) ;
 
       /*
        * At last. Time to enter the main loop
