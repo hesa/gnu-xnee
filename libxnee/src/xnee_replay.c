@@ -72,7 +72,6 @@ xnee_delta_time ( xnee_intercept_data * xindata)
 
 
 
-
 /**************************************************************
  *                                                            *
  * xnee_replay_synchronize                                    *
@@ -221,9 +220,11 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        )
     {
 
+
        while ( (logread != 0)  && ( xd->cont != 0 ) ) 
 	{
 	  ret_str = fgets(tmp, 256, xd->data_file);
+
 
 	  
 	  if ( ret_str == NULL)
@@ -265,15 +266,15 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		}
 	    }
 	}
-       ret = xnee_set_ranges(xd);
-       XNEE_RETURN_IF_ERR (ret);
+/*        ret = xnee_set_ranges(xd); */
+/*        XNEE_RETURN_IF_ERR (ret); */
     }
 
   if ( 
       (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || 
       (read_mode==XNEE_REPLAY_READ_ALL_DATA))
     {
-	
+      
       ret = xnee_set_ranges(xd);
       XNEE_RETURN_IF_ERR (ret);
 
@@ -335,6 +336,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
               }
 	      
 	      
+	
 	      /* Interrupt variable set? */
 	      if (xnee_get_interrupt_action(xd))
 		{
@@ -656,10 +658,12 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
   XWindowAttributes window_attributes_return;
   int ret;
 
-  if (!data->data)
+
+  if (data->data==NULL)
     {
       return;
     }
+
 
   xrec_data  = (XRecordDatum *) (data->data) ;
   type       = (int) xrec_data->type ;
