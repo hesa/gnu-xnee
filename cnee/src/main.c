@@ -30,7 +30,7 @@
 
 
 static int 
-cnee_handle_err(Display *d, int error)
+cnee_handle_err(xnee_data *xd, int error)
 {
   const char *err;
   const char *descr;
@@ -95,9 +95,6 @@ int main(int argc,char *argv[])
       cnee_handle_err(xd, ret);
     }
 
-  XSetErrorHandler(cnee_handle_err);
-
-  ret = xnee_prepare(xd);
   if (ret==XNEE_OK)
     {
       /* start up the action set during parsing the commnd line */
@@ -106,13 +103,7 @@ int main(int argc,char *argv[])
 
   if ( ret != XNEE_OK)
   {
-    xnee_print_error (PACKAGE " failed\n");
-    xnee_print_error ("   Error number:    %d\n", ret);
-    xnee_print_error ("   Error string:    '%s'\n", 
-		      xnee_get_err_description(ret));
-    xnee_print_error ("   Solution string: '%s'\n", 
-		      xnee_get_err_solution(ret));
-    exit(ret);
+    cnee_handle_err(xd, ret);
   }
 
 
