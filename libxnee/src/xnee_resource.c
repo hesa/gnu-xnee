@@ -355,7 +355,7 @@ static xnee_option_t xnee_options_impl[] =
     {
       XNEE_RECALL_WINDOW_POS_KEY,
       "recall-window-position",
-      "rcp",
+      "rwp",
       NULL,
       "Recall the recorded window position to be used"
       " during replay",
@@ -866,11 +866,12 @@ xnee_option2id(xnee_data *xd,
 
   for (i=0;options[i].key!=XNEE_LAST_OPTION;i++)
     {
-      /*       printf ("\t opt=%d %s %s %s\n", i,  
-	       tmp, 
-	       options->options[i]->option, 
-	       options->options[i]->short_option); 
-      */
+      /*             printf ("\t opt=%d %s %s %s\n", 
+		     i,  
+		     tmp, 
+		     options[i].option, 
+		     options[i].short_option); 
+      */     
       if (xnee_check(tmp,
 		     options[i].option,
 		     options[i].short_option))
@@ -1173,7 +1174,7 @@ xnee_parse_xns_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case XNEE_RECALL_WINDOW_POS_KEY:
       verbose_option("XNEE_RECALL_WINDOW_POS_KEY");
-      xnee_set_recall_window_pos(xd);
+      ret = xnee_set_recall_window_pos(xd);
       *args_used = 0;
       break;
 
