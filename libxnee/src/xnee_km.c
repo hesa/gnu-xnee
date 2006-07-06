@@ -433,7 +433,9 @@ xnee_check_key(xnee_data *xd)
 	  int    mode;
 	  int i ;
 
+
 	  XNextEvent (xd->grab, &my_event);
+
 	  if (my_event.xkey.send_event==1) 
 	    { 
 	      xnee_verbose ((xd , "send_event==true\n")); 
@@ -447,6 +449,7 @@ xnee_check_key(xnee_data *xd)
 	    {
 	      xnee_verbose ((xd , "#### KeyRelease\n")); 
 	    }
+
 
 	  tmp_code=my_event.xkey.keycode;
 
