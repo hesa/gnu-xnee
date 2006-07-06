@@ -1165,7 +1165,7 @@ xnee_set_recall_window_pos (xnee_data *xd)
 {
   xnee_verbose((xd, "xnee_set_recall_window_pos()\n"));
   xd->recall_recorded_win_pos=1;
-  return XNEE_OK;
+  return xnee_parse_range (xd, XNEE_DELIVERED_EVENT, "ReparentNotify");
 }
 
 

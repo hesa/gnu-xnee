@@ -703,13 +703,19 @@ xnee_setup_recordext (xnee_data *xd)
     | XRecordFromClientTime  
     | XRecordFromClientSequence; 
 
-  if (xnee_is_recorder(xd)==False)
+  if ( xnee_is_recorder(xd)==False)
     {
       return XNEE_OK;
     }
   
+
+  ret = xnee_parse_range (xd, XNEE_DELIVERED_EVENT, "ReparentNotify");
+  XNEE_RETURN_IF_ERR (ret);
+
   ret = xnee_set_ranges(xd);
   XNEE_RETURN_IF_ERR (ret);
+
+/*   xnee_record_print_record_range(xd, stderr); */
   
   ret = xnee_get_max_range(xd) ;
 
