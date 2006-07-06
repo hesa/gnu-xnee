@@ -49,7 +49,6 @@
 
 
 
-
 /*************************************************************
  * internal functions *
  *************************************************************/
@@ -114,7 +113,6 @@ xnee_expression_handle_session(xnee_data *xd,
 				tmp,
 				xindata);
   if (do_continue==XNEE_PRIMITIVE_DATA) { return (XNEE_PRIMITIVE_DATA); }
-
 
 
 
@@ -318,11 +316,12 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 
   xnee_free_strptr(ret_strptr);
 
-  if (ret==XNEE_OK)
+ 
+  if (option_key==0)
     {
-      ret = XNEE_SETTINGS_DATA;
+      ret = XNEE_OK;
     }
-
+  
   return ret;
 }
 
@@ -399,7 +398,9 @@ xnee_expression_handle_newwindow(xnee_data *xd, char *tmp)
   int override ;
   char buf[256];
 
+
   xnee_verbose ((xd, "---> xnee_expression_handle_newwindow: %s\n", tmp));
+
 
   if (strncmp(XNEE_NEW_WINDOW_MARK,tmp,strlen(XNEE_NEW_WINDOW_MARK))==0)
     {
@@ -431,6 +432,7 @@ xnee_expression_handle_newwindow(xnee_data *xd, char *tmp)
       XNEE_RETURN_IF_ERR(ret);
       
       xnee_verbose ((xd, "<---  : xnee_expression_handle_newwindow\n"));
+
       return XNEE_NEW_WINDOW_DATA;
     }      
 
