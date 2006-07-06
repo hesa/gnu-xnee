@@ -118,6 +118,7 @@ create_pnee_pref (void)
   delay_check = gtk_check_button_new_with_mnemonic ("Delay");
   gtk_widget_show (delay_check);
   gtk_box_pack_start (GTK_BOX (hbox9), delay_check, FALSE, FALSE, 0);
+  gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (delay_check), TRUE);
 
   spinbutton2_adj = gtk_adjustment_new (3, 0, 10000, 1, 10, 10);
   spinbutton2 = gtk_spin_button_new (GTK_ADJUSTMENT (spinbutton2_adj), 1, 0);
@@ -155,6 +156,7 @@ create_pnee_pref (void)
   entry3 = gtk_entry_new ();
   gtk_widget_show (entry3);
   gtk_box_pack_start (GTK_BOX (hbox4), entry3, TRUE, TRUE, 0);
+  gtk_editable_set_editable (GTK_EDITABLE (entry3), FALSE);
 
   rec_file_button = gtk_button_new_with_mnemonic ("...");
   gtk_widget_show (rec_file_button);

@@ -72,9 +72,15 @@ extern pnee_panel_applet *pnee_applet;
 #define DEBUG_OUT()  fprintf(stderr, "  ----> OUT  %s:%d  %s()\n", __FILE__, __LINE__, __func__);
 #define DEBUG_OUT2() fprintf(stderr, "  <---- OUT  %s:%d  %s()\n", __FILE__, __LINE__, __func__);
 
+#define _IN   gdk_threads_enter()
+#define _OUT  gdk_threads_leave()
+
+
+
+/*
 #define _IN   DEBUG_IN(); gdk_threads_enter(); DEBUG_IN2()
 #define _OUT  DEBUG_OUT(); gdk_threads_leave(); DEBUG_OUT2()
-
+*/
 #define pnee_set_no_action(p)            p->action_state=PNEE_ACTION_NONE 
 #define pnee_set_no_action_no_thread(p)  p->action_state=PNEE_ACTION_NONE 
 #define pnee_set_recording(p)            p->action_state=PNEE_ACTION_RECORD 
@@ -91,6 +97,7 @@ extern pnee_panel_applet *pnee_applet;
 #define pnee_set_update_replaying(p) p->update_state=PNEE_UPDATE_REPLAY 
 
 #define GCHAR_TO_CHAR(a) ((char *) (a))
+
 
 
 #define pnee_show_states(p)       \
