@@ -480,7 +480,6 @@ xnee_rep_prepare(xnee_data *xd)
       }
   }
 
-
   xnee_set_events_replayed(xd,0);
 
   if ( xnee_is_replayer(xd) != 0 )
