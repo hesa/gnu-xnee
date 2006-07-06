@@ -315,6 +315,10 @@ xnee_window_try_move(xnee_data *xd)
   Window child;
   char *win_name = NULL;
 
+  xnee_verbose((xd, "Trying to move window %d %d \n",
+	  session_index,
+	  received_index));
+
   if (xnee_is_verbose(xd))
     {
       xnee_window_print_lists();
@@ -330,6 +334,9 @@ xnee_window_try_move(xnee_data *xd)
       return XNEE_OK;
     }
 
+  XNEE_VERBOSE_MARK();
+
+  xnee_verbose((xd, "Trying to move window 1\n"));
   /*
    * OK, we have read info on saved window and we have
    * a window to apply that info on, let's do it.
@@ -343,6 +350,7 @@ xnee_window_try_move(xnee_data *xd)
       return XNEE_WINDOW_POS_ADJ_ERROR;
     }
   
+  XNEE_VERBOSE_MARK();
   XGetWindowAttributes(xd->grab, 
 		       rec_ptr->window,
 		       &win_attributes);
@@ -355,6 +363,8 @@ xnee_window_try_move(xnee_data *xd)
 			 &rx, 
 			 &ry, 
 			 &child);
+
+
   if ( (sess_ptr->x==rx) && (sess_ptr->y==ry) )
     {
       XNEE_WINDOW_DEBUG(("Windows are already loacted correctly :)   %d %d    %d %d\n",
@@ -366,7 +376,6 @@ xnee_window_try_move(xnee_data *xd)
       return XNEE_OK;
     }
 
-  
   xnee_verbose((xd, "XMoveWindow(%d,0x%X, %d,%d)\n",
 		xd->grab,
 		rec_ptr->window,
@@ -401,8 +410,10 @@ xnee_window_try_move(xnee_data *xd)
   
   while ( nr_of_moves<MAX_NR_OF_MOVES)
     {
-      
+
+
       /*       requested   - actual - frame */
+  XNEE_VERBOSE_MARK();
 
       diff_x = sess_ptr->x - rx ;
       diff_y = sess_ptr->y - ry ;
@@ -417,6 +428,8 @@ xnee_window_try_move(xnee_data *xd)
       
       if  ( !diff_x && !diff_y )
 	{
+
+
 	  xnee_window_remove_window(xd, received_index-1, session_index-1);
 	  xnee_verbose((xd,"leaving ..... all  (%d %d) is ok\n", diff_x, diff_y));
 	  break;
