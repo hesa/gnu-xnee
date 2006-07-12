@@ -1,3 +1,48 @@
+2006-06-29   Henrik Sandkklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_setget.c
+	Added function to save one xnee_data ptr
+
+	* libxnee/src/xnee_setget.c
+	Removed faulty code in X err handler
+
+	* libxnee/src/xnee_session.c
+	Removed faulty code in X err handler
+
+	* libxnee/src/xnee_record.c
+	Added handling of interrupt var
+
+	* libxnee/src/xnee_grab.c
+	Added X err handler to handle failed grabs
+
+	* libxnee/src/xnee_error.c
+	Added fault when Xnee is confused over grabs
+
+	* libxnee/src/xnee_alloc.c
+	Remembers newly allocated xd. Used in new funs in 
+	xnee_setget.c
+
+	* libxnee/include/libxnee/xnee_setget.h
+
+	Adjusted macros for handling interrupt var. Fun for 
+	reading stored xnee_data ptr
+
+	* libxnee/include/libxnee/xnee_internal.h
+
+	Added macro for silently checking err, and exit if nec.
+
+	* libxnee/include/libxnee/xnee.h
+
+	Added error when Xnee is confused over grabs
+
+	* cnee/src/main.c
+
+	using cnee's X err handler
+
+	* pnee/*
+
+	"Grab and ungrab works. Thread doesn't deadlock :) " 
+
 2006-06-27    <hesa@gnu.org>
 
 	* libxnee/src/print.c

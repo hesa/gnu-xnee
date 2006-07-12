@@ -3,6 +3,12 @@ Changes in coming 2.06
 
   New features:
 
+  Updated Options for cnee
+
+     Short option for recall window position is now:
+       -rwp
+       (-rcp, is not valid anymore)
+
   Build changes:
 
      * configure option for pnee added

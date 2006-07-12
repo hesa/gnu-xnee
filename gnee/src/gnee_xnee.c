@@ -575,9 +575,6 @@ gx_start_recording(xnee_data* xd)
   ret = gx_set_variable_data(xd, ext_gx);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 
-  ret = xnee_prepare(xd);
-  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
-
   GNEE_DEBUG(("start recording\n"));
 
   ret = xnee_start(xd);
@@ -608,9 +605,6 @@ gx_start_replaying(xnee_data* xd)
 
   GNEE_DEBUG(("setting variable data\n"));
   ret = gx_set_variable_data(xd, ext_gx);
-  GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
-
-  ret = xnee_prepare(xd);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 
   GNEE_DEBUG(("start replaying\n"));
