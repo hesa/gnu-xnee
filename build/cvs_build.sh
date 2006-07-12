@@ -1,5 +1,16 @@
 #!/bin/sh
 
+#
+# this file:
+#   * downloads (anonymous) from CVS
+#   * builds tar ball
+#   * build dist
+#
+# well, that's about it
+#
+# No nedd to license it at the moment 
+#
+
 
 export XNEE_TMP_DIR=/tmp/xnee_cvs
 export CVS_RSH=ssh
