@@ -14,10 +14,10 @@
 
 export XNEE_TMP_DIR=/tmp/xnee_cvs
 export CVS_RSH=ssh
-DEST_DIR=/home/hesa/xnee_cvs/
-TARBALL_DIR=/home/hesa/xnee_cvs/nightly-tar-ball
-NIGHT_DIR=/home/hesa/xnee_cvs/nightly-dists
-LOG_DIR=/home/hesa/xnee_cvs/logs
+DEST_DIR=/var/www/xnee_cvs/
+TARBALL_DIR=${DEST_DIR}/nightly-tar-ball
+NIGHT_DIR=${DEST_DIR}/nightly-dists
+LOG_DIR=${DEST_DIR}/logs
 #DATE=$(date '+%Y%m%d')
 DATE=20060801
 LOG_FILE=/tmp/xnee_cvs/cvs_build-${DATE}.log
