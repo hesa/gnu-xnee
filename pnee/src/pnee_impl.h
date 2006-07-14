@@ -186,4 +186,11 @@ pnee_update_progress(pnee_panel_applet *pnee_applet,
 int 
 pnee_setup(pnee_panel_applet *pnee_applet);
 
+
+void
+create_delay_splash (void);
+
+void
+pnee_2xnee_update_all(void);
+
 #endif /* PNEE_IMPL_H */

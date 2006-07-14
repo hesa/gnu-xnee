@@ -469,6 +469,8 @@ pnee_xnee_init (pnee_panel_applet * pnee_panel_in)
   fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
   pnee_set_interval(NULL, pnee_panel_in->pnee_pref);
   fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
+
+  return XNEE_OK;
 }
 
 
@@ -520,7 +522,7 @@ pnee_prepare_record (void)
 int
 pnee_prepare_replay (void)
 {
-  gchar *my_file;
+/*   gchar *my_file; */
 
   pnee_setup (pnee_applet);
 
@@ -542,7 +544,7 @@ pnee_prepare_replay (void)
 PTHREAD_RETURN_VAL
 pnee_stop_pressed_impl (void *pnee_applet_in)
 {
-  gint ev_max;
+/*   gint ev_max; */
   pnee_panel_applet *pa = (pnee_panel_applet *) pnee_applet_in;
 
   pnee_setup (pa);
@@ -712,7 +714,7 @@ void
 pnee_2xnee_update_stop_key(void)
 {
   GtkEntry *entry;
-  char * my_key;
+  char * my_key = NULL;
 
   entry =  (GtkEntry *)
 	lookup_widget (GTK_WIDGET (pnee_applet->pnee_pref), "entry5");

@@ -170,5 +170,8 @@ pnee_rec_pressed(void);
 void
 pnee_stop_pressed(void);
 
+void
+pnee_set_interval (GtkToggleButton *togglebutton,
+		   gpointer         user_data);
 
 #endif /* CALLBACKS_H */
