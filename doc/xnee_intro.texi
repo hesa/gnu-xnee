@@ -12,6 +12,8 @@ Xnee consists of one library and two applications
 
   @b{gnee} - graphical user interface program
 
+  @b{pnee} - a Gnome Panel Applet
+
   @b{libxnee} - library used by xnee and gnee
 
             
@@ -40,7 +42,7 @@ Xnee can be used for multiple purposes, allthough it was initially designed as a
 	you can use the built-in distribution mechanism in Xnee. 
 
 @b{Macro recorder/replayer} - 
-	By binding a key and modifier combination (e.g using xkeymouse)
+	By binding a key and modifier combination (e.g using xrebind)
   to replay a recorded session you will have a Window Manager and 
   application independent macro.
 
@@ -55,7 +57,7 @@ Xnee can be used for multiple purposes, allthough it was initially designed as a
 In order to verify that a program does the job it's supposed to do, 
 certain tests have to be made. 
 These tests are, IMHO, perhaps the most boring things a programmer 
-can do. XNee is designed to reduce the programmer from this burden.
+can do. Xnee is designed to reduce the programmer from this burden.
 @*
 
 Xnee started out as a commad line program. During the development

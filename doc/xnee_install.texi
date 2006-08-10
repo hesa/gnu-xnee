@@ -99,7 +99,6 @@ Build Xnee
 @code{./configure}
 @code{make}
 @code{make install} (optional)
-@code{cd ..}
 @end example
 
 

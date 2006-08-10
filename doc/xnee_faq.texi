@@ -15,6 +15,41 @@ Include all printouts and log files in the mail which is sent to
 @email{xnee-bug@@gnu.org}
 @*
 
+@item Can you add xxx functionality to Xnee
+  Send an email to @email{xnee-devel@@gnu.org} and we'll consider it.
+
+@item Why the name Xnee?
+@cindex why name it Xnee
+We wanted to use a recursive acronym, as GNU (``GNU's Not Unix'). 
+After having read the Wine documentation, we thought that Xnee is not an 
+Event Emulator would work fine since Xnee is Not an Event Emulator but 
+rather a event recorder and faker. 
+
+@item What does the name gnee mean?
+@cindex  What does the name gnee mean?
+          gnee's not an Emulator Either
+
+@item What doesn't the name gnee mean?
+@cindex  What does the name gnee mean?
+          gnee's not an Event Emulator  
+
+
+
+@item What license is Xnee released under ?
+@cindex license
+GPL version two or later. Which can be found at
+@url{http://www.gnu.org/copyleft/gpl.html}. Xnee will switch to GPLv3
+as soon as GPLv3 is released.
+
+
+@item Where is the CVS repository?
+You can find a CVS tree at @url{http://savannah.gnu.org}.
+You are more than welcome to join
+
+@item Is there a GUI frontend for Xnee ?
+@cindex GUI frontend for Xnee
+Yes! Gnee.
+
 
 @item When setting ranges (integers), how do I know what numbers belong 
 to X11 data?
@@ -32,39 +67,8 @@ print-xxx-name options.
 
 @item Can Xnee record more than one display?
 @cindex can Xnee record more than one display
-No, but we are considering adding the functionality (see the TODO file)
-
-@item Where is the CVS repository?
- You can find a CVS tree at @url{http://savannah.gnu.org}.
- You are more than welcome to join
-
-@item Is there a GUI frontend for Xnee ?
-@cindex GUI frontend for Xnee
-Yes! Gnee.
-
-@item What license is Xnee released under ?
-@cindex license
- GPL. Which can be found at @url{http://www.gnu.org/copyleft/gpl.html}
-
-
-@item Why the name Xnee?
-@cindex why name it Xnee
-  We wanted to use a recursive acronym, as GNU (``GNU's Not Unix'). 
-After having read the Wine documentation, we thought that Xnee is not an 
-Event Emulator would work fine since Xnee is Not an Event Emulator but 
-rather a event recorder and faker. 
-
-@item What does the name Gnee mean?
-@cindex  What does the name Gnee mean?
-          Gnee's not an Emulator Either
-
-@item What doesn't the name Gnee mean?
-@cindex  What does the name Gnee mean?
-          Gnee's not an Event Emulator  
-
-@item Can you add xxx functionality to Xnee
-  Send an email to @email{xnee-devel@@gnu.org} and we'll consider it.
-
+No, we used to consider adding the functionality but have no plans to
+implement it anymore.
 
 @item When starting Xnee I get noticed that I am missing RECORD extension
 @cindex missing RECORD extension
@@ -163,9 +167,30 @@ Use the @code{--store-mouse-pos} option.
 This will cause Xnee to store the mouse position before starting to record. This position will be used to set the start position before replaying of recorded data starts.
 
 @item How do I ensure that the same window is focused as when recorded?
-It's simple, just make sure that you record the window get focus.
+It's simple, just make sure that you record the window getting focus.
+
+@item The window pops up at different positions when replaying, can Xnee handle that?
+Yes, use the @code{--recall-window-position} option when
+replaying (with cnee). This makes cnee try yo reposition the window as
+it was positioned when recording the session.
+
+@item Xnee seems to mess up my entire session after replaying a sessions which was interupted by Control-C?
+Xnee records the KeyPress belonging to Control. After that the system
+sends Xnee a signal which makes Xnee stop recording. So you end up
+having a Control KeyPress recorded, with no coresponding
+KeyRelease. To solve the screwed up session, press Control (which
+generates a KeyPress and the wanted KeyRelease). If you want to keep
+your recorded session and not want this to happen again, remove the
+last line in the recorded file starting with @code{2,}.
+
+
+A better way to interrupt Xnee is to use the stop key option, e.g in
+cnee @code{--stop-key F1}. This prevents the above situation.
+
+
+@item Autorepeat is turned off by Xnee, how do I turn it on again?
+@code{xset r on}
 
 
 @end table
-
 

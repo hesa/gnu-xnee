@@ -57,9 +57,6 @@
 @top 
 @end ifinfo
 
-@include xnee_copying
-
-
 @menu
 * Summary::              Summary
 * Getting started::      Getting started

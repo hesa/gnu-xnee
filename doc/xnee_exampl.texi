@@ -386,7 +386,7 @@ a macro functionality built in (e.g emacs).
 @cindex     Define a simple macro
 There are plenty of tools that bind a key combination to 
 different actions. For various reasons the author of this manual is familliar
-with xkeymouse so we will use xkeymouse in this example.
+with xrebind so we will use xrebind in this example.
 @*
 The first thing to do is to decide which key combination to tie
 to the wanted action. Let's say we want to use one of the funtion keys, F1. 
@@ -407,36 +407,54 @@ like this:
 The interesting part here is the 6th column. In our example we find 67, which
 is the keycode for F1.
 @*
-Now we move on to setup xkeymouse to grab F1 and bind that to replay the 
+Now we move on to setup xrebind to grab F1 and bind that to replay the 
 mouse motions from the file @code{mouse-rec.xnl}. Open or create a new file
-in your home directory called @code{.xkmrc} and add the lines.
+in your home directory called @code{.xrbrc} and add the lines.
 @example
-@code{keycode=67, 0, Exec, xnee,  --replay --file mouse-rec.xnl, \}
-@code{Fork, NoAutoRepeat}
+@code{XrebindGrab}
+@code{@{}
+@code{  Action      = Execute}
+@code{  GrabKeycode = 67}
+@code{  Modifier    = AnyModifier}
+@code{  Command     = xnee  --replay --file mouse-rec.xnl}
+@code{  Comment     = Starting xnee replay}
+@code{  AutoRepeat  = false}
+@code{  Fork        = true}
+@code{@}}
 @end example
-Let's try it. Start xkeymouse with verbose printouts.
+Let's try it. Start xrebind with verbose printouts.
 @example
-@code{xkeymouse --verbose}
+@code{xrebind --verbose}
 @end example
 Press F1 and the recorded session from the previous example shall be replayed. You
-can also see in the verbose printouts that xkeymouse executes xnee.
+can also see in the verbose printouts that xrebind executes xnee.
 
 
 @subsection Define another simple macro
 @cindex     Define another simple macro
 Let's say we want to bind Control and e to execute the session as in the
-example above. This time setting up xkeymouse is a bit easier.
+example above. This time setting up xrebind is a bit easier.
 @*
-Setup xkeymouse to grab F1 and bind that to replay the 
+Setup xrebind to grab F1 and bind that to replay the 
 mouse motions from the file @code{mouse-rec.xnl} by opening or create a 
-new file in your home directory called @code{.xkmrc} and add the lines.
+new file in your home directory called @code{.xrbrc} and add the lines.
 @example
+@code{XrebindGrab}
+@code{@{}
+@code{  Action      = Execute}
+@code{  GrabKey     = e}
+@code{  Modifier    = Control}
+@code{  Command     = xnee  --replay --file mouse-rec.xnl}
+@code{  Comment     = Starting xnee replay}
+@code{  AutoRepeat  = false}
+@code{  Fork        = true}
+@code{@}}
 @code{e, Control, Exec, xnee,  --replay --file mouse-rec.xnl, \}
 @code{Fork, NoAutoRepeat}
 @end example
-Let's try it. Start xkeymouse with verbose printouts.
+Let's try it. Start xrebind with verbose printouts.
 @example
-@code{xkeymouse --verbose}
+@code{xrebind --verbose}
 @end example
 Press Control and e and the recorded session from the previous example 
 shall be replayed.
@@ -564,7 +582,7 @@ device events whenever you need.
 @code{#!/bin/bash }
 @code{ }
 @code{# Source in handy functions }
-@code{. /usr/share/Xnee/xnee.sh }
+@code{. /usr/share/xnee/xnee.sh }
 @code{ }
 @code{# Set up file for communication with Xnee }
 @code{xnee_init_file}

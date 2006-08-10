@@ -334,7 +334,6 @@ store-mouse-position
 
 @end multitable
 
-Xnee Settings Arguments
 @cindex Xnee Settings Arguments
 
 @multitable @columnfractions .30 .40 .30
@@ -375,42 +374,53 @@ Xnee Settings Arguments
 
 @subsection Replay 
 @cindex Replay directive
-@multitable  @columnfractions .0 .40 .60
+@multitable  @columnfractions .40 .60
 @item 
 @b{Replay directive}
 @tab @b{Interpretation}
 
-@item 0,0
+@item 
+0,0
 @tab not valid
 
-@item 0,1
+@item
+0,1
 @tab not valid
 
-@item 0,2,keycode,time
+@item
+0,2,keycode,time
 @tab KeyPress on key with keycode, used to replay
 
-@item 0,3,keycode,time
+@item
+0,3,keycode,time
 @tab KeyRelease on key with keycode, used to replay
 
-@item 0,4,button nr,time
+@item
+0,4,button nr,time
 @tab ButtonPress on button nr, used to replay
 
-@item 0,5,button nr,time
+@item
+0,5,button nr,time
 @tab ButtonRelease on button nr, used to replay
 
-@item 0,6,x,y,time
+@item
+0,6,x,y,time
 @tab MotionNotify on poistion (x,y), used to replay
 
-@item 0,7-XXX,time
+@item
+0,7-XXX,time
 @tab MotionNotify on poistion (x,y), used to replay
 
-@item 1,request number,time
+@item
+1,request number,time
 @tab Recorded request, used during synchronisation 
 
-@item 2,reply number,time
+@item
+2,reply number,time
 @tab Recorded reply, used during synchronisation 
 
-@item 3,error number,time
+@item
+3,error number,time
 @tab Recorded error, used during synchronisation 
 
 
@@ -421,65 +431,85 @@ client. This time is used to keep the speed intact during replay.
 @subsection Script replay data 
 @cindex   Script replay data 
 
-@multitable  @columnfractions .0 .40 .60
-@item @b{Primitive}
+@multitable  @columnfractions .40 .60
+@item
+@b{Primitive}
 @tab @b{Interpretation}
 
-@item fake-motion
+@item
+fake-motion
 @tab Fakes a mouse motion 
 
-@item fake-button-press
+@item
+fake-button-press
 @tab Fakes a button press
 
-@item fake-button-release
+@item
+fake-button-release
 @tab Fakes a button release
 
-@item fake-button
+@item
+fake-button
 @tab Fakes a button press and release
 
-@item fake-key-press
+@item
+fake-key-press
 @tab Fakes a key press
 
-@item fake-key-release
+@item
+fake-key-release
 @tab Fakes a key release
 
-@item fake-key
+@item
+fake-key
 @tab Fakes a key press and release
 
 @end multitable
 
-@multitable  @columnfractions .0 .20  .20 .60
-@item @b{Primitive variable}
+@multitable  @columnfractions .20  .20 .60
+@item
+@b{Primitive variable}
 @tab @b{Primitive values}
 @tab @b{Interpretation}
 
-@item x=value
+@item
+x=value
 @tab  integer
 @tab  Sets the x position used in fake-motion to value
 
-@item x=value
+@item
+x=value
 @tab  +integer
 @tab  Set the relative motion (x direction) used in fake-motion to value
 
-@item x=value
+@item
+x=value
 @tab  -integer
 @tab  Set the relative motion (x direction) used in fake-motion to value
 
-@item y=value
+@item
+y=value
+@tab  integer
 @tab  Sets the y position used in fake-motion to value
 
-@item y=value
+@item
+y=value
 @tab  +integer
 @tab  Set the relative motion (y direction) used in fake-motion to value
 
-@item y=value
+@item
+y=value
 @tab  -integer
 @tab  Set the relative motion (y direction) used in fake-motion to value
 
-@item button=value
+@item
+button=value
+@tab  integer
 @tab  set the button to fake with fake-button-press, fake-button-release and fake-button to value
 
-@item key=value
+@item
+key=value
+@tab  integer
 @tab  set the key to fake with fake-key-press, fake-key-release and fake-key to value
 
 @end multitable
@@ -487,8 +517,9 @@ client. This time is used to keep the speed intact during replay.
 
 @subsection Mark 
 @cindex  Mark directive
-@multitable  @columnfractions .0 .20 .20 .60
-@item @b{First tokens}
+@multitable  @columnfractions .20 .20 .60
+@item
+@b{First tokens}
 @tab @b{Arguments}
 @tab @b{Interpretation}
 
@@ -502,7 +533,7 @@ Mark
 
 @subsection Exec 
 @cindex  Exec directive
-@multitable  @columnfractions .0 .20 .20 .60
+@multitable  @columnfractions .20 .20 .60
 @item @b{First tokens}
 @tab @b{Arguments}
 @tab @b{Interpretation}
@@ -518,7 +549,7 @@ Exec
 
 @subsection Project information 
 @cindex  Project information directive
-@multitable  @columnfractions .0 .45 .55
+@multitable  @columnfractions .45 .55
 @item @b{Project information directives}
 @tab @b{Arguments}
 
