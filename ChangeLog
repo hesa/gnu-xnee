@@ -1,3 +1,18 @@
+2006-08-11   Henrik Sandkklef  <hesa@gnu.org>
+
+	* src/xnee_expr.c
+	Better handling of NEW-WINDOW mark
+
+	* xnee_exampl.texi
+	* xnee_faq.texi
+	* xnee_install.texi
+	* xnee_intro.texi
+	* xnee_prot.texi
+	* xnee.texi
+	Adjusted faulty table layout. 
+	Added: gnee info. 
+	Updated FAQ. Replaced xkeymouse with xrebind
+
 2006-06-29   Henrik Sandkklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_setget.c

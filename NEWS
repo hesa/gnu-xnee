@@ -22,6 +22,17 @@ Changes in coming 2.06
      * configure exits if not all doc generating
        programs are found
 
+  Doc changes:
+
+     * FAQ entry added on ending recording with Control-C
+
+     * Information on gnee added
+
+  Bugs fixed:
+
+     * Replay crashing when window name is empty and using
+       recall window position.
+
   Minor updates
 
      * New About window for Gnee
