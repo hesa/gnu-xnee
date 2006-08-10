@@ -717,6 +717,21 @@ xnee_expression_handle_prim(xnee_data *xd, char *str, xnee_intercept_data * xind
   xindata->u.event.type = 0;
 
   xnee_verbose ((xd, "handling primitive: %s\n", str));
+
+  if (str == NULL)
+    {
+      return 0;
+    }
+
+  /* If NEW-WINDOW string, return */
+  if (strncmp(str,
+	      XNEE_NEW_WINDOW_MARK, 
+	      strlen(XNEE_NEW_WINDOW_MARK)) == 0 )
+    {
+      return 0;
+    }
+
+  /* Skip the leading blanks */
   prim_args = strstr(str," ");
 
   if (prim_args==NULL)
