@@ -1133,7 +1133,9 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
 
   
   fprintf (out,  "\n# Delay before starting record/replay\n");
-  fprintf (out,  "# %d\n", xnee_get_interval(xd) ); 
+  fprintf (out,  "# %s %d\n", 
+	   xnee_xns_key2string(XNEE_DELAY_TIME_KEY),
+	   xnee_get_interval(xd) ); 
 
   
 
