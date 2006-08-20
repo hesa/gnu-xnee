@@ -13,6 +13,7 @@
   <property name="default_height">480</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
+  <property name="icon">xnee128.xpm</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -3738,7 +3739,8 @@ which is what you would probably use anyway :)</property>
   <property name="destroy_with_parent">False</property>
   <property name="name" translatable="yes">Gnee</property>
   <property name="copyright" translatable="yes">©2003,2004,2005,2006 
-Henrik Sandklef, Jon-Erling Dahl</property>
+Henrik Sandklef, Jon-Erling Dahl
+©2006 Luis Santander</property>
   <property name="comments" translatable="yes">Gnee is the GUI frontend for GNU Xnee</property>
   <property name="license" translatable="yes">		    GNU GENERAL PUBLIC LICENSE
 		       Version 2, June 1991
@@ -4088,10 +4090,10 @@ Jon-Erling Dahl &lt;joda@gadgeteer.nu&gt;
 </property>
   <property name="documenters">None, interested in joing? 
 Send an email to xnee-devel@gnu.org</property>
-  <property name="artists">None, interested in joing? 
-Send an email to xnee-devel@gnu.org</property>
+  <property name="artists">Luis Santander</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">None, interested in joing? 
 Send an email to xnee-devel@gnu.org</property>
+  <property name="logo">xnee128.xpm</property>
 </widget>
 
 </glade-interface>
