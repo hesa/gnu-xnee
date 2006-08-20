@@ -124,10 +124,12 @@ delay_start (int mode)
   int delay_time ;
   int delay_time_start;
 
+  pnee_set_interval(NULL, pnee_applet->pnee_pref);
+
   delay_time = xnee_get_interval (xd) ;
   delay_time_start = delay_time;
 
-  fprintf(stderr, " ****************** delay: %d\n", 
+  fprintf(stderr, " ============================================================ delay: %d\n", 
 	  delay_time);
 
   fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
@@ -186,6 +188,7 @@ delay_start (int mode)
   gtk_widget_hide_all (my_delay);
   _OUT;
   fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
+  xnee_set_interval(xd, 0);
   return;
 }
 
@@ -200,7 +203,6 @@ pnee_start_recording (void *pnee_applet_in)
   pnee_panel_applet *pa = (pnee_panel_applet *) pnee_applet_in;
 
   create_delay_splash ();
-  delay_start (PNEE_DELAY_RECORD);
 
   DEBUG_MARK();
   
@@ -213,7 +215,9 @@ pnee_start_recording (void *pnee_applet_in)
   fprintf(stderr, "\n\n\n ********** RECORDING SETTINGS ******** \n\n\n");
   xnee_print_ranges(pa->xd, stderr);
   xnee_print_xnee_settings(pa->xd, stderr);
-  xnee_set_interval(pa->xd, 0);
+
+  pnee_set_interval(NULL, pa->pnee_pref);
+  delay_start (PNEE_DELAY_RECORD);
   
   fprintf(stderr, "\n\n\n ********** START RECORDING ******** \n\n\n");
   ret = xnee_start (pa->xd);
@@ -232,18 +236,20 @@ PTHREAD_RETURN_VAL
 pnee_start_replaying (void *pnee_applet_in)
 {
   int ret;
+  int delay;
 
   pnee_panel_applet *pa = (pnee_panel_applet *) pnee_applet_in;
 
   create_delay_splash ();
-  delay_start (PNEE_DELAY_REPLAY);
+
 
   pnee_set_replaying (pa);
   pnee_set_update_no_action (pa);
 
   pnee_prepare_replay ();
 
-  xnee_set_interval(pa->xd, 0);
+  delay_start (PNEE_DELAY_REPLAY);
+
   ret = xnee_start (pa->xd);
 
   pnee_set_no_action (pa);
