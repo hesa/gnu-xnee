@@ -4093,7 +4093,7 @@ Send an email to xnee-devel@gnu.org</property>
   <property name="artists">Luis Santander</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">None, interested in joing? 
 Send an email to xnee-devel@gnu.org</property>
-  <property name="logo">xnee128.xpm</property>
+  <property name="logo">xnee.xpm</property>
 </widget>
 
 </glade-interface>

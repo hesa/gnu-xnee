@@ -1801,7 +1801,7 @@ create_gnee_about (void)
   gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (gnee_about), documenters);
   gtk_about_dialog_set_artists (GTK_ABOUT_DIALOG (gnee_about), artists);
   gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (gnee_about), translators);
-  gnee_about_logo_pixbuf = create_pixbuf ("xnee128.xpm");
+  gnee_about_logo_pixbuf = create_pixbuf ("xnee.xpm");
   gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (gnee_about), gnee_about_logo_pixbuf);
 
   /* Store pointers to all widgets, for use by lookup_widget(). */
