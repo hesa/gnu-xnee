@@ -22,6 +22,8 @@ Changes in coming 2.06
      * configure exits if not all doc generating
        programs are found
 
+     * New directory pixmap, used when building gnee or pnee
+
   Doc changes:
 
      * FAQ entry added on ending recording with Control-C
@@ -33,12 +35,15 @@ Changes in coming 2.06
      * Replay crashing when window name is empty and using
        recall window position.
 
-  Minor updates
+  Various
 
      * New About window for Gnee
 
-     * Examples (help printout) are updated
+     * Icon added (thanks to Luis Santander and Jeremiah Foster)
 
+  Minor updates
+
+     * Examples (help printout) are updated
 
 Changes in 2.05
 ==============================
