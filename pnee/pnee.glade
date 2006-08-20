@@ -816,7 +816,8 @@
   <property name="visible">True</property>
   <property name="destroy_with_parent">False</property>
   <property name="name" translatable="yes">Pnee</property>
-  <property name="copyright" translatable="yes">© 2005, 2006 Henrik Sandklef &lt;hesa@gnu.org&gt;</property>
+  <property name="copyright" translatable="yes">© 2005, 2006 Henrik Sandklef &lt;hesa@gnu.org&gt;
+© 2006 Luis Santander</property>
   <property name="comments" translatable="yes">Pnee is a GNU Xnee Applet  
 ....for more features check out gnee and cnee
 </property>
@@ -1167,10 +1168,10 @@ Public License instead of this License.
   <property name="authors">Henrik Sandklef &lt;hesa@gnu.org&gt;</property>
   <property name="documenters">None, 
 please contact hesa@gnu.org if you want to contribute</property>
-  <property name="artists">None, 
-please contact hesa@gnu.org if you want to contribute</property>
+  <property name="artists">Luis Santander</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">None, 
 please contact hesa@gnu.org if you want to contribute</property>
+  <property name="logo">xnee.xpm</property>
 </widget>
 
 <widget class="GtkWindow" id="delay">

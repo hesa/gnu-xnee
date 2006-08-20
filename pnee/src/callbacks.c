@@ -273,11 +273,16 @@ pnee_set_interval (GtkToggleButton *togglebutton,
       if (window!=NULL)
 	{
 	  delay = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(window));
-	  fprintf(stderr, "*****  276 delay=%d\n", delay);
-	  xnee_set_interval (xd, (int)delay) ;
-	  xnee_verbose((xd, " -- : setting delay %d\n", delay));
 	}
     }
+  else
+    {
+      delay = 0 ;
+    }
+
+  xnee_set_interval (xd, (int)delay) ;
+  xnee_verbose((xd, " -- : setting delay %d\n", delay));
+  fprintf(stderr, "=================== Setting delay=%d\n", delay);
   XNEE_VERBOSE_LEAVE_FUNCTION();
   return ;
 }
