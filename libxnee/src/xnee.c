@@ -91,9 +91,6 @@ xnee_check ( const char *arg, const char *long_arg , const char *short_arg )
 
 
 
-
-
-
 int
 xnee_start(xnee_data *xd)
 {

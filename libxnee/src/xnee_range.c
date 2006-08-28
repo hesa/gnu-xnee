@@ -179,6 +179,7 @@ xnee_init_list(struct xnee_range *xr, int size)
   xr->index = 0;
   xr->size  = size;
   xr->data  = (int*) malloc (xr->size*sizeof(int));
+  printf (" xr->data = %d\n", xr->data);
   return XNEE_OK;
 }
 
@@ -187,11 +188,11 @@ xnee_free_ranges(xnee_data *xd)
 {
    int i ; 
 
-/*    printf (" '%s'  delete  need=%d\n", */
-/* 	   __func__, need_init); */
 
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
    {
+     printf (" '%s'  delete  xrs->type[%d].data=%d\n",
+	     __func__, i, xrs->type[i].data); 
      XNEE_FREE_AND_NULL(xrs->type[i].data);
      xrs->type[i].data = NULL;
    }
@@ -236,7 +237,6 @@ xnee_print_list(void)
 {
    int i ; 
    int j ; 
-   
    
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
    {
@@ -304,10 +304,6 @@ xnee_add_to_list2(xnee_data *xd, int type, int ev)
       }
    }
    xrp->data[xrp->index++]=ev;
-
-   printf (" added %d %d\n",
-	   type, ev);
-   xnee_print_list();
 
    return XNEE_OK;
 }
@@ -538,7 +534,7 @@ xnee_add_range (xnee_data* xd,
   xd->xnee_info.data_ranges[type]++;
   xnee_verbose((xd, "<--- xnee_add_range\n"));
 
-  xnee_record_print_record_range(xd, stderr);
+/*   xnee_record_print_record_range(xd, stderr); */
 
   return (XNEE_OK);
 }
@@ -714,8 +710,6 @@ xnee_rem_from_list(xnee_data *xd, int type, int ev)
 
    xrp = &xrs->type[type];
 
-   xnee_print_list();
-    
 
    for (i=0;i<xrp->index;i++)
    {

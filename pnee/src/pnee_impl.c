@@ -557,7 +557,7 @@ pnee_stop_pressed_impl (void *pnee_applet_in)
 
   /* 
    * Make sure we are in action, 
-   * otherwise we will prevent next ecation (only once though)
+   * otherwise we will prevent next cation (only once though)
    */
   if (pnee_is_replaying (pa) || pnee_is_recording (pa))
     {
@@ -565,7 +565,6 @@ pnee_stop_pressed_impl (void *pnee_applet_in)
     }
 
   pnee_set_no_action (pa);
-
   pnee_set_no_action_no_thread (pa);
   pnee_set_update_no_action (pa);
 

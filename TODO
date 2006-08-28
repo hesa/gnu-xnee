@@ -3,7 +3,12 @@ pnee:
   ifdef away debugger thread
  
   add state: "configure" that disables record and replay state
-        
+
+  add a "reset" option.... :(
+
+  when using the debug thread, print to file instead of stderr 
+  (good while tracking bugs)
+
 libxnee:
   xnee_info contains record and replay things, but is handled in xnee_record.c
 
