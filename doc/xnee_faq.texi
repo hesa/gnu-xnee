@@ -70,7 +70,7 @@ print-xxx-name options.
 No, we used to consider adding the functionality but have no plans to
 implement it anymore.
 
-@item When starting Xnee I get noticed that I am missing RECORD extension
+@item When starting Xnee I am informed that I am missing the RECORD extension
 @cindex missing RECORD extension
 Your X server doesn't have the RECORD extension either loaded or compiled. To solve this you have to, depending on what Xserver you have do the following:
 
