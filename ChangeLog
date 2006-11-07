@@ -1,3 +1,8 @@
+2006-10-07   Henrik Sandkklef  <hesa@gnu.org>
+
+	* doc/xnee_faq.texi
+	Minor change (better English)
+
 2006-08-20   Henrik Sandkklef  <hesa@gnu.org>
 
 	* src/print.c
