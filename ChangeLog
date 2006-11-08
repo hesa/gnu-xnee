@@ -1,3 +1,13 @@
+
+2006-11-08    <hesa@gnu.org>
+
+	* doc/xnee_start.texi: 
+	Replaced "--loops" with "--events-to-record"
+
+	* libxnee/src/xnee_resource.c: 
+	--time is now a general option (not a record)
+	minor text adjustment
+	
 2006-10-07   Henrik Sandkklef  <hesa@gnu.org>
 
 	* doc/xnee_faq.texi
