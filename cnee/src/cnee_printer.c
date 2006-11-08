@@ -264,23 +264,23 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,".\\\" in the LDP GENERAL PUBLIC LICENSE, Version 1, September 1998 \n");
   fprintf (fd ,".\\\" that should have been distributed together with this file. \n");
   fprintf (fd ,".\\\" \n");
-  fprintf (fd ,".TH \"XNEE\" 1 2006 \"" PACKAGE"\" \n");
+  fprintf (fd ,".TH \"" XNEE_CLI_UC "\" 1 2006 \"" PACKAGE"\" \n");
   fprintf (fd ,".SH \"NAME\" \n");
-  fprintf (fd ,"xnee record, replays or distributes X11 data \n");
+  fprintf (fd ,"%s record, replays or distributes X11 data \n", XNEE_CLI);
   fprintf (fd ,".SH \"SYNOPSIS\" \n");
-  fprintf (fd ,".BI \"xnee [\" options \"]  \n");
+  fprintf (fd ,".BI \"%s [\" options \"]  \n", XNEE_CLI);
   fprintf (fd ,".sp \n");
   fprintf (fd ,".SH \"DESCRIPTION\" \n");
   fprintf (fd ,"The program \n");
-  fprintf (fd ,".B Xnee \n");
-  fprintf (fd ,"can record and replay an X session. Xnee also has the ability to distribute events to multiple displays. \n");
-  fprintf (fd ,".B Xnee  \n");
+  fprintf (fd ,".B %s \n", XNEE_CLI);
+  fprintf (fd ,"can record and replay an X session. %s also has the ability to distribute events to multiple displays. \n", XNEE_CLI);
+  fprintf (fd ,".B %s  \n", XNEE_CLI);
   fprintf (fd ,"gets copies of X protocol data from the X server. These are either printed to file ( \n");
   fprintf (fd ,".I record \n");
   fprintf (fd ,"mode) or replayed and synchronised ( \n");
   fprintf (fd ,".I replay  \n");
   fprintf (fd ,"mode). \n");
-  fprintf (fd ,"During record and replay Xnee can distribute the record/replayed events to multiple displays. \n");
+  fprintf (fd ,"During record and replay %s can distribute the record/replayed events to multiple displays. \n", XNEE_CLI);
 
   fprintf (fd ,".SH \"GENERAL OPTIONS\" \n");
   xnee_manpage_sub(fd, xnee_options, XNEE_GENERAL_OPTION);
@@ -347,14 +347,17 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
 
   fprintf (fd ,".SH \"SEE ALSO\"\n"); 
-  fprintf (fd ,".BR xnee(info), xev (1)\n");
+  fprintf (fd ,
+	   ".BR %s(info), %s(info), xev (1)\n", 
+	   XNEE_CLI,
+	   PACKAGE);
 
   fprintf (fd ,".SH \"VERSION\"\n");
   fprintf (fd ,PACKAGE " man page, version " VERSION "\n");
 
   fprintf (fd ,".SH \"NOTES\"\n");
   fprintf (fd ,"This page describes\n");
-  fprintf (fd ,".B Xnee.\n");
+  fprintf (fd ,".B %s.\n", XNEE_CLI);
   fprintf (fd ,"Mail corrections and additions to %s\n", XNEE_BUG_MAIL );
 }
 
