@@ -1,6 +1,8 @@
-
 2006-11-08    <hesa@gnu.org>
 
+	* cnee/src/cnee_printer.c: 
+	Changed Xnee to cnee in cnee man/info pages
+	
 	* doc/xnee_start.texi: 
 	Replaced "--loops" with "--events-to-record"
 
