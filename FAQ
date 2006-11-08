@@ -1,0 +1,124 @@
+*** GNU Xnee FAQ *** 
+
+   (this file was generated from the complete GNU Xnee Manual)
+
+
+`Where do I send questions?'
+     <info-xnee@gnu.org>
+`Where and how do I report bugs?'
+     Turn on verbose mode `cnee --verbose' and save the printouts.
+     Include all printouts and log files in the mail which is sent to
+     <xnee-bug@gnu.org>
+`When setting ranges (integers), how do I know what numbers belong'
+     to X11 data?  You can either type the data name directly (e.g
+     MotionNotify) or you can use the print-xxx-name options.
+        * `--print-data-name'
+
+        * `--print-event-name'
+
+        * `--print-error-name'
+
+        * `--print-reply-name'
+
+        * `--print-request-name'
+
+`Can Xnee record more than one display?'
+     No, but we are considering adding the functionality (see the TODO
+     file)
+
+`Where is the CVS repository?'
+     You can find a CVS tree at `http://savannah.gnu.org'.   You are
+     more than welcome to join
+
+`Is there a GUI frontend for Xnee ?'
+     Yes! Gnee.
+
+`What license is Xnee released under ?'
+     GPL. Which can be found at `http://www.gnu.org/copyleft/gpl.html'
+
+`Why the name Xnee?'
+     We wanted to use a recursive acronym, as GNU ("GNU's Not Unix').
+     After having read the Wine documentation, we thought that Xnee is
+     not an Event Emulator would work fine since Xnee is Not an Event
+     Emulator but rather a event recorder and faker.
+
+`What does the name Gnee mean?'
+     Gnee's not an Emulator Either
+
+`What doesn't the name Gnee mean?'
+     Gnee's not an Event Emulator
+
+`Can you add xxx functionality to Xnee'
+     Send an email to <xnee-devel@gnu.org> and we'll consider it.
+
+`When starting Xnee I get noticed that I am missing RECORD extension'
+     Your X server doesn't have the RECORD extension either loaded or
+     compiled. To solve this you have to, depending on what Xserver you
+     have do the following:
+
+        * XFree86 4.0 and higher Make sure that the RECORD extension is
+          loaded. This is done by letting the Module section in the X
+          config file (e.g /etc/X11/XF86Config-4) look something like:
+
+          `Section "Module"'
+          `Load  "dbe"         # Double-buffering'
+          `Load  "GLcore"      # OpenGL support'
+          `Load  "dri"         # Direct rendering infrastructure'
+          `Load  "glx"         # OpenGL X protocol interface'
+          `Load  "extmod"      # Misc. required extensions'
+          `Load  "v4l"         # Video4Linux'
+          `# Load  "pex5"      # PHIGS for X 3D environment (obsolete)'
+          `Load  "record"      # X event recorder'
+          `# Load  "xie"       # X Image Extension (obsolete)'
+          `# You only need the following two modules if you do not use
+          xfs.'
+          `# Load  "freetype"  # TrueType font handler'
+          `# Load  "type1"     # Adobe Type 1 font handler'
+          EndSection
+
+          The important load directive (in this case) is the following
+          line
+          `Load  "record"  # X event recorder'
+        * X.org, XFree86 (3.3 and lower)  or any other Xserver
+          Recompile and reinstall the Xserver and make sure that RECORD
+          extension is built into the Xserver. Please look at the
+          documentation from your Xserver "vendor" on how to do that.
+
+`How do I build VNC so that I can use Xnee together with it?'
+     Download vnc source from:
+     `http://www.uk.research.att.com/vnc/xvnchistory.html'
+     In the file `Xvnc/config/cf/vnc.def' change NO on the following
+     items to YES as below:
+     `#define BuildRECORD YES'
+     `#define BuildRECORDlib YES'
+     Download the Xfree86 distribution from `http://www.xfree86.org'.
+     Specifically, the following dir, (currently in the file
+     `X430src-3.tgz file' ):
+     `tar zxvf \'
+     `X430src-3.tgz '
+     `xc/programs/Xserver/record/'
+     `xc/programs/Xserver/record/Imakefile'
+     `xc/programs/Xserver/record/record.c'
+     `xc/programs/Xserver/record/recordmod.c'
+     `xc/programs/Xserver/record/set.c'
+     `xc/programs/Xserver/record/set.h'
+     `xc/programs/Xserver/record/module/'
+     `xc/programs/Xserver/record/module/Imakefile'
+     `cp -rf \'
+     `xc/programs/Xserver/record \'
+     `vnc_unixsrc/Xvnc/programs/Xserver'
+     `cd libvncauth/' `xmkmf' `make all'
+     `cd Xvnc' `make World |& tee LOG'
+     Verify the build by running `xdpyinfo' in an xterm in the vncserver
+     and verify that RECORD and XTEST extensions are loaded.
+
+`How do I ensure that the mouse, during replay, is at the same position (x,y) as when recorded?'
+     Use the `--store-mouse-pos' option.  This will cause Xnee to store
+     the mouse position before starting to record. This position will
+     be used to set the start position before replaying of recorded
+     data starts.
+
+`How do I ensure that the same window is focused as when recorded?'
+     It's simple, just make sure that you record the window get focus.
+
+
