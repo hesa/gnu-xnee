@@ -254,10 +254,10 @@ static xnee_option_t xnee_options_impl[] =
       "time",
       "t",
       "<secs>",
-      "Delay start of application for <secs> seconds. Used to "
-      "prevent recording of KeyRelease when starting Xnee from"
-      "terminal",
-      XNEE_RECORD_OPTION,
+      "Delay start of application for <secs> seconds. Can be "
+      "used to prevent recording of KeyRelease when starting "
+      "Xnee from terminal",
+      XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
 
