@@ -47,7 +47,8 @@
 
 
 
-#define  XNEE_CLI    "cnee"
+#define  XNEE_CLI       "cnee"
+#define  XNEE_CLI_UC    "CNEE"
   
 typedef int xnee_keymask;
 
