@@ -21,7 +21,7 @@ Start a terminal emulator (e.g xterm) and your favorite editor.
 Move the pointer to one of the terminal windows and start Xnee.
 @example
    @code{cnee --record -o example2.xnr --device-event-range 2-3 \}
-   @code{--time 5 --loops 20}
+   @code{--time 5 --events-to-record 20}
 @end example
 Move the pointer to the editor and get focus (e.g click the 
 window frame). After 5 seconds you can type whatever you want to record 
@@ -49,7 +49,7 @@ Start a terminal emulator (e.g xterm).
 Move the pointer to the terminal window and start Xnee.
 @example
    @code{cnee --record -o example3.xnr --device-event-range 5-6 \}
-   @code{--time 5 --loops 20}
+   @code{--time 5 --events-to-record 20}
 @end example
 After 5 seconds you can move the pointer around (20 motion events are recorded).
 
