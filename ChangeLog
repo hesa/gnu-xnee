@@ -10,6 +10,10 @@
 	--time is now a general option (not a record)
 	minor text adjustment
 	
+        * cnee/src/main.c
+	* cnee/src/parse.c
+	Better handling of failed parsing
+	
 2006-10-07   Henrik Sandkklef  <hesa@gnu.org>
 
 	* doc/xnee_faq.texi
