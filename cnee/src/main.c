@@ -82,10 +82,12 @@ int main(int argc,char *argv[])
 	{
 	  exit (XNEE_OK);
 	}
-      else 
+      else if ( ret == -1 )
 	{
-	  cnee_handle_err(xd, ret);
+	  ret = XNEE_WRONG_PARAMS;
 	}
+      fprintf(stderr, "writing crap %d\n", ret);
+      cnee_handle_err(xd, ret);
     }
 
   /* Set the cli parameters */

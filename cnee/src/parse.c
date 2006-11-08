@@ -304,6 +304,12 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
   int key; 
 
 
+  if ( ( opt_and_args == NULL) ||
+       ( opt_and_args[0] == NULL))
+    {
+      return -1;
+    }
+
   /* By default we set used nr of arguments to 0 */
   *args_used = 0;
 
@@ -523,6 +529,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
   int ret = XNEE_WRONG_PARAMS;
   const char *descr;
   const char *err;
+  const char *sol;
+  char *saved_arg;
   int entry ;
   int args_used;
 
@@ -557,20 +565,35 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	}
       else
 	{
+	  saved_arg = argv[i];	  
+	  /* Leave loop on error */
 	  break;
 	}
-      
-
     }
       
   if (ret != XNEE_OK)
     {
+      /* if parser(s) have returned -1, 
+	 it means parsing failed, set ret to XNEE_WRONG_PARAMS */
+      if (ret==-1)
+	{
+	  ret = XNEE_WRONG_PARAMS;
+	}
+
       err = xnee_get_err_description(ret);
       descr = xnee_get_err_solution(ret);
       
-      fprintf (stderr, "Error number: %d\n", ret);
-      fprintf (stderr, "  Error:      %s\n", err);
-      fprintf (stderr, "  Solution:   %s\n", descr);
+      fprintf (stderr, "Error number:   %d\n", ret);
+      fprintf (stderr, "  Error:        %s\n", err);
+      fprintf (stderr, "  Description:  %s\n", descr);
+
+      /* if wrong arg or param, print it put to help the user*/
+      if ( ( ret == XNEE_WRONG_PARAMS ) && (saved_arg!=NULL) )
+	{
+	  fprintf (stderr, 
+		   "  Argument:     %s\n",
+		   saved_arg);
+	}
       
       xnee_close_down(xd);
       exit(XNEE_WRONG_PARAMS);
