@@ -7,7 +7,7 @@
 @cindex     Record mouse motions 
 Record mouse motions only and save the session to mouse-rec.xnl. 
 @example
-   @code{cnee --record --mouse --out mouse-rec.xnl}
+   @code{cnee --record --mouse --out-file mouse-rec.xnl}
 @end example
 After having typed this you can move your mouse round for a while. After Xnee 
 has exited you will be able to replay your motions. Xnee will stop
@@ -18,7 +18,7 @@ after having record 100 events (this is the default behaviour).
 @cindex     Record keyboard 
 Record keyboard events only and save log to kbd-rec.xnl. 
 @example
-   @code{cnee --record --keyboard --out kbd-rec.xnl}
+   @code{cnee --record --keyboard --out-file kbd-rec.xnl}
 @end example
 After having typed this Xnee records all your keyboard actions. After Xnee 
 has exited you will be able to replay your keyboard actions. Xnee will stop
@@ -29,7 +29,7 @@ after having record 100 events (this is the default behaviour).
 @cindex     Record keyboard and mouse
 Record keyboard and mouse and save log to km-rec.xnl. 
 @example
-   @code{cnee --record --keyboard --mouse --out kbd-rec.xnl}
+   @code{cnee --record --keyboard --mouse --out-file kbd-rec.xnl}
 @end example
 After having typed this Xnee records all your keyboard and mouse actions. 
 So now move your pointer and write some stuff with your keyboard. After Xnee 
@@ -49,7 +49,7 @@ Start a terminal emulator (e.g xterm)
 Start Xnee
 @example
    @code{cnee --record --keyboard --mouse --events-to-record 400 \}
-   @code{ --out gnumeric.xnl&}
+   @code{ --out-file gnumeric.xnl&}
 @end example
 
 Start gnumeric
@@ -72,7 +72,7 @@ Start a terminal emulator (e.g xterm)
 Start Xnee
 @example
    @code{cnee --record --keyboard --mouse --events-to-record 400 \}
-   @code{ --out gnumeric2.xnl\}
+   @code{ --out-file gnumeric2.xnl\}
    @code{--delivered-event-range Expose,MapRequest,LeaveNotify,EnterNotify  &}
 @end example
 
