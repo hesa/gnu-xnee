@@ -110,7 +110,8 @@ enum _xnee_mode {
   XNEE_REPLAYER     ,
   XNEE_RECORDER     ,
   XNEE_RETYPER      ,        
-  XNEE_DISTRIBUTOR          
+  XNEE_DISTRIBUTOR  ,        
+  XNEE_SYNTAX_CHECKER        
 } xnee_mode ;
 
 

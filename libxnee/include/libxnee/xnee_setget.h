@@ -313,6 +313,9 @@ int
 xnee_set_distributor (xnee_data *xd);
  
 int
+xnee_set_syntax_checker (xnee_data *xd);
+ 
+int
 xnee_set_retyper (xnee_data *xd);
  
 int
@@ -327,6 +330,9 @@ xnee_is_recorder (xnee_data *xd);
 int
 xnee_is_replayer (xnee_data *xd);
 
+int
+xnee_is_syntax_checker (xnee_data *xd);
+ 
 int
 xnee_is_distributor (xnee_data *xd);
 

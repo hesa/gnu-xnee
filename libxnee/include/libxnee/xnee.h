@@ -101,6 +101,7 @@ enum return_values
     XNEE_MISSING_ARG       ,
     XNEE_OK_LEAVE          ,
     XNEE_GRAB_CONFUSION    ,
+    XNEE_PROJECT_SYNTAX_ERROR  ,
     XNEE_LAST_ERROR
   } _return_values;
 
@@ -543,7 +544,7 @@ typedef struct
   Bool     all_clients ;    /*!< True if recording all clients 
 			      (else Xneee recods only future clients) */
   Bool     sync        ;    /*!< True if Record used when replaying */
-  Bool     mode        ;    /*!< Xnee's current mode (RECORDER/REPLAY...)  */
+  char     mode        ;    /*!< Xnee's current mode (RECORDER/REPLAY/SYNTAX_CHECK...)  */
 
   /*@null@*/ void *plugin_handle  ;        /*!< Handle for the plugin file */
   /*@null@*/ char *plugin_name    ;        /*!< Name of the plugin file */

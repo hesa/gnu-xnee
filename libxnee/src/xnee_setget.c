@@ -439,6 +439,13 @@ xnee_set_distributor (xnee_data *xd)
  
 
 int
+xnee_set_syntax_checker (xnee_data *xd)
+{
+  xd->mode=XNEE_SYNTAX_CHECKER;
+  return XNEE_OK;
+}
+ 
+int
 xnee_set_retyper (xnee_data *xd)
 {
   xd->mode=XNEE_RETYPER;
@@ -465,6 +472,12 @@ xnee_is_recorder (xnee_data *xd)
   return (xd->mode==XNEE_RECORDER);
 }
 
+int
+xnee_is_syntax_checker (xnee_data *xd)
+{
+  return (xd->mode==XNEE_SYNTAX_CHECKER);
+}
+ 
 int
 xnee_is_replayer (xnee_data *xd)
 {
@@ -1208,10 +1221,9 @@ xnee_set_project_file(xnee_data *xd, char *name)
       xnee_verbose((xd, "\ttryingresource file %s\n", buf));
       ret = xnee_set_rc_name (xd, buf);
     }
-	  
   if ( xnee_get_rc_file (xd) != NULL) 
     {
-      ret = xnee_add_resource (xd );
+      ret = xnee_add_resource (xd);
 	      
       if (ret!=XNEE_OK)
 	{
@@ -1222,8 +1234,12 @@ xnee_set_project_file(xnee_data *xd, char *name)
 	      char *tmp_str;
 	      xnee_verbose ((xd, "project file read: SYNTAX ERROR\n"));
 	      tmp_str = xnee_get_err_string();
-	      fprintf (stderr,"%s", tmp_str);
+	      if (tmp_str!=NULL)
+		{
+		  fprintf (stderr,"%s", tmp_str);
+		}
 	      XNEE_FREE_IF_NOT_NULL(tmp_str);
+	      return ret;
 	    }
 	}
     }

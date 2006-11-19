@@ -101,11 +101,24 @@ xnee_start(xnee_data *xd)
        return XNEE_NO_MAIN_DATA;
      }
 
+   /* If just checking syntax,
+      return OK ..... failure should have been 
+      handled by normal parsing ..... */
+   if (xnee_is_syntax_checker(xd))
+     {
+       if (ret == XNEE_OK)
+	 {
+	   fprintf(stdout, "Parsing OK\n");
+	 }
+       return XNEE_OK;
+     }
+
    ret = xnee_prepare(xd);
    XNEE_RETURN_IF_ERR(ret);
 
    xd->in_use = 1;
 
+  
 
    /* grab all keys that have been specified */
    ret = xnee_grab_all_keys (xd);
@@ -114,13 +127,13 @@ xnee_start(xnee_data *xd)
        xnee_verbose((xd, "grab failure \n"));
        return ret;
      }
-  
 
    if (xnee_get_interval (xd) != 0)
    {
      xnee_delay (xnee_get_interval (xd), "xnee:" );
    }
    
+
    /*
     * are we recording or are we replaying
     */
