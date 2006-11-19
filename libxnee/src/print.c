@@ -949,7 +949,7 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "##############################################\n");
   fprintf (out,  "# display %s\n",
 	   (xd->display==NULL) ? "NULL"  : xd->display);
-  fprintf (out,  "%s\n" , xnee_xns_key2string(XNEE_DISTRIBUTE_KEY));
+  fprintf (out,  "# %s\n" , xnee_xns_key2string(XNEE_DISTRIBUTE_KEY));
   ret = xnee_print_distr_list(xd, out);
   XNEE_RETURN_IF_ERR(ret);
 
@@ -959,10 +959,10 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "##############################################\n");
   fprintf (out,  "#      Files                                 #\n");
   fprintf (out,  "##############################################\n");
-  fprintf (out,   "%s %s\n",
+  fprintf (out,   "# %s %s\n",
 	   xnee_xns_key2string(XNEE_OUT_FILE_KEY),
 	   (xd->out_name==NULL) ? "stdout" : xd->out_name );
-  fprintf (out,   "%s %s\n",
+  fprintf (out,   "# %s %s\n",
 	   xnee_xns_key2string(XNEE_ERR_FILE_KEY),
 	   (xd->err_name==NULL) ? "stderr" : xd->err_name );
   
@@ -1108,10 +1108,14 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "#      Various                               #\n");
   fprintf (out,  "##############################################\n");
   /* Plugin */
-  fprintf (out,  "\n# Plugin file (0 means none)\n");
+  fprintf (out,  "\n# Plugin file \n");
+  if (xd->plugin_name==NULL)
+    {
+      fprintf (out,  "# ");
+    }      
   fprintf (out,  "%s       %s\n",
 	   xnee_xns_key2string(XNEE_PLUGIN_KEY),
-	   xd->plugin_name? xd->plugin_name : "0" ); 
+	   xd->plugin_name ); 
   
   /* Modes */
   fprintf (out,  "\n# Modes (currently not used)\n");
@@ -1127,9 +1131,12 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
 	   xnee_get_replay_offset_y(xd)); 
 
   fprintf (out,  "\n# Human printout of X11 data (instead of Xnee format)\n");
-  fprintf (out,  "%s  %d\n",
-	   xnee_xns_key2string(XNEE_HUMAN_PRINTOUT_KEY),
-	   (xnee_is_human_printout(xd)!=0)); 
+  if (!xnee_is_human_printout(xd))
+    {
+      fprintf (out,  "# ");
+    }      
+  fprintf (out,  "%s  \n",
+	   xnee_xns_key2string(XNEE_HUMAN_PRINTOUT_KEY)); 
 
   
   fprintf (out,  "\n# Delay before starting record/replay\n");
