@@ -1,5 +1,40 @@
+2006-11-19   Henrik Sandkklef  <hesa@gnu.org>
+
+	* src/xnee_setget.c
+	* src/xnee.c
+	* include/libxnee/xnee_setget.h
+	* include/libxnee/xnee.h
+	* include/libxnee/xnee_internal.h
+	Added code for syntax check
+
+	* src/xnee_utils.c
+	* src/xnee_resource.c
+	* src/xnee_replay.c
+	* src/xnee_range.c
+	* src/xnee_expr.c
+	Corrected fault when parsing files
+
+	* src/xnee_error.c
+	Corrected fault when parsing files
+
+	* src/print.c
+	Commented away things in recorded file that may break replay
+
+	* include/libxnee/xnee_resource.h
+	Corrected fault when parsing files
+
+	* src/parse.c
+	* src/cnee_demo.c
+	Corrected fault when parsing files
+
+	* include/parse.h
+	Added code for syntax check
+
 2006-11-08    <hesa@gnu.org>
 
+	* doc/gen_faq.sh: 
+	New file to generate FAQ from Manual
+	
 	* cnee/src/cnee_printer.c: 
 	Changed Xnee to cnee in cnee man/info pages
 	

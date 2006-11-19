@@ -9,6 +9,9 @@ Changes in coming 2.06
        -rwp
        (-rcp, is not valid anymore)
 
+     --check-syntax
+       Checks syntax of cli and options. No other action performed.
+
   Build changes:
 
      * configure option for pnee added
