@@ -189,7 +189,7 @@ cnee_demonstration (xnee_data *xd)
   fprintf (stderr, 
 	   "\t"
 	   XNEE_CLI " --%s --%s %s\n", 
-	   xnee_key2string(xd, cnee_options, CNEE_REPLAY_OPTION_KEY),
+	   xnee_key2string(xd, xnee_options, XNEE_REPLAY_OPTION_KEY),
 	   xnee_key2string(xd, cnee_options, CNEE_FILE_OPTION_KEY),
 	   file);
 

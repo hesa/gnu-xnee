@@ -95,25 +95,6 @@ static xnee_option_t cnee_options_impl[] =
       XNEE_OPTION_VISIBLE
     },
     { 
-      CNEE_RECORD_OPTION_KEY,
-      "record",
-      "rec",
-      NULL, 
-      "Set recording mode" , 
-      XNEE_GENERAL_OPTION,
-      XNEE_OPTION_VISIBLE
-    },
-    { 
-      CNEE_REPLAY_OPTION_KEY,
-      "replay",
-      "rep",
-      NULL, 
-      "Set replaying mode" , 
-      XNEE_GENERAL_OPTION,
-      XNEE_OPTION_VISIBLE
-    },
-
-    { 
       CNEE_RETYPE_FILE_OPTION_KEY,
       "retype-file",
       NULL,
@@ -272,7 +253,18 @@ static xnee_option_t cnee_options_impl[] =
       "demo",
       NULL,
       "Let Xnee take you on a demonstration ride",
-      XNEE_GENERAL_OPTION
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+  
+    { 
+      CNEE_SYNTAX_CHECKER_KEY,
+      "check-syntax",
+      "cs",
+      NULL,
+      "Check syntax of the command line and/or project file (no exec)",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
     },
   
     {
@@ -374,22 +366,16 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
       verbose_option("CNEE_PROJECT_OPTION_KEY");
       ret = xnee_set_project_file(xd, opt_and_args[1]);
       *args_used = 1;
+      if (ret==XNEE_SYNTAX_ERROR) 
+	{
+	  ret = XNEE_PROJECT_SYNTAX_ERROR;
+	}
       break;
 
     case CNEE_VERSION_OPTION_KEY:           
       verbose_option("CNEE_VERSION_OPTION_KEY");
       xnee_version(xd);
       return XNEE_OK_LEAVE;
-      break;
-
-    case CNEE_RECORD_OPTION_KEY:            
-      verbose_option("CNEE_RECORD_OPTION_KEY");
-      ret = xnee_set_recorder(xd);
-      break;
-
-    case CNEE_REPLAY_OPTION_KEY:            
-      verbose_option("CNEE_REPLAY_OPTION_KEY");
-      ret = xnee_set_replayer(xd);
       break;
 
     case CNEE_TYPE_HELP_OPTION_KEY:         
@@ -478,6 +464,12 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
       *args_used = 1;
       break;
 
+    case CNEE_SYNTAX_CHECKER_KEY:       
+      verbose_option("CNEE_CHECK_SYNTAX_KEY");
+      xnee_set_syntax_checker(xd);  
+      ret =  xnee_set_syntax_checker (xd); 
+      break;
+
     case CNEE_REMOVE_EVENT_OPTION_KEY:      
       verbose_option("CNEE_REMOVE_EVENT_OPTION_KEY");
       ret=xnee_rem_data_from_range_str (xd,
@@ -552,8 +544,12 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	{
 	  return ret;
 	}
+      else if ( ret == XNEE_PROJECT_SYNTAX_ERROR)
+	{
+	  return XNEE_PROJECT_SYNTAX_ERROR;
+	}
 
-      ret = xnee_parse_xns_option(xd, &argv[i], &args_used);
+      ret = xnee_parse_cli_option(xd, &argv[i], &args_used);
       if ( ret == XNEE_OK )
 	{
 	  i = i + args_used;

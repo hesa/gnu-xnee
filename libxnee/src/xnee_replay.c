@@ -220,12 +220,9 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        )
     {
 
-
        while ( (logread != 0)  && ( xd->cont != 0 ) ) 
 	{
 	  ret_str = fgets(tmp, 256, xd->data_file);
-
-
 	  
 	  if ( ret_str == NULL)
           {
@@ -247,7 +244,9 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	  else 
 	    {
 	      ret = xnee_expression_handle_project(xd, ret_str);
+/* 	      ret = xnee_expression_handle_session(xd, ret_str, &xindata); */
 
+   printf ("main_loop() 2  ret=%d    %s\n", ret, ret_str);
 	      if ( (ret == XNEE_REPLAY_DATA) || 
 		   (ret == XNEE_PRIMITIVE_DATA) || 
 		   (ret == XNEE_SYNTAX_ERROR) )
@@ -266,8 +265,9 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		}
 	    }
 	}
+   printf ("main_loop() 3  ret=%d\n", ret);
 /*        ret = xnee_set_ranges(xd); */
-/*        XNEE_RETURN_IF_ERR (ret); */
+       XNEE_RETURN_IF_ERR (ret); 
     }
 
   if ( 

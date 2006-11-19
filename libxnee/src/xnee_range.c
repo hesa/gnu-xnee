@@ -179,7 +179,7 @@ xnee_init_list(struct xnee_range *xr, int size)
   xr->index = 0;
   xr->size  = size;
   xr->data  = (int*) malloc (xr->size*sizeof(int));
-  printf (" xr->data = %d\n", xr->data);
+/*   printf (" xr->data = %d\n", xr->data); */
   return XNEE_OK;
 }
 
@@ -191,8 +191,6 @@ xnee_free_ranges(xnee_data *xd)
 
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
    {
-     printf (" '%s'  delete  xrs->type[%d].data=%d\n",
-	     __func__, i, xrs->type[i].data); 
      XNEE_FREE_AND_NULL(xrs->type[i].data);
      xrs->type[i].data = NULL;
    }
@@ -400,10 +398,19 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 	  xnee_verbose((xd, " --  add_range_str 4\n" ));
 	  ret = xnee_add_to_list2(xd, type, start);
 	}
+      else if ( (start==0) && (stop==0) )
+	{
+	  ret = XNEE_OK;
+	}
+      else
+	{
+	  ret == XNEE_RANGE_FAILURE ;	  
+	}
     }
 
   xnee_verbose((xd, " <-- add_range_str (%d, %d, %s) max range=%d\n", 
 		(int)xd,type, range, xnee_get_max_range(xd)));
+
   return (ret);
 }
 
@@ -555,27 +562,43 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
   int ret=0;
   int range_len=strlen(range);
 
+/*  */
+
   xnee_verbose ((xd, "int arg=%d\n", (int)xd));
   xnee_verbose ((xd, "nt arg=%d\n", type));
   xnee_verbose ((xd, "string arg=%s\n", range));
 
-  while ( 1 ) {
-    next=strspn (range, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
-    if (next==0) break; 
-    strncpy(buf,range,next);
-    buf[next]='\0';
-    len =strlen(range);
-    range+=next+1;
-    range_len=range_len - next - 1;
-    xnee_verbose((xd, " -- calling xnee_add_range_str (%d, %d, %s) \n" , (int)xd, type, buf));
+  while ( 1 ) 
+    {
+      next=strspn (range, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
+      if (next==0) 
+	{
+	  ret = XNEE_RANGE_FAILURE;
+	  break; 
+	}
+      strncpy(buf,range,next);
+      buf[next]='\0';
+      len =strlen(range);
+      range+=next+1;
+      range_len=range_len - next - 1;
+      xnee_verbose((xd, " -- calling xnee_add_range_str (%d, %d, %s) \n" , (int)xd, type, buf));
 
-    ret=xnee_add_range_str (xd, type, buf);
-    if (range_len<=0) break;
-    if (ret!=0) return (ret);
-  }
+      ret=xnee_add_range_str (xd, type, buf);
 
+      if (ret == XNEE_RANGE_FAILURE )
+	{
+	  ret = XNEE_RANGE_FAILURE;
+	  break;
+	}
+      if (range_len<=0) 
+	{
+	  break;
+	}
+      if (ret!=XNEE_OK) return (ret);
+    }
+  
   xnee_verbose((xd, "<-- parse_range()\n"));
-  return (0);  
+  return ret;  
 }
 
 

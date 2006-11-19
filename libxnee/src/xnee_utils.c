@@ -352,7 +352,7 @@ xnee_str2strptr (char *tmp, int fill_option)
 	  str_size = strlen(tmp) + 1;
 	}
 
-      if ( (size==0) && fill_option )
+      if ( (size==0) && (fill_option==XNEE_CLI_SYNTAX) )
 	{
 	  str =  (char*) calloc(str_size, sizeof(char)+2);
 	  strcpy (str, "--");

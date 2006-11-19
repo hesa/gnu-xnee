@@ -301,6 +301,26 @@ static xnee_option_t xnee_options_impl[] =
       XNEE_OPTION_VISIBLE
     },
     
+    { 
+      XNEE_RECORD_OPTION_KEY,
+      "record",
+      "rec",
+      NULL, 
+      "Set recording mode" , 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      XNEE_REPLAY_OPTION_KEY,
+      "replay",
+      "rep",
+      NULL, 
+      "Set replaying mode" , 
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
     {
       XNEE_DISTRIBUTE_KEY,
       "distribute",
@@ -516,7 +536,7 @@ static xnee_option_t xnee_options_impl[] =
 
     {
       XNEE_EXT_REQ_MIN_STR_KEY,
-      "extension-request-major-range",
+      "extension-request-minor-range",
       "erqmir",
       "<X_LIST>", 
       "Set extension request minor range to X_LIST", 
@@ -526,7 +546,7 @@ static xnee_option_t xnee_options_impl[] =
 
     {
       XNEE_EXT_REP_MAJ_STR_KEY,
-      "extension-request-major-range",
+      "extension-reply-major-range",
       "erpmar",
       "<X_LIST>", 
       "Set extension reply major range to X_LIST", 
@@ -536,7 +556,7 @@ static xnee_option_t xnee_options_impl[] =
 
     {
       XNEE_EXT_REP_MIN_STR_KEY,
-      "extension-request-major-range",
+      "extension-reply-minor-range",
       "erpmir",
       "<X_LIST>", 
       "Set extension reply minor range to X_LIST", 
@@ -754,27 +774,64 @@ xnee_add_resource(xnee_data *xd)
 #define TMP_BUF_SIZE 256
   static char tmp[TMP_BUF_SIZE] ;
   int read_more  = 1 ;
-  
+  int i ;
+  int len;
+  int ret;
+
   strncpy(tmp,"",TMP_BUF_SIZE);
   
 
   while (read_more!=0)
     {
+
       if ( fgets(tmp, 256, xd->rc_file) == NULL)
-	return XNEE_OK;
+	{
+	  return XNEE_OK;
+	}
+
+      if ( tmp == NULL)
+	{
+	  XNEE_SYNTAX_ERROR;
+	}
+
+      /* remove trailing blanks and newlines|tab... */
+      len = strlen(tmp);
+      i=len;
+      while ( (i>0) && 
+	      ( tmp[i] != ' ' ) && 
+	      ( tmp[i] != '\t' ) && 
+	      ( tmp[i] != '\n' )  ) i--;
+      tmp[i]='\0';
+
       /*
        * Hey, I __know__ we'll keep the char array....
        * as long as we need... 
        */
       /*       read_more=xnee_add_resource_syntax(xd, tmp); */
-      read_more=xnee_expression_handle_project(xd, tmp); 
+      ret=xnee_expression_handle_project(xd, tmp); 
+
+
+      if ( (ret==XNEE_BLANK_LINE) ||
+	   (ret==XNEE_META_DATA) ||
+	   (ret==XNEE_SETTINGS_DATA) )
+	{
+	  ret = XNEE_OK;
+	}
+
+      if (ret != XNEE_OK)
+	{
+	  read_more = 0;
+	}
 
       xnee_verbose((xd,"  adding : \"%s\" \t-----------------returned %d\n", 
 		    tmp, read_more));
-      if (read_more==XNEE_SYNTAX_ERROR)
-	return read_more;
 
+      if (ret==XNEE_SYNTAX_ERROR)
+	{
+	  return ret;
+	}
     }
+
   return read_more;
 }
 
@@ -839,7 +896,7 @@ xnee_key2string(xnee_data      *xd,
 
 int
 xnee_option2id(xnee_data *xd, 
-	       xnee_option_t *options, 
+ 	       xnee_option_t *options, 
 	       const char *str, 
 	       int syntax_type)
 {
@@ -972,7 +1029,7 @@ xnee_find_option_entry_impl (xnee_data     *xd,
 
 
 int
-xnee_parse_xns_option(xnee_data *xd, char **opt_and_args, int *args_used)
+xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int syntax_mode)
 {
   int ret = XNEE_OK;
   int key; 
@@ -981,9 +1038,24 @@ xnee_parse_xns_option(xnee_data *xd, char **opt_and_args, int *args_used)
   int tmp_int1;
   int tmp_int2;
 
-  entry = xnee_find_resource_option_entry(xd, 
-					  xnee_options,
-					  opt_and_args[0]);
+  if (syntax_mode == XNEE_CLI_SYNTAX)
+    {
+      entry = xnee_find_cli_option_entry(xd, 
+					 xnee_options,
+					 opt_and_args[0]);
+    }
+  else if (syntax_mode == XNEE_XNS_SYNTAX)
+    {
+      entry = xnee_find_resource_option_entry(xd, 
+					      xnee_options,
+					      opt_and_args[0]);
+    }
+  else
+    {
+      fprintf (stderr, "Type of parse unspecified.... internal error. Report this\n");
+    }
+  
+
   if ( entry == XNEE_OPTION_NOT_FOUND )
     {
       return -1 ;
@@ -991,18 +1063,19 @@ xnee_parse_xns_option(xnee_data *xd, char **opt_and_args, int *args_used)
   
   key = xnee_options[entry].key;
 
-  xnee_verbose((xd, "Found xns entry for '%s' at position: %d\n", 
-		opt_and_args[0], entry));
+  xnee_verbose((xd, "Found xns entry for '%s' '%s' at position: %d\n", 
+		opt_and_args[0],opt_and_args[1], entry));
+
   xnee_verbose((xd, "\tlong option: '%d'\n", 
 		xnee_options[entry].option));
   xnee_verbose((xd, "\tshort option:'%d'\n", 
 		xnee_options[entry].short_option));
+
   xnee_verbose((xd, "\tlong option: '%s'\n", 
 		EMPTY_IF_NULL(xnee_options[entry].option)));
   xnee_verbose((xd, "\tshort option:'%s'\n", 
 		EMPTY_IF_NULL(xnee_options[entry].short_option)));
   
-	       
   /*
     #define verbose_option(a)  \
     xnee_verbose((xd, "%s:%d %s Handling: '%s' \n", \
@@ -1156,6 +1229,16 @@ xnee_parse_xns_option(xnee_data *xd, char **opt_and_args, int *args_used)
       verbose_option("XNEE_DISTRIBUTE_KEY");
       ret = xnee_add_display_list (xd, opt_and_args[1]);
       *args_used = 1;
+      break;
+
+    case XNEE_RECORD_OPTION_KEY:            
+      verbose_option("XNEE_RECORD_OPTION_KEY");
+      ret = xnee_set_recorder(xd);
+      break;
+
+    case XNEE_REPLAY_OPTION_KEY:            
+      verbose_option("XNEE_REPLAY_OPTION_KEY");
+      ret = xnee_set_replayer(xd);
       break;
 
     case XNEE_NO_SYNC_MODE_KEY:

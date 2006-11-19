@@ -58,7 +58,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 			      xnee_intercept_data * xindata);
 
 static int
-xnee_expression_handle_settings(xnee_data *xd, char *tmp);
+xnee_expression_handle_settings(xnee_data *xd, char *tmp, int synt_mode);
 
 static int
 xnee_expression_handle_comment(xnee_data *xd, char *tmp);
@@ -120,8 +120,8 @@ xnee_expression_handle_session(xnee_data *xd,
   do_continue = xnee_expression_handle_comment(xd, tmp);
   if (do_continue==XNEE_META_DATA) { return (do_continue); }
   
-  /* Is it a setting expression*/
-  do_continue = xnee_expression_handle_settings(xd, tmp);
+  /* Is it a setting expression */
+  do_continue = xnee_expression_handle_settings(xd, tmp, XNEE_CLI_SYNTAX);
   if (do_continue==XNEE_SETTINGS_DATA) { return (do_continue); }
   
   /* Is it an action string */
@@ -167,13 +167,12 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp)
   do_continue = xnee_is_replayable(xd, tmp);
   if (do_continue) { return (XNEE_REPLAY_DATA); }
   
-
   /* Is it a meta string */
   do_continue = xnee_expression_handle_comment(xd, tmp);
   if (do_continue==XNEE_META_DATA) { return (do_continue); }
   
-  /* Is it a setting expression*/
-  do_continue = xnee_expression_handle_settings(xd, tmp);
+  /* Is it a setting expression */
+  do_continue = xnee_expression_handle_settings(xd, tmp, XNEE_XNS_SYNTAX);
   if (do_continue==XNEE_SETTINGS_DATA) { return (do_continue); }
   
   /* Is it an action string */
@@ -275,7 +274,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 
 
 static int
-xnee_expression_handle_settings(xnee_data *xd, char *tmp)
+xnee_expression_handle_settings(xnee_data *xd, char *tmp, int synt_mode)
 {
   #define RANGE_BUF_SIZE 100
   int ret=XNEE_SETTINGS_DATA;  
@@ -288,6 +287,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
   int len=0;
   char *my_tmp;
   int   option_key;
+  int args_used ;
 
   if (tmp==NULL)
     {
@@ -305,23 +305,29 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp)
 
   my_tmp = tmp;
 
-  ret_strptr = xnee_str2strptr(my_tmp, 1);
+  ret_strptr = xnee_str2strptr(my_tmp, synt_mode);
+
 
   if (xnee_is_verbose(xd))
     {
       xnee_print_strptr(ret_strptr);
     }
 
-  option_key = xnee_option2key(xd, ret_strptr);
+  ret = xnee_parse_xns_option(xd, ret_strptr, &args_used) ;
 
-  xnee_free_strptr(ret_strptr);
-
- 
-  if (option_key==0)
-    {
+  /*  option_key = xnee_option2key(xd, ret_strptr);
+      xnee_free_strptr(ret_strptr);
+      if (option_key==0)
+      {
       ret = XNEE_OK;
+      }
+  */ 
+
+  if (ret==XNEE_OK)
+    {
+      ret = XNEE_SETTINGS_DATA;
     }
-  
+
   return ret;
 }
 
@@ -333,10 +339,10 @@ xnee_expression_handle_comment(xnee_data *xd, char *tmp)
 
   len = strlen(tmp);
 
-  xnee_verbose ((xd, "handling comment: %s\n", tmp));
+  xnee_verbose ((xd, "handling comment: \"%s\"\n", tmp));
   if (!strncmp("#",tmp,1))  /* # META data */
     {
-      xnee_verbose ((xd, "meta data read: %s\n", tmp));
+      xnee_verbose ((xd, "comment data read: %s\n", tmp));
       return XNEE_META_DATA;
     }
   return -1;

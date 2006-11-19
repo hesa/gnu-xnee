@@ -67,7 +67,7 @@ extern xnee_option_t  *xnee_options;
 #define XNEE_XNS_SYNTAX 2
 #define XNEE_CLI_PREFIX "--"
 #define xnee_find_resource_option_entry(xd, option, options) \
-        xnee_find_option_entry_impl    (xd, option, options, XNEE_CLI_SYNTAX)
+        xnee_find_option_entry_impl    (xd, option, options, XNEE_XNS_SYNTAX)
 #define xnee_find_cli_option_entry(xd, option, options)      \
         xnee_find_option_entry_impl(xd, option, options, XNEE_CLI_SYNTAX) 
 
@@ -125,6 +125,8 @@ enum XNEE_OPTION_KEYS
     XNEE_REPLAY_RESOLUTION_KEY,
     XNEE_ADJUST_RESOLUTION_KEY,
     XNEE_DISTRIBUTE_KEY       ,
+    XNEE_RECORD_OPTION_KEY    ,
+    XNEE_REPLAY_OPTION_KEY    ,
     XNEE_NO_EXPOSE_KEY        ,
     XNEE_NO_SYNC_MODE_KEY     ,
 /*     XNEE_USE_SYNC_KEY         , */
@@ -269,6 +271,11 @@ xnee_key2string(xnee_data      *xd,
 #define xnee_xns_key2string(key) \
    xnee_key2string(xd, xnee_options, key)
 
+#define xnee_parse_xns_option(x,o,a) xnee_parse_option_impl(x,o,a,XNEE_XNS_SYNTAX)
+#define xnee_parse_cli_option(x,o,a) xnee_parse_option_impl(x,o,a,XNEE_CLI_SYNTAX)
+
+int
+xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int syntax_mode);
 
 
 #endif  /* XNEE_RESOURCE_H */

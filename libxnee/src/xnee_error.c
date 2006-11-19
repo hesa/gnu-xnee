@@ -222,6 +222,10 @@ char error_descr_solut[128][256] =
     "Xnee have reached a point where it is confused over the grabs done",
     "Make sure you do not grab something already grabbed. If you are sure about this, report the problem (include recorded session file and verbose printout file)",
 
+    /* XNEE_PROJECT_SYNTAX_ERROR */            
+    "Syntax error in Xnee project file",
+    "Check the file",
+
    /* XNEE_LAST_ERROR */
     "Last error",
     "Internal state, report if you receive this",
