@@ -1,4 +1,4 @@
-ICONS = pnee-record.png pnee-replay.png pnee-stop.png
+ICONS = 
 
 icon_DATA = $(ICONS)
 icondir = $(datadir)/xnee/pixmaps
