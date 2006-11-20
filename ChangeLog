@@ -1,5 +1,8 @@
 2006-11-20    <hesa@gnu.org>
 
+	* doc/xnee_general.texi
+	Note on stoping with Control-c added
+
 	* src/xnee_utils.c
 	* src/xnee_replay.c
 	Parser error fixed
@@ -16,7 +19,7 @@
         *libxnee/src/xnee.c
         *libxnee/src/xnee_range.c
         *libxnee/src/xnee_resource.c
-	Added define NEED_REPLIES NEED_EVENTS before inclusin of Xproto.h
+	Added define NEED_REPLIES NEED_EVENTS before inclusion of Xproto.h
 
 2006-11-19   Henrik Sandkklef  <hesa@gnu.org>
 
