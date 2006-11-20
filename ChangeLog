@@ -1,5 +1,9 @@
 2006-11-20    <hesa@gnu.org>
 
+	* src/xnee_utils.c
+	* src/xnee_replay.c
+	Parser error fixed
+
 	* libxnee/src/print.c (xnee_store_mouse_pos): 
 	Fixed fprintf arguments in wrong order 
 
