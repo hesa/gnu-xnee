@@ -336,6 +336,7 @@ xnee_str2strptr (char *tmp, int fill_option)
 	    }
 	}
 
+      /* Find next blank (or newline) */
       blank_ptr1 = strstr(tmp, " ");
       if (blank_ptr1==NULL)
 	{
