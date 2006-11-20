@@ -13,3 +13,28 @@ libxnee:
   xnee_info contains record and replay things, but is handled in xnee_record.c
 
 doc:
+
+  Table in Section 6.4.2 (Settings) is faulty
+
+  References to /usr/share/Xnee shoule be /usr/share/xnee
+
+  Installation instr for CVS install contains too may "cd .."
+
+  Doc refer to xkeymouse, switch to xrebind instead.
+
+  "6.4.4 Script replay data" badly format(t?)ed
+
+  " 6.4.7 Project information"   -""- 
+
+  "It's simple, just make sure that you record the window get focus." 
+  ---> "It's simple, just make sure that you record the window getting focus."
+
+ FAQ: add note on recording th ctrl press when interrupting using ctrl-c >>>>>>> 1.14
+
+ Add text on "recall windo pos"
+
+ Add notes on pnee
+
+
+Everywhere:
+  Comment the code
