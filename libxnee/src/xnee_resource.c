@@ -142,13 +142,14 @@ static xnee_option_t xnee_options_impl[] =
       XNEE_RECORD_OPTION,
       XNEE_OPTION_VISIBLE
     },
+
     {
       XNEE_ALL_CLIENTS_KEY,
-      "all-client",
+      "all-clients",
+      "ac", 
       NULL,
-      NULL,
-      "Record all client's data (default)", 
-      XNEE_RECORD_OPTION,
+      "Record all client's data (default)",
+      XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
     {
@@ -354,17 +355,6 @@ static xnee_option_t xnee_options_impl[] =
       XNEE_REPLAY_OPTION,
       XNEE_OPTION_VISIBLE
     },
-
-    {
-      XNEE_ALL_CLIENTS_KEY,
-      "all-clients",
-      "ac", 
-      NULL,
-      "Record all client's data (default)",
-      XNEE_GENERAL_OPTION,
-      XNEE_OPTION_VISIBLE
-    },
-
     {
       XNEE_FUTURE_CLIENTS_KEY,
       "future-clients",
@@ -974,11 +964,11 @@ xnee_find_option_entry_impl (xnee_data     *xd,
 
   XNEE_VERBOSE_ENTER_FUNCTION();
 
-
   XNEE_VERBOSE_IN_FUNCTION(option);
 
   if (options==NULL)
     {
+      xnee_verbose((xd, "\toption == NULL\n"));
       return XNEE_MEMORY_FAULT;
     }
 
@@ -1041,6 +1031,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
   int tmp_int1;
   int tmp_int2;
 
+
   if (syntax_mode == XNEE_CLI_SYNTAX)
     {
       entry = xnee_find_cli_option_entry(xd, 
@@ -1049,16 +1040,17 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
     }
   else if (syntax_mode == XNEE_XNS_SYNTAX)
     {
+/*   xnee_set_verbose(xd); */
       entry = xnee_find_resource_option_entry(xd, 
 					      xnee_options,
 					      opt_and_args[0]);
+/*   xnee_unset_verbose(xd); */
     }
   else
     {
       fprintf (stderr, "Type of parse unspecified.... internal error. Report this\n");
     }
   
-
   if ( entry == XNEE_OPTION_NOT_FOUND )
     {
       return -1 ;
@@ -1089,7 +1081,8 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 		     __FILE__ , __LINE__, __func__, a ));
   
   ret = XNEE_SYNTAX_ERROR;
-	       
+
+
   switch (key)
     {
     case XNEE_NO_OPTION_KEY:
@@ -1128,8 +1121,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_ALL_CLIENTS_KEY:
       verbose_option("XNEE_ALL_CLIENTS_KEY");
-      ret = xnee_set_all_clients_str(xd, opt_and_args[1]);
-      INC_ARGS_USED(*args_used, opt_and_args[1]);
+      ret = xnee_set_all_clients(xd);
       break;
 
     case XNEE_FUTURE_CLIENTS_KEY:
