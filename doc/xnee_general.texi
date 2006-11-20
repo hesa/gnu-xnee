@@ -171,12 +171,15 @@ is replayed.
 
 @subsection	sending a SIGTERM signal 
 @cindex SIGTERM
-The easiest way to send a signal to a process is by launching Xnee from a 
-terminal window (e.g xterm) and then press Control-c which will send the SIGTERM 
-signal to Xnee. When replaying it can sometimes be hard to move the pointer 
-into the terminal window (e.g if a lot of motion events were recorded that 
-will let you compete with Xnee on where the mouse pointer shall be located. 
-Beleive me, you'll end up lossing that battle). 
+The easiest way to send a signal to a process is by launching Xnee
+from a terminal window (e.g xterm) and then press Control-c which will
+send the SIGTERM signal to Xnee. When replaying it can sometimes be
+hard to move the pointer into the terminal window (e.g if a lot of
+motion events were recorded that will let you compete with Xnee on
+where the mouse pointer shall be located.  Beleive me, you'll end up
+lossing that battle).
+
+When using Control-c to stop Xnee you must be aware of that the pressing of the Control key gets recorded. When replaying a recorded session ending with pressing of Control your apps may think you are pressing the Control key. A simple solution for this is to press and release the Control.
 
 @subsection  Stop Xnee with key combination
 @cindex      Stop Xnee with key combination
