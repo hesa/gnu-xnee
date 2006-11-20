@@ -331,10 +331,16 @@ xnee_str2strptr (char *tmp, int fill_option)
       while(tmp[0]==' ') 
 	{
 	  if (tmp[0]==' ')
-	    tmp++;
+	    {
+	      tmp++;
+	    }
 	}
 
       blank_ptr1 = strstr(tmp, " ");
+      if (blank_ptr1==NULL)
+	{
+	  blank_ptr1 = strstr(tmp, "\n");
+	}
 
       ret= (char**) realloc(ret,(size+2)*sizeof(char*));
 

@@ -90,7 +90,6 @@ xnee_replay_synchronize (xnee_data* xd)
       xnee_verbose((xd, "Xnee in NO SYNC mode\n"));
       return XNEE_OK;
     }
-   
 
   /*****
    * Check to see if we are in sync
@@ -232,6 +231,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
           {
              ret = (int)strlen (ret_str);
           }
+
+	  
 	  
 	  if ( ret == -1 )
 	    {
@@ -243,10 +244,10 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    }
 	  else 
 	    {
+
 	      ret = xnee_expression_handle_project(xd, ret_str);
 /* 	      ret = xnee_expression_handle_session(xd, ret_str, &xindata); */
 
-   printf ("main_loop() 2  ret=%d    %s\n", ret, ret_str);
 	      if ( (ret == XNEE_REPLAY_DATA) || 
 		   (ret == XNEE_PRIMITIVE_DATA) || 
 		   (ret == XNEE_SYNTAX_ERROR) )
@@ -261,13 +262,18 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		  
 		  xnee_verbose((xd, "REPLAY DATA coming up .... %s \n",
 				ret_str));
+
+		  /* Make sure SYNTAX ERRROR is not forgotten */
+		  if (ret==XNEE_SYNTAX_ERROR)
+		    {
+		      XNEE_RETURN_IF_ERR (ret);  
+		    }
+
 		  break ; 
 		}
 	    }
 	}
-   printf ("main_loop() 3  ret=%d\n", ret);
 /*        ret = xnee_set_ranges(xd); */
-       XNEE_RETURN_IF_ERR (ret); 
     }
 
   if ( 
