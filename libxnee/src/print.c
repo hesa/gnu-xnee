@@ -1253,8 +1253,9 @@ xnee_store_mouse_pos (xnee_data* xd )
 	       "%s " 
 	       "%s=%d " 
 	       "%s=%d \n" ,
-	       XNEE_FAKE_MOTION,XNEE_FAKE_X_ARG,XNEE_FAKE_Y_ARG,
-	       rx, ry );
+	       XNEE_FAKE_MOTION,
+	       XNEE_FAKE_X_ARG, rx, 
+	       XNEE_FAKE_Y_ARG, ry );
 }
 
 
