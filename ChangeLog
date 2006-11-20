@@ -1,3 +1,19 @@
+2006-11-20    <hesa@gnu.org>
+
+	* libxnee/src/print.c (xnee_store_mouse_pos): 
+	Fixed fprintf arguments in wrong order 
+
+        *libxnee/include/libxnee/datastrings.h
+        *libxnee/include/libxnee/xnee.h
+        *libxnee/include/libxnee/xnee_range.h
+        *libxnee/include/libxnee/xnee_record.h
+        *libxnee/include/libxnee/xnee_resource.h
+        *libxnee/src/datastrings.c
+        *libxnee/src/xnee.c
+        *libxnee/src/xnee_range.c
+        *libxnee/src/xnee_resource.c
+	Added define NEED_REPLIES NEED_EVENTS before inclusin of Xproto.h
+
 2006-11-19   Henrik Sandkklef  <hesa@gnu.org>
 
 	* src/xnee_setget.c
@@ -29,6 +45,11 @@
 
 	* include/parse.h
 	Added code for syntax check
+
+2006-11-09    <hesa@gnu.org>
+
+	* doc/xnee_exampl.texi: 
+	--out changed to --out-file
 
 2006-11-08    <hesa@gnu.org>
 
