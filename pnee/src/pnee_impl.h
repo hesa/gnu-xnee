@@ -98,7 +98,9 @@ extern pnee_panel_applet *pnee_applet;
 
 #define GCHAR_TO_CHAR(a) ((char *) (a))
 
-
+#define pnee_reset_zero_ctr(r)     r->reset=0
+#define pnee_reset_inc_ctr(r)      r->reset++
+#define pnee_reset_need_reset(r)  (r->reset>=2)
 
 #define pnee_show_states(p)       \
      fprintf(stderr,       \

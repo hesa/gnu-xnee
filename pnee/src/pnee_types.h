@@ -83,7 +83,8 @@ typedef struct
   volatile pnee_update_actions update_state ;
 
   GtkWidget *delay_progr;
-
+  
+  unsigned char reset;
 
   xnee_data *xd ;
 

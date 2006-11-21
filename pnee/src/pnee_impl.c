@@ -276,6 +276,7 @@ pnee_progress_updater (void *pnee_applet_in)
   gint curr;
   gdouble perc;
   pnee_panel_applet *pa = (pnee_panel_applet *) pnee_applet_in;
+  static unsigned char do_reset_ctr=0;
 
   /*
      GtkWidget *wid;
@@ -284,6 +285,30 @@ pnee_progress_updater (void *pnee_applet_in)
 
   while (1)
     {
+      /* Multiple quick presses on stop button
+       * means reset everything */
+      if (pnee_reset_need_reset(pa))
+	{
+	  fprintf(stderr, "\tRESETing xnee structure!!!!!\n");
+
+	  /* Dealloc xnee structures */
+	  xnee_close_down(pa->xd);
+
+	  /* Alloc/init new xnee structures */
+	  pnee_xnee_init(pa);
+
+	  /* Zero reset ctr */
+	  pnee_reset_zero_ctr(pa);
+	}
+      if (do_reset_ctr++==1)
+	{
+	  /* Zero reset ctr */
+	  pnee_reset_zero_ctr(pa);
+
+	  do_reset_ctr=0;
+	}
+
+
       while (pnee_is_replaying (pa) || pnee_is_recording (pa))
 	{
 	  if (pnee_is_replaying (pa))
@@ -309,6 +334,8 @@ pnee_progress_updater (void *pnee_applet_in)
 
 	  pnee_update_progress (pa, perc);
 	  usleep (1000 * 200);
+
+
 	}
 
       pnee_set_update_no_action (pa);
@@ -470,6 +497,8 @@ pnee_xnee_init (pnee_panel_applet * pnee_panel_in)
   xnee_set_key (pnee_panel_in->xd, XNEE_GRAB_STOP, "F5");
 
 
+  pnee_panel_in->reset=0;
+
   /* Set the program name */
   xnee_set_program_name (pnee_panel_in->xd, "pnee");
 
@@ -578,6 +607,8 @@ pnee_stop_pressed_impl (void *pnee_applet_in)
   pnee_set_no_action (pa);
   pnee_set_no_action_no_thread (pa);
   pnee_set_update_no_action (pa);
+
+  pnee_reset_inc_ctr(pa);
 
   _IN;
   gtk_widget_hide_all (my_delay);
@@ -784,6 +815,7 @@ pnee_debugger (void *pnee_applet_in)
       fprintf (stderr, "  debugger thread:: ");
       pnee_show_states (pa);
       usleep (1000 * 1000);
+
     }
   PTHREAD_RETURN;
 }
