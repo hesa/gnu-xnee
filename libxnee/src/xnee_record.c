@@ -1000,9 +1000,12 @@ xnee_record_async(xnee_data *xd)
   
   for (;;) 
     {
+      fprintf(stderr, "+");
+
       /* Interrupt variable set? */
       if (xnee_is_interrupt_action(xd))
 	{
+      fprintf(stderr, "\ninterrupted\n");
 	  ret = xnee_get_interrupt_action(xd);
 	  xnee_verbose((xd, "interrupt (record) variable was set (%d)\n",
 			ret));
@@ -1043,10 +1046,12 @@ xnee_record_async(xnee_data *xd)
       /* handle data in the RECORD buffer */
       ret = xnee_process_replies(xd);
       XNEE_RETURN_IF_ERR(ret);
-      
+
       if ( xnee_more_to_record(xd) == 0 ) 
 	{
+	  fprintf(stderr, "ZERO to record\n");
 	  xnee_verbose  ((xd," closing down while loop in async loop\n"));
+	  ret=XNEE_OK;
 	  break ; 
 	}
 
@@ -1061,7 +1066,9 @@ xnee_record_async(xnee_data *xd)
 /* 			xd->record_setup->rContext); */
 /*   XRecordFreeContext(xd->control,  */
 /* 			xd->record_setup->rContext); */
-  if (ret ==XNEE_OK)
+
+  fprintf(stderr, " leaving recording\n");
+  if (ret == XNEE_OK)
     {
       ret = xnee_stop_session(xd);
     }
@@ -1070,6 +1077,7 @@ xnee_record_async(xnee_data *xd)
       xnee_stop_session(xd);
     }
 
+  fprintf(stderr, " leaving recording 2\n");
   xnee_verbose((xd, " <--- xnee_record_async()\n"));
   return (ret);
 }
