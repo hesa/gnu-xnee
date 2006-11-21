@@ -102,11 +102,12 @@ extern pnee_panel_applet *pnee_applet;
 
 #define pnee_show_states(p)       \
      fprintf(stderr,       \
-	     " pnee status : %d %d  threads: %x %x \n", \
+	     " pnee status : %d %d  threads: %x %x   evs left: %d\n", \
 	     p->action_state, \
 	     p->update_state, \
 	     (int)p->xnee_thread, \
-	     (int)p->xnee_updater);
+	     (int)p->xnee_updater, \
+	     xnee_get_events_left(xd));
 
 #ifdef PNEE_DEBUGGER
 PTHREAD_RETURN_VAL

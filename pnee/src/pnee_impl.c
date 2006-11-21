@@ -47,7 +47,8 @@ pnee_handle_err(xnee_data *xd, int error)
   const char *err;
   const char *descr;
 
-  if ( error != XNEE_OK_LEAVE )
+  if ( ( error != XNEE_OK ) && 
+       ( error != XNEE_OK_LEAVE ) )
     {
       err   = xnee_get_err_description(error);
       descr = xnee_get_err_solution(error);
@@ -56,9 +57,6 @@ pnee_handle_err(xnee_data *xd, int error)
       fprintf (stderr, "  Error:      %s\n", err);
       fprintf (stderr, "  Solution:   %s\n", descr);
     }
-
-
-  fprintf(stderr, " \n\n\n\n\n\n *** ERROR *** \n\n\n\n");
   return XNEE_OK;
 }
 
@@ -209,6 +207,7 @@ pnee_start_recording (void *pnee_applet_in)
   pnee_set_recording (pa);
   pnee_set_update_no_action (pa);
 
+  pnee_set_events_to_record(NULL, pnee_applet_in);
   xnee_set_events_recorded(pa->xd,0);
   pnee_prepare_record ();
 
@@ -219,9 +218,21 @@ pnee_start_recording (void *pnee_applet_in)
   pnee_set_interval(NULL, pa->pnee_pref);
   delay_start (PNEE_DELAY_RECORD);
   
+  fprintf(stderr, "\n\n\n ********** SET RECORDER ******** \n\n\n");
+
+  ret = xnee_set_recorder (pa->xd);
+  if ( ( ret != XNEE_OK) &&  ( ret != XNEE_OK_LEAVE) ) 
+    {
+      pnee_handle_err(xd, ret);
+    }
   fprintf(stderr, "\n\n\n ********** START RECORDING ******** \n\n\n");
+  
   ret = xnee_start (pa->xd);
-  if ( ret != XNEE_OK)
+
+
+  fprintf(stderr, "\n\n\n ********** FINISHED RECORDING ******** \n\n\n");
+
+  if ( ( ret != XNEE_OK) &&  ( ret != XNEE_OK_LEAVE) ) 
     {
       pnee_handle_err(xd, ret);
     }

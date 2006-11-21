@@ -1,3 +1,14 @@
+2006-11-21    <hesa@gnu.org>
+
+	* pnee/src/pnee_impl.[hc]
+	Various fixes to make recording work again
+	
+	* libxnee/src/xnee.c
+	Checking for XNEE_OK_LEAVE in loop
+	
+	* libxnee/src/xnee_record.c
+	Making sure ret is set to XNEE_OK
+	
 2006-11-20    <hesa@gnu.org>
 
 	* doc/xnee_general.texi
