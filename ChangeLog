@@ -1,3 +1,10 @@
+2006-11-21    <hesa@localhost.localdomain>
+
+	* pnee/src/pnee_impl.c 
+	* pnee/src/pnee_impl.h: 
+	* pnee/src/pnee_types.h: 
+	Added code to handle reset on multiple stop presses
+
 2006-11-21    <hesa@gnu.org>
 
 	* pnee/src/pnee_impl.[hc]
