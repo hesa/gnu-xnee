@@ -4,7 +4,13 @@
 	* libxnee/include/libxnee/xnee_fileop.h:
 	Added function, xnee_open_err_file, to open verbose file
 	
-
+	* doc/xnee_intro.texi:
+	* doc/xnee_faq.texi:
+	Added notes on gnee, pnee
+	
+	* doc/xnee.texi:
+	Added chapter on Xnee programs
+	
 2006-11-21    <hesa@localhost.localdomain>
 
 	* pnee/src/pnee_impl.c 
