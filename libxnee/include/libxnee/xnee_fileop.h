@@ -28,6 +28,9 @@
 #ifndef XNEE_XNEE_FILEOP_H
 #define XNEE_XNEE_FILEOP_H
 
+int
+xnee_open_err_file(xnee_data *xd);
+
 int  
 xnee_free_file (xnee_data *xd, /*@null@*/ char *file_name, /*@null@*/ FILE* file);
 

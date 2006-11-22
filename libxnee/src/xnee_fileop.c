@@ -56,14 +56,10 @@ xnee_free_file (xnee_data *xd, /*@null@*/ char *file_name, /*@null@*/ FILE* file
 }
 
 
-
-
 int
-xnee_open_files(xnee_data *xd)
+xnee_open_err_file(xnee_data *xd)
 {
   char *file_name;
-
-  xnee_verbose((xd, "---> xnee_open_files\n"));
 
   file_name = xnee_get_err_name(xd);
   if (file_name!=NULL)
@@ -74,10 +70,10 @@ xnee_open_files(xnee_data *xd)
 	{
 	  xnee_verbose((xd, "---  xnee_open_files: opening err: %s\n", 
 			xd->err_name));
-	      if ( xd->err_file != xd->saved_err_file )
-		{
-		  XNEE_FCLOSE_IF_NOT_NULL(xd->err_file); 
-		}
+	  if ( xd->err_file != xd->saved_err_file )
+	    {
+	      XNEE_FCLOSE_IF_NOT_NULL(xd->err_file); 
+	    }
 	  xd->err_file = fopen (xd->err_name,"w");
 	  if (xd->err_file==NULL)
 	    {
@@ -87,6 +83,18 @@ xnee_open_files(xnee_data *xd)
 			xd->err_name));
 	}
     }
+  return XNEE_OK;
+}
+
+
+int
+xnee_open_files(xnee_data *xd)
+{
+  char *file_name;
+
+  xnee_verbose((xd, "---> xnee_open_files\n"));
+
+  xnee_open_err_file(xd);
 
   if ( (xnee_is_recorder(xd) != 0) )
     {
