@@ -62,14 +62,18 @@ can do. Xnee is designed to reduce the programmer from this burden.
 
 Xnee started out as a commad line program. During the development
 phase the main functionality was broken out to a library, called
-libxnee. The command line program was renamed cnee. The thought behind 
-making the library was to enable the writing of other clients than just 
-the command line. Today there is a GUI program, gnee, that uses the library.
+libxnee. The command line program was renamed cnee. The thought behind
+making the library was to enable the writing of other clients than
+just the command line. Today there is a GUI program, gnee, and a Gnome
+panel applet, pnee, that uses the library.  
 @*
 
 By using xnee your testcase(s) can be recorded and later on replayed.
 Xnee comes with other features For more information about these, read the 
 Introduction.
+
+This manual mainly focuses on the command line program, cnee. There
+are however a seperate chapters for the other programs.
 
 
 

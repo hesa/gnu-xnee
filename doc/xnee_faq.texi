@@ -25,14 +25,22 @@ After having read the Wine documentation, we thought that Xnee is not an
 Event Emulator would work fine since Xnee is Not an Event Emulator but 
 rather a event recorder and faker. 
 
+@item What does the name cnee mean?
+@cindex  What does the name cnee mean?
+          cnee's not an event emulator
+
 @item What does the name gnee mean?
 @cindex  What does the name gnee mean?
-          gnee's not an Emulator Either
+          gnee's not an emulator either
+
+@item What does the name pnee mean?
+@cindex  What does the name gnee mean?
+          pnee's not even emulating
+
 
 @item What doesn't the name gnee mean?
 @cindex  What does the name gnee mean?
           gnee's not an Event Emulator  
-
 
 
 @item What license is Xnee released under ?
