@@ -64,6 +64,7 @@
 * Installation::         Installation
 * Examples::             examples
 * File format::          File format
+* Programs::             Programs
 * Internals::            Internals
 * Requirements::         Requirements
 * FAQ::                  FAQ
@@ -92,11 +93,15 @@
 @include xnee_install.texi
 @page
 
-@node    Examples, File format, Installation, top
+@node    Examples, Programs, Installation, top
 @include xnee_exampl.texi
 @page
 
-@node    File format, Internals, Examples, top
+@node    Programs, Internals, Examples, top
+@include xnee_progs.texi
+@page
+
+@node    File format, Internals, Programs, top
 @include xnee_prot.texi
 @page
 
