@@ -1,0 +1,41 @@
+@chapter Xnee Programs
+
+@section cnee - cnee's not an event emulator
+
+This is the command line program of the GNU Xnee suite. This programs
+contains most features and is the basis for this documentation
+
+
+@section gnee - gnee's not an emulator either
+
+This is a GUI (using GTK2/Gnome) with most of the features of
+cnee. The GUI has been designed for ease of use.
+
+Currently there are no plans for making a separate manual for gnee.
+
+@section pnee - pnee's not even emulating
+
+This is a Gnome panel applet with a minimal set of features. Ease of
+use is the motto for this program. By default pnee have settings that
+need not be changed for most cases. You can, however, launch the
+preferences dialog and set your preferred values as in most other
+applets.
+
+If you find pnee a bit limited we suggest you switch over to using
+cnee.
+
+@b{Note}: if pnee hangs you can press the stop button twice to make a
+reset. Hopefully this will solve the problem.
+
+@subsection Reporting pnee bugs
+@cindex     Reporting pnee bugs
+
+By default pnee writes error, verbose printouts and warnings to stderr
+which will not be visible to you as a user, since pnee will be started
+automatically along with the other applets. If you start up the
+preferences dialog you can choose a file for pnee printouts. After
+that you should turn on verbose logging (also in the preferences
+dialog) and then reproduce the bug and send over the file to
+@email{xnee-bug@@gnu.org}.
+
+
