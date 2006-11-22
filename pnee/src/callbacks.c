@@ -40,7 +40,7 @@ int        file_choosen = PNEE_FILE_NONE;
   
 
 char *
-pnee_get_default_filename()
+pnee_get_default_filename(void)
 {
   char *tmp_dir = NULL;
   char *user_name = NULL;
@@ -93,7 +93,7 @@ pnee_get_default_filename()
 
 
 char *
-pnee_get_default_err_name()
+pnee_get_default_err_name(void)
 {
   char *tmp_dir = NULL;
   char *user_name = NULL;
@@ -194,8 +194,28 @@ pnee_set_rep_file(char *filename)
 void 
 pnee_set_err_file(char *filename)
 {
+  GtkFileChooserButton *file_text ; 
+
+
   XNEE_VERBOSE_ENTER_FUNCTION();
-  xnee_set_err_name (xd, filename); 
+
+  file_text = (GtkEntry*) lookup_widget(GTK_WIDGET(pnee_applet->pnee_pref),
+					"log_entry");
+
+  if (file_text!=NULL)
+    {
+      xnee_verbose((xd, " setting filename to gui: %s\n", filename));
+      gtk_entry_set_text (file_text, 
+			  filename);
+
+      xnee_verbose((xd, " setting (err) filename in xd:  %s\n", filename));
+      xnee_set_err_name (xd, filename); 
+    }
+  else
+    {
+      xnee_verbose((xd, "Failed to get text entry for ERROR\n"));
+    }
+
   XNEE_VERBOSE_LEAVE_FUNCTION();
 }
 
@@ -282,7 +302,7 @@ pnee_set_interval (GtkToggleButton *togglebutton,
 
   xnee_set_interval (xd, (int)delay) ;
   xnee_verbose((xd, " -- : setting delay %d\n", delay));
-  fprintf(stderr, "=================== Setting delay=%d\n", delay);
+  xnee_verbose((xd, "=================== Setting delay=%d\n", delay));
   XNEE_VERBOSE_LEAVE_FUNCTION();
   return ;
 }
@@ -348,7 +368,7 @@ on_delay_check_toggled                 (GtkToggleButton *togglebutton,
     {
       xnee_verbose((xd, " --on_delay_check_toggled: setting default 0\n"));
       use_delay = 0;
-      fprintf(stderr, "*****  346 delay=%d", 0);
+      xnee_verbose((xd, "*****  346 delay=%d", 0));
       xnee_set_interval (xd, 0) ;
     }
 
@@ -499,7 +519,9 @@ on_f_ok_button_clicked                 (GtkButton       *button,
     {
       XNEE_VERBOSE_IN_FUNCTION("got verbose file ");
       xnee_set_err_name(xd, GCHAR_TO_CHAR(global_filename));
+
       pnee_set_err_file (GCHAR_TO_CHAR(global_filename));
+      xnee_open_err_file(xd);
     }
   else
     {
@@ -627,9 +649,10 @@ on_f_open_button_clicked               (GtkButton       *button,
 
   gtk_widget_hide (fs);
   my_file = gtk_file_chooser_get_filename (GTK_FILE_CHOOSER(fs));
+
   XNEE_VERBOSE_IN_FUNCTION(my_file);
 
-  pnee_set_rec_file(my_file);
+  on_f_ok_button_clicked(NULL,NULL);
 
   XNEE_VERBOSE_LEAVE_FUNCTION();
 }
@@ -726,5 +749,20 @@ pnee_rep_pressed(void)
 		  pnee_start_replaying, 
 		  pnee_applet);
   return;
+}
+
+
+void
+on_log_file_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  XNEE_VERBOSE_ENTER_FUNCTION();
+
+  gtk_file_chooser_set_action (GTK_FILE_CHOOSER(fs),
+			       GTK_FILE_CHOOSER_ACTION_SAVE); 
+  gtk_widget_show (fs);
+  file_choosen=PNEE_FILE_VERBOSE;
+
+  XNEE_VERBOSE_LEAVE_FUNCTION();
 }
 

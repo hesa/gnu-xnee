@@ -175,3 +175,7 @@ pnee_set_interval (GtkToggleButton *togglebutton,
 		   gpointer         user_data);
 
 #endif /* CALLBACKS_H */
+
+void
+on_log_file_button_clicked             (GtkButton       *button,
+                                        gpointer         user_data);

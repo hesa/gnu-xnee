@@ -127,10 +127,10 @@ delay_start (int mode)
   delay_time = xnee_get_interval (xd) ;
   delay_time_start = delay_time;
 
-  fprintf(stderr, " ============================================================ delay: %d\n", 
-	  delay_time);
+  xnee_verbose((xd, " ============================================================ delay: %d\n", 
+	  delay_time));
 
-  fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
+  xnee_verbose((xd, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd)));
   create_delay_splash ();
   _IN;
   gtk_widget_show_all (my_delay);
@@ -141,13 +141,13 @@ delay_start (int mode)
       if (!pnee_is_recording (pnee_applet) &&
 	  !pnee_is_replaying (pnee_applet))
 	{
-	  fprintf (stderr, "Action interrupted ...., leaving start\n");
+	  xnee_verbose((xd, "Action interrupted ...., leaving start\n"));
 	  _IN;
 	  gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (my_delay_progr),
 					 0.0);
 	  _OUT;
 
-  fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
+	  xnee_verbose((xd, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd)));
 	  return;
 	}
 
@@ -163,16 +163,16 @@ delay_start (int mode)
 
 
 
-      fprintf (stderr, "  delay_start->\n");
+      xnee_verbose((xd, "  delay_start->\n"));
       sem_wait (&pnee_applet->update_mutex);
-      fprintf (stderr, "  delay_start -- %u\n", (int) my_delay_progr);
+      xnee_verbose((xd, "  delay_start -- %u\n", (int) my_delay_progr));
       _IN;
       gtk_progress_bar_set_fraction (GTK_PROGRESS_BAR (my_delay_progr), perc);
       gtk_progress_bar_set_text (GTK_PROGRESS_BAR (my_delay_progr), buf);
       _OUT;
-      fprintf (stderr, "  delay_start -- \n");
+      xnee_verbose((xd, "  delay_start -- \n"));
       sem_post (&pnee_applet->update_mutex);
-      fprintf (stderr, "  <-delay_start\n");
+      xnee_verbose((xd, "  <-delay_start\n"));
 
       usleep (1000 * 1000);
       delay_time--;
@@ -185,7 +185,7 @@ delay_start (int mode)
   _IN;
   gtk_widget_hide_all (my_delay);
   _OUT;
-  fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
+  xnee_verbose((xd, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd)));
   xnee_set_interval(xd, 0);
   return;
 }
@@ -211,32 +211,32 @@ pnee_start_recording (void *pnee_applet_in)
   xnee_set_events_recorded(pa->xd,0);
   pnee_prepare_record ();
 
-  fprintf(stderr, "\n\n\n ********** RECORDING SETTINGS ******** \n\n\n");
+  xnee_verbose((xd, "\n\n\n ********** RECORDING SETTINGS ******** \n\n\n"));
   xnee_print_ranges(pa->xd, stderr);
   xnee_print_xnee_settings(pa->xd, stderr);
 
   pnee_set_interval(NULL, pa->pnee_pref);
   delay_start (PNEE_DELAY_RECORD);
   
-  fprintf(stderr, "\n\n\n ********** SET RECORDER ******** \n\n\n");
+  xnee_verbose((xd, "\n\n\n ********** SET RECORDER ******** \n\n\n"));
 
   ret = xnee_set_recorder (pa->xd);
   if ( ( ret != XNEE_OK) &&  ( ret != XNEE_OK_LEAVE) ) 
     {
       pnee_handle_err(xd, ret);
     }
-  fprintf(stderr, "\n\n\n ********** START RECORDING ******** \n\n\n");
+  xnee_verbose((xd, "\n\n\n ********** START RECORDING ******** \n\n\n"));
   
   ret = xnee_start (pa->xd);
 
 
-  fprintf(stderr, "\n\n\n ********** FINISHED RECORDING ******** \n\n\n");
+  xnee_verbose((xd, "\n\n\n ********** FINISHED RECORDING ******** \n\n\n"));
 
   if ( ( ret != XNEE_OK) &&  ( ret != XNEE_OK_LEAVE) ) 
     {
       pnee_handle_err(xd, ret);
     }
-  fprintf(stderr, "\n\n\n ********** STOPED RECORDING  (%d) ******** \n\n\n", ret);
+  xnee_verbose((xd, "\n\n\n ********** STOPED RECORDING  (%d) ******** \n\n\n", ret));
   DEBUG_MARK();
 
   pnee_set_no_action (pa);
@@ -289,7 +289,7 @@ pnee_progress_updater (void *pnee_applet_in)
        * means reset everything */
       if (pnee_reset_need_reset(pa))
 	{
-	  fprintf(stderr, "\tRESETing xnee structure!!!!!\n");
+	  xnee_verbose((xd, "\tRESETing xnee structure!!!!!\n"));
 
 	  /* Dealloc xnee structures */
 	  xnee_close_down(pa->xd);
@@ -477,10 +477,10 @@ pnee_xnee_init (pnee_panel_applet * pnee_panel_in)
 {
 
   char *default_tmp_file;
-  char *default_err_file;
+/*   char *default_err_file; */
 
   default_tmp_file = pnee_get_default_filename ();
-  default_err_file = pnee_get_default_err_name ();
+/*   default_err_file = pnee_get_default_err_name (); */
 
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data ();
@@ -489,7 +489,7 @@ pnee_xnee_init (pnee_panel_applet * pnee_panel_in)
   (void) XSetErrorHandler (pnee_handle_xerr);
 
   xnee_set_verbose (pnee_panel_in->xd);
-  pnee_set_err_file (default_err_file);
+/*   pnee_set_err_file (default_err_file); */
   xnee_open_files (pnee_panel_in->xd);
   xnee_unset_recall_window_pos (pnee_panel_in->xd);
   xnee_set_events_max (pnee_panel_in->xd, 600);
@@ -510,11 +510,11 @@ pnee_xnee_init (pnee_panel_applet * pnee_panel_in)
   pnee_set_rep_file(default_tmp_file);
 
   free (default_tmp_file);
-  free (default_err_file);
+/*   free (default_err_file); */
 
-  fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
+  xnee_verbose((xd, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd)));
   pnee_set_interval(NULL, pnee_panel_in->pnee_pref);
-  fprintf (stderr, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd));
+  xnee_verbose((xd, "  ****** %s:%d       delay %d  \n", __FILE__, __LINE__, xnee_get_interval(pnee_applet->xd)));
 
   return XNEE_OK;
 }
@@ -684,7 +684,7 @@ display_about_dialog (BonoboUIComponent * component,
    */
   if (pnee_is_replaying (pnee_applet) || pnee_is_recording (pnee_applet))
     {
-      fprintf (stderr, "************** about blocked ");
+      xnee_verbose((xd, "************** about blocked "));
       return;
     }
 
@@ -709,7 +709,7 @@ display_properties_dialog (BonoboUIComponent * component,
    */
   if (pnee_is_replaying (pnee_applet) || pnee_is_recording (pnee_applet))
     {
-      fprintf (stderr, "*****************  properties blocked ");
+      xnee_verbose((xd, "*****************  properties blocked "));
       return;
     }
 
@@ -812,7 +812,7 @@ pnee_debugger (void *pnee_applet_in)
 
   while (1)
     {
-      fprintf (stderr, "  debugger thread:: ");
+      xnee_verbose((xd, "  debugger thread:: "));
       pnee_show_states (pa);
       usleep (1000 * 1000);
 
