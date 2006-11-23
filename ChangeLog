@@ -3,6 +3,12 @@
 	* doc/xnee.texi
 	Fixed bad nodes
 
+	* doc/Makefile.am
+	Added xnee_progs.texi for inclusion in dist
+
+	* libxnee/src/Makefile.am
+	Added x11_files.h for inclusion in dist
+
 2006-11-22    <hesa@gnu.org>
 
 	* libxnee/src/xnee_fileop.c: 
