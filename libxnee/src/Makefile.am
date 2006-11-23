@@ -34,6 +34,7 @@ LIBXNEE_H_FILES=../include/libxnee/xnee.h     \
 	../include/libxnee/xnee_plugin.h \
 	../include/libxnee/xnee_internal.h \
 	../include/libxnee/xnee_window.h \
+	../include/libxnee/x11_files.h \
 	../include/libxnee/feedback.h 
 
 
