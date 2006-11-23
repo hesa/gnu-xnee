@@ -26,11 +26,6 @@
 
 #include <stdio.h>
 
-#include <X11/X.h>
-#define NEED_REPLIES
-#define NEED_EVENTS 
-#include <X11/Xproto.h>
-
 #ifndef XNEE_DATASTRINGS_H 
 #define XNEE_DATASTRINGS_H 
 

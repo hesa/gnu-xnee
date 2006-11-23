@@ -30,8 +30,6 @@
 
 #include "xnee.h"
 #include "xnee_record.h"
-#include <X11/extensions/XTest.h>
-
 
 
 

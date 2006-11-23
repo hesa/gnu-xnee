@@ -31,20 +31,6 @@
 /* Standard includes */
 #include <stdio.h>
 
-/* X11 includes */
-#include <X11/Xlib.h>
-#include <X11/Xmd.h>
-#define NEED_REPLIES
-#define NEED_EVENTS 
-#include <X11/Xproto.h>
-#include <X11/Xos.h>
-#include <X11/Xlibint.h>  /* Warning, there be dragons here.... */
-
-/* 
- *  X11 extensions includes 
- */
-#include <X11/extensions/record.h> 
-
 #include "libxnee/xnee.h"
 #include "libxnee/print.h"
 #include "libxnee/xnee_dl.h"

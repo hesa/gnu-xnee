@@ -34,14 +34,7 @@
 
 #include <sys/utsname.h>
 
-#define NEED_REPLIES
-#define NEED_EVENTS 
-#include <X11/Xproto.h>
-#include <X11/Xlibint.h>
-#include <X11/Xlib.h>
-
-
-#include <X11/extensions/record.h> 
+#include "libxnee/x11_files.h"
 
 #include "libxnee/xnee_internal.h"
 #include "libxnee/xnee_strings.h"
@@ -546,7 +539,7 @@ typedef struct
   Bool     all_clients ;    /*!< True if recording all clients 
 			      (else Xneee recods only future clients) */
   Bool     sync        ;    /*!< True if Record used when replaying */
-  char     mode        ;    /*!< Xnee's current mode (RECORDER/REPLAY/SYNTAX_CHECK...)  */
+  unsigned char  mode  ;    /*!< Xnee's current mode (RECORDER/REPLAY/SYNTAX_CHECK...)  */
 
   /*@null@*/ void *plugin_handle  ;        /*!< Handle for the plugin file */
   /*@null@*/ char *plugin_name    ;        /*!< Name of the plugin file */

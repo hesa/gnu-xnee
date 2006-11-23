@@ -30,7 +30,6 @@
 
 #include "xnee.h"
 #include "xnee_record.h"
-#include <X11/extensions/XTest.h>
 
 int
 xnee_reset_fake( xnee_data *xd);

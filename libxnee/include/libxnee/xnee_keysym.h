@@ -26,10 +26,6 @@
 #ifndef XNEE_XNEE_KEYSYM_H
 #define XNEE_XNEE_KEYSYM_H
 
-#include <X11/Xlib.h>
-#include <X11/keysym.h>
-#include <X11/keysymdef.h>
-
 KeyCode
 xnee_str2keycode(xnee_data* xd, const char *str, xnee_key_code *kc);
 

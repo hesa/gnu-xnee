@@ -318,11 +318,11 @@ xnee_set_syntax_checker (xnee_data *xd);
 int
 xnee_set_retyper (xnee_data *xd);
  
-int
+unsigned char
 xnee_get_mode (xnee_data *xd);
 
 int
-xnee_set_mode (xnee_data *xd, int mode);
+xnee_set_mode (xnee_data *xd, unsigned char mode);
 
 int
 xnee_is_recorder (xnee_data *xd);

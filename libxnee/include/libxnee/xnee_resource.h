@@ -22,15 +22,6 @@
  * MA  02110-1301, USA.                                              
  ****/
 
-#define NEED_REPLIES
-#define NEED_EVENTS 
-#include <X11/Xproto.h>
-#include <X11/Xlibint.h>
-#include <X11/Xlib.h>
-
-#include <X11/extensions/record.h> 
-#include <X11/extensions/XTest.h> 
-
 #include "libxnee/xnee.h"
 #include "libxnee/print.h"
 #include "libxnee/xnee_dl.h"

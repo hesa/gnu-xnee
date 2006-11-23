@@ -22,7 +22,6 @@
  * MA  02110-1301, USA.                                              
  ****/
 
-#include <X11/Xlib.h>
 
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_window.h"

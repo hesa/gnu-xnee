@@ -24,8 +24,6 @@
 
 
 
-#include <X11/extensions/XTest.h>
-
 #include "libxnee/xnee.h"
 #include "libxnee/print.h"
 #include "libxnee/xnee_record.h"
