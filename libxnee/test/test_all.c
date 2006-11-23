@@ -1,6 +1,6 @@
 #include "test_setget.h"
 #define DUMMY_FILE_NO ((FILE*)0)
-#define DUMMY_INT ((int)321)
+#define DUMMY_INT ((int)177)
 
 int i ;
 
@@ -341,7 +341,7 @@ int test_all(void)
   
   new        = xnee_get_mode(xd);
 
-  XNEE_TEST_ASSERT(new      , DUMMY_INT,"xnee_set_mode"); /* ADDITIONAL TEST */ 
+  XNEE_TEST_ASSERT(new          , DUMMY_INT,"xnee_set_mode"); /* ADDITIONAL TEST */ 
   XNEE_TEST_ASSERT_DIFF(orig    , new      ,"xnee_set_mode");
 
   ret      = xnee_set_mode (xd, 0);

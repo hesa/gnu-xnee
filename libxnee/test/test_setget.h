@@ -26,7 +26,7 @@ extern int verbose ;
 #define ON_FAIL(fun, line) \
    total++; \
    fails++ ; \
-   printf("Test of function '%s()' failed  (Line nr:%d)   %d/%d\n", fun, line, fails, total );  
+   printf("Test of function '%s()' failed  (%s:%d)   %d/%d\n", fun, __FILE__, line, fails, total );  
 
    #define ON_OK(fun, line)   if(verbose)printf("Test of function '%s()' OK    line:%d   %d/%d  \n", fun, line, fails, total); total++;
 
