@@ -118,6 +118,7 @@ pnee_panel_applet_create (pnee_panel_applet *pnee_applet_in)
   sem_init(&pnee_applet->action_mutex, 0, 10);
   sem_init(&pnee_applet->update_mutex, 0, 1);
 
+  fprintf(stderr, "Using dir: '%s' \n", PNEE_PIXDIR);
   add_pixmap_directory (PNEE_PIXDIR);
 
   pnee_setup(pnee_applet_in);
@@ -234,7 +235,7 @@ main (int argc, char *argv[])
 
 /*   add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps"); */
   add_pixmap_directory (PNEE_PIXDIR);
-  printf("Using dir: '%s' \n", PNEE_PIXDIR);
+  fprintf(stderr, "Using dir: '%s' \n", PNEE_PIXDIR);
   pnee_setup();
 
   if (pnee_panel->pnee_pref==NULL)
