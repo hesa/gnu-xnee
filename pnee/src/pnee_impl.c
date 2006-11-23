@@ -488,7 +488,7 @@ pnee_xnee_init (pnee_panel_applet * pnee_panel_in)
 
   (void) XSetErrorHandler (pnee_handle_xerr);
 
-  xnee_set_verbose (pnee_panel_in->xd);
+/*   xnee_set_verbose (pnee_panel_in->xd); */
 /*   pnee_set_err_file (default_err_file); */
   xnee_open_files (pnee_panel_in->xd);
   xnee_unset_recall_window_pos (pnee_panel_in->xd);

@@ -1,4 +1,4 @@
-2006-11-22    <hesa@gnu.org>
+2006-11-23    <hesa@gnu.org>
 
 	* doc/xnee.texi
 	Fixed bad nodes
@@ -9,6 +9,40 @@
 	* libxnee/src/Makefile.am
 	Added x11_files.h for inclusion in dist
 
+	* libxnee/test/*
+	Corrected tests for unsigned char instead of int
+
+	* libxnee/include/libxnee/x11_files.h
+	New file (for including X11 headers)
+
+	* libxnee/include/libxnee/datastrings.h
+	* libxnee/include/libxnee/xnee.h
+	* libxnee/include/libxnee/xnee_buffer.h
+	* libxnee/include/libxnee/xnee_fake.h
+	* libxnee/include/libxnee/xnee_keysym.h
+	* libxnee/include/libxnee/xnee_range.h
+	* libxnee/include/libxnee/xnee_record.h
+	* libxnee/include/libxnee/xnee_replay.h
+	* libxnee/include/libxnee/xnee_resource.h
+	* libxnee/include/libxnee/xnee_setget.h
+	* libxnee/src/datastrings.c
+	* libxnee/src/xnee.c
+	* libxnee/src/xnee_buffer.c
+	* libxnee/src/xnee_callback.c
+	* libxnee/src/xnee_fake.c
+	* libxnee/src/xnee_grab.c
+	* libxnee/src/xnee_keysym.c
+	* libxnee/src/xnee_range.c
+	* libxnee/src/xnee_replay.c
+	* libxnee/src/xnee_resource.c
+	* libxnee/src/xnee_setget.c
+	* libxnee/src/xnee_threshold.c
+	* libxnee/src/xnee_time.c
+	* libxnee/src/xnee_window.c
+	
+	Using 1 xnee file for X11 inclusion.  
+	set/get mode uses unsigned char
+	
 2006-11-22    <hesa@gnu.org>
 
 	* libxnee/src/xnee_fileop.c: 
