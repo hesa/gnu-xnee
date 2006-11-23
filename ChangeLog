@@ -1,4 +1,9 @@
-2006-11-22    <hesa@localhost.localdomain>
+2006-11-22    <hesa@gnu.org>
+
+	* doc/xnee.texi
+	Fixed bad nodes
+
+2006-11-22    <hesa@gnu.org>
 
 	* libxnee/src/xnee_fileop.c: 
 	* libxnee/include/libxnee/xnee_fileop.h:
