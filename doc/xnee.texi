@@ -97,7 +97,7 @@
 @include xnee_exampl.texi
 @page
 
-@node    Programs, Internals, Examples, top
+@node    Programs, File format, Examples, top
 @include xnee_progs.texi
 @page
 
