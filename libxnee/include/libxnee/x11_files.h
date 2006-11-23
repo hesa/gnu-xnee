@@ -32,9 +32,9 @@
 #include <X11/Xproto.h>
 
 /* Ugly hack to aid AIX */
+#include <X11/Xlibint.h>  /* Warning, there be dragons here.... */
 #ifndef XLIBINT_H
 #define XLIBINT_H
-#include <X11/Xlibint.h>  /* Warning, there be dragons here.... */
 #endif /* XLIBINT_H */
 
 #include <X11/Xlib.h>
