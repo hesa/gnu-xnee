@@ -40,6 +40,8 @@ manual:
 
 man:
 	cd ./cnee/src && make man
+	cd pnee/man && make
+	cd gnee/man && make
 
 
 test:
