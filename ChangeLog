@@ -1,3 +1,14 @@
+2006-11-24    <hesa@gnu.org>
+	* gnee/man/Makefile.am
+	* gnee/man/gnee.1.in
+	* pnee/man/Makefile.am
+	* pnee/man/gnee.1.in
+	New files 
+
+	* pnee/Makefile.am
+	* gnee/Makefile.am
+	Including man dir in dist
+	
 2006-11-23    <hesa@gnu.org>
 
 	* doc/xnee.texi
