@@ -1,6 +1,6 @@
 ## Process this file with automake to produce Makefile.in
 
-SUBDIRS = pics src
+SUBDIRS = pics src man
 
 EXTRA_DIST = \
 	autogen.sh \
