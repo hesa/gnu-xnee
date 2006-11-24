@@ -3,6 +3,9 @@ Changes in coming 2.06
 
   New features:
 
+     man page for pnee
+     man page for gnee
+
   Updated Options for cnee
 
      Short option for recall window position is now:

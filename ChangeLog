@@ -8,6 +8,12 @@
 	* pnee/Makefile.am
 	* gnee/Makefile.am
 	Including man dir in dist
+
+	* configure.in
+	Make Makefile in dir: pnee/man gnee/man 
+	
+	* Makefile.am
+	Added making of pnee and gnee man page when make man
 	
 2006-11-23    <hesa@gnu.org>
 
