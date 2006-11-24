@@ -47,6 +47,8 @@ Changes in coming 2.06
 
      * Icon added (thanks to Luis Santander and Jeremiah Foster)
 
+     * Moved all X11 inclusions to one xnee file (x11_files.h)
+
   Minor updates
 
      * Examples (help printout) are updated
