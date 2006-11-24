@@ -1,4 +1,9 @@
 2006-11-24    <hesa@gnu.org>
+
+	* libxnee/src/xnee.c
+	* libxnee/src/xnee_record.c
+	Removed some debugging fprintf
+	
 	* gnee/man/Makefile.am
 	* gnee/man/gnee.1.in
 	* pnee/man/Makefile.am
