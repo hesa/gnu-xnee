@@ -89,13 +89,11 @@ xnee_start(xnee_data *xd)
 {
    int ret ;
 
-	 fprintf (stderr, "a");
    if (xd==NULL)
      {
        return XNEE_NO_MAIN_DATA;
      }
 
-	 fprintf (stderr, "b");
    /* If just checking syntax,
       return OK ..... failure should have been 
       handled by normal parsing ..... */
@@ -103,19 +101,15 @@ xnee_start(xnee_data *xd)
      {
        if (ret == XNEE_OK)
 	 {
-	   fprintf(stdout, "Parsing OK\n");
+	   ;
 	 }
        return XNEE_OK;
      }
-   fprintf (stderr, "c");
 
    ret = xnee_prepare(xd);
    XNEE_RETURN_IF_ERR(ret);
 
    xd->in_use = 1;
-
-  	 fprintf (stderr, "d");
-
 
    /* grab all keys that have been specified */
    ret = xnee_grab_all_keys (xd);
@@ -125,7 +119,6 @@ xnee_start(xnee_data *xd)
        return ret;
      }
 
-	 fprintf (stderr, "e");
    if (xnee_get_interval (xd) != 0)
    {
      xnee_delay (xnee_get_interval (xd), "xnee:" );
@@ -138,7 +131,6 @@ xnee_start(xnee_data *xd)
    if ( xnee_is_recorder(xd) != 0)  
    {
      
-	 fprintf (stderr, "A");
       /* 
        * Print settings 
        * if verbose mode that is 
@@ -146,7 +138,6 @@ xnee_start(xnee_data *xd)
       xnee_print_xnee_settings       (xd, NULL); 
       xnee_record_print_record_range (xd, NULL);
       
-	 fprintf (stderr, "A");
       /*
        * Do we have XRecord extension on the display
        *
@@ -158,25 +149,19 @@ xnee_start(xnee_data *xd)
           xnee_verbose((xd, "in Xnee how to enable it\n"));
           exit(XNEE_NO_REC_EXT);
        }
-	 fprintf (stderr, "A");
        ret = xnee_setup_recording(xd);
        XNEE_RETURN_IF_ERR (ret);
        
-	 fprintf (stderr, "B");
        ret = xnee_print_sys_info(xd, xnee_get_out_file (xd));
        XNEE_RETURN_IF_ERR (ret);
 
-	 fprintf (stderr, "B");
        xnee_print_xnee_settings (xd, xnee_get_out_file (xd)) ;
        xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
        
 
-	 fprintf (stderr, "B");
        xnee_zero_events_recorded(xd);
        xnee_zero_data_recorded(xd);
        xnee_zero_time_recorded(xd);
-
-	 fprintf (stderr, "C");
 
        /*
         * At last. Time to enter the main loop
@@ -187,8 +172,6 @@ xnee_start(xnee_data *xd)
 	 xnee_verbose((xd, "Entering main loop( recorder)\n"));
 	 ret = xnee_record_async(xd);
 
-	 fprintf (stderr, " fini ----- %d", ret);
-	 
 	 if ( (ret != XNEE_OK) &&  (ret != XNEE_OK_LEAVE) )
 	   {
 	     return ret;
@@ -232,7 +215,6 @@ xnee_start(xnee_data *xd)
 
        xnee_record_print_record_range (xd, stderr) ;
 
-   fprintf (stderr, " ---- xnee_star t a\n");
       /*
        * At last. Time to enter the main loop
        * ... wait to set up recording until all META data from file is read 
@@ -259,8 +241,6 @@ xnee_start(xnee_data *xd)
     {
       return XNEE_MODE_NOT_SET;
     }
-   fprintf (stderr, " ---- xnee_start\n");
-
    xnee_verbose((xd, "xnee_start : ungrab -----> \n"));
    ret = xnee_ungrab_keys (xd);
    XNEE_RETURN_IF_ERR (ret);
@@ -271,9 +251,6 @@ xnee_start(xnee_data *xd)
    
    ret = xnee_renew_xnee_data(xd);
    XNEE_RETURN_IF_ERR (ret);
-
-
-   fprintf (stderr, "<---- xnee_start\n");
 
    return (XNEE_OK);
 }
