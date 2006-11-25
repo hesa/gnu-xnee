@@ -1,12 +1,16 @@
 
+
+
 pnee:
+
+  add Luis' email address in About
+  change note on doc in About to: "Henrik Sandklef <hesa@gnu.org>"
 
 libxnee:
 
   xnee_info contains record and replay things, but is handled in xnee_record.c
 
 doc:
-
 
 Everywhere:
   Comment the code
