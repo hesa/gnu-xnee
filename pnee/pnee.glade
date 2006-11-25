@@ -1214,7 +1214,7 @@ Public License instead of this License.
   <property name="website_label" translatable="yes"></property>
   <property name="authors">Henrik Sandklef &lt;hesa@gnu.org&gt;</property>
   <property name="documenters">Xnee manual and other docs are written by Henrik Sandklef &lt;hesa@gnu.org&gt;</property>
-  <property name="artists">Luis Santander</property>
+  <property name="artists">Luis Santander &lt;yetzero@gmail.com&gt;</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">None, 
 please contact hesa@gnu.org if you want to contribute</property>
   <property name="logo">xnee.xpm</property>
