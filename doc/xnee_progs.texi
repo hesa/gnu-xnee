@@ -1,9 +1,17 @@
 @chapter Xnee Programs
 
+GNU Xnee consists of three different programs, cnee, gnee and pnee. 
+
+
+
 @section cnee - cnee's not an event emulator
 
-This is the command line program of the GNU Xnee suite. This programs
-contains most features and is the basis for this documentation
+This is the Xnee command line program. This programs contains most
+features and is the basis for this documentation.
+
+For a user not used to X11 it is probably a good idea to start with
+gnee or pnee instead or start using cnee in demonstration mode:
+@code{cnee --demo}
 
 
 @section gnee - gnee's not an emulator either
@@ -16,15 +24,16 @@ Currently there are no plans for making a separate manual for gnee.
 @section pnee - pnee's not even emulating
 
 This is a Gnome panel applet with a minimal set of features. Ease of
-use is the motto for this program. By default pnee have settings that
-need not be changed for most cases. You can, however, launch the
-preferences dialog and set your preferred values as in most other
-applets.
+use is the motto for this program. It is intended for users not being
+experts on X11 but still wants to record and replay a session for what
+ever purpose. By default pnee have settings that need not be changed
+for most cases. You can, however, launch the preferences dialog and
+set your preferred values as in most other applets.
 
 If you find pnee a bit limited we suggest you switch over to using
 cnee.
 
-@b{Note}: if pnee hangs you can press the stop button twice to make a
+@b{Note}: If pnee hangs you can press the stop button twice to make a
 reset. Hopefully this will solve the problem.
 
 @subsection Reporting pnee bugs
@@ -37,5 +46,3 @@ preferences dialog you can choose a file for pnee printouts. After
 that you should turn on verbose logging (also in the preferences
 dialog) and then reproduce the bug and send over the file to
 @email{xnee-bug@@gnu.org}.
-
-
