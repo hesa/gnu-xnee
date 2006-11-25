@@ -1,0 +1,33 @@
+.\" Copyright Henrik Sandklef 2006
+.\"   
+.\" This file may be copied under the conditions described 
+.\" in the LDP GENERAL PUBLIC LICENSE, Version 1, September 1998 
+.\" that should have been distributed together with this file. 
+.\" 
+.TH "GNEE" 1 2006 "Xnee" 
+.SH "NAME" 
+gnee record, replays or distributes X11 data 
+.SH "SYNOPSIS" 
+.BI "gnee 
+.sp 
+.SH "DESCRIPTION" 
+.B gnee 
+is the grapgical frontend to GNU Xnee. If you want more information
+about GNU Xnee read the GNU Xnee manual and the cnee info pages. GNU
+Xnee consists of a command lie program (cnee), a graphical frontend
+(gnee) and a Gnome Panel Applet (pnee).
+.SH "AUTHOR" 
+Henrik Sandklef.
+.SH "REPORTING BUGS"
+Report bugs in the program to bug-xnee@gnu.org. 
+.SH "COPYRIGHT"
+Copyright (C) 2006  Henrik Sandklef.
+This  is  free  software;  see the source for copying conditions. There is NO warranty;not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+.SH "SEE ALSO"
+.BR cnee(info), cnee(1), Xnee(info)
+.SH "VERSION"
+gnee man page, version 2.05.97
+.SH "NOTES"
+This page describes the Gnome Panel Applet gnee 
+.B gnee.
+Mail corrections and additions to bug-xnee@gnu.org

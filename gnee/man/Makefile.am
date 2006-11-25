@@ -1,0 +1,8 @@
+GNEE_MAN_PAGE=gnee.1
+man_MANS = $(GNEE_MAN_PAGE)
+
+EXTRA_DIST=$(man_MANS) $(TEXINF_FILES) $(GNEE_MAN_PAGE).in
+
+$(GNEE_MAN_PAGE): $(GNEE_MAN_PAGE).in
+	cat $(GNEE_MAN_PAGE).in | sed "s/__VERSION_TAG__/$(VERSION)/g" > $(GNEE_MAN_PAGE)
+

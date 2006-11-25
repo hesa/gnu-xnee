@@ -1,0 +1,7 @@
+PNEE_MAN_PAGE=pnee.1
+man_MANS = $(PNEE_MAN_PAGE)
+
+EXTRA_DIST=$(man_MANS) $(TEXINF_FILES)  $(PNEE_MAN_PAGE).in
+
+$(PNEE_MAN_PAGE): $(PNEE_MAN_PAGE).in
+	cat $(PNEE_MAN_PAGE).in | sed "s/__VERSION_TAG__/$(VERSION)/g" > $(PNEE_MAN_PAGE)
