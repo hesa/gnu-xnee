@@ -6,14 +6,14 @@ Changes in coming 2.06
      man page for pnee
      man page for gnee
 
+     --check-syntax
+       Checks syntax of cli and files. No other action performed.
+
   Updated Options for cnee
 
      Short option for recall window position is now:
        -rwp
        (-rcp, is not valid anymore)
-
-     --check-syntax
-       Checks syntax of cli and options. No other action performed.
 
   Build changes:
 
@@ -30,11 +30,19 @@ Changes in coming 2.06
 
      * New directory pixmap, used when building gnee or pnee
 
+     * new file: libxnee/include/libxnee/x11_files.h
+
+     * new dirs and files:
+            gnee/man/* 
+            pnee/man/*
+
   Doc changes:
 
      * FAQ entry added on ending recording with Control-C
 
      * Information on gnee added
+
+     * Information on pnee added
 
   Bugs fixed:
 

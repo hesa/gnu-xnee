@@ -864,7 +864,7 @@
   <property name="destroy_with_parent">False</property>
   <property name="name" translatable="yes">Pnee</property>
   <property name="copyright" translatable="yes">© 2005, 2006 Henrik Sandklef &lt;hesa@gnu.org&gt;
-© 2006 Luis Santander &lt;yetzero@gmail.com&gt;</property>
+© 2006 Luis Santander &lt;yetzero@gmail.com&gt; (Xnee logo)</property>
   <property name="comments" translatable="yes">Pnee is a GNU Xnee Applet  
 ....for more features check out gnee and cnee
 </property>
