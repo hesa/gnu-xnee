@@ -443,7 +443,7 @@ create_pnee_about (void)
     NULL
   };
   const gchar *artists[] = {
-    "Luis Santander",
+    "Luis Santander <yetzero@gmail.com>",
     NULL
   };
   /* TRANSLATORS: Replace this string with your names, one name per line. */
