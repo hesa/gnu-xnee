@@ -51,6 +51,9 @@ Xnee can be used for multiple purposes, allthough it was initially designed as a
    during tests or if you want xnee to answer some command
    session without having to record the session.
 
+@b{X11 protocol sniffer} - 
+   Xnee can be used a sniffer for the X11 protocol.
+
 
 @section Background
 @cindex background
