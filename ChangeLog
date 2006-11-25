@@ -1,5 +1,10 @@
 2006-11-24    <hesa@gnu.org>
 
+	* doc/xnee_progs.texi
+	Added info on intended users for the various programs
+
+2006-11-24    <hesa@gnu.org>
+
 	* libxnee/src/xnee.c
 	* libxnee/src/xnee_record.c
 	Removed some debugging fprintf
@@ -97,6 +102,9 @@
 	Making sure ret is set to XNEE_OK
 	
 2006-11-20    <hesa@gnu.org>
+
+	* pnee/pics/Makefile.am: 
+	Removed rules for files
 
 	* doc/xnee_general.texi
 	Note on stoping with Control-c added
