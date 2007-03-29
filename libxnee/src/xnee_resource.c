@@ -1022,6 +1022,11 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
   int tmp_int1;
   int tmp_int2;
 
+  if (opt_and_args==NULL)
+    {
+      return -1;
+    }
+
 
   if (syntax_mode == XNEE_CLI_SYNTAX)
     {

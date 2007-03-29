@@ -6,3 +6,4 @@ GtkWidget* create_pnee_pref (void);
 GtkWidget* create_filechooserdialog1 (void);
 GtkWidget* create_pnee_about (void);
 GtkWidget* create_delay (void);
+GtkWidget* create_error_dialog (void);

@@ -37,6 +37,7 @@ enum {
 
 
 int        file_choosen = PNEE_FILE_NONE;
+extern GtkWidget *my_err_dial;
   
 
 char *
@@ -764,5 +765,13 @@ on_log_file_button_clicked             (GtkButton       *button,
   file_choosen=PNEE_FILE_VERBOSE;
 
   XNEE_VERBOSE_LEAVE_FUNCTION();
+}
+
+
+void
+on_error_ok_clicked                    (GtkButton       *button,
+                                        gpointer         user_data)
+{
+  gtk_widget_hide (my_err_dial);
 }
 

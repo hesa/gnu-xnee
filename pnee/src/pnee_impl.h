@@ -196,4 +196,7 @@ create_delay_splash (void);
 void
 pnee_2xnee_update_all(void);
 
+void
+pnee_display_error(int err_nr);
+
 #endif /* PNEE_IMPL_H */

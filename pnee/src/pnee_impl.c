@@ -39,7 +39,7 @@ GtkWidget *my_delay;
 GtkWidget *my_del_progr_win;
 GtkWidget *my_delay_progr;
 GtkWidget *my_delay_label;
-
+GtkWidget *my_err_dial;
 
 static int 
 pnee_handle_err(xnee_data *xd, int error)
@@ -243,6 +243,54 @@ pnee_start_recording (void *pnee_applet_in)
   PTHREAD_RETURN;
 }
 
+
+void
+pnee_display_error(int err_nr)
+{
+  GtkLabel   *my_text;
+#define GNEE_BUF_SIZE 8
+  gchar buf[GNEE_BUF_SIZE];
+  const char *str_ptr = NULL;
+  int i ;
+
+  if (my_err_dial==NULL)
+    {
+      my_err_dial = create_error_dialog();
+    }
+
+  /* number field */
+  my_text = (GtkLabel *) 
+    lookup_widget (my_err_dial, "err_nr_label");
+  snprintf (buf, GNEE_BUF_SIZE, "%d", err_nr);
+  gtk_label_set_text(my_text,buf);
+
+  /* description field */
+  my_text = (GtkLabel *) 
+    lookup_widget (my_err_dial, "err_descr_label");
+  if (my_text!=NULL)
+    {
+      str_ptr = xnee_get_err_description(err_nr);
+      if (str_ptr!=NULL)
+	{
+	  gtk_label_set_text(my_text,str_ptr);
+	}
+    }
+  
+  /* solution field */
+  my_text = (GtkLabel *) 
+    lookup_widget (my_err_dial, "err_sol_label");
+  if (my_text!=NULL)
+    {
+      str_ptr = xnee_get_err_solution(err_nr);
+      if (str_ptr!=NULL)
+	{
+	  gtk_label_set_text(my_text,str_ptr);
+	}
+    }
+
+  gtk_widget_show (my_err_dial);
+}
+
 PTHREAD_RETURN_VAL
 pnee_start_replaying (void *pnee_applet_in)
 {
@@ -262,6 +310,12 @@ pnee_start_replaying (void *pnee_applet_in)
   delay_start (PNEE_DELAY_REPLAY);
 
   ret = xnee_start (pa->xd);
+
+  if (ret!=XNEE_OK)
+    {
+      xnee_verbose((xd, "xnee_start failed :(\n"));
+      pnee_display_error(ret);
+    }
 
   pnee_set_no_action (pa);
 
