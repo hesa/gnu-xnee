@@ -258,8 +258,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		  xnee_record_print_record_range (xd, NULL);
 		  xnee_print_xnee_settings       (xd, NULL); 
 		  
-		  xnee_verbose((xd, "REPLAY DATA coming up .... %s \n",
-				ret_str));
+		  xnee_verbose((xd, "REPLAY DATA coming up .... (%d) %s \n",
+				ret, ret_str));
 
 		  /* Make sure SYNTAX ERRROR is not forgotten */
 		  if (ret==XNEE_SYNTAX_ERROR)
@@ -273,6 +273,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	}
 /*        ret = xnee_set_ranges(xd); */
     }
+
 
   if ( 
       (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || 
@@ -305,7 +306,9 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	}
 
       ret = xnee_expression_handle_session(xd, tmp, &xindata);
-   
+
+      if ( ret == XNEE_PRIMITIVE_DATA ) { ret = XNEE_OK; }
+
       /**
        * all META DATA setting up our sessions is read ...
        * go on replaying
@@ -499,7 +502,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
   last_logread = 1;
   time_out_counter = 0;
   diff_counter     = 0;
-
+  
   return XNEE_OK;
 }
 

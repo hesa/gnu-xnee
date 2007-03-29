@@ -114,8 +114,6 @@ xnee_expression_handle_session(xnee_data *xd,
 				xindata);
   if (do_continue==XNEE_PRIMITIVE_DATA) { return (XNEE_PRIMITIVE_DATA); }
 
-
-
   /* Is it a meta string */
   do_continue = xnee_expression_handle_comment(xd, tmp);
   if (do_continue==XNEE_META_DATA) { return (do_continue); }
@@ -166,7 +164,11 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp)
   /* Is it a replayable data */
   do_continue = xnee_is_replayable(xd, tmp);
   if (do_continue) { return (XNEE_REPLAY_DATA); }
-  
+
+  /* Is it a script data */
+  do_continue = xnee_is_script(xd, tmp);
+  if (do_continue) { return (XNEE_PRIMITIVE_DATA); }
+
   /* Is it a meta string */
   do_continue = xnee_expression_handle_comment(xd, tmp);
   if (do_continue==XNEE_META_DATA) { return (do_continue); }
@@ -816,6 +818,17 @@ xnee_is_replayable(xnee_data *xd, char *tmp)
 
 
   if ( ( first_c >= '0' ) && ( first_c<='3' ) )
+    {
+      return 1;
+    }
+  return 0;
+}
+
+
+int
+xnee_is_script(xnee_data *xd, char *tmp)
+{
+  if ( strncmp(tmp, "xnee-", strlen("xnee-")))
     {
       return 1;
     }
