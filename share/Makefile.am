@@ -1,7 +1,7 @@
 XNEE_DATA_FILES = xnee.sh
 EXTRA_DIST = xnee.sh.in1 xnee.sh.in2
 pkgdata_DATA = xnee.sh
-pkgdatadir=$(datadir)/xnee/pixmaps
+pkgdatadir=$(datadir)/xnee/
 
 CLEAN_FILES=xnee.sh
 
