@@ -241,8 +241,6 @@ xnee_replay_event_handler( xnee_data* xd,
 
 
 
-
-
 /**************************************************************
  *                                                            *
  * xnee_fake_key_event                                        *
@@ -254,7 +252,8 @@ xnee_fake_key_event  (xnee_data* xd, int keycode, Bool bo, int dtime)
 {
   int i=0;
   int size= xd->distr_list_size;
-  
+
+
   if (!xnee_is_recorder (xd))
     {
       xnee_fake_sleep (dtime);
@@ -305,7 +304,6 @@ xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
       for (mods=0;(mods<8)&&(xss->kc.mod_keycodes[mods]!=0);mods++)
 	{
 	  xnee_fake_sleep (dtime);
-	  xnee_verbose((xd, "XTestFakeKeyEvent modifier \n"));
 	  xnee_fake_key_event (xd,
 			       xss->kc.mod_keycodes[mods], 
 			       bo, 
