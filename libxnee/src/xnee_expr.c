@@ -209,14 +209,14 @@ xnee_expression_handle_replay(xnee_data *xd,
     {    
       xindata->oldtime = xindata->newtime ;
       ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu",
-		      &xindata->type, 
-		      &xindata->u.event.type, 
-		      &xindata->u.event.x,
-		      &xindata->u.event.y, 
-		      &xindata->u.event.button,
-		      &xindata->u.event.keycode, 
-		      &xindata->u.event.screen_nr,
-		      &xindata->newtime);
+		   &xindata->type, 
+		   &xindata->u.event.type, 
+		   &xindata->u.event.x,
+		   &xindata->u.event.y, 
+		   &xindata->u.event.button,
+		   &xindata->u.event.keycode, 
+		   &xindata->u.event.screen_nr,
+		   &xindata->newtime);
       if (ret < 8)    /* NUM ARGS */
 	{
 	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
@@ -603,6 +603,8 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 	  return XNEE_SYNTAX_ERROR;
 	}
 
+
+
       str++;
       /* skip leading blanks */
       while ( str[0] == ' ' ) str++ ;
@@ -651,7 +653,6 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
       /* key=a key=shift etc */
       else if (strncmp(var,XNEE_FAKE_KEY_ARG,strlen(XNEE_FAKE_KEY_ARG))==0)
 	{
-	  
 	  if (strlen(val)==1)  
 	    {
 	      valp = &val[0];
@@ -661,7 +662,7 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
 		{
 		  val[0]=' ';
 		}
-	      
+
 	      xss->key = xnee_char2keycode (xd,val[0],&xss->kc);
 	      if ( xss->kc.kc != 0 )
 		{
@@ -725,6 +726,8 @@ xnee_expression_handle_prim(xnee_data *xd, char *str, xnee_intercept_data * xind
   xindata->u.event.type = 0;
 
   xnee_verbose ((xd, "handling primitive: %s\n", str));
+
+  memset(&xss, 0, sizeof(xnee_script_s));
 
   if (str == NULL)
     {
