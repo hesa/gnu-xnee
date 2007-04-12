@@ -293,7 +293,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
       /*        return ret; */
       /*      } */
       
-      if ( xd->sync != 0 )
+      if ( xd->sync != 0 ) 
 	{
            ret = xnee_setup_rep_recording(xd);
            XNEE_RETURN_IF_ERR(ret);
