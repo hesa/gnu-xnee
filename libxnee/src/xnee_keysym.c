@@ -153,13 +153,21 @@ xnee_token_to_km (xnee_data *xd,
       event.xkey.state   = masks[i];
       event.xkey.keycode = keycode;
       
+      
       size = XLookupString ((XKeyEvent *) &event, string, 20, &keysym, 0);
       string [size] = 0;
+
+/*       printf("     finding mod for %s (%d)  '%s'   kc=%d\n", */
+/* 	     str, i, string, xd->map->modifiermap[i]); */
+
 
       if (strncmp(str,string, TOKEN_STRING_SIZE)==0)
 	{
 	  KeySym ks ;
 	  char *nm ;
+
+/* 	  printf ("-----> masks[%d]=%d\n", i, masks[i]); */
+
 	  xnee_verbose((xd, "  i=%d\n", i ));
 	  xnee_verbose((xd, "  xd=%d\n", (int)xd ));
 	  xnee_verbose((xd, "  map=%d\n", (int)xd->map ));
@@ -167,14 +175,27 @@ xnee_token_to_km (xnee_data *xd,
 
 	  k = (i-1)*xd->map->max_keypermod ;
 	  xnee_verbose((xd, "  k=%d\n", k ));
+/* 	  printf( "  k=%d\n", k ); */
+
+
 	  ks = XKeycodeToKeysym(dpy,
 				xd->map->modifiermap[k],
 				0);
 	  nm = XKeysymToString(ks);
 	  
-	  kc->mod_keycodes[0] = xd->map->modifiermap[k];
+	  if ( ( nm != NULL ) && 
+	       strncmp(nm, "Mode_switch", strlen("Mode_switch")) == 0 )
+	    {
+	      ks = XStringToKeysym("ISO_Level3_Shift");
+	      kc->mod_keycodes[0] = XKeysymToKeycode(dpy, ks);
+	    }
+	  else
+	    {
+	      kc->mod_keycodes[0] = xd->map->modifiermap[k];
+	    }
+/* 	  printf(" ------------------------------------------------------> Found.  %d\n", kc->mod_keycodes[0]); */
 	  ret = XNEE_OK ;
-	  break;
+ 	  break; 
        }
    }
   return ret;
