@@ -91,15 +91,6 @@ xkm_rem_blanks (char *array)
   return XNEE_OK;
 }
 
-
-
-
-#ifdef USE_OBSOLETE
-xnee_keymask
-get_modifier_sub(xnee_data *xd,  char *mod_str, xnee_km_tuple *km);
-
-
-
 int
 get_modifier_from_mapping_sub(Display *display, char *mod_str) 
 {
@@ -187,15 +178,11 @@ get_modifier_from_mapping(Display *display, char *mod_str)
 }
 
 
+
 xnee_keymask
-get_modifier_sub(xnee_data *xd,  char *mod_str, xnee_km_tuple *km) 
+get_modifier_sub(xnee_data *xd,  char *mod_str) 
 {
   int ret=0;
-
-  if ( (xd!=NULL) && (km!=NULL))
-    {
-      xnee_mod2kc(xd, mod_str, km);
-    }
 
   if( xnee_check (mod_str, "ShiftMask", "ShiftMask"  ) )
     {
@@ -251,8 +238,6 @@ get_modifier_sub(xnee_data *xd,  char *mod_str, xnee_km_tuple *km)
     }
   return ret;
 }
-#endif
-
 
 
 #ifdef USE_OBSOLETE
