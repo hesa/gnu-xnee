@@ -121,7 +121,7 @@ char **
 xnee_str2strptr (char *tmp, int fill_option);
 
 void
-xnee_print_strptr( char **strptr);
+xnee_print_strptr(xnee_data *xd, char **strptr);
 
 int
 xnee_free_strptr(char **strptr);

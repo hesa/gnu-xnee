@@ -310,10 +310,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp, int synt_mode)
   ret_strptr = xnee_str2strptr(my_tmp, synt_mode);
 
 
-  if (xnee_is_verbose(xd))
-    {
-      xnee_print_strptr(ret_strptr);
-    }
+  xnee_print_strptr(xd, ret_strptr);
 
   ret = xnee_parse_xns_option(xd, ret_strptr, &args_used) ;
 
