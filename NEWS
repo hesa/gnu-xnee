@@ -44,16 +44,23 @@ Changes in coming 2.06
 
      * Information on pnee added
 
+     * Xnee and different keyboard mapping
   Bugs fixed:
 
      * Replay crashing when window name is empty and using
        recall window position.
+
+     * Buffer overflow error while replaying recorded file
+
+     * #18449 [cnee makes "@" to "q" on german keyboard]
 
   Various
 
      * New About window for Gnee
 
      * Icon added (thanks to Luis Santander and Jeremiah Foster)
+
+     * Solution to crashing X server depends on what server/version 
 
      * Moved all X11 inclusions to one xnee file (x11_files.h)
 
