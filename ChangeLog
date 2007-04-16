@@ -1,3 +1,35 @@
+2007-04-16    <hesa@gnu.org>
+
+	* src/xnee_session.c
+	Doing range adding later on, to include RECORD extension fix on correct display
+
+	* src/xnee_utils.c
+	Printing verbose printout to file instead of stderr" 
+
+	* src/xnee_record.c
+	some debug stuff added and kept as non-in-use
+
+	* src/xnee_range.c
+	RECORD extension fix
+
+	* src/xnee_expr.c 
+	* include/libxnee/xnee_utils.h
+	moved to debug check to correct place
+
+2007-04-12    <hesa@gnu.org>
+
+	* libxnee/src/xnee_keysym.c
+	Fixes for strage Mode_switch ISO_Level3_Shift problem
+
+	* libxnee/src/xnee_km.c
+	Changed args to get_modifier_sub
+
+	* libxnee/src/xnee_expr.c
+	Added a memset
+
+	* libxnee/src/xnee_fake.c
+	added verbose printout
+
 2006-11-25    <hesa@gnu.org>
 
 	* doc/xnee_intro.texi
