@@ -817,16 +817,34 @@ xnee_setup_recording(xnee_data *xd)
 			 xd->record_setup->data_flags, 
 			 xd->record_setup->xids,1, 
 			 xd->record_setup->range_array, nr_of_ranges);
+
+  /*  printf("%d <=== XRecordCreateContext(%d,%d, %d,%d, %d,%d)\n",
+	 xd->record_setup->rContext,
+	 xd->control, 
+	 xd->record_setup->data_flags, 
+	 xd->record_setup->xids[0],1, 
+	 xd->record_setup->range_array, nr_of_ranges);
   
-  /*
-    XRecordRegisterClients   (xd->control,
+    if(!XRecordGetContext(xd->control, xd->record_setup->rContext, (XRecordState **) &xd->record_setup->rState))
+    {
+    xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
+    exit(1);
+    }
+    printf (" enabled:  %d\n", xd->record_setup->rState->enabled);
+    printf (" datum:    %d\n", xd->record_setup->rState->datum_flags);
+    printf (" nclients: %d\n", xd->record_setup->rState->nclients);
+
+    exit(0);
+  */
+    /*
+      XRecordRegisterClients   (xd->control,
 			    xd->record_setup->rContext,
 			    xd->record_setup->data_flags, 
-			    xd->record_setup->xids,1,
+			    xids,1,
 			    xd->record_setup->range_array,nr_of_ranges);    
-  */
   xd->record_setup->xids[0] = xnee_client_id (xd->control);
   xd->record_setup->xids[1] = xnee_client_id (xd->data);
+    */
   /* 
    *Remove our clients displays from recording ...
    */
@@ -987,9 +1005,9 @@ xnee_record_async(xnee_data *xd)
 
 
   ret = XRecordEnableContextAsync(xd->data, 
-			    xd->record_setup->rContext, 
-			    xd->rec_callback, 
-			    (XPointer) (xd) /* closure passed to Dispatch */);
+				  xd->record_setup->rContext, 
+				  xd->rec_callback, 
+				  (XPointer) (xd) /* closure passed to Dispatch */);
   if (!ret)
   {
      return (XNEE_RECORD_FAILURE);
