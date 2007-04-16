@@ -403,6 +403,37 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 }
 
 
+static int 
+is_dangerous_xserver(char *dpy_name)
+{
+  static char *vendor;
+  static int vendrel ;
+  static Display *dpy;
+  static int ret_val = -1;
+
+  if ( ret_val == -1 ) 
+    {
+      dpy = XOpenDisplay(dpy_name);
+      vendor = ServerVendor (dpy);
+      vendrel = VendorRelease(dpy);
+      ret_val = 1 ; 
+
+      if (strstr(vendor, "X.Org") )
+	{
+	  int a = vendrel / 10000000 ;
+	  int b = (vendrel /   100000) % 100 ;
+	  int c = (vendrel /     1000) % 100 ;
+	  if (  ( a == 7 ) &&
+		( b >= 1 ) )
+	    {
+	      ret_val = 0;
+	    }
+	}
+    }
+  return ret_val;
+}
+
+
 
 /**************************************************************
  *                                                            *
@@ -451,7 +482,6 @@ xnee_add_range (xnee_data* xd,
      xd->record_setup->range_array[alloc_nr] = r_range; 
   }
   
-  
 
   /* is it single value */
   if (stop==0) 
@@ -469,10 +499,14 @@ xnee_add_range (xnee_data* xd,
       range->delivered_events.first = start;
       range->delivered_events.last = stop;
 
-      /* Workaround for problem with crashing X server*/
-      xd->xnee_info.data_ranges[XNEE_ERROR]++;
-      range->errors.first = BadCursor;
-      range->errors.last = BadCursor;
+      
+      if ( is_dangerous_xserver(xd->display) )
+	{
+	  /* Workaround for problem with crashing X server */
+	     xd->xnee_info.data_ranges[XNEE_ERROR]++;
+	     range->errors.first = BadCursor;
+	     range->errors.last = BadCursor;
+	}
     }
   else if ( type == XNEE_REQUEST ) 
     {
