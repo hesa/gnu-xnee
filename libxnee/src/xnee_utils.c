@@ -388,22 +388,27 @@ xnee_str2strptr (char *tmp, int fill_option)
 
 
 void
-xnee_print_strptr( char **strptr)
+xnee_print_strptr(xnee_data *xd, char **strptr)
 {
   int i = 0 ; 
+
+  if ( (xd==NULL) || ( xd->verbose == 0 ) )
+    {
+      return;
+    }
 
   if (strptr==NULL)
     {
       return;
     }
 
-  fprintf (stderr, "Option: '%s'\n", strptr[0]);
+  fprintf (xd->err_file, "Option: '%s'\n", strptr[0]);
 
   for (i=1; strptr[i] != NULL ; i++)
     {
       if ( strptr[i] != NULL ) 
 	{
-	  fprintf (stderr, "\targument: '%s'\n", strptr[i]);
+	  fprintf (xd->err_file, "\targument: '%s'\n", strptr[i]);
 	}
       else break;
     }
