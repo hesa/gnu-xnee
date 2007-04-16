@@ -73,6 +73,27 @@ print-xxx-name options.
 @item  @code{--print-request-name} 
 @end itemize
 
+@item When I replay to another display the characters are not correct?
+@cindex replay to another display the characters are not correct
+Make sure you use the same keyyboard mapping. A typical example:
+@*
+@code{xmodmap -pke -display remote:0 > remote.map }
+@*
+@code{xmodmap -pke -display  > local.map }
+@*
+@code{cat local.map | xmodmap -display remote:0 - }
+@*
+@code{cnee --replay --file record_on_local.xnl }
+@*
+@code{xmodmap -pke -display remote:0 > remote.map }
+@*
+@code{cat remote.map | xmodmap -display remote:0 - }
+@*
+
+@item When starting Xnee I am informed that I am missing the RECORD extension
+@cindex missing RECORD extension
+Your X server doesn't have the RECORD extension either loaded or compiled. To solve this you have to, depending on what Xserver you have do the following:
+
 @item Can Xnee record more than one display?
 @cindex can Xnee record more than one display
 No, we used to consider adding the functionality but have no plans to
