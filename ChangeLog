@@ -16,6 +16,9 @@
 	* include/libxnee/xnee_utils.h
 	moved to debug check to correct place
 
+	* doc/xnee_faq.texi
+	Note about remote replaying to different keyboard mapping
+	
 2007-04-12    <hesa@gnu.org>
 
 	* libxnee/src/xnee_keysym.c

@@ -237,14 +237,14 @@ sleep 5
 #get mouse in position and zero the device counter
 get_in_position
 zero_device swmouse
-record_and_replay 700 500 600 400
+record_and_replay 500 200 200 100
 sleep 5
 
 #get mouse in position and zero the device counter
-get_in_position
-zero_device swmouse
-record_and_replay 800 600 700 500
-sleep 5
+#get_in_position
+#zero_device swmouse
+#record_and_replay 800 600 700 500
+#sleep 5
 
 
 result_log $MYNAME 

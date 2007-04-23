@@ -383,8 +383,8 @@ then
 	AC_PATH_PROG(PS2PDF,ps2pdf,,)
 	check_doc_program "$PS2PDF" "ps2pdf" "gs-common"
 
-	AC_PATH_PROG(EPSTOPDF,epstopdf,,)
-	check_doc_program "$EPSTOPDF" "epstopdf" "tetex-bin"
+	AC_PATH_PROG(EPSTOPDF,ps2pdf,,)
+	check_doc_program "$EPSTOPDF" "ps2pdf" "texlive-extra-utils"
 
 	AC_PATH_PROG(CONVERT,convert,,)
 	check_doc_program "$CONVERT" "convert" "imagemagick"
