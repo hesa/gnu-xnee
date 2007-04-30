@@ -54,7 +54,7 @@ function check_version()
     verbose "Checking version on $2"
 
     
-    RECEIVED=`./cnee/src/cnee --version 2>&1 | grep  '^cnee part of Xnee [0-9\. a-zA-Z]*$'| awk '{print $5}' `
+    RECEIVED=`./cnee/src/cnee --version 2>&1 | grep  'Xnee [0-9\. a-zA-Z]*$'| awk '{print $5}' `
     
     if [ "$EXPECTED" != "$RECEIVED" ] ;
     then
