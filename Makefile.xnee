@@ -17,8 +17,6 @@ PEDANTIC_FLAGS =  -W -Wall -pedantic  \
 	-Wpointer-arith -Wcast-qual \
 	-Wstrict-prototypes -Wmissing-prototypes \
 	-Wmissing-declarations -Wmissing-noreturn \
-	-Wmissing-format-attribute -Wredundant-decls \
-	-Wnested-externs -Wunreachable-code \
         -Wformat=2 -Wimplicit -Wmain \
         -Wcomment -Wformat-nonliteral \
         -Wmissing-braces -Wparentheses -Wreturn-type \
