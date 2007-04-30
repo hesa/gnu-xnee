@@ -6,7 +6,7 @@
 #
 
 PACKAGE=\"Xnee\"
-VERSION=\"2.05.99\"
+VERSION=\"2.06\"
 #
 # gnee uses config.h (copied from config.xnee)
 #
