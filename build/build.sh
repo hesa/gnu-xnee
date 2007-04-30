@@ -54,7 +54,7 @@ function check_version()
     verbose "Checking version on $2"
 
     
-    RECEIVED=`./cnee/src/cnee --version 2>&1 | grep  'Xnee [0-9\. a-zA-Z]*$'| awk '{print $5}' `
+    RECEIVED=`./cnee/src/cnee --version 2>&1 | grep  'Xnee [0-9\. a-zA-Z]*$'| awk '{print $2}' `
     
     if [ "$EXPECTED" != "$RECEIVED" ] ;
     then
@@ -255,6 +255,10 @@ if [ "$BUILD_RPM" != "true" ] ;
     verbose "    make clean all text html man info"
     make clean all manual
     check_status "$?" "make"
+
+    echo "======================================="
+    pwd
+
     check_version $XNEE_VERSION "xnee from configure && make"
     cp cnee/src/cnee ./cnee.makefile_configure
     

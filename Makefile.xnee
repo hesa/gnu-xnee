@@ -43,7 +43,7 @@ GUI_C_FLAGS= -I. -Ilibxnee/include -Ignee/src -I/usr/include/gtk-2.0 -I/usr/lib/
 GUI_LD_FLAGS=  -L/usr/X11R6/lib  -L. -lgtk-x11-2.0 -lgdk-x11-2.0 -latk-1.0 -lgdk_pixbuf-2.0 -lm -lfontconfig   -lXrandr -lXext -lXcursor  -lpango-1.0  -lXrender -lX11 -lgobject-2.0 -lgmodule-2.0 -ldl -lglib-2.0 -lxnee 
 
 CFLAGS =  -DPACKAGE=${PACKAGE} -DVERSION=${VERSION} -DHAVE_STDARG_H=1 \
-        -I/usr/X11R6/include -I./libxnee/include/ -Ixnee/src -g \
+        -I/usr/X11R6/include -I./libxnee/include/ -Icnee/include -g \
         ${PEDANTIC_FLAGS} 
 
 
@@ -56,7 +56,7 @@ LDFLAGS = -L/usr/X11R6/lib -L./lib -L/usr/X/lib
 
 LIBS = -lX11 -lXext -lXtst -lpthread ${XOSD_LIB}
 
-CLI_SRC =  cnee/src/parse.c  cnee/src/main.c  
+CLI_SRC =  cnee/src/parse.c  cnee/src/main.c  cnee/src/cnee_strings.c cnee/src/cnee_printer.c cnee/src/cnee_fake.c cnee/src/cnee_demo.c
 GUI_SRC =  gnee/src/callbacks.c   gnee/src/gnee_xnee.c  gnee/src/interface.c  gnee/src/main.c  gnee/src/recordables.c  gnee/src/support.c
 COMM_SRC =   libxnee/src/datastrings.c \
   libxnee/src/feedback.c \
