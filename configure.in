@@ -393,7 +393,7 @@ then
 #	check_doc_program "$DOXYGEN" "doxygen"  "doxygen"
 
 	AC_PATH_PROG(MAKEINFO,makeinfo,,)
-	check_doc_program "$MAKEINFO" "makeinfo" "texi2html"
+	check_doc_program "$MAKEINFO" "makeinfo" "texi2html # texinfo for Ubuntu users"
 
 
 	if test x$DOC_NOT_BUILT_WARNING = xtrue ;
