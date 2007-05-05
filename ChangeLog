@@ -1,3 +1,9 @@
+2007-05-05  Henrik Sandklef  <hesa@gnu.org>
+
+	* configure.in: 
+
+	Added note on which deb makeinfo is located in for Ubuntu users
+
 2007-04-16    <hesa@gnu.org>
 
 	* src/xnee_session.c
