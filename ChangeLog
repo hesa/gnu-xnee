@@ -1,3 +1,9 @@
+2007-05-11  Henrik Sandklef  <hesa@gnu.org>
+
+	* doc/xnee_faq.texi: 
+
+	Added more notes on xmodmap etc in FAQ
+
 2007-05-05  Henrik Sandklef  <hesa@gnu.org>
 
 	* configure.in: 
