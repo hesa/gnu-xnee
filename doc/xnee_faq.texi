@@ -75,19 +75,40 @@ print-xxx-name options.
 
 @item When I replay to another display the characters are not correct?
 @cindex replay to another display the characters are not correct
-Make sure you use the same keyyboard mapping. A typical example:
+Make sure you use the same keyboard mapping. 
+@*
+A typical example:
+@*
+@*
+Record local host using Xnee:
+@*
+@code{cnee --record --out-file recorded_on_local.xnl }
+@*
+@*
+Store remote keymap:
 @*
 @code{xmodmap -pke -display remote:0 > remote.map }
 @*
-@code{xmodmap -pke -display  > local.map }
+@*
+Store local keymap:
+@*
+@code{xmodmap -pke   > local.map }
+@*
+@*
+Copy local keymap to remote host:
 @*
 @code{cat local.map | xmodmap -display remote:0 - }
 @*
-@code{cnee --replay --file record_on_local.xnl }
 @*
-@code{xmodmap -pke -display remote:0 > remote.map }
+Replay previously recorded session:
+@*
+@code{cnee --replay --file recorded_on_local.xnl --display remote:0 }
+@*
+@*
+Copy the original remote keymap to remote host:
 @*
 @code{cat remote.map | xmodmap -display remote:0 - }
+@*
 @*
 
 @item When starting Xnee I am informed that I am missing the RECORD extension
