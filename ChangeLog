@@ -1,3 +1,11 @@
+2007-06-15  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	* man/Makefile.am: 
+	* man/xnee.1: 
+
+	Added basic man page for GNU Xnee for Debian distr.
+
 2007-05-11  Henrik Sandklef  <hesa@gnu.org>
 
 	* doc/xnee_faq.texi: 

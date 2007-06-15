@@ -14,6 +14,7 @@ Changes in coming 2.07
   Doc changes:
 
      * Added more notes on xmodmap etc in FAQ
+     * Added a brief man page for GNU Xnee
 
   Bugs fixed:
 
