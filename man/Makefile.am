@@ -1,4 +1,6 @@
 XNEE_MAN_PAGE=xnee.1
-man_MANS = $(PNEE_MAN_PAGE)
+man_MANS = $(XNEE_MAN_PAGE)
 
 EXTRA_DIST=$(man_MANS)
+
+all:
