@@ -89,6 +89,7 @@ main (int argc, char *argv[])
     gtk_init (&argc, &argv);
 
 
+    printf("Adding: %s\n", PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
     add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
 
     /*

@@ -240,7 +240,7 @@ create_gnee_window (void)
   gnee_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (gnee_window), _("Gnee"));
   gtk_window_set_default_size (GTK_WINDOW (gnee_window), 640, 480);
-  gnee_window_icon_pixbuf = create_pixbuf ("xnee128.xpm");
+  gnee_window_icon_pixbuf = create_pixbuf ("xnee.xpm");
   if (gnee_window_icon_pixbuf)
     {
       gtk_window_set_icon (GTK_WINDOW (gnee_window), gnee_window_icon_pixbuf);

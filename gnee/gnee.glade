@@ -3736,7 +3736,7 @@ which is what you would probably use anyway :)</property>
 
 <widget class="GtkAboutDialog" id="gnee_about">
   <property name="visible">True</property>
-  <property name="destroy_with_parent">False</property>
+  <property name="destroy_with_parent">True</property>
   <property name="name" translatable="yes">Gnee</property>
   <property name="copyright" translatable="yes">©2003,2004,2005,2006 
 Henrik Sandklef, Jon-Erling Dahl
@@ -4093,7 +4093,6 @@ Send an email to xnee-devel@gnu.org</property>
   <property name="artists">Luis Santander</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">None, interested in joing? 
 Send an email to xnee-devel@gnu.org</property>
-  <property name="logo">xnee.xpm</property>
 </widget>
 
 </glade-interface>

@@ -477,10 +477,17 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
   about_box      = lookup_widget(GTK_WIDGET(user_data),
 				 "gnee_about");
 
-  if (about_box==NULL)
+  if (about_box == NULL)
     {
       about_box = create_gnee_about();
     }
+  
+  if (about_box != NULL)
+    {
+      about_box = create_gnee_about();
+    }
+  
+
 
   about_label_1 = lookup_widget(GTK_WIDGET(about_box),
 				"gnee_label");
