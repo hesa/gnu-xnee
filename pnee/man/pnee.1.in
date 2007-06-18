@@ -1,10 +1,23 @@
-.\" Copyright Henrik Sandklef 2006
+.\" Copyright Henrik Sandklef 2007
 .\"   
-.\" This file may be copied under the conditions described 
-.\" in the LDP GENERAL PUBLIC LICENSE, Version 1, September 1998 
-.\" that should have been distributed together with this file. 
+.\" This file is part of GNU Xnee.
+.\"
+.\" GNU Xnee is free software; you can redistribute it and/or modify
+.\" it under the terms of the GNU General Public License as published by
+.\" the Free Software Foundation; either version 2, or (at your option)
+.\" any later version.
+.\"
+.\" GNU Xnee is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public License
+.\" along with GNU Emacs; see the file COPYING.  If not, write to the
+.\" Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+.\" Boston, MA 02111-1307, USA.
 .\" 
-.TH "PNEE" 1 2006 "Xnee" 
+.TH "PNEE" 1 2007 "Xnee" 
 .SH "NAME" 
 pnee record, replays or distributes X11 data 
 .SH "SYNOPSIS" 
@@ -20,7 +33,7 @@ Henrik Sandklef.
 .SH "REPORTING BUGS"
 Report bugs in the program to bug-xnee@gnu.org. 
 .SH "COPYRIGHT"
-Copyright (C) 2006  Henrik Sandklef.
+Copyright (C) 2006, 2007  Henrik Sandklef.
 This  is  free  software;  see the source for copying conditions. There is NO warranty;not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
 .SH "SEE ALSO"
 .BR cnee(info), cnee(1), Xnee(info)
