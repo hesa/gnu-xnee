@@ -1,4 +1,4 @@
-SUBDIRS = ${LIB_DIR}  ${CLI_DIR} ${GUI_DIR} ${GNOME_APPLET_DIR} ${DOC_DIR} share examples sessions ${PIXMAP_DIR}
+SUBDIRS = ${LIB_DIR}  ${CLI_DIR} ${GUI_DIR} ${GNOME_APPLET_DIR} ${DOC_DIR} share examples sessions ${PIXMAP_DIR} man
 
 AUTOMAKE_OPTIONS = gnu
 
