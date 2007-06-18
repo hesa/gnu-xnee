@@ -260,9 +260,23 @@ xnee_manpage (FILE *fd)
 
   fprintf (fd ,".\\\" Copyright Henrik Sandklef 2002, 2003, 2004, 2005, 2006\n");
   fprintf (fd ,".\\\"   \n");
-  fprintf (fd ,".\\\" This file may be copied under the conditions described \n");
-  fprintf (fd ,".\\\" in the LDP GENERAL PUBLIC LICENSE, Version 1, September 1998 \n");
-  fprintf (fd ,".\\\" that should have been distributed together with this file. \n");
+  fprintf (fd, ".\\\" This file is part of GNU Xnee.\n");
+  fprintf (fd, ".\\\"\n");
+  fprintf (fd, ".\\\" GNU Xnee is free software; you can redistribute it and/or modify\n");
+  fprintf (fd, ".\\\" it under the terms of the GNU General Public License as published by\n");
+  fprintf (fd, ".\\\" the Free Software Foundation; either version 2, or (at your option)\n");
+  fprintf (fd, ".\\\" any later version.\n");
+  fprintf (fd, ".\\\"\n");
+  fprintf (fd, ".\\\" GNU Xnee is distributed in the hope that it will be useful,\n");
+  fprintf (fd, ".\\\" but WITHOUT ANY WARRANTY; without even the implied warranty of\n");
+  fprintf (fd, ".\\\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the\n");
+  fprintf (fd, ".\\\" GNU General Public License for more details.\n");
+  fprintf (fd, ".\\\"\n");
+  fprintf (fd, ".\\\" You should have received a copy of the GNU General Public License\n");
+  fprintf (fd, ".\\\" along with GNU Emacs; see the file COPYING.  If not, write to the\n");
+  fprintf (fd, ".\\\" Free Software Foundation, Inc., 59 Temple Place - Suite 330,\n");
+  fprintf (fd, ".\\\" Boston, MA 02111-1307, USA.\n");
+  fprintf (fd, ".\\\"\n");
   fprintf (fd ,".\\\" \n");
   fprintf (fd ,".TH \"" XNEE_CLI_UC "\" 1 2006 \"" PACKAGE"\" \n");
   fprintf (fd ,".SH \"NAME\" \n");
