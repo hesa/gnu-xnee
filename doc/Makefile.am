@@ -2,7 +2,7 @@ docdir = $(datadir)/xnee
 
 xnee_TEXINFOS=xnee_error.texi xnee_prot.texi version.texi  xnee_error.texi xnee_exampl.texi xnee_faq.texi xnee_install.texi xnee_intro.texi xnee_req.texi xnee_synch.texi xnee_usage.texi xnee_general.texi xnee_start.texi  xnee_intern.texi xnee_copying fdl.texi xnee_func.texi xnee_progs.texi 
 
-EXTRA_DIST = xnee_copying fdl.texi *.dia xnee.dox
+EXTRA_DIST = xnee_copying fdl.texi *.dia xnee.dox xnee.pdf xnee.html xnee.ps xnee.txt 
 
 #MAKEINFO = @MAKEINFO@ --no-split
 #TEXI2HTML = texi2html
