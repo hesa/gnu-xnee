@@ -420,10 +420,11 @@ is_dangerous_xserver(char *dpy_name)
 
       if (strstr(vendor, "X.Org") )
 	{
+
 	  int a = vendrel / 10000000 ;
 	  int b = (vendrel /   100000) % 100 ;
 	  int c = (vendrel /     1000) % 100 ;
-	  if (  ( a == 7 ) &&
+	  if (  ( a == 1 ) &&
 		( b >= 1 ) )
 	    {
 	      ret_val = 0;
