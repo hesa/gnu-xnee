@@ -10,11 +10,15 @@ Changes in coming 2.07
   Build changes:
 
      * Added note on which deb makeinfo is located in for Ubuntu users
+     * docs not build by default
+     * docs built and shipped with the tar.gz
 
   Doc changes:
 
      * Added more notes on xmodmap etc in FAQ
      * Added a brief man page for GNU Xnee
+     * docs not build by default
+     * docs built and shipped with the tar.gz
 
   Bugs fixed:
 

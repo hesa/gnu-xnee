@@ -1,3 +1,50 @@
+2007-06-18  Henrik Sandklef  <hesa@sandklef.com>
+
+	* Makefile.am (SUBDIRS): 
+
+	Added man dir to SUBDIRS
+
+	* doc/Makefile.am: 
+
+	Adding xnee.pdf|ps|gtml|txt to EXTRA_DIST
+
+	* configure.in: 
+
+	Docs are not built by default
+	(Docs are shipped with the dist file instead)
+
+	* cnee/src/cnee_printer.c: 
+
+	Updated copyright info printout
+
+	* libxnee/src/xnee_range.c: 
+
+	Searching for X server verion fix
+
+	* gnee/src/interface.c: 
+	* gnee/src/main.c: 
+	* gnee/src/callbacks.c: 
+
+	various picture fixes
+	
+	* pnee/man/pnee.1.in: 
+	* gnee/man/gnee.1.in: 
+
+	Updated copyright info
+
+	* pnee/man/Makefile.am: 
+	* gnee/man/Makefile.am: 
+
+	Added CLEAN_FILES
+
+	* man/Makefile.am: 
+
+	Building man page instead of static
+	
+	* man/xnee.1: 
+
+	Removed file
+	
 2007-06-15  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
