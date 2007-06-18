@@ -1,6 +1,6 @@
-AC_INIT(Xnee,2.06,bug-xnee@gnu.org)
+AC_INIT(Xnee,2.06.90,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
-AM_INIT_AUTOMAKE(Xnee,2.06)
+AM_INIT_AUTOMAKE(Xnee,2.06.90)
 
 
 AC_PROG_INSTALL
@@ -59,12 +59,12 @@ AC_ARG_ENABLE(gnome-applet,
 esac],[buildgapplet=true])
 
 AC_ARG_ENABLE(doc,
-[  --enable-doc       build Xnee documentation],
+[  --enable-doc       (re)build Xnee documentation],
 [case "${enableval}" in
   yes) builddoc=true ;;
   no)  builddoc=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --disable-doc) ;;
-esac],[builddoc=true])
+esac],[builddoc=false])
 
 AC_ARG_ENABLE(doconly,
 [  --enable-doconly       build Xnee documentation only],
@@ -456,7 +456,7 @@ then
 	MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN doc/Makefile"
 	add_incl "doc"
 else
-	add_excl "doc"
+	add_excl "doc (docs are already included in dist file)"
 fi
 
 if test x$buildlib = xtrue ; 
