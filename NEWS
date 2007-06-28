@@ -1,7 +1,9 @@
-Changes in coming 2.07
+Changes in 3.0
 ==============================
 
   New features:
+     * GNU Xnee switches to GPLv3
+     * pnee ready for use
 
   Build changes:
 
@@ -19,6 +21,7 @@ Changes in coming 2.07
   Bugs fixed:
 
   Various
+     * pnee stands for pnee's not even emulating
 
   Minor updates
 

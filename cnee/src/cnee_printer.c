@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
- *                      2004, 2005, 2006 Henrik Sandklef
+ *                      2004, 2005, 2006, 2007 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -258,7 +258,7 @@ xnee_manpage (FILE *fd)
   char *command;
   char *descr;
 
-  fprintf (fd ,".\\\" Copyright Henrik Sandklef 2002, 2003, 2004, 2005, 2006\n");
+  fprintf (fd ,".\\\" Copyright Henrik Sandklef 2002, 2003, 2004, 2005, 2006, 2007\n");
   fprintf (fd ,".\\\"   \n");
   fprintf (fd, ".\\\" This file is part of GNU Xnee.\n");
   fprintf (fd, ".\\\"\n");
@@ -278,7 +278,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd, ".\\\" Boston, MA 02111-1307, USA.\n");
   fprintf (fd, ".\\\"\n");
   fprintf (fd ,".\\\" \n");
-  fprintf (fd ,".TH \"" XNEE_CLI_UC "\" 1 2006 \"" PACKAGE"\" \n");
+  fprintf (fd ,".TH \"" XNEE_CLI_UC "\" 1 2007 \"" PACKAGE"\" \n");
   fprintf (fd ,".SH \"NAME\" \n");
   fprintf (fd ,"%s record, replays or distributes X11 data \n", XNEE_CLI);
   fprintf (fd ,".SH \"SYNOPSIS\" \n");
@@ -355,7 +355,7 @@ xnee_manpage (FILE *fd)
   fprintf (fd ,"Report bugs in the program to %s. \n", XNEE_BUG_MAIL);
 
   fprintf (fd ,".SH \"COPYRIGHT\"\n");
-  fprintf (fd ,"Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006  Henrik Sandklef.\n");
+  fprintf (fd ,"Copyright (C) 2001, 2002, 2003, 2004, 2005, 2006, 2007  Henrik Sandklef.\n");
   fprintf (fd ,"This  is  free  software;  see the source for copying conditions. ");
   fprintf (fd ,"There is NO warranty;");
   fprintf (fd ,"not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n");
@@ -425,7 +425,7 @@ xnee_infopage (FILE *fd)
 
   fprintf (fd, "@contents\n");
   fprintf (fd, "\n");
-  fprintf (fd ,"Copyright (C) 2002, 2003, 2004, 2005, 2006 Henrik Sandklef.\n");
+  fprintf (fd ,"Copyright (C) 2002, 2003, 2004, 2005, 2006, 2007 Henrik Sandklef.\n");
   fprintf (fd, "@*\n");
   fprintf (fd, "@*\n");
   fprintf (fd ,"This  is  free  software;  see the source for copying conditions. ");
