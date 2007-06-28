@@ -7,7 +7,7 @@
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
- * as published by the Free Software Foundation; either version 2    
+ * as published by the Free Software Foundation; either version 3    
  * of the License, or any later version.                             
  *                                                                   
  *                                                                   
@@ -497,7 +497,7 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
 	      XNEE_GUI, 
 	      VERSION);
       strcat(buf, "is the graphical frontend to " PACKAGE "\n\n");
-      strcat(buf, PACKAGE " is Free Software released under GPL version 2\n");
+      strcat(buf, PACKAGE " is Free Software released under GPL version 3\n");
 
       gtk_label_set_markup((GtkLabel*)about_label_1, (gchar*)buf);
     }
