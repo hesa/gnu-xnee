@@ -775,3 +775,18 @@ on_error_ok_clicked                    (GtkButton       *button,
   gtk_widget_hide (my_err_dial);
 }
 
+
+void
+on_pnee_about_response                 (GtkDialog       *dialog,
+                                        gint             response_id,
+                                        gpointer         user_data)
+{
+  GtkWidget   *window = user_data;
+
+  if (window != NULL )
+    {
+      gtk_widget_hide (window);
+    }
+  
+}
+

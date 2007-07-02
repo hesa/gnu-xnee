@@ -188,3 +188,8 @@ pnee_set_events_to_record (GtkToggleButton *togglebutton,
 
 #endif /* CALLBACKS_H */
 
+
+void
+on_pnee_about_response                 (GtkDialog       *dialog,
+                                        gint             response_id,
+                                        gpointer         user_data);

@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2002, 2003, 2004, 2005 Henrik Sandklef
+ *        Copyright (C) 2002, 2003, 2004, 2005, 2007 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -482,13 +482,6 @@ on_about1_activate                     (GtkMenuItem     *menuitem,
       about_box = create_gnee_about();
     }
   
-  if (about_box != NULL)
-    {
-      about_box = create_gnee_about();
-    }
-  
-
-
   about_label_1 = lookup_widget(GTK_WIDGET(about_box),
 				"gnee_label");
   if (about_label_1!=NULL)
@@ -892,12 +885,15 @@ on_about_ok_button_clicked             (GtkButton       *button,
   about_box      = lookup_widget(GTK_WIDGET(user_data),
 				 "gnee_about");
   
-
   if (about_box==NULL)
-    about_box = create_gnee_about();
-
-  gtk_widget_hide (about_box);
+    {
+      about_box = create_gnee_about();
+    }
   
+  if (about_box!=NULL)
+    {
+      gtk_widget_hide (about_box);
+    }
 }
 
 
@@ -1644,6 +1640,35 @@ on_offset_toggle_toggled               (GtkToggleButton *togglebutton,
 	  gx_set_replay_offset_x(ext_xd, 0);
 	  gx_set_replay_offset_y(ext_xd, 0); 
 	}
+    }
+}
+
+
+
+
+
+gboolean
+on_gnee_about_close                    (GtkWidget       *widget,
+                                        GdkEventButton  *event,
+                                        gpointer         user_data)
+{
+  printf ("Close\n");
+
+  return FALSE;
+}
+
+
+void
+on_gnee_about_response                 (GtkDialog       *dialog,
+                                        gint             response_id,
+                                        gpointer         user_data)
+{
+  
+  GtkWidget   *window = user_data;
+
+  if (window != NULL )
+    {
+      gtk_widget_hide (window);
     }
 }
 

@@ -390,3 +390,13 @@ on_y_offs_spin_changed                 (GtkSpinButton   *spinbutton,
 void
 on_offset_toggle_toggled               (GtkToggleButton *togglebutton,
                                         gpointer         user_data);
+
+gboolean
+on_gnee_about_close                    (GtkWidget       *widget,
+                                        GdkEventButton  *event,
+                                        gpointer         user_data);
+
+void
+on_gnee_about_response                 (GtkDialog       *dialog,
+                                        gint             response_id,
+                                        gpointer         user_data);

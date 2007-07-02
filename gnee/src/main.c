@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2002, 2003, 2004, 2005 Henrik Sandklef
+ *        Copyright (C) 2002, 2003, 2004, 2005, 2007
+ *         Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -89,7 +90,7 @@ main (int argc, char *argv[])
     gtk_init (&argc, &argv);
 
 
-    printf("Adding: %s\n", PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
+/*     printf("Adding: %s\n", PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps"); */
     add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
 
     /*
