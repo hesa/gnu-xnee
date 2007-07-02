@@ -73,12 +73,23 @@ pnee_get_default_filename(void)
     {
       user_name = (char *) default_user_name; 
     }
+
+#define PNEE_CHECK_CHAR_PTR(a) { if ( a==NULL) {  fprintf(stderr, "Couldn't put together default file name\n") ;  return NULL; } }
+ PNEE_CHECK_CHAR_PTR(tmp_dir);
+ PNEE_CHECK_CHAR_PTR(user_name);
+ PNEE_CHECK_CHAR_PTR(file_prefix);
+ PNEE_CHECK_CHAR_PTR(file_suffix);
   
   size = strlen (tmp_dir) + 
     strlen (user_name)    + 
     strlen (file_prefix)  + 
     strlen (file_suffix) ;
   
+  if (size <= 0 )
+    {
+      fprintf (stderr, "Trying to allocate size %d\n", size);
+      return NULL;
+    }
   ret_str = (char*) malloc (size*sizeof(char));
   if (ret_str==NULL)
     {

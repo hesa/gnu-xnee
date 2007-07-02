@@ -1,3 +1,32 @@
+2007-07-03  Henrik Sandklef  <hesa@gnu.org>
+
+	* pnee/src/callbacks.c (PNEE_CHECK_CHAR_PTR): 
+	* gnee/src/gnee_xnee.c (GNEE_CHECK_CHAR_PTR): 
+
+	Added (and used) macro to check mem size to alloc
+	
+2007-07-02  Henrik Sandklef  <hesa@gnu.org>
+
+	* gnee/src/callbacks.h: 
+	* gnee/src/callbacks.c: 
+	* gnee/src/interface.c: 
+	* pnee/src/callbacks.h: 
+	* pnee/src/callbacks.c: 
+	* pnee/src/interface.c: 
+
+	GPLv3 fixes, About->close works
+
+	* configure.in: 
+
+	Defines function check_doc_program 
+	before usage
+
+2007-06-30  Henrik Sandklef  <hesa@gnu.org>
+
+	* : 
+
+	Upgrade to GPLv3
+
 2007-06-18  Henrik Sandklef  <hesa@sandklef.com>
 
 	* Makefile.am (SUBDIRS): 

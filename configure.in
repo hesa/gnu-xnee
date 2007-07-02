@@ -1,6 +1,6 @@
-AC_INIT(Xnee,3.0,bug-xnee@gnu.org)
+AC_INIT(Xnee,3.0.1,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
-AM_INIT_AUTOMAKE(Xnee,3.0)
+AM_INIT_AUTOMAKE(Xnee,3.0.1)
 
 
 AC_PROG_INSTALL
@@ -214,6 +214,32 @@ LIB_DIR=
 DOC_DIR=
 GUI_DIR=
 
+
+check_program()
+{
+    PROG_VAR_TO_CHECK=$1
+    PROG_TO_CHECK=$2
+    
+    if test "x$PROG_VAR_TO_CHECK" = "x" 
+	then
+	MISSING_PROGRAMS="$MISSING_PROGRAMS $PROG_TO_CHECK"
+    fi
+}
+
+DEBS_TO_INSTALL=""
+check_doc_program()
+{
+    PROG_VAR_TO_CHECK=$1
+    PROG_TO_CHECK=$2
+    DEBS=$3    
+
+    if test "x$PROG_VAR_TO_CHECK" = "x" 
+	then
+	DOC_NOT_BUILT_WARNING=true
+	MISSING_PROGRAMS="$MISSING_PROGRAMS $PROG_TO_CHECK"
+	DEBS_TO_INSTALL="$DEBS_TO_INSTALL $DEBS"
+    fi
+}
 if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
 then
 	AC_ISC_POSIX
@@ -226,6 +252,9 @@ then
 	AC_SUBST(PACKAGE_CFLAGS)
 	AC_SUBST(PACKAGE_LIBS)
 	PIXMAP_DIR=pixmap
+	AC_PATH_PROG(CONVERT,convert,,)
+	check_doc_program "$CONVERT" "convert" "imagemagick"
+
 #	add_incl "pixmap"
 fi
 
@@ -342,32 +371,6 @@ help_on_missing_progrs()
 }
 
 
-check_program()
-{
-    PROG_VAR_TO_CHECK=$1
-    PROG_TO_CHECK=$2
-    
-    if test "x$PROG_VAR_TO_CHECK" = "x" 
-	then
-	MISSING_PROGRAMS="$MISSING_PROGRAMS $PROG_TO_CHECK"
-    fi
-}
-
-DEBS_TO_INSTALL=""
-check_doc_program()
-{
-    PROG_VAR_TO_CHECK=$1
-    PROG_TO_CHECK=$2
-    DEBS=$3    
-
-    if test "x$PROG_VAR_TO_CHECK" = "x" 
-	then
-	DOC_NOT_BUILT_WARNING=true
-	MISSING_PROGRAMS="$MISSING_PROGRAMS $PROG_TO_CHECK"
-	DEBS_TO_INSTALL="$DEBS_TO_INSTALL $DEBS"
-    fi
-}
-
 DOC_TARGETS="info txt"
 if test x$builddoc = xtrue ; 
 then
@@ -385,9 +388,6 @@ then
 
 	AC_PATH_PROG(EPSTOPDF,ps2pdf,,)
 	check_doc_program "$EPSTOPDF" "ps2pdf" "texlive-extra-utils"
-
-	AC_PATH_PROG(CONVERT,convert,,)
-	check_doc_program "$CONVERT" "convert" "imagemagick"
 
 #	AC_PATH_PROG(DOXYGEN,doxygen,,)
 #	check_doc_program "$DOXYGEN" "doxygen"  "doxygen"
@@ -425,6 +425,7 @@ then
 fi
 
 
+AC_SUBST(CONVERT)
 AC_SUBST(DOC_TARGETS)
 AC_SUBST(GUI_DIR)
 AC_SUBST(GNOME_APPLET_DIR)
@@ -550,6 +551,7 @@ echo "    X11_LIBS             $X11_LIBS"
 echo "    PANEL_SERVER_DIR     $PANEL_SERVER_DIR"
 echo "    PANEL_APPLET_DIR     $PANEL_APPLET_DIR"
 echo "    PIXMAP_DIR           $PIXMAP_DIR"
+echo "    CONVERT              $CONVERT"
 #echo "    GUI_DIR              $GUI_DIR"
 #echo "    GNOME_APPLET_DIR     $GNOME_APPLET_DIR"
 #echo "    CLI_DIR              $CLI_DIR"
@@ -561,6 +563,7 @@ then
 	echo "   Programs used to build documentation "
 	echo "   -------------------------------------"
 	show_doc_program "$DIA" "dia"  "Can't generate pictures from dia sources"
+	show_doc_program "$CONVERT" "convert"  "Can't convert image formats"
 	show_doc_program "$TEXI2HTML" "texi2html"  "can not generate html pages"
 	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
 	show_doc_program "$PS2PDF" "ps2pdf"  "can not generate pdf"

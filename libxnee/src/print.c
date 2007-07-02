@@ -87,10 +87,6 @@ xnee_print_error_info (xnee_data *xd)
       tmp = xnee_print_error_code(i) ; 
     }
 
-  if (tmp==NULL)
-    {
-      return XNEE_WRONG_PARAMS;
-    }
   return XNEE_OK;
 }
 
@@ -119,10 +115,7 @@ xnee_print_request_info (xnee_data *xd)
       i++;
       tmp = xnee_print_request(i); 
     }
-  if (tmp==NULL)
-    {
-      return XNEE_WRONG_PARAMS;
-    }
+
   return XNEE_OK;
 }
 

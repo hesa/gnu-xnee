@@ -86,7 +86,6 @@ int main(int argc,char *argv[])
 	{
 	  ret = XNEE_WRONG_PARAMS;
 	}
-      fprintf(stderr, "writing crap %d\n", ret);
       cnee_handle_err(xd, ret);
     }
 
