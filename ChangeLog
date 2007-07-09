@@ -1,3 +1,10 @@
+2007-07-09  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/print.c: 
+
+	Updated version printout according to 
+	new GNU standards.
+
 2007-07-03  Henrik Sandklef  <hesa@gnu.org>
 
 	* pnee/src/callbacks.c (PNEE_CHECK_CHAR_PTR): 

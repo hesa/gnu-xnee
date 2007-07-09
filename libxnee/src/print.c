@@ -1,6 +1,7 @@
 /*
   Xnee's Not an Event Emulator enables recording and replaying of X protocol data
-  Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef
+  Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 
+                2007 Henrik Sandklef
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -1263,16 +1264,17 @@ void
 xnee_version(xnee_data* xd)
 {
   xnee_verbose ((xd, " --> xnee_version\n"));
-  fprintf (stderr, "%s ",PACKAGE);
-  fprintf (stderr, "%s\n",VERSION);
+  fprintf (stderr, "%s %s\n",PACKAGE, VERSION);
   fprintf (stderr, "Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007 Henrik Sandklef \n");
   fprintf (stderr, "%s and all its included programs come with ", PACKAGE);
   fprintf (stderr, "NO WARRANTY,\nto the extent permitted by law.\n" );
   fprintf (stderr, "This is free software, and you may redistribute\n");
   fprintf (stderr, "copies of it under terms of GNU General Public License.\n");
+  /*
   fprintf (stderr, "For questions: \n\t%s  \n", XNEE_MAIL);
   fprintf (stderr, "Xnee, Xnee's not an Event Emulator \n\t%s \n", XNEE_HOME_URL);
   fprintf (stderr, "GPL, GNU General Public License \n\t%s\n",  GNU_HOME_URL);
+  */
   xnee_verbose ((xd, " <-- xnee_version\n"));
 }
 
