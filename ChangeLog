@@ -1,3 +1,9 @@
+2007-07-30  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_range.c (is_dangerous_xserver): 
+	Fix for X.org releases, recording of deliv events 
+	seem need a work around
+
 2007-07-09  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/print.c: 
