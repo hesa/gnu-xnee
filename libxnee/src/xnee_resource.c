@@ -581,7 +581,7 @@ static xnee_option_t xnee_options_impl[] =
     
     {
       XNEE_REPLAY_OFFSET_KEY,
-      "xnee_replay_offset",
+      "replay-offset",
       "ro",
       "<x,y>",
       "Set the replay offset to (x,y)",
@@ -1254,7 +1254,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_REPLAY_OFFSET_KEY:
       verbose_option("XNEE_REPLAY_OFFSET_KEY");
-      ret = xnee_set_replay_offset_str (xd, opt_and_args[1]);
+      ret = xnee_xset_replay_offset_str (xd, opt_and_args[1]);
       *args_used = 1;
       break;
 
@@ -1272,8 +1272,9 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
 
     case XNEE_FORCE_REPLAY_KEY:
+      printf(" force replay...\n");
       verbose_option("XNEE_FORCE_REPLAY_KEY");
-      xnee_set_force_replay(xd);
+      ret = xnee_set_force_replay(xd);
       *args_used = 0;
       break;
 
@@ -1369,6 +1370,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_DEVICE_EVENT_STR_KEY:
       verbose_option("XNEE_DEVICE_EVENT_STR_KEY");
+      printf (" einar....\n");
       ret = xnee_parse_range(xd, XNEE_DEVICE_EVENT, opt_and_args[1]);
       *args_used = 1;
       break;
