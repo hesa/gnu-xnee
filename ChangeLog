@@ -1,3 +1,8 @@
+2007-08-07  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_resource.c (xnee_parse_option_impl): 
+	xnee_replay_offset ==> replay-offset
+
 2007-07-30  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_range.c (is_dangerous_xserver): 

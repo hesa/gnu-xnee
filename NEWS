@@ -1,11 +1,19 @@
-Changes in 3.02
+Changes in coming 3.0.2
 ==============================
+
+  Syntax changes:
+ 
+    *  Changed xnee_replay_offset 
+       to replay-offset
 
   New features:
  
     * Version printout changed according
       to new GNU coding standards
 
+ 
+  Bugs fixed:
+  
 Changes in 3.0.1
 ==============================
 
