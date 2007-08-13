@@ -1,5 +1,12 @@
 2007-08-13  Henrik Sandklef  <hesa@gnu.org>
 
+	* pnee/Makefile.am (install-exec-local): 
+	* pnee/src/Makefile.am (install-exec-local): 
+
+	target now respects DESTDIR
+	
+2007-08-13  Henrik Sandklef  <hesa@gnu.org>
+
 	* libxnee/src/xnee_resource.c (xnee_parse_option_impl): 
 
 	typo fixed

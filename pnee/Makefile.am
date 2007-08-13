@@ -22,6 +22,6 @@ pnee.server: data/pnee.server.in
 
 install-data-local: pnee.server
 	@$(NORMAL_INSTALL)
-	mkdir -p $(PANEL_SERVER_DIR)
-	cp pnee.server   $(PANEL_SERVER_DIR)/
+	mkdir -p $(DESTDIR)$(PANEL_SERVER_DIR)
+	cp pnee.server  $(DESTDIR)$(PANEL_SERVER_DIR)/
 
