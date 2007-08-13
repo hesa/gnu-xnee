@@ -963,7 +963,9 @@ xnee_find_option_entry_impl (xnee_data     *xd,
       return XNEE_MEMORY_FAULT;
     }
 
-  if (syntax_type==XNEE_CLI_SYNTAX)
+/*   printf ("[option: %s] ", option); */
+
+  if ( (syntax_type==XNEE_CLI_SYNTAX) || (syntax_type==XNEE_XNS_SYNTAX) )
     {
       if (option[0]=='-')
 	{
@@ -981,6 +983,9 @@ xnee_find_option_entry_impl (xnee_data     *xd,
 
   for (i=0;options[i].key!=XNEE_LAST_OPTION;i++)
     {
+/*   printf ("\tCompare %s %s\n", */
+/* 		    options[i].option, */
+/* 		    option); */
       xnee_verbose((xd, "\tCompare '%s'  '%s'\n",
 		    options[i].option,
 		    option));
@@ -1254,7 +1259,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_REPLAY_OFFSET_KEY:
       verbose_option("XNEE_REPLAY_OFFSET_KEY");
-      ret = xnee_xset_replay_offset_str (xd, opt_and_args[1]);
+      ret = xnee_set_replay_offset_str (xd, opt_and_args[1]);
       *args_used = 1;
       break;
 
