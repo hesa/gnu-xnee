@@ -1,6 +1,5 @@
 AUTOMAKE_OPTIONS = gnu
 
-noinst_LIBRARIES = libxnee.a
 
 LIBXNEE_H_FILES=../include/libxnee/xnee.h     \
 	../include/libxnee/print.h         \
@@ -37,8 +36,7 @@ LIBXNEE_H_FILES=../include/libxnee/xnee.h     \
 	../include/libxnee/x11_files.h \
 	../include/libxnee/feedback.h 
 
-
-libxnee_a_SOURCES = xnee.c  \
+LIB_XNEE_SOURCE_FILES = xnee.c  \
 	print.c  \
 	print_varargs.c  \
 	xnee_record.c  \
@@ -72,7 +70,17 @@ libxnee_a_SOURCES = xnee.c  \
 	feedback.c \
 	$(LIBXNEE_H_FILES)
 
-#EXTRA_DIST = 
+libxnee_a_SOURCES = $(LIB_XNEE_SOURCE_FILES)
+EXTRA_LTLIBRARIES = libxnee.la
+lib_LTLIBRARIES = $(WANTED_LIBXNEE)
+libxnee_la_LDFLAGS = -rpath '$(libdir)'
+libxnee_la_SOURCES = $(LIB_XNEE_SOURCE_FILES) 
+libxnee_a_CFLAGS = $(AM_CFLAGS)
+
+dnl noinst_LIBRARIES = libxnee.a 
+
+dnl noinst_LTLIBRARIES = $(WANTED_LIBXNEE)
+
 
 if VERBOSE
 VERBOSE_FLAG = -DUSE_VERBOSE
@@ -110,6 +118,14 @@ else
 PEDANTIC_FLAGS = 
 endif
 
+if NOT_INSTALL_LIBS
+install-exec-local:
+	echo " ... not installing libs"
+else
+install-exec-local:
+	echo " ... installing libs"
+endif
+
 AM_CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS} ${DEBUG_FLAGS}
 
 
@@ -137,5 +153,4 @@ testnames:
 	echo "HTML_INC_FILES=${HTML_INC_FILES}"
 
 devel-doc: devel-doc-src devel-doc-inc
-
 
