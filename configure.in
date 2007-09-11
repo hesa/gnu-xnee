@@ -1,13 +1,13 @@
 AC_INIT(Xnee,3.0.1,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
-AM_INIT_AUTOMAKE(Xnee,3.0.1)
-
+dnl AM_INIT_AUTOMAKE(xnee,3.0.1)
+AM_INIT_AUTOMAKE
 
 AC_PROG_INSTALL
 AC_PROG_CC
 AC_LANG_C
 AC_PROG_MAKE_SET
-AC_PROG_RANLIB
+#AC_PROG_RANLIB
 AC_PATH_X
 AC_PATH_XTRA
 AC_FUNC_VPRINTF
@@ -15,6 +15,9 @@ AC_CHECK_HEADERS(stdarg.h varargs.h, break)
 AC_EXEEXT
 AC_PATH_PROG(AWK,awk)
 AC_PATH_PROG(BASH,bash,sh)
+
+#AC_DISABLE_SHARED
+AC_PROG_LIBTOOL
 
 # Add X libs 
 LIBS="$LIBS $X_LIBS"
@@ -41,6 +44,7 @@ then
     echo " "
     exit 1
 fi
+
 
 AC_ARG_ENABLE(gui,
 [  --enable-gui       build the GUI frontend to Xnee],
@@ -83,12 +87,21 @@ AC_ARG_ENABLE(cli,
 esac],[buildcli=true])
 
 AC_ARG_ENABLE(lib,
-[  --enable-lib       build Xnee library (libxnee)],
+[  --enable-lib       install Xnee library (libxnee)],
 [case "${enableval}" in
   yes) buildlib=true ;;
   no)  buildlib=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --disable-lib) ;;
 esac],[buildlib=true])
+
+AC_ARG_ENABLE(static-programs,
+[  --enable-static-programs     make the Xnee programs static (defaults to static)],
+[case "${enableval}" in
+  yes) makestatic=true ;;
+  no)  makestatic=false ;;
+  *) AC_MSG_ERROR(bad value ${enableval} for --disable-static-programs) ;;
+esac],[makestatic=true])
+
 
 AC_ARG_ENABLE(xosd,
 [  --enable-xosd       build Xnee with no verbose mode support],
@@ -146,6 +159,7 @@ AC_ARG_ENABLE(paranoid-pedantic,
   *) AC_MSG_ERROR(bad value ${enableval} for --enable-paranoid-pedantic) ;;
 esac],[para_pedantic=false])
 
+
 AM_CONDITIONAL(BUILDDOC, test x$builddoc = xtrue)
 AM_CONDITIONAL(VERBOSE, test x$verbose = xtrue)
 AM_CONDITIONAL(GCOV, test x$gcov = xtrue)
@@ -154,6 +168,8 @@ AM_CONDITIONAL(PEDANTIC,    test x$pedantic = xtrue)
 AM_CONDITIONAL(BUF_VERBOSE, test x$buffer_verbose = xtrue)
 AM_CONDITIONAL(XOSD, test x$xosd = xtrue)
 AM_CONDITIONAL(DOCONLY, test x$doconly = xtrue)
+AM_CONDITIONAL(BUILD_STATIC, test x$makestatic = xtrue)
+AM_CONDITIONAL(NOT_INSTALL_LIBS, test x$buildlib = xfalse)
 
 if test x$verbose = xtrue ;
 then
@@ -296,11 +312,21 @@ else
 fi
 
 
+LIB_DIR=libxnee
 if test x$buildlib = xtrue ; 
-then
-	LIB_DIR=libxnee
+then       
+	WANTED_LIBXNEE=libxnee.la
+	AC_SUBST(WANTED_LIBXNEE)
 else
-	LIB_DIR=
+	dnl WANTED_LIBXNEE=
+	if test x$makestatic = xfalse ;
+	    then
+	    echo "  ********** ERROR **********"
+	    echo " You can't build the programs dynamic "
+	    echo " and not install the libs $makestatic"
+	    echo "  ********** ERROR **********"
+	    exit 1
+	fi
 fi
 
 
@@ -463,9 +489,10 @@ fi
 if test x$buildlib = xtrue ; 
 then
         MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile"
-	add_incl "libxnee"
-else
-	add_excl "libxnee"
+dnl	add_incl "libxnee"
+dnl else
+dnl	add_excl "libxnee"
+	
 fi
 
 if test x$buildcli = xtrue ; 
