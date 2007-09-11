@@ -261,11 +261,12 @@ xnee_get_err_string (void)
 }
 
 void
-xnee_free_err_string (void)
+xnee_free_err_name (void)
 {
   XNEE_FREE_IF_NOT_NULL(latest_error);
   return ;
 }
+
 
 #ifdef HAVE_STDARG_H
 char *
