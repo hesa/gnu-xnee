@@ -91,6 +91,7 @@ main (int argc, char *argv[])
 
 
 /*     printf("Adding: %s\n", PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps"); */
+    add_pixmap_directory (PACKAGE_DATA_DIR "/pixmaps");
     add_pixmap_directory (PACKAGE_DATA_DIR "/" PACKAGE "/pixmaps");
 
     /*
