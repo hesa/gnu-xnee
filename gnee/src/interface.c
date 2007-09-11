@@ -240,7 +240,7 @@ create_gnee_window (void)
   gnee_window = gtk_window_new (GTK_WINDOW_TOPLEVEL);
   gtk_window_set_title (GTK_WINDOW (gnee_window), _("Gnee"));
   gtk_window_set_default_size (GTK_WINDOW (gnee_window), 640, 480);
-  gnee_window_icon_pixbuf = create_pixbuf ("xnee128.xpm");
+  gnee_window_icon_pixbuf = create_pixbuf ("xnee.xpm");
   if (gnee_window_icon_pixbuf)
     {
       gtk_window_set_icon (GTK_WINDOW (gnee_window), gnee_window_icon_pixbuf);
@@ -1788,6 +1788,7 @@ create_gnee_about (void)
   };
   /* TRANSLATORS: Replace this string with your names, one name per line. */
   gchar *translators = "None, interested in joing? \nSend an email to xnee-devel@gnu.org";
+  GdkPixbuf *gnee_about_logo_pixbuf;
 
   gnee_about = gtk_about_dialog_new ();
   gtk_window_set_destroy_with_parent (GTK_WINDOW (gnee_about), TRUE);
@@ -1801,6 +1802,8 @@ create_gnee_about (void)
   gtk_about_dialog_set_documenters (GTK_ABOUT_DIALOG (gnee_about), documenters);
   gtk_about_dialog_set_artists (GTK_ABOUT_DIALOG (gnee_about), artists);
   gtk_about_dialog_set_translator_credits (GTK_ABOUT_DIALOG (gnee_about), translators);
+  gnee_about_logo_pixbuf = create_pixbuf ("xnee.xpm");
+  gtk_about_dialog_set_logo (GTK_ABOUT_DIALOG (gnee_about), gnee_about_logo_pixbuf);
 
   g_signal_connect_swapped ((gpointer) gnee_about, "response",
                             G_CALLBACK (on_gnee_about_response),

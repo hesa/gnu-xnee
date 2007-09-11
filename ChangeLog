@@ -1,3 +1,54 @@
+2007-09-11  Henrik Sandklef  <hesa@sandklef.com>
+
+	* gnee/src/main.c (main): 
+
+	Added new pixmap dir
+
+	* gnee/gnee.glade: 
+
+	Changed icon name to xnee.xpm
+
+	* configure.in: 
+
+	Rules for excluding library install, 
+	libtool stuff added
+
+	* Makefile.cvs (generate): 
+
+	Added libtool stuff
+
+	* libxnee/src/Makefile.am (install-exec-local): 
+
+	Rules for excluding library install
+
+	* libxnee/src/xnee_buffer.c (xnee_replay_buffer_handler): 
+	
+	Changed the verbose printout information slightly
+
+	* libxnee/test/Makefile.am (libtest_LDADD): 
+	* cnee/src/Makefile.am (libtest_LDADD): 
+	* gnee/src/Makefile.am (libtest_LDADD): 
+	* pnee/src/Makefile.am (libtest_LDADD): 
+
+	Adding -static to linker to force static linking
+	
+	* libxnee/src/xnee_error.c (xnee_free_err_name): 
+
+	Changed name of fun:
+	  xnee_free_err_string ==> xnee_free_err_name
+
+	* libxnee/src/print.c: 
+
+	Printout of XNEE_NO_SYNC_MODE_KEY, XNEE_SYNC_MODE_KEY
+	XNEE_FIRST_LAST_KEY doesn't print value, uses # instead
+
+2007-09-11  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_resource.c (xnee_parse_option_impl): 
+
+	made parsing of XNEE_NO_SYNC_MODE_KEY, XNEE_SYNC_MODE_KEY
+	XNEE_FIRST_LAST_KEY disregard arguments
+	
 2007-08-13  Henrik Sandklef  <hesa@gnu.org>
 
 	* pnee/Makefile.am (install-exec-local): 

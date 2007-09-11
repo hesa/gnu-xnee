@@ -6,6 +6,12 @@ Changes in coming 3.0.2
     *  Changed xnee_replay_offset 
        to replay-offset
 
+    *  The following options will not
+       accept value in sessions/resource file:
+         first-last
+         synchronised-replay
+         no-synchronise
+
   New features:
  
     * Version printout changed according
