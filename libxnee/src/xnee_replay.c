@@ -273,8 +273,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	}
 /*        ret = xnee_set_ranges(xd); */
     }
-
-
+  
   if ( 
       (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || 
       (read_mode==XNEE_REPLAY_READ_ALL_DATA))
@@ -309,6 +308,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 
       if ( ret == XNEE_PRIMITIVE_DATA ) { ret = XNEE_OK; }
 
+/* 	  printf ("  ===== starting \n"); */
+/* 	  xnee_print_list(); */
       /**
        * all META DATA setting up our sessions is read ...
        * go on replaying
@@ -318,6 +319,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        */
       while  ( (ret!=XNEE_SYNTAX_ERROR) && ( xd->cont != 0 ) ) 
 	{
+/* 	  printf ("  started '%'s ", tmp); */
+	  
 	  if (last_logread != 0)
 	    {
 	      /* 
@@ -335,6 +338,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    }
 	  else if (ret!=0)
 	    {
+/* 	      printf (" CC : "); */
 	      if (xd->first_read_time==0)
               {
                  /*@ ignore @*/
@@ -354,6 +358,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 				xnee_get_interrupt_action(xd)));
 		  return XNEE_OK;
 		}
+
+/* 	      printf (" DD "); */
 
 	      /*
 	       *
@@ -389,6 +395,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		    }
 		}
 	      
+/* 	      printf (" EE "); */
+
 	      /*
 	       *
 	       * OK, all grabbed stuffed is handled, let's fake some events
@@ -493,7 +501,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    }
 
 	  ret = xnee_expression_handle_session(xd, tmp, &xindata);
-
+/* 	  printf ("  and again  (%d, %s)\n", ret, xnee_get_err_description(ret)); */
 	  last_logread = 0;
 	}
     }
@@ -672,6 +680,7 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
     }
 
 
+
   xrec_data  = (XRecordDatum *) (data->data) ;
   type       = (int) xrec_data->type ;
   xd         = (xnee_data*) (type_ref);
@@ -683,6 +692,7 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
       xnee_verbose((xd, "GOT A REQUEST:         %d \n ", type));
 /*       xnee_replay_buffer_handle (xd, XNEE_REQUEST, type, XNEE_RECEIVED); */
       xnee_replay_buffer_handler (xd, XNEE_REQUEST, type, XNEE_RECEIVED); 
+/*       printf ("dispatch: %d (%d/%d)\n", XNEE_RECEIVED, XNEE_REQUEST,type); */
 
       break;
     case XRecordFromServer:
