@@ -205,7 +205,9 @@ xnee_replay_buffer_handler (xnee_data* xd,
       return;
     }
 
+  
 
+      
   xnee_verbose((xd,"---> xnee_replay_buffer_handler "));
   if (rec_or_rep==XNEE_RECEIVED) 
     {
@@ -498,7 +500,7 @@ xnee_check_buffer_limits (xnee_data *xd)
 		 xd->key_pressed
 		 ));
 
-  xnee_verbose ((xd, "---  %02d %02d %02d %02d %02d \n",
+  xnee_verbose ((xd, "---  cached: %02d/%02d  sum_max=%02d   sum_min=%02d   sum_tot=%02d \n",
 		 cached_max ,
 		 cached_min ,
 		 sum_max    ,
