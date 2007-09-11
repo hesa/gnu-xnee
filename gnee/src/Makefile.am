@@ -24,8 +24,17 @@ gnee_SOURCES = \
 gnee_CFLAGS = ${PEDANTIC_FLAGS} 
 AM_CFLAGS = ${PEDANTIC_FLAGS} 
 
+if BUILD_STATIC
+STATIC_FLAGS = -static
+else
+STATIC_FLAGS = 
+endif
+
+gnee_LDFLAGS =  $(STATIC_FLAGS)
+
 gnee_LDADD = @PACKAGE_LIBS@   \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
 	 ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)
+
 
 

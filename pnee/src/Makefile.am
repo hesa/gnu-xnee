@@ -19,6 +19,13 @@ pnee_SOURCES = \
 
 pnee_LDADD =  -L../../ -L../../libxnee/src @PACKAGE_LIBS@ $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   
 
+if BUILD_STATIC
+STATIC_FLAGS = -static
+else
+STATIC_FLAGS = 
+endif
+pnee_LDFLAGS =  $(STATIC_FLAGS)
+
 install-exec-local: $(PNEE)	
 	mkdir -p $(DESTDIR)$(PANEL_APPLET_DIR)
 	cp $(PNEE)  $(DESTDIR)$(PANEL_APPLET_DIR)
