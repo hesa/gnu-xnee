@@ -13,7 +13,7 @@
   <property name="default_height">480</property>
   <property name="resizable">True</property>
   <property name="destroy_with_parent">False</property>
-  <property name="icon">xnee128.xpm</property>
+  <property name="icon">xnee.xpm</property>
   <property name="decorated">True</property>
   <property name="skip_taskbar_hint">False</property>
   <property name="skip_pager_hint">False</property>
@@ -4595,6 +4595,7 @@ Send an email to xnee-devel@gnu.org</property>
   <property name="artists">Luis Santander</property>
   <property name="translator_credits" translatable="yes" comments="TRANSLATORS: Replace this string with your names, one name per line.">None, interested in joing? 
 Send an email to xnee-devel@gnu.org</property>
+  <property name="logo">xnee.xpm</property>
   <signal name="response" handler="on_gnee_about_response" object="gnee_about" last_modification_time="Mon, 02 Jul 2007 21:30:47 GMT"/>
 </widget>
 
