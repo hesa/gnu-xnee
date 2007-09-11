@@ -1,6 +1,7 @@
 /*
   Xnee's Not an Event Emulator enables recording and replaying of X protocol data
-  Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef
+  Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 
+                2007 Henrik Sandklef
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -567,7 +568,6 @@ xnee_record_print_record_range (xnee_data *xd, /*@null@*/ FILE* out)
   int max=0;
   int i ;
 
-
   if ( (xd==NULL) || 
        (xd->record_setup==NULL) ||
        (xd->record_setup->range_array==NULL) ||
@@ -584,6 +584,7 @@ xnee_record_print_record_range (xnee_data *xd, /*@null@*/ FILE* out)
 	}
       out=xd->err_file;
     }
+
   max=xnee_get_max_range(xd);
 
 
@@ -997,8 +998,11 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
 	   xnee_xns_key2string(XNEE_DATA_MAX_KEY),xnee_get_data_max(xd) );
   fprintf (out,  "%s       %d\n",
 	   xnee_xns_key2string(XNEE_TIME_MAX_KEY),xnee_get_time_left(xd) );
-  fprintf (out,  "first-last       %d\n",
-	   xd->xnee_info.first_last ); 
+  if ( xd->xnee_info.first_last == 0 )
+    {
+      fprintf (out,  "# ");
+    }
+  fprintf (out,  "first-last\n"); 
 
   fprintf (out,  "\n# Record  all (including current) clients or only future ones\n");
   if (xnee_get_all_clients(xd)==0)
@@ -1112,9 +1116,12 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   
   /* Modes */
   fprintf (out,  "\n# Modes (currently not used)\n");
-  fprintf (out,    "#%s       %d\n",
-	   xnee_xns_key2string(XNEE_SYNC_MODE_KEY),
-	   xd->sync ); 
+  if ( xd->sync == 0)
+    {
+      fprintf (out,  "# ");
+    }
+  fprintf (out,    "%s\n",
+	   xnee_xns_key2string(XNEE_SYNC_MODE_KEY)); 
 
   /* Replay offset */
   fprintf (out,  "\n# Replay offset\n");
@@ -1136,8 +1143,6 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "# %s %d\n", 
 	   xnee_xns_key2string(XNEE_DELAY_TIME_KEY),
 	   xnee_get_interval(xd) ); 
-
-  
 
   /* Various */
   fprintf (out,  "\n# Various\n");
