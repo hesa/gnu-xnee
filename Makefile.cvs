@@ -1,6 +1,6 @@
 generate:
 #	@echo "*** intltoolize (in pnee) ** "
-#	intltoolize --automake  --copy --force
+	libtoolize --automake  --copy --force
 
 	@echo "*** Retrieving configure tests needed by configure.in"
 	@aclocal -I ./autotools/
