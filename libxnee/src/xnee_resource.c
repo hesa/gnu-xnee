@@ -1110,8 +1110,10 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_FIRST_LAST_KEY:
       verbose_option("XNEE_FIRST_LAST_KEY");
-      ret = xnee_set_first_list_str(xd, opt_and_args[1]);
-      *args_used = 1;
+      ret = xnee_set_first_last(xd);
+      *args_used = 0;
+/*       ret = xnee_set_first_list_str(xd, opt_and_args[1]); */
+/*       *args_used = 1; */
       break;
 
     case XNEE_ALL_EVENTS_KEY:
@@ -1239,16 +1241,18 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_NO_SYNC_MODE_KEY:
       verbose_option("XNEE_NO_SYNC_MODE_KEY");
-      ret = xnee_unset_sync_mode_str (xd, opt_and_args[1]);
-      INC_ARGS_USED(*args_used, opt_and_args[1]);
-      *args_used = 1;
+      ret = xnee_unset_sync_mode (xd); 
+/*       ret = xnee_unset_sync_mode_str (xd, opt_and_args[1]); */
+/*       INC_ARGS_USED(*args_used, opt_and_args[1]); */
+      *args_used = 0;
       break;
 
     case XNEE_SYNC_MODE_KEY:
       verbose_option("XNEE_SYNC_MODE_KEY");
-      ret = xnee_set_sync_mode_str (xd, opt_and_args[1]);
-      INC_ARGS_USED(*args_used, opt_and_args[1]);
-      *args_used = 1;
+      ret = xnee_set_sync_mode (xd); 
+/*       ret = xnee_set_sync_mode_str (xd, opt_and_args[1]); */
+/*       INC_ARGS_USED(*args_used, opt_and_args[1]); */
+      *args_used = 0;
       break;
 
     case XNEE_RECALL_WINDOW_POS_KEY:
@@ -1375,7 +1379,6 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_DEVICE_EVENT_STR_KEY:
       verbose_option("XNEE_DEVICE_EVENT_STR_KEY");
-      printf (" einar....\n");
       ret = xnee_parse_range(xd, XNEE_DEVICE_EVENT, opt_and_args[1]);
       *args_used = 1;
       break;
