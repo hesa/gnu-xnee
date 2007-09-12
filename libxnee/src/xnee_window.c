@@ -35,14 +35,14 @@
  *     received  - information as received during replay from RECORD
  */ 
 
-
+#define XNEE_DEBUG_WINDOW_CODE 1
 #ifdef  XNEE_DEBUG_WINDOW_CODE
 #define XNEE_WINDOW_DEBUG(a) printf a
 #else
 #define XNEE_WINDOW_DEBUG(a) 
 #endif
 
-#define MAX_NR_OF_MOVES     3
+#define MAX_NR_OF_MOVES     10
 #define XNEE_WINDOW_BUFFER_SIZE 10
 static int received_index = 0;
 static int session_index  = 0;
@@ -409,16 +409,15 @@ xnee_window_try_move(xnee_data *xd)
   
   while ( nr_of_moves<MAX_NR_OF_MOVES)
     {
-
+      
 
       /*       requested   - actual - frame */
-  XNEE_VERBOSE_MARK();
+      XNEE_VERBOSE_MARK();
 
       diff_x = sess_ptr->x - rx ;
       diff_y = sess_ptr->y - ry ;
 
-      XNEE_WINDOW_DEBUG(("Requested   Actual   diff    attrib   window=0x%X\n", 
-			 rec_ptr->window));
+      XNEE_WINDOW_DEBUG(("Requested   Actual   diff    attrib   window=0x%X  (%d try)\n", rec_ptr->window, nr_of_moves));
       XNEE_WINDOW_DEBUG(("   %.3d      %.3d      %.2d       %d\n",
 			 sess_ptr->x , rx , diff_x, win_attributes.x));
       XNEE_WINDOW_DEBUG(("   %.3d      %.3d      %.2d       %d\n",
