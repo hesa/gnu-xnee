@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003
- *                      2004, 2005, 2006, 2007 Henrik Sandklef                    
+ *                      2004, 2005, 2006, 2007 Henrik Sandklef              
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -202,7 +202,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
   xindata.oldtime = 0 ;
   xindata.newtime = 0 ;
 
-
   xnee_reset_elapsed_time(xd);
   xnee_reset_fake(xd);
 
@@ -216,7 +215,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        (read_mode==XNEE_REPLAY_READ_ALL_DATA)
        )
     {
-
        while ( (logread != 0)  && ( xd->cont != 0 ) ) 
 	{
 	  ret_str = fgets(tmp, 256, xd->data_file);
@@ -246,6 +244,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	      ret = xnee_expression_handle_project(xd, ret_str);
 /* 	      ret = xnee_expression_handle_session(xd, ret_str, &xindata); */
 
+
 	      if ( (ret == XNEE_REPLAY_DATA) || 
 		   (ret == XNEE_PRIMITIVE_DATA) || 
 		   (ret == XNEE_SYNTAX_ERROR) )
@@ -266,7 +265,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		    {
 		      XNEE_RETURN_IF_ERR (ret);  
 		    }
-
 		  break ; 
 		}
 	    }
@@ -281,6 +279,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
       
       ret = xnee_set_ranges(xd);
       XNEE_RETURN_IF_ERR (ret);
+
 
       /* REMOVE ME... after testing.
 	 rep_prepare is done in xnee_prepare */
@@ -531,6 +530,7 @@ xnee_setup_rep_recording(xnee_data *xd)
   int ret;
   xnee_recordext_setup  *xrs       = xd->record_setup;
 
+      
 
   if  ( (xd == NULL)
         ||
@@ -555,11 +555,13 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "\t  CreateContext   nr_of_ranges=%d\n", nr_of_ranges));  
 
   xnee_verbose ((xd, "creating context .... on control = %d\n", (int)xd->control));
+
   xrs->rContext = XRecordCreateContext(xd->control, 
 				       xrs->data_flags, 
 				       xrs->xids, 1, 
 				       xrs->range_array,nr_of_ranges );
 
+  /*
   xnee_verbose((xd, "\t  CreateContext   0x%lx\n", xrs->rContext));  
   ret = XRecordRegisterClients   (xd->control,
                                   xrs->rContext,
@@ -575,8 +577,6 @@ xnee_setup_rep_recording(xnee_data *xd)
 		     nr_of_ranges));
       return XNEE_RECORD_FAILURE;
     }
-
-
   xnee_verbose((xd, "--- xnee_setup_rep_recording setting xids \n"));             
 
   xrs->xids[0] = xnee_client_id (xd->control);
@@ -600,6 +600,8 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "--- \t %d\n", (int)xrs));             
   xnee_verbose((xd, "--- \t %d\n", (int)xrs->rContext));             
   xnee_verbose((xd, "--- \t %d\n", (int)xrs->rState));             
+
+  */
 
   /*  if( XRecordGetContext(xd->control, 
 			xrs->rContext, 
@@ -642,7 +644,6 @@ xnee_setup_rep_recording(xnee_data *xd)
     }
 
 
-  xnee_verbose((xd, " 1.3\n"));             
   xnee_verbose((xd, "finished setting up record for replaying\n"));
   xnee_verbose((xd, "<---xnee_setup_rep_recording\n"));             
   
@@ -672,13 +673,14 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
   int rec_window_pos = 0;
   XWindowAttributes window_attributes_return;
   int ret;
-
+  printf (".");
 
   if (data->data==NULL)
     {
       return;
     }
 
+  
 
 
   xrec_data  = (XRecordDatum *) (data->data) ;
