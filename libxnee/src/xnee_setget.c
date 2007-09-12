@@ -1451,8 +1451,21 @@ int
 xnee_set_first_list_str(xnee_data *xd, char *str)
 {
   int ret = XNEE_OK;  
+  
+  ret = xnee_set_first_last(xd);
+  return ret;
+}
 
-  ret = xnee_boolstr2int(xd, str);
+#ifdef USE_OBSOLETE
+int
+xnee_set_first_list_str2(xnee_data *xd, char *str)
+{
+  int ret = XNEE_OK;  
+  
+  if ( str != NULL)
+    {
+      ret = xnee_boolstr2int(xd, str);
+    }
   if (ret == XNEE_BOOL_ERROR)
     {
       ret = XNEE_SYNTAX_ERROR;
@@ -1470,7 +1483,7 @@ xnee_set_first_list_str(xnee_data *xd, char *str)
     }
   return ret;
 }
-
+#endif
 
 int
 xnee_set_all_clients_str(xnee_data *xd, char *str)
