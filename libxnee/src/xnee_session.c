@@ -516,8 +516,8 @@ xnee_rep_prepare(xnee_data *xd)
   ret = xnee_set_autorepeat (xd);
   XNEE_RETURN_IF_ERR (ret);
 
-  ret = xnee_refresh_ranges(xd);
-  XNEE_RETURN_IF_ERR (ret);
+/*   ret = xnee_refresh_ranges(xd); */
+/*   XNEE_RETURN_IF_ERR (ret); */
 
   xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", XNEE_OK));
   return XNEE_OK;
