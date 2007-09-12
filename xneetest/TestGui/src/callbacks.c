@@ -215,9 +215,15 @@ void
 on_combobox1_changed                   (GtkComboBox     *combobox,
                                         gpointer         user_data)
 {
-  test_printf("on_combobox1_changed\n");
+  gchar *selection = NULL;
+  selection = gtk_combo_box_get_active_text(combobox);
+
+  printf("on_combobox1_changed: %s\n", selection );
+
 
 }
+
+
 
 
 void

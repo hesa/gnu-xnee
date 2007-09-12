@@ -30,6 +30,7 @@ GtkWidget*
 create_window1 (void)
 {
   GtkWidget *window1;
+  GtkWidget *vbox1;
   GtkWidget *menubar1;
   GtkWidget *menuitem1;
   GtkWidget *menu1;
@@ -54,7 +55,7 @@ create_window1 (void)
   GtkWidget *table1;
   GtkWidget *button1;
   GtkWidget *label4;
-  GtkWidget *vbox1;
+  GtkWidget *vbox11;
   GtkWidget *radiobutton2;
   GSList *radiobutton2_group = NULL;
   GtkWidget *radiobutton3;
@@ -201,27 +202,27 @@ create_window1 (void)
   gtk_label_set_justify (GTK_LABEL (label4), GTK_JUSTIFY_RIGHT);
   gtk_misc_set_alignment (GTK_MISC (label4), 0, 0.5);
 
-  vbox1 = gtk_vbox_new (FALSE, 0);
-  gtk_widget_show (vbox1);
-  gtk_table_attach (GTK_TABLE (table1), vbox1, 0, 1, 2, 3,
+  vbox11 = gtk_vbox_new (FALSE, 0);
+  gtk_widget_show (vbox11);
+  gtk_table_attach (GTK_TABLE (table1), vbox11, 0, 1, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_EXPAND | GTK_FILL), 0, 0);
 
   radiobutton2 = gtk_radio_button_new_with_mnemonic (NULL, _("radiobutton2"));
   gtk_widget_show (radiobutton2);
-  gtk_box_pack_start (GTK_BOX (vbox1), radiobutton2, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox11), radiobutton2, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton2), radiobutton2_group);
   radiobutton2_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton2));
 
   radiobutton3 = gtk_radio_button_new_with_mnemonic (NULL, _("radiobutton3"));
   gtk_widget_show (radiobutton3);
-  gtk_box_pack_start (GTK_BOX (vbox1), radiobutton3, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox11), radiobutton3, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton3), radiobutton2_group);
   radiobutton2_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton3));
 
   radiobutton4 = gtk_radio_button_new_with_mnemonic (NULL, _("radiobutton4"));
   gtk_widget_show (radiobutton4);
-  gtk_box_pack_start (GTK_BOX (vbox1), radiobutton4, FALSE, FALSE, 0);
+  gtk_box_pack_start (GTK_BOX (vbox11), radiobutton4, FALSE, FALSE, 0);
   gtk_radio_button_set_group (GTK_RADIO_BUTTON (radiobutton4), radiobutton2_group);
   radiobutton2_group = gtk_radio_button_get_group (GTK_RADIO_BUTTON (radiobutton4));
 
@@ -286,6 +287,13 @@ create_window1 (void)
   gtk_table_attach (GTK_TABLE (table1), combobox1, 2, 3, 2, 3,
                     (GtkAttachOptions) (GTK_FILL),
                     (GtkAttachOptions) (GTK_FILL), 0, 0);
+  gtk_combo_box_append_text (GTK_COMBO_BOX (combobox1), _("One"));
+  gtk_combo_box_append_text (GTK_COMBO_BOX (combobox1), _("Two"));
+  gtk_combo_box_append_text (GTK_COMBO_BOX (combobox1), _("Three"));
+  gtk_combo_box_append_text (GTK_COMBO_BOX (combobox1), _("Four"));
+  gtk_combo_box_append_text (GTK_COMBO_BOX (combobox1), _("Five"));
+  gtk_combo_box_append_text (GTK_COMBO_BOX (combobox1), _("Six"));
+  gtk_combo_box_append_text (GTK_COMBO_BOX (combobox1), _("Seven"));
 
   label1 = gtk_label_new (_("label1"));
   gtk_widget_show (label1);
@@ -460,9 +468,9 @@ create_window1 (void)
   g_signal_connect ((gpointer) button2, "released",
                     G_CALLBACK (on_button2_released),
                     NULL);
-  g_signal_connect ((gpointer) combobox1, "changed",
-                    G_CALLBACK (on_combobox1_changed),
-                    NULL);
+  g_signal_connect_swapped ((gpointer) combobox1, "changed",
+                            G_CALLBACK (on_combobox1_changed),
+                            GTK_OBJECT (combobox1));
   g_signal_connect ((gpointer) button3, "clicked",
                     G_CALLBACK (on_button3_clicked),
                     NULL);
@@ -524,7 +532,7 @@ create_window1 (void)
   GLADE_HOOKUP_OBJECT (window1, table1, "table1");
   GLADE_HOOKUP_OBJECT (window1, button1, "button1");
   GLADE_HOOKUP_OBJECT (window1, label4, "label4");
-  GLADE_HOOKUP_OBJECT (window1, vbox1, "vbox1");
+  GLADE_HOOKUP_OBJECT (window1, vbox11, "vbox11");
   GLADE_HOOKUP_OBJECT (window1, radiobutton2, "radiobutton2");
   GLADE_HOOKUP_OBJECT (window1, radiobutton3, "radiobutton3");
   GLADE_HOOKUP_OBJECT (window1, radiobutton4, "radiobutton4");
