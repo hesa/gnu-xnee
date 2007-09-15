@@ -73,7 +73,7 @@ endif
 
 cnee_LDFLAGS = ${GCOV_FLAG} ${GPROF_FLAG} $(STATIC_FLAGS)
 
-cnee_DEPENDENCIES = ${LIBXNEE_DIR}/src/libxnee.a
+cnee_DEPENDENCIES = 
 
 test-cli:
 	(cd test ; ./test_all.sh)
