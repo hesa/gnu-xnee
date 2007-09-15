@@ -1,4 +1,11 @@
-2007-09-11  Henrik Sandklef  <hesa@sandklef.com>
+2007-09-15  Henrik Sandklef  <hesa@gnu.org>
+
+	* cnee/src/Makefile.am: 
+	* libxnee/test/Makefile.am:
+
+	Removed dependency to static lib
+
+2007-09-11  Henrik Sandklef  <hesa@gnu.org>
 
 	* gnee/src/main.c (main): 
 
