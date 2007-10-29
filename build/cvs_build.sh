@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 #
 # this file:
@@ -14,7 +14,7 @@
 
 export XNEE_TMP_DIR=/tmp/xnee_cvs
 export CVS_RSH=ssh
-DEST_DIR=/var/www/xnee_cvs/
+DEST_DIR=/tmp/var/www/xnee_cvs/
 TARBALL_DIR=${DEST_DIR}/nightly-tar-ball
 NIGHT_DIR=${DEST_DIR}/nightly-dists
 LOG_DIR=${DEST_DIR}/logs
@@ -70,7 +70,7 @@ copy_and_latest()
 {
     do_exec "cp $1 $2/"
     do_exec "pushd  $2"
-    do_exec "rm latest"
+    do_exec "rm -f latest"
     do_exec "ln -s $1 latest"
     do_exec "popd"
 }
