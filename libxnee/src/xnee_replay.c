@@ -404,12 +404,12 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	      switch (xindata.type)
 		{
 		case XNEE_EVENT:
-		  
+		  /* if type == 0, break .... BTW, why is it 0?? */
+		  if ( xindata.u.event.type == 0 ) { break ; }
 		  /* is it a device event ? */
                    if ( ( xindata.u.event.type >= KeyPress ) 
 		       && (xindata.u.event.type <= MotionNotify) )
 		    {
-		      
 		      if ( xindata.u.event.type == ButtonPress )
 			{
 			  xd->button_pressed++;
