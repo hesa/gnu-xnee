@@ -5,7 +5,7 @@
 
 @item Where do I send questions?
 @cindex questions is sent where?
-@email{info-xnee@@gnu.org}
+@email{xnee-devel@@gnu.org}
 @*
 
 @item Where and how do I report bugs?
