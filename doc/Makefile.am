@@ -2,7 +2,25 @@ docdir = $(datadir)/xnee
 
 xnee_TEXINFOS=xnee_error.texi xnee_prot.texi version.texi  xnee_error.texi xnee_exampl.texi xnee_faq.texi xnee_install.texi xnee_intro.texi xnee_req.texi xnee_synch.texi xnee_usage.texi xnee_general.texi xnee_start.texi  xnee_intern.texi xnee_copying fdl.texi xnee_func.texi xnee_progs.texi 
 
-EXTRA_DIST = xnee_copying fdl.texi *.dia xnee.dox xnee.pdf xnee.html xnee.ps xnee.txt 
+IMG_DIA = xndetail.dia xngener.dia xnrec.dia xnrep.dia xnswinp.dia 
+IMG_EPS = xndetail.eps xngener.eps xnrec.eps xnrep.eps xnswinp.eps 
+IMG_PDF = xndetail.pdf xngener.pdf xnrec.pdf xnrep.pdf xnswinp.pdf 
+IMG_PNG = xndetail.png xngener.png xnrec.png xnrep.png xnswinp.png
+IMG_JPG = xndetail.jpg xngener.jpg xnrec.jpg xnrep.jpg xnswinp.jpg
+
+GEN_IMAGES = $(IMG_EPS) $(IMG_PDF) $(IMG_PNG) $(IMG_JPG)
+GEN_IMAGES_TO_INSTALL = $(IMG_PNG) $(IMG_JPG)
+MANUALS = xnee.html xnee.pdf xnee.ps xnee.txt
+
+EXTRA_DIST = xnee_copying fdl.texi *.dia xnee.dox xnee.pdf \
+             $(MANUALS)\
+             $(GEN_IMAGES_TO_INSTALL)
+
+if BUILDDOC
+DOC_DEP=$(GEN_IMAGES_TO_INSTALL) $(MANUALS)
+doc_DATA = $(MANUALS) $(GEN_IMAGES_TO_INSTALL)
+endif
+
 
 #MAKEINFO = @MAKEINFO@ --no-split
 #TEXI2HTML = texi2html
@@ -19,17 +37,6 @@ CLEANFILES = xnee.acs  xnee.cvs  xnee.mss  xnee.prs \
              */*.png */*.eps */*.pdf *.png *.eps *.pdf 
 
 
-IMG_DIA = xndetail.dia xngener.dia xnrec.dia xnrep.dia xnswinp.dia 
-IMG_EPS = xndetail.eps xngener.eps xnrec.eps xnrep.eps xnswinp.eps 
-IMG_PDF = xndetail.pdf xngener.pdf xnrec.pdf xnrep.pdf xnswinp.pdf 
-IMG_PNG = xndetail.png xngener.png xnrec.png xnrep.png xnswinp.png
-IMG_JPG = xndetail.jpg xngener.jpg xnrec.jpg xnrep.jpg xnswinp.jpg
-
-GEN_IMAGES = $(IMG_EPS) $(IMG_PDF) $(IMG_PNG) $(IMG_JPG)
-GEN_IMAGES_TO_INSTALL = $(IMG_PNG) $(IMG_JPG)
-MANUALS = xnee.html xnee.pdf xnee.ps xnee.txt
-
-doc_DATA = $(MANUALS) $(GEN_IMAGES_TO_INSTALL)
 
 
 ## ----------------------------- ##
@@ -111,11 +118,15 @@ xnee.txt:
 	$(MAKEINFO) -o xnee.txt --no-headers --no-split --no-validate xnee.texi
 
 manual: $(MANUALS)
-all: $(GEN_IMAGES) 
+all: $(DOC_DEP)
 default: all
 
 
 clean:  
 	\rm -f *.pdf *.ps *.jpg *.png *.info
 
+
+install: $(DOC_DEP)
+	mkdir -p $(docdir)
+	cp $(MANUALS) $(GEN_IMAGES_TO_INSTALL)  $(docdir)/
 
