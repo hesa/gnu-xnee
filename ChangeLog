@@ -1,3 +1,9 @@
+2007-10-29  Henrik Sandklef  <hesa@gnu.org>
+
+	* configure.in: 
+	
+	builddoc=false by default
+	
 2007-09-24  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/print.c (xnee_print_xnee_settings): 
@@ -10,6 +16,44 @@
 	* libxnee/test/Makefile.am:
 
 	Removed dependency to static lib
+
+2007-09-12  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+
+	Docs not built by default
+	Exluding AM_INIT_AUTOMAKE
+
+	* libxnee/src/xnee_buffer.c (xnee_replay_buffer_handler): 
+
+	Removed faulty check
+
+	* libxnee/src/xnee_expr.c: 
+	* libxnee/src/xnee_session.c: 
+
+	Skipping refreshing of ranges since already done elsewhere
+	Corrected faulty strcnmp (added ==0)
+
+	* libxnee/src/xnee_record.c: 
+
+	Added helper function: xnee_record_handle_event_printer
+	used in xnee_record_handle_event
+
+	* libxnee/src/xnee_replay.c: 
+
+	Disabled parts of the recording setup
+
+	* libxnee/src/xnee_resource.c: 
+
+	Updated copyrighted years
+
+	* libxnee/src/xnee_setget.c: 
+
+	Disregards argument to first-last 
+
+	* libxnee/src/xnee_window.c: 
+
+	Raised move window tries limit to 10
 
 2007-09-11  Henrik Sandklef  <hesa@gnu.org>
 
