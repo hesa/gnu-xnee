@@ -1,4 +1,4 @@
-AC_INIT(Xnee,3.01,bug-xnee@gnu.org)
+AC_INIT(Xnee,3.02,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 dnl AM_INIT_AUTOMAKE(xnee,3.0.1)
 AM_INIT_AUTOMAKE
@@ -68,7 +68,7 @@ AC_ARG_ENABLE(doc,
   yes) builddoc=true ;;
   no)  builddoc=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --disable-doc) ;;
-esac],[builddoc=true])
+esac],[builddoc=false])
 
 AC_ARG_ENABLE(doconly,
 [  --enable-doconly       build Xnee documentation only],
@@ -330,12 +330,12 @@ else
 fi
 
 
-if test x$builddoc = xtrue ; 
-then
-	DOC_DIR=doc
-else
-	DOC_DIR=
-fi
+dnl if test x$builddoc = xtrue ; 
+dnl then
+dnl 	DOC_DIR=doc
+dnl else
+dnl 	DOC_DIR=
+dnl fi
 
 
 FOO_DIR=foo
@@ -353,6 +353,7 @@ then
 	DOC_MAKEFILES=
 fi
 
+	DOC_DIR=doc
 
 
 show_doc_program()
@@ -609,6 +610,15 @@ echo "   Excluding the following components "
 echo "   -------------------------------------"
 printf "    $EXCLUDED_COMPONENTS"
 echo " "
+fi
+echo ""
+echo "   Static or dynamic linking for programs ($makestatic)"
+echo "   -------------------------------------"
+if test "x$BUILD_STATIC" != "x" ;
+then
+echo "        dynamic"
+else
+echo "        static"
 fi
 echo " "
 echo "   Settings ok?"
