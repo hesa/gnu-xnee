@@ -1,4 +1,4 @@
-Changes in coming 3.0.2
+Changes in 3.02
 ==============================
 
   Syntax changes:
@@ -17,8 +17,26 @@ Changes in coming 3.0.2
     * Version printout changed according
       to new GNU coding standards
 
- 
+    * Fix for X.org releases, recording of deliv events 
+      seem need a work around
+
+  Build changes:
+
+     * target now respects DESTDIR
+     * possible to choose between static or dynamic binary linking
+     * Rule for excluding library install
+     * Libtool used
+     * Added new pixmap dir
+     * Changed icon name to xnee.xpm
+     * Docs not built by default
+     * Exluding AM_INIT_AUTOMAKE
+     * builddoc=false by default
+
   Bugs fixed:
+     * Raised move window tries limit to 10
+
+  Doc changes:
+     * changed question email address to xnee-devel@gnu.org
   
 Changes in 3.0.1
 ==============================

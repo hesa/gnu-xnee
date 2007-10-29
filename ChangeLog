@@ -1,3 +1,21 @@
+2007-10-29  Henrik Sandklef  <hesa@sandklef.com>
+
+	* doc/Makefile.am (docdir): 
+	DOC_DEP is used for dependency doc code
+	DOC_DEP and doc_DATA depends on build type (BUILDDOC)
+	install rule added to override default
+	
+	* libxnee/src/xnee_replay.c (xnee_replay_main_loop): 
+	insert break in replay loop if type in event is zero
+
+	* configure.in: 
+	updated version to 3.02
+	DOC_DIR always set
+	add printout to show if dynamic or static linking will be made
+
+	* doc/xnee_faq.texi: 
+	changed question email address to xnee-devel@gnu.org
+
 2007-10-29  Henrik Sandklef  <hesa@gnu.org>
 
 	* configure.in: 
