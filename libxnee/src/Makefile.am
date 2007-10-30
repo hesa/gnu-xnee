@@ -70,7 +70,7 @@ LIB_XNEE_SOURCE_FILES = xnee.c  \
 	feedback.c \
 	$(LIBXNEE_H_FILES)
 
-libxnee_a_SOURCES = $(LIB_XNEE_SOURCE_FILES)
+dnl libxnee_la_SOURCES = $(LIB_XNEE_SOURCE_FILES)
 EXTRA_LTLIBRARIES = libxnee.la
 lib_LTLIBRARIES = $(WANTED_LIBXNEE)
 libxnee_la_LDFLAGS = -rpath '$(libdir)'
@@ -121,6 +121,7 @@ endif
 if NOT_INSTALL_LIBS
 install-exec-local:
 	echo " ... not installing libs"
+install:
 else
 install-exec-local:
 	echo " ... installing libs"
