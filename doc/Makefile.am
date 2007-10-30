@@ -1,7 +1,6 @@
 docdir = $(datadir)/xnee
 
 xnee_TEXINFOS=xnee_error.texi xnee_prot.texi version.texi  xnee_error.texi xnee_exampl.texi xnee_faq.texi xnee_install.texi xnee_intro.texi xnee_req.texi xnee_synch.texi xnee_usage.texi xnee_general.texi xnee_start.texi  xnee_intern.texi xnee_copying fdl.texi xnee_func.texi xnee_progs.texi 
-
 IMG_DIA = xndetail.dia xngener.dia xnrec.dia xnrep.dia xnswinp.dia 
 IMG_EPS = xndetail.eps xngener.eps xnrec.eps xnrep.eps xnswinp.eps 
 IMG_PDF = xndetail.pdf xngener.pdf xnrec.pdf xnrep.pdf xnswinp.pdf 
@@ -20,7 +19,6 @@ if BUILDDOC
 DOC_DEP=$(GEN_IMAGES_TO_INSTALL) $(MANUALS)
 doc_DATA = $(MANUALS) $(GEN_IMAGES_TO_INSTALL)
 endif
-
 
 #MAKEINFO = @MAKEINFO@ --no-split
 #TEXI2HTML = texi2html
@@ -103,6 +101,11 @@ ${IMG_PDF}: ${IMG_EPS}
 ${IMG_PNG}: ${IMG_EPS}
 ${IMG_JPG}: ${IMG_EPS}
 
+install: 
+	mkdir -p $(docdir)
+	cp $(MANUALS) $(GEN_IMAGES_TO_INSTALL)  $(docdir)/
+
+
 
 api-doc: xnee.dox 
 	\rm -fr alldocs/
@@ -124,9 +127,4 @@ default: all
 
 clean:  
 	\rm -f *.pdf *.ps *.jpg *.png *.info
-
-
-install: $(DOC_DEP)
-	mkdir -p $(docdir)
-	cp $(MANUALS) $(GEN_IMAGES_TO_INSTALL)  $(docdir)/
 
