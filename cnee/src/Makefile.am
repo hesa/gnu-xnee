@@ -13,15 +13,8 @@ texi_TEXINFOS = cnee.texi
 #info_TEXINFOS = cnee.texi
 
 
-EXTRA_DIST=$(man_MANS) $(TEXINF_FILES)
+EXTRA_DIST=$(man_MANS) $(texi_TEXINFOS)
 
-cnee.texi: $(CNEE)$(EXEEXT)
-	@echo "Generating texi file from: $(CNEE)$(EXEEXT)"
-	./$(CNEE)$(EXEEXT) --texipage > $@
-
-cnee.info: cnee.texi
-	@echo "Generating info file from cnee.texi"
-	$(MAKEINFO) $< 
 
 LIBXNEE_DIR = ../../libxnee
 
@@ -83,7 +76,22 @@ test-cli:
 
 info: $(CNEE_INFO)
 
-man: $(CNEE_MAN_FILES)
-
-cnee.1: $(CNEE)$(EXEEXT)
+man: 
+	@echo "Generating man page file from: $(CNEE)$(EXEEXT)"
 	./$(CNEE)$(EXEEXT) --manpage > $@
+	@echo "Generating texi file from: $(CNEE)$(EXEEXT)"
+	./$(CNEE)$(EXEEXT) --texipage > $@
+	@echo "Generating info file from cnee.texi"
+	$(MAKEINFO) $< 
+
+
+#cnee.1: $(CNEE)$(EXEEXT)
+#	./$(CNEE)$(EXEEXT) --manpage > $@
+
+#cnee.texi: $(CNEE)$(EXEEXT)
+#	@echo "Generating texi file from: $(CNEE)$(EXEEXT)"
+#	./$(CNEE)$(EXEEXT) --texipage > $@
+
+#cnee.info: $(texi_TEXINFOS)
+#	@echo "Generating info file from cnee.texi"
+#	$(MAKEINFO) $< 
