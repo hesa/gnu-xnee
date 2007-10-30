@@ -1,4 +1,5 @@
-SUBDIRS = src test
+SUBDIRS = src 
+#test
 
 AUTOMAKE_OPTIONS = gnu 
 
