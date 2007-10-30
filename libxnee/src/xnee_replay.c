@@ -240,11 +240,11 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    }
 	  else 
 	    {
-
 	      ret = xnee_expression_handle_project(xd, ret_str);
 /* 	      ret = xnee_expression_handle_session(xd, ret_str, &xindata); */
 
 
+      
 	      if ( (ret == XNEE_REPLAY_DATA) || 
 		   (ret == XNEE_PRIMITIVE_DATA) || 
 		   (ret == XNEE_SYNTAX_ERROR) )
@@ -263,6 +263,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		  /* Make sure SYNTAX ERRROR is not forgotten */
 		  if (ret==XNEE_SYNTAX_ERROR)
 		    {
+		      return ret;  
 		      XNEE_RETURN_IF_ERR (ret);  
 		    }
 		  break ; 
@@ -276,7 +277,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
       (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || 
       (read_mode==XNEE_REPLAY_READ_ALL_DATA))
     {
-      
       ret = xnee_set_ranges(xd);
       XNEE_RETURN_IF_ERR (ret);
 
@@ -401,6 +401,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	       * OK, all grabbed stuffed is handled, let's fake some events
 	       *
 	       */
+
 	      switch (xindata.type)
 		{
 		case XNEE_EVENT:
@@ -452,6 +453,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		      XNEE_SYNC_DEBUG ( (stderr, 
 					 "SYNC     EVENT   %d\n", 
 					 xindata.u.event.type ) );
+
 		      xnee_replay_buffer_handler ( 
 						  xd, 
 						  XNEE_EVENT, 
@@ -673,7 +675,6 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
   int rec_window_pos = 0;
   XWindowAttributes window_attributes_return;
   int ret;
-  printf (".");
 
   if (data->data==NULL)
     {
