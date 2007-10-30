@@ -92,7 +92,7 @@ AC_ARG_ENABLE(lib,
   yes) buildlib=true ;;
   no)  buildlib=false ;;
   *) AC_MSG_ERROR(bad value ${enableval} for --disable-lib) ;;
-esac],[buildlib=true])
+esac],[buildlib=false])
 
 AC_ARG_ENABLE(static-programs,
 [  --enable-static-programs     make the Xnee programs static (defaults to static)],
@@ -318,7 +318,6 @@ then
 	WANTED_LIBXNEE=libxnee.la
 	AC_SUBST(WANTED_LIBXNEE)
 else
-	dnl WANTED_LIBXNEE=
 	if test x$makestatic = xfalse ;
 	    then
 	    echo "  ********** ERROR **********"
@@ -327,6 +326,8 @@ else
 	    echo "  ********** ERROR **********"
 	    exit 1
 	fi
+	WANTED_LIBXNEE=libxnee.la
+        AC_SUBST(WANTED_LIBXNEE)
 fi
 
 
@@ -489,7 +490,8 @@ fi
 
 if test x$buildlib = xtrue ; 
 then
-        MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile"
+dnl         MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile"
+        MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN libxnee/Makefile libxnee/src/Makefile"
 dnl	add_incl "libxnee"
 dnl else
 dnl	add_excl "libxnee"
@@ -552,7 +554,8 @@ AC_SUBST(MAKEFILES_TO_GEN)
 echo "Making the following Makefiles:"
 echo "  $MAKEFILES_TO_GEN"
 #AC_OUTPUT([ $MAKEFILES_TO_GEN ])
-AC_OUTPUT([ Makefile libxnee/Makefile libxnee/test/Makefile libxnee/src/Makefile examples/Makefile sessions/Makefile share/Makefile doc/Makefile cnee/Makefile cnee/src/Makefile gnee/Makefile gnee/src/Makefile gnee/man/Makefile pnee/Makefile pnee/src/Makefile pnee/pics/Makefile  pnee/man/Makefile  pixmap/Makefile man/Makefile ])
+dnl libxnee/test/Makefile 
+AC_OUTPUT([ Makefile libxnee/Makefile libxnee/src/Makefile examples/Makefile sessions/Makefile share/Makefile doc/Makefile cnee/Makefile cnee/src/Makefile gnee/Makefile gnee/src/Makefile gnee/man/Makefile pnee/Makefile pnee/src/Makefile pnee/pics/Makefile  pnee/man/Makefile  pixmap/Makefile man/Makefile ])
 
 #
 # Final words 
