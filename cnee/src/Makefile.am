@@ -76,22 +76,22 @@ test-cli:
 
 info: $(CNEE_INFO)
 
-man: 
+man: ./$(CNEE)$(EXEEXT)
 	@echo "Generating man page file from: $(CNEE)$(EXEEXT)"
+	./$(CNEE)$(EXEEXT) --manpage > cnee.1
+	@echo "Generating texi file from: $(CNEE)$(EXEEXT)"
+	./$(CNEE)$(EXEEXT) --texipage > cnee.texinfo
+	@echo "Generating info file from cnee.texi"
+	$(MAKEINFO) cnee.info
+
+
+cnee.1: $(CNEE)$(EXEEXT)
 	./$(CNEE)$(EXEEXT) --manpage > $@
+
+cnee.texi: $(CNEE)$(EXEEXT)
 	@echo "Generating texi file from: $(CNEE)$(EXEEXT)"
 	./$(CNEE)$(EXEEXT) --texipage > $@
+
+cnee.info: $(texi_TEXINFOS)
 	@echo "Generating info file from cnee.texi"
 	$(MAKEINFO) $< 
-
-
-#cnee.1: $(CNEE)$(EXEEXT)
-#	./$(CNEE)$(EXEEXT) --manpage > $@
-
-#cnee.texi: $(CNEE)$(EXEEXT)
-#	@echo "Generating texi file from: $(CNEE)$(EXEEXT)"
-#	./$(CNEE)$(EXEEXT) --texipage > $@
-
-#cnee.info: $(texi_TEXINFOS)
-#	@echo "Generating info file from cnee.texi"
-#	$(MAKEINFO) $< 
