@@ -1,3 +1,21 @@
+2007-10-31  Henrik Sandklef  <hesa@sandklef.com>
+
+	* doc/xnee_install.texi: 
+	Added note on how to configure after CVS checkout
+	xnee-3.02 used in examples instead of Xnee-1.0
+
+	* build/cvs_build.sh (LOG_FILE): 
+	Added configure options to enable build form CVS
+
+	* cnee/src/Makefile.am (cnee.info): 
+	Reintroduced rules for generating .texinfo, .1, .info
+
+	* configure.in: 
+	Version set to 3.02.80
+
+	* Makefile.cvs (generate): 
+	Added note on how to configure after CVS checkout
+
 2007-10-29  Henrik Sandklef  <hesa@sandklef.com>
 
 	* doc/Makefile.am (docdir): 
