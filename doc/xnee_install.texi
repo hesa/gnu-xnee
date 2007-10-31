@@ -4,26 +4,26 @@
 To build and install Xnee do the following:
 Download the following source files into a directory (version numbers given here are just examples)
 @itemize @bullet
-@item	Xnee-1.0.tar.gz
+@item	xnee-3.02.tar.gz
 @end itemize
 
 
 @*
 Unzip the source file
 @example
-@code{gunzip Xnee-1.0.tar.gz}
+@code{gunzip xnee-3.02.tar.gz}
 @end example
 
 @*
 Untar the source file
 @example
-@code{tar xvf Xnee-1.0.tar}
+@code{tar xvf xnee-3.02.tar}
 @end example
 
 @*
 Enter the Xnee directory
 @example
-@code{cd Xnee-1.0}
+@code{cd xnee-3.02}
 @end example
 
 @*
@@ -57,17 +57,17 @@ Download the source files into a directory
 
 Unzip the source file
 @example
-@code{gunzip Xnee-1.0.tar.gz}
+@code{gunzip xnee-3.02.tar.gz}
 @end example
 
 Untar the source file
 @example
-@code{tar xvf Xnee-1.0.tar}
+@code{tar xvf xnee-3.02.tar}
 @end example
 
 Enter the Xnee directory
 @example
-@code{cd Xnee-1.0}
+@code{cd xnee-3.02}
 @end example
 
 Build Xnee
@@ -96,7 +96,7 @@ Build Xnee
 @example
 @code{cd xnee}
 @code{make -f Makefile.cvs}
-@code{./configure}
+@code{./configure --enable-doc}
 @code{make}
 @code{make install} (optional)
 @end example
