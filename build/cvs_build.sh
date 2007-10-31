@@ -15,6 +15,7 @@
 export XNEE_TMP_DIR=/tmp/xnee_cvs
 export CVS_RSH=ssh
 DEST_DIR=/tmp/var/www/xnee_cvs/
+INSTALL_DIR=${DEST_DIR}/install
 TARBALL_DIR=${DEST_DIR}/nightly-tar-ball
 NIGHT_DIR=${DEST_DIR}/nightly-dists
 LOG_DIR=${DEST_DIR}/logs
@@ -78,8 +79,9 @@ copy_and_latest()
 build_from_cvs()
 {
     do_exec "make -f Makefile.cvs"
-    do_exec "./configure"
+    do_exec "./configure --enable-doc --prefix=$INSTALL_DIR "
     do_exec "make"
+    do_exec "make install"
     do_exec "make dist"
     GZ_FILE=$(ls *.gz)
 
