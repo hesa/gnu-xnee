@@ -12,7 +12,7 @@
 @cindex Report bugs?
 Turn on verbose mode @code{cnee --verbose} and save the printouts. 
 Include all printouts and log files in the mail which is sent to
-@email{xnee-bug@@gnu.org}
+@email{bug-xnee@@gnu.org}
 @*
 
 @item Can you add xxx functionality to Xnee
