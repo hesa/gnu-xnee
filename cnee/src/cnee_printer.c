@@ -198,6 +198,9 @@ xnee_usage (FILE *fd)
   fprintf (fd ,"REPLAY OPTIONS\n\n");
   xnee_usage_sub(fd, xnee_options, XNEE_REPLAY_OPTION);
 
+  fprintf (fd ,"GRAB OPTIONS\n\n");
+  xnee_usage_sub(fd, xnee_options, XNEE_GRAB_OPTION);
+
   fprintf (fd ,"CNEE OPTIONS\n\n");
   xnee_usage_sub(fd, cnee_options, XNEE_ANY_OPTION);
 
