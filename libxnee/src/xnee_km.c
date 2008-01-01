@@ -471,6 +471,7 @@ xnee_handle_rec_key(xnee_data *xd)
   int    ret=XNEE_OK;
   static int exec_ctr = 0; /* Keeps track of nr of exec grabs */
   char *exec_prog ;
+  char *tmp_ptr;
   int len;
 
   xnee_verbose ((xd, " ---> xnee_handle_rec_km\n"));
@@ -527,7 +528,16 @@ xnee_handle_rec_key(xnee_data *xd)
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_EXEC)
     {
       xnee_verbose ((xd, " ---  xnee_handle_rec_km: EXEC (nr %d)\n", exec_ctr));
-      len = strlen (xnee_get_exec_prog(xd));
+      
+      tmp_ptr =  xnee_get_exec_prog(xd);
+      if ( tmp_ptr == NULL ) 
+	{
+	  ret=XNEE_NO_GRAB_DATA;
+	  xnee_verbose((xd, "Xnee exec received... couldn't find valid exec program\n"));
+	  return ret;
+	}
+
+      len = strlen (tmp_ptr);
       len = len + 10 ; 
     
       exec_prog = (char*) calloc(len, sizeof(char));
@@ -547,7 +557,6 @@ xnee_handle_rec_key(xnee_data *xd)
 	  system ( exec_prog );
 	  free(exec_prog);
 	}
-
       ret=XNEE_GRAB_EXEC;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_INSERT)

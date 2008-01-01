@@ -236,7 +236,7 @@ static xnee_option_t xnee_options_impl[] =
     
     {
       XNEE_EXEC_PROGRAM_KEY,
-      "exec-key",
+      "exec-program-key",
       "ep",
       "<programname>", 
       "Program to start when pressing the grabbed exec key",
@@ -1190,7 +1190,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_EXEC_PROGRAM_KEY:
       verbose_option("XNEE_EXEC_PROGRAM_KEY");
-      xnee_set_exec_prog (xd, opt_and_args[1]);
+      ret = xnee_set_exec_prog (xd, opt_and_args[1]);
       *args_used = 1;
       break;
 
@@ -1245,7 +1245,6 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
       ret = xnee_unset_sync_mode (xd); 
 /*       ret = xnee_unset_sync_mode_str (xd, opt_and_args[1]); */
 /*       INC_ARGS_USED(*args_used, opt_and_args[1]); */
-      *args_used = 0;
       break;
 
     case XNEE_SYNC_MODE_KEY:
@@ -1253,7 +1252,6 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
       ret = xnee_set_sync_mode (xd); 
 /*       ret = xnee_set_sync_mode_str (xd, opt_and_args[1]); */
 /*       INC_ARGS_USED(*args_used, opt_and_args[1]); */
-      *args_used = 0;
       break;
 
     case XNEE_RECALL_WINDOW_POS_KEY:
@@ -1491,7 +1489,6 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
       ret = XNEE_SYNTAX_ERROR;
       break;
     }
-
 
   return ret;
 }
