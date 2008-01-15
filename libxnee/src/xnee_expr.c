@@ -135,6 +135,7 @@ xnee_expression_handle_session(xnee_data *xd,
   do_continue = xnee_expression_handle_newwindow(xd, tmp);
   if (do_continue==XNEE_NEW_WINDOW_DATA) { return (do_continue); }
   
+
   /* is it? ..., continue anyway */
   return (do_continue);
 }
@@ -173,7 +174,7 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp)
   /* Is it a meta string */
   do_continue = xnee_expression_handle_comment(xd, tmp);
   if (do_continue==XNEE_META_DATA) { return (do_continue); }
-  
+
   /* Is it a setting expression */
   do_continue = xnee_expression_handle_settings(xd, tmp, XNEE_XNS_SYNTAX);
   if (do_continue==XNEE_SETTINGS_DATA) { return (do_continue); }

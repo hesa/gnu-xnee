@@ -28,7 +28,7 @@ testsetget_LDADD =   -L${LIBXNEE_DIR}/src -lxnee  ${X_LIBS} ${X11_LIBS} ${LIBDL}
 testsetget_LDFLAGS = ${GCOV_FLAG} ${GPROF_FLAG} 
 testsetget_DEPENDENCIES = 
 
-test:
+test: 
 	./$(LIBTEST)
 	./$(TESTSETGET)
 

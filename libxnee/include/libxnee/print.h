@@ -282,7 +282,6 @@ xnee_print_distr_list (xnee_data*, /*@null@*/FILE *);
 int 
 xnee_print_data_range_count (xnee_data * xd);
 
-
 #ifdef NO_BUF_VERBOSE
 #define xnee_replay_printbuffer(a) 
 #else

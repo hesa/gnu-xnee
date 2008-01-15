@@ -590,6 +590,15 @@ static xnee_option_t xnee_options_impl[] =
       XNEE_OPTION_VISIBLE
     },
     {
+      XNEE_KEEP_AUTOREPEAT,
+      "keep-autorepeat",
+      "ka",
+      NULL,
+      "Keep autorepeat during record/replay",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    {
       XNEE_LAST_OPTION,
       NULL,
       NULL,
@@ -1028,11 +1037,12 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
   int tmp_int1;
   int tmp_int2;
 
+
+
   if (opt_and_args==NULL)
     {
       return -1;
     }
-
 
   if (syntax_mode == XNEE_CLI_SYNTAX)
     {
@@ -1042,11 +1052,11 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
     }
   else if (syntax_mode == XNEE_XNS_SYNTAX)
     {
-/*   xnee_set_verbose(xd); */
+/*    xnee_set_verbose(xd);  */
       entry = xnee_find_resource_option_entry(xd, 
 					      xnee_options,
 					      opt_and_args[0]);
-/*   xnee_unset_verbose(xd); */
+/*    xnee_unset_verbose(xd);  */
     }
   else
     {
@@ -1057,7 +1067,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
     {
       return -1 ;
     }
-  
+
   key = xnee_options[entry].key;
 
   xnee_verbose((xd, "Found xns entry for '%s' '%s' at position: %d\n", 
@@ -1083,6 +1093,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 		     __FILE__ , __LINE__, __func__, a ));
   
   ret = XNEE_SYNTAX_ERROR;
+
 
 
   switch (key)
@@ -1266,6 +1277,12 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
       *args_used = 1;
       break;
 
+    case XNEE_KEEP_AUTOREPEAT:
+      verbose_option("XNEE_KEEP_AUTOREPEAT");
+      ret = xnee_set_keep_autorepeat (xd);
+      *args_used = 0;
+      break;
+
     case XNEE_HUMAN_PRINTOUT_KEY:
       verbose_option("XNEE_HUMAN_PRINTOUT_KEY");
       ret = xnee_set_human_printout(xd);
@@ -1278,9 +1295,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
       *args_used = 1;
       break;
 
-
     case XNEE_FORCE_REPLAY_KEY:
-      printf(" force replay...\n");
       verbose_option("XNEE_FORCE_REPLAY_KEY");
       ret = xnee_set_force_replay(xd);
       *args_used = 0;

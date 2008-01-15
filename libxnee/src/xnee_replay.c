@@ -305,7 +305,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 
       ret = xnee_expression_handle_session(xd, tmp, &xindata);
 
-      if ( ret == XNEE_PRIMITIVE_DATA ) { ret = XNEE_OK; }
+/*       if ( ret == XNEE_PRIMITIVE_DATA ) { printf ("return XNEE_OK\n"); ret = XNEE_OK; } */
 
 /* 	  printf ("  ===== starting \n"); */
 /* 	  xnee_print_list(); */
@@ -330,6 +330,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	      last_elapsed = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
 	      xnee_verbose((xd, " <--  xnee_get_elapsed_time\n"));
 	    }
+
+
 	  if ( ret == XNEE_META_DATA )
 	    {
 	      xnee_verbose((xd, "META DATA read ... should be "

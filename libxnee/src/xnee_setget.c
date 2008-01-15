@@ -987,6 +987,10 @@ xnee_set_autorepeat (xnee_data *xd)
       return XNEE_OK;
     }
   
+  if (xd->keep_autorepeat!=0)
+    {
+      return XNEE_OK;
+    }
 
   if ( (xd==NULL) || (xd->fake==NULL) )
     {
@@ -1042,6 +1046,10 @@ xnee_reset_autorepeat (xnee_data *xd)
       return XNEE_OK;
     }
 
+  if (xd->keep_autorepeat!=0)
+    {
+      return XNEE_OK;
+    }
 
   xnee_verbose((xd,"Resetting autorepeat on (%d) to: ",
 		(xd->fake==NULL)?0:(int)xd->fake));
@@ -1806,5 +1814,12 @@ int
 xnee_set_xnee_data (xnee_data *xd)
 {
   xd_saved = xd;
+}
+ 
+int
+xnee_set_keep_autorepeat (xnee_data *xd)
+{
+  xd->keep_autorepeat = 1;
+  return XNEE_OK;
 }
  

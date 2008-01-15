@@ -538,6 +538,7 @@ typedef struct
   Bool     all_clients ;    /*!< True if recording all clients 
 			      (else Xneee recods only future clients) */
   Bool     sync        ;    /*!< True if Record used when replaying */
+  Bool     keep_autorepeat ;    /*!< True = use autorepeat */
   unsigned char  mode  ;    /*!< Xnee's current mode (RECORDER/REPLAY/SYNTAX_CHECK...)  */
 
   /*@null@*/ void *plugin_handle  ;        /*!< Handle for the plugin file */

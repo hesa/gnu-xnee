@@ -808,4 +808,7 @@ xnee_get_xnee_data (void);
 int
 xnee_set_xnee_data (xnee_data *xd);
 
+int
+xnee_set_keep_autorepeat (xnee_data *xd);
+
 #endif /* XNEE_SETGET_H */ 

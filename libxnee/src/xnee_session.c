@@ -309,6 +309,7 @@ xnee_init(xnee_data* xd)
   xnee_sem_init (xd, xd->buf_sem, 0, 1);
 #endif
   xd->autorepeat_saved = 0 ;
+  xd->keep_autorepeat  = 0 ;
 
   xd->button_pressed=0;
   /*  Not done until needed
