@@ -1,3 +1,23 @@
+2008-05-05  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/print.c (xnee_human_print_event_verbose): 
+	
+	Added function to make human printout more informative
+
+2008-04-14  Henrik Sandklef  <hesa@gnu.org>
+
+	* doc/xnee_prot.texi: 
+	Resuest printout info corrected.
+
+2008-01-01  Henrik Sandklef  <hesa@sandklef.com>
+
+	* cnee/src/cnee_printer.c (xnee_usage): 
+	Added XNEE_GRAB_OPTION to the option printout
+
+	* libxnee/src/xnee_resource.c (xnee_parse_option_impl): 
+	* libxnee/src/xnee_km.c (xnee_parse_option_impl): 
+	Fixed a bug when reading/using exec-program
+
 2008-01-15  Henrik Sandklef  <hesa@gnu.org>
 	* include/libxnee/print.h
 	* include/libxnee/xnee.h
