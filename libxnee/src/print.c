@@ -241,19 +241,263 @@ xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd )
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   event_type = (int)xrec_data->type ;
 
+#define XNEE_HP_SEP " "
+#define XNEE_HP_EQUALS "="
+
+  (void)xd->data_fp (xd->out_file,"Event" XNEE_HP_EQUALS "%s" XNEE_HP_SEP "Number" XNEE_HP_EQUALS "%d", 
+		     xnee_print_event(event_type), event_type);
+  
+  if ( 1 )
+    {
+      xnee_human_print_event_verbose (xd,xrecintd );
+    }
+
+  (void)xd->data_fp (xd->out_file,"\n");
+}
+
+
+/*
+ *
+ * xnee_human_print_event.  
+ *
+ */
+void 
+xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
+{
+  XRecordDatum *xrec_data  ;
+  int           event_type ;
+
+  xrec_data  = (XRecordDatum *) (xrecintd->data) ;
+  event_type = (int)xrec_data->type ;
+
+
   switch (event_type)
     {
+    case KeyPress:
+    case KeyRelease:
+    case ButtonPress:
+    case ButtonRelease:
+    case MotionNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "root" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "child" XNEE_HP_EQUALS "%lu", 
+			 xrec_data->event.u.keyButtonPointer.root,
+			 xrec_data->event.u.keyButtonPointer.event,
+			 xrec_data->event.u.keyButtonPointer.child
+			 );
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "rootX" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "rootY" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "eventX" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "eventY" XNEE_HP_EQUALS "%lu", 
+			 xrec_data->event.u.keyButtonPointer.rootX,
+			 xrec_data->event.u.keyButtonPointer.rootY,
+			 xrec_data->event.u.keyButtonPointer.eventX,
+			 xrec_data->event.u.keyButtonPointer.eventY
+			 );
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "state" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "sameScreen" XNEE_HP_EQUALS "%d", 
+			 xrec_data->event.u.keyButtonPointer.state,
+			 xrec_data->event.u.keyButtonPointer.sameScreen			 );
+      break;
+    case EnterNotify:
+    case LeaveNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "root" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "child" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "rootX" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "rootY" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "eventX" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "eventY" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "state" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "mode" XNEE_HP_EQUALS "%d", 
+			 xrec_data->event.u.enterLeave.root,
+			 xrec_data->event.u.enterLeave.event,
+			 xrec_data->event.u.enterLeave.child,
+			 xrec_data->event.u.enterLeave.rootX,
+			 xrec_data->event.u.enterLeave.rootY,
+			 xrec_data->event.u.enterLeave.eventX,
+			 xrec_data->event.u.enterLeave.eventY,
+			 xrec_data->event.u.enterLeave.state,
+			 xrec_data->event.u.enterLeave.mode);
+      break;
+
+    case FocusIn:
+    case FocusOut:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "mode" XNEE_HP_EQUALS "%lu", 
+			 xrec_data->event.u.focus.window,
+			 xrec_data->event.u.focus.mode);
+      break;
+    case Expose:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "width" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "height" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "count" XNEE_HP_EQUALS "%d", 
+			 xrec_data->event.u.expose.window,
+			 xrec_data->event.u.expose.x,
+			 xrec_data->event.u.expose.y,
+			 xrec_data->event.u.expose.width,
+			 xrec_data->event.u.expose.height,
+			 xrec_data->event.u.expose.count);
+      break;
+    case GraphicsExpose:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "drawable" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "width" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "height" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "minorEvent" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "majorEvent" XNEE_HP_EQUALS "%d"
+			 XNEE_HP_SEP "count" XNEE_HP_EQUALS "%d", 
+			 xrec_data->event.u.graphicsExposure.drawable,
+			 xrec_data->event.u.graphicsExposure.x,
+			 xrec_data->event.u.graphicsExposure.y,
+			 xrec_data->event.u.graphicsExposure.width,
+			 xrec_data->event.u.graphicsExposure.height,
+			 xrec_data->event.u.graphicsExposure.minorEvent,
+			 xrec_data->event.u.graphicsExposure.majorEvent,
+			 xrec_data->event.u.graphicsExposure.count);
+      break;
+    case NoExpose:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "drawable" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "minorEvent" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "majorEvent" XNEE_HP_EQUALS "%d" , 
+			 xrec_data->event.u.noExposure.drawable,
+			 xrec_data->event.u.noExposure.minorEvent,
+			 xrec_data->event.u.noExposure.majorEvent);
+      break;
+    case VisibilityNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "state" XNEE_HP_EQUALS "%d" , 
+			 xrec_data->event.u.visibility.window,
+			 xrec_data->event.u.visibility.state);
+      break;
     case CreateNotify:
-      (void)xd->data_fp (xd->out_file,"Event     %20s\t%.3d\t%lu\n", 
-			 xnee_print_event(event_type), 
-			 event_type,
-			 xrec_data->event.u.createNotify.window);
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "width" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "height" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "borderWidth" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "override" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.createNotify.parent,
+			 xrec_data->event.u.createNotify.window,
+			 xrec_data->event.u.createNotify.x,
+			 xrec_data->event.u.createNotify.y,
+			 xrec_data->event.u.createNotify.width,
+			 xrec_data->event.u.createNotify.height,
+			 xrec_data->event.u.createNotify.borderWidth,
+			 xrec_data->event.u.createNotify.override);
+      break;
+    case DestroyNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" ,
+			 xrec_data->event.u.destroyNotify.event,
+			 xrec_data->event.u.destroyNotify.window);
+      break;
+    case UnmapNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "fromConfigure" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.unmapNotify.event,
+			 xrec_data->event.u.unmapNotify.window,
+			 xrec_data->event.u.unmapNotify.fromConfigure);
+      break;
+    case MapNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "override" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.mapNotify.event,
+			 xrec_data->event.u.mapNotify.window,
+			 xrec_data->event.u.mapNotify.override);
+      break;
+    case MapRequest:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu",
+			 xrec_data->event.u.mapRequest.parent,
+			 xrec_data->event.u.mapRequest.window);
+      break;
+    case ReparentNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "override" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.reparent.event,
+			 xrec_data->event.u.reparent.window,
+			 xrec_data->event.u.reparent.parent,
+			 xrec_data->event.u.reparent.x,
+			 xrec_data->event.u.reparent.y,
+			 xrec_data->event.u.reparent.override);
+      break;
+    case ConfigureNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "aboveSibling" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "width" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "height" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "borderWidth" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "override" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.configureNotify.event,
+			 xrec_data->event.u.configureNotify.window,
+			 xrec_data->event.u.configureNotify.aboveSibling,
+			 xrec_data->event.u.configureNotify.x,
+			 xrec_data->event.u.configureNotify.y,
+			 xrec_data->event.u.configureNotify.width,
+			 xrec_data->event.u.configureNotify.height,
+			 xrec_data->event.u.configureNotify.borderWidth,
+			 xrec_data->event.u.configureNotify.override);
+      break;
+    case ConfigureRequest:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "sibling" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "width" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "height" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "borderWidth" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "valueMask" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.configureRequest.parent,
+			 xrec_data->event.u.configureRequest.window,
+			 xrec_data->event.u.configureRequest.sibling,
+			 xrec_data->event.u.configureRequest.x,
+			 xrec_data->event.u.configureRequest.y,
+			 xrec_data->event.u.configureRequest.width,
+			 xrec_data->event.u.configureRequest.height,
+			 xrec_data->event.u.configureRequest.borderWidth,
+			 xrec_data->event.u.configureRequest.valueMask);
       break;
     default:
-      (void)xd->data_fp (xd->out_file,"Event     %20s\t%.3d\n", 
+      (void)xd->data_fp (xd->out_file,"%.3d", 
 			 xnee_print_event(event_type), event_type);
       break;
     }
+
 }
 
 
