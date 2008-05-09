@@ -1,3 +1,9 @@
+2008-05-09  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/print.c (xnee_human_print_event_verbose): 
+	
+	more human printout implementations
+
 2008-05-05  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/print.c (xnee_human_print_event_verbose): 
