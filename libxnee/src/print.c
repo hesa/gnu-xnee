@@ -238,18 +238,30 @@ xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd )
   XRecordDatum *xrec_data  ;
   int           event_type ;
 
+  char  *event_name ;
+  char  *name=" not defined " ;
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   event_type = (int)xrec_data->type ;
-
+  event_name = " not defined " ;
 #define XNEE_HP_SEP " "
 #define XNEE_HP_EQUALS "="
+#define XNEE_HP_CONTENT_BEGIN " { "
+#define XNEE_HP_CONTENT_END " } "
+
+  event_name = xnee_print_event(event_type);
+    if ( event_name == NULL )
+      {
+	event_name = name;
+      }
 
   (void)xd->data_fp (xd->out_file,"Event" XNEE_HP_EQUALS "%s" XNEE_HP_SEP "Number" XNEE_HP_EQUALS "%d", 
-		     xnee_print_event(event_type), event_type);
+		     event_name, event_type);
   
   if ( 1 )
     {
+      (void)xd->data_fp (xd->out_file,XNEE_HP_CONTENT_BEGIN); 
       xnee_human_print_event_verbose (xd,xrecintd );
+      (void)xd->data_fp (xd->out_file,XNEE_HP_CONTENT_END); 
     }
 
   (void)xd->data_fp (xd->out_file,"\n");
@@ -266,6 +278,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
 {
   XRecordDatum *xrec_data  ;
   int           event_type ;
+  int i ;
 
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   event_type = (int)xrec_data->type ;
@@ -492,9 +505,141 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
 			 xrec_data->event.u.configureRequest.borderWidth,
 			 xrec_data->event.u.configureRequest.valueMask);
       break;
+
+    case GravityNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d"  
+			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.gravity.event,
+			 xrec_data->event.u.gravity.window,
+			 xrec_data->event.u.gravity.x,
+			 xrec_data->event.u.gravity.y);
+      break;
+
+    case ResizeRequest:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "width" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "height" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.resizeRequest.window,
+			 xrec_data->event.u.resizeRequest.width,
+			 xrec_data->event.u.resizeRequest.height);
+      break;
+
+    case CirculateNotify:
+    case CirculateRequest:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "place" XNEE_HP_EQUALS "%lu" ,
+			 xrec_data->event.u.circulate.event,
+			 xrec_data->event.u.circulate.window,
+			 xrec_data->event.u.circulate.parent,
+			 xrec_data->event.u.circulate.place);
+      break;
+
+    case PropertyNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "atom" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "time" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "state" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.property.window,
+			 xrec_data->event.u.property.atom,
+			 xrec_data->event.u.property.time,
+			 xrec_data->event.u.property.state);
+      break;
+
+    case SelectionClear:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "time" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "atom" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.selectionClear.time,
+			 xrec_data->event.u.selectionClear.window,
+			 xrec_data->event.u.selectionClear.atom);
+      break;
+
+    case SelectionRequest:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "time" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "owner" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "requestor" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "selection" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "target" XNEE_HP_EQUALS "%d" ,
+			 XNEE_HP_SEP "property" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.selectionRequest.time,
+			 xrec_data->event.u.selectionRequest.owner,
+			 xrec_data->event.u.selectionRequest.requestor,
+			 xrec_data->event.u.selectionRequest.selection,
+			 xrec_data->event.u.selectionRequest.target,
+			 xrec_data->event.u.selectionRequest.property);
+      break;
+
+    case SelectionNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "time" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "requestor" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "selection" XNEE_HP_EQUALS "%d" 
+			 XNEE_HP_SEP "target" XNEE_HP_EQUALS "%d" ,
+			 XNEE_HP_SEP "property" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.selectionNotify.time,
+			 xrec_data->event.u.selectionNotify.requestor,
+			 xrec_data->event.u.selectionNotify.selection,
+			 xrec_data->event.u.selectionNotify.target,
+			 xrec_data->event.u.selectionNotify.property);
+      break;
+
+    case ColormapNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "colormap" XNEE_HP_EQUALS "%lu" 
+#if defined(__cplusplus) || defined(c_plusplus)
+			 XNEE_HP_SEP "c_new" XNEE_HP_EQUALS "%d" 
+#else
+			 XNEE_HP_SEP "new" XNEE_HP_EQUALS "%d" 
+#endif
+			 XNEE_HP_SEP "state" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.colormap.window,
+			 xrec_data->event.u.colormap.colormap,
+#if defined(__cplusplus) || defined(c_plusplus)
+			 xrec_data->event.u.colormap.c_new,
+#else
+			 xrec_data->event.u.colormap.new,
+#endif
+			 xrec_data->event.u.colormap.state);
+      break;
+
+    case ClientMessage:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" ,
+			 xrec_data->event.u.clientMessage.window );
+      /*
+      (void)xd->data_fp (xd->out_file, "bytes" XNEE_HP_EQUALS " {");
+      for (i=0;i<20;i++)
+	{
+	  (void)xd->data_fp (xd->out_file, "%c ", 
+			     xrec_data->event.u.clientMessage.u.b.bytes[i]);
+
+	}
+      (void)xd->data_fp (xd->out_file, "} ");
+      */
+      break;
+
+    case MappingNotify:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "request" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "firstKeyCode" XNEE_HP_EQUALS "%lu" 
+			 XNEE_HP_SEP "count" XNEE_HP_EQUALS "%d" ,
+			 xrec_data->event.u.mappingNotify.request,
+			 xrec_data->event.u.mappingNotify.firstKeyCode,
+			 xrec_data->event.u.mappingNotify.count);
+      break;
+
     default:
-      (void)xd->data_fp (xd->out_file,"%.3d", 
-			 xnee_print_event(event_type), event_type);
       break;
     }
 
