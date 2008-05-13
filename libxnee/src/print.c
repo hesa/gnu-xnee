@@ -34,6 +34,10 @@
 #include "libxnee/xnee_session.h"
 
 
+#define XNEE_HP_SEP " "
+#define XNEE_HP_EQUALS "="
+#define XNEE_HP_CONTENT_BEGIN " { "
+#define XNEE_HP_CONTENT_END " } "
 
 
 /*
@@ -216,15 +220,94 @@ void
 xnee_human_print_request (xnee_data *xd, XRecordInterceptData *xrecintd )
 {
   XRecordDatum *xrec_data;
+  int           request_type ;
+  char  *request_name ;
+  char  *name=" not defined " ;
+  xrec_data  = (XRecordDatum *) (xrecintd->data) ;
+
+  request_type = (int)xrec_data->type ;
+  request_name = " not defined " ;
+
+  request_name = xnee_print_request(request_type);
+    if ( request_name == NULL )
+      {
+	request_name = name;
+      }
+
+  (void)xd->data_fp (xd->out_file,"Request" XNEE_HP_EQUALS "%s" XNEE_HP_SEP "Number" XNEE_HP_EQUALS "%d", 
+		     request_name, request_type);
+  
+  if ( 1 )
+    {
+      (void)xd->data_fp (xd->out_file,XNEE_HP_CONTENT_BEGIN); 
+      xnee_human_print_request_verbose (xd,xrecintd );
+      (void)xd->data_fp (xd->out_file,XNEE_HP_CONTENT_END); 
+    }
+
+  (void)xd->data_fp (xd->out_file,"\n");
+}
+
+
+/*
+ *
+ * xnee_human_print_request.  
+ *
+ */
+void 
+xnee_human_print_request_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
+{
+  XRecordDatum *xrec_data;
   int           req_type ;
+  xCreateWindowReq *req_create_ptr;
 
   xrec_data = (XRecordDatum *) (xrecintd->data) ;
   req_type  = (int) xrec_data->type ;
   
-  (void)xd->data_fp (xd->out_file,"Request   %20s\t%.3d\t%lu\n", 
-		     xnee_print_request(req_type),
-		     req_type,
-		     xrec_data->req.id    );
+  switch (req_type)
+    {
+    case X_CreateWindow:
+      req_create_ptr = (xCreateWindowReq *) (xrecintd->data) ;
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "reqType" XNEE_HP_EQUALS "%c"
+			 XNEE_HP_SEP "depth"   XNEE_HP_EQUALS "%d"
+			 XNEE_HP_SEP "length"  XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "wid"     XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "parent"  XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "width"   XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "height"  XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "borderWidth" XNEE_HP_EQUALS "%lu"
+#if defined(__cplusplus) || defined(c_plusplus)
+			 XNEE_HP_SEP "c_class" XNEE_HP_EQUALS "%lu"
+#else
+			 XNEE_HP_SEP "class"   XNEE_HP_EQUALS "%lu"
+#endif
+			 XNEE_HP_SEP "visual"  XNEE_HP_EQUALS "%lu"
+			 XNEE_HP_SEP "mask"    XNEE_HP_EQUALS "%lu",
+			 req_create_ptr->reqType, 
+			 req_create_ptr->depth, 
+			 req_create_ptr->length, 
+			 req_create_ptr->wid, 
+			 req_create_ptr->parent, 
+			 req_create_ptr->width, 
+			 req_create_ptr->height, 
+			 req_create_ptr->borderWidth, 
+#if defined(__cplusplus) || defined(c_plusplus)
+			 req_create_ptr->c_class, 
+#else
+			 req_create_ptr->class, 
+#endif
+			 req_create_ptr->visual, 
+			 req_create_ptr->mask);
+     break;
+    case sz_xReparentWindowReq:
+      (void)xd->data_fp (xd->out_file,
+			 XNEE_HP_SEP "length" XNEE_HP_EQUALS "%lu  RE ",
+			 xrec_data->req.length);
+     break;
+    default:
+      (void)xd->data_fp (xd->out_file, " NOT IMPLEMENTED REQUEST ");
+      break;
+    }
 }
 
 /*
@@ -243,10 +326,6 @@ xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd )
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   event_type = (int)xrec_data->type ;
   event_name = " not defined " ;
-#define XNEE_HP_SEP " "
-#define XNEE_HP_EQUALS "="
-#define XNEE_HP_CONTENT_BEGIN " { "
-#define XNEE_HP_CONTENT_END " } "
 
   event_name = xnee_print_event(event_type);
     if ( event_name == NULL )
