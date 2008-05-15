@@ -102,8 +102,8 @@ ${IMG_PNG}: ${IMG_EPS}
 ${IMG_JPG}: ${IMG_EPS}
 
 install: 
-	mkdir -p $(docdir)
-	cp $(MANUALS) $(GEN_IMAGES_TO_INSTALL)  $(docdir)/
+	mkdir -p $(DESTDIR)/$(docdir)
+	cp $(MANUALS) $(GEN_IMAGES_TO_INSTALL)  $(DESTDIR)$(docdir)/
 
 
 
