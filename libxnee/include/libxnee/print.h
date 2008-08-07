@@ -323,4 +323,12 @@ xnee_store_mouse_pos (xnee_data* xd );
 int
 xnee_print_xnee_data(xnee_data *xd);
 
+void 
+xnee_human_print_request_verbose (xnee_data *xd, XRecordInterceptData *xrecintd );
+
+void 
+xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd );
+
+
+
 #endif /* XNEE_PRINT_H */
