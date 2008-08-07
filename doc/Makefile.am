@@ -9,11 +9,12 @@ IMG_JPG = xndetail.jpg xngener.jpg xnrec.jpg xnrep.jpg xnswinp.jpg
 
 GEN_IMAGES = $(IMG_EPS) $(IMG_PDF) $(IMG_PNG) $(IMG_JPG)
 GEN_IMAGES_TO_INSTALL = $(IMG_PNG) $(IMG_JPG)
-MANUALS = xnee.html xnee.pdf xnee.ps xnee.txt
+MANUALS = xnee.html xnee.ps xnee.txt
 
-EXTRA_DIST = xnee_copying fdl.texi *.dia xnee.dox xnee.pdf \
-             $(MANUALS)\
-             $(GEN_IMAGES_TO_INSTALL)
+EXTRA_DIST = xnee_copying fdl.texi *.dia xnee.dox xnee.html xnee.pdf xnee.ps xnee.txt  \
+	$(GEN_IMAGES_TO_INSTALL) 
+#\
+#	$(MANUALS)
 
 if BUILDDOC
 DOC_DEP=$(GEN_IMAGES_TO_INSTALL) $(MANUALS)
@@ -30,9 +31,7 @@ info_TEXINFOS = xnee.texi
 
 CLEANFILES = xnee.acs  xnee.cvs  xnee.mss  xnee.prs \
 	     xnee.ats  xnee.evs  xnee.fns  xnee.ovs \
-             xnee.tmp  *.1       *.html    \
-             stamp-vti *.pdf     *.txt     *.info \
-             */*.png */*.eps */*.pdf *.png *.eps *.pdf 
+             xnee.tmp  stamp-vti 
 
 
 
@@ -126,5 +125,5 @@ default: all
 
 
 clean:  
-	\rm -f *.pdf *.ps *.jpg *.png *.info
+	-rm $(CLEANFILES)
 

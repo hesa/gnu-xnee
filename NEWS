@@ -1,3 +1,8 @@
+Changes in 3.03
+==============================
+
+   * Bugs fixed: #23965: Uninitialized variable in cnee
+
 Changes in 3.02
 ==============================
 
@@ -17,6 +22,16 @@ Changes in 3.02
     * Version printout changed according
       to new GNU coding standards
 
+  Build changes:
+
+    * Docs built by default
+
+    * New configure options:
+         --enable-static-programs (build static programs)
+
+    * Changed configure options:
+         --enable-lib  (install libxnee)
+
     * Fix for X.org releases, recording of deliv events 
       seem need a work around
 
@@ -33,7 +48,10 @@ Changes in 3.02
      * builddoc=false by default
 
   Bugs fixed:
-     * Raised move window tries limit to 10
+
+    * Tries harder to move window
+
+    * Increased move window tries limit to 10
 
   Doc changes:
      * changed question email address to xnee-devel@gnu.org
