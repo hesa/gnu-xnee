@@ -522,7 +522,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
   const char *descr;
   const char *err;
   const char *sol;
-  char *saved_arg;
+  char *saved_arg = "(NO ARG)";
   int entry ;
   int args_used;
 
@@ -531,6 +531,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
   for (i=1; i < argc; i++) 
     {
       ret = xnee_parse_cnee_option(xd, &argv[i], &args_used);
+
       if ( ret == XNEE_OK)
 	{
 	  i = i + args_used ;
@@ -562,6 +563,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else
 	{
 	  saved_arg = argv[i];	  
+
 	  /* Leave loop on error */
 	  break;
 	}
