@@ -320,6 +320,7 @@ xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd )
 {
   XRecordDatum *xrec_data  ;
   int           event_type ;
+  
 
   char  *event_name ;
   char  *name=" not defined " ;
@@ -363,6 +364,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
   event_type = (int)xrec_data->type ;
 
 
+  (void)xd->data_fp (xd->out_file, "{ ");
   switch (event_type)
     {
     case KeyPress:
@@ -371,7 +373,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
     case ButtonRelease:
     case MotionNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "root" XNEE_HP_EQUALS "%lu"
+			  "root" XNEE_HP_EQUALS "%lu"
 			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu"
 			 XNEE_HP_SEP "child" XNEE_HP_EQUALS "%lu", 
 			 xrec_data->event.u.keyButtonPointer.root,
@@ -397,7 +399,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
     case EnterNotify:
     case LeaveNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "root" XNEE_HP_EQUALS "%lu"
+			  "root" XNEE_HP_EQUALS "%lu"
 			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu"
 			 XNEE_HP_SEP "child" XNEE_HP_EQUALS "%lu"
 			 XNEE_HP_SEP "rootX" XNEE_HP_EQUALS "%lu"
@@ -420,14 +422,14 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
     case FocusIn:
     case FocusOut:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu"
+			  "window" XNEE_HP_EQUALS "%lu"
 			 XNEE_HP_SEP "mode" XNEE_HP_EQUALS "%lu", 
 			 xrec_data->event.u.focus.window,
 			 xrec_data->event.u.focus.mode);
       break;
     case Expose:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			  "window" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d" 
 			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d"  
 			 XNEE_HP_SEP "width" XNEE_HP_EQUALS "%d" 
@@ -442,7 +444,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
     case GraphicsExpose:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "drawable" XNEE_HP_EQUALS "%lu" 
+			  "drawable" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d" 
 			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d"  
 			 XNEE_HP_SEP "width" XNEE_HP_EQUALS "%d" 
@@ -461,7 +463,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
     case NoExpose:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "drawable" XNEE_HP_EQUALS "%lu" 
+			  "drawable" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "minorEvent" XNEE_HP_EQUALS "%d" 
 			 XNEE_HP_SEP "majorEvent" XNEE_HP_EQUALS "%d" , 
 			 xrec_data->event.u.noExposure.drawable,
@@ -470,14 +472,14 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
     case VisibilityNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
+			  "window" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "state" XNEE_HP_EQUALS "%d" , 
 			 xrec_data->event.u.visibility.window,
 			 xrec_data->event.u.visibility.state);
       break;
     case CreateNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%lu" 
+			  "parent" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d"  
 			 XNEE_HP_SEP "y" XNEE_HP_EQUALS "%d" 
@@ -496,14 +498,14 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
     case DestroyNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			  "event" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" ,
 			 xrec_data->event.u.destroyNotify.event,
 			 xrec_data->event.u.destroyNotify.window);
       break;
     case UnmapNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			  "event" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "fromConfigure" XNEE_HP_EQUALS "%d" ,
 			 xrec_data->event.u.unmapNotify.event,
@@ -512,7 +514,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
     case MapNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			  "event" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "override" XNEE_HP_EQUALS "%d" ,
 			 xrec_data->event.u.mapNotify.event,
@@ -521,14 +523,14 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
     case MapRequest:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%lu" 
+			  "parent" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu",
 			 xrec_data->event.u.mapRequest.parent,
 			 xrec_data->event.u.mapRequest.window);
       break;
     case ReparentNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			  "event" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%d" 
 			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d"  
@@ -543,7 +545,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
     case ConfigureNotify:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "event" XNEE_HP_EQUALS "%lu" 
+			  "event" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "aboveSibling" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%d" 
@@ -565,7 +567,7 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
     case ConfigureRequest:
       (void)xd->data_fp (xd->out_file,
-			 XNEE_HP_SEP "parent" XNEE_HP_EQUALS "%lu" 
+			  "parent" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "window" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "sibling" XNEE_HP_EQUALS "%lu" 
 			 XNEE_HP_SEP "x" XNEE_HP_EQUALS "%d"  
@@ -719,8 +721,10 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
       break;
 
     default:
+      (void)xd->data_fp (xd->out_file," NOT IMPLEMENTED ");
       break;
     }
+  (void)xd->data_fp (xd->out_file, " }");
 
 }
 
