@@ -531,18 +531,28 @@ int test_all(xnee_data *xd)
     BEGIN_LOOP
     ;
   xnee_set_recorder(xd);
+  PRINT_XNEE_CRAP(xd)
   xnee_init(xd);
   xnee_set_recorder(xd);
+  PRINT_XNEE_CRAP(xd);
+  SET_HP_TEST(xd);
   xnee_set_human_printout(xd);
+  SET_HP_TEST(xd);
+    PRINT_XNEE_CRAP(xd);
   orig     = xnee_is_human_printout(xd);
+  PRINT_XNEE_CRAP(xd);
+  SET_HP_TEST(xd);
   ret      = xnee_set_xnee_printout(xd); 
+  SET_HP_TEST(xd);
   new      = xnee_is_human_printout(xd);
+  PRINT_XNEE_CRAP(xd);
 
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_human_printout"); 
   XNEE_TEST_ASSERT_DIFF(orig, new  ,"xnee_set_human_printout");
   
   ret      = xnee_set_human_printout(xd);
   new      = xnee_is_human_printout(xd);
+  PRINT_XNEE_CRAP(xd);
   XNEE_TEST_ASSERT(orig    , new      ,"xnee_set_human_printout");
   XNEE_TEST_ASSERT(new      , orig    , "xnee_set_human_printout");
   END_LOOP
