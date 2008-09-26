@@ -17,33 +17,37 @@ FILE *orig_fd;
 FILE *ret_fd;
 FILE *new_fd;
 
-xnee_data *xd;
 
 int main(int argc, char **argv)
 {
   fails = 0 ;
   total = 0;
   verbose = 0;
+xnee_data *xdl;
 
   if (argc>1) verbose = 1;
 
-  printf ("Starting tests\n");
+  printf ("Starting tests :) :) \n");
 
   /*  Get a new xnee_data structure  */
-  xd = (xnee_data *)xnee_new_xnee_data();
+  /* call to xnee_init */
+
+   
+  xdl = xnee_new_xnee_data();
+/*   xnee_init(xdl); */
 
   /* Set the program name */
-  xnee_set_program_name (xd, "libtest");
+  xnee_set_program_name (xdl, "libtest");
 
   /* Set the cli parameters */
-  xnee_set_application_parameters (xd, NULL);
-
-  test_all();
+  xnee_set_application_parameters (xdl, NULL);
+  xnee_set_recorder (xdl);
+  test_all(xdl);
 
   fprintf (stdout, "\tSucesss:  %d\n", total);
   fprintf (stdout, "\tFailures: %d\n", fails);
 
-  xnee_close_down(xd);
+  xnee_close_down(xdl);
 
   return 0;
 }

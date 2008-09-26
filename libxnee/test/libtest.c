@@ -164,8 +164,8 @@ int test_xnee_data()
     xnee_set_events_max (xd, 10);
     xnee_set_data_max (xd, 10);
 
-    xnee_set_recorder(xd);
-    xnee_prepare(xd);
+    xnee_set_recorder(xd); 
+    /*    xnee_prepare(xd);*/
     ret=xnee_start(xd);
 
     if (ret==0)

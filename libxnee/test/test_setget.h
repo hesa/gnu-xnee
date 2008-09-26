@@ -15,7 +15,7 @@ extern FILE *orig_fd;
 extern FILE *ret_fd;
 extern FILE *new_fd;
 
-xnee_data *xd;
+extern xnee_data *xdl;
 
 extern int fails;
 extern int total;
@@ -83,4 +83,5 @@ extern int verbose ;
      else \
         ON_OK(fun_str, __LINE__);\
    }
+
 

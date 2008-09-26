@@ -7,8 +7,21 @@ int i ;
 #define BEGIN_LOOP for(i=0;i<1000;i++) { 
 #define END_LOOP }
 
-int test_all(void) 
+int test_all(xnee_data *xd) 
 {
+  /*
+    Doing what's done in xnee_start
+    .... but not actually calling xnee_start
+  ret = xnee_init(xd);
+  XNEE_RETURN_IF_ERR(ret);
+   */
+
+
+  ret = xnee_prepare(xd);
+  XNEE_RETURN_IF_ERR(ret);
+
+
+
   xnee_set_verbose(xd);
 
   /* Testing:
@@ -285,47 +298,6 @@ int test_all(void)
   XNEE_TEST_ASSERT(new      , orig    , "xnee_set_sync");
   END_LOOP
 
-  /* Testing:
-   *
-   *           xnee_set_recorder
-   *
-   */
-    BEGIN_LOOP
-  xnee_set_recorder(xd);
-  orig     = xnee_is_recorder(xd);
-  
-  ret      = xnee_set_replayer (xd); 
-  XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_recorder"); 
-  
-  new        = xnee_is_recorder(xd);
-  XNEE_TEST_ASSERT_DIFF(orig    , new      ,"xnee_set_recorder");
-
-  ret      = xnee_set_recorder (xd);
-  new        = xnee_is_recorder(xd);
-  XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_recorder"); 
-  XNEE_TEST_ASSERT(new      , orig    , "xnee_set_recorder");
-  END_LOOP
-
-  /* Testing:
-   *
-   *           xnee_set_replayer
-   *
-   */
-    BEGIN_LOOP
-  xnee_set_replayer(xd);
-  orig     = xnee_is_replayer(xd);
-  
-  ret      = xnee_set_recorder (xd); 
-  XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_replayer"); 
-  
-  new        = xnee_is_replayer(xd);
-  XNEE_TEST_ASSERT_DIFF(orig    , new      ,"xnee_set_replayer");
-
-  ret       = xnee_set_replayer (xd);
-  new        = xnee_is_replayer(xd);
-  XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_replayer"); 
-  XNEE_TEST_ASSERT(new      , orig    , "xnee_set_replayer");
-  END_LOOP
 
   /* Testing:
    *
@@ -349,6 +321,50 @@ int test_all(void)
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_mode"); 
   XNEE_TEST_ASSERT(new      , orig    , "xnee_set_mode");
   END_LOOP
+
+  /* Testing:
+   *
+   *           xnee_set_replayer
+   *
+   */
+    BEGIN_LOOP
+  xnee_set_replayer(xd);
+  orig     = xnee_is_replayer(xd);
+  
+  ret      = xnee_set_recorder (xd); 
+  XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_replayer"); 
+  
+  new        = xnee_is_replayer(xd);
+  XNEE_TEST_ASSERT_DIFF(orig    , new      ,"xnee_set_replayer");
+
+  ret       = xnee_set_replayer (xd);
+  new        = xnee_is_replayer(xd);
+  XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_replayer"); 
+  XNEE_TEST_ASSERT(new      , orig    , "xnee_set_replayer");
+  END_LOOP
+
+
+  /* Testing:
+   *
+   *           xnee_set_recorder
+   *
+   */
+    BEGIN_LOOP
+  xnee_set_recorder(xd);
+  orig     = xnee_is_recorder(xd);
+  
+  ret      = xnee_set_replayer (xd); 
+  XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_recorder"); 
+  
+  new        = xnee_is_recorder(xd);
+  XNEE_TEST_ASSERT_DIFF(orig    , new      ,"xnee_set_recorder");
+
+  ret      = xnee_set_recorder (xd);
+  new        = xnee_is_recorder(xd);
+  XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_recorder"); 
+  XNEE_TEST_ASSERT(new      , orig    , "xnee_set_recorder");
+  END_LOOP
+
 
   /* Testing:
    *
@@ -510,18 +526,23 @@ int test_all(void)
    *           xnee_set_human_printout
    *
    */
+
+
     BEGIN_LOOP
     ;
+  xnee_set_recorder(xd);
+  xnee_init(xd);
+  xnee_set_recorder(xd);
   xnee_set_human_printout(xd);
   orig     = xnee_is_human_printout(xd);
-  
   ret      = xnee_set_xnee_printout(xd); 
-  new        = xnee_is_human_printout(xd);
+  new      = xnee_is_human_printout(xd);
+
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_human_printout"); 
   XNEE_TEST_ASSERT_DIFF(orig, new  ,"xnee_set_human_printout");
   
   ret      = xnee_set_human_printout(xd);
-  new        = xnee_is_human_printout(xd);
+  new      = xnee_is_human_printout(xd);
   XNEE_TEST_ASSERT(orig    , new      ,"xnee_set_human_printout");
   XNEE_TEST_ASSERT(new      , orig    , "xnee_set_human_printout");
   END_LOOP
