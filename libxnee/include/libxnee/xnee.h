@@ -400,7 +400,7 @@ typedef struct
 typedef union { 
   unsigned char    type ;
   xEvent           event ;
-  xResourceReq     req   ;
+  xReq             req   ;
   xGenericReply    reply ;
   xError           error ;
   xConnSetupPrefix setup;
