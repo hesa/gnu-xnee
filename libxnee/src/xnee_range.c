@@ -314,6 +314,7 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 		(int)xd,type, range));
   str_len=strspn(range, "1234567890-");
 
+
   if ( str_len > XNEE_RANGE_STRING_SIZE )
     {
       fprintf (stderr, "The string you wanted to add is too long\n");
@@ -591,6 +592,7 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
   xnee_verbose ((xd, "int arg=%d\n", (int)xd));
   xnee_verbose ((xd, "nt arg=%d\n", type));
   xnee_verbose ((xd, "string arg=%s\n", range));
+
 
   while ( 1 ) 
     {

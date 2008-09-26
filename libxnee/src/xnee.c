@@ -212,7 +212,6 @@ xnee_start(xnee_data *xd)
 /*       ret = xnee_rep_prepare(xd); */
 /*       XNEE_RETURN_IF_ERR (ret); */
       
-
        xnee_record_print_record_range (xd, stderr) ;
 
       /*
