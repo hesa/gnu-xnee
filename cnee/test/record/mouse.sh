@@ -34,7 +34,6 @@ parse_me "$*"
 
 #######################################################################
 
-MOUSE_DEVICE=/dev/swmouse
 
 function check_nr_of_loops()
 {
@@ -113,7 +112,7 @@ function test_mouse()
     sleep 2
     while [ "$TMP" != "$PIX" ];
       do
-      echo "$DIRECTION" > /dev/swmouse
+      echo "$DIRECTION" > $MOUSE_DEVICE
       TMP=`expr $TMP + 1 `
     done
     sleep 2
@@ -128,7 +127,7 @@ function test_mouse()
 
 # main ..... I guess
 
-verify_device swmouse
+verify_device $MOUSE_DEVICE_NAME
 
 
 
@@ -153,7 +152,7 @@ move_mouse      r  $HALF_WAYS
 
 
 #zero the device counter
-zero_device swmouse
+zero_device $MOUSE_DEVICE
 
 
 verbose  "starting...."

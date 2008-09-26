@@ -15,7 +15,7 @@
  
  
 # name of myself
-MYNAME=keyboard.sh
+MYNAME=retype/keyboard.sh
  
  
 # source useful funs

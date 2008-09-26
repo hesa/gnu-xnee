@@ -34,9 +34,6 @@ parse_me "$*"
 
 #######################################################################
 
-MOUSE_DEVICE=/dev/swmouse
-
-
 
 
 #
@@ -44,17 +41,17 @@ MOUSE_DEVICE=/dev/swmouse
 
 NR_OF_PIX=400
 HALF_WAYS=200
-verify_device swmouse
+verify_device $MOUSE_DEVICE
 
 
 #get mouse in position and zero the device counter
 #get_in_position
-#zero_device swmouse
+#zero_device $MOUSE_DEVICE
 #record_and_replay 40 5 6 7
 
 #get mouse in position and zero the device counter
 get_in_position
-zero_device swmouse
+zero_device $MOUSE_DEVICE
 verbose "Storing start time"
 verbose "Recording a session ......"
 REAL_START_TIME=`date '+%s'`

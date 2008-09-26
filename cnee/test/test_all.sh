@@ -13,7 +13,14 @@ trap sighandler 2
 trap sighandler 15
 
 
+retype_keyboard()
+{
 
+    CMD="scripts/retype/keyboard.sh    $*"
+    echo "executing $CMD"
+    scripts/retype/keyboard.sh    $*
+
+}
 
 option_scripts()
 {
@@ -56,9 +63,9 @@ function_scripts()
     echo "executing $CMD"
     scripts/timing/mo-time.sh     $*
 
-    CMD="scripts/retype/keyboard.sh    $*"
-    echo "executing $CMD"
-    scripts/retype/keyboard.sh    $*
+#    CMD="scripts/retype/keyboard.sh    $*"
+#    echo "executing $CMD"
+#    scripts/retype/keyboard.sh    $*
 }
 
 
@@ -142,6 +149,13 @@ elif [ "$1" == "--option" ];
     START=`date '+%s'`
     \rm -f $LOG $ERR_LOG
     option_scripts "$*"
+    STOP=`date '+%s'`
+    scan_logs
+elif [ "$1" == "--kbd" ];
+    then
+    START=`date '+%s'`
+    \rm -f $LOG $ERR_LOG
+    retype_keyboard "$*"
     STOP=`date '+%s'`
     scan_logs
 else

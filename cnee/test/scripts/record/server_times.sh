@@ -184,7 +184,7 @@ move_my_mouse()
 }
 
 
-verify_device swmouse
+verify_device $MOUSE_DEVICE_NAME
 
 get_in_position
 

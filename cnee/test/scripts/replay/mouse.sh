@@ -33,10 +33,6 @@ parse_me "$*"
 
 #######################################################################
 
-MOUSE_DEVICE=/dev/swmouse
-
-
-
 
 function record_and_replay()
 {
@@ -213,7 +209,7 @@ function record_and_replay()
 
 # main ..... I guess
 
-verify_device swmouse
+verify_device $MOUSE_DEVICE
 
 
 #
@@ -224,25 +220,28 @@ HALF_WAYS=200
 
 #get mouse in position and zero the device counter
 get_in_position
-zero_device swmouse
+zero_device $MOUSE_DEVICE
+
+
+
 record_and_replay 40 5 6 7
 sleep 5
 
 #get mouse in position and zero the device counter
 get_in_position
-zero_device swmouse
+zero_device $MOUSE_DEVICE
 record_and_replay 200 300 250 170
 sleep 5
 
 #get mouse in position and zero the device counter
 get_in_position
-zero_device swmouse
+zero_device $MOUSE_DEVICE
 record_and_replay 500 200 200 100
 sleep 5
 
 #get mouse in position and zero the device counter
 #get_in_position
-#zero_device swmouse
+#zero_device $MOUSE_DEVICE
 #record_and_replay 800 600 700 500
 #sleep 5
 

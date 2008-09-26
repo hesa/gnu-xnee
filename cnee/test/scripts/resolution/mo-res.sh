@@ -34,9 +34,6 @@ parse_me "$*"
 
 #######################################################################
 
-MOUSE_DEVICE=/dev/swmouse
-
-
 
 function time_record()
 {
@@ -218,7 +215,7 @@ function time_replay()
 }
 
 # main ..... I guess
-verify_device swmouse
+verify_device $MOUSE_DEVICE
 
 
 #
@@ -230,7 +227,7 @@ HALF_WAYS=200
 
 #get mouse in position and zero the device counter
 #get_in_position
-#zero_device swmouse
+#zero_device $MOUSE_DEVICE
 #record_and_replay 40 5 6 7
 
 
@@ -238,7 +235,7 @@ HALF_WAYS=200
 
 #get mouse in position and zero the device counter
 get_in_position
-zero_device swmouse
+zero_device $MOUSE_DEVICE
 time_record 600 400 400 200 res-mouse.log
 
 
@@ -252,7 +249,7 @@ export REPLAY_RESOLUTION_X=800
 export REPLAY_RESOLUTION_Y=600
 export REPLAY_RESOLUTION_ARG="--replay-resolution $REPLAY_RESOLUTION_X"x"$REPLAY_RESOLUTION_Y"
 get_in_position
-zero_device swmouse
+zero_device $MOUSE_DEVICE
 sleep 2
 time_replay
 sleep 2
@@ -270,7 +267,7 @@ export REPLAY_RESOLUTION_Y=`$getresy`
 export REPLAY_RESOLUTION_ARG=
 
 get_in_position
-zero_device swmouse
+zero_device $MOUSE_DEVICE
 sleep 2
 time_replay
 sleep 2

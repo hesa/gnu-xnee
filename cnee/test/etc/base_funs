@@ -11,6 +11,8 @@ export KEYBOARD_DEVICE=/dev/swkeybd
 export KILL_1=kill_1
 export KILLALL_1=kill_1
 
+MOUSE_DEVICE_NAME=swmouse0
+MOUSE_DEVICE=/dev/${MOUSE_DEVICE_NAME}
 
 MEMCHECK=valgrind
 MEMCHECK_ARGS="--trace-malloc=yes --log-file=xnee_val --leak-check=yes -v" 
