@@ -482,7 +482,7 @@ xnee_set_xnee_printout (xnee_data *xd);
 
 #define xnee_is_human_printout(xd) (xd->rec_callback == xnee_human_dispatch)
 #define xnee_is_xnee_printout(xd)  (xd->rec_callback == xnee_record_dispatch)
-#define xnee_is_autorepeat(xd) (xd->autorepeat_saved!=0)
+#define xnee_is_autorepeat(xd)     (xd->autorepeat_saved!=0)
 
 
 int
