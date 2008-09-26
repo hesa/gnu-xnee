@@ -3,6 +3,9 @@ Changes in 3.03
 
    * Bugs fixed: #23965: Uninitialized variable in cnee
 
+   * Doc:   Protocol specification fault corrected
+
+   * Test:  Adjusting to latest swinput (CVS HEAD)
 
 Changes in 3.02
 ==============================
