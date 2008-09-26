@@ -209,28 +209,28 @@ speed-percent
 
 @item
 stop-key
-@tab  @acronym{string@comma{}string}
-@tab  Sets the stop key combination to the strings
+@tab  @acronym{string}
+@tab  Sets the stop key combination to the string
 
 @item
 pause-key
-@tab  @acronym{string@comma{}string}
-@tab  Sets the pause key combination to the strings
+@tab  @acronym{string}
+@tab  Sets the pause key combination to the string
 
 @item
 resume-key
-@tab  @acronym{string@comma{}string}
-@tab  Sets the resume key combination to the strings
+@tab  @acronym{string}
+@tab  Sets the resume key combination to the string
 
 @item
 mark-key
-@tab  @acronym{string@comma{}string}
-@tab  Sets the mark key combination to the strings
+@tab  @acronym{string}
+@tab  Sets the mark key combination to the string
 
 @item
 exec-key
-@tab  @acronym{string@comma{}string}
-@tab  Sets the execute key combination to strings
+@tab  @acronym{string}
+@tab  Sets the execute key combination to string
 
 @item
 replay-resolution
@@ -412,7 +412,7 @@ store-mouse-position
 @tab MotionNotify on poistion (x,y), used to replay
 
 @item
-1,request number,time
+1,request number, request type, length, request id, time
 @tab Recorded request, used during synchronisation 
 
 @item
