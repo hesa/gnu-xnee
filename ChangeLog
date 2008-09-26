@@ -1,9 +1,5 @@
 2008-09-26  Henrik Sandklef  <hesa@gnu.org>
-
-	* cnee/test:
-	Switching to latest swinput
-
-	* libxnee/src/xnee_prot.texi:
+	* xnee_prot.texi:
 	Faulty protocol specs corrected
 
 	* configure.in
