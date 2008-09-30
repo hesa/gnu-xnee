@@ -1,5 +1,14 @@
+2008-09-30  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_range.c (xnee_free_ranges): 
+	Setting index to 0 when clearing the array
+
 2008-09-26  Henrik Sandklef  <hesa@gnu.org>
-	* xnee_prot.texi:
+
+	* cnee/test:
+	Switching to latest swinput
+
+	* libxnee/src/xnee_prot.texi:
 	Faulty protocol specs corrected
 
 	* configure.in
