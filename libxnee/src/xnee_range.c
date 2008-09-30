@@ -180,7 +180,8 @@ xnee_free_ranges(xnee_data *xd)
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
    {
      XNEE_FREE_AND_NULL(xrs->type[i].data);
-     xrs->type[i].data = NULL;
+     xrs->type[i].data  = NULL;
+     xrs->type[i].index = 0;
    }
    need_init = 1 ;
    
