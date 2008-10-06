@@ -1,4 +1,4 @@
-AC_INIT(Xnee,3.02.81,bug-xnee@gnu.org)
+AC_INIT(Xnee,3.02.90,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 dnl AM_INIT_AUTOMAKE(xnee,3.0.1)
 AM_INIT_AUTOMAKE
@@ -181,6 +181,7 @@ fi
 if test x$gcov = xtrue ;
 then
 	GCOV_FLAG=-fprofile-arcs -ftest-coverage 
+	CFLAGS=
 else
 	GCOV_FLAG=
 fi
@@ -188,6 +189,7 @@ fi
 if test x$gprof = xtrue ;
 then
 	GPROF_FLAG=-pg
+	CFLAGS=
 else
 	GPROF_FLAG=
 fi
