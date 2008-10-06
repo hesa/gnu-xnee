@@ -20,10 +20,10 @@ FILE *new_fd;
 
 int main(int argc, char **argv)
 {
+  xnee_data *xdl;
   fails = 0 ;
   total = 0;
   verbose = 0;
-xnee_data *xdl;
 
   if (argc>1) verbose = 1;
 
