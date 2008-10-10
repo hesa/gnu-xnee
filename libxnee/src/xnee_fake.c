@@ -541,6 +541,7 @@ xnee_type_file(xnee_data *xd)
 	  xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
 	  usleep (1000*100);
 	  xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
+	  usleep (1000*100);
 	  
 	  
 	}
