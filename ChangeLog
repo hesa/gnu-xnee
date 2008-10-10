@@ -1,3 +1,9 @@
+2008-10-11  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_fake.c (xnee_type_file): 
+	Added short delay after key release when faking,
+	since words have been reported to be typed too fast
+
 2008-09-30  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_range.c (xnee_free_ranges): 
