@@ -51,8 +51,8 @@ xnee.html: xnee.texi $(GEN_IMAGES)
 #	-$(TEXI2DVI) --pdf --batch $(srcdir)/xnee.texi
 
 # PDF for Debian
-xnee.pdf: xnee.ps $(GEN_IMAGES)
-	$(PS2PDF)  $(srcdir)/xnee.ps
+#xnee.pdf: xnee.ps $(GEN_IMAGES)
+#	$(PS2PDF)  $(srcdir)/xnee.ps
 
 
 # DVI
@@ -65,8 +65,12 @@ xnee.dvi: $(GEN_IMAGES)
 #	pdf2ps $(srcdir)/xnee.pdf
 
 # PS for Debian
-xnee.ps: xnee.dvi $(GEN_IMAGES)
-	$(DVI2PS) -c xnee.ps $(srcdir)/xnee.dvi
+#xnee.ps: xnee.dvi $(GEN_IMAGES)
+#	$(DVI2PS) -c xnee.ps $(srcdir)/xnee.dvi
+
+# PS for Debian
+xnee.ps: xnee.pdf $(GEN_IMAGES)
+	$(PDF2PS) $(srcdir)/xnee.pdf
 
 
 
@@ -75,9 +79,13 @@ xnee.ps: xnee.dvi $(GEN_IMAGES)
 	echo "creating EPS"
 	$(DIA) --nosplash -e $@ $<
 
-%.pdf: %.eps
+#%.pdf: %.eps
+#	echo "creating PDF"
+#	$(EPSTOPDF) --outfile $@ $<
+
+%.pdf: %.texi
 	echo "creating PDF"
-	$(EPSTOPDF) --outfile $@ $<
+	$(TEXI2PDF)   $<
 
 %.png: %.eps
 	echo "creating PNG"
