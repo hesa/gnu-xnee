@@ -1825,3 +1825,18 @@ xnee_set_keep_autorepeat (xnee_data *xd)
   return XNEE_OK;
 }
  
+int
+xnee_set_retype_press_delay(xnee_data *xd, unsigned int delay)
+{
+  xd->retype.key_press_delay   = delay;
+  return XNEE_OK;
+}
+
+int
+xnee_set_retype_release_delay(xnee_data *xd, unsigned int delay)
+{
+  xd->retype.key_release_delay = delay;
+  return XNEE_OK;
+}
+
+
