@@ -342,6 +342,8 @@ xnee_init(xnee_data* xd)
   xd->meta_data.sum_min_threshold  = XNEE_DEFAULT_MIN_THRESHOLD;
   xd->meta_data.tot_diff_threshold = XNEE_DEFAULT_TOT_THRESHOLD;
 
+  xd->retype.key_press_delay = 100;
+  xd->retype.key_release_delay = 100;
 
   xd->res_info.x_offset = 0;
   xd->res_info.y_offset = 0;
