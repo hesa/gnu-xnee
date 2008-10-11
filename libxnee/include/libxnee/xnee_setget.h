@@ -802,6 +802,7 @@ xnee_get_rep_resolution_y (xnee_data *xd);
 
 #define xnee_is_interrupt_action(xd) \
    (xd->xnee_info.interrupt!=XNEE_OK)
+
 xnee_data*
 xnee_get_xnee_data (void);
 
@@ -810,5 +811,17 @@ xnee_set_xnee_data (xnee_data *xd);
 
 int
 xnee_set_keep_autorepeat (xnee_data *xd);
+
+int
+xnee_set_retype_press_delay(xnee_data *xd, unsigned int delay);
+
+int
+xnee_set_retype_release_delay(xnee_data *xd, unsigned int delay);
+
+#define xnee_get_retype_press_delay(xd) \
+  (xd->retype.key_press_delay)
+
+#define xnee_get_retype_release_delay(xd) \
+  (xd->retype.key_release_delay)
 
 #endif /* XNEE_SETGET_H */ 

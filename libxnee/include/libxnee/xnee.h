@@ -164,7 +164,8 @@ enum
     XNEE_GRAB_OPTION,
     XNEE_MISC_OPTION,
     XNEE_INTERNAL_OPTION,
-    XNEE_OBSOLETE_OPTION
+    XNEE_OBSOLETE_OPTION,
+    XNEE_RETYPE_OPTION
   } xnee_option_type;
 
 typedef struct
@@ -479,6 +480,11 @@ typedef struct
 } xnee_recordext_setup;
 
 
+typedef struct
+{
+  unsigned int key_press_delay   ;
+  unsigned int key_release_delay ;
+} retype_settings ;
 
 struct buffer_meta_data
 {
@@ -600,6 +606,8 @@ typedef struct
   XModifierKeymap *map ;
   
   int              in_use;
+
+  retype_settings  retype;
 
 } xnee_data ; 
 
