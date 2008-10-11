@@ -6,6 +6,8 @@ Changes in coming version 3.03
        Demo mode crashes sometimes
 
    * Doc:   Protocol specification fault corrected
+            Added new retype options
+            Switched to using texi2pdf texi2ps
 
    * Test:  Adjusting to latest swinput (CVS HEAD)
  
