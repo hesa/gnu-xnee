@@ -1,11 +1,15 @@
-Changes in 3.03
+Changes in coming version 3.03
 ==============================
 
-   * Bugs fixed: #23965: Uninitialized variable in cnee
+   * Bugs fixed:
+       #23965: Uninitialized variable in cnee
+       Demo mode crashes sometimes
 
    * Doc:   Protocol specification fault corrected
 
    * Test:  Adjusting to latest swinput (CVS HEAD)
+ 
+   * New options: --retype-press-delay --retype-release-delay 
 
 Changes in 3.02
 ==============================
