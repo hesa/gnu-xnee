@@ -53,6 +53,17 @@
 	* configure.in
 	Building libxnee/test/Makefile
 
+2008-08-07  Henrik Sandklef  <hesa@sandklef.com>
+
+	* cnee/src/parse.c (xnee_parse_args): 
+	Fixed bug #23965: Uninitialized variable in cnee
+
+	* libxnee/include/libxnee/print.h: 
+	Added func headers for printout cases for X11 data
+
+	* libxnee/src/print.c (xnee_print_xnee_settings): 
+	Added more printout cases for X11 data
+
 2008-05-15  Henrik Sandklef  <hesa@gnu.org>
 
 	* doc/Makefile.am: 
