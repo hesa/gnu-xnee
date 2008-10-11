@@ -148,7 +148,8 @@ cnee_demonstration (xnee_data *xd)
       fprintf (stderr, "Reording went well....\n");
     }
 
-
+  ret = xnee_renew_xnee_data(xd);
+  XNEE_RETURN_IF_ERR(ret);
 
   ret = xnee_set_data_name (xd, file);
   XNEE_RETURN_IF_ERR(ret);
@@ -156,7 +157,7 @@ cnee_demonstration (xnee_data *xd)
   ret = xnee_set_replayer (xd);
   XNEE_RETURN_IF_ERR(ret);
 
-  ret = xnee_prepare(xd);
+  ret = xnee_prepare(xd); 
   if (ret==XNEE_OK)
     {
       fprintf (stderr, 
