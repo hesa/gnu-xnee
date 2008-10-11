@@ -598,6 +598,38 @@ static xnee_option_t xnee_options_impl[] =
       XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
+
+    {
+      XNEE_KEEP_AUTOREPEAT,
+      "keep-autorepeat",
+      "ka",
+      NULL,
+      "Keep autorepeat during record/replay",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_RETYPE_PRESS_DELAY,
+      "retype-press-delay",
+      "rpd",
+      NULL,
+      "Delay after faked key press when retryping file ",
+      XNEE_RETYPE_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    {
+      XNEE_RETYPE_RELEASE_DELAY,
+      "retype-release-delay",
+      "rrd",
+      NULL,
+      "Delay after faked key release when retryping file ",
+      XNEE_RETYPE_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+
     {
       XNEE_LAST_OPTION,
       NULL,
@@ -993,9 +1025,9 @@ xnee_find_option_entry_impl (xnee_data     *xd,
 
   for (i=0;options[i].key!=XNEE_LAST_OPTION;i++)
     {
-/*   printf ("\tCompare %s %s\n", */
-/* 		    options[i].option, */
-/* 		    option); */
+      /*   printf ("\tCompare '%s' '%s'\n", 
+ 		    options[i].option, 
+ 		    option); */
       xnee_verbose((xd, "\tCompare '%s'  '%s'\n",
 		    options[i].option,
 		    option));
@@ -1034,10 +1066,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
   int key; 
   int entry ; 
   char **str_ptr ;
-  int tmp_int1;
-  int tmp_int2;
-
-
+  int opt_int;
 
   if (opt_and_args==NULL)
     {
@@ -1093,8 +1122,6 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 		     __FILE__ , __LINE__, __func__, a ));
   
   ret = XNEE_SYNTAX_ERROR;
-
-
 
   switch (key)
     {
@@ -1430,6 +1457,20 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
     case XNEE_EXT_REP_MIN_STR_KEY:
       verbose_option("XNEE_EXT_REP_MIN_STR_KEY");
       ret = xnee_parse_range ( xd, XNEE_EXT_REPLY_MINOR, opt_and_args[1]);
+      *args_used = 1;
+      break;
+
+    case XNEE_RETYPE_PRESS_DELAY:
+      verbose_option("XNEE_RETYPE_PRESS_DELAY");
+      opt_int = xnee_str2int(xd, opt_and_args[1]);
+      ret = xnee_set_retype_press_delay ( xd, opt_int); 
+      *args_used = 1;
+      break;
+
+    case XNEE_RETYPE_RELEASE_DELAY:
+      verbose_option("XNEE_RETYPE_RELEASE_DELAY");
+      opt_int = xnee_str2int(xd, opt_and_args[1]);
+      ret = xnee_set_retype_release_delay ( xd, opt_int); 
       *args_used = 1;
       break;
 
