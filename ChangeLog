@@ -1,3 +1,33 @@
+2008-10-12  Henrik Sandklef  <hesa@gnu.org>
+
+	* cnee/src/cnee_printer.c: 
+	Added code to print out retype options help
+
+	* cnee/src/cnee_demo.c (cnee_demonstration): 
+	Added call to xnee_renew_xnee_data, to use the new API
+
+	* libxnee/xnee_setget.h:
+	* libxnee/xnee_resource.h:
+	* libxnee/xnee.h:
+	Added code the handle new retype delay struct
+	
+	* libxnee/src/xnee_alloc.c: 
+	Added code the handle new retype delay struct
+	Typecasted void* to int before comparions of mem pointers
+
+	* libxnee/src/xnee_setget.c: 
+	* libxnee/src/xnee_session.c: 
+	Adding function(s) to handle sleep period after faking 
+	key press/release (--retype-press-delay --retype-release-delay)
+
+	* libxnee/src/xnee_resource.c (xnee_parse_option_impl): 
+	Adding options to change sleep period after faking key 
+	press/release (--retype-press-delay --retype-release-delay)
+
+	* libxnee/src/xnee_fake.c (xnee_type_file): 
+	Changing sleep period after faking key press/release to 
+	use user adjustable delays 
+	
 2008-10-11  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_fake.c (xnee_type_file): 
