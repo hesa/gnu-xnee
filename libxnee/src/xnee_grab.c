@@ -152,7 +152,9 @@ xnee_grab_key (xnee_data* xd, int mode, char *key)
   xnee_verbose((xd, "----  xnee_grab_key key=%d\n", ak.key));
 
   if (ak.key==0) 
-    return XNEE_BAD_GRAB_DATA;
+    {
+      return XNEE_BAD_GRAB_DATA;
+    }
 
   if ( (mode>=XNEE_GRAB_STOP) && (mode<XNEE_GRAB_LAST))
     {
@@ -314,7 +316,7 @@ xnee_grab_all_keys (xnee_data* xd)
       if (xd->grab==NULL)
 	{
 	  xnee_verbose((xd, "could not open display for grab...\n"));
-      SET_OLD_ERR_HANDLER();
+	  SET_OLD_ERR_HANDLER();
 	  return XNEE_NOT_OPEN_DISPLAY;
 	}
     }
