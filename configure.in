@@ -1,4 +1,4 @@
-AC_INIT(Xnee,3.02.90,bug-xnee@gnu.org)
+AC_INIT(Xnee,3.02.91,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 dnl AM_INIT_AUTOMAKE(xnee,3.0.1)
 AM_INIT_AUTOMAKE
