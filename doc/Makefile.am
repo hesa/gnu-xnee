@@ -69,8 +69,8 @@ xnee.ps: xnee.dvi $(GEN_IMAGES)
 	$(DVI2PS) -c xnee.ps $(srcdir)/xnee.dvi
 
 # PS for Debian
-xnee.ps: xnee.pdf $(GEN_IMAGES)
-	$(PDF2PS) $(srcdir)/xnee.pdf
+#xnee.ps: xnee.pdf $(GEN_IMAGES)
+#	$(PDF2PS) $(srcdir)/xnee.pdf
 
 
 
