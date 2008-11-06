@@ -413,6 +413,9 @@ then
 #	AC_PATH_PROG(DVI2PS,dvi2ps,,)
 #	check_doc_program "$DVI2PS" "dvi2ps" "dvi2ps"
 
+	AC_PATH_PROG(DVIPDF,dvipdf,,)
+	check_doc_program "$DVIPDF" "dvipdf" "dvipdf"
+
 	AC_PATH_PROG(PDF2PS,pdf2ps,,)
 	check_doc_program "$PDF2PS" "pdf2ps" ""
 
@@ -422,8 +425,8 @@ then
 	AC_PATH_PROG(TEXI2PDF,texi2pdf,,)
 	check_doc_program "$TEXI2PDF" "texi2pdf" ""
 
-#	AC_PATH_PROG(EPSTOPDF,ps2pdf,,)
-#	check_doc_program "$EPSTOPDF" "ps2pdf" "texlive-extra-utils"
+	AC_PATH_PROG(EPSTOPDF,epstopdf,,)
+	check_doc_program "$EPSTOPDF" "epstopdf" "texlive-extra-utils"
 
 #	AC_PATH_PROG(DOXYGEN,doxygen,,)
 #	check_doc_program "$DOXYGEN" "doxygen"  "doxygen"
@@ -558,6 +561,8 @@ else
 	add_excl "pnee"
 fi
 
+
+
 AC_SUBST(MAKEFILES_TO_GEN)
 echo "Making the following Makefiles:"
 echo "  $MAKEFILES_TO_GEN"
@@ -604,7 +609,8 @@ then
 	show_doc_program "$DIA" "dia"  "Can't generate pictures from dia sources"
 	show_doc_program "$CONVERT" "convert"  "Can't convert image formats"
 	show_doc_program "$TEXI2HTML" "texi2html"  "can not generate html pages"
-	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
+#	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
+	show_doc_program "$DVpdf" "dvipdf"   "can not generate pdf from dvi "
 	show_doc_program "$PS2PDF" "ps2pdf"  "can not generate pdf"
 	show_doc_program "$EPSTOPDF" "epstopdf"  "can not generate pdf"
 	show_doc_program "$CONVERT" "convert"  "can not generate convert between formats"

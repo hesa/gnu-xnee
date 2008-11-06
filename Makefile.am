@@ -43,6 +43,12 @@ man:
 	cd pnee/man && make
 	cd gnee/man && make
 
-
 test:
 	cd libxnee/test && make clean all test
+
+
+$(srcdir)/package.m4 : $(topdir)/configure.in
+	:;{\
+	echo '# ' && \
+	echo 'm4_define([AT_PACKAGE_NAME],  [@PACKAGE_NAME@])' ; \
+	} > '$$(srcdir)/package.m4'
