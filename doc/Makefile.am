@@ -65,8 +65,8 @@ xnee.dvi: $(GEN_IMAGES)
 #	pdf2ps $(srcdir)/xnee.pdf
 
 # PS for Debian
-#xnee.ps: xnee.dvi $(GEN_IMAGES)
-#	$(DVI2PS) -c xnee.ps $(srcdir)/xnee.dvi
+xnee.ps: xnee.dvi $(GEN_IMAGES)
+	$(DVI2PS) -c xnee.ps $(srcdir)/xnee.dvi
 
 # PS for Debian
 xnee.ps: xnee.pdf $(GEN_IMAGES)
@@ -83,9 +83,9 @@ xnee.ps: xnee.pdf $(GEN_IMAGES)
 	echo "creating PDF"
 	$(TEXI2PDF)   $<
 
-%.pdf: %.eps
-	echo "creating PDF"
-	$(EPSTOPDF) --outfile $@ $<
+#%.pdf: %.eps
+#	echo "creating PDF"
+#	$(EPSTOPDF) --outfile $@ $<
 
 %.png: %.eps
 	echo "creating PNG"
