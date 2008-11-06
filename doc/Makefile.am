@@ -79,13 +79,13 @@ xnee.ps: xnee.pdf $(GEN_IMAGES)
 	echo "creating EPS"
 	$(DIA) --nosplash -e $@ $<
 
-#%.pdf: %.eps
-#	echo "creating PDF"
-#	$(EPSTOPDF) --outfile $@ $<
-
 %.pdf: %.texi
 	echo "creating PDF"
 	$(TEXI2PDF)   $<
+
+%.pdf: %.eps
+	echo "creating PDF"
+	$(EPSTOPDF) --outfile $@ $<
 
 %.png: %.eps
 	echo "creating PNG"
