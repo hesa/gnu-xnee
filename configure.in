@@ -609,7 +609,7 @@ then
 	show_doc_program "$DIA" "dia"  "Can't generate pictures from dia sources"
 	show_doc_program "$CONVERT" "convert"  "Can't convert image formats"
 	show_doc_program "$TEXI2HTML" "texi2html"  "can not generate html pages"
-#	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
+	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
 	show_doc_program "$DVpdf" "dvipdf"   "can not generate pdf from dvi "
 	show_doc_program "$PS2PDF" "ps2pdf"  "can not generate pdf"
 	show_doc_program "$EPSTOPDF" "epstopdf"  "can not generate pdf"
