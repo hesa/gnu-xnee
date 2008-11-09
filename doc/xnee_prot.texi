@@ -332,6 +332,18 @@ store-mouse-position
 @tab  
 @tab  If set, Xnee records the initial mouse position and makes sure that replaying starts from there
 
+@item
+retype-press-delay
+@tab  integer 
+@tab  Xnee delays processing after a faked key press (during retype)
+with integer milli seconds
+
+@item
+retype-release-delay
+@tab  integer 
+@tab  Xnee delays processing after a faked key press (during retype)
+with integer milli seconds
+
 @end multitable
 
 @cindex Xnee Settings Arguments
