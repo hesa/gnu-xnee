@@ -126,6 +126,12 @@ elif [ "$1" == "--help" ];
     echo "   --function  test cnee functionality only"
     echo "   --option    test cnee options only"
     echo "   --no-run    Dont exec cnee. Scan logs"
+elif [ "$1" == "--build" ];
+    then
+    cd src
+    make all 
+    cd ..
+
 elif [ "$1" == "--clean" ];
     then
     remove_gcov_gprof_file
@@ -135,6 +141,7 @@ elif [ "$1" == "--clean" ];
     rm -fr gcov*.*
     rm -fr xnee_val.*
     rm -fr rep-*.log
+    rm -fr src/xgetter.o src/xgetter
     
 elif [ "$1" == "--function" ];
     then
