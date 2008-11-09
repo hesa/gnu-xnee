@@ -10,6 +10,7 @@ Changes in coming version 3.03
             Switched to using texi2pdf texi2ps
 
    * Test:  Adjusting to latest swinput (CVS HEAD)
+            Adding coverage rules, using gnulib
  
    * New options: --retype-press-delay --retype-release-delay 
 

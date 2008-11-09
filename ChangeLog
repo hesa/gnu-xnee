@@ -1,4 +1,16 @@
-2008-11-09  Henrik Sandklef  <hesa@gnu.org>
+2008-11-09  Henrik Sandklef  <hesa@sandklef.com>
+
+	* build/maint-test.sh:
+	Script to ease up cov testing etc
+
+	* doc/xnee_prot.texi: 
+	Adding info on retype-[press|release]-delay option
+
+	* cnee/test/test_all.sh: 
+	Adding option (--build) to build help program
+
+	* Makefile.am: 
+	Adding test scripts to check rule
 
 	* maint.mk: 
 	* GNUMakefile: 
