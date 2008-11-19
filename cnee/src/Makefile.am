@@ -68,6 +68,9 @@ cnee_LDFLAGS = ${GCOV_FLAG} ${GPROF_FLAG} $(STATIC_FLAGS)
 
 cnee_DEPENDENCIES = 
 
+verify-cli:
+	./cnee --version && echo "cnee seems to be ok"
+
 test-cli:
 	(cd test ; ./test_all.sh)
 
