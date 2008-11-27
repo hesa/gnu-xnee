@@ -63,18 +63,18 @@ function check_arg()
 
 
 # positive test
-$XNEE $LONG_ARG --record  --events-to-record 0 > $XNEE_STDOUT
+run_cnee $LONG_ARG --record  --events-to-record 0 > $XNEE_STDOUT
 STATUS=$?
 check_retval $STATUS 0 
 check_arg $XNEE_STDOUT 1 "$LONG_ARG"
 
 # positive test
-$XNEE $SHORT_ARG --record --events-to-record 0 > $XNEE_STDOUT
+run_cnee $SHORT_ARG --record --events-to-record 0 > $XNEE_STDOUT
 check_retval $STATUS 0 
 check_arg  $XNEE_STDOUT 1 "$SHORT_ARG"
 
 # negative test
-$XNEE --record --device-event-range 6 --events-to-record 0 > $XNEE_STDOUT
+run_cnee --record --device-event-range 6 --events-to-record 0 > $XNEE_STDOUT
 check_retval $STATUS 0 
 check_arg  $XNEE_STDOUT 0 "$SHORT_ARG"
 

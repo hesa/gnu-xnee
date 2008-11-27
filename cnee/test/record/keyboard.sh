@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 #
 #
 # Filename:   record/keyboard-rec.sh
@@ -57,10 +57,29 @@ function press_key()
 {
     KEY=$1
     verbose "faking key $KEY"
-    echo "$KEY" > $KEYBOARD_DEVICE
+    echo "FAKE   $KEY"  $KEYBOARD_DEVICE
+    printf "$KEY\n" >> $KEYBOARD_DEVICE
     sleep 0
 }
 
+
+fake_string()
+{
+    STR=$1
+
+    echo "For thos about to fake...."
+    sleep 5
+    echo "we salute you"
+
+    TMP=0
+    while [ "$TMP" != "$LEN" ];
+    do
+      press_key "${STR:$TMP:1}"
+      TMP=$(( $TMP + 1 ))
+      sleep 1
+    done
+
+}
 
 
 function test_keyboard()
@@ -92,23 +111,24 @@ function test_keyboard()
     verbose "TLEN=$TLEN"
     
 
+    fake_string $STR &
+
     verbose "starting xnee"
-    $XNEE --record --device-event-range 2-3 --events-to-record $TLEN -o $FILE &
+    echo "XNEE Start"
+   $XNEE --record --device-event-range 2-3 --events-to-record $TLEN -o $FILE 
+#    $XNEE --record --keyboard  -sk q 
     XNEE_PID=$!
 
     verbose "XNEE PID = $XNEE_PID"
     sleep 2
 
-    TMP=0
-    while [ "$TMP" != "$LEN" ];
-    do
-      press_key "${STR:$TMP:1}"
-      TMP=$(( $TMP + 1 ))
-    done
 
     
     sleep 2
     verbose "shoot Xnee down"
+#    press_key "q"
+    sleep 2
+    
     $KILL_1 $XNEE_PID
 #    press_key a 
     sleep 3
@@ -123,7 +143,9 @@ verify_device swkeybd
 
 rm k*.log
 
-STRING="This is a simple test string for Xnee"
+# make sure to exclude the char/letter q, which we use to stop Xnee
+export STRING="This is a simple test string for Xnee"
+export STRING="ThisIsXnee"
 test_keyboard "$STRING"   k1.log
 verbose  "starting...."
 

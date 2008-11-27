@@ -55,7 +55,7 @@ zero_device $MOUSE_DEVICE
 verbose "Storing start time"
 verbose "Recording a session ......"
 REAL_START_TIME=`date '+%s'`
-$XNEE --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record 5000 -o rep-time.log &
+run_cnee --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record 5000 -o rep-time.log &
 
 move_mouse r 600
 move_mouse d 600
@@ -89,7 +89,7 @@ function timed_replay()
     verbose "replaying with speed=$SPEED%"
 
     FAKE_START_TIME=`date '+%s'`
-    $XNEE --replay -f rep-time.log --speed-percent $SPEED
+    run_cnee --replay -f rep-time.log --speed-percent $SPEED
     echo $XNEE --replay -f rep-time.log --speed-percent $SPEED
     FAKE_STOP_TIME=`date '+%s'`
     

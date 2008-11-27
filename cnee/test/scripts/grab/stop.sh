@@ -64,7 +64,7 @@ function test_keyboard()
     verbose "TLEN=$TLEN"
     
     verbose "starting $XNEE (grab (stop) on $STOP_KEY)"
-    $XNEE --record --device-event-range 2-3 --data-to-record 10000 --seconds-to-record 100000 --events-to-record $TLEN -o $FILE -sk $STOP_KEY &
+    run_cnee --record --device-event-range 2-3 --data-to-record 10000 --seconds-to-record 100000 --events-to-record $TLEN -o $FILE -sk $STOP_KEY &
     XNEE_PID=$!
     
     verbose "XNEE PID = $XNEE_PID"

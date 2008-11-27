@@ -66,12 +66,12 @@ do
   ER_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
-  XNEE_ER=`$XNEE $LONG_ARG $NAME_`
+  XNEE_ER=`run_cnee $LONG_ARG $NAME_`
   STATUS=$?
   check_retval $STATUS 0 
   
 
-  XNEE_ER_NAME=`$XNEE $LONG_ARG $ER_`
+  XNEE_ER_NAME=`run_cnee $LONG_ARG $ER_`
   STATUS=$?
   check_retval $STATUS 0 
   compare_data "$ER_" "$NAME_"  "$XNEE_ER" "$XNEE_ER_NAME"
@@ -88,11 +88,11 @@ do
   ERR_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
-  XNEE_ERR=`$XNEE $SHORT_ARG $NAME_`
+  XNEE_ERR=`run_cnee $SHORT_ARG $NAME_`
   STATUS=$?
   check_retval $STATUS 0 
 
-  XNEE_ERR_NAME=`$XNEE $SHORT_ARG $ERR_`
+  XNEE_ERR_NAME=`run_cnee $SHORT_ARG $ERR_`
   STATUS=$?
   check_retval $STATUS 0 
 
@@ -109,7 +109,7 @@ TMP=1
 while [ "$TMP" != "$LAST_ERROR" ];
 do
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
-  REC=`$XNEE $LONG_ARG  $TMP | xargs $XNEE $SHORT_ARG  `
+  REC=`run_cnee $LONG_ARG  $TMP | xargs run_cnee $SHORT_ARG  `
   STATUS=$?
   check_retval $STATUS 0 
   if [ "$REC" != "$TMP" ];
@@ -123,7 +123,7 @@ do
 
 
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
-  REC=`$XNEE $SHORT_ARG  $TMP | xargs $XNEE $LONG_ARG  `
+  REC=`run_cnee $SHORT_ARG  $TMP | xargs run_cnee $LONG_ARG  `
   STATUS=$?
   check_retval $STATUS 0 
   if [ "$REC" != "$TMP" ];
@@ -151,8 +151,8 @@ do
   ERR_=`echo $i | sed 's,\([-0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[-0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
-  echo $XNEE $LONG_ARG $NAME_
-  XNEE_ERR=`$XNEE $LONG_ARG $NAME_`
+#  echo $XNEE $LONG_ARG $NAME_
+  XNEE_ERR=`run_cnee $LONG_ARG $NAME_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_ERR" != "" ];
@@ -163,8 +163,8 @@ do
   fi
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
 
-  echo $XNEE $LONG_ARG $ERR_
-  XNEE_ERR_NAME=`$XNEE $LONG_ARG $ERR_`
+#  echo $XNEE $LONG_ARG $ERR_
+  XNEE_ERR_NAME=`run_cnee $LONG_ARG $ERR_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_ERR_NAME" != "" ];
@@ -182,7 +182,7 @@ do
   #  compare_data_false $ERR_ $NAME_  $XNEE_ERR $XNEE_ERR_NAME 
 
 
-  XNEE_ERR=`$XNEE $SHORT_ARG $NAME_`
+  XNEE_ERR=`run_cnee $SHORT_ARG $NAME_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_ERR" != "" ];
@@ -195,7 +195,7 @@ do
   
 
 
-  XNEE_ERR_NAME=`$XNEE $SHORT_ARG $ERR_`
+  XNEE_ERR_NAME=`run_cnee $SHORT_ARG $ERR_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_ERR_NAME" != "" ];

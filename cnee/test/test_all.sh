@@ -29,7 +29,7 @@ option_scripts()
       echo "exec $i"
       CMD="$i $*"
       $i $*
-      sleep 1
+      sleep 2
     done
 }
 

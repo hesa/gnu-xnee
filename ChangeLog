@@ -1,5 +1,6 @@
 2008-11-27  Henrik Sandklef  <hesa@gnu.org>
 
+	* build/profile.sh:
 	* GNUmakefile: 
 	* maint.mk: 
 	* cfg.mk: 

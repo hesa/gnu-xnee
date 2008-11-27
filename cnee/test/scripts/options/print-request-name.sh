@@ -71,13 +71,13 @@ do
   EV_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
-  XNEE_EV=`$XNEE $LONG_ARG $NAME_`
+  XNEE_EV=`run_cnee $LONG_ARG $NAME_`
   STATUS=$?
-  check_retval $STATUS 0 "$XNEE $LONG_ARG $NAME_"
+  check_retval $STATUS 0 "run_cnee $LONG_ARG $NAME_"
 
-  XNEE_EV_NAME=`$XNEE $LONG_ARG $EV_`
+  XNEE_EV_NAME=`run_cnee $LONG_ARG $EV_`
   STATUS=$?
-  check_retval $STATUS 0 "$XNEE $LONG_ARG $EV_"
+  check_retval $STATUS 0 "run_cnee $LONG_ARG $EV_"
 
   compare_data $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME "$MYNAME"
 
@@ -91,11 +91,11 @@ do
   EV_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
-  XNEE_EV=`$XNEE $SHORT_ARG $NAME_`
+  XNEE_EV=`run_cnee $SHORT_ARG $NAME_`
   STATUS=$?
   check_retval $STATUS 0 
 
-  XNEE_EV_NAME=`$XNEE $SHORT_ARG $EV_`
+  XNEE_EV_NAME=`run_cnee $SHORT_ARG $EV_`
   STATUS=$?
   check_retval $STATUS 0 
 
@@ -113,12 +113,12 @@ TMP=1
 while [ "$TMP" != "$LAST_REQ" ];
 do
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
-  REC=`$XNEE $LONG_ARG  $TMP | xargs $XNEE $SHORT_ARG  `
+  REC=`run_cnee $LONG_ARG  $TMP | xargs run_cnee $SHORT_ARG  `
   STATUS=$?
   check_retval $STATUS 0 
   if [ "$REC" != "$TMP" ];
       then
-      log " unexpected result: using  \"$XNEE $LONG_ARG  $TMP | $XNEE $SHORT_ARG $TMP\""
+      log " unexpected result: using  \"run_cnee $LONG_ARG  $TMP | run_cnee $SHORT_ARG $TMP\""
       log " got: $REC ..... wanted: $TMP"
       ERR_TEST=`expr $ERR_TEST + 1`
   else
@@ -128,12 +128,12 @@ do
 
 
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
-  REC=`$XNEE $SHORT_ARG  $TMP | xargs $XNEE $LONG_ARG  `
+  REC=`run_cnee $SHORT_ARG  $TMP | xargs run_cnee $LONG_ARG  `
   STATUS=$?
   check_retval $STATUS 0 
   if [ "$REC" != "$TMP" ];
       then
-      log " unexpected result: using  \"$XNEE $SHORT_ARG  $TMP | $XNEE $LONG_ARG $TMP\""
+      log " unexpected result: using  \"run_cnee $SHORT_ARG  $TMP | run_cnee $LONG_ARG $TMP\""
       log " got: $REC ..... wanted: $TMP"
       ERR_TEST=`expr $ERR_TEST + 1`
   else
@@ -158,7 +158,7 @@ do
   NAME_=`echo $i | sed 's,[-0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
 
-  XNEE_EV=`$XNEE $LONG_ARG $NAME_`
+  XNEE_EV=`run_cnee $LONG_ARG $NAME_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_EV" != "" ];
@@ -169,7 +169,7 @@ do
   fi
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
 
-  XNEE_EV_NAME=`$XNEE $LONG_ARG $EV_`
+  XNEE_EV_NAME=`run_cnee $LONG_ARG $EV_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_EV_NAME" != "" ];
@@ -186,7 +186,7 @@ do
 #  compare_data_false $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME 
 
 
-  XNEE_EV=`$XNEE $SHORT_ARG $NAME_`
+  XNEE_EV=`run_cnee $SHORT_ARG $NAME_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_EV" != "" ];
@@ -197,7 +197,7 @@ do
   fi
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
   
-  XNEE_EV_NAME=`$XNEE $SHORT_ARG $EV_`
+  XNEE_EV_NAME=`run_cnee $SHORT_ARG $EV_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_EV_NAME" != "" ];
@@ -219,7 +219,7 @@ do
   NAME_=`echo $i | sed 's,[-0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
 
-  XNEE_EV=`$XNEE $LONG_ARG $NAME_`
+  XNEE_EV=`run_cnee $LONG_ARG $NAME_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_EV" != "" ];
@@ -231,7 +231,7 @@ do
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
 
 
-  XNEE_EV_NAME=`$XNEE $LONG_ARG $EV_`
+  XNEE_EV_NAME=`run_cnee $LONG_ARG $EV_`
   STATUS=$?
   check_retval $STATUS 0
   if [ "$XNEE_EV_NAME" == "" ];
@@ -247,7 +247,7 @@ do
 # ### 
 #  compare_data_false $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME 
 
-  XNEE_EV=`$XNEE $SHORT_ARG $NAME_`
+  XNEE_EV=`run_cnee $SHORT_ARG $NAME_`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_EV" != "" ];
@@ -260,7 +260,7 @@ do
   
 
 
-  XNEE_EV_NAME=`$XNEE $SHORT_ARG $EV_`
+  XNEE_EV_NAME=`run_cnee $SHORT_ARG $EV_`
   STATUS=$?
   check_retval $STATUS 0
   if [ "$XNEE_EV_NAME" == "" ];

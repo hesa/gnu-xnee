@@ -46,7 +46,7 @@ function retype_file()
 
     sleep 4
     verbose "  launching cnee"
-    $XNEE --retype-file scripts/retype/onefile.txt
+    run_cnee --retype-file scripts/retype/onefile.txt
     sleep 2 
     verbose "  faking control-d"
     fake_controld

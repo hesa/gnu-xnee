@@ -62,7 +62,7 @@ start_all()
     verbose "sleeoing 5 secs to let Xnest start up"
     sleep 2
 
-    $XNEE  --display :20 --record --device-event-range MotionNotify --out-file $XNEE_LOG --data-to-record -1 --events-to-record -1 --seconds-to-record -1 &
+    run_cnee  --display :20 --record --device-event-range MotionNotify --out-file $XNEE_LOG --data-to-record -1 --events-to-record -1 --seconds-to-record -1 &
     XNEE_PID=$!
 
     ROOT_WINDOW_ID=$(xdpyinfo -display :20 | grep "root window id" | awk '{ print $4 }' | sed 's/[ \t]*//g')

@@ -137,7 +137,7 @@ function compare_request_false()
 # positive test
 #
 #get the event numbers and names from Xnee
-$XNEE $LONG_ARG | grep -e "^[0-9]" >  $XNEE_NAMES
+run_cnee $LONG_ARG | grep -e "^[0-9]" >  $XNEE_NAMES
 STATUS=$?
 # compare Xnee number and names with the system
 for i in `cat $X11_NAMES`
@@ -158,7 +158,7 @@ check_retval $STATUS 0
 
 
 # positive test
-$XNEE $SHORT_ARG | grep -e "^[0-9]" > $XNEE_NAMES.2
+run_cnee $SHORT_ARG | grep -e "^[0-9]" > $XNEE_NAMES.2
 STATUS=$?
 
 diff $XNEE_NAMES $XNEE_NAMES.2>/dev/null 1>/dev/null

@@ -99,7 +99,7 @@ function test_mouse()
 
     TMP=-1
     verbose "starting xnee"
-    $XNEE --record --device-event-range 6 --data-to-record 10000 --seconds-to-record 10000 --events-to-record $PIX -o $FILE &
+    run_cnee --record --device-event-range 6 --data-to-record 10000 --seconds-to-record 10000 --events-to-record $PIX -o $FILE &
 
     sleep 2
     while [ "$TMP" != "$PIX" ];

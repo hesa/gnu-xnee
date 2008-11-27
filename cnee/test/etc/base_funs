@@ -1,4 +1,4 @@
-export XNEE=../src/cnee
+export XNEE=$(pwd)/../src/cnee
 export LIBXNEE=../../libxnee/src
 export VERBOSE_MODE=false
 
@@ -17,10 +17,16 @@ MOUSE_DEVICE=/dev/${MOUSE_DEVICE_NAME}
 MEMCHECK=valgrind
 MEMCHECK_ARGS="--trace-malloc=yes --log-file=xnee_val --leak-check=yes -v" 
 
+
+
 function init_test()
 {
     SCRIPT_NAME=$1
-    
+
+    CNEE_BASE_DIR=$(dirname $0)/../../../
+
+    PATH=$PATH:$(pwd)
+
     # Result counters
     TOTAL_TEST=0
     SUCC_TEST=0
@@ -31,7 +37,7 @@ function init_test()
     UNTESTED=0
 
     START=`date '+%s'`
-    XNEE_VERSION=`$XNEE --version 2>&1 | grep xnee | grep -v opyrigh | grep -v WARRAN | grep -v http | awk '{ print $2}' | sed 's,[ ],,'`
+    XNEE_VERSION=`run_cnee --version 2>&1 | grep xnee | grep -v opyrigh | grep -v WARRAN | grep -v http | awk '{ print $2}' | sed 's,[ ],,'`
     X_VEND=`xdpyinfo | grep "vendor string" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
     X_VERS=`xdpyinfo | grep "vendor release" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
     ME=`whoami`
@@ -57,10 +63,11 @@ function error_log()
 }
 
 
+
 function move_cursor()
 {
     DELAY=$1
-    $XNEE --replay -f rc/one_cursor.xnr --time $DELAY
+    run_cnee --replay -f rc/one_cursor.xnr --time $DELAY
 }
 
 

@@ -56,7 +56,7 @@ function record_and_replay()
     STARTX=$XPOS
     STARTY=$YPOS
     verbose "   ### start point:    $XPOS $YPOS `date`"
-    $XNEE --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record $SUM -o rep-mouse.log &
+    run_cnee --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record $SUM -o rep-mouse.log &
 
     verbose " Sleeping 2 secs"
     sleep 2
@@ -152,7 +152,7 @@ function record_and_replay()
     verbose "  -- checking start   $XPOS $YPOS  `date`"
     verify_same $STARTX $SAVE_XPOS
     verify_same $STARTY $SAVE_YPOS
-    $XNEE --replay -f rep-mouse.log &
+    run_cnee --replay -f rep-mouse.log &
     TMP=0
 
 #    echo "$TMP `$getx`  `$gety`"

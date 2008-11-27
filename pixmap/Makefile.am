@@ -1,7 +1,7 @@
 ICONS = xnee.xpm xnee.png
 
 icon_DATA = $(ICONS)
-icondir = $(datadir)/xnee/pixmaps
+icondir = $(datadir)/pixmaps
 
 EXTRA_DIST = $(ICONS) 
 

@@ -129,8 +129,6 @@ endif
 
 AM_CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS} ${DEBUG_FLAGS}
 
-
-
 HTML_SRC_FILES = $(libxnee_a_SOURCES:%.c=%.c.html)
 HTML_INC_FILES = $(LIBXNEE_H_FILES:%.h=%.h.html)
 

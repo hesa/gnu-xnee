@@ -128,7 +128,7 @@ function move_square()
     SQUARE_SIZE=$2
     PIXEL_TO_MOVE=$3
 
-    move_square_sub1  $MSLEEP $SQUARE_SIZE $PIXEL_TO_MOVE "0" | $XNEE $XNEE_ARGS 
+    move_square_sub1  $MSLEEP $SQUARE_SIZE $PIXEL_TO_MOVE "0" | run_cnee $XNEE_ARGS 
 }
 
 function move_rel_square()
@@ -137,7 +137,7 @@ function move_rel_square()
     SQUARE_SIZE=$2
     PIXEL_TO_MOVE=$3
 
-    move_rel_square_sub1  $MSLEEP $SQUARE_SIZE $PIXEL_TO_MOVE  | $XNEE $XNEE_ARGS 
+    move_rel_square_sub1  $MSLEEP $SQUARE_SIZE $PIXEL_TO_MOVE  | run_cnee $XNEE_ARGS 
 }
 
 
@@ -164,7 +164,7 @@ function fake_string_sub()
 
 function fake_string()
 {
-    fake_string_sub "$1"  $2 | $XNEE   $XNEE_ARGS 
+    fake_string_sub "$1"  $2 | run_cnee   $XNEE_ARGS 
 }
 
 
@@ -178,7 +178,7 @@ function fake_button_sub()
 
 function fake_buttons()
 {
-    fake_button_sub |  $XNEE   $XNEE_ARGS 
+    fake_button_sub |  run_cnee   $XNEE_ARGS 
 }
 
 function grab_window()
@@ -206,7 +206,7 @@ function move_win_sub()
 
 function move_window()
 {
-    move_win_sub   |  $XNEE   $XNEE_ARGS 
+    move_win_sub   |  run_cnee   $XNEE_ARGS 
 }
 
 

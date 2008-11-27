@@ -48,7 +48,7 @@ function test_keyboard()
     LEN3=${#STRING3}
 	
     verbose "starting $XNEE (grab (stop) on $STOP_KEY)"
-    $XNEE --record --device-event-range 2-3 --data-to-record 10000 \
+    run_cnee --record --device-event-range 2-3 --data-to-record 10000 \
           --seconds-to-record 100000 --events-to-record -1 \
           -o $FILE -sk $STOP_KEY -pk $PAUSE_KEY  -rk $RESUME_KEY \
 	  &
@@ -88,7 +88,7 @@ replay_file()
     sleep 4
 
     verbose "starting $XNEE (grab (stop) on $STOP_KEY)"
-    $XNEE --replay --file $FILE 
+    run_cnee --replay --file $FILE 
     XNEE_PID=$!
     
     sleep 2 

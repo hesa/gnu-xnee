@@ -58,7 +58,7 @@ function time_record()
     STARTX=$XPOS
     STARTY=$YPOS
     verbose "   ### start point:    $XPOS $YPOS `date`"
-    $XNEE --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record $SUM -o rep-mouse.log &
+    run_cnee --record --mouse --data-to-record 10000 --seconds-to-record 10000 --events-to-record $SUM -o rep-mouse.log &
 
     sleep 1
     verbose "Start faking with swinput:"
@@ -157,7 +157,7 @@ function time_replay()
     verbose " "
     verbose " "
 
-    $XNEE --replay -f rep-mouse.log $REPLAY_RESOLUTION_ARG &
+    run_cnee --replay -f rep-mouse.log $REPLAY_RESOLUTION_ARG &
     verbose "executing: $XNEE --replay -f rep-mouse.log $REPLAY_RESOLUTION_ARG "
     TMP=0
 

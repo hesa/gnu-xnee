@@ -93,7 +93,7 @@ function test_keyboard()
     
 
     verbose "starting xnee"
-    $XNEE --record --device-event-range 2-3 --data-to-record 10000 --seconds-to-record 10000 --events-to-record $TLEN -o $FILE &
+    run_cnee --record --device-event-range 2-3 --data-to-record 10000 --seconds-to-record 10000 --events-to-record $TLEN -o $FILE &
     XNEE_PID=$!
 
     verbose "XNEE PID = $XNEE_PID"
