@@ -1,0 +1,34 @@
+#!/bin/sh
+
+
+store_gmon()
+{
+#    echo "--> store_gmon"
+    if [ -f gmon.out ]
+    then
+#	ls -t gmon.out* | tail -1 | sed 's,gmon\.out\.,,g'
+#ls -t gmon.out.* | head -1
+	LAST=$(ls -1t gmon.out.* | head -1 | sed 's,gmon\.out[\.]*,,g')
+	
+#	echo "LAST $LAST"
+	if [ "$LAST" = "" ]
+	    then
+	    NEXT=0
+	else
+	    NEXT=$(( $LAST + 1 ))
+	fi
+#	echo "NEXT $NEXT"
+
+	mv gmon.out gmon.out.$NEXT
+#	echo "-- store_gmon  gmon.out.$NEXT  ($LAST => $NEXT)"
+    fi
+#    echo "<-- store_gmon"
+#    sleep 2
+}
+
+store_gmon
+../src/cnee $*
+store_gmon
+sleep 0
+sleep 0
+sleep 0
