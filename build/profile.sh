@@ -21,12 +21,12 @@ mkdir -p $DEST_DIR
 
 mkdir doc/profile
 
-#./configure \
-#  --disable-gui \
-#  --disable-gnome-applet \
-#  --disable-doc          \
-#  --enable-gprof               && \
-#make clean all check           && \
+./configure \
+  --disable-gui \
+  --disable-gnome-applet \
+  --disable-doc          \
+  --enable-gprof               && \
+make clean all check           && \
 cd cnee/src                        && \
 mv ../test/gmon.out* ./ ; \
 rm -f gmon.out.txt  gmon.sum       && \
