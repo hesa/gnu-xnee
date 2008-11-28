@@ -104,9 +104,10 @@ do_the_tests()
 	gmon.out.txt                && \
 	dot -T$FMT -o cnee.$FMT cnee.dot && \
         mv cnee.$FMT ../../doc/profile && \
-	cd ../.. && \
-	cp doc/profile/cnee.$FMT $DEST_DIR/cnee-call-graph.$FMT && \
-	cp cnee/src/gmon.out.txt $DEST_DIR/ && \
+	cd ../.. 
+
+	cp doc/profile/cnee.$FMT $DEST_DIR/cnee-call-graph.$FMT 
+	cp cnee/src/gmon.out.txt $DEST_DIR/ 
 	echo "OK :)"
 }
 
