@@ -122,7 +122,7 @@ close_down()
 
 
 init_test
-#prepare_sw_for_test
+prepare_sw_for_test
 gen_x11_data&
 do_the_tests
 close_down
