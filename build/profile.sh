@@ -6,7 +6,7 @@
 
 FMT=pdf
 PATH=$PATH:/opt/gprof2dot
-DATE=$(date '+%Y%m%d')
+DATE=$(date '+%Y-%m-%d')
 
 if [ "$1" = "" ]
 then
