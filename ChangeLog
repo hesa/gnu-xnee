@@ -1,3 +1,11 @@
+2008-11-29  Henrik Sandklef  <hesa@gnu.org>
+
+	* build/coverage.sh: 
+	* build/profile.sh: 
+	Xvfb used to test
+	Work around for Xvfb (freecolormap) bug?
+	xterm, xwininfo, xdpyinfo, xset used to generate x11 data
+
 2008-11-27  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/profile.sh:
