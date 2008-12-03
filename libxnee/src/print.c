@@ -1759,11 +1759,11 @@ xnee_print_xnee_data(xnee_data *xd)
 {
 
   fprintf (stderr, "xnee_data\n");
-  fprintf (stderr, "  xd:          %d\n", xd);
-  fprintf (stderr, "  xd->data:    %d\n", xd->data);
-  fprintf (stderr, "  xd->control: %d\n", xd->control);
-  fprintf (stderr, "  xd->fake:    %d\n", xd->fake);
-  fprintf (stderr, "  xd->grab:    %d\n", xd->grab);
+  fprintf (stderr, "  xd:          %u\n", (int)xd);
+  fprintf (stderr, "  xd->data:    %u\n", (int)xd->data);
+  fprintf (stderr, "  xd->control: %u\n", (int)xd->control);
+  fprintf (stderr, "  xd->fake:    %u\n", (int)xd->fake);
+  fprintf (stderr, "  xd->grab:    %u\n", (int)xd->grab);
   
 }
 
