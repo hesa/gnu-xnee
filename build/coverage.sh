@@ -29,7 +29,7 @@ init_test()
     XVFB_PID=$!
     
     
-    DISPLAY=:32
+    export DISPLAY=:32
     sleep 2
     
 
