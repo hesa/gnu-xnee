@@ -1,5 +1,9 @@
 2008-12-04  Henrik Sandklef  <hesa@gnu.org>
 
+	* build/profile.sh: 
+	* build/coverage.sh: 
+	exporting DISPLAY variable
+
 	* maint.mk: 
         Adding quoutes to C/CC flags
 
