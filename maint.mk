@@ -111,9 +111,9 @@ init-coverage:
 	make clean
 	lcov --directory . --zerocounters
 
-COVERAGE_CCOPTS ?= -g --coverage
+COVERAGE_CCOPTS ?= "-g --coverage"
 COVERAGE_OUT ?= doc/coverage
-PROFILE_CCOPTS ?= -g -fprofile-arcs -ftest-coverage 
+PROFILE_CCOPTS ?= "-g -fprofile-arcs -ftest-coverage "
 PROFILE_OUT ?= doc/coverage
 
 # hesa rules
