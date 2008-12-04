@@ -1,3 +1,8 @@
+2008-12-04  Henrik Sandklef  <hesa@gnu.org>
+
+	* maint.mk: 
+        Adding quoutes to C/CC flags
+
 2008-11-29  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/coverage.sh: 
@@ -38,13 +43,22 @@
 	* cfg.mk
 	Files to enable coverage (and more) tests with gnulib
 
+
+2008-11-06  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Using dvi->pdf and pdf->ps instead
+
+	* doc/Makefile.am: 
+	Using eps->pdf rule again
+	Adjusting doc building rules to build machine
+	Using dvi->pdf and pdf->ps instead
+
 2008-10-12  Henrik Sandklef  <hesa@gnu.org>
 
 	* configure.in: 
 	* doc/Makefile.am: 
 	Using texito* tools
-
-2008-10-12  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_resource.c (xnee_options_impl): 
 	Added info that we're dealing with milli seconds to help text 
