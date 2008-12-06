@@ -1,3 +1,9 @@
+2008-12-06  Henrik Sandklef  <hesa@gnu.org>
+
+	* build/coverage.sh: 
+	Fixed faulty directory (coverage instead of profile)
+
+
 2008-12-04  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/profile.sh: 
