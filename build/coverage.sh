@@ -9,8 +9,9 @@ else
     BASE_DEST_DIR=$1
 fi
 
-DEST_DIR=$BASE_DEST_DIR/coverage/$DATE/x86
+export DEST_DIR=$BASE_DEST_DIR/coverage/$DATE/x86
 mkdir -p $DEST_DIR
+
 
 #
 # current version is nothing but a hack to try out some conecpts
@@ -33,8 +34,6 @@ init_test()
     sleep 2
     
 
-    DEST_DIR=$BASE_DEST_DIR/profile/$DATE/x86
-    mkdir -p $DEST_DIR
     
 }
 
