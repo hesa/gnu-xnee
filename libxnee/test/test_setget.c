@@ -37,7 +37,7 @@ int main(int argc, char **argv)
 /*   xnee_init(xdl); */
 
   /* Set the program name */
-  xnee_set_program_name (xdl, "libtest");
+  xnee_set_program_name (xdl, "testsetget");
 
   /* Set the cli parameters */
   xnee_set_application_parameters (xdl, NULL);
