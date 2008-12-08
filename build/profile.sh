@@ -103,7 +103,7 @@ do_the_tests()
 	--output cnee.dot --cluster-by-scope --merge-overloaded-functions \
 	gmon.out.txt                && \
 	dot -T$FMT -o cnee.$FMT cnee.dot && \
-        cp cnee.$FMT  $DEST_DIR/cnee-call-graph.$FMT  && \
+        cp cnee.$FMT  $DEST_DIR/cnee-call-graph.$FMT  
 	cd ../.. 
 
 	cp cnee/src/gmon.out.txt $DEST_DIR/ 

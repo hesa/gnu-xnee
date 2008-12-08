@@ -1,5 +1,8 @@
 2008-12-08  Henrik Sandklef  <hesa@gnu.org>
 
+	* build/profile.sh (DATE): 
+	Stepping beck in dir tree doesn't now depend on successful command
+
 	* libxnee/test/Makefile.am: 
 	Added statis ld flags to testsetget bin
 
