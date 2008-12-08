@@ -50,6 +50,7 @@ test:
 check: all
 	cd libxnee/test && ./libtest
 	cd libxnee/test && ./testsetget
+	cd libxnee/test && ./testfeedback
 	cd cnee/test    && ./test_all.sh --clean
 	cd cnee/test    && ./test_all.sh --build
 	cd cnee/test    && ./test_all.sh --option
