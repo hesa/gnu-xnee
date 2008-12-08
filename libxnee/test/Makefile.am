@@ -1,13 +1,15 @@
 LIBTEST = libtest
 TESTSETGET = testsetget
+TESTFEEDBACK = testfeedback
 
-noinst_PROGRAMS = $(LIBTEST) $(TESTSETGET)
+noinst_PROGRAMS = $(LIBTEST) $(TESTSETGET) $(TESTFEEDBACK)
 
 EXTRA_DIST = test_setget.h
 
 
 libtest_SOURCES = libtest.c
 testsetget_SOURCES = test_setget.c test_all.c 
+testfeedback_SOURCES = test_feedback.c
 
 LIBXNEE_DIR = ../
 
@@ -19,17 +21,11 @@ endif
 
 
 AM_CFLAGS = -I../include -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${BUF_VERBOSE_FLAG}  ${USER_CFLAGS} ${GCOV_FLAG} ${GPROF_FLAG}
-
-libtest_LDADD =   -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} 
-libtest_LDFLAGS = ${GCOV_FLAG} ${GPROF_FLAG} $(STATIC_FLAGS)
-libtest_DEPENDENCIES = 
-
-testsetget_LDADD =   -L${LIBXNEE_DIR}/src -lxnee  ${X_LIBS} ${X11_LIBS} ${LIBDL}  
-testsetget_LDFLAGS = ${GCOV_FLAG} ${GPROF_FLAG}  $(STATIC_FLAGS)
-testsetget_DEPENDENCIES = 
+AM_LDFLAGS =   -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} ${GCOV_FLAG} ${GPROF_FLAG} $(STATIC_FLAGS)
+AM_LDADD   =   -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} ${GCOV_FLAG} ${GPROF_FLAG} $(STATIC_FLAGS)
 
 test: 
 	./$(LIBTEST)
 	./$(TESTSETGET)
-
+	./$(TESTFEEDBACK)
 
