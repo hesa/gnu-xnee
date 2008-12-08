@@ -247,6 +247,7 @@ xnee_feedback_close(xnee_data *xd)
 }
 
 
+
 #ifdef HAVE_STDARG_H
 int 
 feedback(xnee_data *xd, char *str, ... ) 
@@ -284,6 +285,10 @@ feedback(xnee_data *xd, char *str, va_dcl  valist)
   else if (feedback_used==XNEE_STDERR_FEEDBACK)
     {
        fprintf (stderr,"%s", buf);
+      ret = XNEE_OK;
+    }
+  else if (feedback_used==XNEE_NO_FEEDBACK)
+    {
       ret = XNEE_OK;
     }
   else
@@ -335,7 +340,7 @@ xnee_set_xosd_feedback(xnee_data *xd)
 int 
 xnee_is_xosd_feedback(xnee_data *xd)
 {
-   xnee_verbose((xd, "xnee_is_xosd_feedback\n"));
+  xnee_verbose((xd, "xnee_is_xosd_feedback used=%d\n", feedback_used));
    return (feedback_used==XNEE_XOSD_FEEDBACK);
 }
 
@@ -343,15 +348,15 @@ xnee_is_xosd_feedback(xnee_data *xd)
 int 
 xnee_is_stderr_feedback(xnee_data *xd)
 {
-   xnee_verbose((xd, "xnee_is_stderr_feedback\n"));
+   xnee_verbose((xd, "xnee_is_stderr_feedback  used=%d\n", feedback_used));
   return (feedback_used==XNEE_STDERR_FEEDBACK);
 }
 
 int 
 xnee_is_no_feedback(xnee_data *xd)
 {
-   xnee_verbose((xd, "xnee_is_stderr_feedback\n"));
-   return (feedback_used==XNEE_STDERR_FEEDBACK);
+   xnee_verbose((xd, "xnee_is_no_feedback used=%d\n", feedback_used));
+   return (feedback_used==XNEE_NO_FEEDBACK);
 }
 
 
