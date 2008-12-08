@@ -1,3 +1,13 @@
+2008-12-08  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/test/Makefile.am: 
+	Added statis ld flags to testsetget bin
+
+2008-12-03  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/print.c (xnee_print_xnee_data): 
+	Fixed printf formating, casted pointers int
+
 2008-12-06  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/coverage.sh: 
@@ -29,6 +39,7 @@
 	* cfg.mk: 
 	New files for GNU testing
 	
+>>>>>>> 1.103
 2008-11-19  Henrik Sandklef  <hesa@gnu.org>
 
 	* cnee/src/Makefile.am: 
