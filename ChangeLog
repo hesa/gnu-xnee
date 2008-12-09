@@ -1,3 +1,13 @@
+2008-12-09  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/test/print.c: 
+	New file
+	Some print tests
+
+	* libxnee/test/test_feedback.c: 
+	Change name of xnee app to feedbacker
+
+
 2008-12-08  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/profile.sh (DATE): 
