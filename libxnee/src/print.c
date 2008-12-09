@@ -223,6 +223,13 @@ xnee_human_print_request (xnee_data *xd, XRecordInterceptData *xrecintd )
   int           request_type ;
   char  *request_name ;
   char  *name=" not defined " ;
+
+  if ( xrecintd == NULL)
+    {
+      return;
+    }
+
+
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
 
   request_type = (int)xrec_data->type ;
