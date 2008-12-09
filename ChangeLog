@@ -1,4 +1,4 @@
-2008-12-10  Henrik Sandklef  <hesa@sandklef.com>
+2008-12-10  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/test/Makefile.am: 
 	Added print test file to make targets
