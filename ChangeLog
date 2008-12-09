@@ -1,5 +1,11 @@
 2008-12-09  Henrik Sandklef  <hesa@gnu.org>
 
+	* cnee/test/scripts/options/print-request-name-human.sh: 
+	File for testing request name printing in human format
+
+	* cnee/test/scripts/options/print-even-name-human.sh: 
+	File for testing event name printing in human format
+
 	* libxnee/test/print.c: 
 	New file
 	Some print tests
