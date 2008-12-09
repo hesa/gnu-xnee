@@ -77,7 +77,7 @@ int main()
 
   xdl = xnee_new_xnee_data();
 
-  xnee_set_program_name (xdl, "libtest");
+  xnee_set_program_name (xdl, "feedbacker");
 
   xnee_set_application_parameters (xdl, NULL);
 
