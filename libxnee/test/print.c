@@ -13,13 +13,17 @@ test_printfuns(xnee_data *xd)
   XRecordInterceptData xrecintd_impl;
   XRecordDatum         xrec_data_impl;
   xResourceReq         req_impl;
+  xEvent               ev_impl;
   int req_type ;
+  int ev_type ;
+  int i ;
 
   XRecordInterceptData *xrecintd  = &xrecintd_impl;
   XRecordDatum         *xrec_data = &xrec_data_impl;
   xResourceReq         *req       = &req_impl;
-  xReq                 tmp_req;
-  xReq                *tmp_req_p;
+  xEvent               *ev        = &ev_impl;
+
+  char *tmp_str;
 
   ret = xnee_print_event_info(xd);
   XNEE_TEST_ASSERT(ret, 0, "xnee_print_event_info");
@@ -42,35 +46,63 @@ test_printfuns(xnee_data *xd)
   total++;
   
   /* make sure it accepts NULL without crashing the app */
-/*   xnee_record_print_request(xd, NULL);   */
+  xnee_record_print_request(xd, NULL);   
   total++;
-
-/*   memset(&xrecintd, 0, sizeof(XRecordInterceptData)); */
-/*   memset(&xrec_data, 0, sizeof(XRecordDatum)); */
-  /* NOTE: bogus values */
-  req_type     = 1 ;
-  req->reqType = 2 ;
-  req->length  = 3 ;
-  req->id      = 4 ;
-  xrecintd->server_time = 200;
-
-  tmp_req_p  = (xReq*)req;
-  tmp_req    = *tmp_req_p;
-  xrec_data->req    = tmp_req;
-  xrec_data->type   = req_type;
-  xrecintd->data    = (unsigned char) xrec_data;
-
-  printf ("%d,%lu,%lu,%lu,%lu\n", 
-		      req_type, 
-		      req->reqType,
-		      req->length,
-		      req->id,
-		      xrecintd->server_time);
+  xnee_human_print_request(xd, NULL);   
+  total++;
   
 
-  xnee_record_print_request(xd, xrecintd);  
-  total++;
+  /* NOTE: bogus values */
+  #define SET_BOGUES_REQ_VALUES(r)   \
+  memset(xrecintd, 0, sizeof(XRecordInterceptData)); \
+  memset(xrec_data, 0, sizeof(XRecordDatum)); \
+  req_type     = r ; \
+  req->reqType = 1 ; \
+  req->length  = 1 ; \
+  req->id      = 4 ; \
+  xrecintd->server_time = 200; \
+  xrec_data->req    = *(xReq*)&req;\
+  xrec_data->type   = req_type;\
+  xrecintd->data    = xrec_data;
 
+
+ for (i=1;i<128;i++)
+    {
+      SET_BOGUES_REQ_VALUES(i);
+      xnee_record_print_request(xd, xrecintd);  
+      total++;
+
+      SET_BOGUES_REQ_VALUES(i);
+      xnee_human_print_request(xd, xrecintd);  
+      total++;
+
+      SET_BOGUES_REQ_VALUES(i);
+      xnee_human_print_request_verbose(xd, xrecintd);  
+      total++;
+    }
+  
+  printf ("==================================================\n");
+
+  #define SET_BOGUES_EV_VALUES(e)   \
+  memset(xrecintd, 0, sizeof(XRecordInterceptData));  \
+  memset(xrec_data, 0, sizeof(XRecordDatum));  \
+  ev_type      = e ;  \
+  ev->u.u.type = 0 ;   \
+  ev->u.keyButtonPointer.state = 0 ;   \
+  xrec_data->event  = *(xEvent*)&ev;  \
+  xrec_data->type   = (unsigned char) ev_type ; \
+  xrecintd->data    = xrec_data;  
+
+  for (i=2;i<35;i++)
+    {
+      SET_BOGUES_EV_VALUES(i);
+      xnee_human_print_event(xd, xrecintd);  
+      total++;
+
+      SET_BOGUES_EV_VALUES(i);
+      xnee_human_print_event_verbose(xd, xrecintd);  
+      total++;
+    }
   
 }
 
@@ -92,6 +124,8 @@ int main()
 
   test_printfuns(xdl);
 
+
+  fprintf (stdout, "\n");
   fprintf (stdout, "\tSucesss:  %d\n", total);
   fprintf (stdout, "\tFailures: %d\n", fails);
 
