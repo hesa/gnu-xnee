@@ -4,7 +4,7 @@
 	Added print test file to make targets
 
 	* libxnee/test/print.c: 
-	More test casesfor request/event human printing
+	More test cases for request/event human printing
 
 2008-12-09  Henrik Sandklef  <hesa@gnu.org>
 
