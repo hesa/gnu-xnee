@@ -1,5 +1,8 @@
 2008-12-10  Henrik Sandklef  <hesa@gnu.org>
 
+	* Makefile.am: 
+	Removed old merge leftovers
+
 	* libxnee/include/libxnee/print.h: 
 	Added (c) year 2008
 
