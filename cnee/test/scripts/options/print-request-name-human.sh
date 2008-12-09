@@ -11,8 +11,6 @@
  
  
  
- 
- 
 # name of myself
 MYNAME=print-request-name-human.sh
  

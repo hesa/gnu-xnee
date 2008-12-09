@@ -66,7 +66,8 @@ do
   EV_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
-  XNEE_EV=`run_cnee -hp $LONG_ARG $NAME_`
+  run_cnee -hp $LONG_ARG $NAME_
+
   STATUS=$?
   check_retval $STATUS 0 
 
@@ -88,123 +89,13 @@ do
   STATUS=$?
   check_retval $STATUS 0 
 
-  XNEE_EV_NAME=`run_cnee $SHORT_ARG $EV_`
+  XNEE_EV_NAME=`run_cnee -hp $SHORT_ARG $EV_`
   STATUS=$?
-  check_retval -hp $STATUS 0 
+  check_retval  $STATUS 0 
 
   compare_data $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME
 done
 
-
-
-# loop through all events and run them in a Xnee renaming pipe 
-# Make sure that 2 == 2   
-# after this has been done:  2 --xnee--> KeyPress --xnee--> 2
-# loop from 2 to LASTEvent
-
-TMP=2
-while [ "$TMP" != "$LAST_EVENT" ];
-do
-  TOTAL_TEST=`expr $TOTAL_TEST + 1`
-  REC=`run_cnee $LONG_ARG  $TMP | xargs run_cnee $SHORT_ARG  `
-  STATUS=$?
-  check_retval $STATUS 0 
-  if [ "$REC" != "$TMP" ];
-      then
-      log " unexpected result: using  \"run_cnee $LONG_ARG  $TMP | run_cnee $SHORT_ARG $TMP\""
-      log " got: $REC ..... wanted: $TMP"
-      ERR_TEST=`expr $ERR_TEST + 1`
-  else
-    SUCC_TEST=`expr $SUCC_TEST + 1`
-  fi
-
-
-  TOTAL_TEST=`expr $TOTAL_TEST + 1`
-  REC=`run_cnee $SHORT_ARG  $TMP | xargs run_cnee $LONG_ARG  `
-  STATUS=$?
-  check_retval $STATUS 0 
-  if [ "$REC" != "$TMP" ];
-      then
-      log " unexpected result: using  \"run_cnee $SHORT_ARG  $TMP | run_cnee $LONG_ARG $TMP\""
-      log " got: $REC ..... wanted: $TMP"
-      ERR_TEST=`expr $ERR_TEST + 1`
-  else
-    SUCC_TEST=`expr $SUCC_TEST + 1`
-  fi
-  
-
-  
-  TMP=`expr $TMP + 1`
-done
-
-#
-# negative tests
-#
-for i in 0=bartok    -12=bela      1=allan 67=pettersson 127=dimitri 200=shostakovich
-do
-  EV_=`echo $i | sed 's,\([-0-9]*\)=.*,\1,g'`
-  NAME_=`echo $i | sed 's,[-0-9]*=\([a-zA-Z0-9]*\),\1,g'`
-
-  XNEE_EV=`run_cnee $LONG_ARG $NAME_`
-  STATUS=$?
-  check_retval_false $STATUS 0
-  if [ "$XNEE_EV" != "" ];
-      then
-      ERR_TEST=`expr $ERR_TEST + 1`
-  else
-      SUCC_TEST=`expr $SUCC_TEST + 1`
-  fi
-  TOTAL_TEST=`expr $TOTAL_TEST + 1`
-
-  XNEE_EV_NAME=`run_cnee $LONG_ARG $EV_`
-  STATUS=$?
-  check_retval_false $STATUS 0
-  if [ "$XNEE_EV_NAME" != "" ];
-      then
-      ERR_TEST=`expr $ERR_TEST + 1`
-  else
-      SUCC_TEST=`expr $SUCC_TEST + 1`
-  fi
-  TOTAL_TEST=`expr $TOTAL_TEST + 1`
-  
-
-  # ###
-  # Xnee returns no value so we can't compare
-  # ### 
-  #  compare_data_false $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME 
-
-
-  XNEE_EV=`run_cnee $SHORT_ARG $NAME_`
-  STATUS=$?
-  check_retval_false $STATUS 0
-  if [ "$XNEE_EV" != "" ];
-      then
-      ERR_TEST=`expr $ERR_TEST + 1`
-  else
-      SUCC_TEST=`expr $SUCC_TEST + 1`
-  fi
-  TOTAL_TEST=`expr $TOTAL_TEST + 1`
-  
-
-
-  XNEE_EV_NAME=`run_cnee $SHORT_ARG $EV_`
-  STATUS=$?
-  check_retval_false $STATUS 0
-  if [ "$XNEE_EV_NAME" != "" ];
-      then
-      ERR_TEST=`expr $ERR_TEST + 1`
-  else
-      SUCC_TEST=`expr $SUCC_TEST + 1`
-  fi
-  TOTAL_TEST=`expr $TOTAL_TEST + 1`
-
-
-
-# ###
-# Xnee returns no value so we can't compare
-# ### 
-#  compare_data_false $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME 
-done
 
 
 

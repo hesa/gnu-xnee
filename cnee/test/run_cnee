@@ -30,5 +30,3 @@ store_gmon
 ../src/cnee $*
 store_gmon
 sleep 0
-sleep 0
-sleep 0
