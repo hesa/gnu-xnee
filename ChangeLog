@@ -33,12 +33,6 @@
 	* libxnee/test/Makefile.am: 
 	Added statis ld flags to testsetget bin
 
-2008-12-03  Henrik Sandklef  <hesa@sandklef.com>
-
-	* libxnee/src/print.c (xnee_print_xnee_data): 
-	Fixed printf formating, casted pointers int
-
->>>>>>> 1.106
 2008-12-06  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/coverage.sh: 
@@ -53,6 +47,11 @@
 
 	* maint.mk: 
         Adding quoutes to C/CC flags
+
+2008-12-03  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/print.c (xnee_print_xnee_data): 
+	Fixed printf formating, casted pointers int
 
 2008-11-29  Henrik Sandklef  <hesa@gnu.org>
 
@@ -70,7 +69,6 @@
 	* cfg.mk: 
 	New files for GNU testing
 	
->>>>>>> 1.103
 2008-11-19  Henrik Sandklef  <hesa@gnu.org>
 
 	* cnee/src/Makefile.am: 
