@@ -51,6 +51,7 @@ check: all
 	cd libxnee/test && ./libtest
 	cd libxnee/test && ./testsetget
 	cd libxnee/test && ./testfeedback
+	cd libxnee/test && ./testprint
 	cd cnee/test    && ./test_all.sh --clean
 	cd cnee/test    && ./test_all.sh --build
 	cd cnee/test    && ./test_all.sh --option
@@ -60,4 +61,4 @@ $(srcdir)/package.m4 : $(topdir)/configure.in
 	:;{\
 	echo '# ' && \
 	echo 'm4_define([AT_PACKAGE_NAME],  [@PACKAGE_NAME@])' ; \
-	} > '$$(srcdir)/package.m4'>>>>>>> 1.25
+	} > '$$(srcdir)/package.m4'
