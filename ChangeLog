@@ -7,6 +7,23 @@
 	* libxnee/test/test_feedback.c: 
 	Change name of xnee app to feedbacker
 
+	* Makefile.am (check): 
+	Adding testfeedback to test
+
+	* libxnee/src/feedback.c: 
+	Feedback with no feedback set gives no error
+	Added some verbose printout
+	Fixed faulty feedback checks 
+
+	* libxnee/test/test_setget.c: 
+	Setting name correctly
+
+	* libxnee/test/Makefile.am: 
+	Added testfeedback and simplified LD flags a bit
+
+	* libxnee/test/test_feedback.c: 
+	New file for testing feedback funs
+
 
 2008-12-08  Henrik Sandklef  <hesa@gnu.org>
 
@@ -21,6 +38,7 @@
 	* libxnee/src/print.c (xnee_print_xnee_data): 
 	Fixed printf formating, casted pointers int
 
+>>>>>>> 1.106
 2008-12-06  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/coverage.sh: 
