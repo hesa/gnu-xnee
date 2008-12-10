@@ -23,6 +23,11 @@ extern int verbose ;
 
 #define PRINT_FUN   printf ("   %s:%d     %s()\n", __FILE__, __LINE__ , __func__); 
 
+#define XNEE_PRINT_ERROR(err) \
+      fprintf (stderr, "Error number: %d\n", err);                                \
+      fprintf (stderr, "  Error:      %s\n", xnee_get_err_description(err));     \
+      fprintf (stderr, "  Solution:   %s\n", xnee_get_err_solution(err)); \
+
 #define ON_FAIL(fun, line) \
    total++; \
    fails++ ; \
