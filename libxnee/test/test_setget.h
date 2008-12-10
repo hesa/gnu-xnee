@@ -42,6 +42,7 @@ extern int verbose ;
            ON_FAIL(fun_str, __LINE__); \
            printf ("   %d != %d\n", ret_val, comp_val); \
            PRINT_FUN;\
+           XNEE_PRINT_ERROR(ret);\
            exit(1); \
        }\
      else \
