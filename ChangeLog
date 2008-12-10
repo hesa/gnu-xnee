@@ -1,3 +1,27 @@
+2008-12-10  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/test/print.c (test_rangefuns): 
+	More test cases:
+             ranges, distribution lists, requests, replies
+
+	* libxnee/test/test_setget.h (XNEE_PRINT_ERROR): 
+	Added macro (XNEE_PRINT_ERROR) for printing return values more
+	nicely in test programs
+
+	* libxnee/include/libxnee/print.h: 
+	Commented out function: xnee_rec_print_sys_info
+
+	* libxnee/src/xnee_display.c: 
+	Made buffer for display name bigger (now 256 bytes)
+	Added copyright year 2008
+
+	* libxnee/src/print.c: 
+	Added return XNEE_OK when nothing to print
+
+	* libxnee/src/xnee_window.c: 
+	Removed warnings in verbose print functions
+	Added copyright year 2008
+
 2008-12-10  Henrik Sandklef  <hesa@gnu.org>
 
 	* Makefile.am: 
