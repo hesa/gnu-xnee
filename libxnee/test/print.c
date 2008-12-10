@@ -20,6 +20,9 @@ test_distributionfuns(xnee_data *xd)
   ret = xnee_print_distr_list (xd, NULL);
   XNEE_TEST_ASSERT(ret, 0, "xnee_print_distr_list");
   
+  ret = xnee_print_distr_list (xd, xd->out_file);
+  XNEE_TEST_ASSERT(ret, 0, "xnee_print_distr_list");
+  
   
 
 }
@@ -37,6 +40,8 @@ test_rangefuns(xnee_data *xd)
   xnee_add_range(xd, XNEE_REQUEST, 2, 4);
   xnee_add_range(xd, XNEE_REPLY, 2, 4);
   xnee_add_range(xd, XNEE_ERROR, 1, 1);
+
+  xnee_prepare(xd);
 
   xnee_record_print_record_range (xd, NULL) ;
   total++;
@@ -56,7 +61,6 @@ test_rangefuns(xnee_data *xd)
   ret = xnee_print_xnee_data(xd);
   XNEE_TEST_ASSERT(ret, 0, "xnee_print_xnee_data");
 
-  xnee_prepare(xd);
   ret = xnee_print_xnee_resource_settings (xd, xd->out_file ) ;
   XNEE_TEST_ASSERT(ret, 0, "xnee_print_xnee_resource_settings");
   
@@ -81,6 +85,7 @@ test_printfuns(xnee_data *xd)
   xResourceReq         req_impl;
   xEvent               ev_impl;
   xGenericReply        rep_impl;
+  xError               err_impl;
   int req_type ;
   int ev_type ;
   int rep_type ;
@@ -91,6 +96,7 @@ test_printfuns(xnee_data *xd)
   xResourceReq         *req       = &req_impl;
   xEvent               *ev        = &ev_impl;
   xGenericReply        *rep       = &rep_impl;
+  xError               *err       = &err_impl;
 
   char *tmp_str;
 
@@ -184,7 +190,19 @@ test_printfuns(xnee_data *xd)
   xrecintd->data = xrec_data;
 
   xnee_human_print_reply (xd, xrecintd );
+  total++;
 
+  xnee_record_print_reply (xd, xrecintd );
+  total++;
+
+  err->type = X_Error;
+  xrec_data->error = *(xError*)&err;
+  xrecintd->data   = xrec_data;
+  xnee_human_print_error (xd, xrecintd );
+  total++;
+
+  xnee_record_print_error (xd, xrecintd );
+  total++;
 
 }
 
@@ -210,6 +228,11 @@ int main()
 
   test_distributionfuns(xdl);
 
+  xnee_set_verbose(xdl);
+  xnee_verbose((xdl, "Just a simple string, printed from test code\n"));
+  xnee_verbose((NULL, "Just a simple string, but with xnee_data arg set to NULL\n"));
+  xnee_print_error("Simple test string in test code\n");
+  xnee_unset_verbose(xdl);
 
   fprintf (stdout, "\n");
   fprintf (stdout, "\tSucesss:  %d\n", total);
