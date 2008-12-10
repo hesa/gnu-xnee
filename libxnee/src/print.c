@@ -1771,7 +1771,7 @@ xnee_print_xnee_data(xnee_data *xd)
   fprintf (stderr, "  xd->control: %u\n", (int)xd->control);
   fprintf (stderr, "  xd->fake:    %u\n", (int)xd->fake);
   fprintf (stderr, "  xd->grab:    %u\n", (int)xd->grab);
-  
+  return XNEE_OK;
 }
 
 
