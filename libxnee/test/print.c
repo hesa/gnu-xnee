@@ -2,9 +2,75 @@
 #include "libxnee/xnee.h"
 
 
+
 int fails;
 int total;
 int verbose;
+
+
+int 
+test_distributionfuns(xnee_data *xd)
+{
+  int ret;
+
+  xnee_add_display_list(xd, ":0");
+  xnee_add_display_list(xd, ":0"); 
+  xnee_add_display_list(xd, ":0,:0"); 
+
+  ret = xnee_print_distr_list (xd, NULL);
+  XNEE_TEST_ASSERT(ret, 0, "xnee_print_distr_list");
+  
+  
+
+}
+
+int 
+test_rangefuns(xnee_data *xd)
+{
+  int ret;
+
+  xnee_record_print_record_range (xd, NULL) ;
+  total++;
+
+  xnee_add_range(xd, XNEE_DELIVERED_EVENT, 2, 4);
+  xnee_add_range(xd, XNEE_DEVICE_EVENT, 7, 14);
+  xnee_add_range(xd, XNEE_REQUEST, 2, 4);
+  xnee_add_range(xd, XNEE_REPLY, 2, 4);
+  xnee_add_range(xd, XNEE_ERROR, 1, 1);
+
+  xnee_record_print_record_range (xd, NULL) ;
+  total++;
+
+  ret = xnee_print_ranges (xd, xd->out_file) ;
+  XNEE_TEST_ASSERT(ret, 0, "xnee_record_print_ranges");
+
+  ret = xnee_print_data_range_count (xd);
+  XNEE_TEST_ASSERT(ret, 0, "xnee_print_data_range_count");
+
+  xnee_replay_printbuffer_impl (xd );
+  total++;
+
+  xnee_version(xd);
+  total++;
+
+  ret = xnee_print_xnee_data(xd);
+  XNEE_TEST_ASSERT(ret, 0, "xnee_print_xnee_data");
+
+  xnee_prepare(xd);
+  ret = xnee_print_xnee_resource_settings (xd, xd->out_file ) ;
+  XNEE_TEST_ASSERT(ret, 0, "xnee_print_xnee_resource_settings");
+  
+  xnee_store_mouse_pos (xd );
+  total++;
+
+  ret = xnee_print_xnee_settings(xd, xd->out_file);
+  XNEE_TEST_ASSERT(ret, 0, "xnee_rec_print_xnee_settings");
+
+  ret = xnee_print_data_str(xd, "MotionNotify", XNEE_EVENT);
+  XNEE_TEST_ASSERT(ret, 0, "xnee_print_data_str");
+
+
+}
 
 int 
 test_printfuns(xnee_data *xd)
@@ -14,14 +80,17 @@ test_printfuns(xnee_data *xd)
   XRecordDatum         xrec_data_impl;
   xResourceReq         req_impl;
   xEvent               ev_impl;
+  xGenericReply        rep_impl;
   int req_type ;
   int ev_type ;
+  int rep_type ;
   int i ;
 
   XRecordInterceptData *xrecintd  = &xrecintd_impl;
   XRecordDatum         *xrec_data = &xrec_data_impl;
   xResourceReq         *req       = &req_impl;
   xEvent               *ev        = &ev_impl;
+  xGenericReply        *rep       = &rep_impl;
 
   char *tmp_str;
 
@@ -68,6 +137,8 @@ test_printfuns(xnee_data *xd)
 
  for (i=1;i<128;i++)
     {
+      printf("  request: %d\n", i);
+      
       SET_BOGUES_REQ_VALUES(i);
       xnee_record_print_request(xd, xrecintd);  
       total++;
@@ -103,7 +174,18 @@ test_printfuns(xnee_data *xd)
       xnee_human_print_event_verbose(xd, xrecintd);  
       total++;
     }
-  
+
+
+  memset(xrecintd, 0, sizeof(XRecordInterceptData));  
+  memset(xrec_data, 0, sizeof(XRecordDatum));  
+  rep_type = 0;
+  rep->type = X_Reply;
+  xrec_data->reply = *(xGenericReply*)&req ;
+  xrecintd->data = xrec_data;
+
+  xnee_human_print_reply (xd, xrecintd );
+
+
 }
 
 int main()
@@ -123,6 +205,10 @@ int main()
   xnee_set_application_parameters (xdl, NULL);
 
   test_printfuns(xdl);
+
+  test_rangefuns(xdl);
+
+  test_distributionfuns(xdl);
 
 
   fprintf (stdout, "\n");
