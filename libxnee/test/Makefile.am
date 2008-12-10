@@ -2,8 +2,9 @@ LIBTEST = libtest
 TESTSETGET = testsetget
 TESTFEEDBACK = testfeedback
 TESTPRINT = testprint
+TESTDISP = testdisplay
 
-noinst_PROGRAMS = $(LIBTEST) $(TESTSETGET) $(TESTFEEDBACK) $(TESTPRINT)
+noinst_PROGRAMS = $(LIBTEST) $(TESTSETGET) $(TESTFEEDBACK) $(TESTPRINT) $(TESTDISP)
 
 EXTRA_DIST = test_setget.h
 
@@ -12,6 +13,7 @@ libtest_SOURCES = libtest.c
 testsetget_SOURCES = test_setget.c test_all.c 
 testfeedback_SOURCES = test_feedback.c
 testprint_SOURCES = print.c
+testdisplay_SOURCES = disp.c
 
 LIBXNEE_DIR = ../
 
