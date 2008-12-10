@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef 
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2008 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -196,16 +196,20 @@ xnee_open_display(xnee_data* xd)
 int 
 xnee_add_display_list ( xnee_data* xd, char * disp)
 {
-  char buf[10];
+  char buf[256];
   size_t next;
   size_t len;
   int ret=0;
-  int disp_len=strlen(disp);
+  int disp_len;
+
 
   if (disp==NULL)
     {
       XNEE_WRONG_PARAMS;
     }
+
+  disp_len = strlen(disp);
+
 
   xnee_verbose((xd, "xnee_add_display (xd, %s, )\n", disp));
 
