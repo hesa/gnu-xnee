@@ -232,9 +232,9 @@ xnee_record_print_record_range (xnee_data *xd, /*@null@*/ FILE *) ;
  *              and thereby enable synchronisation again
  * 
  * 
- */
 int
 xnee_rec_print_sys_info(xnee_data *xd);
+ */
 
 
 
