@@ -375,16 +375,16 @@ xnee_window_try_move(xnee_data *xd)
       return XNEE_OK;
     }
 
-  xnee_verbose((xd, "XMoveWindow(%d,0x%X, %d,%d)\n",
-		xd->grab,
+  xnee_verbose((xd, "XMoveWindow(%u,0x%X, %u,%u)\n",
+		(unsigned int)xd->grab,
 		rec_ptr->window,
-		sess_ptr->x ,
-		sess_ptr->y ));
-  XNEE_WINDOW_DEBUG(("XMoveWindow(%d,0x%X, %d,%d)\n",
-		xd->grab,
+		(unsigned int)sess_ptr->x ,
+		(unsigned int)sess_ptr->y ));
+  XNEE_WINDOW_DEBUG(("XMoveWindow(%u,0x%X, %u,%u)\n",
+		(unsigned int)xd->grab,
 		rec_ptr->window,
-		sess_ptr->x ,
-		sess_ptr->y ));
+		(unsigned int)sess_ptr->x ,
+		(unsigned int)sess_ptr->y ));
   XMoveWindow(xd->grab,
 	      rec_ptr->window,
 	      sess_ptr->x ,
@@ -436,16 +436,16 @@ xnee_window_try_move(xnee_data *xd)
       pos_x = sess_ptr->x + diff_x ;
       pos_y = sess_ptr->y + diff_y ;
 
-      xnee_verbose((xd, "XMoveWindow(%d,0x%X, %d,%d)\n",
-		    xd->grab,
+      xnee_verbose((xd, "XMoveWindow(%u,0x%X, %u,%u)\n",
+		    (unsigned int)xd->grab,
 		    rec_ptr->window,
-		    pos_x ,
-		    pos_y ));
-      XNEE_WINDOW_DEBUG(("XMoveWindow(%d,0x%X, %d,%d)\n",
-		    xd->grab,
+		    (unsigned int)pos_x ,
+		    (unsigned int)pos_y ));
+      XNEE_WINDOW_DEBUG(("XMoveWindow(%u,0x%X, %u,%u)\n",
+		    (unsigned int)xd->grab,
 		    rec_ptr->window,
-		    pos_x ,
-		    pos_y ));
+		    (unsigned int)pos_x ,
+		    (unsigned int)pos_y ));
       XMoveWindow(xd->grab, rec_ptr->window, pos_x, pos_y);
 
       XFlush(xd->grab);
