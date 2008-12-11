@@ -8,8 +8,14 @@ then
 else
     BASE_DEST_DIR=$1
 fi
+export CPU=x86
+if [ "$(uname -a | grep -c ppc)" != "0" ]
+then
+    export CPU=ppc
+fi
 
-export DEST_DIR=$BASE_DEST_DIR/coverage/$DATE/x86
+
+export DEST_DIR=$BASE_DEST_DIR/coverage/$DATE/$CPU
 mkdir -p $DEST_DIR
 
 
@@ -34,7 +40,10 @@ init_test()
     sleep 2
     
 
+<<<<<<< coverage.sh
+=======
     
+>>>>>>> 1.4
 }
 
 gen_x11_data()

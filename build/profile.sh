@@ -14,6 +14,11 @@ then
 else
     BASE_DEST_DIR=$1
 fi
+export CPU=x86
+if [ "$(uname -a | grep -c ppc)" != "0" ]
+then
+    export CPU=ppc
+fi
 
 
 init_test()
@@ -33,7 +38,7 @@ init_test()
     sleep 2
     
 
-    DEST_DIR=$BASE_DEST_DIR/profile/$DATE/x86
+    DEST_DIR=$BASE_DEST_DIR/profile/$DATE/$CPU
     mkdir -p $DEST_DIR
     
 }
