@@ -38,12 +38,6 @@ init_test()
     
     export DISPLAY=:32
     sleep 2
-    
-
-<<<<<<< coverage.sh
-=======
-    
->>>>>>> 1.4
 }
 
 gen_x11_data()
