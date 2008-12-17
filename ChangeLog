@@ -1,3 +1,14 @@
+2008-12-17  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_display.c (xnee_add_display): 
+	Fixed faulty return of memory fault
+
+2008-12-17  Henrik Sandklef  <hesa@sandklef.com>
+
+	* build/coverage.sh: 
+	XVFB display number adjustable
+
+
 2008-12-11  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/profile.sh: 
