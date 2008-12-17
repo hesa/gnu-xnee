@@ -41,7 +41,7 @@ int main()
   xnee_add_display_list(xdl, disp_buf); 
   total++;
 
-  ret = xnee_add_display_str(":0", xdl);
+  ret = xnee_add_display_str(getenv("DISPLAY"), xdl);
   XNEE_TEST_ASSERT(ret, 0, "xnee_add_display_str");
 
   dpy = XOpenDisplay(NULL);
