@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef 
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2008 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -386,7 +386,14 @@ xnee_add_display (Display *dpy, xnee_data* xd)
       /*@ignore@*/
       xd->distr_list = tmp;
       /*@end@*/
-      return (XNEE_MEMORY_FAULT);
+      if (xd->distr_list==NULL)
+	{
+	  /*@ignore@*/
+	  xd->distr_list = tmp;
+	  /*@end@*/
+	  tmp = NULL;
+	  return XNEE_MEMORY_FAULT;
+	}
     }
   /*@ignore@*/
   XTestGrabControl (dpy, True);
