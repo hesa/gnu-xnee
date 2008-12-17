@@ -23,7 +23,7 @@ test_distributionfuns(xnee_data *xd)
   strcat(disp_buf, getenv("DISPLAY"));
   strcat(disp_buf, ",");
   strcat(disp_buf, getenv("DISPLAY"));
-  xnee_add_display_list(xdl, disp_buf); 
+  xnee_add_display_list(xd, disp_buf); 
   total++;
 
   ret = xnee_print_distr_list (xd, NULL);
