@@ -1,4 +1,11 @@
-2008-12-17  Henrik Sandklef  <hesa@sandklef.com>
+2008-12-17  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/test/disp.c: 
+	Removing dependency to display :0
+	reading DISPLAY environmanet variable instead
+
+	* libxnee/src/xnee_range.c (is_dangerous_xserver): 
+	Checking if display name string is of zero length, then using NULL
 
 	* libxnee/src/xnee_display.c (xnee_add_display): 
 	Fixed faulty return of memory fault
