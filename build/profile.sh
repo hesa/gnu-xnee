@@ -4,7 +4,7 @@
 # current version is nothing but a hack to try out some conecpts
 #
 
-FMT=pdf
+FMT=ps
 PATH=$PATH:/opt/gprof2dot
 DATE=$(date '+%Y-%m-%d')
 
