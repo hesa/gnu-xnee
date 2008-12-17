@@ -12,10 +12,19 @@ int
 test_distributionfuns(xnee_data *xd)
 {
   int ret;
+  char disp_buf[256];
 
-  xnee_add_display_list(xd, ":0");
-  xnee_add_display_list(xd, ":0"); 
-  xnee_add_display_list(xd, ":0,:0"); 
+  xnee_add_display_list(xd, getenv("DISPLAY"));
+  total++;
+  xnee_add_display_list(xd, getenv("DISPLAY")); 
+  total++;
+  strcpy(disp_buf, getenv("DISPLAY"));
+  strcat(disp_buf, ",");
+  strcat(disp_buf, getenv("DISPLAY"));
+  strcat(disp_buf, ",");
+  strcat(disp_buf, getenv("DISPLAY"));
+  xnee_add_display_list(xdl, disp_buf); 
+  total++;
 
   ret = xnee_print_distr_list (xd, NULL);
   XNEE_TEST_ASSERT(ret, 0, "xnee_print_distr_list");

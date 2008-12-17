@@ -12,10 +12,13 @@ int main()
   xnee_data *xdl;
   int ret ;
   Display *dpy;
+  char disp_buf[256];
 
   fails = 0;
   total = 0;
   
+  
+
 
   printf (" display tester\n");
 
@@ -26,11 +29,16 @@ int main()
 
   xnee_set_application_parameters (xdl, NULL);
 
-  xnee_add_display_list(xdl, ":0");
+  xnee_add_display_list(xdl, getenv("DISPLAY"));
   total++;
-  xnee_add_display_list(xdl, ":0"); 
+  xnee_add_display_list(xdl, getenv("DISPLAY")); 
   total++;
-  xnee_add_display_list(xdl, ":0,:0"); 
+  strcpy(disp_buf, getenv("DISPLAY"));
+  strcat(disp_buf, ",");
+  strcat(disp_buf, getenv("DISPLAY"));
+  strcat(disp_buf, ",");
+  strcat(disp_buf, getenv("DISPLAY"));
+  xnee_add_display_list(xdl, disp_buf); 
   total++;
 
   ret = xnee_add_display_str(":0", xdl);
@@ -38,6 +46,7 @@ int main()
 
   dpy = XOpenDisplay(NULL);
 
+  printf("    adding display: %u\n", dpy);
   ret = xnee_add_display(dpy, xdl);
   XNEE_TEST_ASSERT(ret, 0, "xnee_add_display");
 
