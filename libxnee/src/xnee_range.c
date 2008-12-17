@@ -415,6 +415,12 @@ is_dangerous_xserver(char *dpy_name)
 
   if ( ret_val == -1 ) 
     {
+      if ( ( dpy_name != NULL ) &&
+	   ( strlen(dpy_name)==0 ))
+	{
+	  dpy_name = NULL;
+	}
+
       dpy = XOpenDisplay(dpy_name);
       vendor = ServerVendor (dpy);
       vendrel = VendorRelease(dpy);
