@@ -52,7 +52,7 @@ check: all
 	cd libxnee/test && ./testsetget
 	cd libxnee/test && ./testfeedback
 	cd libxnee/test && ./testprint
-	cd libxnee/test && ./testdisp
+	cd libxnee/test && ./testdisplay
 	cd cnee/test    && ./test_all.sh --clean
 	cd cnee/test    && ./test_all.sh --build
 	cd cnee/test    && ./test_all.sh --option
