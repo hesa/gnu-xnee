@@ -19,6 +19,8 @@ export DEST_DIR=$BASE_DEST_DIR/coverage/$DATE/$CPU
 mkdir -p $DEST_DIR
 
 
+XVFB_DISPLAY=":32"
+
 #
 # current version is nothing but a hack to try out some conecpts
 #
@@ -32,11 +34,11 @@ init_test()
 #
 #  Setup virtual X environment
 #
-    Xvfb -ac -screen 0 640x480x16 :32  2> /dev/null  > /dev/null &
+    Xvfb -ac -screen 0 640x480x16 $XVFB_DISPLAY  2> /dev/null  > /dev/null &
     XVFB_PID=$!
     
     
-    export DISPLAY=:32
+    export DISPLAY=$XVFB_DISPLAY
     sleep 2
 }
 
@@ -113,6 +115,7 @@ close_down()
 }
 
 init_test
+export DISPLAY=$XVFB_DISPLAY
 gen_x11_data&
 do_the_tests
 close_down
