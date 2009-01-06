@@ -1,6 +1,19 @@
+2009-01-06  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Fixed uc/lc typo in dvipdf
+	Removed dvi2ps check (not used anymore)
+
 2008-12-17  Henrik Sandklef  <hesa@gnu.org>
 
+	* build/profile.sh (FMT): 
+	Defaulting to ps format instead of pdf
+
+	* Makefile.am (check): 
+	Test file to exec is testdisplay (not testdisp)
+
 	* libxnee/test/disp.c: 
+	* libxnee/test/print.c: 
 	Removing dependency to display :0
 	reading DISPLAY environmanet variable instead
 
