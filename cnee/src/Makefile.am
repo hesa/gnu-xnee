@@ -98,3 +98,15 @@ cnee.texi: $(CNEE)$(EXEEXT)
 cnee.info: $(texi_TEXINFOS)
 	@echo "Generating info file from cnee.texi"
 	$(MAKEINFO) $< 
+
+cnee.html:  $(texi_TEXINFOS)
+	@echo "Generating html file from cnee.texi"
+	$(TEXI2HTML) $< 
+
+cnee.pdf:  $(texi_TEXINFOS)
+	@echo "Generating pdf file from cnee.texi"
+	$(TEXI2PDF) $< 
+
+cnee.txt:  $(texi_TEXINFOS)
+	@echo "Generating txt file from cnee.texi"
+	man ./cnee.1 | col -b > $@
