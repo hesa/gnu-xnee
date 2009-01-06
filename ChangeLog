@@ -1,5 +1,8 @@
 2009-01-06  Henrik Sandklef  <hesa@sandklef.com>
 
+	* cnee/src/Makefile.am (cnee.txt): 
+	Adding rules to build cnee manuals (html, text, pdf)
+
 	* configure.in: 
 	Fixed uc/lc typo in dvipdf
 	Removed dvi2ps check (not used anymore)
