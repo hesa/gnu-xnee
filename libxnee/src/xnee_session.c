@@ -643,6 +643,38 @@ signal_handler(int sig)
     }
 }
 
+static void  
+xnee_record_update_time_left(xnee_data *xd)
+{
+  static unsigned long time_stamp = 0 ;
+  struct timeval  cur_time;
+  struct timezone zoneData;
+  /* get current time */
+  if(  gettimeofday( &cur_time, &zoneData) == 0 )
+    {
+      if ( time_stamp == 0 ) 
+	{
+	  time_stamp = cur_time.tv_sec ;
+	}
+      else if ( cur_time.tv_sec > time_stamp )
+	{
+ 	  xd->xnee_info.time_recorded++;	   
+	  time_stamp = cur_time.tv_sec ;
+	}
+      else
+	{
+	  ;
+	}
+      
+    }
+  else
+    {
+      ;
+    }
+}
+
+
+
 int
 xnee_more_to_record(xnee_data *xd)
 {
@@ -656,6 +688,8 @@ xnee_more_to_record(xnee_data *xd)
   dats = xnee_get_data_left(xd);
   if (dats<0) dats = 1;
 
+
+  xnee_record_update_time_left(xd);
   tims = xnee_get_time_left(xd);
   if (tims<0) tims = 1;
 
