@@ -383,9 +383,6 @@ xnee_add_display (Display *dpy, xnee_data* xd)
       xnee_distr *tmp = xd->distr_list;
       xd->distr_list = (xnee_distr *) realloc (xd->distr_list, 
 					       xd->distr_list_size);
-      /*@ignore@*/
-      xd->distr_list = tmp;
-      /*@end@*/
       if (xd->distr_list==NULL)
 	{
 	  /*@ignore@*/
