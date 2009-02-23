@@ -76,6 +76,11 @@ MSEC=2
 ########################################################################
 xnee_init_fifo()
 {
+	sleep 0
+}
+
+xnee_init_fifo_obsolete()
+{
     rm -f $MY_FIFO
     touch $MY_FIFO
     $CNEE --replay --file $MY_FIFO   &
@@ -98,6 +103,11 @@ xnee_init_fifo()
 #
 ########################################################################
 xnee_init_file()
+{
+    sleep 0
+}
+
+xnee_init_file_obsolete()
 {
     rm -f $MY_FIFO
     mkfifo $MY_FIFO
@@ -123,7 +133,8 @@ xnee_init_file()
 ########################################################################
 xnee_write()
 {
-    echo "$*" >> $MY_FIFO
+#    echo "$*" >> $MY_FIFO
+    echo "$*" | $CNEE --replay --file stdin
 }
 
 
@@ -141,8 +152,9 @@ xnee_write()
 ########################################################################
 xnee_close_down()
 {
-    rm -f $MY_FIFO 2>/dev/null >/dev/null
-    kill $CNEE_PID 2>/dev/null >/dev/null
+#    rm -f $MY_FIFO 2>/dev/null >/dev/null
+#    kill $CNEE_PID 2>/dev/null >/dev/null
+    sleep 0
 }
 
 
