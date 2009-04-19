@@ -136,7 +136,6 @@
 	Fixed faulty directory (coverage instead of profile)
 
 
->>>>>>> 1.121
 2008-12-04  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/profile.sh: 
