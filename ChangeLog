@@ -1,3 +1,8 @@
+2009-04-19  Henrik Sandklef  <hesa@gnu.org>
+
+	* libxnee/src/xnee_resource.c: 
+	Adjusted parsing type of the xns file
+
 2009-01-06  Henrik Sandklef  <hesa@sandklef.com>
 
 	* cnee/src/Makefile.am (cnee.txt): 
@@ -131,6 +136,7 @@
 	Fixed faulty directory (coverage instead of profile)
 
 
+>>>>>>> 1.121
 2008-12-04  Henrik Sandklef  <hesa@gnu.org>
 
 	* build/profile.sh: 

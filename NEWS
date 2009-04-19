@@ -5,6 +5,9 @@ Changes in coming version 3.03
        #23965: Uninitialized variable in cnee
        Demo mode crashes sometimes
 
+       reported on bug list: 
+       Sync doesn't work
+
    * Doc:   Protocol specification fault corrected
             Added new retype options
             Switched to using texi2pdf texi2ps
