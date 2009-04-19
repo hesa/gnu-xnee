@@ -1005,9 +1005,10 @@ xnee_find_option_entry_impl (xnee_data     *xd,
       return XNEE_MEMORY_FAULT;
     }
 
-/*   printf ("[option: %s] ", option); */
+/*   printf ("[option: %s] ", option);  */
 
-  if ( (syntax_type==XNEE_CLI_SYNTAX) || (syntax_type==XNEE_XNS_SYNTAX) )
+  if (syntax_type==XNEE_CLI_SYNTAX)
+    /* || (syntax_type==XNEE_XNS_SYNTAX) )*/
     {
       if (option[0]=='-')
 	{
@@ -1022,6 +1023,8 @@ xnee_find_option_entry_impl (xnee_data     *xd,
 	  option++;
 	}
     }
+
+/*   printf (" -- [option: %s] 2222 ", option);  */
 
   for (i=0;options[i].key!=XNEE_LAST_OPTION;i++)
     {
@@ -1112,6 +1115,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
   xnee_verbose((xd, "\tshort option:'%s'\n", 
 		EMPTY_IF_NULL(xnee_options[entry].short_option)));
   
+
   /*
     #define verbose_option(a)  \
     xnee_verbose((xd, "%s:%d %s Handling: '%s' \n", \
