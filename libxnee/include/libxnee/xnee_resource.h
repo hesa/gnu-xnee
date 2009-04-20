@@ -274,4 +274,11 @@ int
 xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int syntax_mode);
 
 
+int
+xnee_find_option_entry_implss (xnee_data     *xd, 
+			     xnee_option_t *options,
+			     const char    *option, 
+			     int            syntax_type);
+
+
 #endif  /* XNEE_RESOURCE_H */
