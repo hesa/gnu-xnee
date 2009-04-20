@@ -365,7 +365,6 @@ xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd )
 {
   XRecordDatum *xrec_data  ;
   int           event_type ;
-  int i ;
 
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   event_type = (int)xrec_data->type ;
@@ -1158,8 +1157,10 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
     }
 
 
-
   max=xnee_get_max_range(xd);
+
+  printf (" print ranges %d\n",max);
+  fprintf (fp," print ranges\n");
 
   fprintf (fp, "#########################################\n");
   fprintf (fp, "#          Recording ranges             #\n");
