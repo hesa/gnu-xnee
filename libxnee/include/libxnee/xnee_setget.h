@@ -598,10 +598,16 @@ int
 xnee_set_new_window_pos (xnee_data *xd);
 
 int
+xnee_get_new_window_pos (xnee_data *xd);
+
+int
 xnee_get_new_window_pos_value (xnee_data *xd);
 
 int
 xnee_unset_new_window_pos (xnee_data *xd);
+
+int
+xnee_get_recall_window_pos (xnee_data *xd);
 
 int
 xnee_set_recall_window_pos (xnee_data *xd);
@@ -671,9 +677,6 @@ xnee_get_author_email_str(xnee_data *xd);
 
 char *
 xnee_get_char_str(xnee_data *xd);
-
-int
-xnee_set_first_list_str(xnee_data *xd, char *str);
 
 int
 xnee_set_all_clients_str(xnee_data *xd, char *str);
