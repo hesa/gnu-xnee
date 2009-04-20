@@ -27,6 +27,11 @@
 #include "cnee_fake.h"
 #include "cnee_strings.h"
 #include "libxnee/xnee_resource.h"
+#include "libxnee/xnee_utils.h"
+#include "libxnee/xnee_keysym.h"
+#include "libxnee/xnee_fake.h"
+#include "libxnee/xnee_display.h"
+#include "libxnee/xnee_session.h"
 
 
 
@@ -39,7 +44,7 @@ cnee_fake_string(xnee_data *xd, char *my_string)
 
   len = (int)strlen(my_string);
 
-  xnee_verbose((xd, "Faking: '%s'  len=%d\n", my_string));
+  xnee_verbose((xd, "Faking: '%s'  len=%d\n", my_string, len));
 
   for (i=0;i<len;i++)
     {
@@ -64,10 +69,8 @@ cnee_fake_string(xnee_data *xd, char *my_string)
 static int
 xnee_type_help_sub (xnee_data *xd, xnee_option_t *opts, int type)
 {
-  int ret;
+  int ret = XNEE_OK;
   int i ;
-  char *command;
-  char *descr;
   char *option_long;
   char *option_short;
   char *option_arg;
@@ -77,14 +80,14 @@ xnee_type_help_sub (xnee_data *xd, xnee_option_t *opts, int type)
   #define HELP_STR_SIZE 500
   char my_string[HELP_STR_SIZE];
 
-  for (i = 0; xnee_options[i].key!=XNEE_LAST_OPTION; i++) 
+  for (i = 0; opts[i].key!=XNEE_LAST_OPTION; i++) 
     {
-      if (xnee_options[i].type==type)
+      if (opts[i].type==type)
 	{
-	  option_long  = xnee_options[i].option ;
-	  option_short = xnee_options[i].short_option ;
-	  option_arg   = xnee_options[i].args ;
-	  option_descr = xnee_options[i].description ;
+	  option_long  = opts[i].option ;
+	  option_short = opts[i].short_option ;
+	  option_arg   = opts[i].args ;
+	  option_descr = opts[i].description ;
 	  snprintf (my_string, HELP_STR_SIZE, "%s,-%s %s\n",
 		    (option_long ? option_long  : empty_str),
 		    (option_short? option_short : empty_str),
