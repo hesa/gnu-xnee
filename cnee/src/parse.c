@@ -27,6 +27,7 @@
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_setget.h"
+#include "parse.h"
 
 /* #include "cnee_fake.h" */
 /* #include "cnee_strings.h" */
