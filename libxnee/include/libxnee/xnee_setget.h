@@ -681,7 +681,6 @@ xnee_get_char_str(xnee_data *xd);
 int
 xnee_set_all_clients_str(xnee_data *xd, char *str);
 
-
 int
 xnee_set_future_clients_str(xnee_data *xd, char *str);
 
