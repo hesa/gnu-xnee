@@ -26,11 +26,12 @@
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_resource.h"
+#include "libxnee/xnee_session.h"
 #include "parse.h"
 
 
 static int 
-cnee_handle_err(xnee_data *xd, int error)
+cnee_handle_err(int error)
 {
   const char *err;
   const char *descr;
@@ -71,7 +72,7 @@ int main(int argc,char *argv[])
   ret = xnee_set_program_name (xd, XNEE_CLI);
   if ( ret != XNEE_OK)
     {
-      cnee_handle_err(xd, ret);
+      cnee_handle_err(ret);
     }
 
   /* Well .... parse the args */
@@ -86,14 +87,14 @@ int main(int argc,char *argv[])
 	{
 	  ret = XNEE_WRONG_PARAMS;
 	}
-      cnee_handle_err(xd, ret);
+      cnee_handle_err(ret);
     }
 
   /* Set the cli parameters */
   ret = xnee_set_application_parameters (xd, argv);
   if ( ret != XNEE_OK)
     {
-      cnee_handle_err(xd, ret);
+      cnee_handle_err(ret);
     }
 
   if (ret==XNEE_OK)
@@ -104,7 +105,7 @@ int main(int argc,char *argv[])
 
   if ( ret != XNEE_OK)
   {
-    cnee_handle_err(xd, ret);
+    cnee_handle_err(ret);
   }
 
 
