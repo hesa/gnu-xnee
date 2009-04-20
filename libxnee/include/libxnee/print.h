@@ -329,6 +329,8 @@ xnee_human_print_request_verbose (xnee_data *xd, XRecordInterceptData *xrecintd 
 void 
 xnee_human_print_event_verbose (xnee_data *xd, XRecordInterceptData *xrecintd );
 
+int
+xnee_print_data_str(xnee_data *xd, char *tmp, int type);
 
 
 #endif /* XNEE_PRINT_H */
