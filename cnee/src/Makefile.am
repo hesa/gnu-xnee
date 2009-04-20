@@ -49,7 +49,7 @@ BUF_VERBOSE_FLAG = -DNO_BUF_VERBOSE
 endif
 
 if PEDANTIC
-PEDANTIC_FLAGS =  -W -Wall -pedantic -pedantic-errors  -Werror
+PEDANTIC_FLAGS =  -W -Wall -pedantic -pedantic-errors  -Werror -Wno-format
 else
 PEDANTIC_FLAGS = 
 endif
