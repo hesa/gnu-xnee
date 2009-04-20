@@ -1,7 +1,7 @@
 2009-04-21  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_grab.c: 
-	Added typedef fpr X error handlers
+	Added typedef for X error handlers
 	Removed compilation warnings
 
 	* libxnee/src/xnee_km.c: 
