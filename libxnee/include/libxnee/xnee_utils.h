@@ -113,9 +113,8 @@ xnee_client_id (Display *dpy);
 
 
 
-
-
-
+int
+xnee_str2int(xnee_data *xd, char *str);
 
 char **
 xnee_str2strptr (char *tmp, int fill_option);
