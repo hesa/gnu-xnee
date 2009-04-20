@@ -39,6 +39,10 @@
 
 int xkm_rem_blanks (char *array);
 
+
+xnee_keymask
+get_modifier_sub(xnee_data *xd,  char *mod_str) ;
+
 const char *
 xnee_symbolic_modifier2modifier (xnee_data *xd, const char *mod_str)
 {
@@ -118,7 +122,7 @@ get_modifier_from_mapping_sub(Display *display, char *mod_str)
 			  XKeysymToString(my_keysym),
 			  XKeysymToString(my_keysym)))
 	    {
-	      ret |= get_modifier_sub(NULL, mod_list[i], NULL);
+	      ret |= get_modifier_sub(NULL, mod_list[i]);
 	      return ret;
 	    }
 	  else
@@ -240,159 +244,6 @@ get_modifier_sub(xnee_data *xd,  char *mod_str)
 }
 
 
-#ifdef USE_OBSOLETE
-static int 
-is_last (xnee_data *xd,  char *mod_strs) 
-{
-  char *tmp;
-  int i ;
-  int len = strlen (mod_strs);
-  tmp=mod_strs;
-
-  xnee_verbose ((xd, " ---> is_last ('%s' %d)\n", mod_strs, len));
-
-  for (i=0;  (i<len) ; i++)
-    {
-      if (tmp[i]=='+')
-	{
-	  return XNEE_OK;
-	}
-    }
-  xnee_verbose ((xd, " <--- is_last\n"));
-  return 1;
-}
-
-xnee_keymask
-get_modifier(xnee_data *xd,  char *mod_strs, xnee_km_tuple *km) 
-{
-  #define MODIFIER_BUF_SIZE 50
-  int ret=0;
-  /*  int try_ret;*/
-  char *tmp;
-  char mod_head[MODIFIER_BUF_SIZE]="";
-  char mod_tail[MODIFIER_BUF_SIZE]="";
-  int i;
-  /*  int last=0;*/
-  int len=strlen(mod_strs);
-  int found=0;
-  static int _level=0;
-  int level=_level;
-  xkm_rem_blanks(mod_strs);
-
-  _level++;
-
-
-  xnee_verbose((xd, "%d ---> get_modifier:\"%s\"\n", level, mod_strs));
-  tmp=mod_strs;
-  
-  if (!is_last(xd, tmp)==1)
-    {
-      xnee_verbose((xd, "%d --- get_modifier:\n", level));
-      for (i=0;  (i<len) ; i++)
-	{
-	  xnee_verbose((xd, "%d --- get_modifier 2:\n", level));
-	  if (tmp[i]=='+')
-	    {
-	      
-	      xnee_verbose((xd, "%d --- get_modifier 3: '%s'\n", level, tmp));
-	      found=1;
-	      strncpy (mod_head, tmp, i); 
-	      tmp+=(sizeof(char)*i+1);
-
-	      xnee_verbose((xd, "%d --- get_modifier 4: '%s'\n", level, mod_head));
-	      strncpy (mod_tail, MODIFIER_BUF_SIZE - strlen(mod_tail), tmp); 
-
-	      xnee_verbose((xd, "%d --- get_modifier 5: '%s'\n", level, mod_tail));
-	      ret |= get_modifier_sub (xd, mod_head, km);
-
-	      ret |= get_modifier (xd, mod_tail, km);
-	      xnee_verbose((xd, "%d ---- get_modifier FOUND \"%s\"   ret=%d\n", level, tmp, ret));
-	      break;
-	    }
-	}
-    }
-  else
-    {
-      ret |= get_modifier_sub (xd, tmp, km);
-      xnee_verbose((xd, "%d ---- get_modifier LAST :\"%s\"  ret=%d\n", level, tmp, ret));
-      
-    }
- /*	  XKM_TAB(level);
-	  xnee_verbose((xd, "\t %d head:\"%s\"   tail:\"%s\"\n", level, mod_head, mod_tail));
-  */
-  
-  xnee_verbose((xd, "%d <--- get_modifier:\"%s\" --- ret=%d\n", level, mod_strs, ret));
-  return ret;
-}
-
-#endif
-
-
-/**************************************************************
- *                                                            *
- * get_modifier                                               *
- *                                                            *
- *                                                            *
- **************************************************************/
-/* 
- *  OBSOLETE 
- *
- *
-xnee_keymask
-xget_modifier(xnee_data *xd, char *mod_str) 
-{
-  int ret=-1;
-
-  if( xnee_check (mod_str, "Shift", "Shift"  ) )
-    {
-      ret = ShiftMask;
-    }
-  else if( xnee_check (mod_str, "LockMask", "Lock"  ) )
-    {
-      ret = LockMask;
-    }
-  else if( xnee_check (mod_str, "Control", "ctrl"  ) )
-    {
-      ret = ControlMask;
-    }
-  else if( xnee_check (mod_str, "Mod1Mask", "m1m"  ) )
-    {
-      ret = Mod1Mask;
-    }
-  else if( xnee_check (mod_str, "Mod2Mask", "m2m"  ) )
-    {
-      ret = Mod2Mask;
-    }
-  else if( xnee_check (mod_str, "Mod3Mask", "m3m"  ) )
-    {
-      ret = Mod3Mask;
-    }
-  else if( xnee_check (mod_str, "Mod4Mask", "m4m"  ) )
-    {
-      ret = Mod4Mask;
-    }
-  else if( xnee_check (mod_str, "Mod5Mask", "m5m"  ) )
-    {
-      ret = Mod5Mask;
-    }
-  else if( xnee_check (mod_str, "AnyModifier", "any"  ) )
-    {
-      ret = AnyModifier;
-    }
-  else if( xnee_check (mod_str, "none", "0"  ) )
-    {
-      ret = 0;
-    }
-  else 
-    {
-      ret = -1;
-    }
-  xnee_verbose((xd, "get_modifier\tmodifier=%d (%s)\n", ret, mod_str));
-  return ret;
-}
-
-*/
-
 int
 xnee_check_key(xnee_data *xd)
 {
@@ -473,6 +324,7 @@ xnee_handle_rec_key(xnee_data *xd)
   char *exec_prog ;
   char *tmp_ptr;
   int len;
+  int exec_ret;
 
   xnee_verbose ((xd, " ---> xnee_handle_rec_km\n"));
 
@@ -536,17 +388,17 @@ xnee_handle_rec_key(xnee_data *xd)
 	  xnee_verbose((xd, "Xnee exec received... couldn't find valid exec program\n"));
 	  return ret;
 	}
-
+      
       len = strlen (tmp_ptr);
       len = len + 10 ; 
-    
+      
       exec_prog = (char*) calloc(len, sizeof(char));
       
       sprintf(exec_prog, "%s %d &", xnee_get_exec_prog(xd), exec_ctr);
       
       xnee_verbose ((xd, " ---  xnee_handle_rec_km: EXEC \n"));
       feedback (xd, "Xnee exec received");
-
+      
       if (exec_prog==NULL)
 	{
 	  fprintf (xd->out_file, "%s   \n",XNEE_EXEC_MARK);
@@ -554,16 +406,22 @@ xnee_handle_rec_key(xnee_data *xd)
       else
 	{
 	  fprintf (xd->out_file, "%s    %s\n", XNEE_EXEC_MARK, exec_prog);
-	  system ( exec_prog );
+	  exec_ret= system (exec_prog );
+	  
+	  if ( exec_ret != 0 )
+	    {
+	      fprintf(stderr, "Failed to launch: %s\n", "xterm");
+	    }
 	  free(exec_prog);
+	  
+	  ret=XNEE_GRAB_EXEC;
 	}
-      ret=XNEE_GRAB_EXEC;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_INSERT)
     {
       time_t rawtime;
       struct tm * timeinfo;
-
+      
       feedback (xd, "Xnee inserting mark in log file");
       xnee_verbose ((xd, " ---  xnee_handle_rec_km: MARK \n"));
       time ( &rawtime );
@@ -581,7 +439,7 @@ xnee_handle_rec_key(xnee_data *xd)
     {
       xnee_verbose ((xd, " ---  xnee_handle_rec_km: UNKNOWN \n"));
     }  
-
+  
   xnee_verbose ((xd, " <--- xnee_handle_rec_km\n"));
   return ret;
 }
@@ -591,6 +449,7 @@ int
 xnee_handle_rep_key(xnee_data *xd)
 {
   int ret=XNEE_OK;
+  int exec_ret;
   xnee_verbose ((xd, " ---> xnee_handle_rep_km\n"));
 
   if (xd->grab_keys->grabbed_action==XNEE_GRAB_STOP)
@@ -618,7 +477,12 @@ xnee_handle_rep_key(xnee_data *xd)
     {
       xnee_verbose ((xd, " ---  xnee_handle_rep_km: EXEC \n"));
       feedback (xd, "Xnee exec received");
-      system ("xterm&");
+      exec_ret = system ("xterm&");
+
+      if ( exec_ret != 0 )
+	{
+	  fprintf(stderr, "Failed to launch: %s\n", "xterm");
+	}
       ret=XNEE_GRAB_EXEC;
     }
   else if (xd->grab_keys->grabbed_action==XNEE_GRAB_INSERT)
