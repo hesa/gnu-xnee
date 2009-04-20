@@ -1812,6 +1812,7 @@ int
 xnee_set_xnee_data (xnee_data *xd)
 {
   xd_saved = xd;
+  return XNEE_OK;
 }
  
 int
