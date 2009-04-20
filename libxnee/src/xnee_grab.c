@@ -37,6 +37,7 @@
 #include "libxnee/xnee_alloc.h"
 
 
+typedef  int (*x_err_handler)(Display *, XErrorEvent *);
 
 int 
 xnee_ungrab_key (xnee_data* xd, int mode)
@@ -95,7 +96,12 @@ xnee_ungrab_key (xnee_data* xd, int mode)
 static int
 xnee_ungrab_err_handler(Display* dpy, XErrorEvent* ev)
 {
+  if ( dpy==0 || ev==0 )
+    {
+      return XNEE_WRONG_PARAMS;
+    }
   xnee_set_interrupt_error(xnee_get_xnee_data(), XNEE_BAD_GRAB_DATA) ;
+  return XNEE_OK;
 }
 
 /**************************************************************
@@ -107,10 +113,8 @@ xnee_ungrab_err_handler(Display* dpy, XErrorEvent* ev)
 int 
 xnee_ungrab_keys (xnee_data* xd)
 {
-  void *old_err_handler;
+  x_err_handler old_err_handler = XSetErrorHandler(xnee_ungrab_err_handler);
   xnee_verbose((xd, "---> xnee_ungrab_keys\n")); 
-
-  old_err_handler = XSetErrorHandler(xnee_ungrab_err_handler);
 
   xnee_ungrab_key ( xd, XNEE_GRAB_STOP);
   xnee_ungrab_key ( xd, XNEE_GRAB_PAUSE);
@@ -271,7 +275,12 @@ xnee_free_grab_keys(/*@null@*/ xnee_grab_keys *grab_keys)
 static int
 xnee_grab_err_handler(Display* dpy, XErrorEvent* ev)
 {
+  if ( dpy==0 || ev==0 )
+    {
+      return XNEE_WRONG_PARAMS;
+    }
   xnee_set_interrupt_error(xnee_get_xnee_data(), XNEE_BAD_GRAB_DATA) ;
+  return XNEE_OK;
 }
 
 
@@ -289,7 +298,7 @@ xnee_grab_all_keys (xnee_data* xd)
   int ret;
   int i ; 
   xnee_action_key ak;
-  void *old_err_handler;
+  x_err_handler old_err_handler = XSetErrorHandler(xnee_ungrab_err_handler);
 
 #define SET_OLD_ERR_HANDLER() \
     XSetErrorHandler(old_err_handler);
