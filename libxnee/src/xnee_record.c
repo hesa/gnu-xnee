@@ -127,8 +127,8 @@ xnee_record_handle_event_printer(xnee_data * xd,
 				 XRecordDatum *xrec_data, 
 				 XRecordInterceptData *xrecintd)
 {
-  static int last_record_window_pos_win=0;
-  static int last_record_window_pos_par=0;
+  static unsigned int last_record_window_pos_win=0;
+  static unsigned int last_record_window_pos_par=0;
 
   KeyCode kc;
   XWindowAttributes window_attributes_return;
@@ -237,7 +237,7 @@ xnee_record_handle_event_printer(xnee_data * xd,
       screen = xnee_get_screen_nr(xd, 
 				  xd->data,
 				  xrec_data->event.u.keyButtonPointer.root);
-      if (screen<0)
+      if (screen==0)
 	{
 	  xnee_verbose((xd, "Could not find a screen, bailing out\n"));
 	  return XNEE_SCREEN_MISSING;
@@ -317,15 +317,15 @@ xnee_record_handle_event_printer(xnee_data * xd,
 	      xnee_verbose((xd," window has has name '%s'\n", win_name));
 	    }
 	  fprintf (out, 
-		   "%s:%d,%d:%d,%d,%d,%d,%d,%d:%dx%d+%d+%d:%d,%d:%s\n", 
+		   "%s:%d,%d:%u,%u,%u,%u,%u,%d:%dx%d+%d+%d:%d,%d:%s\n", 
 		   XNEE_NEW_WINDOW_MARK,
 		   rx,
 		   ry,
-		   xrec_data->event.u.reparent.event,
-		   xrec_data->event.u.reparent.window,
-		   xrec_data->event.u.reparent.parent,
-		   xrec_data->event.u.reparent.x,
-		   xrec_data->event.u.reparent.y,
+		   (unsigned int) xrec_data->event.u.reparent.event,
+		   (unsigned int) xrec_data->event.u.reparent.window,
+		   (unsigned int) xrec_data->event.u.reparent.parent,
+		   (unsigned int) xrec_data->event.u.reparent.x,
+		   (unsigned int) xrec_data->event.u.reparent.y,
 		   xrec_data->event.u.reparent.override,
 		   window_attributes_return.x,
 		   window_attributes_return.y,
@@ -355,6 +355,7 @@ xnee_record_handle_event_printer(xnee_data * xd,
       break;
     }
   
+  return XNEE_OK;
 }
 
 
@@ -440,7 +441,6 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
 
 
 
-
 /**************************************************************
  *                                                            *
  * xnee_record_dispatch                                       *
@@ -457,7 +457,7 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   int           ret;
 
   XNEE_DEBUG ( (stderr ," --> xnee_record_dispatch()  \n"  ));
-  
+
   if ( (!data->data) || (data==NULL) )
     {
       XRecordFreeData(data);
@@ -523,9 +523,9 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
       break;   
     case XRecordClientStarted:
       xnee_verbose((xd,  "ClientStarted \n"));
-      fprintf(stderr,  "ClientStarted %d %d \n", 
-	      data->id_base, 
-	      data->data);
+      fprintf(stderr,  "ClientStarted %u %u \n", 
+	      (unsigned int) data->id_base, 
+	      (unsigned int) data->data);
       break;
     case XRecordClientDied:
       xnee_verbose((xd,  "ClientDied \n"));
@@ -601,8 +601,6 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
     }
 
   
-
-
   switch(data->category)
     {
     case XRecordFromClient:

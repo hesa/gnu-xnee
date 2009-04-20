@@ -42,6 +42,7 @@
 #include "libxnee/xnee_session.h"
 #include "libxnee/xnee_utils.h"
 #include "libxnee/xnee_window.h"
+#include "libxnee/xnee_range.h"
 
 static int time_out_counter = 0;
 static int diff_counter     = 0;
@@ -272,6 +273,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	}
 /*        ret = xnee_set_ranges(xd); */
     }
+
+  xnee_print_ranges(xd,stdout);
   
   if ( 
       (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || 
@@ -302,6 +305,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
            ret = xnee_print_sys_info(xd , xd->out_file);
            XNEE_RETURN_IF_ERR(ret);
 	}
+
+  xnee_print_ranges(xd,stdout);
 
       ret = xnee_expression_handle_session(xd, tmp, &xindata);
 
@@ -668,8 +673,8 @@ xnee_setup_rep_recording(xnee_data *xd)
 void 
 xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
 {
-  static int last_record_window_pos_win=0;
-  static int last_record_window_pos_par=0;
+  static unsigned int last_record_window_pos_win = 0;
+  static unsigned int last_record_window_pos_par = 0;
   
   XRecordDatum *xrec_data;
   int           type;
@@ -683,7 +688,7 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
       return;
     }
 
-  
+		      
 
 
   xrec_data  = (XRecordDatum *) (data->data) ;
@@ -735,7 +740,7 @@ xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
 			xrec_data->event.u.reparent.parent) )
 		    {
 		      xnee_verbose((xd, "   xnee_replay adding window 0x%X\n",
-			      xrec_data->event.u.reparent.window));
+				    (unsigned int)xrec_data->event.u.reparent.window));
 
 		      xnee_window_add_attribute_received(xd, 
 							 &window_attributes_return,
