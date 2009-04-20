@@ -33,8 +33,13 @@
 #include "libxnee/xnee_record.h"
 #include "libxnee/xnee_replay.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/xnee_session.h"
+#include "libxnee/xnee_utils.h"
 #include "libxnee/xnee_alloc.h"
+#include "libxnee/xnee_resource.h"
+#include "libxnee/xnee_plugin.h"
 #include "libxnee/feedback.h"
+#include "libxnee/xnee_range.h"
 
 
 
@@ -1453,15 +1458,6 @@ int
 xnee_set_author_email(xnee_data *xd, char *str){
   xd->xrm.author_email=strdup(str);
   return XNEE_OK;
-}
-
-int
-xnee_set_first_list_str(xnee_data *xd, char *str)
-{
-  int ret = XNEE_OK;  
-  
-  ret = xnee_set_first_last(xd);
-  return ret;
 }
 
 #ifdef USE_OBSOLETE
