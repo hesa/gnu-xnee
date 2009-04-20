@@ -1,7 +1,86 @@
+2009-04-21  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_grab.c: 
+	Added typedef fpr X error handlers
+	Removed compilation warnings
+
+	* libxnee/src/xnee_km.c: 
+	Cleaned up code
+	Removed compilation warnings
+	Removed obsoleted code
+	Removed extra arg to get_modifier_from_mapping_sub
+
+	* libxnee/src/xnee_setget.c (xnee_set_xnee_data): 
+	Added return XNEE_OK
+
+	* libxnee/include/libxnee/xnee_utils.h: 
+	Added prototype for: str2int
+
+	* cnee/src/parse.c: 
+	Removed unused variable (need_init)
+
+	* libxnee/include/libxnee/xnee_resource.h: 
+	Added prototype for: xnee_find_option_entry_impl
+
+	* libxnee/include/libxnee/print.h: 
+	Added prototype for: xnee_print_data_str
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+	Added prototype for xnee_set_project_file
+
+	* cnee/src/main.c (cnee_handle_err): 
+	Removed unused argument
+
+	* cnee/src/main.c: 
+	Cleaned up code from compiler warnings
+
+	* cnee/src/cnee_demo.c: 
+	Removed compiler warnings
+
+	* cnee/src/Makefile.am (PEDANTIC_FLAGS): 
+	Added -Wno-format to pedantic mode flags, 
+	since we are using non static formats.
+
+2009-04-20  Henrik Sandklef  <hesa@gnu.org>
+
+	* cnee/src/cnee_fake.c (xnee_type_help_sub): 
+	Removed compiler warnings
+	More modular printing (using opts as argument)
+
+
+	* libxnee/src/xnee_setget.c: 
+	removed function: int xnee_set_first_list_str(xnee_data *xd, char *str);
+	Compiler warnings removed
+
+	* libxnee/src/xnee_replay.c: 
+	* libxnee/src/xnee_record.c: 
+	Compiler warnings removed
+
+
+	* libxnee/src/print.c (xnee_human_print_event_verbose): 
+	Removed unused variable i
+
 2009-04-19  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_resource.c: 
 	Adjusted parsing type of the xns file
+
+2009-02-23  Henrik Sandklef  <hesa@sandklef.com>
+
+	* doc/xnee_exampl.texi: 
+	Removing docs on obsoleted reqs
+
+	* share/xnee.sh.in1: 
+	Obsoleting fif/file functionality
+	Using one cnee instance per bash function call
+
+2009-02-17  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_display.c (xnee_add_display): 
+	Better cleaning up
+
+	* libxnee/src/xnee_session.c (xnee_record_update_time_left): 
+	New function to calculate time left to record
 
 2009-01-06  Henrik Sandklef  <hesa@sandklef.com>
 
