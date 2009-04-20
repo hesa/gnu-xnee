@@ -25,8 +25,16 @@
 
 
 #include "libxnee/xnee.h"
-#include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_setget.h"
+#include "libxnee/print.h"
+#include "libxnee/xnee_resource.h"
+#include "libxnee/xnee_utils.h"
+#include "libxnee/xnee_range.h"
+#include "libxnee/xnee_session.h"
+
+
+#include "cnee_fake.h"
+#include "cnee_demo.h"
 #include "parse.h"
 
 /* #include "cnee_fake.h" */
@@ -282,7 +290,6 @@ static xnee_option_t cnee_options_impl[] =
 
 
 xnee_option_t *cnee_options = &cnee_options_impl[0];
-static int need_init = 1;
 
 #define xnee_cli_key2string(key) \
    xnee_key2string(xd, cnee_options, key)
@@ -522,12 +529,9 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
   int ret = XNEE_WRONG_PARAMS;
   const char *descr;
   const char *err;
-  const char *sol;
   char *saved_arg = "(NO ARG)";
-  int entry ;
   int args_used;
 
-  char *last_opt = NULL;
 
   for (i=1; i < argc; i++) 
     {
