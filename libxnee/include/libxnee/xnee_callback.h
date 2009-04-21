@@ -42,7 +42,7 @@
  */
 int
 xnee_set_callback (xnee_data *xd,
-		   callback_ptrptr, 
+		   callback_ptrptr dest, 
 		   const char *sym_name);
 
 /* OLD VERSION
