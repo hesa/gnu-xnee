@@ -55,7 +55,7 @@ xnee_record_dispatch2 (XPointer xpoint_xnee_data,
 		       XRecordInterceptData *data )
 {
 
-  if ( (!data->data) || (data==NULL) )
+  if ( (data==NULL) || (!data->data) )
     {
       XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
@@ -458,7 +458,7 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
 
   XNEE_DEBUG ( (stderr ," --> xnee_record_dispatch()  \n"  ));
 
-  if ( (!data->data) || (data==NULL) )
+  if ( (data==NULL) || (!data->data) )
     {
       XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
@@ -566,7 +566,7 @@ xnee_human_dispatch(XPointer xpoint_xnee_data,
   
   XNEE_DEBUG ( (stderr ," --> xnee_human_dispatch()  \n"  ));
   
-  if ( (!data->data) || (data==NULL) )
+  if ( (data==NULL) || (!data->data) )
     {
       XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_human_dispatch()  \n"  ));
