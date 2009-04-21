@@ -1,3 +1,85 @@
+2009-04-22  Henrik Sandklef  <hesa@sandklef.com>
+
+	* cnee/src/cnee_printer.c: 
+	Minor indentation fixes
+	Removed unused variables
+
+	* libxnee/src/xnee_session.c: 
+	Type casting to int (to remove compiler warnings)
+	(c) year updated	
+
+	* libxnee/src/feedback.c: 
+	(c) year updated	
+	Fixed pedantic warnings (function pointer)
+	
+	* libxnee/src/xnee_alloc.c: 
+	obsoleted function: xnee_reset_retype_info
+	(c) year updated
+
+	* libxnee/src/xnee_callback.c: 
+	(c) year updated	
+	Fixed pedantic warnings
+
+	* libxnee/src/xnee_display.c: 
+	Added missing return statement
+	(c) year updated
+	Type casting to int (to remove compiler warnings)
+
+	* libxnee/src/xnee_expr.c: 
+	Removed unused vars
+	Chceking return value of system
+	Safer pointer arithmetics when using stat. buffers
+	(c) year updated
+
+	* libxnee/src/xnee_range.c: 
+	Better check for X.org server
+	(c) year updated
+
+	* libxnee/src/xnee_record.c: 
+	Better screen nr handling 
+	Removed dangerious call to XRecordFreeData
+
+	* libxnee/src/xnee_resource.c: 
+	Adding mode in call to xnee_set_plugin_name
+
+	* libxnee/src/xnee_strings.c: 
+	Added strings to handle name of 
+	external dl-loaded funs
+
+	* libxnee/src/xnee_utils.c: 
+	Added verbose printout
+	Setting variable leave to 0 on decl.
+
+	* libxnee/src/xnee_window.c: 
+	Setting variable win_name to NULL before use
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+	* libxnee/src/xnee_setget.c: 
+	Added (c) years
+	Added prototype for xnee_set_project_file
+
+	* libxnee/src/xnee_plugin.c: 
+	Added variable to know where to search 
+	for (dl-loaded) functions
+	(c) year updated
+
+	* libxnee/include/libxnee/xnee_strings.h: 
+	Added names for external callback functions
+	(c) year updated
+
+	* libxnee/include/libxnee/xnee_plugin.h: 
+	Added variable to know where to search 
+	for (dl-loaded) functions
+	(c) year updated
+
+	* libxnee/include/libxnee/xnee_expr.h: 
+	Added missing xnee_is_script prototype
+	(c) year updated
+
+	* libxnee/include/libxnee/xnee_callback.h: 
+	added name of arg (dest) as in c file
+	(c) year updated
+
 2009-04-21  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/test/callback.c:
