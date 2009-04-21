@@ -30,10 +30,11 @@
  * Opens the plugin file (pl_name). Xnee will use the functions in this file instead of the built in
  * @param xd       xnee's main structure
  * @param pl_name  name of the plugin file
+ * @param mode     external (1) or internal (0) plugin
  * @return int     0 means OK.
  */
 int
-xnee_use_plugin(xnee_data *xd, char *pl_name);
+xnee_use_plugin(xnee_data *xd, char *pl_name, unsigned char mode);
 
 
 /**
