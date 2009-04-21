@@ -3,7 +3,8 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *  Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef                    
+ *  Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 
+ *                2009 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -27,6 +28,7 @@
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_dl.h"
 #include "libxnee/feedback.h"
+#include "libxnee/xnee_setget.h"
 #ifdef HAVE_STDARG_H
 #include <stdarg.h>
 #else
@@ -51,6 +53,11 @@ typedef  void* (*xosd_int_fun)    (void*, int)    ;
 typedef  void* (*xosd_char_fun)   (void*, char*)  ; 
 typedef  void* (*xosd_print_fun) (void*, int, int, char *) ; 
 
+typedef  xosd_create_fun *xosd_create_fun_ptr;
+typedef  xosd_int_fun    *xosd_int_fun_ptr;
+typedef  xosd_char_fun   *xosd_char_fun_ptr;
+typedef  xosd_print_fun  *xosd_print_fun_ptr;
+
 static xosd_print_fun xosd_print ;
 static char *xosd_font ;
 static char *xosd_default_font = "-*-terminus-medium-r-*-*-*-320-*-*-*-*-*-*";
@@ -63,6 +70,7 @@ static xosd_char_fun    xosd_char   = NULL ;
 const char *
 xnee_get_xosd_font_impl(xnee_data *xd)
 {
+  xnee_verbose((xd, "xnee_get_xosd_font_impl\n"));
   return xosd_font;
 }
 
@@ -73,6 +81,7 @@ xnee_set_xosd_font_impl(xnee_data *xd, char *font_str)
     {
       return XNEE_XOSD_FAILURE;
     }
+  xnee_verbose((xd, "xnee_set_xosd_font_impl\n"));
   XNEE_FREE_IF_NOT_NULL(xosd_font);
   xosd_font = strdup(font_str);
   if ( xosd_font == NULL)
@@ -86,7 +95,10 @@ xnee_set_xosd_font_impl(xnee_data *xd, char *font_str)
 static int
 xnee_setup_xosd(xnee_data *xd)
 {
-
+  xosd_create_fun_ptr xosd_create_p ;
+  xosd_int_fun_ptr    xosd_int_p    ;
+  xosd_char_fun_ptr   xosd_char_p   ;
+  xosd_print_fun_ptr  xosd_print_p  ;
 
   xosd_lib = xnee_dlopen (xd, "libxosd.so", RTLD_LAZY);
   if (xosd_lib==NULL) 
@@ -95,7 +107,10 @@ xnee_setup_xosd(xnee_data *xd)
       return XNEE_XOSD_FAILURE ; 
     }
   
-  xosd_create = (xosd_create_fun) xnee_dlsym(xd, xosd_lib, "xosd_create");
+  
+  xosd_create_p = &xosd_create;
+  *(void**)(xosd_create_p) = xnee_dlsym(xd, xosd_lib, "xosd_create");
+  xosd_create = (xosd_create_fun) *xosd_create_p;
   if (xosd_create==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -109,8 +124,8 @@ xnee_setup_xosd(xnee_data *xd)
       return XNEE_XOSD_FAILURE ; 
     }
   
-
-  xosd_int = (xosd_int_fun)xnee_dlsym(xd, xosd_lib, "xosd_set_shadow_offset");
+  xosd_int_p = &xosd_int;
+  *(void**)(xosd_int_p) = xnee_dlsym(xd, xosd_lib, "xosd_set_shadow_offset");
   if (xosd_int==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -121,7 +136,8 @@ xnee_setup_xosd(xnee_data *xd)
   xosd_int(osd, 2);
 
   
-  xosd_int =  (xosd_int_fun) xnee_dlsym(xd, xosd_lib, "xosd_set_timeout");
+  *(void**)xosd_int_p =  xnee_dlsym(xd, xosd_lib, "xosd_set_timeout");
+  xosd_int =  (xosd_int_fun) *xosd_int_p;
   if (xosd_int==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -131,8 +147,8 @@ xnee_setup_xosd(xnee_data *xd)
     }
   xosd_int(osd, FEEDBACK_TIMEOUT);
 
-  
-  xosd_char = (xosd_char_fun) xnee_dlsym(xd, xosd_lib, "xosd_set_font");
+  xosd_char_p = &xosd_char;
+  *(void**)xosd_char_p = xnee_dlsym(xd, xosd_lib, "xosd_set_font");
   if (xosd_char==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -144,7 +160,9 @@ xnee_setup_xosd(xnee_data *xd)
   xnee_set_xosd_font(xd, xosd_default_font);
   xosd_char(osd, xosd_font);
 
-  xosd_char = (xosd_char_fun) xnee_dlsym(xd, xosd_lib, "xosd_set_colour");
+
+  *(void**)xosd_char_p = xnee_dlsym(xd, xosd_lib, "xosd_set_colour");
+  xosd_char = (xosd_char_fun) *xosd_char_p;
   if (xosd_char==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -154,8 +172,8 @@ xnee_setup_xosd(xnee_data *xd)
     }
   xosd_char(osd, "yellow");
 
-
-  xosd_print= (xosd_print_fun) xnee_dlsym(xd, xosd_lib, "xosd_display");
+  xosd_print_p = &xosd_print;
+  *(void**)xosd_print_p = xnee_dlsym(xd, xosd_lib, "xosd_display");
   if (xosd_print==NULL) 
     { 
       feedback_used=XNEE_UNDEFINED_FEEDBACK; 
@@ -252,8 +270,7 @@ xnee_feedback_close(xnee_data *xd)
 int 
 feedback(xnee_data *xd, char *str, ... ) 
 {
-  
-   va_list ap;
+   va_list ap=NULL;
    static char buf[200];
    int conv;
    int ret;
@@ -284,7 +301,7 @@ feedback(xnee_data *xd, char *str, va_dcl  valist)
     }
   else if (feedback_used==XNEE_STDERR_FEEDBACK)
     {
-       fprintf (stderr,"%s", buf);
+      fprintf (stderr,"%s", buf);
       ret = XNEE_OK;
     }
   else if (feedback_used==XNEE_NO_FEEDBACK)
