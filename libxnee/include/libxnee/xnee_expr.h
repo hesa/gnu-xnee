@@ -36,3 +36,5 @@ xnee_expression_handle_project(xnee_data *xd, char *tmp);
 
 
 
+int
+xnee_is_script(xnee_data *xd, char *tmp);
