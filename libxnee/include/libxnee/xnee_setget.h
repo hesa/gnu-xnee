@@ -826,4 +826,20 @@ xnee_set_retype_release_delay(xnee_data *xd, unsigned int delay);
 #define xnee_get_retype_release_delay(xd) \
   (xd->retype.key_release_delay)
 
+
+int 
+xnee_set_resolution_str (xnee_data *xd, char *str);
+
+int
+xnee_set_plugin_name(xnee_data *xd, char *str);
+
+int 
+xnee_set_xosd_feedback(xnee_data *xd);
+
+int
+xnee_set_stderr_feedback(xnee_data *xd);
+
+int 
+xnee_set_no_feedback(xnee_data *xd);
+
 #endif /* XNEE_SETGET_H */ 
