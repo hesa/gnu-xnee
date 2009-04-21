@@ -3,8 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- * Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
- *               2007 Henrik Sandklef 
+ * Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 
+ *               2005, 2006, 2007, 2009  Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -283,14 +283,7 @@ xnee_expression_handle_settings(xnee_data *xd, char *tmp, int synt_mode)
   #define RANGE_BUF_SIZE 100
   int ret=XNEE_SETTINGS_DATA;  
   char **ret_strptr;
-  char *range_tmp = NULL;
-  char *range = NULL;
-  char range_buf[RANGE_BUF_SIZE];
-  char opt_buf[RANGE_BUF_SIZE];
-  char *opt;
-  int len=0;
   char *my_tmp;
-  int   option_key;
   int args_used ;
 
   if (tmp==NULL)
@@ -352,9 +345,9 @@ xnee_expression_handle_comment(xnee_data *xd, char *tmp)
 static int
 xnee_expression_handle_action(xnee_data *xd, char *tmp)
 {
-  static int exec_counter = 0 ;
+/*   static int exec_counter = 0 ; */
   char *exec_prog ;
-  int len;
+  int ret;
 
   xnee_verbose ((xd, "handling action: %s\n", tmp));
 
@@ -367,14 +360,14 @@ xnee_expression_handle_action(xnee_data *xd, char *tmp)
     exec_prog = xnee_get_exec_prog(xd);
     if (exec_prog != NULL)
       {
-	system (exec_prog);
+	ret = system (exec_prog);
 	return XNEE_ACTION_DATA;
       }
 
     exec_prog = getenv("XNEE_EXEC_PROGRAM");
     if (exec_prog != NULL)
       {
-	system (exec_prog);
+	ret = system (exec_prog);
 	return XNEE_ACTION_DATA;
       }
   }
@@ -395,11 +388,6 @@ xnee_expression_handle_newwindow(xnee_data *xd, char *tmp)
   xnee_win_pos xwp;
   int ret;
 
-  int event ;
-  int window ;
-  int parent ;
-  int rx;
-  int ry;
   int x ;
   int y ;
   int override ;
@@ -428,7 +416,7 @@ xnee_expression_handle_newwindow(xnee_data *xd, char *tmp)
 	      &xwp.height,
 	      &xwp.border_h,
 	      &xwp.border_w,
-	      &buf);
+	      &buf[0]);
 
       xwp.name=strdup(buf);
 
@@ -818,6 +806,7 @@ xnee_is_replayable(xnee_data *xd, char *tmp)
 
   first_c = tmp[0];
 
+  xnee_verbose((xd, " xnee_is_replayable\n"));  
 
   if ( ( first_c >= '0' ) && ( first_c<='3' ) )
     {
@@ -830,6 +819,9 @@ xnee_is_replayable(xnee_data *xd, char *tmp)
 int
 xnee_is_script(xnee_data *xd, char *tmp)
 {
+
+  xnee_verbose((xd, " xnee_is_replayable\n"));  
+
   if ( strncmp(tmp, "xnee-", strlen("xnee-")) == 0 )
     {
       return 1;
