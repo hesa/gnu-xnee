@@ -4,7 +4,8 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
- *                      2004, 2005, 2006, 2007 Henrik Sandklef      
+ *                      2004, 2005, 2006, 2007, 2008
+ *                      2009 Henrik Sandklef      
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -234,15 +235,16 @@ xnee_record_handle_event_printer(xnee_data * xd,
       break;
     case MotionNotify:  
       kc = 0;
-      screen = xnee_get_screen_nr(xd, 
+      ret = xnee_get_screen_nr(xd, 
 				  xd->data,
 				  xrec_data->event.u.keyButtonPointer.root);
-      if (screen==0)
+      if (ret<0)
 	{
 	  xnee_verbose((xd, "Could not find a screen, bailing out\n"));
 	  return XNEE_SCREEN_MISSING;
 	}
-      
+      screen = ret;
+
       do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
       fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
 	       event_type,
@@ -460,7 +462,6 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
 
   if ( (data==NULL) || (!data->data) )
     {
-      XRecordFreeData(data);
       XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
       (void)xnee_process_count(XNEE_PROCESS_RESET);
       return;
