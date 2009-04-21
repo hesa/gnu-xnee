@@ -36,11 +36,29 @@
  *                                                            *
  **************************************************************/
 int
-xnee_use_plugin(xnee_data *xd, char *pl_name)
+xnee_use_plugin(xnee_data *xd, char *pl_name, unsigned char mode)
 {
   int ret=0;
   #define LIB_NAME_STR_SIZE 100
   char lib_name[LIB_NAME_STR_SIZE];
+
+
+  const char *rec_cb ;
+  const char *rep_cb ;
+  const char *sync_cb ;
+
+  if (mode==0)
+    {
+      rec_cb  = XNEE_RECORD_CALLBACK_NAME;
+      rep_cb  = XNEE_REPLAY_CALLBACK_NAME;
+      sync_cb = XNEE_SYNC_FUNCTION_NAME;
+    }
+  else
+    {
+      rec_cb  = EXT_RECORD_CALLBACK_NAME;
+      rep_cb  = EXT_REPLAY_CALLBACK_NAME;
+      sync_cb = EXT_SYNC_FUNCTION_NAME;
+    }
 
   xnee_verbose ((xd, "Using plugin file: %s\n", pl_name));
   strncpy (lib_name, "lib", LIB_NAME_STR_SIZE);
@@ -66,7 +84,8 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
 
   ret = xnee_set_callback (xd, 
 			   &xd->rec_callback,
-			   XNEE_RECORD_CALLBACK_NAME);
+			   rec_cb);
+
   if ( ret != XNEE_OK )
     {
       /*
@@ -77,7 +96,7 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
   
   ret = xnee_set_callback (xd, 
 			   &xd->rep_callback,
-			   XNEE_REPLAY_CALLBACK_NAME);
+			   rep_cb);
   if ( ret != XNEE_OK )
     {
       /*      
