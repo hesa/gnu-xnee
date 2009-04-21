@@ -48,10 +48,10 @@ xnee_set_callback (xnee_data *xd,
 		   const char *sym_name)
 {
   const char *error;
-  callback_ptr saved;
+  callback_ptrptr saved;
   xnee_verbose ((xd, "\nTrying to set \"%s\" as callback\n", sym_name));
 
-  saved = *dest;
+  saved = dest;
 
   if (xd==NULL)
     {
@@ -59,14 +59,14 @@ xnee_set_callback (xnee_data *xd,
     }
   else
     {
-      *dest = (callback_ptr) xnee_dlsym(xd, 
+      dest = (callback_ptrptr) xnee_dlsym(xd, 
 					xd->plugin_handle,
 					sym_name);
       error = xnee_dlerror(xd) ;
       if ( error != NULL)  
 	{
 	  xnee_verbose ((xd, "Failed to set \"%s\" from plugin\n", sym_name));
-	  *dest = saved ;
+	  *dest = *saved ;
 	  fputs(error, stderr);
 	  return (XNEE_PLUGIN_FILE_ERROR);
 	}
@@ -103,9 +103,9 @@ xnee_set_synchronize (xnee_data *xd,
     }
   else
     {
-      *dest = (synch_ptr) xnee_dlsym(xd, 
-				     xd->plugin_handle, 
-				     sym_name);
+      dest = (synch_ptrptr) xnee_dlsym(xd, 
+				       xd->plugin_handle, 
+				       (const char*)sym_name);
       
       if ((error = xnee_dlerror(xd)) != NULL)  
 	{
