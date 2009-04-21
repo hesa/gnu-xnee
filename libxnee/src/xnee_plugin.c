@@ -85,9 +85,8 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
 	      exit(XNEE_PLUGIN_FILE_ERROR);
       */
     }
-  
-   
-   
+
+#ifdef USE_DYNAMIC_SYNC_FUN   
   ret = xnee_set_callback (xd, 
 			   &xd->sync_fun,
 			   XNEE_SYNC_FUNCTION_NAME);
@@ -98,7 +97,8 @@ xnee_use_plugin(xnee_data *xd, char *pl_name)
       exit(XNEE_PLUGIN_FILE_ERROR);
       */
     }
-  
+#endif   /* USE_DYNAMIC_SYNC_FUN    */
+
    return XNEE_OK;
 }
 
