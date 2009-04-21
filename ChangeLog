@@ -1,3 +1,27 @@
+2009-04-21  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/test/callback.c:
+	* libxnee/test/callback_so.c: 
+	* libxnee/test/Makefile.am: 
+	Added test file for dynamic lib (plugin)
+
+	* libxnee/src/xnee_plugin.c: 
+	Removed (using macros) unnecassary code
+
+	* libxnee/src/xnee_callback.c: 
+	Removed compilation warnings 
+
+	* libxnee/src/xnee_record.c: 
+	Checking for NULL args in correct order
+
+	* libxnee/src/xnee_resource.c: 
+	Removed compilation warnings
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+	Removed compilation warnings
+	by adding some prototypes
+	
+
 2009-04-21  Henrik Sandklef  <hesa@gnu.org>
 
 	* libxnee/src/xnee_grab.c: 
