@@ -11,7 +11,8 @@ test_setfeedback(xnee_data *xd)
 {
   int ret ;
   const char *ptr;
-  static char *xosd_test_font = "-*-terminus-medium-r-*-*-*-120-*-*-*-*-*-*";
+  static char *xosd_test_font = "-bitstream-courier 10 pitch-*-*-*-*-*-*-*-*-*-*-*-*";
+  /*" * -*-terminus-medium-r-*-*-*-120-*-*-*-*-*-*"; */
   /*
     no
   */
@@ -44,6 +45,7 @@ test_setfeedback(xnee_data *xd)
     xosd
   */
 
+  xnee_set_verbose(xd);
   ret = xnee_set_xosd_feedback(xd);
   XNEE_TEST_ASSERT(ret, 0, "xnee_set_xosd_feedback");
 
@@ -62,6 +64,11 @@ test_setfeedback(xnee_data *xd)
   ptr = xnee_get_xosd_font_impl(xd);
   XNEE_TEST_ASSERT_DIFF(ptr, NULL, "xnee_get_xosd_font_impl");
   
+
+  ret = feedback(xd, "   ** Testing xosd feedback again\n");
+  XNEE_TEST_ASSERT(ret, 0, "feedback");
+
+  usleep(2000*1000);
 
 }
 

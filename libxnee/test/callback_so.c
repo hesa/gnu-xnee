@@ -2,20 +2,22 @@
 #include "libxnee/xnee.h"
 
 void 
-xnee_record_dispatch (XPointer xpoint_xnee_data,
+xnee_record_dispatch_external (XPointer xpoint_xnee_data,
 		      XRecordInterceptData *data )
 {
-  printf(" dummy callback\n");
-
-  if ( (!data->data) || (data==NULL) )
+  static int ctr=0;
+  if (++ctr%1000==0) 
     {
-      XRecordFreeData(data);
+      printf(" %d ", ctr);
+      fflush(stdout);
+    }
+
+  if (  (data==NULL) || (!data->data) )
+    {
       xnee_process_count(XNEE_PROCESS_RESET);
       return;
     } 
 
-  printf(" dummy callback\n");
-  fflush (stdout);
   XRecordFreeData(data);
   return;
 }
@@ -23,22 +25,19 @@ xnee_record_dispatch (XPointer xpoint_xnee_data,
 
 
 void 
-xnee_replay_dispatch (XPointer type_ref, XRecordInterceptData *data)
+xnee_replay_dispatch_external (XPointer type_ref, XRecordInterceptData *data)
 {
-  
-  XRecordDatum *xrec_data;
-  int           type;
-  xnee_data    *xd;
-  int rec_window_pos = 0;
-  XWindowAttributes window_attributes_return;
-  int ret;
+  static int ctr=0;
+  if (++ctr%1000==0) 
+    {
+      printf(" %d ", ctr);
+      fflush(stdout);
+    }
 
-  printf(" dummy callback\n");
-
-  if (data->data==NULL)
+  if (  (data==NULL) || (!data->data) )
     {
       return;
     }
   XRecordFreeData(data);
-
+  return;
 }

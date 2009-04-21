@@ -14,6 +14,12 @@ test_distributionfuns(xnee_data *xd)
   int ret;
   char disp_buf[256];
 
+  xnee_add_display_list(xd, ":0");
+  total++;
+  xnee_add_display_list(xd, ":0"); 
+  total++;
+  xnee_add_display_list(xd, ":0,:0"); 
+  total++;
   xnee_add_display_list(xd, getenv("DISPLAY"));
   total++;
   xnee_add_display_list(xd, getenv("DISPLAY")); 
@@ -147,7 +153,7 @@ test_printfuns(xnee_data *xd)
   xrecintd->server_time = 200; \
   xrec_data->req    = *(xReq*)&req;\
   xrec_data->type   = req_type;\
-  xrecintd->data    = xrec_data;
+  xrecintd->data    = (unsigned char*)xrec_data;
 
 
  for (i=1;i<128;i++)
@@ -155,6 +161,8 @@ test_printfuns(xnee_data *xd)
       printf("  request: %d\n", i);
       
       SET_BOGUES_REQ_VALUES(i);
+
+
       xnee_record_print_request(xd, xrecintd);  
       total++;
 
@@ -177,7 +185,7 @@ test_printfuns(xnee_data *xd)
   ev->u.keyButtonPointer.state = 0 ;   \
   xrec_data->event  = *(xEvent*)&ev;  \
   xrec_data->type   = (unsigned char) ev_type ; \
-  xrecintd->data    = xrec_data;  
+  xrecintd->data    = (unsigned char*) xrec_data;  
 
   for (i=2;i<35;i++)
     {
@@ -196,7 +204,7 @@ test_printfuns(xnee_data *xd)
   rep_type = 0;
   rep->type = X_Reply;
   xrec_data->reply = *(xGenericReply*)&req ;
-  xrecintd->data = xrec_data;
+  xrecintd->data = (unsigned char*) xrec_data;
 
   xnee_human_print_reply (xd, xrecintd );
   total++;
@@ -206,7 +214,7 @@ test_printfuns(xnee_data *xd)
 
   err->type = X_Error;
   xrec_data->error = *(xError*)&err;
-  xrecintd->data   = xrec_data;
+  xrecintd->data   = (unsigned char*) xrec_data;
   xnee_human_print_error (xd, xrecintd );
   total++;
 
