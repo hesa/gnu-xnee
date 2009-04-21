@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 
- *                 2005, 2006, 2007 Henrik Sandklef                    
+ *                 2005, 2006, 2007, 2009 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -43,6 +43,7 @@
 #include "libxnee/datastrings.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_session.h"
+#include "libxnee/xnee_alloc.h"
 
 
 static struct xnee_ranges  myxrs           ;
@@ -176,6 +177,7 @@ xnee_free_ranges(xnee_data *xd)
 {
    int i ; 
 
+   xnee_verbose((xd, " -- xnee_free_ranges\n"));
 
    for (i=0;i<XNEE_NR_OF_TYPES;i++)
    {
@@ -247,6 +249,8 @@ xnee_add_to_list2(xnee_data *xd, int type, int ev)
 {
    int i ;
    struct xnee_range *xrp;
+
+
 
    /* An item is added, set recording active */
    xd->record_setup->active = 1;
@@ -394,7 +398,7 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 	}
       else
 	{
-	  ret == XNEE_RANGE_FAILURE ;	  
+	  ret = XNEE_RANGE_FAILURE ;	  
 	}
     }
 
@@ -431,7 +435,7 @@ is_dangerous_xserver(char *dpy_name)
 
 	  int a = vendrel / 10000000 ;
 	  int b = (vendrel /   100000) % 100 ;
-	  int c = (vendrel /     1000) % 100 ;
+/* 	  int c = (vendrel /     1000) % 100 ; */
 
 	  if (  ( ( a == 7 ) || ( a == 1 ) ) &&
 		( b >= 1 ) )
@@ -600,7 +604,6 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
   xnee_verbose ((xd, "nt arg=%d\n", type));
   xnee_verbose ((xd, "string arg=%s\n", range));
 
-
   while ( 1 ) 
     {
       next=strspn (range, "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_");
@@ -669,6 +672,7 @@ xnee_is_type_nr_set(xnee_data *xd, int type, int nr)
 {
   int i ; 
 
+  xnee_verbose((xd, " -- xnee_is_type_nr_set\n"));
   for (i=0; i<xrs->type[type].index ;i++)
     {
       if ( xrs->type[type].data[i] == nr )
@@ -704,7 +708,6 @@ xnee_set_ranges(xnee_data *xd)
       first = -1;
       last  = -1;
 
-   
       for (i=0; i<xrs->type[j].index ;i++)
 	{
 
@@ -758,6 +761,8 @@ xnee_rem_from_list(xnee_data *xd, int type, int ev)
    int j ; 
 
    struct xnee_range *xrp;
+
+   xnee_verbose((xd, " -- xnee_rem_from_list\n"));
 
    if (need_init==1)
      {
