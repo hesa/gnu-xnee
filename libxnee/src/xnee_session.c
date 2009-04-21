@@ -3,7 +3,8 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
+ *                      2009 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -141,7 +142,7 @@ xnee_close_down(xnee_data* xd)
     }
 #endif
 
-  xnee_verbose((xd, "Freeing modifier mapping memory %d ", xd->map));
+  xnee_verbose((xd, "Freeing modifier mapping memory %d ", (int)xd->map));
   XFreeModifiermap(xd->map);
 
   xnee_verbose((xd, "Closing displays on host "));
@@ -646,7 +647,7 @@ signal_handler(int sig)
 static void  
 xnee_record_update_time_left(xnee_data *xd)
 {
-  static unsigned long time_stamp = 0 ;
+  static signed long time_stamp = 0 ;
   struct timeval  cur_time;
   struct timezone zoneData;
   /* get current time */
