@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef 
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
+                        2004, 2009  Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -319,7 +320,6 @@ xnee_str2strptr (char *tmp, int fill_option)
 {
   int size=0; 
   int str_size=0 ; 
-  int leave = 0;
   char **ret ; 
   char *blank_ptr1;
   char *str;
@@ -471,6 +471,8 @@ int
 xnee_str2int(xnee_data *xd, char *str)
 {
   int ret=XNEE_OK;
+
+  xnee_verbose((xd, " xnee_str2int\n"));  
 
   if (str==NULL)
     {
