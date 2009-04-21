@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2006, 2007, 2008 Henrik Sandklef                    
+ *        Copyright (C) 2006, 2007, 2008, 2009 
+ *                      Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -27,6 +28,8 @@
 #include "libxnee/xnee_window.h"
 #include "libxnee/print_varargs.h"
 #include "libxnee/print.h"
+#include "libxnee/xnee_alloc.h"
+#include "libxnee/xnee_setget.h"
 
 /*
  *  In this file the following two words are frequent enough
@@ -80,6 +83,8 @@ xnee_window_print_lists(void)
     }
   fprintf (stderr,"--- End of list of windows ....\n");
   fprintf (stderr,"\n");
+
+  return XNEE_OK;
 }
 
 
@@ -291,6 +296,7 @@ xnee_window_remove_window(xnee_data *xd, int rec_idx, int ses_idx)
   session_index--;
   received_index--;
       
+  return XNEE_OK;
 }
 
 
@@ -312,7 +318,6 @@ xnee_window_try_move(xnee_data *xd)
   int nr_of_moves = 0;
   XWindowAttributes win_attributes;
   Window child;
-  char *win_name = NULL;
 
   xnee_verbose((xd, "Trying to move window %d %d \n",
 	  session_index,
