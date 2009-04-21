@@ -115,6 +115,9 @@ extern const char*  XNEE_REPLAY_CALLBACK_NAME ;
 extern const char*  XNEE_RECORD_CALLBACK_NAME ;
 extern const char*  XNEE_SYNC_FUNCTION_NAME   ;
 
+extern const char*  EXT_REPLAY_CALLBACK_NAME  ;
+extern const char*  EXT_RECORD_CALLBACK_NAME  ;
+extern const char*  EXT_SYNC_FUNCTION_NAME    ;
 
 extern const char*  XNEE_FAKE_MOTION          ;
 extern const char*  XNEE_FAKE_X_ARG           ;
