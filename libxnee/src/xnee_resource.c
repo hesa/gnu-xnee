@@ -56,7 +56,12 @@
 #define  INC_ARGS_USED(a, str) if(str!=NULL) a=1; else a=0;
 
 
-static int needs_init=1;
+int
+xnee_option2id(xnee_data *xd, 
+ 	       xnee_option_t *options, 
+	       const char *str, 
+	       int syntax_type);
+
 
 static xnee_option_t xnee_options_impl[] = 
   {
@@ -817,7 +822,7 @@ xnee_add_resource(xnee_data *xd)
 
       if ( tmp == NULL)
 	{
-	  XNEE_SYNTAX_ERROR;
+	  return XNEE_SYNTAX_ERROR;
 	}
 
       /* remove trailing blanks and newlines|tab... */
@@ -870,6 +875,8 @@ xnee_key2id(xnee_data      *xd,
 	    int             key)
 {
   int i ;
+
+  xnee_verbose((xd, "xnee_key2id key=%d\n", key));
   
   for (i=0;options[i].key!=XNEE_LAST_OPTION;i++)
     {
@@ -929,11 +936,16 @@ xnee_option2id(xnee_data *xd,
   int i =0;
   char *tmp;
 
+
   if (str==NULL)
     {
       return XNEE_SYNTAX_ERROR;
     }
   
+  xnee_verbose((xd, "xnee_option2id '%s'\n",
+		str));
+
+
   tmp=(char*)str;
   if (syntax_type==XNEE_CLI_SYNTAX)
     {
@@ -1067,8 +1079,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 {
   int ret = XNEE_OK;
   int key; 
-  int entry ; 
-  char **str_ptr ;
+  int entry = XNEE_OPTION_NOT_FOUND; 
   int opt_int;
 
   if (opt_and_args==NULL)
@@ -1105,10 +1116,10 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
   xnee_verbose((xd, "Found xns entry for '%s' '%s' at position: %d\n", 
 		opt_and_args[0],opt_and_args[1], entry));
 
-  xnee_verbose((xd, "\tlong option: '%d'\n", 
-		xnee_options[entry].option));
-  xnee_verbose((xd, "\tshort option:'%d'\n", 
-		xnee_options[entry].short_option));
+  xnee_verbose((xd, "\tlong option: '%u'\n", 
+		(unsigned int) xnee_options[entry].option));
+  xnee_verbose((xd, "\tshort option:'%u'\n", 
+		(unsigned int) xnee_options[entry].short_option));
 
   xnee_verbose((xd, "\tlong option: '%s'\n", 
 		EMPTY_IF_NULL(xnee_options[entry].option)));
@@ -1524,7 +1535,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_EVERYTHING_KEY:
       verbose_option("XNEE_EVERYTHING_KEY");
-      fprintf (stderr, "\everyting' is an obsoleted option\n");
+      fprintf (stderr, "'everyting' is an obsoleted option\n");
       ret = XNEE_SYNTAX_ERROR;
       *args_used = 1;
       break;
