@@ -3,7 +3,8 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
+ *                      2009 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -48,10 +49,8 @@ xnee_set_callback (xnee_data *xd,
 		   const char *sym_name)
 {
   const char *error;
-  callback_ptrptr saved;
+  callback_ptr saved;
   xnee_verbose ((xd, "\nTrying to set \"%s\" as callback\n", sym_name));
-
-  saved = dest;
 
   if (xd==NULL)
     {
@@ -59,14 +58,16 @@ xnee_set_callback (xnee_data *xd,
     }
   else
     {
-      dest = (callback_ptrptr) xnee_dlsym(xd, 
-					xd->plugin_handle,
-					sym_name);
+      saved = *dest;
+
+      *(void**)(dest) =  xnee_dlsym(xd, 
+				    xd->plugin_handle,
+				    sym_name);
       error = xnee_dlerror(xd) ;
       if ( error != NULL)  
 	{
 	  xnee_verbose ((xd, "Failed to set \"%s\" from plugin\n", sym_name));
-	  *dest = *saved ;
+	  *dest = saved ;
 	  fputs(error, stderr);
 	  return (XNEE_PLUGIN_FILE_ERROR);
 	}
