@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef 
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
+ *                      2004, 2009  Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -48,6 +49,9 @@ const char*  XNEE_REPLAY_CALLBACK_NAME = "xnee_replay_dispatch";
 const char*  XNEE_RECORD_CALLBACK_NAME = "xnee_record_dispatch";
 const char*  XNEE_SYNC_FUNCTION_NAME   = "xnee_sync_fun";
 
+const char*  EXT_REPLAY_CALLBACK_NAME = "xnee_replay_dispatch_external";
+const char*  EXT_RECORD_CALLBACK_NAME = "xnee_record_dispatch_external";
+const char*  EXT_SYNC_FUNCTION_NAME   = "xnee_sync_fun_external";
 
 const char*  XNEE_FAKE_MOTION          = "fake-motion";
 const char*  XNEE_FAKE_X_ARG           = "x";
