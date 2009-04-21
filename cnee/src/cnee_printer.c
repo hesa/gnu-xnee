@@ -4,7 +4,8 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
- *                      2004, 2005, 2006, 2007 Henrik Sandklef
+ *                      2004, 2005, 2006, 2007,
+ *                      2009 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -73,7 +74,6 @@ xnee_usage_printer(FILE *fd, int tmp_size, char *pre, char *str)
   #define USAGE_PRINT_LINE_LEN 256
   char line_buf[USAGE_PRINT_LINE_LEN];
 
-  char *tmp = str;
   int   len = strlen(str);
   int   ret ;
   int   size = tmp_size;
@@ -86,8 +86,10 @@ xnee_usage_printer(FILE *fd, int tmp_size, char *pre, char *str)
 
   while (len>0)
     {
-      ret = snprintf (line_buf, size, str);
-      printf ("%s %s\n", pre, line_buf);
+      ret = snprintf (line_buf, 
+		      size,
+		      (const char*)str);
+      fprintf (fd, "%s %s\n", pre, line_buf);
 /*       printf ("** '%s'    '%s'\n", line_buf, str); */
 /*       printf (" len =%d   ret=%d   str'%s'\n", */
 /* 	      len, ret, str); */
@@ -103,7 +105,6 @@ void
 xnee_print_sub_impl (FILE *fd, xnee_option_t *options, int type, int format )
 {
   int i ; 
-  char *descr;
   char *option_long;
   char *option_short;
   char *option_arg;
@@ -177,8 +178,6 @@ xnee_usage (FILE *fd)
   char **cpp;
   char *command;
   char *descr;
-  int i ;
-
 
   fprintf (fd ,"USAGE: %s [OPTIONS]\n", XNEE_CLI );
   fprintf (fd ,"\n");
