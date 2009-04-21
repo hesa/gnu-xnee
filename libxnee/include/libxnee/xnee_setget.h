@@ -3,7 +3,9 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
+ *                      2004, 2005, 2006, 2007, 2008
+ *                      2009  Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -827,11 +829,14 @@ xnee_set_retype_release_delay(xnee_data *xd, unsigned int delay);
   (xd->retype.key_release_delay)
 
 
+int
+xnee_set_project_file(xnee_data *xd, char *name);
+
 int 
 xnee_set_resolution_str (xnee_data *xd, char *str);
 
 int
-xnee_set_plugin_name(xnee_data *xd, char *str);
+xnee_set_plugin_name(xnee_data *xd, char *str, unsigned char mode);
 
 int 
 xnee_set_xosd_feedback(xnee_data *xd);
