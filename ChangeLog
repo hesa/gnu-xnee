@@ -1,3 +1,8 @@
+2009-04-27  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Finally, Version set to 3.03
+
 2009-04-22  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/print.c (xnee_version): 
