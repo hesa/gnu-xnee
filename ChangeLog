@@ -1,5 +1,8 @@
 2009-04-27  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_replay.c (xnee_setup_rep_recording): 
+	(c) year updated		
+
 	* configure.in: 
 	Finally, Version set to 3.03
 

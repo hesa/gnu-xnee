@@ -2,20 +2,29 @@ Changes in coming version 3.03
 ==============================
 
    * Bugs fixed:
-       #23965: Uninitialized variable in cnee
-       Demo mode crashes sometimes
+        #23965: Uninitialized variable in cnee
+        Demo mode crashes sometimes
 
-       reported on bug list: 
-       Sync doesn't work
+        Reported on bug list: 
+        Sync doesn't work
 
-   * Doc:   Protocol specification fault corrected
-            Added new retype options
-            Switched to using texi2pdf texi2ps
+        Too quick retype delay bug (see new options)
 
-   * Test:  Adjusting to latest swinput (CVS HEAD)
-            Adding coverage rules, using gnulib
+   * Doc:
+        Protocol specification fault corrected
+        Added new retype options
+        Switched to using texi2pdf texi2ps
+
+   * Test:
+        Adjusting to latest swinput (CVS HEAD)
+        Adding coverage rules, using gnulib
  
-   * New options: --retype-press-delay --retype-release-delay 
+   * New options: 
+        --retype-press-delay
+        --retype-release-delay 
+
+   * Various:
+        cnee, libxnee passes gcc's pedantic mode again
 
 Changes in 3.02
 ==============================
