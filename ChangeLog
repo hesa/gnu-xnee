@@ -1,3 +1,11 @@
+2009-05-09  Henrik Sandklef  <hesa@sandklef.com>
+
+	* doc/xnee.texi (Top): 
+	Moved Top node outside of ifinfo statment
+
+	* doc/Makefile.am: 
+	Falling back to one rule for ps and pdf 
+
 2009-04-27  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_replay.c (xnee_setup_rep_recording): 

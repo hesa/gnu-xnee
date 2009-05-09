@@ -1,4 +1,11 @@
-Changes in coming version 3.03
+Changes in coming version 3.04
+==============================
+
+   * Doc:
+       Moved Top node outside of ifinfo statment
+       Falling back to one rule for ps and pdf
+
+Changes in 3.03
 ==============================
 
    * Bugs fixed:
