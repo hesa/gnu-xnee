@@ -52,13 +52,14 @@
 @end titlepage
 
 
-@ifinfo
 @node Top, Summary, (dir), (dir)
+@ifinfo
 @top 
 @end ifinfo
 
+
 @menu
-* Summary::              Summary
+* Summary::              Summary. 
 * Getting started::      Getting started
 * Functional overview::  Functional overview
 * Installation::         Installation
@@ -75,7 +76,7 @@
 
 @shortcontents
 
-@node    Summary, Getting started, top, top
+@node    Summary, Getting started, Top, Top
 @include xnee_intro.texi
 @page
 
