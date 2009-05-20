@@ -1591,9 +1591,12 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
     {
       fprintf (out,  "# ");
     }      
-  fprintf (out,  "%s       %s\n",
-	   xnee_xns_key2string(XNEE_PLUGIN_KEY),
-	   xd->plugin_name ); 
+  else
+    {
+      fprintf (out,  "%s       %s\n",
+	       xnee_xns_key2string(XNEE_PLUGIN_KEY),
+	       xd->plugin_name ); 
+    }
   
   /* Modes */
   fprintf (out,  "\n# Modes (currently not used)\n");
