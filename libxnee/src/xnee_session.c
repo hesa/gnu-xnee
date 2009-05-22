@@ -121,6 +121,13 @@ xnee_close_down(xnee_data* xd)
 
   xnee_verbose((xd, "xnee_close_down : ungrab -----> \n"));
   ret = xnee_ungrab_keys (xd);
+
+  if ( xd->grab_keys!= NULL) 
+  {
+      xnee_free(xd->grab_keys);
+  }
+  xd->grab_keys = NULL ;
+
   xnee_verbose((xd, "xnee_close_down : ungrab <---- %d\n", ret));
   xnee_verbose((xd, "xnee_close_down : xnee_reset_autorepeat ----> \n"));
   ret = xnee_reset_autorepeat (xd_global);
@@ -155,6 +162,8 @@ xnee_close_down(xnee_data* xd)
     {      
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.2 \n"  ));
       xnee_verbose((xd, "%s\n", xd->display));
+      xnee_free(xd->display);
+      xd->display=NULL;
     }
 
   if ( xd->control!=NULL)  
