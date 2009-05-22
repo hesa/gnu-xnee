@@ -124,7 +124,11 @@ xnee_ungrab_keys (xnee_data* xd)
   
   XSetErrorHandler(old_err_handler);
 
+
+  xnee_verbose((xd, "--- xnee_ungrab_keys  freeing grab struct \n"));
+
   xnee_verbose((xd, "<--- xnee_ungrab_keys\n"));
+
   return XNEE_OK;
 }
 
@@ -241,12 +245,19 @@ xnee_new_grab_keys(xnee_data *xd)
   memset (xgk, 0, sizeof (xnee_grab_keys)); 
 
   if (xgk==NULL)
-    return NULL;
+  {
+      return NULL;
+  }
 
   xgk->grab = XNEE_GRAB_NODATA;
   xgk->grabbed_action = XNEE_GRAB_NODATA;
 
-  xd->grab_keys= xgk;
+  if ( xd->grab_keys!= NULL) 
+  {
+      xnee_free(xd->grab_keys);
+  }
+
+  xd->grab_keys = xgk;
 
   xnee_grab_keys_init(xd);
    
