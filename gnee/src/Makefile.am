@@ -8,8 +8,7 @@ INCLUDES = \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
 	-I${LIBXNEE_DIR}/include \
-	-I../../ \
-	@PACKAGE_CFLAGS@
+	-I../../ 
 
 bin_PROGRAMS = gnee
 
@@ -21,7 +20,7 @@ gnee_SOURCES = \
 	recordables.c recordables.h \
 	gnee_xnee.c gnee_xnee.h 
 
-gnee_CFLAGS = ${PEDANTIC_FLAGS} 
+gnee_CFLAGS = ${PEDANTIC_FLAGS} $(libgnomeui_CFLAGS) $(gtk_CFLAGS)
 AM_CFLAGS = ${PEDANTIC_FLAGS} 
 
 if BUILD_STATIC
@@ -30,11 +29,12 @@ else
 STATIC_FLAGS = 
 endif
 
-gnee_LDFLAGS =  $(STATIC_FLAGS)
+gnee_LDFLAGS =  $(STATIC_FLAGS) 
 
-gnee_LDADD = @PACKAGE_LIBS@   \
+gnee_LDADD =    \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
-	 ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)
+	 ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)  \
+         $(libgnomeui_LIBS) $(gtk_LIBS)
 
 
 

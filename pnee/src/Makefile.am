@@ -4,12 +4,12 @@
 INCLUDES = \
 	-DPACKAGE_DATA_DIR=\""$(datadir)"\" \
 	-DPACKAGE_LOCALE_DIR=\""$(prefix)/$(DATADIRNAME)/locale"\" \
-	@PACKAGE_CFLAGS@ -I../../libxnee/include
+	 -I../../libxnee/include
 
 
 PNEE=pnee
 noinst_PROGRAMS = $(PNEE)
-pnee_CFLAGS = -DHAVE_STDARG $(PANEL_FLAGS) -Wall -g -DPNEE_PIXDIR=\""$(datadir)/xnee/pixmaps"\"
+pnee_CFLAGS = -DHAVE_STDARG $(PANEL_FLAGS) -Wall -g -DPNEE_PIXDIR=\""$(datadir)/xnee/pixmaps"\" $(libgnomeui_CFLAGS) $(gtk_CFLAGS)
 pnee_SOURCES = \
 	main.c \
 	support.c support.h \
@@ -17,7 +17,7 @@ pnee_SOURCES = \
 	callbacks.c callbacks.h \
 	pnee_impl.c pnee_impl.h pnee_types.h 
 
-pnee_LDADD =  -L../../ -L../../libxnee/src @PACKAGE_LIBS@ $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   
+pnee_LDADD =  -L../../ -L../../libxnee/src $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   $(libgnomeui_LIBS) $(gtk_LIBS)
 
 if BUILD_STATIC
 STATIC_FLAGS = -static
