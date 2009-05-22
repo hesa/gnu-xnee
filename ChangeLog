@@ -1,5 +1,20 @@
 2009-05-22  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_session.c (xnee_close_down): 
+	Checking grab_keys is not NULL before free
+
+	* libxnee/src/xnee_grab.c (xnee_new_grab_keys): 
+	Minor coding standard update (added {})
+	Free old grabs before setting new 
+
+	* libxnee/src/xnee_alloc.c (xnee_new_xnee_data): 
+	Setting grab_keys to NULL as init value
+
+	* configure.in: 
+	* gnee/src/Makefile.am (INCLUDES): 
+	* pnee/src/Makefile.am (INCLUDES): 
+	Better depencency handling (libgnomeui, gtk)
+
 	* libxnee/test/Makefile.am (testcallback_SOURCES): 
 	Moved defs before use
 
