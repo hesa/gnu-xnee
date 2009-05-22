@@ -10,6 +10,12 @@ noinst_PROGRAMS = $(LIBTEST) $(TESTSETGET) $(TESTFEEDBACK) $(TESTPRINT) $(TESTDI
 
 EXTRA_DIST = test_setget.h
 
+if BUILD_STATIC
+STATIC_FLAGS = -static
+else
+STATIC_FLAGS = 
+endif
+
 AM_CFLAGS = -I../include -I${LIBXNEE_DIR}/include  ${PEDANTIC_FLAGS}  ${X_CFLAGS}  -g ${VERBOSE_FLAG} ${BUF_VERBOSE_FLAG}  ${USER_CFLAGS} ${GCOV_FLAG} ${GPROF_FLAG}
 AM_LDFLAGS =  -L../src/.libs/  -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} ${GCOV_FLAG} ${GPROF_FLAG} $(STATIC_FLAGS) -shared
 AM_LDADD   =  -L../src/.libs/ -L${LIBXNEE_DIR}/src -lxnee ${X_LIBS} ${X11_LIBS} ${LIBDL} ${GCOV_FLAG} ${GPROF_FLAG} $(STATIC_FLAGS)
@@ -24,11 +30,6 @@ testcallback_SOURCES = callback.c
 libtestcb_la_SOURCES = callback_so.c
 libtestcb_la_CFLAGS = -shared $(AM_CFLAGS)
 
-if BUILD_STATIC
-STATIC_FLAGS = -static
-else
-STATIC_FLAGS = 
-endif
 
 
 test: 

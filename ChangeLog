@@ -1,5 +1,8 @@
 2009-05-22  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/test/Makefile.am (testcallback_SOURCES): 
+	Moved defs before use
+
 	* libxnee/src/print.c (xnee_print_xnee_settings): 
 	Fixed ugly typo 
 
