@@ -260,6 +260,8 @@ check_doc_program()
 	DEBS_TO_INSTALL="$DEBS_TO_INSTALL $DEBS"
     fi
 }
+
+
 if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
 then
 	AC_ISC_POSIX
@@ -268,14 +270,23 @@ then
 	AC_HEADER_STDC
 	AC_PATH_XTRA
 	pkg_modules="gtk+-2.0 >= 2.0.0"
-	PKG_CHECK_MODULES(PACKAGE, [$pkg_modules])
-	AC_SUBST(PACKAGE_CFLAGS)
-	AC_SUBST(PACKAGE_LIBS)
+	PKG_CHECK_MODULES(gtk, [$pkg_modules])
+	AC_SUBST(gtk_CFLAGS)
+	AC_SUBST(gtk_LIBS)
+
+	pkg_modules="libgnomeui-2.0 >= 2.0.0"
+	PKG_CHECK_MODULES(libgnomeui, [$pkg_modules])
+	AC_SUBST(libgnomeui_CFLAGS)
+	AC_SUBST(libgnomeui_LIBS)
+
 	PIXMAP_DIR=pixmap
 	AC_PATH_PROG(CONVERT,convert,,)
 	check_doc_program "$CONVERT" "convert" "imagemagick"
 
 #	add_incl "pixmap"
+else
+	echo "QUE?"
+	sleep 20
 fi
 
 if test x$buildgui = xtrue ; 
