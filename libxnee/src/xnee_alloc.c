@@ -317,9 +317,12 @@ xnee_new_xnee_data()
    }
    memset (xd, 0, sizeof(xnee_data));
    
+   xd->grab_keys=NULL; 
+
    ret = xnee_new_dyn_data(xd);
    XNEE_RETURN_NULL_IF_ERR(ret);
   
+
    ret = xnee_init(xd);
    XNEE_RETURN_NULL_IF_ERR(ret);
 
@@ -394,6 +397,7 @@ xnee_free( /*@only@*/  /*@out@*/ /*@null@*/ void *mem)
    {
       return XNEE_MEMORY_FAULT;
    }
+/*   fprintf(stderr, "Freeing at %lu\n", mem); */
    free(mem);
    return XNEE_OK;
 }
