@@ -1588,7 +1588,7 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   /* Plugin */
   fprintf (out,  "\n# Plugin file \n");
   if ( (xd->plugin_name                      == NULL) ||  
-       (xnee_xns_key2string(XNEE_PLUGIN_KEY  == NULL)   ) 
+       (xnee_xns_key2string(XNEE_PLUGIN_KEY) == NULL)   )
     {
       fprintf (out,  "# ");
     }      
