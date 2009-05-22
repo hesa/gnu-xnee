@@ -1,3 +1,13 @@
+2009-05-22  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/print.c (xnee_print_xnee_settings): 
+	Fixed ugly typo 
+
+2009-05-20  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/print.c (xnee_print_xnee_settings): 
+	Fixed seg fault on solaris, faulty if statement fixed
+
 2009-05-09  Henrik Sandklef  <hesa@sandklef.com>
 
 	* doc/xnee.texi (Top): 
