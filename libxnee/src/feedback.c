@@ -270,7 +270,7 @@ xnee_feedback_close(xnee_data *xd)
 int 
 feedback(xnee_data *xd, char *str, ... ) 
 {
-   va_list ap=NULL;
+   va_list ap;
    static char buf[200];
    int conv;
    int ret;
