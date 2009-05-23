@@ -1,4 +1,10 @@
-2009-05-23  Henrik Sandklef  <hesa@sandklef.com>
+2009-05-23  Henrik Sandklef  <hesa@bach.sandklef.com>
+
+	* doc/Makefile.am (docdir): 
+	Added @ before commands in Makefile (less verbose)
+
+	* configure.in: 
+	Print out commands to build also when building gui+applet
 
 	* libxnee/src/print.c (xnee_human_print_request_verbose): 
 	Not printing if NULL pointer. Removed seg fault crash on solaris
