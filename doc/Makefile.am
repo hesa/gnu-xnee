@@ -31,7 +31,10 @@ info_TEXINFOS = xnee.texi
 
 CLEANFILES = xnee.acs  xnee.cvs  xnee.mss  xnee.prs \
 	     xnee.ats  xnee.evs  xnee.fns  xnee.ovs \
-             xnee.tmp  stamp-vti 
+             xnee.tmp  stamp-vti \
+             $(IMG_EPS) $(IMG_PDF) $(IMG_PNG) $(IMG_JPG) \
+             *.eps *.jpg *.png *.pdf *.html
+
 
 
 
@@ -78,19 +81,19 @@ xnee.dvi: $(GEN_IMAGES)
 
 
 %.eps:%.dia
-	echo "creating EPS"
+	@echo "creating EPS"
 	$(DIA) --nosplash -e $@ $<
 
 %.pdf: %.texi
-	echo "creating PDF"
+	@echo "creating PDF"
 	$(TEXI2PDF)   $<
 
 %.pdf: %.eps
-	echo "creating PDF"
+	@echo "creating PDF"
 	$(EPSTOPDF) --outfile $@ $<
 
 %.png: %.eps
-	echo "creating PNG"
+	@echo "creating PNG"
 	$(CONVERT) -density 144x144 $< $@ 
 	( mv $@ `echo $@ | sed 's,\.png,_big\.png,g'` )
 	$(CONVERT) -density 32x32 $< $@ 
@@ -135,5 +138,5 @@ default: all
 
 
 clean:  
-	-rm $(CLEANFILES)
+	-rm -f $(CLEANFILES)
 
