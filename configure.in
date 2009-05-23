@@ -615,7 +615,7 @@ echo "    CONVERT              $CONVERT"
 #echo "    LIB_DIR              $LIB_DIR"
 #echo "    DOC_DIR              $DOC_DIR"
 echo " "
-if test x$builddoc = xtrue ; 
+if test x$builddoc = xtrue || test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
 then
 	echo "   Programs used to build documentation "
 	echo "   -------------------------------------"
