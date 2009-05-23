@@ -1,5 +1,9 @@
 2009-05-23  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/print.c (xnee_human_print_request_verbose): 
+	Not printing if NULL pointer. Removed seg fault crash on solaris
+        Updated (c) year
+
 	* libxnee/src/feedback.c: 
 	Remove va_list init to NULL
 

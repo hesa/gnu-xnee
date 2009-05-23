@@ -2,7 +2,7 @@
   Xnee's Not an Event Emulator enables recording and replaying of X 
   protocol data
   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 
-                2007, 2008 Henrik Sandklef
+                2007, 2008, 2009 Henrik Sandklef
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -1591,13 +1591,19 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
        (xnee_xns_key2string(XNEE_PLUGIN_KEY) == NULL)   )
     {
       fprintf (out,  "# ");
+      fprintf (out,  "%s       %s\n",
+	       xnee_xns_key2string(XNEE_PLUGIN_KEY),
+	       xd->plugin_name ); 
     }      
+<<<<<<< print.c
+=======
   else
     {
       fprintf (out,  "%s       %s\n",
 	       xnee_xns_key2string(XNEE_PLUGIN_KEY),
 	       xd->plugin_name ); 
     }
+>>>>>>> 1.61
   
   /* Modes */
   fprintf (out,  "\n# Modes (currently not used)\n");
