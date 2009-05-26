@@ -432,7 +432,7 @@ then
 	AC_PATH_PROG(PDF2PS,pdf2ps,,)
 	check_doc_program "$PDF2PS" "pdf2ps" ""
 
-	AC_PATH_PROG(PS2PDF,ps2pdf,,)
+	AC_PATH_PROG(PS2PDF,ps2pdf,ps2pdf14,)
 	check_doc_program "$PS2PDF" "ps2pdf" "gs-common"
 
 	AC_PATH_PROG(TEXI2PDF,texi2pdf,,)
