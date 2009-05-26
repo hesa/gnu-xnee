@@ -884,12 +884,10 @@ xnee_setup_recording(xnee_data *xd)
 
   if ( xnee_record_from_data_display(xd->display))
     {
-      printf("Record from data display\n");
       context_display = xd->data ;
     }
   else
     {
-      printf("Record from control display\n");
       context_display = xd->control ;
     }
 
