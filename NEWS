@@ -1,9 +1,18 @@
 Changes in coming version 3.04
 ==============================
 
-   * Doc:
+   * Bugs fixed:
+       Workdaround for RECORD problem in Xorg 1.6.0
+
+       Seg faults on Solaris 10 
+
+   * Doc changes:
        Moved Top node outside of ifinfo statment
        Falling back to one rule for ps and pdf
+
+   * Build changes:
+       configure looks for libgnomeui
+       Checking for ps2pdf14 as well as ps2pdf	   
 
 Changes in 3.03
 ==============================
