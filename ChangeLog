@@ -1,4 +1,8 @@
-2009-05-26  Henrik Sandklef  <hesa@sandklef.com>
+2009-05-27  Henrik Sandklef  <hesa@sandklef.com>
+
+	* doc/version.texi: 
+	* configure.in: 
+	Version set to 3.04 (and updated date)
 
 	* libxnee/src/print.c (xnee_print_xnee_settings): 
 	Removed ugly merge leftover
@@ -61,6 +65,10 @@
 
 	* configure.in: 
 	Finally, Version set to 3.03
+
+	* src/xnee_plugin.c: 
+	* include/libxnee/xnee_plugin.h: 
+	(c) year updated		
 
 2009-04-22  Henrik Sandklef  <hesa@sandklef.com>
 
