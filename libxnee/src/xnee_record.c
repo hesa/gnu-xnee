@@ -794,6 +794,42 @@ xnee_has_record_extension(xnee_data *xd)
 }
 
 
+static int 
+xnee_record_from_data_display(char *dpy_name)
+{
+  static char *vendor;
+  static int vendrel ;
+  static Display *dpy;
+  int ret_val = 0;
+
+  if ( ( dpy_name != NULL ) &&
+       ( strlen(dpy_name)==0 ))
+    {
+      dpy_name = NULL;
+    }
+  
+  dpy = XOpenDisplay(dpy_name);
+  vendor = ServerVendor (dpy);
+  vendrel = VendorRelease(dpy);
+  
+  
+  if (strstr(vendor, "X.Org") )
+    {
+      
+      int a = vendrel / 10000000 ;
+      int b = (vendrel /   100000) % 100 ;
+      /* 	  int c = (vendrel /     1000) % 100 ; */
+      
+      if ( ( a == 1 ) &&
+	   ( b >= 6 ) )
+	{
+	  ret_val = 1;
+	}
+    }
+  return ret_val;
+}
+
+
 
 
 /**************************************************************
@@ -806,6 +842,7 @@ int
 xnee_setup_recording(xnee_data *xd)
 {
   int nr_of_ranges=0;
+  Display *context_display;
   nr_of_ranges=xnee_get_max_range(xd);
   xnee_verbose((xd, "--->xnee_setup_recording\n"));
 
@@ -834,8 +871,30 @@ xnee_setup_recording(xnee_data *xd)
       xd->record_setup->xids[0] = XRecordFutureClients; 
     }
 
+
+  /*
+   * From X.org 1.6.0
+   * 
+   *   there seem to be something strange about 
+   *   the XRecordCreateContext call
+   *   which causes the XRecordEnableContextAsync 
+   *   to fail ... ugly fix, but it works
+   *
+   */
+
+  if ( xnee_record_from_data_display(xd->display))
+    {
+      printf("Record from data display\n");
+      context_display = xd->data ;
+    }
+  else
+    {
+      printf("Record from control display\n");
+      context_display = xd->control ;
+    }
+
   xd->record_setup->rContext = 
-    XRecordCreateContext(xd->control, 
+    XRecordCreateContext(xd->data, 
 			 xd->record_setup->data_flags, 
 			 xd->record_setup->xids,1, 
 			 xd->record_setup->range_array, nr_of_ranges);
@@ -1030,10 +1089,13 @@ xnee_record_async(xnee_data *xd)
 				  xd->record_setup->rContext, 
 				  xd->rec_callback, 
 				  (XPointer) (xd) /* closure passed to Dispatch */);
-  if (!ret)
+  printf ("  ret=%d  cont=%d\n", ret, xd->record_setup->rContext);
+
+  if (ret==0)
   {
      return (XNEE_RECORD_FAILURE);
   }
+  
 
 /*   XNEE_RETURN_IF_ERR(ret); */
 
