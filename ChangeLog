@@ -1,3 +1,8 @@
+2009-05-26  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/print.c (xnee_print_xnee_settings): 
+	Removed ugly merge leftover
+
 2009-05-23  Henrik Sandklef  <hesa@bach.sandklef.com>
 
 	* doc/Makefile.am (docdir): 
