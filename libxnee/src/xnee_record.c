@@ -1089,7 +1089,6 @@ xnee_record_async(xnee_data *xd)
 				  xd->record_setup->rContext, 
 				  xd->rec_callback, 
 				  (XPointer) (xd) /* closure passed to Dispatch */);
-  printf ("  ret=%d  cont=%d\n", ret, xd->record_setup->rContext);
 
   if (ret==0)
   {
