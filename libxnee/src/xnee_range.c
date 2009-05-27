@@ -440,6 +440,11 @@ is_dangerous_xserver(xnee_data *xd)
       return XNEE_MEMORY_FAULT;
     }
   
+  if (xd->x_vendor_name==NULL)
+    {
+      xnee_set_x_server_version(xd);
+    }
+
   if (strstr(xd->x_vendor_name, "X.Org") )
     {
       
