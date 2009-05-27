@@ -877,7 +877,7 @@ xnee_setup_recording(xnee_data *xd)
     }
 
   xd->record_setup->rContext = 
-    XRecordCreateContext(xd->data, 
+    XRecordCreateContext(context_display, 
 			 xd->record_setup->data_flags, 
 			 xd->record_setup->xids,1, 
 			 xd->record_setup->range_array, nr_of_ranges);
@@ -968,6 +968,7 @@ xnee_unsetup_recording(xnee_data *xd)
     {
       xnee_verbose((xd, "---  disabling context %d \n", 
 		    (int)xd->record_setup->rContext));
+  
       (void)XRecordDisableContext(xd->control, xd->record_setup->rContext);
 
       xnee_verbose((xd, "---  freeing context \n"));
@@ -1053,7 +1054,7 @@ xnee_record_async(xnee_data *xd)
        return XNEE_RECORD_FAILURE;
      }
    
-  xnee_verbose((xd, " ---> xnee_record_async()\n"));
+  xnee_verbose((xd, " ---> xnee_record_async() \n"));
   
   /* 
    * In case the key pressed to invoke Xnee is not released
@@ -1068,10 +1069,13 @@ xnee_record_async(xnee_data *xd)
     }
 
 
-  ret = XRecordEnableContext(xd->data, 
+
+  xnee_verbose((xd, " --- xnee_record_async() enable context\n"));
+  ret = XRecordEnableContext(xd->control, 
 				  xd->record_setup->rContext, 
 				  xd->rec_callback, 
 				  (XPointer) (xd) /* closure passed to Dispatch */);
+
 
   if (ret==0)
   {
@@ -1081,9 +1085,11 @@ xnee_record_async(xnee_data *xd)
 
 /*   XNEE_RETURN_IF_ERR(ret); */
 
-  
+
   for (;;) 
     {
+      xnee_verbose((xd, " --- xnee_record_async() loop\n"));
+
       /* Interrupt variable set? */
       if (xnee_is_interrupt_action(xd))
 	{
@@ -1096,7 +1102,6 @@ xnee_record_async(xnee_data *xd)
 			ret));
 	  break;
 	}
-
 
       /* has the user pressed a modifier+key */
       if (xnee_check_key (xd)==XNEE_GRAB_DATA)
@@ -1112,7 +1117,7 @@ xnee_record_async(xnee_data *xd)
 	  else if (ret == XNEE_GRAB_RESUME)
 	    {
 	      xnee_verbose  ((xd," starting async loop since RESUME \n"));
-	      ret = XRecordEnableContextAsync(xd->data, 
+	      ret = XRecordEnableContextAsync(xd->control, 
                                               xd->record_setup->rContext, 
                                               xd->rec_callback, 
                                               (XPointer) (xd) );
@@ -1124,11 +1129,12 @@ xnee_record_async(xnee_data *xd)
 	    }
 	}
 
+
       /* handle data in the RECORD buffer */
       ret = xnee_process_replies(xd);
       XNEE_RETURN_IF_ERR(ret);
 
-      if ( xnee_more_to_record(xd) == 0 ) 
+       if ( xnee_more_to_record(xd) == 0 ) 
 	{
 	  xnee_verbose  ((xd," closing down while loop in async loop\n"));
 	  ret=XNEE_OK;
