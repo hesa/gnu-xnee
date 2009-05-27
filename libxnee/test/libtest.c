@@ -137,35 +137,41 @@ int test_xnee_data()
       fprintf (stdout, "failed to alloc xnee_data\n");
       global_fail++;
     }
-  printf (".");
+  printf (".1");
 
   printf ("\n Test 4: ");
+  
   for (i=0;i<10;i++)
   {
-    printf (".");
-    xnee_set_verbose(xd);
+    printf ("  loop (%d)", i ); fflush(stdout);
+/*     xnee_set_verbose(xd); */
 
     xnee_set_out_name (xd, "/tmp/libtest.xns") ; 
-    xnee_unset_verbose(xd);
+
+/*     xnee_parse_range (xd, XNEE_DEVICE_EVENT,   */
+/* 		      "2-6");  */
     xnee_parse_range (xd, XNEE_DELIVERED_EVENT,  
 		      "EnterNotify-MappingNotify"); 
-    xnee_parse_range (xd, XNEE_REQUEST,  
+       xnee_parse_range (xd, XNEE_REQUEST,  
 		      "1-100"); 
     xnee_parse_range (xd, XNEE_ERROR,  
 		      "1-17"); 
-    /*
-      xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
-      "ButtonPress-MotionNotify");
+    
+    xnee_parse_range (xd, XNEE_DELIVERED_EVENT, 
+		      "ButtonPress-MotionNotify");
+      /*
       xnee_set_key (xd, XNEE_GRAB_STOP, "s");
       xnee_set_key (xd, XNEE_GRAB_PAUSE, "p");
       xnee_set_key (xd, XNEE_GRAB_RESUME, "r");
     */
 
-    xnee_set_events_max (xd, 10);
-    xnee_set_data_max (xd, 10);
+    xnee_set_events_max (xd, 50);
+    xnee_set_data_max (xd, 0);
 
     xnee_set_recorder(xd); 
     /*    xnee_prepare(xd);*/
+
+    fprintf(stderr, "Start xnee\n"); fflush(stderr);
     ret=xnee_start(xd);
 
     if (ret==0)
@@ -174,7 +180,7 @@ int test_xnee_data()
        }
     else
       {
-	 fprintf (stdout, "failed to start %d   %s)\n", 
+	 fprintf (stdout, "failed to start1 %d   %s)\n", 
 		  ret,
 		  xnee_get_err_description(ret));
 	 global_fail++;
@@ -196,10 +202,8 @@ int test_xnee_data()
   for (i=0;i<10;i++)
   {
     printf (".");
-    xnee_set_verbose(xd);
 
     xnee_set_out_name (xd, "/tmp/libtest.xns") ;
-    xnee_unset_verbose(xd);
     xnee_parse_range (xd, XNEE_DELIVERED_EVENT,  
 		      "EnterNotify-MappingNotify"); 
     xnee_parse_range (xd, XNEE_REQUEST,  
@@ -211,11 +215,11 @@ int test_xnee_data()
     xnee_set_key (xd, XNEE_GRAB_STOP, "s");
     xnee_set_key (xd, XNEE_GRAB_PAUSE, "p");
     xnee_set_key (xd, XNEE_GRAB_RESUME, "r");
-    xnee_set_events_max (xd, 10);
-    xnee_set_data_max (xd, 10);
 
     xnee_set_recorder(xd);
     xnee_prepare(xd);
+    xnee_set_events_max (xd, 0);
+    xnee_set_data_max (xd, 10);
     ret=xnee_start(xd);
 
     if (ret==0)
@@ -224,7 +228,7 @@ int test_xnee_data()
        }
     else
       {
-	 fprintf (stdout, "failed to start %d   %s)\n", 
+	 fprintf (stdout, "failed to start2 %d   %s)\n", 
 		  ret,
 		  xnee_get_err_description(ret));
 	 global_fail++;
