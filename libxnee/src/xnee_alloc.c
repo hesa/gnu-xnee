@@ -289,10 +289,15 @@ xnee_free_dyn_data(xnee_data *xd)
    xnee_verbose((xd, " --- xnee_free_dyn_data: xnee_info\n")); 
    ret = xnee_reset_xnee_info(xd);
    XNEE_RETURN_IF_ERR(ret);
-
+   
+   xnee_verbose((xd, " --- xnee_free_dyn_data: x version info\n")); 
+   XNEE_FREE_IF_NOT_NULL(xd->x_vendor_name);
+   
    xnee_verbose((xd, "<--- xnee_free_dyn_data\n"));
    return XNEE_OK;
 }
+
+
 
 
 

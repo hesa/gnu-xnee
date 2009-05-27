@@ -410,41 +410,47 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 
 
 static int 
-is_dangerous_xserver(char *dpy_name)
+xnee_device_as_delivered(xnee_data *xd)
 {
-  static char *vendor;
-  static int vendrel ;
-  static Display *dpy;
-  static int ret_val = -1;
+  int ret_val = 0;
 
-  if ( ret_val == -1 ) 
+  if (xd!=NULL)
     {
-      if ( ( dpy_name != NULL ) &&
-	   ( strlen(dpy_name)==0 ))
+      if (strstr(xd->x_vendor_name, "X.Org") )
 	{
-	  dpy_name = NULL;
-	}
-
-      dpy = XOpenDisplay(dpy_name);
-      vendor = ServerVendor (dpy);
-      vendrel = VendorRelease(dpy);
-      ret_val = 1 ; 
-
-      if (strstr(vendor, "X.Org") )
-	{
-
-	  int a = vendrel / 10000000 ;
-	  int b = (vendrel /   100000) % 100 ;
-/* 	  int c = (vendrel /     1000) % 100 ; */
-
-	  if (  ( ( a == 7 ) || ( a == 1 ) ) &&
-		( b >= 1 ) )
+	  if ( ( xd->x_version_major == 1 ) &&
+	       ( xd->x_version_minor >= 6 ) )
 	    {
-	      ret_val = 0;
+	      ret_val = 1;
 	    }
 	}
     }
+  
   return ret_val;
+}
+
+
+
+static int 
+is_dangerous_xserver(xnee_data *xd)
+{
+  int ret_val = 1;
+  if (xd==NULL)
+    {
+      return XNEE_MEMORY_FAULT;
+    }
+  
+  if (strstr(xd->x_vendor_name, "X.Org") )
+    {
+      
+      if (  ( ( xd->x_version_major == 7 ) || 
+	      ( xd->x_version_major == 1 ) ) &&
+	    ( xd->x_version_minor >= 1 ) )
+	{
+	  ret_val = 0;
+	}
+    }
+return ret_val;
 }
 
 
@@ -514,8 +520,10 @@ xnee_add_range (xnee_data* xd,
       range->delivered_events.last = stop;
 
       
-      if ( is_dangerous_xserver(xd->display) )
+      if ( is_dangerous_xserver(xd) )
 	{
+	  fprintf(stderr, "Workaround: Adding some errors to recored to prevent crash\n");
+	  fprintf(stderr, "            You can ignore this message\n");
 	  /* Workaround for problem with crashing X server */
 	     xd->xnee_info.data_ranges[XNEE_ERROR]++;
 	     range->errors.first = BadCursor;
@@ -566,6 +574,24 @@ xnee_add_range (xnee_data* xd,
     {
       range->device_events.first = start;
       range->device_events.last = stop;
+
+      /*
+       * WORKAROUND
+       * 
+       *   xnee doesn't record on some servers
+       *   unless device evs are added as deliv. evs  :(
+       *
+       */
+      if ( xnee_device_as_delivered(xd))
+      {
+	fprintf(stderr, "Workaround: Adding your device events as delivered events to get them recorded.\n");
+	fprintf(stderr, "            You can ignore this message\n");
+	xnee_add_range(xd, 
+		       XNEE_DELIVERED_EVENT,
+		       start ,
+		       stop);
+      }
+
     }
 
  

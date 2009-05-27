@@ -770,9 +770,7 @@ xnee_has_record_extension(xnee_data *xd)
 
   if  ( (xd == NULL)
         ||
-        (xd->control == NULL)
-        ||
-        (xd->record_setup == NULL))
+        (xd->control == NULL))
   {
      return XNEE_RECORD_FAILURE;
   }
@@ -795,39 +793,27 @@ xnee_has_record_extension(xnee_data *xd)
 
 
 static int 
-xnee_record_from_data_display(char *dpy_name)
+xnee_record_from_data_display(xnee_data *xd)
 {
-  static char *vendor;
-  static int vendrel ;
-  static Display *dpy;
   int ret_val = 0;
 
-  if ( ( dpy_name != NULL ) &&
-       ( strlen(dpy_name)==0 ))
-    {
-      dpy_name = NULL;
-    }
-  
-  dpy = XOpenDisplay(dpy_name);
-  vendor = ServerVendor (dpy);
-  vendrel = VendorRelease(dpy);
-  
-  
-  if (strstr(vendor, "X.Org") )
+  if (xd==NULL)
     {
       
-      int a = vendrel / 10000000 ;
-      int b = (vendrel /   100000) % 100 ;
-      /* 	  int c = (vendrel /     1000) % 100 ; */
-      
-      if ( ( a == 1 ) &&
-	   ( b >= 6 ) )
+      if (strstr(xd->x_vendor_name, "X.Org") )
 	{
-	  ret_val = 1;
+	  
+	  if ( ( xd->x_version_major == 1 ) &&
+	       ( xd->x_version_minor >= 6 ) )
+	    {
+	      ret_val = 1;
+	    }
 	}
     }
+  
   return ret_val;
 }
+
 
 
 
@@ -850,9 +836,7 @@ xnee_setup_recording(xnee_data *xd)
        ||
        (xd->control == NULL)
        ||
-       (xd->record_setup == NULL)
-       ||
-       (xd->record_setup->xids == NULL))
+       (xd->record_setup == NULL))
   {
      return XNEE_RECORD_FAILURE;
   }
@@ -872,18 +856,19 @@ xnee_setup_recording(xnee_data *xd)
     }
 
 
-  /*
-   * From X.org 1.6.0
-   * 
-   *   there seem to be something strange about 
-   *   the XRecordCreateContext call
-   *   which causes the XRecordEnableContextAsync 
-   *   to fail ... ugly fix, but it works
-   *
-   */
-
-  if ( xnee_record_from_data_display(xd->display))
+  if ( xnee_record_from_data_display(xd))
     {
+      /*
+       * From X.org 1.6.0 to ????
+       * 
+       *   there seem to be something strange about 
+       *   the XRecordCreateContext call
+       *   which causes the XRecordEnableContextAsync 
+       *   to fail ... ugly fix, but it works
+       *
+       */
+      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
+      fprintf(stderr, "            You can ignore this message\n");
       context_display = xd->data ;
     }
   else
@@ -1083,7 +1068,7 @@ xnee_record_async(xnee_data *xd)
     }
 
 
-  ret = XRecordEnableContextAsync(xd->data, 
+  ret = XRecordEnableContext(xd->data, 
 				  xd->record_setup->rContext, 
 				  xd->rec_callback, 
 				  (XPointer) (xd) /* closure passed to Dispatch */);
