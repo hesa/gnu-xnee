@@ -1,5 +1,23 @@
 2009-05-27  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/test/libtest.c (test_xnee_data): 
+	Test updates
+
+	* libxnee/include/libxnee/xnee.h: 
+	Added variables (to xnee_data) to store 
+        x server info from the display
+	Updated (c) year
+	
+	* libxnee/src/xnee_range.c: 
+	* libxnee/src/xnee_record.c: 
+	* libxnee/src/xnee_alloc.c: 
+	Added checks and work around for faults that appears
+	to happen only in Xorg 1.6
+
+	* libxnee/src/xnee_session.c: 
+	Added fun (xnee_set_x_server_version) to get and store 
+	x server info from the display
+
 	* doc/version.texi: 
 	* configure.in: 
 	Version set to 3.04 (and updated date)
