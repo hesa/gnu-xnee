@@ -1,5 +1,14 @@
 2009-05-27  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_range.c: 
+	call xnee_set_x_server_version if info not there
+
+	* libxnee/src/xnee_record.c: 
+	Creating record context on control display
+
+	* libxnee/src/xnee_session.c: 
+	Added some logic debugging code
+
 	* libxnee/test/libtest.c (test_xnee_data): 
 	Test updates
 
