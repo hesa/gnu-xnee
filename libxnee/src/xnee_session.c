@@ -230,7 +230,7 @@ xnee_close_down(xnee_data* xd)
 }
 
 
-static int 
+int 
 xnee_set_x_server_version(xnee_data *xd)
 {
   static int vendrel ;
@@ -716,12 +716,20 @@ xnee_more_to_record(xnee_data *xd)
   int dats;
   int tims;
 
+  /*
+  fprintf (stderr, "  [ %d(%d) %d(%d) %d ] \n", 
+	   xnee_get_events_left(xd),
+	   xd->xnee_info.events_recorded,
+	   xnee_get_data_left(xd),
+	   xd->xnee_info.data_recorded,
+	   xnee_get_time_left(xd));
+  */
+
   evs = xnee_get_events_left(xd);
   if (evs<0) evs = 1;
 
   dats = xnee_get_data_left(xd);
   if (dats<0) dats = 1;
-
 
   xnee_record_update_time_left(xd);
   tims = xnee_get_time_left(xd);
