@@ -609,6 +609,10 @@ typedef struct
 
   retype_settings  retype;
 
+  unsigned char   x_version_major;
+  unsigned char   x_version_minor;
+  char *          x_vendor_name  ;
+
 } xnee_data ; 
 
 
