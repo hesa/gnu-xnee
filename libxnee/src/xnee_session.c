@@ -230,6 +230,28 @@ xnee_close_down(xnee_data* xd)
 }
 
 
+static int 
+xnee_set_x_server_version(xnee_data *xd)
+{
+  static int vendrel ;
+  static Display *dpy;
+  int ret_val = 0;
+
+  if (xd==NULL)
+    {
+      return XNEE_MEMORY_FAULT;
+    }
+
+  dpy = XOpenDisplay(xd->display);
+  xd->x_vendor_name = ServerVendor (dpy);
+  vendrel = VendorRelease(dpy);
+    
+  xd->x_version_major =  vendrel / 10000000 ;
+  xd->x_version_minor = (vendrel / 100000) % 100 ;
+
+  return XNEE_OK;
+}
+
 
 /**************************************************************
  *                                                            *
@@ -364,6 +386,8 @@ xnee_init(xnee_data* xd)
   
   ret = xnee_resolution_init (xd);
   XNEE_RETURN_IF_ERR(ret);
+
+  xnee_set_x_server_version(xd);
 
   /* Set the signal handler the libxnee's built in */ 
   (void) signal (SIGINT, signal_handler);
