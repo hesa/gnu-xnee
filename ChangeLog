@@ -1,3 +1,8 @@
+2009-06-17  Henrik Sandklef  <hesa@korngold.sandklef.com>
+
+	* libxnee/src/print.c (xnee_print_xnee_settings): 
+	Fixed seg fault 
+
 2009-05-27  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_range.c: 
