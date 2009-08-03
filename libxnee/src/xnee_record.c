@@ -779,7 +779,9 @@ xnee_has_record_extension(xnee_data *xd)
                           &xd->record_setup->major_return, 
                           &xd->record_setup->minor_return) == 0 )
     {
-      xnee_print_error ("Record extension missing\n");
+      xnee_print_error ("Record extension missing."
+			" This is not an error in " 
+			PACKAGE "\n");
       ok=XNEE_NO_REC_EXT;
     }
   else
