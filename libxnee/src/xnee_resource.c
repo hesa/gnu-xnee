@@ -908,7 +908,9 @@ xnee_key2string(xnee_data      *xd,
   id = xnee_key2id(xd, options, key);
 
   xnee_verbose((xd, "Looking for %d ===> %d  '%s'\n",
-	  key, id, options[id].option));
+		key, 
+		id, 
+		EMPTY_IF_NULL( options[id].option)));
 
   if ( id == XNEE_OPTION_NOT_FOUND )
     {
