@@ -1,3 +1,13 @@
+2009-11-01  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_resource.c (xnee_parse_option_impl): 
+	Added check if NULL ptr when verbose printing
+	(xnee_key2string): 
+	Added check if NULL ptr when verbose printing
+
+	* libxnee/src/xnee_record.c (xnee_has_record_extension): 
+	Adding note that missing RECORD extension is not an Xnee error
+
 2009-06-17  Henrik Sandklef  <hesa@korngold.sandklef.com>
 
 	* libxnee/src/print.c (xnee_print_xnee_settings): 
