@@ -606,16 +606,6 @@ static xnee_option_t xnee_options_impl[] =
     },
 
     {
-      XNEE_KEEP_AUTOREPEAT,
-      "keep-autorepeat",
-      "ka",
-      NULL,
-      "Keep autorepeat during record/replay",
-      XNEE_GENERAL_OPTION,
-      XNEE_OPTION_VISIBLE
-    },
-
-    {
       XNEE_RETYPE_PRESS_DELAY,
       "retype-press-delay",
       "rpd",
@@ -1115,7 +1105,9 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
   key = xnee_options[entry].key;
 
   xnee_verbose((xd, "Found xns entry for '%s' '%s' at position: %d\n", 
-		opt_and_args[0],opt_and_args[1], entry));
+		EMPTY_IF_NULL(opt_and_args[0]),
+		EMPTY_IF_NULL(opt_and_args[1]), 
+		entry));
 
   xnee_verbose((xd, "\tlong option: '%u'\n", 
 		(unsigned int) xnee_options[entry].option));
