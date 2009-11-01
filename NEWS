@@ -6,6 +6,11 @@ Changes in coming version 3.04
 
        Seg faults on Solaris 10 
 
+       Bugs reported on savannah.gnu.org 
+       #27850 "Segmentation Fault in print.c"
+       #27849: "Another Bug in xnee_resource.c"
+       #27848: "Segmentation fault"
+
    * Doc changes:
        Moved Top node outside of ifinfo statment
        Falling back to one rule for ps and pdf
