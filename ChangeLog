@@ -1,3 +1,9 @@
+2009-11-22  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_session.c (xnee_set_x_server_version): 
+	Added check for display
+	Needed for nightly builds without X server up
+
 2009-11-01  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_resource.c (xnee_parse_option_impl): 

@@ -243,6 +243,13 @@ xnee_set_x_server_version(xnee_data *xd)
     }
 
   dpy = XOpenDisplay(xd->display);
+  if (dpy==NULL)
+    {
+      return XNEE_NOT_OPEN_DISPLAY;
+    }
+
+
+
   xd->x_vendor_name = ServerVendor (dpy);
   vendrel = VendorRelease(dpy);
     
