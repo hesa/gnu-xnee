@@ -34,6 +34,7 @@ libtestcb_la_CFLAGS =  $(AM_CFLAGS)
 
 test: 
 	Xvfb :20 &
+	sleep 5
 	DISPLAY=:20 ./$(LIBTEST)
 	DISPLAY=:20 ./$(TESTSETGET)
 	DISPLAY=:20 ./$(TESTFEEDBACK)

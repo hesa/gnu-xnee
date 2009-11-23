@@ -1,5 +1,9 @@
 2009-11-23  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/test/Makefile.am
+	Removing shared lib for bins
+	(Xvfb): Adding sleep to make Xvfb starts up before proceeding
+
 	* configure.in: 
 	Removing debug sleep
 
