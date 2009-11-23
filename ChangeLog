@@ -1,3 +1,8 @@
+2009-11-23  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Removing debug sleep
+
 2009-11-22  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_session.c (xnee_set_x_server_version): 

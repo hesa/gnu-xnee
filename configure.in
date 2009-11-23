@@ -285,8 +285,7 @@ then
 
 #	add_incl "pixmap"
 else
-	echo "QUE?"
-	sleep 20
+	echo "Not building applet or gui"
 fi
 
 if test x$buildgui = xtrue ; 
