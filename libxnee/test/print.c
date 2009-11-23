@@ -14,12 +14,14 @@ test_distributionfuns(xnee_data *xd)
   int ret;
   char disp_buf[256];
 
+  /*
   xnee_add_display_list(xd, ":0");
   total++;
   xnee_add_display_list(xd, ":0"); 
   total++;
   xnee_add_display_list(xd, ":0,:0"); 
   total++;
+  */
   xnee_add_display_list(xd, getenv("DISPLAY"));
   total++;
   xnee_add_display_list(xd, getenv("DISPLAY")); 
