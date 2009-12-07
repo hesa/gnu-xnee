@@ -2,7 +2,16 @@ Changes in coming version 3.04
 ==============================
 
    * Bugs fixed:
-       Workdaround for RECORD problem in Xorg 1.6.0
+
+       Bad context bug fixed:
+         https://bugs.freedesktop.org/show_bug.cgi?id=3722
+         https://bugs.freedesktop.org/show_bug.cgi?id=20500
+         https://bugs.freedesktop.org/show_bug.cgi?id=21971
+         https://bugs.launchpad.net/ubuntu/+source/xorg-server/+bug/315456
+         https://bugs.launchpad.net/ubuntu/+source/xorg/+bug/379432
+ 
+       Workaround for RECORD problem in Xorg 1.6.0
+             recording device events also as delivered 
 
        Seg faults on Solaris 10 
 
