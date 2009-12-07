@@ -800,6 +800,12 @@ xnee_record_from_data_display(xnee_data *xd)
 {
   int ret_val = 0;
 
+  printf ("X info:   %s %d %d %d\n",
+	  xd->x_vendor_name, 
+	  xd->x_version_major, 
+	  xd->x_version_minor, 
+	  xd->x_version_minor_sub);
+
   if (xd != NULL)
     {
       
@@ -807,7 +813,7 @@ xnee_record_from_data_display(xnee_data *xd)
 	{
 	  
 	  if ( ( xd->x_version_major == 1 ) &&
-	       ( xd->x_version_minor >= 6 ) )
+	       ( xd->x_version_minor >= 4 ) )
 	    {
 	      ret_val = 1;
 	    }

@@ -1,3 +1,11 @@
+2009-12-08  Henrik Sandklef  <hesa@bach.sandklef.com>
+
+	* libxnee/src/xnee_record.c (xnee_record_from_data_display): 
+	Adding support for old Xorg (Debian): 
+          vendor string:    The X.Org Foundation
+          vendor release number:    10402000
+
+
 2009-12-07  Henrik Sandklef  <hesa@korngold.sandklef.com>
 
 	* libxnee/src/xnee_record.c (xnee_record_from_data_display): 
