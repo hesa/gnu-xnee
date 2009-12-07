@@ -253,8 +253,9 @@ xnee_set_x_server_version(xnee_data *xd)
   xd->x_vendor_name = ServerVendor (dpy);
   vendrel = VendorRelease(dpy);
     
-  xd->x_version_major =  vendrel / 10000000 ;
-  xd->x_version_minor = (vendrel / 100000) % 100 ;
+  xd->x_version_major     =  vendrel / 10000000 ;
+  xd->x_version_minor     = (vendrel / 100000) % 100 ;
+  xd->x_version_minor_sub = (vendrel / 1000) % 100 ;
 
   return XNEE_OK;
 }
