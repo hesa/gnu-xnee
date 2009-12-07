@@ -612,6 +612,7 @@ typedef struct
 
   unsigned char   x_version_major;
   unsigned char   x_version_minor;
+  unsigned char   x_version_minor_sub;
   char *          x_vendor_name  ;
 
 } xnee_data ; 
