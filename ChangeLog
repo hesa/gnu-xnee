@@ -1,3 +1,8 @@
+2009-12-07  Henrik Sandklef  <hesa@korngold.sandklef.com>
+
+	* libxnee/src/xnee_record.c (xnee_record_from_data_display): 
+	Adding checks for X server checks (how to record) on Open Solaris 
+
 2009-12-07  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/include/libxnee/xnee.h (struct): 
