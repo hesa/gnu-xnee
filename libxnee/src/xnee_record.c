@@ -460,6 +460,7 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
 
   XNEE_DEBUG ( (stderr ," --> xnee_record_dispatch()  \n"  ));
 
+
   if ( (data==NULL) || (!data->data) )
     {
       XNEE_DEBUG ( (stderr ," <-- xnee_record_dispatch()  \n"  ));
@@ -799,7 +800,7 @@ xnee_record_from_data_display(xnee_data *xd)
 {
   int ret_val = 0;
 
-  if (xd==NULL)
+  if (xd != NULL)
     {
       
       if (strstr(xd->x_vendor_name, "X.Org") )
@@ -883,6 +884,11 @@ xnee_setup_recording(xnee_data *xd)
 			 xd->record_setup->data_flags, 
 			 xd->record_setup->xids,1, 
 			 xd->record_setup->range_array, nr_of_ranges);
+
+  XFlush(xd->control);
+  XFlush(xd->data);
+  XSync(xd->control, True);
+  XSync(xd->data, True);
 
   /*  printf("%d <=== XRecordCreateContext(%d,%d, %d,%d, %d,%d)\n",
 	 xd->record_setup->rContext,
@@ -997,6 +1003,7 @@ int
 xnee_record_loop(xnee_data *xd)
 {
    int ret ; 
+   Display *context_display;
 
    if ( (xd==NULL)
         || 
@@ -1010,6 +1017,26 @@ xnee_record_loop(xnee_data *xd)
    
    xnee_verbose((xd, " ---> xnee_record_loop()\n"));
   
+  if ( xnee_record_from_data_display(xd))
+    {
+      /*
+       * From X.org 1.6.0 to ????
+       * 
+       *   there seem to be something strange about 
+       *   the XRecordCreateContext call
+       *   which causes the XRecordEnableContextAsync 
+       *   to fail ... ugly fix, but it works
+       *
+       */
+      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
+      fprintf(stderr, "            You can ignore this message\n");
+      context_display = xd->data ;
+    }
+  else
+    {
+      context_display = xd->control ;
+    }
+
    /* 
     * In case the key pressed to invoke Xnee is not released
     * we wait 1/2 of a second and hopefully it is. If not
@@ -1019,10 +1046,10 @@ xnee_record_loop(xnee_data *xd)
    (void) usleep ( XNEE_DELAY_RECORDING );
    /*@ end @*/
    
-   ret = XRecordEnableContext(xd->data, 
-			      xd->record_setup->rContext, 
-			      xd->rec_callback, 
-			      (XPointer) (xd) /* closure passed to Dispatch */);
+   ret = XRecordEnableContextAsync(context_display, 
+				   xd->record_setup->rContext, 
+				   xd->rec_callback, 
+				   (XPointer) (xd) /* closure passed to Dispatch */);
    
    XNEE_RETURN_IF_ERR(ret);
    
@@ -1046,6 +1073,7 @@ int
 xnee_record_async(xnee_data *xd)
 {
    int ret ;
+   Display *context_display;
 
    if ( (xd==NULL)
         || 
@@ -1071,12 +1099,34 @@ xnee_record_async(xnee_data *xd)
     }
 
 
+  
+  if ( xnee_record_from_data_display(xd))
+    {
+      /*
+       * From X.org 1.6.0 to ????
+       * 
+       *   there seem to be something strange about 
+       *   the XRecordCreateContext call
+       *   which causes the XRecordEnableContextAsync 
+       *   to fail ... ugly fix, but it works
+       *
+       */
+      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
+      fprintf(stderr, "            You can ignore this message\n");
+      context_display = xd->data ;
+    }
+  else
+    {
+      context_display = xd->control ;
+    }
+
+
 
   xnee_verbose((xd, " --- xnee_record_async() enable context\n"));
-  ret = XRecordEnableContext(xd->control, 
-				  xd->record_setup->rContext, 
-				  xd->rec_callback, 
-				  (XPointer) (xd) /* closure passed to Dispatch */);
+  ret = XRecordEnableContextAsync(context_display, 
+			     xd->record_setup->rContext, 
+			     xd->rec_callback, 
+			     (XPointer) (xd) /* closure passed to Dispatch */);
 
 
   if (ret==0)
@@ -1091,6 +1141,7 @@ xnee_record_async(xnee_data *xd)
   for (;;) 
     {
       xnee_verbose((xd, " --- xnee_record_async() loop\n"));
+
 
       /* Interrupt variable set? */
       if (xnee_is_interrupt_action(xd))
