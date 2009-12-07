@@ -1,3 +1,18 @@
+2009-12-07  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee.h (struct): 
+	More fine grained storage of X version number
+	added: x_version_minor_sub	
+
+	* libxnee/src/xnee_record.c (xnee_record_async): 
+	Flushing and syncing displays after record contect creation
+	Checking if X > Xorg 1.6.0 to choose display to use in 
+	EnableAsync call
+	Recording is now done with XRecordEnableContextAsync
+
+	* libxnee/src/xnee_session.c (xnee_set_x_server_version): 
+	More fine grained storage of X version number
+
 2009-11-23  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/test/print.c: 
