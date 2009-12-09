@@ -16,7 +16,9 @@ generate:
 	@echo "*** Create date/time stamp"
 	@touch stamp-h.in
 	@echo "*** Finished"
-	@echo "    Don't forget to run ./configure --enable-doc"
+	@echo "    Don't forget to run "
+	@echo "    ./configure"
+	@echo "    or ./configure --enable-doc"
 	@echo "    If you haven't done so in a while, run ./configure --help"
 
 

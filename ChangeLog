@@ -1,3 +1,8 @@
+2009-12-09  Henrik Sandklef  <hesa@sandklef.com>
+
+	* Makefile.cvs (generate): 
+	Fixing faulty comment after generating configure script
+
 2009-12-08  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_record.c (xnee_record_from_data_display): 
