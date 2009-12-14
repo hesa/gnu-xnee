@@ -3,7 +3,7 @@ Changes in coming version 3.04 (futsanaj)
 
    * Bugs fixed:
 
-       Bad context bug fixed:
+       Bad context / RECORD bug fixed:
          https://bugs.freedesktop.org/show_bug.cgi?id=3722
          https://bugs.freedesktop.org/show_bug.cgi?id=20500
          https://bugs.freedesktop.org/show_bug.cgi?id=21971
@@ -16,7 +16,7 @@ Changes in coming version 3.04 (futsanaj)
        Seg faults on Solaris 10 
 
        Bugs reported on savannah.gnu.org 
-       #27850 "Segmentation Fault in print.c"
+       #27850: "Segmentation Fault in print.c"
        #27849: "Another Bug in xnee_resource.c"
        #27848: "Segmentation fault"
 
@@ -25,8 +25,9 @@ Changes in coming version 3.04 (futsanaj)
        Falling back to one rule for ps and pdf
 
    * Build changes:
-       configure looks for libgnomeui
+       configure now looks for libgnomeui
        Checking for ps2pdf14 as well as ps2pdf	   
+
 
 Changes in 3.03
 ==============================
