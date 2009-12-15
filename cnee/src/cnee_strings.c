@@ -41,7 +41,7 @@ char *explain[] = {
 
 
 char *examples[] = {
-  ""XNEE_CLI "--record --events-to-record 1000 --mouse --keyboard -o /tmp/xnee.xns -e /tmp/xnee.log -v", 
+  ""XNEE_CLI " --record --events-to-record 1000 --mouse --keyboard -o /tmp/xnee.xns -e /tmp/xnee.log -v", 
   "Records 1000 events (keyboard and mouse) to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log",
   ""XNEE_CLI " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
   "Read data from /tmp/xnee.xns, replay it and verbose print to file /tmp/xnee.log",
