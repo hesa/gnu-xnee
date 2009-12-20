@@ -1,5 +1,15 @@
 2009-12-20  Henrik Sandklef  <hesa@sandklef.com>
 
+	* README.cvs: 
+	New file: "Information on where to find info on building from CVS"
+
+	* README: 
+	More info about GNU Xnee
+	Added info on building from CVS
+
+	* BUGS: 
+	Better info on bug reporting
+
 	* configure.in: 
 	Better support for finding libgnomeui, gtk+
 	Fixed bug: "Bug report: No package 'libgnomeui-2.0' found" 	
@@ -7,7 +17,7 @@
 	Fixed faulty usage of pkg-config and gtk and libgnomeui
 	Removed gnomedesktop from deps in pkg-config
 	Minor adjustments to search for panelapplet
-
+	Workaround for a strange pkg-config/autotools problem
 
 2009-12-16  Henrik Sandklef  <hesa@sandklef.com>
 
