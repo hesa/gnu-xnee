@@ -295,12 +295,11 @@ then
 
 fi
 
+
 if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
 then
     AC_PATH_PROG(PKGCFG,pkg-config,,)
     check_doc_program "$PKGCFG" "pkg-config" "pkg-config"
-
-
 
     if test "x$PKGCFG" = "x" 
     then
@@ -317,6 +316,11 @@ then
 	echo "  ********** ERROR **********"
 	exit 1
     fi
+fi
+
+if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
+then
+	
 
     AC_ISC_POSIX
     AC_PROG_CC
