@@ -3,7 +3,11 @@
 	* configure.in: 
 	Better support for finding libgnomeui, gtk+
 	Fixed bug: "Bug report: No package 'libgnomeui-2.0' found" 	
-	as reported on the bug-xnee ML
+	as reported on the bug-xnee 
+	Fixed faulty usage of pkg-config and gtk and libgnomeui
+	Removed gnomedesktop from deps in pkg-config
+	Minor adjustments to search for panelapplet
+
 
 2009-12-16  Henrik Sandklef  <hesa@sandklef.com>
 

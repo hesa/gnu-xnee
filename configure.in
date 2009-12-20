@@ -327,7 +327,7 @@ then
     GTK_MODULES=""
     GTK2_MODULE="gtk+-2.0 "
     GTK2_VERSION="2.0.0"
-    PKG_CHECK_MODULES(gtk, ["$GTK2_MODULE >= $GTK2_VERSION" ], DUMMY=0, 
+    PKG_CHECK_MODULES(gtk, $GTK2_MODULE >= $GTK2_VERSION , DUMMY=0, 
 	[
 	    GTK_MODULES="$GTK2_MODULE"
 	    GTK_ERR=1
@@ -336,11 +336,11 @@ then
     AC_SUBST(gtk_CFLAGS)
     AC_SUBST(gtk_LIBS)
 
-    GNOMEUI2_MODULE="libgnomeui-2.0 "
-    GNOMEUI2_VERSION=" 2.0.0"
-    PKG_CHECK_MODULES(libgnomeui, ["$GNOMEUI2_MODULE >= $GNOMEUI2_VERSION"], DUMMY=0,
+    GNOMEUI2_MODULE="libgnomeui-2.0"
+    GNOMEUI2_VERSION="2.0.0"
+    PKG_CHECK_MODULES(libgnomeui, $GNOMEUI2_MODULE >= $GNOMEUI2_VERSION, DUMMY=0,
 	[
-	    GTK_MODULES="$GTK2_MODULES $GNOMEUI2_MODULE" 
+	    GTK_MODULES="$GTK_MODULES $GNOMEUI2_MODULE" 
 	    GTK_ERR=1
 	]
 	)
@@ -611,7 +611,7 @@ then
     PANEL_SERVER_DIR="${libdir}/bonobo/servers"
     AC_SUBST(PANEL_SERVER_DIR)
     AC_SUBST(PANEL_APPLET_DIR)
-    AC_PATH_PROG(GCONFTOOL, gconftool-2)
+#    AC_PATH_PROG(GCONFTOOL, gconftool-2)
     PANEL_APPLET=libpanelapplet-2.0
     PANEL_FLAGS=`$PKGCFG --cflags $PANEL_APPLET`
     PANEL_LD_FLAGS=`$PKGCFG  --libs $PANEL_APPLET`
@@ -624,7 +624,7 @@ then
 	echo "  ** The following programs/packages are missing:"
 	echo "  **    $PANEL_APPLET"
 	echo "  ** " 
-	DEBS_TO_INSTALL="libgnome-desktop-2 libpanel-applet2-dev"
+	DEBS_TO_INSTALL=" libpanel-applet2-dev"
 	help_on_missing_progrs pnee "--disable-gnome-applet"
 	echo "  ** " 
 	echo "  ********** ERROR **********"
