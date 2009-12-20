@@ -1,3 +1,10 @@
+2009-12-20  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Better support for finding libgnomeui, gtk+
+	Fixed bug: "Bug report: No package 'libgnomeui-2.0' found" 	
+	as reported on the bug-xnee ML
+
 2009-12-16  Henrik Sandklef  <hesa@sandklef.com>
 
 	* cnee/src/cnee_strings.c (examples): 
