@@ -1,4 +1,6 @@
 generate:
+	@echo "*** Creating autotools dir"
+	-mkdir autotools/
 #	@echo "*** intltoolize (in pnee) ** "
 	libtoolize --automake  --copy --force
 

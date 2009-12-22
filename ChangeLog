@@ -1,3 +1,14 @@
+2009-12-22  Henrik Sandklef  <hesa@sandklef.com>
+
+	* Makefile.cvs (generate): 
+	Creating autotools dir before generating configure script
+	Works better with buildbot
+
+2009-12-21  Henrik Sandklef  <hesa@sandklef.com>
+
+	* Makefile.cvs (generate): 
+	Telling user to run configure with --enable-doc option set
+
 2009-12-20  Henrik Sandklef  <hesa@sandklef.com>
 
 	* README.cvs: 
