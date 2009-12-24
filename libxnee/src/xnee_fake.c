@@ -97,7 +97,6 @@ xnee_replay_event_handler( xnee_data* xd,
 
   Time saved_time = 0 ; /* used to restore time of last replayable event */
 
-  xnee_verbose((xd, "---> xnee_replay_event_handler \n "));
   xnee_verbose((xd, "---  xnee_replay_event_handler fake=%d\n ", (int)xd->fake));
   XTestGrabControl (xd->fake, True); 
   xnee_verbose((xd, "---  xnee_replay_event_handler 0\n "));
@@ -183,7 +182,7 @@ xnee_replay_event_handler( xnee_data* xd,
 
 
 
-  xnee_verbose((xd, "---  xnee_replay_event_handler \n "));
+  xnee_verbose((xd, "---  xnee_replay_event_handler switch on %d  (assuming %d or %d )\n ", xindata->u.event.type, KeyPress, KeyRelease));
   
   /* If we use the last args to the XTestFakexxx functions
    * it is harder to synchronize .... 
@@ -233,7 +232,9 @@ xnee_replay_event_handler( xnee_data* xd,
     }
   xnee_verbose((xd, "<--- xnee_replay_event_handler returning after handling of %d \n", 
 		xindata->u.event.type ));
+
   
+/*   printf ("xnee_replay_event_handler: %d\n", return_value); fflush(stdout); */
   return return_value ;
 }
 

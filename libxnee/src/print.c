@@ -1159,9 +1159,6 @@ xnee_print_ranges (xnee_data *xd, FILE *fp)
 
   max=xnee_get_max_range(xd);
 
-  printf (" print ranges %d\n",max);
-  fprintf (fp," print ranges\n");
-
   fprintf (fp, "#########################################\n");
   fprintf (fp, "#          Recording ranges             #\n");
   fprintf (fp, "#########################################\n");

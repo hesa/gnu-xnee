@@ -1,4 +1,4 @@
-AC_INIT(Xnee,3.04.90,bug-xnee@gnu.org)
+AC_INIT(Xnee,3.05,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 AM_INIT_AUTOMAKE
 
@@ -356,7 +356,7 @@ then
     
 #	add_incl "pixmap"
 else
-    echo "Not building applet or gui"
+	echo "Not building applet or gui"
 fi
 
 if test x$buildgui = xtrue ; 

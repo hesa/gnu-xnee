@@ -205,7 +205,9 @@ xnee_expression_handle_replay(xnee_data *xd,
 			      xnee_intercept_data * xindata)
 {
   int ret = 0;
-
+  int dummy1;
+  int dummy2;
+  int dummy3;
 
   if (!strncmp("0",tmp,1))  /* EVENT */
     {    
@@ -231,6 +233,8 @@ xnee_expression_handle_replay(xnee_data *xd,
       ret = sscanf(tmp, "%d,%d,%lu",
 		      &xindata->type, 
 		      &xindata->u.request.type,
+		   &dummy1,
+		   &dummy2,
 		      &xindata->newtime);
       if (ret < 3)
 	{

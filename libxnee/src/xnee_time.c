@@ -158,9 +158,9 @@ xnee_calc_sleep_amount(xnee_data *xd,
 		 "%lu recordFirst_diff: %lu\n",  
 		 last_diff, first_diff, record_last_diff, recordFirst_diff )); 
 
-  /*  printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",  
-	  last_diff, first_diff, record_last_diff, recordFirst_diff ); 
-  */
+/*     printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",   */
+/* 	  last_diff, first_diff, record_last_diff, recordFirst_diff );  */
+  
 
 
   /* determine where we are from first read  
@@ -179,9 +179,11 @@ xnee_calc_sleep_amount(xnee_data *xd,
   
   if ( out_of_wack==1 ) 
     {
+      xnee_verbose (( xd, "xnee_calc_sleep_amount: too fast\n" )); 
       /* too fast - we should slow down a bit */
       if ( record_last_diff > last_diff ) 
 	{
+	  xnee_verbose (( xd, "xnee_calc_sleep_amount: too fast 1\n" )); 
 	  /* recorded wait more than we have waited so far */
 
 	  /* find amount that we are too fast or too slow */
@@ -191,16 +193,19 @@ xnee_calc_sleep_amount(xnee_data *xd,
 	  /* then sleep the full recorded difference */
 	  if ( out_of_wack_amt > record_last_diff )  
 	    {
+	      xnee_verbose (( xd, "xnee_calc_sleep_amount: 1.1\n" )); 
 	      sleep_amt = record_last_diff;
 	    }
 	  else 
 	    {
+	      xnee_verbose (( xd, "xnee_calc_sleep_amount: 1.2\n" )); 
 	      /* otherwise sleep the amount out of wack */
 	      sleep_amt = out_of_wack_amt;
 	    }
 	}
       else 
 	{
+	  xnee_verbose (( xd, "xnee_calc_sleep_amount: too fast 2 \n" )); 
 	  /* we have already waited the recorded amount of time */
 	  /* but since we are still too fast - 
 	     sleep a percentage of recorded wait time */
@@ -210,6 +215,7 @@ xnee_calc_sleep_amount(xnee_data *xd,
     }
   else if ( out_of_wack == -1 ) 
     {
+      xnee_verbose (( xd, "xnee_calc_sleep_amount: too slown" )); 
       if ( record_last_diff > last_diff ) 
 	{
 	  /* recorded wait more than we have waited so far */
@@ -224,6 +230,7 @@ xnee_calc_sleep_amount(xnee_data *xd,
     }
   else
     {
+      xnee_verbose (( xd, "xnee_calc_sleep_amount: on time\n" )); 
       sleep_amt=2;
     }
 
@@ -258,7 +265,7 @@ xnee_calc_sleep_amount_slow(xnee_data *xd,
   record_last_diff = 
     record_last_diff * xnee_get_speed(xd) / 100;
   
-  xnee_verbose ((xd, "xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\n",  
+  xnee_verbose ((xd, "xnee_calc_sleep_amount_slow last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\n",  
 		 last_diff, first_diff, record_last_diff, recordFirst_diff )); 
 /*   printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",    */
 /*  	  last_diff, first_diff, record_last_diff, recordFirst_diff );   */

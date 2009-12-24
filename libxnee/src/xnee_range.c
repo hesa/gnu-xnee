@@ -416,7 +416,8 @@ xnee_device_as_delivered(xnee_data *xd)
 
   if (xd!=NULL)
     {
-      if (strstr(xd->x_vendor_name, "X.Org") )
+      if (  (xd->x_vendor_name != NULL ) &&
+	    (strstr(xd->x_vendor_name, "X.Org") ))
 	{
 	  if ( ( xd->x_version_major == 1 ) &&
 	       ( xd->x_version_minor >= 6 ) )
@@ -425,7 +426,6 @@ xnee_device_as_delivered(xnee_data *xd)
 	    }
 	}
     }
-  
   return ret_val;
 }
 
@@ -596,7 +596,12 @@ xnee_add_range (xnee_data* xd,
 		       start ,
 		       stop);
       }
-
+      else
+	{
+	  /* the work around above should probably be removed any time ... errrh */
+	  fprintf(stderr, "BEWARE: this code should not be released without serious checking, which has not been performed, since you see this text\n");
+	}
+      
     }
 
  

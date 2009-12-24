@@ -577,6 +577,8 @@ gx_start_recording(xnee_data* xd)
 
   GNEE_DEBUG(("start recording\n"));
 
+  fprintf(stderr, "Recording with outfile: %s\n", xd->out_name);
+
   ret = xnee_start(xd);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 

@@ -800,20 +800,18 @@ xnee_record_from_data_display(xnee_data *xd)
 {
   int ret_val = 0;
 
-  /*
   printf ("X info:   %s %d %d %d\n",
 	  xd->x_vendor_name, 
 	  xd->x_version_major, 
 	  xd->x_version_minor, 
 	  xd->x_version_minor_sub);
-  */
 
   if (xd != NULL)
     {
       
-      if (strstr(xd->x_vendor_name, "X.Org") )
-	{
-	  
+  if ( (xd->x_vendor_name != NULL ) && 
+       (strstr(xd->x_vendor_name, "X.Org") ))
+    {
 	  if ( ( xd->x_version_major == 1 ) &&
 	       ( xd->x_version_minor >= 4 ) )
 	    {
@@ -831,7 +829,8 @@ xnee_record_from_data_display(xnee_data *xd)
 	}
 
     }
-  
+
+  printf ("RET: %d\n", ret_val);
   return ret_val;
 }
 
@@ -902,6 +901,7 @@ xnee_setup_recording(xnee_data *xd)
 			 xd->record_setup->data_flags, 
 			 xd->record_setup->xids,1, 
 			 xd->record_setup->range_array, nr_of_ranges);
+  XFlush(context_display);
 
   XFlush(xd->control);
   XFlush(xd->data);
@@ -977,6 +977,7 @@ xnee_setup_recording(xnee_data *xd)
 int
 xnee_unsetup_recording(xnee_data *xd)
 {
+  Display *context_display;
 
    if (xd==NULL)
      {
@@ -988,12 +989,22 @@ xnee_unsetup_recording(xnee_data *xd)
        return XNEE_OK; 
      }
 
+  if ( xnee_record_from_data_display(xd))
+    {
+      fprintf(stderr, "Workaround: Disabling context on data display instead of control \n");
+      fprintf(stderr, "            You can ignore this message\n");
+      context_display = xd->data ;
+    }
+  else
+    {
+      context_display = xd->control ;
+    }
   xnee_verbose((xd, "---> xnee_unsetup_recording\n"));
 
   if (xd->record_setup->rContext != 0)
     {
-      xnee_verbose((xd, "---  disabling context %d \n", 
-		    (int)xd->record_setup->rContext));
+      xnee_verbose((xd, "---  disabling context %d on %d \n", 
+		    (int)xd->record_setup->rContext, context_display));
   
       (void)XRecordDisableContext(xd->control, xd->record_setup->rContext);
 
@@ -1140,7 +1151,28 @@ xnee_record_async(xnee_data *xd)
 
 
 
+  if ( xnee_record_from_data_display(xd))
+    {
+      /*
+       * From X.org 1.6.0 to ????
+       * 
+       *   there seem to be something strange about 
+       *   the XRecordCreateContext call
+       *   which causes the XRecordEnableContextAsync 
+       *   to fail ... ugly fix, but it works
+       *
+       */
+      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
+      fprintf(stderr, "            You can ignore this message\n");
+      context_display = xd->data ;
+    }
+  else
+    {
+      context_display = xd->control ;
+    }
+
   xnee_verbose((xd, " --- xnee_record_async() enable context\n"));
+
   ret = XRecordEnableContextAsync(context_display, 
 			     xd->record_setup->rContext, 
 			     xd->rec_callback, 
@@ -1188,7 +1220,7 @@ xnee_record_async(xnee_data *xd)
 	  else if (ret == XNEE_GRAB_RESUME)
 	    {
 	      xnee_verbose  ((xd," starting async loop since RESUME \n"));
-	      ret = XRecordEnableContextAsync(xd->control, 
+	      ret = XRecordEnableContextAsync(context_display, 
                                               xd->record_setup->rContext, 
                                               xd->rec_callback, 
                                               (XPointer) (xd) );

@@ -58,13 +58,14 @@ static int last_logread=1;
 Time
 xnee_delta_time ( xnee_intercept_data * xindata)
 {
-    if ( xindata->newtime > xindata->oldtime ) 
+
+  if ( xindata->newtime > xindata->oldtime ) 
     {
-	return ( xindata->newtime - xindata->oldtime); 
+      return ( xindata->newtime - xindata->oldtime); 
     }
-    else 
+  else 
     {
-	return 0 ;
+      return 0 ;
     }
 }
 
@@ -273,7 +274,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 /*        ret = xnee_set_ranges(xd); */
     }
 
-  xnee_print_ranges(xd,stdout);
+/*   xnee_print_ranges(xd,stdout); */
   
   if ( 
       (read_mode==XNEE_REPLAY_READ_REPLAY_DATA) || 
@@ -305,7 +306,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
            XNEE_RETURN_IF_ERR(ret);
 	}
 
-  xnee_print_ranges(xd,stdout);
+/*       xnee_print_ranges(xd,stdout); */
 
       ret = xnee_expression_handle_session(xd, tmp, &xindata);
 
@@ -322,8 +323,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
        */
       while  ( (ret!=XNEE_SYNTAX_ERROR) && ( xd->cont != 0 ) ) 
 	{
-/* 	  printf ("  started '%'s ", tmp); */
-	  
 	  if (last_logread != 0)
 	    {
 	      /* 
@@ -516,7 +515,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
   last_logread = 1;
   time_out_counter = 0;
   diff_counter     = 0;
-  
+
+
   return XNEE_OK;
 }
 

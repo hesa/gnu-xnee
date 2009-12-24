@@ -45,11 +45,19 @@ xnee_setup_display (xnee_data *xd)
 {
   int ret;
 
+  xnee_verbose((xd, "-- xnee_setup_display - data display\n"));
   if (xd->data!=NULL)
     {
-      XCloseDisplay(xd->data);
+      /*
+      xnee_verbose((xd, "-- xnee_setup_display - close data display\n"));
+      XFlush(xd->data);
+      XCloseDisplay(xd->data);*/
     }
-  xd->data     = xnee_open_display (xd);
+  else 
+    {
+      xnee_verbose((xd, "-- xnee_setup_display - open data display\n"));
+      xd->data     = xnee_open_display (xd);
+    }
   if (xd->data==NULL)
     {
       return XNEE_NOT_OPEN_DISPLAY;
@@ -57,6 +65,7 @@ xnee_setup_display (xnee_data *xd)
   
 
   
+  xnee_verbose((xd, "-- xnee_setup_display - control display\n"));
   if (xd->control!=NULL)
     {
       XCloseDisplay(xd->control);
@@ -69,6 +78,7 @@ xnee_setup_display (xnee_data *xd)
   
   
 
+  xnee_verbose((xd, "-- xnee_setup_display - fake display\n"));
   if (xd->fake!=NULL)
     {
       XCloseDisplay(xd->fake);
@@ -79,6 +89,7 @@ xnee_setup_display (xnee_data *xd)
       return XNEE_NOT_OPEN_DISPLAY;
     }
 
+  xnee_verbose((xd, "-- xnee_setup_display - modifier map\n"));
 
   xnee_verbose((xd, "Freeing modifier mapping memory %d ", (int)xd->map));
   XFreeModifiermap(xd->map);
@@ -91,6 +102,7 @@ xnee_setup_display (xnee_data *xd)
   xnee_verbose((xd, "display control %d\n" , (int) xd->control));
   xnee_verbose((xd, "display fake    %d\n" , (int) xd->fake));
 
+  xnee_verbose((xd, "-- xnee_setup_display - resolution\n"));
   /* 
    * resolution */
   ret = xnee_set_default_rec_resolution (xd);
@@ -103,10 +115,12 @@ xnee_setup_display (xnee_data *xd)
   /* return XNEE_OK on success, 1  indicats error opening the displays */
   if ( ( xd->data != NULL ) && (xd->control != NULL) && (xd->fake != NULL) )
     {
+      xnee_verbose((xd, "-- xnee_setup_display - return OK\n"));
       return XNEE_OK;
     }
   else 
     {
+      xnee_verbose((xd, "-- xnee_setup_display - return 1 ... which is bad\n"));
       return 1;
     }
 

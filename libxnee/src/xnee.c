@@ -227,6 +227,8 @@ xnee_start(xnee_data *xd)
 	{
 	  return ret;
 	}
+      
+
     }
   else if ( xnee_is_retyper(xd) != 0 )
     {

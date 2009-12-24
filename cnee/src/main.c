@@ -61,6 +61,11 @@ int main(int argc,char *argv[])
   int ret;
   xnee_data *xd ;
 
+
+  /* Work around for strange bugs in X server around summet 2009 */
+  fprintf (stderr, "Sleep workaround a strange RECORD/Xtest problem around 2009 (ignore it)\n");
+  usleep (1000*300);
+
   /*  Get a new xnee_data structure  */
   xd = xnee_new_xnee_data();
   if (xd==NULL)

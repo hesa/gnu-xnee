@@ -521,6 +521,9 @@ on_record                              (GtkButton       *button,
     
     window = lookup_widget(user_data, "gnee_window");
 
+    xnee_set_verbose(ext_xd);
+    xnee_verbose((ext_xd, "verbose: %d", ext_xd->verbose)); usleep(1000*1000);
+
     if (window != NULL)
       {
 	gtk_widget_hide(window); 
@@ -552,6 +555,9 @@ on_replay                              (GtkButton       *button,
 
     window = lookup_widget(user_data, "gnee_window");
     
+    xnee_verbose((ext_xd, "verbose: %d", ext_xd->verbose)); usleep(1000*1000);
+    xnee_set_verbose(ext_xd);
+
     if (window != NULL)
     {
       gtk_widget_hide(window);

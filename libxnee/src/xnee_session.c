@@ -503,7 +503,7 @@ xnee_rep_prepare(xnee_data *xd)
 {
   int ret ; 
 
-  xnee_verbose((xd, "--> xnee_rep_prepare\n"));
+  xnee_verbose((xd, "--> xnee_rep_prepare \n"));
   /* 
    * Print settings 
    * only done if verbose mode  
@@ -524,9 +524,10 @@ xnee_rep_prepare(xnee_data *xd)
   }
 
   /* 
-   * Test Displays and Extensions  
+   * Setup / Test Displays and Extensions  
    *
    */
+  xnee_verbose((xd, "-- xnee_rep_prepare - setup display\n"));
 
   ret = xnee_setup_display (xd);
   if (ret!=XNEE_OK)
@@ -535,6 +536,8 @@ xnee_rep_prepare(xnee_data *xd)
       return ret;
     }
   
+  xnee_verbose((xd, "-- xnee_rep_prepare - setup record ext \n"));
+
   ret = xnee_setup_recordext (xd);
   if ( xnee_is_recorder(xd) != 0)
   {
@@ -554,6 +557,7 @@ xnee_rep_prepare(xnee_data *xd)
       xnee_replay_init (xd);   
     }
   
+  xnee_verbose((xd, "-- xnee_rep_prepare - set auto repeat\n"));
   /*
    * Save repeat mode so we can reset it after we are done
    *

@@ -139,6 +139,7 @@
 	* doc/version.texi: 
 	* configure.in: 
 	Version set to 3.04 (and updated date)
+	Checking for ps2pdf14 as well as ps2pdf
 
 	* libxnee/src/print.c (xnee_print_xnee_settings): 
 	Removed ugly merge leftover
