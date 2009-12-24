@@ -1,3 +1,24 @@
+Changes in coming version 3.05 ()
+==============================
+
+   * Bugs report on bug-xnee@gnu.org:
+       "Bug report: libpanelapplet-2.0" (12/15/2009 11:07 AM)
+       "Bug report: No package 'libgnomeui-2.0' found" (12/15/2009 11:03 AM)
+       "Configure Error" (12/15/2009 11:07 AM)
+       "Error in configure." (12/15/2009 11:09 AM)
+       "Building from CVS" (12/17/2009 07:19 PM)
+
+   * Build changes:
+       configure bails out when building any gui 
+       and no pkg-config installed
+
+       Better help during configure if no gtk, gnomeui found
+
+       Telling user to run configure with --enable-doc option set, 
+       when building from CVS (make -f Makefile.cvs)
+
+       New file (README.cvs) to ease up for users building from CVS
+
 Changes in coming version 3.04 (futsanaj)
 ==============================
 
