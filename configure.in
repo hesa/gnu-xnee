@@ -330,7 +330,14 @@ then
     GTK_MODULES=""
     GTK2_MODULE="gtk+-2.0 "
     GTK2_VERSION="2.0.0"
-    
+
+
+    gtk_CFLAGS=`$PKGCFG --cflags $GTK2_MODULE `
+    gtk_LIBS=`$PKGCFG --libs $GTK2_MODULE `
+
+
+    AC_SUBST(gtk_CFLAGS)
+    AC_SUBST(gtk_LIBS)
 
     if `$PKGCFG --exists $GTK2_MODULE >= $GTK2_VERSION `
     then	
@@ -338,19 +345,23 @@ then
 	GTK_ERR=1
     fi
 
-#    AC_SUBST(gtk_CFLAGS)
-#    AC_SUBST(gtk_LIBS)
 
     GNOMEUI2_MODULE="libgnomeui-2.0"
     GNOMEUI2_VERSION="2.0.0"
+
+
     if `$PKGCFG --exists  $GNOMEUI2_MODULE >= $GNOMEUI2_VERSION`
     then	
 	GTK_MODULES="$GTK_MODULES $GNOMEUI2_MODULE" 
 	GTK_ERR=1
     fi
-#    AC_SUBST(libgnomeui_CFLAGS)
-#    AC_SUBST(libgnomeui_LIBS)
 
+    libgnomeui_CFLAGS=`$PKGCFG --cflags $GNOMEUI2_MODULE `
+    libgnomeui_LIBS=`$PKGCFG --libs $GNOMEUI2_MODULE `
+
+
+    AC_SUBST(libgnomeui_CFLAGS)
+    AC_SUBST(libgnomeui_LIBS)
 
     PIXMAP_DIR=pixmap
     
@@ -570,8 +581,6 @@ fi
 
 if test x$buildgui = xtrue || test x$buildgapplet = xtrue  ; 
 then
-    echo "BUILDING GUI  $GTK_ERR  $GTK_MODULES "
-    
     if test x$GTK_ERR != x0  ; 
     then
 	echo "  ********** ERROR **********"

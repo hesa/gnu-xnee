@@ -1,5 +1,7 @@
-2009-12-26  Henrik Sandklef  <hesa@armstrong.sandklef.com>
+2009-12-26  Henrik Sandklef  <hesa@sandklef.com>
 
+	* configure.in: 
+	gtk/gnomeui cflags/ldflags fixes
 	* configure.in:
 	More fixes to get get rid of pkg-config deps, when not needing it
 
