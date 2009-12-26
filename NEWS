@@ -1,4 +1,12 @@
-Changes in coming version 3.05 ()
+Changes in coming version 3.06 
+==============================
+
+   * Build changes:
+       configure bails out when building any gui 
+       and no pkg-config installed
+
+
+Changes in version 3.05 ('Merry X11-mas')
 ==============================
 
    * Bugs report on bug-xnee@gnu.org:
@@ -19,7 +27,7 @@ Changes in coming version 3.05 ()
 
        New file (README.cvs) to ease up for users building from CVS
 
-Changes in coming version 3.04 (futsanaj)
+Changes in version 3.04 (futsanaj)
 ==============================
 
    * Bugs fixed:

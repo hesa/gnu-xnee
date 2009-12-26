@@ -295,7 +295,6 @@ then
 
 fi
 
-
 if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
 then
     AC_PATH_PROG(PKGCFG,pkg-config,,)
@@ -331,25 +330,26 @@ then
     GTK_MODULES=""
     GTK2_MODULE="gtk+-2.0 "
     GTK2_VERSION="2.0.0"
-    PKG_CHECK_MODULES(gtk, $GTK2_MODULE >= $GTK2_VERSION , DUMMY=0, 
-	[
-	    GTK_MODULES="$GTK2_MODULE"
-	    GTK_ERR=1
-	]
-	)
-    AC_SUBST(gtk_CFLAGS)
-    AC_SUBST(gtk_LIBS)
+    
+
+    if `$PKGCFG --exists $GTK2_MODULE >= $GTK2_VERSION `
+    then	
+	GTK_MODULES="$GTK2_MODULE"
+	GTK_ERR=1
+    fi
+
+#    AC_SUBST(gtk_CFLAGS)
+#    AC_SUBST(gtk_LIBS)
 
     GNOMEUI2_MODULE="libgnomeui-2.0"
     GNOMEUI2_VERSION="2.0.0"
-    PKG_CHECK_MODULES(libgnomeui, $GNOMEUI2_MODULE >= $GNOMEUI2_VERSION, DUMMY=0,
-	[
-	    GTK_MODULES="$GTK_MODULES $GNOMEUI2_MODULE" 
-	    GTK_ERR=1
-	]
-	)
-    AC_SUBST(libgnomeui_CFLAGS)
-    AC_SUBST(libgnomeui_LIBS)
+    if `$PKGCFG --exists  $GNOMEUI2_MODULE >= $GNOMEUI2_VERSION`
+    then	
+	GTK_MODULES="$GTK_MODULES $GNOMEUI2_MODULE" 
+	GTK_ERR=1
+    fi
+#    AC_SUBST(libgnomeui_CFLAGS)
+#    AC_SUBST(libgnomeui_LIBS)
 
 
     PIXMAP_DIR=pixmap

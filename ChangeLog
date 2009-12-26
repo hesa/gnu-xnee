@@ -1,3 +1,8 @@
+2009-12-26  Henrik Sandklef  <hesa@armstrong.sandklef.com>
+
+	* configure.in:
+	More fixes to get get rid of pkg-config deps, when not needing it
+
 2009-12-22  Henrik Sandklef  <hesa@sandklef.com>
 
 	* Makefile.cvs (generate): 
