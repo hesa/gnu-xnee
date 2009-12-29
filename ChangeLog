@@ -1,3 +1,19 @@
+2009-12-29  Henrik Sandklef  <hesa@sandklef.com>
+
+	* cnee/test/test_all.sh: 
+	No args is handled better
+
+	* cnee/test/etc/base_funs: 
+	Added handling of no X up 
+	Function decl./def now in bourne shell syntax
+
+	* cnee/test/scripts/options/print-error-name.sh: 
+	* cnee/test/scripts/options/print-error-names.sh: 
+	Redirect misleading (from negative tests) error messages 
+
+	* cnee/test/scripts/options/print-event-name-human.sh:
+	Removed test of non existing event
+
 2009-12-26  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
