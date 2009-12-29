@@ -1,9 +1,14 @@
-Changes in coming version 3.06 
+Changes in coming version 3.06
 ==============================
 
    * Build changes:
        configure bails out when building any gui 
        and no pkg-config installed
+
+   * Test changes:
+       Separated tests:
+       * make check  - does not need an X server to connect to
+       * make xcheck - needs an X server to connect to
 
 
 Changes in version 3.05 ('Merry X11-mas')
