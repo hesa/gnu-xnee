@@ -142,7 +142,7 @@ elif [ "$1" == "--clean" ];
     rm -fr xnee_val.*
     rm -fr rep-*.log
     rm -fr src/xgetter.o src/xgetter
-    
+
 elif [ "$1" == "--function" ];
     then
     START=`date '+%s'`
@@ -166,15 +166,10 @@ elif [ "$1" == "--kbd" ];
     STOP=`date '+%s'`
     scan_logs
 else
-    START=`date '+%s'`
-    \rm -f $LOG $ERR_LOG
-    option_scripts "$*"
-    function_scripts "$*"
-    STOP=`date '+%s'`
-    scan_logs
+    $0 --clean
+    $0 --build
+#    $0 --option
 fi
-
-
 
 
 
