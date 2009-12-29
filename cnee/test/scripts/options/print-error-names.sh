@@ -135,9 +135,6 @@ compare_error_false()
 find_errors  /usr/include/X11/X.h  $X11_NAMES
 
 LAST_ERROR=`cat $X11_NAMES | grep -v Extension | tail -1 | awk 'BEGIN {FS="="} ; { print $1}' | sed 's,[ ]*,,g' `
-echo "LAST_ERROR=$LAST_ERROR"
-
-echo "start 1"
 
 #
 # positive test
@@ -165,7 +162,6 @@ result_log $MYNAME
 
 
 result_log $MYNAME 
-echo "start 2"
 
 
 
@@ -188,7 +184,5 @@ check_retval $STATUS 0 "$STATUS 0"
 
 \rm -f $X11_NAMES
 \rm -f $XNEE_NAMES $XNEE_NAMES.2
-
-echo "start 3"
 
 result_log $MYNAME 

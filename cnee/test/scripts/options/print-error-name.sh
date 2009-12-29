@@ -141,8 +141,6 @@ do
 done
 
 
-echo " ================= 12 "
-
 #
 # negative tests
 #
@@ -152,7 +150,7 @@ do
   NAME_=`echo $i | sed 's,[-0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
 #  echo $XNEE $LONG_ARG $NAME_
-  XNEE_ERR=`run_cnee $LONG_ARG $NAME_`
+  XNEE_ERR=`run_cnee $LONG_ARG $NAME_  >/dev/null 2>&1`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_ERR" != "" ];
@@ -164,7 +162,7 @@ do
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
 
 #  echo $XNEE $LONG_ARG $ERR_
-  XNEE_ERR_NAME=`run_cnee $LONG_ARG $ERR_`
+  XNEE_ERR_NAME=`run_cnee $LONG_ARG $ERR_   >/dev/null 2>&1`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_ERR_NAME" != "" ];
@@ -175,14 +173,13 @@ do
   fi
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
   
-
   # ###
   # Xnee returns no value so we can't compare
   # ### 
   #  compare_data_false $ERR_ $NAME_  $XNEE_ERR $XNEE_ERR_NAME 
 
 
-  XNEE_ERR=`run_cnee $SHORT_ARG $NAME_`
+  XNEE_ERR=`run_cnee $SHORT_ARG $NAME_   >/dev/null 2>&1`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_ERR" != "" ];
@@ -194,8 +191,7 @@ do
   TOTAL_TEST=`expr $TOTAL_TEST + 1`
   
 
-
-  XNEE_ERR_NAME=`run_cnee $SHORT_ARG $ERR_`
+  XNEE_ERR_NAME=`run_cnee $SHORT_ARG $ERR_  >/dev/null 2>&1`
   STATUS=$?
   check_retval_false $STATUS 0
   if [ "$XNEE_ERR_NAME" != "" ];
