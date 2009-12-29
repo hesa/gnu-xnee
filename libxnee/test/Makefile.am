@@ -7,8 +7,9 @@ TESTCALLBACK = testcallback
 lib_LTLIBRARIES = libtestcb.la
 
 noinst_PROGRAMS = $(LIBTEST) $(TESTSETGET) $(TESTFEEDBACK) $(TESTPRINT) $(TESTDISP) $(TESTCALLBACK)
+TEST_WRAPPER=test-wrapper.sh
 
-EXTRA_DIST = test_setget.h test-wrapper.sh
+EXTRA_DIST = test_setget.h $(TEST_WRAPPER)
 
 if BUILD_STATIC
 STATIC_FLAGS = -static
@@ -32,9 +33,16 @@ libtestcb_la_CFLAGS =  $(AM_CFLAGS)
 
 test: 
 	chmod a+x ./test-wrapper.sh 
-	./test-wrapper.sh ./$(LIBTEST)
-	./test-wrapper.sh ./$(TESTSETGET)
-	./test-wrapper.sh ./$(TESTFEEDBACK)
-	./test-wrapper.sh ./$(TESTPRINT)
-	./test-wrapper.sh ./$(TESTCALLBACK)
+	$(TEST_WRAPPER) ./$(LIBTEST)
+	$(TEST_WRAPPER) ./$(TESTSETGET)
+	$(TEST_WRAPPER) ./$(TESTFEEDBACK)
+	$(TEST_WRAPPER) ./$(TESTPRINT)
+	$(TEST_WRAPPER) ./$(TESTCALLBACK)
+
+xtest: 
+	./$(LIBTEST)
+	./$(TESTSETGET)
+	./$(TESTFEEDBACK)
+	./$(TESTPRINT)
+	./$(TESTCALLBACK)
 
