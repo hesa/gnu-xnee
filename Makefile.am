@@ -2,7 +2,7 @@ SUBDIRS = ${LIB_DIR}  ${CLI_DIR} ${GUI_DIR} ${GNOME_APPLET_DIR} ${DOC_DIR} share
 
 AUTOMAKE_OPTIONS = gnu
 
-EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/* projects/test.xnp sessions/example1.xns README README.debian BUGS FAQ EXAMPLES doc/Makefile.am doc/Makefile.in ChangeLog 
+EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/* projects/test.xnp sessions/example1.xns README README.debian README.cvs BUGS FAQ EXAMPLES doc/Makefile.am doc/Makefile.in ChangeLog 
 
 
 
@@ -48,15 +48,12 @@ test:
 
 
 check: all
-	cd libxnee/test && ./libtest
-	cd libxnee/test && ./testsetget
-	cd libxnee/test && ./testfeedback
-	cd libxnee/test && ./testprint
-	cd libxnee/test && ./testdisplay
-	cd cnee/test    && ./test_all.sh --clean
-	cd cnee/test    && ./test_all.sh --build
-	cd cnee/test    && ./test_all.sh --option
+	cd libxnee/test && make test
+	cd cnee/test    && ./test_all.sh 
 
+xcheck: all
+	cd libxnee/test && make xtest
+	cd cnee/test    && ./test_all.sh 
 
 $(srcdir)/package.m4 : $(topdir)/configure.in
 	:;{\
