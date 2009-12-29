@@ -8,7 +8,7 @@ lib_LTLIBRARIES = libtestcb.la
 
 noinst_PROGRAMS = $(LIBTEST) $(TESTSETGET) $(TESTFEEDBACK) $(TESTPRINT) $(TESTDISP) $(TESTCALLBACK)
 
-EXTRA_DIST = test_setget.h
+EXTRA_DIST = test_setget.h test-wrapper.sh
 
 if BUILD_STATIC
 STATIC_FLAGS = -static
