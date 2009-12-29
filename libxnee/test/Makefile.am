@@ -30,14 +30,11 @@ testcallback_SOURCES = callback.c
 libtestcb_la_SOURCES = callback_so.c
 libtestcb_la_CFLAGS =  $(AM_CFLAGS)
 
-
-
 test: 
-	Xvfb :20 &
-	sleep 5
-	DISPLAY=:20 ./$(LIBTEST)
-	DISPLAY=:20 ./$(TESTSETGET)
-	DISPLAY=:20 ./$(TESTFEEDBACK)
-	DISPLAY=:20 ./$(TESTPRINT)
-	DISPLAY=:20 ./$(TESTCALLBACK)
+	chmod a+x ./test-wrapper.sh 
+	./test-wrapper.sh ./$(LIBTEST)
+	./test-wrapper.sh ./$(TESTSETGET)
+	./test-wrapper.sh ./$(TESTFEEDBACK)
+	./test-wrapper.sh ./$(TESTPRINT)
+	./test-wrapper.sh ./$(TESTCALLBACK)
 
