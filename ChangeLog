@@ -1,5 +1,20 @@
 2009-12-29  Henrik Sandklef  <hesa@sandklef.com>
 
+	* Makefile.am (check): 
+	Cleaner calls to test targets in libxnee and cnee
+	target check will (soon) not rely on X
+	target xcheck will need X
+
+	* libxnee/test/Makefile.am: 
+	Put test-wrapper in a var
+	Made separate test when requesting to test with X
+
+	* libxnee/test/test_setget.h: 
+	Casts to int before print
+
+	* libxnee/test/Makefile.am: 
+	Calling test programs through test-wrapper.sh
+
 	* cnee/test/test_all.sh: 
 	No args is handled better
 
