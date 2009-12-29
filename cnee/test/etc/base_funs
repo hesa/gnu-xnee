@@ -18,8 +18,16 @@ MEMCHECK=valgrind
 MEMCHECK_ARGS="--trace-malloc=yes --log-file=xnee_val --leak-check=yes -v" 
 
 
+HAS_X="true"
+xdpyinfo >/dev/null 2>&1 
+if [ "$?" != "0" ]		      
+then 
+    HAS_X="false"
+fi
 
-function init_test()
+
+
+init_test()
 {
     SCRIPT_NAME=$1
 
@@ -38,8 +46,15 @@ function init_test()
 
     START=`date '+%s'`
     XNEE_VERSION=`run_cnee --version 2>&1 | grep xnee | grep -v opyrigh | grep -v WARRAN | grep -v http | awk '{ print $2}' | sed 's,[ ],,'`
-    X_VEND=`xdpyinfo | grep "vendor string" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
-    X_VERS=`xdpyinfo | grep "vendor release" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
+
+    if [ "$HAS_X" != "false" ]
+    then
+	X_VEND=`xdpyinfo | grep "vendor string" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
+	X_VERS=`xdpyinfo | grep "vendor release" | awk 'BEGIN {FS="[:]"} { print $2}' | sed 's,^[ ]*\(.*\)[ ]*$,\1,g'`
+    else		 
+	X_VEND="none"
+	X_VERS="-1"
+    fi
     ME=`whoami`
 
     uname -o > /dev/null 2>/dev/null
@@ -51,27 +66,27 @@ function init_test()
 }
 
 
-function log()
+log()
 {
     echo "$*" >> $LOG
     echo "$*"
 }
 
-function error_log()
+error_log()
 {
     echo "$*" >> $ERR_LOG
 }
 
 
 
-function move_cursor()
+move_cursor()
 {
     DELAY=$1
     run_cnee --replay -f rc/one_cursor.xnr --time $DELAY
 }
 
 
-function result_log_xml()
+result_log_xml()
 {
     NAME=$1
     log "<RESULT script-name=\"$NAME\">"
@@ -99,7 +114,7 @@ function result_log_xml()
     log "</RESULT>"
 }
 
-function result_log_simple()
+result_log_simple()
 {
     NAME=$1
     log "Script name=\"$NAME\""
@@ -123,14 +138,14 @@ function result_log_simple()
 }
 
 
-function result_log_()
+result_log_()
 {
     NAME=$1
     log "$NAME:$TOTAL_TEST:$SUCC_TEST:$ERR_TEST:$WARN_TEST:$RETURN_TEST:$RETURN_ERR:$UNTESTED:$START:$STOP:$XNEE_VERSION:$X_VEND:$X_VERS:$ME:$OS"
 }
 
 
-function result_log()
+result_log()
 {
     STOP=`date '+%s'`
     result_log_ $*
@@ -138,18 +153,18 @@ function result_log()
 	
 }
 
-function killall_1
+killall_1()
 {
     PROG=cnee
 
-    killall -SIGINT $PROG
+    killall -SIGINT $PROG 
     sleep 1
     killall -TERM   $PROG
     sleep 1
     killall -kill   $PROG
-}
+} >/dev/null 2>&1
 
-function do_kill_1()
+do_kill_1()
 {
     PID=$1
     SIG=$2
@@ -158,7 +173,7 @@ function do_kill_1()
 }
 
 
-function kill_1
+kill_1()
 {
     PID=$1
 
@@ -180,7 +195,7 @@ function kill_1
     fi
 }
 
-function verbose()
+verbose()
 {
     if [ "$VERBOSE_MODE" == "true" ];
         then
@@ -188,7 +203,7 @@ function verbose()
     fi
 }
 
-function check_retval()
+check_retval()
 {
     RESULT=$1
     EXPECTED=$2 
@@ -207,7 +222,7 @@ function check_retval()
     fi
 }
 
-function check_retval_false()
+check_retval_false()
 {
     RESULT=$1
     UN_EXPECTED=$2 
@@ -226,7 +241,7 @@ function check_retval_false()
 }
 
 
-function parse_me()
+parse_me()
 {
     for arg in $1
       do
@@ -251,7 +266,7 @@ function parse_me()
 }
 
 
-function find_events()
+find_events()
 {
     FILE=$1 
     OUT=$2
@@ -264,7 +279,7 @@ function find_events()
 	    '  > $OUT
 }
 
-function find_requests()
+find_requests()
 {
     FILE=$1 
     OUT=$2
@@ -278,7 +293,7 @@ function find_requests()
 }
 
 
-function find_errors()
+find_errors()
 {
     FILE=$1 
     OUT=$2
@@ -302,7 +317,7 @@ function find_errors()
 #  
 # 
 
-function compare_data()
+compare_data()
 {
     
     EXP_EV=`echo $1 | sed 's,^[0]*\([0-9][0-9]*\),\1,g'`
@@ -338,7 +353,7 @@ function compare_data()
 }
 
 
-function compare_data_false()
+compare_data_false()
 {
     
     EXP_EV=`echo $1 | sed 's,^[0]*,,g'`
@@ -373,7 +388,7 @@ function compare_data_false()
 
 
 
-function verify_device()
+verify_device()
 {
     DEV=$1
     cat /proc/misc | grep $DEV   2>/dev/null 1>/dev/null 
@@ -387,14 +402,14 @@ function verify_device()
 }
 
 
-function zero_device()
+zero_device()
 {
 	DEV=$1
 	echo "0" > /dev/$DEV
 }
 
 
-function verify_same()
+verify_same()
 {
     EXP_VAL=$1
     REAL_VAL=$2
@@ -420,7 +435,7 @@ function verify_same()
 }
 
 
-function verify_not_same()
+verify_not_same()
 {
     EXP_VAL=$1
     REAL_VAL=$2
@@ -443,7 +458,7 @@ function verify_not_same()
     SUCC_TEST=$(( $SUCC_TEST + 1 ))
 }
 
-function verify_pos_alm_same()
+verify_pos_alm_same()
 {
     EXP_VAL=$1
     REAL_VAL=$2
@@ -478,7 +493,7 @@ function verify_pos_alm_same()
 }
 
 
-function check_xgetter()
+check_xgetter()
 {
     if [ ! -f ./src/xgetter ]
 	then
@@ -509,7 +524,7 @@ save_pointer()
 }
 
 
-function press_key()
+press_key()
 {
     KEY=$1
     verbose "faking key $KEY"
@@ -517,7 +532,7 @@ function press_key()
     sleep 0
 }
 
-function press_key_from_string()
+press_key_from_string()
 {
     _STRING=$1
     _LEN=${#_STRING}
@@ -530,7 +545,7 @@ function press_key_from_string()
     done
 }
 
-function fake_controld()
+fake_controld()
 {
     sleep 1
     echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
@@ -540,7 +555,7 @@ function fake_controld()
     echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
 }
 
-function fake_control_()
+fake_control_()
 {
     KEY=$1
     sleep 1
@@ -551,7 +566,7 @@ function fake_control_()
     echo "[CONTROL_UP]"   > $KEYBOARD_DEVICE
 }
 
-function fake_alt_()
+fake_alt_()
 {
     KEY=$1
     sleep 1
@@ -563,21 +578,21 @@ function fake_alt_()
     sleep 1
 }
 
-function fake_control_press()
+fake_control_press()
 {
     sleep 0
     echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
     sleep 0
 }
 
-function fake_control_release()
+fake_control_release()
 {
     sleep 0
     echo "[CONTROL_UP]" > $KEYBOARD_DEVICE
     sleep 0
 }
 
-function fake_controlc()
+fake_controlc()
 {
     sleep 1
     echo "[CONTROL_DOWN]" > $KEYBOARD_DEVICE
@@ -589,13 +604,13 @@ function fake_controlc()
 }
 
 
-function fake_enter()
+fake_enter()
 {
     echo "[ENTER]"   > $KEYBOARD_DEVICE
 }
 
 
-function move_mouse()
+move_mouse()
 {
     TMP=0
     PIX=$2
@@ -609,7 +624,7 @@ function move_mouse()
 }
 
 #start with the mouse in such a position that in can move around enough
-function get_in_position()
+get_in_position()
 {
     fast_move_mouse  u 500
     fast_move_mouse  l 500
@@ -626,7 +641,7 @@ function get_in_position()
 }
 
 
-function slow_move_mouse()
+slow_move_mouse()
 {
     TMP=0
     PIX=$2
@@ -640,7 +655,7 @@ function slow_move_mouse()
     done
 }
 
-function fast_move_mouse()
+fast_move_mouse()
 {
     DIR=$1
     PIX=$2
@@ -648,13 +663,13 @@ function fast_move_mouse()
 }
 
 
-function zero_mouse()
+zero_mouse()
 {
     echo "0" > $MOUSE_DEVICE
 }
 
 
-function remove_gcov_gprof_file()
+remove_gcov_gprof_file()
 {
     verbose "Removing gcov and gprof files....."
     # gcov
