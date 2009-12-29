@@ -61,30 +61,32 @@ LAST_EVENT=`grep LASTEvent /usr/include/X11/X.h | awk '{ print $3}' | sed 's,[ ]
 # positive tests
 #
 # compare Xnee number and names with the system
-for i in `cat $X11_NAMES`
+for i in `cat $X11_NAMES  | grep -v GenericEvent` 
 do
   EV_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[0-9]*=\([a-zA-Z0-9]*\),\1,g'`
 
-  run_cnee -hp $LONG_ARG $NAME_
+
+  XNEE_EV=`run_cnee -hp $LONG_ARG $NAME_`
 
   STATUS=$?
   check_retval $STATUS 0 
 
+
+  XNEE_EV_NAME=`run_cnee -hp $LONG_ARG $EV_`
+  STATUS=$?
+  check_retval  $STATUS 0 
+
+  compare_data $EV_ $NAME_  $XNEE_EV $XNEE_EV_NAME
 done
 
 
 
-
-
-
-
 # compare Xnee number and names with the system
-for i in `cat $X11_NAMES`
+for i in `cat $X11_NAMES | grep -v GenericEvent`
 do
   EV_=`echo $i | sed 's,\([0-9]*\)=.*,\1,g'`
   NAME_=`echo $i | sed 's,[0-9]*=\([a-zA-Z0-9]*\),\1,g'`
-
   XNEE_EV=`run_cnee -hp $SHORT_ARG $NAME_`
   STATUS=$?
   check_retval $STATUS 0 
