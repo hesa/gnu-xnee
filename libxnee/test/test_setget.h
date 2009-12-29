@@ -56,7 +56,7 @@ extern int verbose ;
      if ( ret_val == comp_val ) \
        {                    \
           ON_FAIL(fun_str, __LINE__);\
-          printf ("   %d == %d\n", ret_val, comp_val); \
+          printf ("   %d == %d\n", (int)ret_val, (int)comp_val);	\
           PRINT_FUN \
            exit(1); \
        }\
