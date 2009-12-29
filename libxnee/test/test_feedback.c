@@ -45,7 +45,6 @@ test_setfeedback(xnee_data *xd)
     xosd
   */
 
-  xnee_set_verbose(xd);
   ret = xnee_set_xosd_feedback(xd);
   XNEE_TEST_ASSERT(ret, 0, "xnee_set_xosd_feedback");
 

@@ -9,9 +9,6 @@ int main()
   xnee_data *xd = xnee_new_xnee_data();
   int i ;
 
-  printf ("Verbose mode\n");
-  xnee_set_verbose(xd);
-
   printf ("Set plugin\n");
   xnee_use_plugin(xd, "testcb.so", 1);
 

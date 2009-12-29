@@ -32,7 +32,6 @@ int main(int argc, char **argv)
   /*  Get a new xnee_data structure  */
   /* call to xnee_init */
 
-   
   xdl = xnee_new_xnee_data();
 /*   xnee_init(xdl); */
 
