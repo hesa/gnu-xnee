@@ -1,3 +1,12 @@
+2009-12-31  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Added AB_INIT
+	Preparing for 3.06
+
+	* build/autobuild.sh: 
+	New file: Autobuild wrapper
+
 2009-12-30  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/test/test-wrapper.sh: 
