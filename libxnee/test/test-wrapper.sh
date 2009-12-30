@@ -19,5 +19,5 @@ test_program()
 }
 
 test_program $1
-return 0
+exit 0
 
