@@ -1,3 +1,9 @@
+2009-12-30  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/test/Makefile.am (TEST_WRAPPER): 
+	Adding "./" to test-wrapper.sh since we don't want to add . to PATH
+
+
 2009-12-29  Henrik Sandklef  <hesa@sandklef.com>
 
 	* Makefile.am (check): 
