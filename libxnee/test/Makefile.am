@@ -7,7 +7,7 @@ TESTCALLBACK = testcallback
 lib_LTLIBRARIES = libtestcb.la
 
 noinst_PROGRAMS = $(LIBTEST) $(TESTSETGET) $(TESTFEEDBACK) $(TESTPRINT) $(TESTDISP) $(TESTCALLBACK)
-TEST_WRAPPER=test-wrapper.sh
+TEST_WRAPPER=./test-wrapper.sh
 
 EXTRA_DIST = test_setget.h $(TEST_WRAPPER)
 
