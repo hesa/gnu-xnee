@@ -1,5 +1,8 @@
 2009-12-31  Henrik Sandklef  <hesa@sandklef.com>
 
+	* Makefile.am (EXTRA_DIST): 
+	Adding build/autobuild.sh to dist file
+
 	* configure.in: 
 	Added AB_INIT
 	Preparing for 3.06

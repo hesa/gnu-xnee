@@ -2,7 +2,8 @@ SUBDIRS = ${LIB_DIR}  ${CLI_DIR} ${GUI_DIR} ${GNOME_APPLET_DIR} ${DOC_DIR} share
 
 AUTOMAKE_OPTIONS = gnu
 
-EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/* projects/test.xnp sessions/example1.xns README README.debian README.cvs BUGS FAQ EXAMPLES doc/Makefile.am doc/Makefile.in ChangeLog 
+EXTRA_DIST = Makefile.xnee Makefile.cvs autotools/* projects/test.xnp sessions/example1.xns README README.debian README.cvs BUGS FAQ EXAMPLES doc/Makefile.am doc/Makefile.in ChangeLog build/autobuild.sh
+
 
 
 
@@ -60,3 +61,7 @@ $(srcdir)/package.m4 : $(topdir)/configure.in
 	echo '# ' && \
 	echo 'm4_define([AT_PACKAGE_NAME],  [@PACKAGE_NAME@])' ; \
 	} > '$$(srcdir)/package.m4'
+
+
+autobuild:
+	cd build && autobuild.sh
