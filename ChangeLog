@@ -1,3 +1,17 @@
+2010-01-21  Henrik Sandklef  <hesa@schnittke.sandklef.com>
+
+	* libxnee/src/xnee_resource.c: 
+	* libxnee/src/xnee_record.c: 
+	Updated (c) year
+
+	* libxnee/src/xnee_resource.c (xnee_key2string): 
+	Not crashing due to options[-1] indexing
+
+2010-01-02  Henrik Sandklef  <hesa@schnittke.sandklef.com>
+
+	* libxnee/src/xnee_record.c (xnee_record_from_data_display): 
+	Checking if x_vendor_name is NULL before use
+
 2009-12-31  Henrik Sandklef  <hesa@sandklef.com>
 
 	* Makefile.am (EXTRA_DIST): 
