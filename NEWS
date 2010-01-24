@@ -1,6 +1,9 @@
 Changes in coming version 3.06
 ==============================
 
+   * New logo:
+       pixmap/512x512/xnee-new.png
+
    * Build changes:
        configure bails out when building any gui 
        and no pkg-config installed
