@@ -1,3 +1,8 @@
+2010-01-24  Henrik Sandklef  <hesa@bach.sandklef.com>
+
+	* pixmap/512x512/xnee-new.png
+	New file (logo) from Luis Santander
+
 2010-01-21  Henrik Sandklef  <hesa@schnittke.sandklef.com>
 
 	* libxnee/src/xnee_resource.c: 
