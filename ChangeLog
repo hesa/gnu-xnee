@@ -1,3 +1,8 @@
+2010-02-06  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/test/callback.c (main): 
+	Casting xd to XPointer to silent warning
+
 2010-01-24  Henrik Sandklef  <hesa@bach.sandklef.com>
 
 	* pixmap/512x512/xnee-new.png
