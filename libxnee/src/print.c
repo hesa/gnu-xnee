@@ -2,7 +2,7 @@
   Xnee's Not an Event Emulator enables recording and replaying of X 
   protocol data
   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 
-                2007, 2008, 2009 Henrik Sandklef
+                2007, 2008, 2009, 2010 Henrik Sandklef
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -1620,6 +1620,14 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
   fprintf (out,  "# %s %d\n", 
 	   xnee_xns_key2string(XNEE_DELAY_TIME_KEY),
 	   xnee_get_interval(xd) ); 
+
+  fprintf (out,  "\n# Forced recording of ReparentNotify\n");
+  if ( ! xnee_is_forced_reparent_recording(xd) )
+    {
+      fprintf (out,  "# "); 
+    }
+  fprintf (out,  "%s \n", 
+	   xnee_xns_key2string(XNEE_FORCE_REPARENT_RECORD)    ); 
 
   /* Various */
   fprintf (out,  "\n# Various\n");
