@@ -278,7 +278,6 @@ xnee_record_handle_event_printer(xnee_data * xd,
 	       );
       break;
     case ReparentNotify:
-      printf ("REC:  REPARENT\n");
       new_window_pos = xnee_get_new_window_pos(xd);
       
       if (xnee_is_forced_reparent_recording(xd))
