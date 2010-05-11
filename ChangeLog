@@ -1,5 +1,15 @@
 2010-05-11  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
+	Removed debug printout
+	Check if string is NULL before strcmp
+
+	* cnee/src/main.c: 
+	Removed sleep workaround
+
+	* libxnee/src/xnee_record.c: 
+	Removed debug printouts
+
 	* libxnee/src/print.c: 
 	Added printing of forced reparent mode when 
 	writing to sessions file
