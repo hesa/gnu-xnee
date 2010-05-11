@@ -1,3 +1,34 @@
+2010-05-11  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/print.c: 
+	Added printing of forced reparent mode when 
+	writing to sessions file
+
+	* libxnee/src/xnee_error.c: 
+	Fixed typo (filure => failure)
+
+	* libxnee/src/xnee_record.c: 
+	Only recording all ReparentNotify when forced reparent
+	mode
+
+	* libxnee/src/xnee_resource.c: 
+	Added parser functions for new forced reparent
+	functionality
+
+	* libxnee/include/libxnee/xnee.h: 
+	Added variable for new forced reparent
+	functionality
+
+	* libxnee/src/xnee_session.c: 
+	Set forced reparent flag to 0 during init.
+
+	* libxnee/src/xnee_setget.c: 
+	Added helper functions (is, set, get) for new forced reparent
+	functionality
+
+	* libxnee/include/libxnee/xnee_resource.h: 
+	Added new enum (XNEE_FORCE_REPARENT_RECORD) 
+
 2010-02-06  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/test/callback.c (main): 
