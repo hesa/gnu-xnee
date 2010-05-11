@@ -5,7 +5,7 @@
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
  *                      2004, 2005, 2006, 2007, 2008
- *                      2009 Henrik Sandklef      
+ *                      2009, 2010 Henrik Sandklef      
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -278,14 +278,15 @@ xnee_record_handle_event_printer(xnee_data * xd,
 	       );
       break;
     case ReparentNotify:
+      printf ("REC:  REPARENT\n");
       new_window_pos = xnee_get_new_window_pos(xd);
       
-      if (new_window_pos!=0)
+      if (xnee_is_forced_reparent_recording(xd))
 	{
 	  fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
 		   event_type,
 		   xrecintd->server_time );
-	}
+	} 
       XGetWindowAttributes(xd->grab, 
 			   xrec_data->event.u.reparent.window,
 			   &window_attributes_return);
@@ -651,6 +652,9 @@ void
 xnee_record_init (xnee_data *xd) 
 {
   int i=0;
+
+  printf ("Setting reparent to 0 \n");
+
   XNEE_DEBUG ( (stderr ," --> xnee_record_init()  \n"  ));
   xd->xnee_info.first_last      = False  ; /* Intercept all MotionNotify, else only first and last */
 
@@ -678,7 +682,6 @@ xnee_record_init (xnee_data *xd)
 
   xd->xnee_info.replayed_events = 0      ;
   xd->xnee_info.interrupt       = 0;
-
 
   for ( i=0 ; i< XNEE_NR_OF_TYPES ; i++) 
     {
