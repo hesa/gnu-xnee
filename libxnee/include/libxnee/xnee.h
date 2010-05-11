@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *      Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                    2009 Henrik Sandklef                    
+ *                    2009, 2010 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -440,6 +440,7 @@ typedef struct
 
   int             interrupt ;
 
+
 } xnee_record_init_data ; 
 
 
@@ -585,6 +586,7 @@ typedef struct
    
   /*@only@*/ /*@null@*/ 
   xnee_record_init_data    xnee_info ; 
+  int             forced_reparent_recording ;
 
   /*@only@*/ /*@null@*/ 
   xnee_recordext_setup     *record_setup;
