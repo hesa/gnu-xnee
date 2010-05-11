@@ -806,12 +806,11 @@ xnee_record_from_data_display(xnee_data *xd)
 	  xd->x_version_minor, 
 	  xd->x_version_minor_sub);
   */
-  if (xd != NULL)
+  if ( (xd != NULL) && (xd->x_vendor_name != NULL ) )
     {
       
-  if ( (xd->x_vendor_name != NULL ) && 
-       (strstr(xd->x_vendor_name, "X.Org") ))
-    {
+      if (strstr(xd->x_vendor_name, "X.Org"))
+	{
 	  if ( ( xd->x_version_major == 1 ) &&
 	       ( xd->x_version_minor >= 4 ) )
 	    {
@@ -827,7 +826,7 @@ xnee_record_from_data_display(xnee_data *xd)
 	      ret_val = 1;
 	    }
 	}
-
+      
     }
 
   return ret_val;
