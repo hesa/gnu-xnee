@@ -104,7 +104,7 @@ xnee_get_max_range (xnee_data *xd)
  * xnee_close_down                                            *
  *                                                            *
  *                                                            *
- **************************************************************/
+**************************************************************/
 void 
 xnee_close_down(xnee_data* xd) 
 {
@@ -152,6 +152,7 @@ xnee_close_down(xnee_data* xd)
   xnee_verbose((xd, "Freeing modifier mapping memory %d ", (int)xd->map));
   XFreeModifiermap(xd->map);
 
+
   xnee_verbose((xd, "Closing displays on host "));
   if ( xd->display==NULL ) 
     {
@@ -165,6 +166,9 @@ xnee_close_down(xnee_data* xd)
       xnee_free(xd->display);
       xd->display=NULL;
     }
+  /* HESA HESA HESA */
+  if (0==1)
+    {
 
   if ( xd->control!=NULL)  
     {
@@ -181,8 +185,10 @@ xnee_close_down(xnee_data* xd)
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3.1 \n"  ));
       XCloseDisplay ( xd->fake );
     }
+ 
+    }
 
-  XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.4 \n"  )); 
+ XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.4 \n"  )); 
   if ( xd->data!=NULL)  
     {
 /*       printf ("close data in %s   ---> %d\n", __func__, xd->data); */
@@ -210,6 +216,7 @@ xnee_close_down(xnee_data* xd)
       XCloseDisplay ( xd->grab );
     }
   
+
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.5 \n"  ));
 
   xnee_verbose((xd, "closing fds\n"));
@@ -238,7 +245,8 @@ xnee_close_down(xnee_data* xd)
   ret = xnee_free_file (xd, xd->out_name,  xd->out_file);
   xd->out_file=NULL;
 
-  ret = xnee_free_xnee_data(xd);
+   ret = xnee_free_xnee_data(xd); 
+
   xd=NULL;
 }
 

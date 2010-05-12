@@ -844,7 +844,6 @@ xnee_setup_recording(xnee_data *xd)
 			 xd->record_setup->xids,1, 
 			 xd->record_setup->range_array, 
 			 nr_of_ranges);
-  XFlush(context_display);
 
   XFlush(xd->control);
   XFlush(xd->data);
@@ -884,16 +883,18 @@ xnee_unsetup_recording(xnee_data *xd)
 
   xnee_verbose((xd, "---> xnee_unsetup_recording\n"));
 
+      printf ("Close context** %u %u   context:%u *** \n",
+	      xd,
+	      xd->record_setup,
+	      xd->record_setup->rContext); fflush(stdout);
+
   if (xd->record_setup->rContext != 0)
     {
       xnee_verbose((xd, "---  disabling context %d on %d \n", 
-		    (int)xd->record_setup->rContext, 
-		    context_display));
-  
-      (void)XRecordDisableContext(xd->control, 
-				  xd->record_setup->rContext);
+		    (int)xd->record_setup->rContext, context_display));
 
-      xnee_verbose((xd, "---  freeing context \n"));
+      (void)XRecordDisableContext(xd->control, xd->record_setup->rContext); 
+
       (void)XRecordFreeContext(xd->control, 
 			       xd->record_setup->rContext);
 
