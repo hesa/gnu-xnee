@@ -177,7 +177,7 @@ xnee_close_down(xnee_data* xd)
   if ( xd->fake!=NULL)  
     {
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3 \n"  ));
-      xnee_verbose((xd, "Closing displays control=%d \n", (int) xd->fake));
+      xnee_verbose((xd, "Closing displays fake=%d \n", (int) xd->fake));
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3.1 \n"  ));
       XCloseDisplay ( xd->fake );
     }
@@ -187,13 +187,26 @@ xnee_close_down(xnee_data* xd)
     {
 /*       printf ("close data in %s   ---> %d\n", __func__, xd->data); */
       xnee_verbose((xd, "Closing displays data=%d \n", (int) xd->data));
+
+      
+      xnee_verbose((xd, "Closing displays data=%d  pending:%d\n", (int) xd->data, XPending(xd->data)));
+
+      XFlush(xd->data);
+      xnee_verbose((xd, "Closing displays data=%d  flushed\n", (int) xd->data));
+      usleep(1000*100);
+      xnee_verbose((xd, "Closing displays data=%d slept\n", (int) xd->data));
+
+      /* 
       XCloseDisplay ( xd->data );
+      */
     }
   
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.41 \n"  )); 
   if ( xd->grab!=NULL)  
     {
-      xnee_verbose((xd, "Closing displays data=%d \n", (int) xd->grab));
+      xnee_verbose((xd, "Closing displays grab=%d \n", (int) xd->grab));
+      XFlush(xd->grab);
+      usleep(1000*1000);
       XCloseDisplay ( xd->grab );
     }
   
