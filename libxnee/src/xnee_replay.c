@@ -5,7 +5,7 @@
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003
  *                      2004, 2005, 2006, 2007, 2008
- *                      2009  Henrik Sandklef              
+ *                      2009, 2010  Henrik Sandklef              
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -201,12 +201,15 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
   long int last_elapsed = 0;
   int      ret = XNEE_OK ; 
   char    *ret_str;
+  Display *context_display;
 
   xindata.oldtime = 0 ;
   xindata.newtime = 0 ;
 
   xnee_reset_elapsed_time(xd);
   xnee_reset_fake(xd);
+
+  context_display = xnee_get_display_for_recordcontext(xd);
 
   if ( xd->data_file == NULL)
     {
@@ -391,7 +394,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 
 
 		      xnee_verbose  ((xd," starting async loop since RESUME \n"));
-		      ret = XRecordEnableContextAsync(xd->data, 
+		      ret = XRecordEnableContextAsync(context_display, 
                                                       xd->record_setup->rContext, 
                                                       xd->rec_callback, 
                                                       (XPointer) (xd) );
@@ -536,6 +539,7 @@ xnee_setup_rep_recording(xnee_data *xd)
   int nr_of_ranges=0;
   int ret;
   xnee_recordext_setup  *xrs       = xd->record_setup;
+  Display *context_display;
 
       
 
@@ -561,66 +565,16 @@ xnee_setup_rep_recording(xnee_data *xd)
     }
   xnee_verbose((xd, "\t  CreateContext   nr_of_ranges=%d\n", nr_of_ranges));  
 
-  xnee_verbose ((xd, "creating context .... on control = %d\n", (int)xd->control));
+  context_display = xnee_get_display_for_recordcontext(xd);
 
-  xrs->rContext = XRecordCreateContext(xd->control, 
+  xnee_verbose ((xd, "creating context .... on control = %d\n", (int)context_display));
+
+
+  xrs->rContext = XRecordCreateContext(context_display, 
 				       xrs->data_flags, 
 				       xrs->xids, 1, 
 				       xrs->range_array,nr_of_ranges );
 
-  /*
-  xnee_verbose((xd, "\t  CreateContext   0x%lx\n", xrs->rContext));  
-  ret = XRecordRegisterClients   (xd->control,
-                                  xrs->rContext,
-                                  xrs->data_flags, 
-                                  xrs->xids,1,
-                                  xrs->range_array,nr_of_ranges);    
-  if (ret==0)
-    {
-      xnee_verbose ((xd, "Could not register clients dpy=%u data_flags=%d"
-		     "nr of ranges=%d\n", 
-		     (unsigned int)xd->control,
-		     xrs->data_flags,
-		     nr_of_ranges));
-      return XNEE_RECORD_FAILURE;
-    }
-  xnee_verbose((xd, "--- xnee_setup_rep_recording setting xids \n"));             
-
-  xrs->xids[0] = xnee_client_id (xd->control);
-  xrs->xids[1] = xnee_client_id (xd->data);
-
-  xnee_verbose((xd, "--- xnee_setup_rep_recording unregistring \n"));             
-
-  ret = XRecordUnregisterClients( xd->control, 
-                                  xrs->rContext,
-                                  xrs->xids,
-                                  2);
-  if (ret==0)
-    {
-      xnee_verbose ((xd, "Could not unregister clients dpy=%u\n", 
-		     (unsigned int)xd->control));
-      return XNEE_RECORD_FAILURE;
-    }
-
-  xnee_verbose((xd, "--- xnee_setup_rep_recording getting context \n"));             
-  xnee_verbose((xd, "--- \t %d\n", (int)xd->control));             
-  xnee_verbose((xd, "--- \t %d\n", (int)xrs));             
-  xnee_verbose((xd, "--- \t %d\n", (int)xrs->rContext));             
-  xnee_verbose((xd, "--- \t %d\n", (int)xrs->rState));             
-
-  */
-
-  /*  if( XRecordGetContext(xd->control, 
-			xrs->rContext, 
-			(XRecordState **) xrs->rState) == 0)
-    {
-      xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
-      exit(XNEE_BAD_CONTEXT);
-    }
-  
-  xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n", 
-		xrs->rContext, (int) ( (xrs->rState) - (xrs->nclients) ) ));   
-  */
   xnee_verbose((xd, "--- xnee_setup_rep_recording  freeing state \n"));             
 
   XRecordFreeState(xrs->rState); 
@@ -640,7 +594,7 @@ xnee_setup_rep_recording(xnee_data *xd)
   xnee_verbose((xd, "--- xnee_setup_rep_recording enabling async \n"));             
 
   /* Enable context for async interception */
-  ret = XRecordEnableContextAsync (xd->data, 
+  ret = XRecordEnableContextAsync (context_display, 
                                    xrs->rContext, 
                                    xnee_replay_dispatch, 
                                    (XPointer) (xd) /* closure passed to Dispatch */);
