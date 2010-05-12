@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
-                        2004, 2009  Henrik Sandklef 
+ *                      2004, 2009, 2010 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -32,6 +32,7 @@
 #include "libxnee/xnee_resource.h"
 #include "libxnee/xnee_settings.h"
 #include "libxnee/xnee_utils.h"
+
 
 
 
@@ -489,4 +490,76 @@ xnee_str2int(xnee_data *xd, char *str)
 	}
     }
   return ret;
+}
+
+
+int 
+xnee_record_from_data_display(xnee_data *xd)
+{
+  int ret_val = 0;
+
+  /*  printf ("X info:   %s %d %d %d\n",
+	  xd->x_vendor_name, 
+	  xd->x_version_major, 
+	  xd->x_version_minor, 
+	  xd->x_version_minor_sub);
+  */
+  if ( (xd != NULL) && (xd->x_vendor_name != NULL ) )
+    {
+      
+      if (strstr(xd->x_vendor_name, "X.Org"))
+	{
+	  if ( ( xd->x_version_major == 1 ) &&
+	       ( xd->x_version_minor >= 4 ) )
+	    {
+	      ret_val = 1;
+	    }
+	}
+      else if (strstr(xd->x_vendor_name, "Sun Microsystems") )
+	{
+	  
+	  if ( ( xd->x_version_major == 1 ) &&
+	       ( xd->x_version_minor >= 3 ) )
+	    {
+	      ret_val = 1;
+	    }
+	}
+      
+    }
+
+  return ret_val;
+}
+
+
+
+Display *
+xnee_get_display_for_recordcontext(xnee_data *xd)
+{
+  Display *context_display;
+
+  if (xd==NULL)
+    {
+      return NULL;
+    }
+
+  if ( xnee_record_from_data_display(xd))
+    {
+      /*
+       * From X.org 1.6.0 to ????
+       * 
+       *   there seem to be something strange about 
+       *   the XRecordCreateContext call
+       *   which causes the XRecordEnableContextAsync 
+       *   to fail ... ugly fix, but it works
+       *
+       */
+      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
+      fprintf(stderr, "            You can ignore this message\n");
+      context_display = xd->data ;
+    }
+  else
+    {
+      context_display = xd->control ;
+    }
+  return context_display;
 }
