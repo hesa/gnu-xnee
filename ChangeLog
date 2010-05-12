@@ -1,3 +1,26 @@
+2010-05-12  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
+	Adding code to prepare for new XLIB fixes
+
+	* libxnee/src/xnee_record.c: 
+	* libxnee/src/xnee_replay.c: 
+	Using functions in xnee_utils to find which display
+	to use for sending control data
+	Removed unused code
+	
+	* libxnee/src/xnee_session.c (xnee_close_down): 
+	Added some debug printouts
+	Removed clsoing of data display (don't know what's wrong :( )
+
+	* libxnee/include/libxnee/xnee_utils.h: 
+	* libxnee/src/xnee_utils.c: 
+	Added functions:
+	  xnee_record_from_data_display(xnee_data *xd);
+	  xnee_get_display_for_recordcontext(xnee_data *xd);
+	to handle workaround for Xorg server in 2009-2010
+
+
 2010-05-11  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 

@@ -497,8 +497,8 @@ int
 xnee_record_from_data_display(xnee_data *xd)
 {
   int ret_val = 0;
-
-  /*  printf ("X info:   %s %d %d %d\n",
+  /*
+  fprintf (stderr,"X info:   %s %d %d %d\n",
 	  xd->x_vendor_name, 
 	  xd->x_version_major, 
 	  xd->x_version_minor, 
@@ -507,12 +507,40 @@ xnee_record_from_data_display(xnee_data *xd)
   if ( (xd != NULL) && (xd->x_vendor_name != NULL ) )
     {
       
+      /*
+       *  Xorg
+       */
       if (strstr(xd->x_vendor_name, "X.Org"))
 	{
-	  if ( ( xd->x_version_major == 1 ) &&
-	       ( xd->x_version_minor >= 4 ) )
+	  /*
+	   *  Version 1
+	   */
+	  if ( xd->x_version_major == 1 )
 	    {
-	      ret_val = 1;
+	      /*
+	       *  versions 1.4 - 1.7
+	       */
+	      if ( ( xd->x_version_minor >= 4 ) &&
+		   ( xd->x_version_minor <= 7 ) )
+		{
+
+		  /*
+		   *  Once the XLIB fix is in place
+		   *  this should be enabled 
+		   *
+		  if ( ( xd->x_version_minor == 7 ) &&
+		       ( xd->x_version_minor_sub > 6 ))
+		    {
+		    ;
+		    }
+		  else
+		    {
+		  */
+		      ret_val = 1;
+		      /*
+		    }
+		      */
+		}
 	    }
 	}
       else if (strstr(xd->x_vendor_name, "Sun Microsystems") )
