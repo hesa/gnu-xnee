@@ -17,6 +17,9 @@ Changes in coming version 3.06
        "crash in xnee_key2string when verbose"
        "cnee causing segfault"
 
+   * New options: 
+        --force-reparent-recording
+
 Changes in version 3.05 ('Merry X11-mas')
 ==============================
 
