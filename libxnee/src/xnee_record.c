@@ -795,43 +795,6 @@ xnee_has_record_extension(xnee_data *xd)
 }
 
 
-static int 
-xnee_record_from_data_display(xnee_data *xd)
-{
-  int ret_val = 0;
-
-  /*  printf ("X info:   %s %d %d %d\n",
-	  xd->x_vendor_name, 
-	  xd->x_version_major, 
-	  xd->x_version_minor, 
-	  xd->x_version_minor_sub);
-  */
-  if ( (xd != NULL) && (xd->x_vendor_name != NULL ) )
-    {
-      
-      if (strstr(xd->x_vendor_name, "X.Org"))
-	{
-	  if ( ( xd->x_version_major == 1 ) &&
-	       ( xd->x_version_minor >= 4 ) )
-	    {
-	      ret_val = 1;
-	    }
-	}
-      else if (strstr(xd->x_vendor_name, "Sun Microsystems") )
-	{
-	  
-	  if ( ( xd->x_version_major == 1 ) &&
-	       ( xd->x_version_minor >= 3 ) )
-	    {
-	      ret_val = 1;
-	    }
-	}
-      
-    }
-
-  return ret_val;
-}
-
 
 
 
@@ -873,32 +836,14 @@ xnee_setup_recording(xnee_data *xd)
       xd->record_setup->xids[0] = XRecordFutureClients; 
     }
 
-
-  if ( xnee_record_from_data_display(xd))
-    {
-      /*
-       * From X.org 1.6.0 to ????
-       * 
-       *   there seem to be something strange about 
-       *   the XRecordCreateContext call
-       *   which causes the XRecordEnableContextAsync 
-       *   to fail ... ugly fix, but it works
-       *
-       */
-      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
-      fprintf(stderr, "            You can ignore this message\n");
-      context_display = xd->data ;
-    }
-  else
-    {
-      context_display = xd->control ;
-    }
+  context_display = xnee_get_display_for_recordcontext(xd);
 
   xd->record_setup->rContext = 
     XRecordCreateContext(context_display, 
 			 xd->record_setup->data_flags, 
 			 xd->record_setup->xids,1, 
-			 xd->record_setup->range_array, nr_of_ranges);
+			 xd->record_setup->range_array, 
+			 nr_of_ranges);
   XFlush(context_display);
 
   XFlush(xd->control);
@@ -906,58 +851,6 @@ xnee_setup_recording(xnee_data *xd)
   XSync(xd->control, True);
   XSync(xd->data, True);
 
-  /*  printf("%d <=== XRecordCreateContext(%d,%d, %d,%d, %d,%d)\n",
-	 xd->record_setup->rContext,
-	 xd->control, 
-	 xd->record_setup->data_flags, 
-	 xd->record_setup->xids[0],1, 
-	 xd->record_setup->range_array, nr_of_ranges);
-  
-    if(!XRecordGetContext(xd->control, xd->record_setup->rContext, (XRecordState **) &xd->record_setup->rState))
-    {
-    xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
-    exit(1);
-    }
-    printf (" enabled:  %d\n", xd->record_setup->rState->enabled);
-    printf (" datum:    %d\n", xd->record_setup->rState->datum_flags);
-    printf (" nclients: %d\n", xd->record_setup->rState->nclients);
-
-    exit(0);
-  */
-    /*
-      XRecordRegisterClients   (xd->control,
-			    xd->record_setup->rContext,
-			    xd->record_setup->data_flags, 
-			    xids,1,
-			    xd->record_setup->range_array,nr_of_ranges);    
-  xd->record_setup->xids[0] = xnee_client_id (xd->control);
-  xd->record_setup->xids[1] = xnee_client_id (xd->data);
-    */
-  /* 
-   *Remove our clients displays from recording ...
-   */
-  /*
-    XRecordUnregisterClients( xd->control, 
-    xd->record_setup->rContext,
-    xd->record_setup->xids,2);
-    
-    
-    if(!XRecordGetContext(xd->control, xd->record_setup->rContext, (XRecordState **) xd->record_setup->rState))
-    {
-    xnee_print_error ("\n Couldn't get the context information for Display %d\n", (int) xd->control) ;
-    exit(1);
-    }
-  */
-  /*
-    XRecordFreeState(xd->record_setup->rState); 
-    xd->record_setup->rState=NULL; 
-  */
-  
-/*   xnee_verbose((xd, "\t  GetContext      0x%lx (%d clients intercepted))\n",  */
-/* 		xd->record_setup->rContext,  */
-/* 		(int) ( (xd->record_setup->rState) - (xd->record_setup->nclients) )));    */
-  
-  
   xnee_verbose((xd, "<---xnee_setup_recording\n"));
   XNEE_DEBUG ( (stderr ," <-- xnee_setup_recording()  \n"  ));
   return (0);
@@ -987,29 +880,24 @@ xnee_unsetup_recording(xnee_data *xd)
        return XNEE_OK; 
      }
 
-  if ( xnee_record_from_data_display(xd))
-    {
-      fprintf(stderr, "Workaround: Disabling context on data display instead of control \n");
-      fprintf(stderr, "            You can ignore this message\n");
-      context_display = xd->data ;
-    }
-  else
-    {
-      context_display = xd->control ;
-    }
+  context_display = xnee_get_display_for_recordcontext(xd);
+
   xnee_verbose((xd, "---> xnee_unsetup_recording\n"));
 
   if (xd->record_setup->rContext != 0)
     {
       xnee_verbose((xd, "---  disabling context %d on %d \n", 
-		    (int)xd->record_setup->rContext, context_display));
+		    (int)xd->record_setup->rContext, 
+		    context_display));
   
-      (void)XRecordDisableContext(xd->control, xd->record_setup->rContext);
+      (void)XRecordDisableContext(xd->control, 
+				  xd->record_setup->rContext);
 
       xnee_verbose((xd, "---  freeing context \n"));
-      (void)XRecordFreeContext(xd->control, xd->record_setup->rContext);
+      (void)XRecordFreeContext(xd->control, 
+			       xd->record_setup->rContext);
 
-      xd->record_setup->rContext = 0;
+      xd->record_setup->rContext = NULL;
     }
 
 
@@ -1044,25 +932,8 @@ xnee_record_loop(xnee_data *xd)
    
    xnee_verbose((xd, " ---> xnee_record_loop()\n"));
   
-  if ( xnee_record_from_data_display(xd))
-    {
-      /*
-       * From X.org 1.6.0 to ????
-       * 
-       *   there seem to be something strange about 
-       *   the XRecordCreateContext call
-       *   which causes the XRecordEnableContextAsync 
-       *   to fail ... ugly fix, but it works
-       *
-       */
-      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
-      fprintf(stderr, "            You can ignore this message\n");
-      context_display = xd->data ;
-    }
-  else
-    {
-      context_display = xd->control ;
-    }
+
+  context_display = xnee_get_display_for_recordcontext(xd);
 
    /* 
     * In case the key pressed to invoke Xnee is not released
@@ -1126,48 +997,8 @@ xnee_record_async(xnee_data *xd)
     }
 
 
+  context_display = xnee_get_display_for_recordcontext(xd);
   
-  if ( xnee_record_from_data_display(xd))
-    {
-      /*
-       * From X.org 1.6.0 to ????
-       * 
-       *   there seem to be something strange about 
-       *   the XRecordCreateContext call
-       *   which causes the XRecordEnableContextAsync 
-       *   to fail ... ugly fix, but it works
-       *
-       */
-      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
-      fprintf(stderr, "            You can ignore this message\n");
-      context_display = xd->data ;
-    }
-  else
-    {
-      context_display = xd->control ;
-    }
-
-
-
-  if ( xnee_record_from_data_display(xd))
-    {
-      /*
-       * From X.org 1.6.0 to ????
-       * 
-       *   there seem to be something strange about 
-       *   the XRecordCreateContext call
-       *   which causes the XRecordEnableContextAsync 
-       *   to fail ... ugly fix, but it works
-       *
-       */
-      fprintf(stderr, "Workaround: Creating context on data display instead of control \n");
-      fprintf(stderr, "            You can ignore this message\n");
-      context_display = xd->data ;
-    }
-  else
-    {
-      context_display = xd->control ;
-    }
 
   xnee_verbose((xd, " --- xnee_record_async() enable context\n"));
 
@@ -1249,10 +1080,6 @@ xnee_record_async(xnee_data *xd)
     }
 
 
-/*   XRecordDisableContext(xd->control,  */
-/* 			xd->record_setup->rContext); */
-/*   XRecordFreeContext(xd->control,  */
-/* 			xd->record_setup->rContext); */
 
   if (ret == XNEE_OK)
     {
