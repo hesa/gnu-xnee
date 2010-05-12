@@ -1,5 +1,8 @@
 2010-05-12  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_fileop.c (xnee_free_file): 
+	Checking if file is null before printing (only debug print)
+
 	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
 	Adding code to prepare for new XLIB fixes
 
