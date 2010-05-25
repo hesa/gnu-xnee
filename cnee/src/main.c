@@ -46,7 +46,6 @@ cnee_handle_err(int error)
       fprintf (stderr, "  Error:      %s\n", err);
       fprintf (stderr, "  Solution:   %s\n", descr);
     }
-  exit(error);
 }
 
 
@@ -110,6 +109,7 @@ int main(int argc,char *argv[])
     cnee_handle_err(ret);
   }
 
+  xnee_set_verbose(xd);
 
   /* hey, we are fin(n)ished .... close down */
   xnee_close_down(xd);
