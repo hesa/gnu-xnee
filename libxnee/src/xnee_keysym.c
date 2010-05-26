@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 Henrik Sandklef 
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004,
+ *                      2010 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -66,6 +67,7 @@ xnee_str2keycode(xnee_data* xd, const char *str, xnee_key_code *kc)
     {
        str=tmp;
     }
+
 
   /* Xnee special syntax */
   if (strncmp(str, XNEE_XK_SPACE, strlen(XNEE_XK_SPACE))==0)
@@ -157,16 +159,11 @@ xnee_token_to_km (xnee_data *xd,
       size = XLookupString ((XKeyEvent *) &event, string, 20, &keysym, 0);
       string [size] = 0;
 
-/*       printf("     finding mod for %s (%d)  '%s'   kc=%d\n", */
-/* 	     str, i, string, xd->map->modifiermap[i]); */
-
 
       if (strncmp(str,string, TOKEN_STRING_SIZE)==0)
 	{
 	  KeySym ks ;
 	  char *nm ;
-
-/* 	  printf ("-----> masks[%d]=%d\n", i, masks[i]); */
 
 	  xnee_verbose((xd, "  i=%d\n", i ));
 	  xnee_verbose((xd, "  xd=%d\n", (int)xd ));
@@ -175,8 +172,6 @@ xnee_token_to_km (xnee_data *xd,
 
 	  k = (i-1)*xd->map->max_keypermod ;
 	  xnee_verbose((xd, "  k=%d\n", k ));
-/* 	  printf( "  k=%d\n", k ); */
-
 
 	  ks = XKeycodeToKeysym(dpy,
 				xd->map->modifiermap[k],
@@ -191,9 +186,13 @@ xnee_token_to_km (xnee_data *xd,
 	    }
 	  else
 	    {
-	      kc->mod_keycodes[0] = xd->map->modifiermap[k];
+	      if ( (k>=0) && (i>=0 ) )
+		{
+		  kc->mod_keycodes[0] = xd->map->modifiermap[k];
+		}
 	    }
-/* 	  printf(" ------------------------------------------------------> Found.  %d\n", kc->mod_keycodes[0]); */
+ 	  /* printf(" ------------------------------------------------------> Found.  %d\n", kc->mod_keycodes[0]);  */
+
 	  ret = XNEE_OK ;
  	  break; 
        }
@@ -209,7 +208,7 @@ KeyCode
 xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
 {
   char buf[2];
-  KeySym ks = 0 ;
+  volatile KeySym ks = 0 ;
   
   if (xd->fake==NULL)
     {
@@ -342,6 +341,7 @@ xnee_char2keycode (xnee_data *xd, char token, xnee_key_code *kc)
     default:
        break;
     }
+
 
   if ( ks != 0)
     {
