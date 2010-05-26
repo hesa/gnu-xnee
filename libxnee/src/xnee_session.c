@@ -378,7 +378,7 @@ xnee_init(xnee_data* xd)
   */
 
 
-  xd->forced_reparent_recording = 0;
+  xd->no_reparent_recording = 0;
 
   for (i=0;i<XNEE_NR_OF_TYPES;i++)
     {
