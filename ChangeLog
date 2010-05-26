@@ -1,5 +1,9 @@
 2010-05-26  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_resource.c: 
+	Replace "forced-reparent-recording" with
+	"no-reparent-recording"
+	
 	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
 	Don't print reparent event if no-reparent
 

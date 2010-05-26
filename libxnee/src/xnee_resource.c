@@ -626,11 +626,11 @@ static xnee_option_t xnee_options_impl[] =
     },
 
     {
-      XNEE_FORCE_REPARENT_RECORD,
-      "force-reparent-recording",
-      "frr",
+      XNEE_NO_REPARENT_RECORD,
+      "no-reparent-recording",
+      "nrr",
       NULL,
-      "Force explicit recording of ReparentNotify event",
+      "Prevent explicit recording of ReparentNotify event",
       XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
@@ -1494,9 +1494,9 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
       break;
 
 
-    case XNEE_FORCE_REPARENT_RECORD:
-      verbose_option("XNEE_FORCE_REPARENT_RECORD");
-      ret = xnee_set_forced_reparent_recording (xd); 
+    case XNEE_NO_REPARENT_RECORD:
+      verbose_option("XNEE_NO_REPARENT_RECORD");
+      ret = xnee_set_no_reparent_recording (xd); 
       *args_used = 0;
       break;
 
