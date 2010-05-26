@@ -1,3 +1,8 @@
+2010-05-27  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_keysym.c (xnee_token_to_km): 
+	Checking if keycode/modifier is valid before using it
+
 2010-05-26  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_resource.c: 
@@ -49,6 +54,7 @@
 	to handle workaround for Xorg server in 2009-2010
 
 
+>>>>>>> 1.179
 2010-05-11  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
