@@ -1621,13 +1621,13 @@ xnee_print_xnee_settings (xnee_data* xd, /*@null@*/ FILE* out)
 	   xnee_xns_key2string(XNEE_DELAY_TIME_KEY),
 	   xnee_get_interval(xd) ); 
 
-  fprintf (out,  "\n# Forced recording of ReparentNotify\n");
-  if ( ! xnee_is_forced_reparent_recording(xd) )
+  fprintf (out,  "\n# No recording of ReparentNotify\n");
+  if ( ! xnee_is_no_reparent_recording(xd) )
     {
       fprintf (out,  "# "); 
     }
   fprintf (out,  "%s \n", 
-	   xnee_xns_key2string(XNEE_FORCE_REPARENT_RECORD)    ); 
+	   xnee_xns_key2string(XNEE_NO_REPARENT_RECORD)    ); 
 
   /* Various */
   fprintf (out,  "\n# Various\n");

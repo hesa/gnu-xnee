@@ -1,5 +1,8 @@
 2010-05-26  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/print.c (xnee_print_xnee_settings): 
+	If no-reparent-recording used, print option to file
+
 	* libxnee/src/xnee_session.c (xnee_init): 
 	no-reparent turned OFF default
 
