@@ -1839,23 +1839,23 @@ xnee_set_retype_release_delay(xnee_data *xd, unsigned int delay)
 
 
 int
-xnee_set_forced_reparent_recording(xnee_data *xd)
+xnee_set_no_reparent_recording(xnee_data *xd)
 {
-  xd->forced_reparent_recording = 1;
+  xd->no_reparent_recording = 1;
   return XNEE_OK;
 }
 
 int
-xnee_unset_forced_reparent_recording(xnee_data *xd)
+xnee_unset_no_reparent_recording(xnee_data *xd)
 {
-  xd->forced_reparent_recording = 0;
+  xd->no_reparent_recording = 0;
   return XNEE_OK;
 }
 
 int
-xnee_is_forced_reparent_recording(xnee_data *xd)
+xnee_is_no_reparent_recording(xnee_data *xd)
 {
-  return xd->forced_reparent_recording ;
+  return xd->no_reparent_recording ;
 }
 
 
