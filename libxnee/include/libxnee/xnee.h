@@ -586,7 +586,7 @@ typedef struct
    
   /*@only@*/ /*@null@*/ 
   xnee_record_init_data    xnee_info ; 
-  int             forced_reparent_recording ;
+  int             no_reparent_recording ;
 
   /*@only@*/ /*@null@*/ 
   xnee_recordext_setup     *record_setup;
