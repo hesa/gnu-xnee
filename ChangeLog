@@ -1,5 +1,8 @@
 2010-05-26  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_session.c (xnee_init): 
+	no-reparent turned OFF default
+
 	* libxnee/src/xnee_setget.c (xnee_set_no_reparent_recording): 
 	set, get and is functions for no-reparent functionality
 
