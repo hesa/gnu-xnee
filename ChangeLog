@@ -1,5 +1,8 @@
 2010-05-27  Henrik Sandklef  <hesa@sandklef.com>
 
+	* cnee/src/main.c (main): 
+	Removing set_verbose in main (huah!!)
+
 	* libxnee/src/xnee_keysym.c (xnee_token_to_km): 
 	Checking if keycode/modifier is valid before using it
 
