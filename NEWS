@@ -1,4 +1,4 @@
-Changes in coming version 3.06
+Changes in coming version 3.06 ('Dio')
 ==============================
 
    * New logo:
@@ -18,6 +18,9 @@ Changes in coming version 3.06
        "cnee causing segfault"
 
    * New options: 
+        --no-reparent-recording
+
+   * Options that didn't make it: 
         --force-reparent-recording
 
 Changes in version 3.05 ('Merry X11-mas')
