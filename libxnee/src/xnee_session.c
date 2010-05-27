@@ -166,9 +166,6 @@ xnee_close_down(xnee_data* xd)
       xnee_free(xd->display);
       xd->display=NULL;
     }
-  /* HESA HESA HESA */
-  if (0==1)
-    {
 
   if ( xd->control!=NULL)  
     {
@@ -186,7 +183,6 @@ xnee_close_down(xnee_data* xd)
       XCloseDisplay ( xd->fake );
     }
  
-    }
 
  XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.4 \n"  )); 
   if ( xd->data!=NULL)  
