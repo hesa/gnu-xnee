@@ -109,8 +109,6 @@ int main(int argc,char *argv[])
     cnee_handle_err(ret);
   }
 
-  xnee_set_verbose(xd);
-
   /* hey, we are fin(n)ished .... close down */
   xnee_close_down(xd);
   
