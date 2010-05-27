@@ -883,10 +883,6 @@ xnee_unsetup_recording(xnee_data *xd)
 
   xnee_verbose((xd, "---> xnee_unsetup_recording\n"));
 
-      printf ("Close context** %u %u   context:%u *** \n",
-	      xd,
-	      xd->record_setup,
-	      xd->record_setup->rContext); fflush(stdout);
 
   if (xd->record_setup->rContext != 0)
     {

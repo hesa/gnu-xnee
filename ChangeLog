@@ -1,5 +1,11 @@
 2010-05-27  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_record.c: 
+	Removed debug/printf printout when closing context
+
+	* libxnee/src/xnee_session.c: 
+	Re-enabling closing of displays
+
 	* cnee/src/main.c (main): 
 	Removing set_verbose in main (huah!!)
 
@@ -7,6 +13,9 @@
 	Checking if keycode/modifier is valid before using it
 
 2010-05-26  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Bumping version to 3.06
 
 	* libxnee/src/xnee_resource.c: 
 	Replace "forced-reparent-recording" with
@@ -57,7 +66,6 @@
 	to handle workaround for Xorg server in 2009-2010
 
 
->>>>>>> 1.179
 2010-05-11  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
