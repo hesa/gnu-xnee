@@ -1,5 +1,8 @@
 2010-06-17  Henrik Sandklef  <hesa@haas.sandklef.com>
 
+	* doc/Makefile.am (install): 
+	Installation of docs is now depending on BUILDOC
+
 	* configure.in: 
 	Added new option: --enable-man
 	Checks for makeinfo once, uses result many times
