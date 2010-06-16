@@ -1,3 +1,10 @@
+2010-06-17  Henrik Sandklef  <hesa@haas.sandklef.com>
+
+	* configure.in: 
+	Added new option: --enable-man
+	Checks for makeinfo once, uses result many times
+	Can build guis and manual without all doc stuff
+
 2010-05-27  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_record.c: 

@@ -1,6 +1,10 @@
 Changes in coming version 3.07
 ==============================
 
+   * Build changes:
+      Added new option: --enable-man
+      Checks for makeinfo once, uses result many times
+      Can build guis and manual without all doc stuff
 
 
 Changes in version 3.06 ('Dio')
