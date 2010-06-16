@@ -16,6 +16,7 @@ EXTRA_DIST = xnee_copying fdl.texi *.dia xnee.dox xnee.html xnee.pdf xnee.ps xne
 #\
 #	$(MANUALS)
 
+
 if BUILDDOC
 DOC_DEP=$(GEN_IMAGES_TO_INSTALL) $(MANUALS)
 doc_DATA = $(MANUALS) $(GEN_IMAGES_TO_INSTALL)
@@ -113,10 +114,15 @@ ${IMG_PDF}: ${IMG_EPS}
 ${IMG_PNG}: ${IMG_EPS}
 ${IMG_JPG}: ${IMG_EPS}
 
+
+if BUILDDOC
 install: 
 	mkdir -p $(DESTDIR)/$(docdir)
 	cp $(MANUALS) $(GEN_IMAGES_TO_INSTALL)  $(DESTDIR)$(docdir)/
-
+else
+install: 
+	echo not installing docs
+endif
 
 
 api-doc: xnee.dox 
