@@ -16,6 +16,9 @@ AC_CHECK_HEADERS(stdarg.h varargs.h, break)
 AC_EXEEXT
 AC_PATH_PROG(AWK,awk)
 AC_PATH_PROG(BASH,bash,sh)
+AC_PATH_PROG(PKGCFG,pkg-config,,)
+AC_PATH_PROG(CONVERT,convert,,)
+AC_PATH_PROG(MAKEINFO,makeinfo,,)
 
 #AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
@@ -71,6 +74,14 @@ AC_ARG_ENABLE(doc,
 	no)  builddoc=false ;;
 	*) AC_MSG_ERROR(bad value ${enableval} for --disable-doc) ;;
 	    esac],[builddoc=false])
+
+AC_ARG_ENABLE(man,
+    [  --enable-man       (re)build Xnee man pages],
+    [case "${enableval}" in
+	yes) buildman=true ;;
+	no)  buildman=false ;;
+	*) AC_MSG_ERROR(bad value ${enableval} for --disable-man) ;;
+	    esac],[buildman=false])
 
 AC_ARG_ENABLE(doconly,
     [  --enable-doconly       build Xnee documentation only],
@@ -163,6 +174,7 @@ AC_ARG_ENABLE(paranoid-pedantic,
 
 
 AM_CONDITIONAL(BUILDDOC, test x$builddoc = xtrue)
+AM_CONDITIONAL(BUILDMAN, test x$buildman = xtrue)
 AM_CONDITIONAL(VERBOSE, test x$verbose = xtrue)
 AM_CONDITIONAL(GCOV, test x$gcov = xtrue)
 AM_CONDITIONAL(GPROF, test x$gprof = xtrue)
@@ -290,10 +302,10 @@ help_on_missing_progrs()
 
 if test x$buildgapplet = xtrue || test x$buildgui = xtrue  || test x$builddoc = xtrue  ; 
 then
-    AC_PATH_PROG(CONVERT,convert,,)
     check_doc_program "$CONVERT" "convert" "imagemagick"
-
 fi
+
+
 
 if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
 then
@@ -320,7 +332,6 @@ fi
 if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
 then
 	
-
     AC_ISC_POSIX
     AC_PROG_CC
     AM_PROG_CC_STDC
@@ -364,11 +375,9 @@ then
     AC_SUBST(libgnomeui_LIBS)
 
     PIXMAP_DIR=pixmap
-    
-#	add_incl "pixmap"
-else
-	echo "Not building applet or gui"
 fi
+
+
 
 if test x$buildgui = xtrue ; 
 then
@@ -470,10 +479,10 @@ DOC_NOT_BUILT_WARNING=false
 MISSING_PROGRAMS=""
 
 
+
 DOC_TARGETS="info txt"
 if test x$builddoc = xtrue ; 
 then
-
     AC_PATH_PROG(DIA,dia,,)
     check_doc_program "$DIA" "dia" "dia"
 
@@ -501,8 +510,7 @@ then
 #	AC_PATH_PROG(DOXYGEN,doxygen,,)
 #	check_doc_program "$DOXYGEN" "doxygen"  "doxygen"
 
-    AC_PATH_PROG(MAKEINFO,makeinfo,,)
-    check_doc_program "$MAKEINFO" "makeinfo" "texi2html # texinfo for Ubuntu users"
+    check_doc_program "$MAKEINFO" "makeinfo" "texi2html texinfo"
 
 
     if test x$DOC_NOT_BUILT_WARNING = xtrue ;
@@ -530,6 +538,39 @@ then
     else
 	DOC_TARGETS="images html info txt pdf ps"
 	CNEE_INFO="cnee.info"
+    fi
+else
+
+    if test x$buildman = xtrue;
+    then
+	check_doc_program "$MAKEINFO" "makeinfo" "texi2html texinfo "
+
+        if test x$DOC_NOT_BUILT_WARNING = xtrue ;
+        then
+	 echo " "
+	 echo "  ********** ERROR **********"
+	 echo "  ** Man page(s) and images can not be built ** "
+	 echo "  ** " 
+	 echo "  ** The following programs are missing:"
+	 for i in $MISSING_PROGRAMS 
+	 do
+	    echo "  **    $i "
+	 done
+	 echo "  ** " 
+	 help_on_missing_progrs documentation "--disable-doc"
+         echo "  ** " 
+	 echo "  ********** ERROR **********"
+	 DOC_DIR=""
+	 DOC_TARGETS=""
+	 builddoc=false
+	 doconly=false
+	 CNEE_INFO=""
+	 echo "...  configuration failed"
+	 exit 1
+        else
+	 DOC_TARGETS="info"
+	 CNEE_INFO="cnee.info"
+        fi
     fi
 fi
 
