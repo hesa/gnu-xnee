@@ -1,4 +1,4 @@
-Changes in coming version 3.07
+Changes in coming version 3.07 
 ==============================
 
    * Build changes:
@@ -10,6 +10,7 @@ Changes in coming version 3.07
      http://ubuntuforums.org/showthread.php?t=1253453&highlight=xnee
 
      savannah bug: #30134 "Missing xnee.xpm in gnee"
+     savannah bug: #30136 "Configure misses to check for gnome.h"
 
 
 Changes in version 3.06 ('Dio')
