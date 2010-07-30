@@ -19,6 +19,7 @@ AC_PATH_PROG(BASH,bash,sh)
 AC_PATH_PROG(PKGCFG,pkg-config,,)
 AC_PATH_PROG(CONVERT,convert,,)
 AC_PATH_PROG(MAKEINFO,makeinfo,,)
+AC_PATH_PROG(GTKCONF,gtk-config)
 
 #AC_DISABLE_SHARED
 AC_PROG_LIBTOOL
@@ -329,6 +330,7 @@ then
     fi
 fi
 
+
 if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
 then
 	
@@ -375,6 +377,43 @@ then
     AC_SUBST(libgnomeui_LIBS)
 
     PIXMAP_DIR=pixmap
+
+
+    if test x$buildgapplet = xtrue ; 
+    then   
+    
+      if test x$GTKCONF = x ; 
+      then
+  	echo " **************************************** "
+  	echo " * WARNING, missing program: gtk-config *"
+  	echo " **************************************** "
+  	echo ""
+  	echo "     On Debian, install like: libgtk2.0-dev"
+  	echo ""
+  	echo "However, I will try my best to continue without gtk-config. "
+  	echo "Will not be able to check for gtk/gnome header files"
+  	echo ""
+      else	
+        GTK_PREFIX=`$GTKCONF --prefix`
+        GTK_INC_PATH=$GTK_PREFIX/include/$GNOMEUI2_MODULE/
+        GNOME_H_FILE=$GTK_INC_PATH/gnome.h
+  
+        ls -l $GNOME_H_FILE 2>/dev/null >/dev/null
+
+        MISSING_GNOME_H=$?
+
+        if test x$MISSING_GNOME_H != x0  ; 
+        then
+  	  echo "Missing GNOME header file (gnome.h), you need to install development packages"
+	  echo "On a Debian based system do:"
+  	  echo ""
+  	  echo "     sudo apt-get install libgnomeui-dev "
+  	  echo ""
+  	  exit 1
+        fi	
+      fi
+  
+  fi
 fi
 
 
@@ -748,6 +787,7 @@ then
     show_doc_program "$CONVERT" "convert"  "can not generate convert between formats"
     show_doc_program "$MAKEINFO" "makeinfo"  "can not make info pages"
     show_doc_program "$PKGCFG"   "pkg-config"  "can not get meta info from installed packages"
+    show_doc_program "$GTKCFG"   "gtk-config"  "can not check for header files..."
 fi
 echo ""
 echo "   Building the following components "

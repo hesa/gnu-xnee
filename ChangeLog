@@ -1,5 +1,9 @@
 2010-07-30  Henrik Sandklef  <hesa@sandklef.com>
 
+	* configure.in (libgnomeui_LIBS): 
+	check for gtk-config
+        try our best to look for gnome.h file
+
 	* pnee/src/pnee_impl.h: 
 	Removed inclusion of gnome.h
 
