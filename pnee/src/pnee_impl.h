@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2005, 2006, 2007 Henrik Sandklef 
+ *        Copyright (C) 2005, 2006, 2007, 2010 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -29,7 +29,6 @@
 #include <string.h>
 
 #include <gdk/gdk.h>
-#include <gnome.h>
 #include <gtk/gtk.h>
 #include <gtk/gtklabel.h>
 #include <gtk/gtkbox.h>
