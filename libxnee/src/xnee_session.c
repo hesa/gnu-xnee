@@ -541,7 +541,11 @@ xnee_rep_prepare(xnee_data *xd)
   {
     xnee_verbose((xd, "Entering main loop (replayer) to read META data \n"));
     ret = xnee_replay_main_loop(xd, XNEE_REPLAY_READ_META_DATA);
-    XNEE_RETURN_IF_ERR (ret);
+    if (!( ( ret == XNEE_REPLAY_READ_META_DATA ) || 
+	   ( ret == XNEE_REPLAY_READ_REPLAY_DATA ) ))
+      {
+	return ret;
+      }
   }
 
   /* 

@@ -1,3 +1,10 @@
+2010-08-26  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_session.c (xnee_rep_prepare): 
+	After reading meta data, we're now looking at the ret variable and
+	make sure the called fun has finished with a return value that allows
+	us to continue
+
 2010-08-25  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_expr.c (xnee_expression_handle_comment): 
