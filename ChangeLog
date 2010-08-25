@@ -1,3 +1,9 @@
+2010-08-25  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee.c:
+	Removed unhandled check of return value
+	Added copyright year
+
 2010-07-30  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in (libgnomeui_LIBS): 
