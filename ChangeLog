@@ -1,5 +1,8 @@
 2010-08-25  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_session.c (xnee_rep_prepare): 
+	Return from xnee_rep_prepare() if reading of meta data fails
+
 	* libxnee/src/print.c (xnee_human_print_event): 
 	Removed useless assignment wasting "storage"	
 	(xnee_human_print_request): 
