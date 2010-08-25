@@ -1,5 +1,8 @@
 2010-08-25  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_setget.c: 
+	Better null handling (xnee_set_project_file)
+
 	* libxnee/src/xnee.c:
 	Removed unhandled check of return value
 	Added copyright year
