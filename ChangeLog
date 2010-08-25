@@ -1,5 +1,9 @@
 2010-08-25  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_expr.c (xnee_expression_handle_comment): 
+	Removed unused variable len
+	Updated copyright year	
+
 	* libxnee/src/xnee_session.c (xnee_rep_prepare): 
 	Return from xnee_rep_prepare() if reading of meta data fails
 
