@@ -2,6 +2,8 @@
 
 	* libxnee/src/print.c (xnee_human_print_event): 
 	Removed useless assignment wasting "storage"	
+	(xnee_human_print_request): 
+	Removed useless assignment of request_name (wasting "storage")
 
 	* libxnee/src/xnee_range.c: 
 	Updated copyright year

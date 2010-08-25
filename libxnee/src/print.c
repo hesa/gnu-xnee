@@ -233,7 +233,6 @@ xnee_human_print_request (xnee_data *xd, XRecordInterceptData *xrecintd )
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
 
   request_type = (int)xrec_data->type ;
-  request_name = " not defined " ;
 
   request_name = xnee_print_request(request_type);
     if ( request_name == NULL )
