@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 
- *                 2005, 2006, 2007, 2009 Henrik Sandklef                    
+ *                 2005, 2006, 2007, 2009, 2010 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -630,7 +630,6 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
 {
   char buf[DATA_NAME_SIZE_MAX];
   int next;
-  int len;
   int ret=0;
   int range_len=strlen(range);
 
@@ -650,7 +649,6 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
 	}
       strncpy(buf,range,next);
       buf[next]='\0';
-      len =strlen(range);
       range+=next+1;
       range_len=range_len - next - 1;
       xnee_verbose((xd, " -- calling xnee_add_range_str (%d, %d, %s) \n" , (int)xd, type, buf));

@@ -1,5 +1,9 @@
 2010-08-25  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_range.c: 
+	Updated copyright year
+	Removed unused variable "len"
+
 	* libxnee/src/xnee_setget.c: 
 	Better null handling (xnee_set_project_file)
 
