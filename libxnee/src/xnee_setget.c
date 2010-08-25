@@ -7,7 +7,7 @@
  *                      2004, 2009, 2010  Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
- * modify it under the terms of the GNU General Public License       
+ * modify1 it under the terms of the GNU General Public License       
  * as published by the Free Software Foundation; either version 3    
  * of the License, or any later version.                             
  *                                                                   
@@ -1214,7 +1214,7 @@ xnee_set_project_file(xnee_data *xd, char *name)
 
   if (name == NULL)
     {
-      ret = XNEE_WRONG_PARAMS;
+      return XNEE_WRONG_PARAMS;
     }
 
   ret = xnee_set_rc_byname (xd, name);
