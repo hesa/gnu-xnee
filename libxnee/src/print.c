@@ -333,7 +333,6 @@ xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd )
   char  *name=" not defined " ;
   xrec_data  = (XRecordDatum *) (xrecintd->data) ;
   event_type = (int)xrec_data->type ;
-  event_name = " not defined " ;
 
   event_name = xnee_print_event(event_type);
     if ( event_name == NULL )
