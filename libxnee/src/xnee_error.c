@@ -227,6 +227,11 @@ char error_descr_solut[128][256] =
     "Syntax error in Xnee project file",
     "Check the file",
 
+    /* XNEE_CLI_ERROR         */
+    "Something went wrong when executing a cli command to an option",
+    "Most likely NOT an error in " PACKAGE,
+
+
    /* XNEE_LAST_ERROR */
     "Last error",
     "Internal state, report if you receive this",
