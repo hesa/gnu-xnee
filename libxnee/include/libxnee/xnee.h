@@ -23,6 +23,7 @@
  * MA  02110-1301, USA.                                              
  ****/
 
+#define XNEE_XINPUT_SUPPORT
 
 #ifndef XNEE_XNEE_H
 #define XNEE_XNEE_H
@@ -93,12 +94,15 @@ enum return_values
     XNEE_RANGE_FAILURE     ,
     XNEE_BAD_OFFSET        ,
     XNEE_WINDOW_POS_ADJ_ERROR     ,
-    XNEE_MISSING_ARG       ,
+    XNEE_MISSING_ARG        ,
     XNEE_OK_LEAVE          ,
     XNEE_GRAB_CONFUSION    ,
     XNEE_PROJECT_SYNTAX_ERROR  ,
+    XNEE_CLI_ERROR         ,
+    XNEE_XINPUT_EXTENSION_FAILURE    ,
     XNEE_LAST_ERROR
   } _return_values;
+
 
 
 enum bool_string_values
@@ -109,10 +113,22 @@ enum bool_string_values
     XNEE_BOOL_ERROR
   } _bool_string_values;
 
+enum xnee_protocol_data_numbers
+  {
+    XNEE_PROTO_EVENT = 0,
+    XNEE_PROTO_REQUEST  ,
+    XNEE_PROTO_REPLY    ,
+    XNEE_PROTO_ERROR    ,
+    XNEE_PROTO_DUMMY1   ,
+    XNEE_PROTO_DUMMY2   ,
+    XNEE_PROTO_XINPUT_EVENT_MASTER,
+    XNEE_PROTO_XINPUT_EVENT_SLAVE,
+    XNEE_PROTO_LAST    
+  } _xnee_protocol_data_numbers;
   
 
 /** 
- * \brief simply an X event. 
+ * \brief simply a X error. 
  *
  */
 typedef struct {
@@ -120,7 +136,7 @@ typedef struct {
 }xnee_error;  
 
 /** 
- * \brief simply an X event. 
+ * \brief simply a X reply. 
  *
  */
 typedef struct {
@@ -128,12 +144,13 @@ typedef struct {
 }xnee_reply;
 
 /** 
- * \brief simply an X event. 
+ * \brief simply a X request. 
  *
  */
 typedef struct {
   int type;      /*!<  Simply an X requets. Put in a struct if things are to be added later on  */
 }xnee_request;
+
 
 /** 
  * \brief simply an X event. 
@@ -146,6 +163,51 @@ typedef struct {
   int keycode ;   /*!< x, y coordinates. These are only used when type is Key*/
   int screen_nr ; /*!< The screen on which the event occured */
 }xnee_event;
+
+typedef struct _xinput_device
+{
+  char *name;
+  int   deviceid;
+  int   is_slave;
+  int   masterid;
+  
+} xinput_device ;
+
+
+typedef struct _xinput_data
+{
+  int             xinput_event_base;
+  int             xinput_record_mouse;
+  int             xinput_record_keyboard;
+  xinput_device   xi_devices[XNEE_NR_OF_XINPUT_DEVICES];
+} xinput_data;
+
+typedef struct _saved_xinput_event
+{
+  int button;
+  int type;
+  int x;
+  int y;
+  int deviceid;
+  int detail;
+  int time;
+} saved_xinput_event ;
+
+
+/** 
+ * \brief an Xinput event. 
+ *
+ */
+typedef struct {
+  int type ;      /*!< type of Xevent (e.g MotionNotify)*/
+  int x, y ;      /*!< x, y coordinates. These are only used when type is MotionXXX*/
+  int button ;    /*!< x, y coordinates. These are only used when type is Button*/
+  int keycode ;   /*!< x, y coordinates. These are only used when type is Key*/
+  int screen_nr ; /*!< The screen on which the event occured */
+  int detail;     /*!< The id of the originating device  */
+  int deviceid;
+  char name[100];
+}xnee_xinput_event;
 
 
 struct data_description 
@@ -331,7 +393,7 @@ typedef struct
 
 
 /** 
- * Used for holding data of what we've received 
+ * Used for holding data of what we've received (from file)
  *
  *  u          
  *  type       Type of event/request/error/reply... eg MotionNotify 
@@ -342,10 +404,11 @@ typedef struct
 typedef struct {
   
   union {
-    xnee_event   event ;
-    xnee_request request ;
-    xnee_reply   reply ;
-    xnee_error   error ; 
+    xnee_event          event ;
+    xnee_request        request ;
+    xnee_reply          reply ;
+    xnee_error          error ; 
+    xnee_xinput_event   xievent ;
   } u ;  /*!< What have we got ... event, request, reply or error  */
   int type ;     /*!< Type of event/request/error/reply... eg MotionNotify  */
   Time newtime ; /*!< Time when data (u.type) occured  */
@@ -388,6 +451,8 @@ typedef struct
   int valid ; 
   int msecs ; 
 
+  int xinput_deviceid ;
+
   xnee_key_code kc;
 
 } xnee_script_s ;
@@ -420,7 +485,7 @@ typedef struct
 {
   Bool            first_last     ;  /*!< when true, only first and last motion events are printed */
   Bool            last_motion    ;  /*!< was the last event a motion event */
-  int               store_mouse_pos;  /*!< shall we save the mouse position before starting recording */
+  int             store_mouse_pos;  /*!< shall we save the mouse position before starting recording */
   Bool            store_window_pos;  /*!< shall we store every new window position   0=don't, 1=only for window pos, 2=window pos and user resuested recording*/
   unsigned long   server_time    ;  /*!< when the X11 data did occur          */
   int             x              ;  /*!< last MotionNotify RootX-value        */
@@ -617,6 +682,8 @@ typedef struct
   unsigned char   x_version_minor_sub;
   char *          x_vendor_name  ;
 
+  xinput_data xi_data;
+
 } xnee_data ; 
 
 
@@ -645,11 +712,6 @@ xnee_check ( const char *arg, const char *long_arg , const char *short_arg );
 int
 xnee_start(xnee_data *xd);
 
-int 
-xnee_check_true(char *expr);
-
-int 
-xnee_check_false(char *expr);
 
 
 

@@ -42,6 +42,8 @@
 #include "libxnee/xnee_utils.h"
 #include "libxnee/xnee_strings.h"
 #include "libxnee/xnee_display.h"
+#include "libxnee/xnee_xinput.h"
+
 
 
 #ifdef DEBUG_DISPATCHER
@@ -142,6 +144,7 @@ xnee_record_handle_event_printer(xnee_data * xd,
   unsigned int screen ;
   char *win_name;
   int do_print = 1;
+
   
   out = xd->out_file;
 
@@ -349,12 +352,19 @@ xnee_record_handle_event_printer(xnee_data * xd,
 	}
       break;
     default:
-      XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 6  \n"  ));
-      fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
-	       event_type,
-	       xrecintd->server_time
-	       );
-      break;
+      {
+	ret = xnee_handle_xinput_event(xd, 
+				       event_type, 
+				       xrec_data);
+
+	if ( ret != 0 )
+	  {
+	    fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
+		     event_type,
+		     xrecintd->server_time);
+	  }
+	break;
+      }
     }
   
   return XNEE_OK;
@@ -731,7 +741,14 @@ xnee_setup_recordext (xnee_data *xd)
       return XNEE_OK;
     }
   
+  #ifdef  XNEE_XINPUT_SUPPORT
+     xnee_xinput_add_devices(xd);
+     xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
+#endif /*  XNEE_XINPUT_SUPPORT */
 
+
+
+  
   ret = xnee_parse_range (xd, XNEE_DELIVERED_EVENT, "ReparentNotify");
   XNEE_RETURN_IF_ERR (ret);
 
@@ -844,6 +861,7 @@ xnee_setup_recording(xnee_data *xd)
 			 xd->record_setup->xids,1, 
 			 xd->record_setup->range_array, 
 			 nr_of_ranges);
+  XFlush(context_display);
 
   XFlush(xd->control);
   XFlush(xd->data);
@@ -883,14 +901,16 @@ xnee_unsetup_recording(xnee_data *xd)
 
   xnee_verbose((xd, "---> xnee_unsetup_recording\n"));
 
-
   if (xd->record_setup->rContext != 0)
     {
       xnee_verbose((xd, "---  disabling context %d on %d \n", 
-		    (int)xd->record_setup->rContext, context_display));
+		    (int)xd->record_setup->rContext, 
+		    context_display));
+  
+      (void)XRecordDisableContext(xd->control, 
+				  xd->record_setup->rContext);
 
-      (void)XRecordDisableContext(xd->control, xd->record_setup->rContext); 
-
+      xnee_verbose((xd, "---  freeing context \n"));
       (void)XRecordFreeContext(xd->control, 
 			       xd->record_setup->rContext);
 
