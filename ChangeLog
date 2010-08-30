@@ -1,6 +1,12 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
-	* libxnee/src/xnee.c: 
+	* devel-scripts/setup-xi2.sh: 
+	Script to setup and unsetup (-d) xinput devices
+
+	* libxnee/src/Makefile.am:
+	Merged xinput-2 branch
+
+	* libxnee/src/xnee.c:
 	Removed funs: xnee_check_true, xnee_check_false
 
 	* libxnee/src/xnee_display.c: 
