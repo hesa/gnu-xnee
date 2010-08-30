@@ -591,3 +591,21 @@ xnee_get_display_for_recordcontext(xnee_data *xd)
     }
   return context_display;
 }
+
+
+
+int 
+xnee_check_true(char *expr)
+{
+   return  (int) ( (strncmp(expr,XNEE_TRUE_STRING,strlen(XNEE_TRUE_STRING))==0)
+                   ||
+                   (strncmp(expr,XNEE_1_STRING,strlen(XNEE_1_STRING))==0) );
+}
+
+int 
+xnee_check_false(char *expr)
+{
+   return  (int)( (strncmp(expr,XNEE_FALSE_STRING,strlen(XNEE_FALSE_STRING))==0)
+                  ||
+                  (strncmp(expr,XNEE_0_STRING,strlen(XNEE_0_STRING))==0) );
+}

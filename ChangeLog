@@ -1,3 +1,69 @@
+2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_utils.c (xnee_check_true): 
+	New funs: xnee_check_true, xnee_check_false
+
+	* libxnee/src/xnee_strings.c: 
+	Updated (c) years to include 2010
+	Added string containing name of xinput extension
+
+	* libxnee/src/xnee_record.c (xnee_unsetup_recording): 
+	Merged xinput-2 branch
+
+	* libxnee/include/libxnee/xnee.h (struct): 
+	Merged xinput-2 branch
+
+2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
+
+	BRANCH: xinput-2 branch
+
+	* cnee/src/parse.c: 
+	* cnee/include/parse.h: 
+	Updated (c) years to include 2010
+	Added option   "--disable-xinput-events"
+
+	* libxnee/src/Makefile.am: 
+	Added files: src/xnee_xinput.c include/libxnee/xnee_xinput.c 
+
+	* libxnee/src/xnee_expr.c: 
+	Added support for managing xinput events	
+	Updated (c) years to include 2010
+
+	* libxnee/src/xnee_fake.c: 
+	Added support for faking xinput events	
+	Updated (c) years to include 2010
+
+	* libxnee/src/xnee_range.c: 
+	Add static to add_to_list2
+	Updated (c) years to include 2010
+
+	* libxnee/src/xnee_record.c: 
+	Moved xinput funationality to file: xnee_xinput
+
+	* libxnee/src/xnee_replay.c: 
+	Skeleton code for replaying XInput device events
+
+	* libxnee/src/xnee_session.c: 
+	Using Xnee's Xinput API to disable Xinput by default
+
+	* libxnee/src/xnee_setget.c: 
+	Moved xinput funationality to file: xnee_xinput
+
+	* libxnee/src/xnee_utils.c: 
+	Moved xinput funationality to file: xnee_xinput
+
+	* libxnee/include/libxnee/xnee.h: 
+	Added variables to keep info on whether to record xi mouse/kbd or not
+
+	* libxnee/include/libxnee/xnee_fake.h: 	
+	Added support for faking xinput events	
+
+	* libxnee/src/xnee_xinput.c: 
+	New file
+
+	* libxnee/include/libxnee/xnee_xinput.h: 
+	New file
+
 2010-08-30  Henrik Sandklef  <hesa@sandklef.com>
 
 	* AUTHORS (Authors): 
@@ -97,26 +163,109 @@
 	* libxnee/include/libxnee/xnee.h (struct): 
 	forced_reparent_recording turned into no_reparent_recording 
 
+2010-05-24  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee.h: 
+	Adding structs: saved_xinput_event, xinput_device
+	Adding enum:    XNEE_PROTO_XINPUT_EVENT_MASTER,
+			XNEE_PROTO_XINPUT_EVENT_SLAVE,
+	To handle XI2
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+	New function prototype: xnee_has_xinput2
+
+	* libxnee/include/libxnee/xnee_settings.h: 
+	Macro XNEE_NR_OF_XINPUT_DEVICES to set the nu,ber of XI2 devies
+	Xnee can manage 
+
+	* libxnee/src/xnee_utils.c (xnee_init_xinput_devices): 
+	Function to retrieve and store XI2 info
+
+	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
+	Recording Button press/release (not working)
+	Motion implemented
+
+	* cnee/include/parse.h: 
+	Adding enum member CNEE_GET_XINPUT_EVENT_BASE
+
+	* cnee/src/parse.c (]): 
+	Adding option: --get-xinput-event-base / -gxbe
+
+	* libxnee/src/xnee.c: 
+	Moved util funs to xnee_utils.c
+
+	* libxnee/src/xnee_error.c: 
+	Adding generic error in CLI
+
+2010-05-23  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_display.c (xnee_setup_display): 
+	Setting event base for x input extension if XI is available
+	otherwise setting it to < 0
+
+	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
+	More structured xinput event handling
+	Filtering out the "incorrect events"
+
+	* libxnee/src/xnee_session.c (xnee_init): 
+	X Input extension event base initialised to -1 
+
+	* libxnee/src/xnee_utils.c: 
+	Added new function: xnee_get_xinput_event_base
+	Moved two funs here: xnee_check_true, xnee_check_false
+
+	* libxnee/src/xnee_strings.c: 
+	* libxnee/include/libxnee/xnee_strings.h: 
+        New string:  XNEE_XINPUT_EXTENSION_NAME
+	to store the name of the X Input Extension
+
+	* libxnee/include/libxnee/xnee.h: 
+	Adding support for Xinput Event internally  
+	
+	Return value:
+	XNEE_XINPUT_EXTENSION_FAILURE    ,
+
+	All protocol formatting numbers now have a enum value:
+	enum: xnee_protocol_data_numbers
+
+	Adding struct:
+	xnee_xinput_event
+
+	which is used in: 
+	xnee_intercept_data;
+   
+	xnee_data now has a member: 
+	xinput_event_base;
+
+	xnee_script_s now has a member:
+	xinput_deviceid ;
+
+
+	* libxnee/include/libxnee/xnee_utils.h:
+	Added new function: xnee_get_xinput_event_base
+	Moved two funs here: xnee_check_true, xnee_check_false
+
+>>>>>>> 1.174.2.30
 2010-05-12  Henrik Sandklef  <hesa@sandklef.com>
 
-	* libxnee/src/xnee_fileop.c (xnee_free_file): 
+	* libxnee/src/xnee_fileop.c (xnee_free_file):
 	Checking if file is null before printing (only debug print)
 
-	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
+	* libxnee/src/xnee_utils.c (xnee_record_from_data_display):
 	Adding code to prepare for new XLIB fixes
 
-	* libxnee/src/xnee_record.c: 
-	* libxnee/src/xnee_replay.c: 
+	* libxnee/src/xnee_record.c:
+	* libxnee/src/xnee_replay.c:
 	Using functions in xnee_utils to find which display
 	to use for sending control data
 	Removed unused code
-	
-	* libxnee/src/xnee_session.c (xnee_close_down): 
+
+	* libxnee/src/xnee_session.c (xnee_close_down):
 	Added some debug printouts
 	Removed clsoing of data display (don't know what's wrong :( )
 
-	* libxnee/include/libxnee/xnee_utils.h: 
-	* libxnee/src/xnee_utils.c: 
+	* libxnee/include/libxnee/xnee_utils.h:
+	* libxnee/src/xnee_utils.c:
 	Added functions:
 	  xnee_record_from_data_display(xnee_data *xd);
 	  xnee_get_display_for_recordcontext(xnee_data *xd);
