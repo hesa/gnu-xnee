@@ -1,5 +1,8 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_session.c: 
+	Merged xinput-2 branch
+
 	* libxnee/src/xnee_utils.c (xnee_check_true): 
 	New funs: xnee_check_true, xnee_check_false
 
