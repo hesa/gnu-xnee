@@ -1,3 +1,9 @@
+2010-08-30  Henrik Sandklef  <hesa@sandklef.com>
+
+	* AUTHORS (Authors): 
+	Added Fabian Keil to contributors (thanks!)
+	Made more explicit who of the AUTHORS made what
+
 2010-08-26  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_session.c (xnee_rep_prepare): 
