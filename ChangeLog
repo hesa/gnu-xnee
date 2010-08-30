@@ -1,18 +1,9 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
-	* libxnee/src/Makefile.am:
-	Merged xinput-2 branch
-
-	* libxnee/src/xnee.c:
-	Removed funs: xnee_check_true, xnee_check_false
-
-	* libxnee/src/xnee_display.c: 
-	Merged xinput-2 branch
-
 	* libxnee/src/xnee_error.c: 
 	Updated (c) years to include 2010
 	New error code: XNEE_CLI_ERROR
-
+	
 	* libxnee/src/xnee_expr.c: 
 	Merged xinput-2 branch
 
