@@ -313,6 +313,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 
       ret = xnee_expression_handle_session(xd, tmp, &xindata);
 
+
 /*       if ( ret == XNEE_PRIMITIVE_DATA ) { printf ("return XNEE_OK\n"); ret = XNEE_OK; } */
 
 /* 	  printf ("  ===== starting \n"); */
@@ -337,6 +338,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	      xnee_verbose((xd, " <--  xnee_get_elapsed_time\n"));
 	    }
 
+	  printf ("xindata ret=%d  %d  %d\n", ret, xindata.type, xindata.u.xievent.type);
 
 	  if ( ret == XNEE_META_DATA )
 	    {
@@ -484,7 +486,29 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 					      xindata.u.reply.type, 
 					      XNEE_REPLAYED);
 		  break;
+		case XNEE_PROTO_XINPUT_EVENT_MASTER:
+                   if ( ( xindata.u.xievent.type >= KeyPress ) 
+		       && (xindata.u.xievent.type <= MotionNotify) )
+		     {
+		       
+		       int screen = xindata.u.event.screen_nr ; 
+		       int x      = (int) xindata.u.xievent.x ; 
+		       int y      = (int) xindata.u.xievent.y ; 
+		       int devid  = (int) xindata.u.xievent.deviceid ; 
+		       xnee_fake_xi_motion_event (xd,
+						  screen,
+						  x, 
+						  y, 
+						  devid,
+						  0);
+		     }
+		  break;
+		case XNEE_PROTO_XINPUT_EVENT_SLAVE:
+		  printf("#ignoring slave\n");
+		  break;
+		  
 		default:
+		  printf("def branch\n");
 		  xnee_verbose((xd, 
 				"xnee_replay_MainReplayLoop: Unknown type \n"));
 		  break;

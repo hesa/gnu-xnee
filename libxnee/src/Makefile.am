@@ -34,7 +34,8 @@ LIBXNEE_H_FILES=../include/libxnee/xnee.h     \
 	../include/libxnee/xnee_internal.h \
 	../include/libxnee/xnee_window.h \
 	../include/libxnee/x11_files.h \
-	../include/libxnee/feedback.h 
+	../include/libxnee/feedback.h  \
+	../include/libxnee/xnee_xinput.h
 
 LIB_XNEE_SOURCE_FILES = xnee.c  \
 	print.c  \
@@ -68,6 +69,7 @@ LIB_XNEE_SOURCE_FILES = xnee.c  \
 	xnee_plugin.c \
 	xnee_window.c \
 	feedback.c \
+	xnee_xinput.c \
 	$(LIBXNEE_H_FILES)
 
 dnl libxnee_la_SOURCES = $(LIB_XNEE_SOURCE_FILES)

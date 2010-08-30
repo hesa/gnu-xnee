@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef     
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003,
+ *                      2010  Henrik Sandklef     
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -297,7 +298,7 @@ xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
   int i=0;
   int size= xd->distr_list_size;
   int mods=0;
-  
+
 
   if (!xnee_is_recorder (xd))
     {
@@ -305,6 +306,7 @@ xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
       for (mods=0;(mods<8)&&(xss->kc.mod_keycodes[mods]!=0);mods++)
 	{
 	  xnee_fake_sleep (dtime);
+
 	  xnee_fake_key_event (xd,
 			       xss->kc.mod_keycodes[mods], 
 			       bo, 
@@ -396,11 +398,12 @@ xnee_fake_button_event (xnee_data* xd, int button, Bool bo , int dtime)
  *                                                            *
  **************************************************************/
 int
-xnee_fake_motion_event (xnee_data* xd,
-			int screen, 
-			int x, 
-			int y, 
-			unsigned long dtime)
+xnee_fake_motion_event_impl (xnee_data* xd,
+			     int screen, 
+			     int x, 
+			     int y, 
+			     unsigned long dtime,
+			     int deviceid)
 {
   int i=0;
   int size= xd->distr_list_size;
@@ -416,18 +419,43 @@ xnee_fake_motion_event (xnee_data* xd,
       new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
       new_y = xnee_resolution_newy(xd,y) + xd->res_info.y_offset;
 
-      xnee_fake_sleep (dtime);
-      xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))\n",
-		    (int) xd->fake, 
-		    (int) screen, 
-		    (int) new_x,
-		    (int) new_y,
-		    0));
-      XTestFakeMotionEvent(xd->fake, 
-			   screen, 
-			   new_x, 
-			   new_y, 
-			   0);
+      if (deviceid == 0 )
+	{
+	  xnee_fake_sleep (dtime);
+	  xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))\n",
+			(int) xd->fake, 
+			(int) screen, 
+			(int) new_x,
+			(int) new_y,
+			0));
+	  XTestFakeMotionEvent(xd->fake, 
+			       screen, 
+			       new_x, 
+			       new_y, 
+			       0);
+	}
+      else
+	{
+	  int axes[2];
+	  axes[0] = new_x;
+	  axes[1] = new_y;
+	  xnee_fake_sleep (dtime);
+	  xnee_verbose((xd, "XTestFakeDeviceMotionEvent (%d, %d, %d, {%d, %d}, %d, %d))\n",
+			(int) xd->fake, 
+			(int) deviceid,
+			(int) True,
+			(int) new_x,
+			(int) new_y,
+			2,0));
+	  XTestFakeDeviceMotionEvent(xd->fake, 
+				     deviceid,
+				     True,
+				     0,
+				     &axes,
+				     2,
+				     0);
+
+	}
       XFlush(xd->fake);
     }
   

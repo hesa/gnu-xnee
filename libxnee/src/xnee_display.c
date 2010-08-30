@@ -4,8 +4,8 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                      2004, 2008, 2009  Henrik Sandklef 
- *                                                                   
+ *                      2004, 2008, 2009, 2010  Henrik Sandklef 
+ *
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
  * as published by the Free Software Foundation; either version 3    
@@ -112,6 +112,23 @@ xnee_setup_display (xnee_data *xd)
       return XNEE_NOT_OPEN_DISPLAY;
     }
 
+
+#ifdef  XNEE_XINPUT_SUPPORT 
+  ret = xnee_get_xinput_event_base(xd->control);
+  if ( ret > 0 )
+    {
+      xd->xi_data.xinput_event_base = ret;
+      
+      ret = xnee_init_xinput_devices(xd);
+      if (ret != XNEE_OK )
+	{
+	  fprintf(stderr, "Failed finding X Input extension devices\n");
+	  xd->xi_data.xinput_event_base = -1;
+	}
+    }
+#endif /* XNEE_XINPUT_SUPPORT */
+
+
   /* return XNEE_OK on success, 1  indicats error opening the displays */
   if ( ( xd->data != NULL ) && (xd->control != NULL) && (xd->fake != NULL) )
     {
@@ -123,6 +140,9 @@ xnee_setup_display (xnee_data *xd)
       xnee_verbose((xd, "-- xnee_setup_display - return 1 ... which is bad\n"));
       return 1;
     }
+
+
+
 
 }
 

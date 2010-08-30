@@ -4,7 +4,8 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  * Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 
- *               2005, 2006, 2007, 2009, 2010  Henrik Sandklef 
+ *               2005, 2006, 2007, 2009, 2010
+ *               Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -231,11 +232,9 @@ xnee_expression_handle_replay(xnee_data *xd,
     {
       xindata->oldtime = xindata->newtime ;
       ret = sscanf(tmp, "%d,%d,%lu",
-		      &xindata->type, 
-		      &xindata->u.request.type,
-		   &dummy1,
-		   &dummy2,
-		      &xindata->newtime);
+		   &xindata->type, 
+		   &xindata->u.request.type,
+		   &xindata->newtime);
       if (ret < 3)
 	{
 	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
@@ -263,6 +262,44 @@ xnee_expression_handle_replay(xnee_data *xd,
 		      &xindata->u.error.type,
 		      &xindata->newtime);
       if (ret < 3)
+	{
+	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	  ret = 0;
+	} 
+    }
+  else if (!strncmp("6",tmp,1))    /* XInput Device (master) */
+    {
+      ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
+		   &xindata->type, 
+		   &xindata->u.xievent.type, 
+		   &xindata->u.xievent.x,
+		   &xindata->u.xievent.y, 
+		   &xindata->u.xievent.button,
+		   &xindata->u.xievent.keycode, 
+		   &xindata->u.xievent.screen_nr,
+		   &xindata->newtime,
+		   &xindata->u.xievent.deviceid,
+		   xindata->u.xievent.name);
+      if (ret < 10)
+	{
+	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	  ret = 0;
+	} 
+    }
+  else if (!strncmp("7",tmp,1))  /* XInput Device (slave) */
+    {
+      ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
+		   &xindata->type, 
+		   &xindata->u.xievent.type, 
+		   &xindata->u.xievent.x,
+		   &xindata->u.xievent.y, 
+		   &xindata->u.xievent.button,
+		   &xindata->u.xievent.keycode, 
+		   &xindata->u.xievent.screen_nr,
+		   &xindata->newtime,
+		   &xindata->u.xievent.deviceid,
+		   xindata->u.xievent.name);
+      if (ret < 10)
 	{
 	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
 	  ret = 0;
@@ -640,7 +677,6 @@ xnee_expression_handle_prim_sub(xnee_data *xd, char *arg, xnee_script_s *xss)
       /* key=a key=shift etc */
       else if (strncmp(var,XNEE_FAKE_KEY_ARG,strlen(XNEE_FAKE_KEY_ARG))==0)
 	{
-
 	  if (strlen(val)==1)  
 	    {
 	      valp = &val[0];
@@ -706,7 +742,7 @@ xnee_expression_handle_prim(xnee_data *xd, char *str, xnee_intercept_data * xind
 {
   int ret= 0 ;  
   char *prim_args;
-  char buf[32];
+  char buf[256];
   int   prim_len = 0 ; 
   xnee_script_s xss ;
   

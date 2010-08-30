@@ -46,6 +46,7 @@
 #include "libxnee/xnee_session.h"
 #include "libxnee/xnee_fileop.h"
 #include "libxnee/xnee_alloc.h"
+#include "libxnee/xnee_xinput.h"
 
 xnee_data *xd_global;
 
@@ -290,7 +291,7 @@ xnee_init(xnee_data* xd)
   int ret ; 
   int i ; 
   char *tmp;
-  
+
   if (xd == NULL) 
     {
       return XNEE_MEMORY_FAULT;
@@ -407,6 +408,9 @@ xnee_init(xnee_data* xd)
 
   xd->res_info.x_offset = 0;
   xd->res_info.y_offset = 0;
+
+  xnee_disable_xinput(xd);
+
 
   /* Init Recording variables
    * Since those are used when recording and replaying. */
