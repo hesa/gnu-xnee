@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *   Copyright (C) 2003, 2004, 2005 Henrik Sandklef and Jon-Erling Dahl
+ *   Copyright (C) 2003, 2004, 2005 
+ *                 2010 Henrik Sandklef and Jon-Erling Dahl
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -152,14 +153,14 @@ int
 gnee_set_no_feedback()
 {
   GNEE_DEBUG(("gnee_set_no\n"));
-  gnee_set_cb ("no_fb_b", 1);
+  return gnee_set_cb ("no_fb_b", 1);
 }
 
 int
 gnee_set_xosd_feedback()
 {
   GNEE_DEBUG(("gnee_set_xosd\n"));
-  gnee_set_cb ("xosd_fb_b", 1);
+  return gnee_set_cb ("xosd_fb_b", 1);
 }
 
 static int
@@ -557,6 +558,7 @@ gnee_get_grab(xnee_data* xd)
   on_exec_k_combo_changed(NULL,
 			    ext_gnee_window);
 
+  return XNEE_OK;
 }
 
 int

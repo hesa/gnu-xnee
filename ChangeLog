@@ -1,5 +1,8 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
+	* gnee/src/gnee_xnee.c (gnee_get_grab): 
+	Added missing return values
+
 	* cnee/src/main.c (cnee_handle_err): 
 	function now returns void 
 	we will discard any errors in the function anyway
