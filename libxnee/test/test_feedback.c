@@ -68,7 +68,8 @@ test_setfeedback(xnee_data *xd)
   XNEE_TEST_ASSERT(ret, 0, "feedback");
 
   usleep(2000*1000);
-
+  
+  return 0;
 }
 
 int main()

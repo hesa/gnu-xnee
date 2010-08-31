@@ -1,3 +1,28 @@
+/*****
+ *       Xnee's Not an Event Emulator                                
+ *                                                                   
+ * Xnee enables recording and replaying of X protocol data           
+ *                                                                   
+ *   Copyright (C) 2006, 2007, 2010
+ *                        Henrik Sandklef 
+ *                                                                   
+ * This program is free software; you can redistribute it and/or     
+ * modify it under the terms of the GNU General Public License       
+ * as published by the Free Software Foundation; either version 3    
+ * of the License, or any later version.                             
+ *                                                                   
+ *                                                                   
+ * This program is distributed in the hope that it will be useful,   
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of    
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the     
+ * GNU General Public License for more details.                      
+ *                                                                   
+ * You should have received a copy of the GNU General Public License 
+ * along with this program; if not, write to the Free Software       
+ * Foundation, Inc., 51 Franklin Street, Boston,            
+ * MA  02110-1301, USA.                                              
+ ****/
+
 #include "test_setget.h"
 #define DUMMY_FILE_NO ((FILE*)0)
 #define DUMMY_INT ((int)177)
@@ -1072,7 +1097,7 @@ int test_all(xnee_data *xd)
      *           xnee_set_sync_mode
      *
      */
-      BEGIN_LOOP
+    BEGIN_LOOP
     xnee_set_sync_mode(xd);
     orig  = xnee_get_sync_mode(xd);
   
@@ -1092,11 +1117,12 @@ int test_all(xnee_data *xd)
      *           xnee_set_xosd_font
      *
      */
-      BEGIN_LOOP
+    BEGIN_LOOP
     ret      = xnee_set_xosd_font(xd, "apa"); 
     XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_xosd_font"); 
     orig_str = (char*)xnee_get_xosd_font(xd);
     XNEE_TEST_ASSERT_STR(orig_str, "apa","xnee_set_xosd_font"); 
     END_LOOP
 
+    return 0;  
 } 
