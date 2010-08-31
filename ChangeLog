@@ -1,5 +1,8 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/test/libtest.c (test_xnee_data): 
+	Added return XNEE_OK at the end
+
 	* gnee/src/gnee_xnee.c (gnee_get_grab): 
 	Added missing return values
 

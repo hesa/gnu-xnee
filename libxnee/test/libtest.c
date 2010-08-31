@@ -1,3 +1,5 @@
+
+
 #include <stdio.h>
 
 #include "libxnee/xnee.h"
@@ -247,6 +249,7 @@ int test_xnee_data()
   }
   
   printf ("\n");
+  return XNEE_OK;
 }
 
 
