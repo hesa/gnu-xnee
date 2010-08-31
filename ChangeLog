@@ -1,5 +1,9 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
+	* cnee/src/main.c (cnee_handle_err): 
+	function now returns void 
+	we will discard any errors in the function anyway
+
 	* devel-scripts/setup-xi2.sh: 
 	Script to setup and unsetup (-d) xinput devices
 
