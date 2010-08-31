@@ -1,7 +1,11 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/test/test_all.c (test_all): 
+	Added return 0 at the end of the function body
+
 	* libxnee/test/libtest.c (test_xnee_data): 
 	Added return XNEE_OK at the end
+	Added (c) and license notice
 
 	* gnee/src/gnee_xnee.c (gnee_get_grab): 
 	Added missing return values
