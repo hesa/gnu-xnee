@@ -1,5 +1,9 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/test/print.c: 
+	Added return 0 at the end of some function body
+	Added (c) and license notice
+
 	* libxnee/test/test_feedback.c (test_setfeedback): 
 	Added return 0 at the end of the function body
 
