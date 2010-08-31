@@ -31,7 +31,7 @@
 #include "parse.h"
 
 
-static int 
+static void 
 cnee_handle_err(int error)
 {
   const char *err;
