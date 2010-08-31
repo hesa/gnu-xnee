@@ -1,5 +1,8 @@
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
+	* AUTHORS (Authors): 	
+	Added Tuukka Pasanen to contributors
+
 	* libxnee/test/print.c: 
 	Added return 0 at the end of some function body
 	Added (c) and license notice
