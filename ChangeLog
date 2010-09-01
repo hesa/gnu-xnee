@@ -1,7 +1,7 @@
 2010-09-01  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/include/libxnee/xnee.h: 
-	libxnee/include/libxnee/
+	Including xnee_settings.h to get the nr of xinput devices
 
 2010-08-31  Henrik Sandklef  <hesa@sandklef.com>
 
