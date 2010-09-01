@@ -42,6 +42,7 @@
 #include "libxnee/xnee_internal.h"
 #include "libxnee/xnee_strings.h"
 #include "libxnee/xnee_error.h"
+#include "libxnee/xnee_settings.h"
 
 #define  XNEE_CLI       "cnee"
 #define  XNEE_CLI_UC    "CNEE"
