@@ -1,5 +1,8 @@
 2010-09-01  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/test/print.c (test_printfuns): 
+	Typo fix:  reurn => return
+
 	* libxnee/include/libxnee/xnee.h: 
 	Including xnee_settings.h to get the nr of xinput devices
 

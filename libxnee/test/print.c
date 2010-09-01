@@ -248,7 +248,7 @@ test_printfuns(xnee_data *xd)
   xnee_record_print_error (xd, xrecintd );
   total++;
 
-  reurn 0;
+  return 0;
 }
 
 int main()
