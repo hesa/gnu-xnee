@@ -280,8 +280,8 @@ int main()
   xnee_unset_verbose(xdl);
 
   fprintf (stdout, "\n");
-  fprintf (stdout, "\tSucesss:  %d\n", total);
-  fprintf (stdout, "\tFailures: %d\n", fails);
+  fprintf (stdout, "\tSucesses:  %d\n", total);
+  fprintf (stdout, "\tFailures:  %d\n", fails);
 
   xnee_close_down(xdl);
 

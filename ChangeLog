@@ -2,6 +2,7 @@
 
 	* libxnee/test/print.c (test_printfuns): 
 	Typo fix:  reurn => return
+	(main): printf typo and formatting 
 
 	* libxnee/include/libxnee/xnee.h: 
 	Including xnee_settings.h to get the nr of xinput devices
