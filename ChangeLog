@@ -1,5 +1,10 @@
 2010-09-07  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_alloc.c: 
+	Updated (c) year
+
+2010-09-07  Henrik Sandklef  <hesa@sandklef.com>
+
 	* libxnee/include/libxnee/xnee_settings.h
 	(XNEE_NR_OF_XINPUT_DEVICES): 
 	Adding XNEE_NR_OF_XINPUT_DEVICES as the max 
@@ -316,7 +321,6 @@
 	Added new function: xnee_get_xinput_event_base
 	Moved two funs here: xnee_check_true, xnee_check_false
 
->>>>>>> 1.174.2.30
 2010-05-12  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_fileop.c (xnee_free_file):
