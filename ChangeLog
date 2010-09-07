@@ -1,3 +1,10 @@
+2010-09-07  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee_settings.h
+	(XNEE_NR_OF_XINPUT_DEVICES): 
+	Adding XNEE_NR_OF_XINPUT_DEVICES as the max 
+	number of xinput devices handled
+
 2010-09-01  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/test/print.c (test_printfuns): 
