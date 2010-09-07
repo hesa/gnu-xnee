@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
+ *                      2010 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -34,6 +35,7 @@
 int
 xnee_reset_fake( xnee_data *xd);
 
+
 /**
  * Sends a faked moton event to the display in the distribution list as found in xd.
  * @param xd       xnee's main structure
@@ -44,11 +46,16 @@ xnee_reset_fake( xnee_data *xd);
  * @return int     XNEE_OK on success.
  */
 int 
-xnee_fake_motion_event (xnee_data* xd,
-			int screen, 
-			int x, 
-			int y, 
-			unsigned long dtime);
+xnee_fake_motion_event_impl (xnee_data* xd,
+			     int screen, 
+			     int x, 
+			     int y, 
+			     unsigned long dtime,
+			     int deviceid);
+
+#define xnee_fake_motion_event(xd, scr, x, y, dtime) xnee_fake_motion_event_impl(xd, scr, x, y, dtime, 0)
+
+#define xnee_fake_xi_motion_event(xd, scr, x, y, dtime, dev) xnee_fake_motion_event_impl(xd, scr, x, y, dtime, dev)
 
 
 /**
@@ -57,6 +64,7 @@ xnee_fake_motion_event (xnee_data* xd,
  * @param button   the button to fake
  * @param bo       press or release
  * @param dtime    how long before the faking shall take place
+ * @param deviceid Id of the device (XInput extension)
  * @return int     XNEE_OK on success.
  */
 int

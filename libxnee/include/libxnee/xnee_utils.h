@@ -136,5 +136,14 @@ xnee_record_from_data_display(xnee_data *xd);
 Display *
 xnee_get_display_for_recordcontext(xnee_data *xd);
 
+int
+xnee_get_xinput_event_base(Display *dpy);
+
+int 
+xnee_check_true(char *expr);
+
+int 
+xnee_check_false(char *expr);
+
 
 #endif /*  XNEE_XNEE_UTILS_H */

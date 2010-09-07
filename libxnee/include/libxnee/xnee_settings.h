@@ -3,8 +3,8 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2010
- *                      Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003,
+ *                      2010 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -32,13 +32,12 @@
 
 #define XNEE_NR_OF_MODIFIERS    8
 
-#define XNEE_HIGHEST_DATA_NR    256
-#define XNEE_REPLAY_BUFFER_SIZE XNEE_HIGHEST_DATA_NR 
-#define XNEE_SAVED_LINES_BYTES  1024
-#define XNEE_RANGE_STRING_SIZE  512 
-#define DATA_NAME_SIZE_MAX      32
-#define XNEE_NR_OF_XINPUT_DEVICES 100
-
+#define XNEE_HIGHEST_DATA_NR        256
+#define XNEE_REPLAY_BUFFER_SIZE     XNEE_HIGHEST_DATA_NR 
+#define XNEE_SAVED_LINES_BYTES      1024
+#define XNEE_RANGE_STRING_SIZE      512 
+#define DATA_NAME_SIZE_MAX          32
+#define XNEE_NR_OF_XINPUT_DEVICES   100
 
 
 extern const int XNEE_MAX_DELAY ;

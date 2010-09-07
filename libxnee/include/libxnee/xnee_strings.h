@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004 
- *                      2009  Henrik Sandklef 
+ *                      2009, 2010  Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -166,6 +166,8 @@ extern const char*  XNEE_REAL_CONTROL     ;
 extern const char*  XNEE_REAL_SCROLL      ;
 extern const char*  XNEE_REAL_CAPS        ;
 extern const char*  XNEE_REAL_SHIFT       ;
+
+extern const char*  XNEE_XINPUT_EXTENSION_NAME  ;
 
 extern const char*  NULL_STRING           ;
 

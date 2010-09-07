@@ -847,4 +847,7 @@ xnee_set_stderr_feedback(xnee_data *xd);
 int 
 xnee_set_no_feedback(xnee_data *xd);
 
+int
+xnee_has_xinput2(xnee_data *xd);
+
 #endif /* XNEE_SETGET_H */ 
