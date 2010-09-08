@@ -139,17 +139,12 @@ xnee_free_recordext_setup(xnee_data* xd)
 	   /*@end@*/
         }
      }
+     XNEE_FREE_IF_NOT_NULL (record_setup->xids);
+     XNEE_FREE_IF_NOT_NULL (record_setup->rState);
+     XNEE_FREE_IF_NOT_NULL (xd->record_setup);
      XNEE_FREE_AND_NULL (record_setup->range_array);
   }
 
-
-  /*@ignore@*/
-  if (record_setup!=NULL)
-  {
-    XNEE_FREE_IF_NOT_NULL (record_setup->xids);
-    XNEE_FREE_IF_NOT_NULL (record_setup->rState);
-  }
-  XNEE_FREE_IF_NOT_NULL (xd->record_setup);
 
   XNEE_DEBUG ( (stderr ," <--xnee_free_recordext_setup\n"  ));
   return XNEE_OK;
