@@ -3,8 +3,9 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
- *                      2004, 2005, 2006, 2007 Henrik Sandklef
+ *   Copyright (C) 1999, 2000, 2001, 2002, 2003 
+ *                 2004, 2005, 2006, 2007, 2010
+ *                      Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -31,6 +32,9 @@
 #include "libxnee/xnee_utils.h"
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_session.h"
+#ifdef  XNEE_XINPUT_SUPPORT
+#include "libxnee/xnee_xinput.h"
+#endif  /* XNEE_XINPUT_SUPPORT */
 
 
 #include "cnee_fake.h"
@@ -275,7 +279,26 @@ static xnee_option_t cnee_options_impl[] =
       XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
-  
+#ifdef  XNEE_XINPUT_SUPPORT
+    { 
+      CNEE_GET_XINPUT_EVENT_BASE,
+      "get-xinput-event-base",
+      "gxeb",
+      NULL,
+      "Get the event base for Xinput Extension",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+    { 
+      CNEE_DISABLE_XINPUT_EVENTS,
+      "disable-xinput-events",
+      "dxe",
+      NULL,
+      "Disable recording of XInput events",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+#endif /*  XNEE_XINPUT_SUPPORT*/
     {
       XNEE_LAST_OPTION,
       NULL,
@@ -502,7 +525,38 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
       verbose_option("XNEE_MOUSE_OPTION_KEY");
       ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 			    "ButtonPress-MotionNotify");
+#ifdef  XNEE_XINPUT_SUPPORT
+      if ( ret != XNEE_OK )
+	{
+	  break;
+	}
+      xnee_xinput_request_mouse(xd);
+#endif /*  XNEE_XINPUT_SUPPORT      */
       break;
+
+#ifdef  XNEE_XINPUT_SUPPORT
+    case CNEE_GET_XINPUT_EVENT_BASE: 
+      verbose_option("CNEE_GET_XINPUT_EVENT_BASE");
+      ret=xnee_get_xinput_event_base(NULL);
+      if ( ret != -1 )
+	{
+	  fprintf(stdout, "%d\n",ret);
+	  ret = XNEE_OK_LEAVE;
+	}
+      else
+	{
+	  fprintf(stderr, 
+		  "Could not find event base for %s\n", 
+		  XNEE_XINPUT_EXTENSION_NAME);
+	  ret = XNEE_CLI_ERROR;
+	}
+      break;
+    case CNEE_DISABLE_XINPUT_EVENTS:
+      verbose_option("CNEE_DISABLE_XINPUT_EVENTS");
+      xnee_disable_xinput(xd) ;
+      ret = XNEE_OK;
+      break;
+#endif /*  XNEE_XINPUT_SUPPORT */
 
     default:
       ret = XNEE_NO_OPTION_KEY;
@@ -537,6 +591,7 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
     {
       ret = xnee_parse_cnee_option(xd, &argv[i], &args_used);
 
+
       if ( ret == XNEE_OK)
 	{
 	  i = i + args_used ;
@@ -553,6 +608,10 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
       else if ( ret == XNEE_PROJECT_SYNTAX_ERROR)
 	{
 	  return XNEE_PROJECT_SYNTAX_ERROR;
+	}
+      else if ( ret == XNEE_CLI_ERROR)
+	{
+	  return XNEE_CLI_ERROR;
 	}
 
       ret = xnee_parse_cli_option(xd, &argv[i], &args_used);
@@ -573,7 +632,8 @@ xnee_parse_args (xnee_data* xd , int argc, char **argv )
 	  break;
 	}
     }
-      
+
+
   if (ret != XNEE_OK)
     {
       /* if parser(s) have returned -1, 

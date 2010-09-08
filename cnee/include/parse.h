@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
+ *                      2010  Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -108,7 +109,9 @@ enum {
   CNEE_DEMONSTRATION_OPTION_KEY     ,
   XNEE_KEYBOARD_OPTION_KEY          ,
   XNEE_MOUSE_OPTION_KEY             ,
-  CNEE_SYNTAX_CHECKER_KEY           
+  CNEE_SYNTAX_CHECKER_KEY           ,
+  CNEE_GET_XINPUT_EVENT_BASE        ,   
+  CNEE_DISABLE_XINPUT_EVENTS  
  } ;
 
 
