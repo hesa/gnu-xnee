@@ -27,9 +27,6 @@
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_xinput.h"
 
-#ifdef XNEE_XINPUT_SUPPORT
-
-
 #define XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, devid, fd)	\
   if ( ! xd->xi_data.xi_devices[devid].is_slave)		\
     fprintf (fd, "%d", XNEE_PROTO_XINPUT_EVENT_MASTER);		\
@@ -37,6 +34,8 @@
     fprintf (fd, "%d", XNEE_PROTO_XINPUT_EVENT_SLAVE);
 
 
+
+#ifdef XNEE_XINPUT_SUPPORT
 
 int
 xnee_init_xinput_devices(xnee_data *xd)
@@ -302,8 +301,45 @@ xnee_xinput_add_devices(xnee_data *xd)
 }
 	  
 
+
+#else /*  XNEE_XINPUT_SUPPORT */
+
+
+int
+xnee_init_xinput_devices(xnee_data *xd)
+{
+  return XNEE_OK;
+}
+
+int
+xnee_get_xinput_event_base(Display *dpy)
+{
+  return XNEE_OK;
+}
+
+
+int
+xnee_has_xinput(xnee_data *xd)
+{
+  return -1;
+}
+
+
 int 
-xnee_activate_xinput(xnee_data *xd);
+xnee_handle_xinput_event(xnee_data * xd, 
+			 int event_type, 
+			 XRecordDatum *xrec_data)
+{
+  return XNEE_OK;
+}
+
+
+int 
+xnee_xinput_add_devices(xnee_data *xd)
+{
+  return XNEE_OK;
+}
+	  
 
 
 #endif /*  XNEE_XINPUT_SUPPORT */
