@@ -27,12 +27,14 @@
 #ifndef XNEE_XINPUT_H
 #define XNEE_XINPUT_H
 
+#ifdef   XNEE_XINPUT_SUPPORT
 #include "libxnee/xnee.h"
-#ifdef  XNEE_XINPUT_SUPPORT
 #include <X11/extensions/XInput.h>
-#include <X11/extensions/XInput2.h>
+#include <X11/extensions/XInput2.h> 
 #include <X11/extensions/XIproto.h>
+#else
 
+#endif /*  XNEE_XINPUT_SUPPORT */
 
 enum 
   {
@@ -74,7 +76,6 @@ xnee_handle_xinput_event(xnee_data * xd,
 			 XRecordDatum *xrec_data);
 
 
-#endif /*  XNEE_XINPUT_SUPPORT */
 
 
 #endif /* XNEE_XINPUT_H */
