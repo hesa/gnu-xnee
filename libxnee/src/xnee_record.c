@@ -105,6 +105,10 @@ xnee_get_screen_nr(xnee_data *xd, Display *dpy, Window recorded_root)
       Screen *scr;
       scr = ScreenOfDisplay(dpy,i);
       disp_root = RootWindowOfScreen(scr);
+
+      /* printf ("Loop: i=%d scr=%d dr=%d   rr=%d\n",  */
+      /* 	      i, scr, disp_root, recorded_root); */
+
       if ( disp_root == recorded_root )
 	{
 	  keep_looping = 0 ;
@@ -113,6 +117,9 @@ xnee_get_screen_nr(xnee_data *xd, Display *dpy, Window recorded_root)
       i++;
     } while ( (i<nr_screens) && ( keep_looping ) );
   
+  /* printf ("display %d   nr of screens %d      this:%d\n", */
+  /* 	  dpy, nr_screens, this_screen); */
+
   /* If we didn't find a screen, bail out */
   if ( this_screen == -1)
     {
@@ -239,11 +246,21 @@ xnee_record_handle_event_printer(xnee_data * xd,
     case MotionNotify:  
       kc = 0;
       ret = xnee_get_screen_nr(xd, 
-				  xd->data,
-				  xrec_data->event.u.keyButtonPointer.root);
+			       xd->data,
+			       xrec_data->event.u.keyButtonPointer.root);
       if (ret<0)
 	{
+	  /*
+	    fprintf (out,"\tMissed motion event, since screen=%d\n", ret);
+	    fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
+	    event_type,
+	    xrec_data->event.u.keyButtonPointer.rootX,
+	    xrec_data->event.u.keyButtonPointer.rootY,
+	    screen,
+	    xrecintd->server_time
+	    );
 	  xnee_verbose((xd, "Could not find a screen, bailing out\n"));
+	  */
 	  return XNEE_SCREEN_MISSING;
 	}
       screen = ret;
