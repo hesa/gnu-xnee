@@ -1,5 +1,17 @@
 2010-09-08  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/include/libxnee/xnee_xinput.h: 
+	Moved function prototypes outside xinput ifdef
+
+	* libxnee/src/xnee_alloc.c (xnee_free_recordext_setup): 
+	free code placed inside NULL checks instead of separate NULL checks
+
+	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
+	Discarding motion event if no screen presented
+
+	* libxnee/src/xnee_xinput.c: 
+	Stub code for Xinput2 if xinput disabled
+
 	* libxnee/src/Makefile.am:
 	* cnee/src/Makefile.am:
 	Added xinput enable/disable support
