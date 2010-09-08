@@ -1,3 +1,12 @@
+2010-09-08  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/Makefile.am:
+	* cnee/src/Makefile.am:
+	Added xinput enable/disable support
+
+	* configure.in:
+	--disable-xinput2 (and enable) added
+
 2010-09-07  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_alloc.c: 

@@ -120,6 +120,14 @@ else
 PEDANTIC_FLAGS = 
 endif
 
+if XNEE_XINPUT_SUPPORT
+XNEE_XINPUT_SUPPORT_FLAGS = -DXNEE_XINPUT_SUPPORT
+else
+XNEE_XINPUT_SUPPORT_FLAGS =
+endif
+
+
+
 if NOT_INSTALL_LIBS
 install-exec-local:
 	echo " ... not installing libs"
@@ -129,7 +137,7 @@ install-exec-local:
 	echo " ... installing libs"
 endif
 
-AM_CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS} ${DEBUG_FLAGS}
+AM_CFLAGS = -I../include ${X_CFLAGS} ${PEDANTIC_FLAGS} -g ${VERBOSE_FLAG} ${GCOV_FLAG} ${GPROF_FLAG} ${BUF_VERBOSE_FLAG}  ${XOSD_FLAGS} ${DEBUG_FLAGS}  ${XNEE_XINPUT_SUPPORT_FLAGS} 
 
 HTML_SRC_FILES = $(libxnee_a_SOURCES:%.c=%.c.html)
 HTML_INC_FILES = $(LIBXNEE_H_FILES:%.h=%.h.html)
