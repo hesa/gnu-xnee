@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 2010 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -27,13 +27,11 @@
 #ifndef XNEE_XINPUT_H
 #define XNEE_XINPUT_H
 
-#ifdef   XNEE_XINPUT_SUPPORT
 #include "libxnee/xnee.h"
+#ifdef   XNEE_XINPUT_SUPPORT
 #include <X11/extensions/XInput.h>
 #include <X11/extensions/XInput2.h> 
 #include <X11/extensions/XIproto.h>
-#else
-
 #endif /*  XNEE_XINPUT_SUPPORT */
 
 enum 

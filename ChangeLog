@@ -1,3 +1,9 @@
+2010-09-09  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee_xinput.h: 
+	Modified (c) year (only 2010)
+	Include libxnee/xnee.h alwas done
+
 2010-09-08  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/include/libxnee/xnee_xinput.h: 
