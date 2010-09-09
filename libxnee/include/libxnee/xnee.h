@@ -23,7 +23,6 @@
  * MA  02110-1301, USA.                                              
  ****/
 
-#define XNEE_XINPUT_SUPPORT
 
 #ifndef XNEE_XNEE_H
 #define XNEE_XNEE_H

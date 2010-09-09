@@ -1,5 +1,8 @@
 2010-09-09  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/include/libxnee/xnee.h:
+        Removed hard coded #define of XNEE_XINPUT_SUPPORT
+
 	* libxnee/include/libxnee/xnee_xinput.h: 
 	Modified (c) year (only 2010)
 	Include libxnee/xnee.h alwas done
