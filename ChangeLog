@@ -1,3 +1,8 @@
+2010-09-13  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
+	Added support for handling N900 X servers
+
 2010-09-09  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/include/libxnee/xnee.h:

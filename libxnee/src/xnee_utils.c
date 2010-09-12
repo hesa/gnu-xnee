@@ -552,10 +552,20 @@ xnee_record_from_data_display(xnee_data *xd)
 	      ret_val = 1;
 	    }
 	}
+      /* N900 */
+      else if (strstr(xd->x_vendor_name, "Nokia") )
+	{
+	  if ( ( xd->x_version_major == 1 ) &&
+	       ( xd->x_version_minor >= 1 ) )
+	    {
+	      ret_val = 1;
+	    }
+	}
       
     }
 
-  return ret_val;
+  return 1 ;
+  //ret_val;
 }
 
 
