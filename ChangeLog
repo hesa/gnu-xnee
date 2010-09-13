@@ -1,3 +1,9 @@
+2010-09-14  Henrik Sandklef  <hesa@sandklef.com>
+
+	* build/maemo.sh: 
+	Removed unused old settings
+	Re-enabled clean target
+
 2010-09-13  Henrik Sandklef  <hesa@sandklef.com>
 
 	* build/maemo.sh: 
