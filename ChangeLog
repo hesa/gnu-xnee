@@ -1,3 +1,8 @@
+2010-09-18  Henrik Sandklef  <hesa@sandklef.com>
+
+	* xswine/main.c: 
+	Major rewrite, fprintf and flush to swmouse devs
+
 2010-09-14  Henrik Sandklef  <hesa@sandklef.com>
 
 	* build/maemo.sh: 
@@ -44,6 +49,9 @@
 	--disable-xinput2 (and enable) added
 
 2010-09-07  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee_strings.h: 
+	merge
 
 	* libxnee/src/xnee_alloc.c: 
 	Updated (c) year
