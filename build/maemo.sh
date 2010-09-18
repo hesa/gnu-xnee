@@ -12,7 +12,11 @@ make_makefile()
 
     make -f Makefile.cvs && \
       ./configure --disable-gui --disable-doc --disable-gnome-applet --host=arm --disable-xinput2
+
+    make
 }
+
 
 clean_up
 make_makefile
+

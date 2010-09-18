@@ -201,8 +201,8 @@ typedef struct _saved_xinput_event
 typedef struct {
   int type ;      /*!< type of Xevent (e.g MotionNotify)*/
   int x, y ;      /*!< x, y coordinates. These are only used when type is MotionXXX*/
-  int button ;    /*!< x, y coordinates. These are only used when type is Button*/
-  int keycode ;   /*!< x, y coordinates. These are only used when type is Key*/
+  int button ;    
+  int keycode ;   
   int screen_nr ; /*!< The screen on which the event occured */
   int detail;     /*!< The id of the originating device  */
   int deviceid;
