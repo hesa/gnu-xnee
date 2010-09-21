@@ -541,6 +541,13 @@ xnee_rep_prepare(xnee_data *xd)
 
   xnee_set_events_replayed(xd,0);
 
+  ret = xnee_setup_display (xd);
+  if (ret!=XNEE_OK)
+    {
+      xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", ret));
+      return ret;
+    }
+
   if ( xnee_is_replayer(xd) != 0 )
   {
     xnee_verbose((xd, "Entering main loop (replayer) to read META data \n"));
@@ -558,13 +565,8 @@ xnee_rep_prepare(xnee_data *xd)
    */
   xnee_verbose((xd, "-- xnee_rep_prepare - setup display\n"));
 
-  ret = xnee_setup_display (xd);
-  if (ret!=XNEE_OK)
-    {
-      xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", ret));
-      return ret;
-    }
   
+
   xnee_verbose((xd, "-- xnee_rep_prepare - setup record ext \n"));
 
   ret = xnee_setup_recordext (xd);
