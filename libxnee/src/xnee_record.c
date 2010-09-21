@@ -248,21 +248,13 @@ xnee_record_handle_event_printer(xnee_data * xd,
       ret = xnee_get_screen_nr(xd, 
 			       xd->data,
 			       xrec_data->event.u.keyButtonPointer.root);
+      /*
+
       if (ret<0)
 	{
-	  /*
-	    fprintf (out,"\tMissed motion event, since screen=%d\n", ret);
-	    fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
-	    event_type,
-	    xrec_data->event.u.keyButtonPointer.rootX,
-	    xrec_data->event.u.keyButtonPointer.rootY,
-	    screen,
-	    xrecintd->server_time
-	    );
-	  xnee_verbose((xd, "Could not find a screen, bailing out\n"));
-	  */
 	  return XNEE_SCREEN_MISSING;
 	}
+      */
       screen = ret;
 
       do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
@@ -400,7 +392,6 @@ xnee_record_handle_event ( xnee_data *xd, /*@null@*/ XRecordInterceptData *xreci
   XRecordDatum *xrec_data ;
   unsigned int  event_type ;
   FILE *out ;
-
 
    if ( xrecintd==NULL )
    {
@@ -807,7 +798,9 @@ xnee_has_record_extension(xnee_data *xd)
         ||
         (xd->control == NULL))
   {
-     return XNEE_RECORD_FAILURE;
+    fprintf(stderr, "cannot look for RECORD extension withou xnee_data or control display %d %d \n", 
+	    xd, xd->control);
+    return XNEE_RECORD_FAILURE;
   }
 
   if( XRecordQueryVersion(xd->control, 
