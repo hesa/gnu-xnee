@@ -211,6 +211,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 
   context_display = xnee_get_display_for_recordcontext(xd);
 
+
   if ( xd->data_file == NULL)
     {
       xnee_verbose((xd, "Using stdin as file\n"));
@@ -337,8 +338,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	      last_elapsed = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
 	      xnee_verbose((xd, " <--  xnee_get_elapsed_time\n"));
 	    }
-
-	  printf ("xindata ret=%d  %d  %d\n", ret, xindata.type, xindata.u.xievent.type);
 
 	  if ( ret == XNEE_META_DATA )
 	    {
@@ -504,11 +503,11 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		     }
 		  break;
 		case XNEE_PROTO_XINPUT_EVENT_SLAVE:
-		  printf("#ignoring slave\n");
+		  /* printf("#ignoring slave\n"); */
 		  break;
 		  
 		default:
-		  printf("def branch\n");
+		  fprintf(stderr, "def branch\n");
 		  xnee_verbose((xd, 
 				"xnee_replay_MainReplayLoop: Unknown type \n"));
 		  break;
