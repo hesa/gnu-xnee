@@ -1,5 +1,8 @@
 2010-09-22  Henrik Sandklef  <hesa@sandklef.com>
 
+	* configure.in: 
+	Updated version to 3.06.90 to prepare for 3.07
+
 	* libxnee/src/xnee_fake.c (xnee_replay_event_handler): 
 	Indentation fix 	
 	
