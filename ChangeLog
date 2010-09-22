@@ -1,3 +1,25 @@
+2010-09-22  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_session.c (xnee_rep_prepare): 
+	Added extra call (for second call of fun :( )  to
+	xnee_setup_display
+	Continuing if XNEE_OK returned from xnee_replay_main_loop
+	
+	* libxnee/src/xnee_record.c: 
+	Enabled recording even if screen < 0
+	Added print of xnee_data and control dpy in fprintf statement
+
+	* libxnee/src/xnee_replay.c: 
+	Removed printf statements
+	changed a printf into a fprintf(stderr,
+
+	* libxnee/src/xnee_session.c: 
+	xnee_setup_display called earlier (N900 fix)
+
+	* libxnee/src/xnee_xinput.c: 
+	Updated (c) year
+	changed a printf into a fprintf
+
 2010-09-18  Henrik Sandklef  <hesa@sandklef.com>
 
 	* xswine/main.c: 
