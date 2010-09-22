@@ -1,5 +1,8 @@
 2010-09-22  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_range.c: 
+	Changed "WARNING" to "NOTIFICATION" in warning text 
+
 	* libxnee/src/xnee_session.c (xnee_rep_prepare): 
 	Added extra call (for second call of fun :( )  to
 	xnee_setup_display

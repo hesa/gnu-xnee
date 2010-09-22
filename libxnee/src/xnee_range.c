@@ -598,7 +598,7 @@ xnee_add_range (xnee_data* xd,
       else
 	{
 	  /* the work around above should probably be removed any time ... errrh */
-	  fprintf(stderr, "BEWARE: this code should not be released without serious checking, which has not been performed, since you see this text\n");
+	  fprintf(stderr, "NOTIFICATION: If you have problem with Xnee and recording device events: File a bug report including this text.\n");
 	}
       
     }
