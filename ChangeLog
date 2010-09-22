@@ -1,3 +1,8 @@
+2010-09-23  Henrik Sandklef  <hesa@sandklef.com>
+
+	* doc/version.texi: 
+	Updated (c) year
+
 2010-09-22  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_xinput.c (xnee_handle_xinput_event): 
