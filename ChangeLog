@@ -1,5 +1,8 @@
 2010-09-22  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_xinput.c (xnee_handle_xinput_event): 
+	Changed exit to print a warning (stderr) and return with errorr code
+
 	* configure.in: 
 	Updated version to 3.06.90 to prepare for 3.07
 

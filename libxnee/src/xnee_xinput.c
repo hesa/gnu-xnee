@@ -213,14 +213,8 @@ xnee_handle_xinput_event(xnee_data * xd,
 	{
 	  if ( e->num_valuators != 2 )
 	    {
-	      fprintf (stderr, "Number of valuators was faulty :(\n");
-	      /*
-	       * HESA HESA HESA
-	       * exit is good when developing
-	       * since it forces an exit on error ..... 
-	       *  FIX LATER
-	       */
-	      exit(1);
+	      fprintf (stderr, "WARNING: Number of valuators was faulty \n");
+	      return XNEE_XINPUT_EXTENSION_FAILURE;
 	    }
 	  
 	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
