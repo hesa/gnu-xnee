@@ -538,7 +538,6 @@ xnee_rep_prepare(xnee_data *xd)
 /*   ret = xnee_set_ranges(xd); */
 /*   XNEE_RETURN_IF_ERR (ret); */
 
-
   xnee_set_events_replayed(xd,0);
 
   ret = xnee_setup_display (xd);
@@ -548,12 +547,15 @@ xnee_rep_prepare(xnee_data *xd)
       return ret;
     }
 
+
   if ( xnee_is_replayer(xd) != 0 )
   {
+
     xnee_verbose((xd, "Entering main loop (replayer) to read META data \n"));
     ret = xnee_replay_main_loop(xd, XNEE_REPLAY_READ_META_DATA);
-    if (!( ( ret == XNEE_REPLAY_READ_META_DATA ) || 
-	   ( ret == XNEE_REPLAY_READ_REPLAY_DATA ) ))
+    if (!( ( ret == XNEE_REPLAY_READ_META_DATA )  || 
+	   ( ret == XNEE_REPLAY_READ_REPLAY_DATA) || 
+	   ( ret == XNEE_OK ) ))
       {
 	return ret;
       }
@@ -564,9 +566,14 @@ xnee_rep_prepare(xnee_data *xd)
    *
    */
   xnee_verbose((xd, "-- xnee_rep_prepare - setup display\n"));
+  ret = xnee_setup_display (xd);
+  if (ret!=XNEE_OK)
+    {
+      xnee_verbose((xd, "<-- xnee_rep_prepare returning %d\n", ret));
+      return ret;
+    }
 
   
-
   xnee_verbose((xd, "-- xnee_rep_prepare - setup record ext \n"));
 
   ret = xnee_setup_recordext (xd);
