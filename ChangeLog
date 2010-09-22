@@ -1,5 +1,8 @@
 2010-09-22  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_fake.c (xnee_replay_event_handler): 
+	Indentation fix 	
+	
 	* libxnee/src/xnee_range.c: 
 	Changed "WARNING" to "NOTIFICATION" in warning text 
 
