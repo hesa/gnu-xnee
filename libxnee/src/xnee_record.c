@@ -225,6 +225,9 @@ xnee_record_handle_event_printer(xnee_data * xd,
 	}
       break;
     case ButtonPress:
+#define HIDE_NORMAL_DEV_EVS_IF_XI(xd) if ( xnee_has_xinput(xd)) fprintf (out,"#")
+
+      HIDE_NORMAL_DEV_EVS_IF_XI(xd);
       fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
 	       event_type,
 	       xrec_data->event.u.u.detail,
@@ -234,6 +237,7 @@ xnee_record_handle_event_printer(xnee_data * xd,
       XNEE_RETURN_IF_ERR(ret);
       break;
     case ButtonRelease:
+      HIDE_NORMAL_DEV_EVS_IF_XI(xd);
       fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
 	       event_type,
 	       xrec_data->event.u.u.detail,
@@ -256,8 +260,8 @@ xnee_record_handle_event_printer(xnee_data * xd,
 	}
       */
       screen = ret;
-
       do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
+      HIDE_NORMAL_DEV_EVS_IF_XI(xd);
       fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
 	       event_type,
 	       xrec_data->event.u.keyButtonPointer.rootX,
@@ -364,7 +368,8 @@ xnee_record_handle_event_printer(xnee_data * xd,
       {
 	ret = xnee_handle_xinput_event(xd, 
 				       event_type, 
-				       xrec_data);
+				       xrec_data,
+				       xrecintd->server_time);
 
 	if ( ret != 0 )
 	  {

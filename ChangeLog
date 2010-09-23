@@ -1,5 +1,8 @@
 2010-09-23  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
+	Printing a "#" in front of every "normal" motion event (devel fix) v
+
 	* doc/xnee_copying: 
 	Updated (c) year
 
