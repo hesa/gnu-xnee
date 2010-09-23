@@ -130,8 +130,9 @@ xnee_has_xinput(xnee_data *xd)
 
 int 
 xnee_handle_xinput_event(xnee_data * xd, 
-			 int event_type, 
-			 XRecordDatum *xrec_data)
+			 int  event_type, 
+			 XRecordDatum *xrec_data,
+			 Time server_time)
 {
   static saved_xinput_event sxe;
   FILE *out ;
@@ -164,7 +165,7 @@ xnee_handle_xinput_event(xnee_data * xd,
 	  sxe.x        = xrec_data->event.u.keyButtonPointer.rootX;
 	  sxe.y        = xrec_data->event.u.keyButtonPointer.rootY;
 	  sxe.time     = xrec_data->event.u.keyButtonPointer.time;
-	  
+
 	  /* 
 	   * Rest of the data is sent in an Devicevaluator event, 
 	   * store what we have and continue
@@ -178,7 +179,8 @@ xnee_handle_xinput_event(xnee_data * xd,
 	  fprintf (out, ",%u,0,0,%d,0,0,%lu,%d,%s\n",
 		   ordinary_event_nr,
 		   e->detail ,
-		   sxe.time,
+		   server_time,
+	   /* sxe.time, */
 		   e->deviceid,
 		   xd->xi_data.xi_devices[e->deviceid].name);
 	}
@@ -188,7 +190,8 @@ xnee_handle_xinput_event(xnee_data * xd,
 	  fprintf (out, ",%u,0,0,0,%d,0,%lu,%d,%s\n",
 		   ordinary_event_nr,
 		   e->detail ,
-		   sxe.time,
+		   server_time,
+		   /* sxe.time, */
 		   e->deviceid,
 		   xd->xi_data.xi_devices[e->deviceid].name);
 	}
@@ -216,13 +219,14 @@ xnee_handle_xinput_event(xnee_data * xd,
 	      fprintf (stderr, "WARNING: Number of valuators was faulty \n");
 	      return XNEE_XINPUT_EXTENSION_FAILURE;
 	    }
-	  
+	 
 	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
 	  fprintf (out, ",%d,%d,%d,0,0,0,%lu,%d,'%s'\n",
 		   sxe.type,
 		   e->valuator0, 
 		   e->valuator1, 
-		   sxe.time,
+		   server_time,
+		   /* sxe.time, */
 		   e->deviceid,
 		   xd->xi_data.xi_devices[e->deviceid].name);
 	  
@@ -320,7 +324,8 @@ xnee_has_xinput(xnee_data *xd)
 int 
 xnee_handle_xinput_event(xnee_data * xd, 
 			 int event_type, 
-			 XRecordDatum *xrec_data)
+			 XRecordDatum *xrec_data,
+			 Time server_time)
 {
   return XNEE_OK;
 }
