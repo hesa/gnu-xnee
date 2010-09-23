@@ -47,7 +47,7 @@
 	Added extra call (for second call of fun :( )  to
 	xnee_setup_display
 	Continuing if XNEE_OK returned from xnee_replay_main_loop
-	
+
 	* libxnee/src/xnee_record.c: 
 	Enabled recording even if screen < 0
 	Added print of xnee_data and control dpy in fprintf statement
