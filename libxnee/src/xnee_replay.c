@@ -58,7 +58,6 @@ static int last_logread=1;
 Time
 xnee_delta_time ( xnee_intercept_data * xindata)
 {
-
   if ( xindata->newtime > xindata->oldtime ) 
     {
       return ( xindata->newtime - xindata->oldtime); 
@@ -212,6 +211,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
   context_display = xnee_get_display_for_recordcontext(xd);
 
 
+
+
   if ( xd->data_file == NULL)
     {
       xnee_verbose((xd, "Using stdin as file\n"));
@@ -346,6 +347,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    }
 	  else if (ret!=0)
 	    {
+
+
 /* 	      printf (" CC : "); */
 	      if (xd->first_read_time==0)
               {
@@ -355,7 +358,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
               }
 	      
 	      
-	
 	      /* Interrupt variable set? */
 	      if (xnee_get_interrupt_action(xd))
 		{
@@ -486,24 +488,15 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 					      XNEE_REPLAYED);
 		  break;
 		case XNEE_PROTO_XINPUT_EVENT_MASTER:
-                   if ( ( xindata.u.xievent.type >= KeyPress ) 
-		       && (xindata.u.xievent.type <= MotionNotify) )
-		     {
-		       
-		       int screen = xindata.u.event.screen_nr ; 
-		       int x      = (int) xindata.u.xievent.x ; 
-		       int y      = (int) xindata.u.xievent.y ; 
-		       int devid  = (int) xindata.u.xievent.deviceid ; 
-		       xnee_fake_xi_motion_event (xd,
-						  screen,
-						  x, 
-						  y, 
-						  devid,
-						  0);
-		     }
+		  xnee_verbose((xd, "READ A XINPUT EVENT MASTER\n")); 
 		  break;
 		case XNEE_PROTO_XINPUT_EVENT_SLAVE:
-		  /* printf("#ignoring slave\n"); */
+		  xnee_verbose((xd, "READ A XINPUT EVENT SLAVE\n")); 
+		  replayable = 
+		    xnee_replay_event_handler(xd, 
+					      &xindata, 
+					      last_elapsed);
+		  
 		  break;
 		  
 		default:
@@ -530,10 +523,10 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	    {
  	      break; 
 	    }
-
 	  ret = xnee_expression_handle_session(xd, tmp, &xindata);
 /* 	  printf ("  and again  (%d, %s)\n", ret, xnee_get_err_description(ret)); */
 	  last_logread = 0;
+
 	}
     }
 
