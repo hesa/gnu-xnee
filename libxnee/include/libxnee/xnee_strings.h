@@ -171,6 +171,9 @@ extern const char*  XNEE_XINPUT_EXTENSION_NAME  ;
 
 extern const char*  NULL_STRING           ;
 
+extern const char* XNEE_REPLAY_XNEE_STRING   ;
+extern const char* XNEE_REPLAY_SWINPUT_STRING;
+
 #define EMPTY_IF_NULL(a) (a?a:XNEE_EMPTY_STRING)
 
 #endif /* XNEE_XNEE_STRINGS_H */

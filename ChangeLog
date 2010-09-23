@@ -1,5 +1,8 @@
 2010-09-23  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/include/libxnee/xnee_strings.h: 
+	Added string for replay backend
+
 	* libxnee/include/libxnee/xnee_setget.h: 
 	Added funs to handle replay backend
 
