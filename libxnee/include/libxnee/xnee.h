@@ -100,6 +100,7 @@ enum return_values
     XNEE_PROJECT_SYNTAX_ERROR  ,
     XNEE_CLI_ERROR         ,
     XNEE_XINPUT_EXTENSION_FAILURE    ,
+    XNEE_REPLAY_BACKEND_FAILURE    ,
     XNEE_LAST_ERROR
   } _return_values;
 
@@ -126,6 +127,12 @@ enum xnee_protocol_data_numbers
     XNEE_PROTO_LAST    
   } _xnee_protocol_data_numbers;
   
+enum xnee_replay_backend
+  {
+    XNEE_REPLAY_XNEE = 0,
+    XNEE_REPLAY_SWINPUT,
+    XNEE_REPLAY_LAST
+  } _xnee_replay_backend;
 
 /** 
  * \brief simply a X error. 
@@ -681,8 +688,10 @@ typedef struct
   unsigned char   x_version_minor;
   unsigned char   x_version_minor_sub;
   char *          x_vendor_name  ;
+  
 
   xinput_data xi_data;
+  unsigned char replay_backend;
 
 } xnee_data ; 
 
