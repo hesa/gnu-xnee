@@ -269,6 +269,7 @@ xnee_expression_handle_replay(xnee_data *xd,
     }
   else if (!strncmp("6",tmp,1))    /* XInput Device (master) */
     {
+      xindata->oldtime = xindata->newtime ;
       ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
 		   &xindata->type, 
 		   &xindata->u.xievent.type, 
@@ -288,6 +289,7 @@ xnee_expression_handle_replay(xnee_data *xd,
     }
   else if (!strncmp("7",tmp,1))  /* XInput Device (slave) */
     {
+      xindata->oldtime = xindata->newtime ;
       ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
 		   &xindata->type, 
 		   &xindata->u.xievent.type, 
