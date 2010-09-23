@@ -1,5 +1,8 @@
 2010-09-23  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_fake.c (xnee_fake_motion_event_impl): 
+	Removed crappy printf statement
+
 	* libxnee/src/xnee_expr.c (xnee_expression_handle_replay): 
 	Storing time for XI events
 
@@ -32,8 +35,8 @@
 	Updated version to 3.06.90 to prepare for 3.07
 
 	* libxnee/src/xnee_fake.c (xnee_replay_event_handler): 
-	Indentation fix 	
-	
+	Indentation fix
+
 	* libxnee/src/xnee_range.c: 
 	Changed "WARNING" to "NOTIFICATION" in warning text 
 

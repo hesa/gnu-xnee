@@ -456,8 +456,13 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 
       new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
       new_y = xnee_resolution_newy(xd,y) + xd->res_info.y_offset;
-
-      if (deviceid == 0 )
+      
+      if (xnee_is_swinput_playback(xd))
+	{
+	  fprintf (stdout, "fake swinput\n");
+	  fprintf (stderr, "fake swinput\n");
+	}
+      else if (deviceid == 0 )
 	{
 	  xnee_fake_sleep (dtime);
 	  xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))\n",
