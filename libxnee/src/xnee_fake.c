@@ -105,6 +105,7 @@ xnee_replay_event_handler( xnee_data* xd,
 
   xnee_verbose((xd, "---  xnee_replay_event_handler 1\n "));
 
+
   /* Get the recorded time difference. 
      Should be from previous read 
      X server time recorded in file*/
@@ -116,6 +117,7 @@ xnee_replay_event_handler( xnee_data* xd,
 
   record_first_diff = ( xindata->newtime - xd->first_read_time ) ;
 
+
   /* get the actual difference from last read - 
      we may have had to wait/sleep */
   last_diff = xnee_get_elapsed_time(xd, XNEE_FROM_LAST_READ );
@@ -123,6 +125,8 @@ xnee_replay_event_handler( xnee_data* xd,
   /* get the actual elapsed time from the start of the read */
   first_diff = xnee_get_elapsed_time(xd, XNEE_FROM_FIRST_READ );
   
+
+
   if (loop_nr==0)
     {
       record_last_diff = 0 ;
@@ -175,72 +179,103 @@ xnee_replay_event_handler( xnee_data* xd,
 				     record_last_diff, 
 				     record_first_diff ) ; 
     }
-
-/*   printf ("xnee_calc_sleep_amount : %lu : (%lu) : %lu %lu ?? %d\n",     */
-/* 	  last_diff, first_diff,  */
-/* 	  record_last_diff, record_first_diff, */
-/* 	  sleep_amt);    */
-
-
-
+  
+  /*   printf ("xnee_calc_sleep_amount : %lu : (%lu) : %lu %lu ?? %d\n",     */
+  /* 	  last_diff, first_diff,  */
+  /* 	  record_last_diff, record_first_diff, */
+  /* 	  sleep_amt);    */
+  
+  
+  
   xnee_verbose((xd, "---  xnee_replay_event_handler switch on %d  (assuming %d or %d )\n ", xindata->u.event.type, KeyPress, KeyRelease));
   
-  /* If we use the last args to the XTestFakexxx functions
-   * it is harder to synchronize .... 
-   * XNEE_FAKE_SLEEP is a macro for usleep 
-   */
-  switch (xindata->u.event.type)
+  if ( xindata->type == XNEE_PROTO_XINPUT_EVENT_MASTER)
     {
-    case KeyPress:
-      xnee_inc_events_replayed(xd);      
-      xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_PRESS, sleep_amt );
-      break;
-    case KeyRelease:
-      xnee_inc_events_replayed(xd);      
-      xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_RELEASE, sleep_amt);
-      break;
-    case ButtonPress:
-      xnee_inc_events_replayed(xd);      
-      xnee_fake_button_event (xd, xindata->u.event.button, XNEE_PRESS, sleep_amt);
-      break;
-    case ButtonRelease:
-      xnee_inc_events_replayed(xd);      
-      xnee_fake_button_event (xd, xindata->u.event.button, XNEE_RELEASE, sleep_amt);
-      break;
-    case MotionNotify:
 
-      xnee_inc_events_replayed(xd);      
-      screen = xindata->u.event.screen_nr ; 
-      x      = (int) xindata->u.event.x ; 
-      y      = (int) xindata->u.event.y ; 
-      xnee_fake_motion_event (xd,
-			      screen,
-			      x, 
-			      y, 
-			      sleep_amt);
-      break;
-
-    default:                  /*  Do nothing  */
-      xnee_verbose((xd, " Did NOT replay %d  returning XNEE_NOT_REPLAYABLE \n", xindata->u.event.type));
-      /* restore time of last replayable event */
-      xindata->oldtime = saved_time;
-      return_value= XNEE_NOT_REPLAYABLE;
-      break;
+      if ( ( xindata->u.xievent.type >= KeyPress ) 
+	   && (xindata->u.xievent.type <= MotionNotify) )
+	{
+	  int screen = xindata->u.event.screen_nr ; 
+	  int x      = (int) xindata->u.xievent.x ; 
+	  int y      = (int) xindata->u.xievent.y ; 
+	  int devid  = (int) xindata->u.xievent.deviceid ; 
+	  
+	  fprintf(stderr, 
+		  "xnee_fake_xi_motion_event(%d, %d, %d, %d, %d, %d)\n",
+		  xd,
+		  screen,
+		  x, 
+		  y, 
+		  sleep_amt,
+		  devid);
+	  
+	  xnee_fake_xi_motion_event (xd,
+				     screen,
+				     x, 
+				     y, 
+				     sleep_amt,
+				     devid);
+	}
     }
-
+  else
+    {
+      /* If we use the last args to the XTestFakexxx functions
+       * it is harder to synchronize .... 
+       * XNEE_FAKE_SLEEP is a macro for usleep 
+       */
+      switch (xindata->u.event.type)
+	{
+	case KeyPress:
+	  xnee_inc_events_replayed(xd);      
+	  xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_PRESS, sleep_amt );
+	  break;
+	case KeyRelease:
+	  xnee_inc_events_replayed(xd);      
+	  xnee_fake_key_event (xd, xindata->u.event.keycode, XNEE_RELEASE, sleep_amt);
+	  break;
+	case ButtonPress:
+	  xnee_inc_events_replayed(xd);      
+	  xnee_fake_button_event (xd, xindata->u.event.button, XNEE_PRESS, sleep_amt);
+	  break;
+	case ButtonRelease:
+	  xnee_inc_events_replayed(xd);      
+	  xnee_fake_button_event (xd, xindata->u.event.button, XNEE_RELEASE, sleep_amt);
+	  break;
+	case MotionNotify:
+	  
+	  xnee_inc_events_replayed(xd);      
+	  screen = xindata->u.event.screen_nr ; 
+	  x      = (int) xindata->u.event.x ; 
+	  y      = (int) xindata->u.event.y ; 
+	  xnee_fake_motion_event (xd,
+				  screen,
+				  x, 
+				  y, 
+				  sleep_amt);
+	  break;
+	  
+	default:                  /*  Do nothing  */
+	  xnee_verbose((xd, " Did NOT replay %d  returning XNEE_NOT_REPLAYABLE \n", xindata->u.event.type));
+	  /* restore time of last replayable event */
+	  xindata->oldtime = saved_time;
+	  return_value= XNEE_NOT_REPLAYABLE;
+	  break;
+	}
+    }
+     
   if (return_value==0)
     {
       ;
     }
   xnee_verbose((xd, "<--- xnee_replay_event_handler returning after handling of %d \n", 
 		xindata->u.event.type ));
-
   
-/*   printf ("xnee_replay_event_handler: %d\n", return_value); fflush(stdout); */
+  
+  /*   printf ("xnee_replay_event_handler: %d\n", return_value); fflush(stdout); */
   return return_value ;
 }
-
-
+  
+  
 
 
 
@@ -413,11 +448,14 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   xnee_verbose((xd, "---  delay = %d\n", (int)dtime));
+
+  
+
   if (!xnee_is_recorder (xd))
     {
 
-  new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
-  new_y = xnee_resolution_newy(xd,y) + xd->res_info.y_offset;
+      new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
+      new_y = xnee_resolution_newy(xd,y) + xd->res_info.y_offset;
 
       if (deviceid == 0 )
 	{
@@ -443,20 +481,23 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 	  xnee_verbose((xd, "XTestFakeDeviceMotionEvent (%d, %d, %d, {%d, %d}, %d, %d))\n",
 			(int) xd->fake, 
 			(int) deviceid,
-			(int) True,
+			(int) False,
 			(int) new_x,
 			(int) new_y,
 			2,0));
+
 	  XTestFakeDeviceMotionEvent(xd->fake, 
 				     deviceid,
-				     True,
+				     False,
 				     0,
 				     &axes,
 				     2,
-				     0);
+				     1);
 	}
       XFlush(xd->fake);
     }
+
+  
   
   for (i=0; i<size ; i++)
     {
@@ -548,7 +589,9 @@ xnee_type_file(xnee_data *xd)
   xnee_verbose ((xd,"--- xnee_type_file\n"));
 
   if (!xnee_has_xtest_extension(xd))
-    exit(XNEE_NO_TEST_EXT);
+    {
+      exit(XNEE_NO_TEST_EXT);
+    }
   
   xnee_verbose ((xd,"--- xnee_type_file\n"));
 
