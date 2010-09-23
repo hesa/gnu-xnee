@@ -102,3 +102,5 @@ const char* NULL_STRING             = "NULL";
 
 const char* XNEE_EMPTY_STRING       = "" ;
 
+const char* XNEE_REPLAY_XNEE_STRING    = "xnee";
+const char* XNEE_REPLAY_SWINPUT_STRING = "swinput";
