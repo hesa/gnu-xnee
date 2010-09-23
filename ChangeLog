@@ -1,5 +1,19 @@
 2010-09-23  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_expr.c (xnee_expression_handle_replay): 
+	Storing time for XI events
+
+	* libxnee/include/libxnee/xnee_xinput.h: 
+	* libxnee/src/xnee_xinput.c (xnee_handle_xinput_event): 
+	Added server time as argument since we need the time source
+
+	* libxnee/src/xnee_fake.c: 
+	Making sure XI motions events are faked as absolute
+	Improved handling of XI events
+
+	* libxnee/src/xnee_replay.c (xnee_replay_main_loop): 
+	Changed to replaying/faking XInput Slave events instead of master
+
 	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
 	Printing a "#" in front of every "normal" motion event (devel fix) v
 
