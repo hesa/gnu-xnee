@@ -71,7 +71,8 @@ xnee_has_xinput(xnee_data *xd);
 int 
 xnee_handle_xinput_event(xnee_data * xd, 
 			 int event_type, 
-			 XRecordDatum *xrec_data);
+			 XRecordDatum *xrec_data,
+			 Time server_time);
 
 
 
