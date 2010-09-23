@@ -1,5 +1,8 @@
 2010-09-23  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_setget.c (xnee_set_replay_backend): 
+	Removed faulty fprintf statement
+	
 	* configure.in: 
 	Bumping version to 3.06.91 (in preps for 3.07)
 

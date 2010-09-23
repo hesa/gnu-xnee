@@ -1859,3 +1859,35 @@ xnee_is_no_reparent_recording(xnee_data *xd)
 }
 
 
+int
+xnee_set_replay_backend(xnee_data *xd, int replay_backend)
+{
+  if (( replay_backend < 0 ) || (replay_backend >= XNEE_REPLAY_LAST))
+    {
+      return XNEE_REPLAY_BACKEND_FAILURE;
+    }
+  xd->replay_backend = replay_backend;
+  return XNEE_OK;
+}
+
+int
+xnee_set_replay_backend_name(xnee_data *xd, char *replay_backend)
+{
+  if (replay_backend==NULL)
+    {
+      return XNEE_REPLAY_BACKEND_FAILURE;
+    }
+  if (strncmp(replay_backend, 
+	      XNEE_REPLAY_XNEE_STRING, 
+	      strlen(XNEE_REPLAY_XNEE_STRING))==0)
+    {
+      return xnee_set_replay_backend(xd, XNEE_REPLAY_XNEE);
+    }
+  else if (strncmp(replay_backend, 
+		   XNEE_REPLAY_SWINPUT_STRING, 
+		   strlen(XNEE_REPLAY_SWINPUT_STRING))==0)
+    {
+      return xnee_set_replay_backend(xd, XNEE_REPLAY_SWINPUT);
+    }
+  return XNEE_REPLAY_BACKEND_FAILURE;
+}
