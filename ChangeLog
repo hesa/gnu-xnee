@@ -1,5 +1,8 @@
 2010-09-24  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/test/libtest.c: 
+	Added (c) notice
+
 	* cnee/include/parse.h: 
 	* cnee/src/parse.c: 
 	Added options to handle:
