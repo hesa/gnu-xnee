@@ -1,16 +1,46 @@
 Changes in coming version 3.07 
 ==============================
 
+   * New features:
+      Supports recording xnd replaying of XInput device events
+        * Forced replaying of X11 core events can be done
+        * Backward compatible with olde session files
+
    * Build changes:
-      Added new option: --enable-man
+
+      --enable-man
       Checks for makeinfo once, uses result many times
       Can build guis and manual without all doc stuff
+
+      --disable-xinput2
+      By default Xnee is built with XI support
+
+      Looks for gtk-config when configuring
+      Checks for makeinfo once, uses result many times
+      Can build guis and manual without all doc stuff
+
+
+   * Issues
+      Human printout of X Input events needs more work
+      Need to make X Input code be totally ifdefed away
+
+   * New options:
+	--force-core-replay,-fcr 
+          Discard recorded X Input device data, 
+          use recorded core device data
+
+        --disable-xinput-events
+          Disable recording of XInput events
 
    * Fixed bugs as reported on ubuntuforums:
      http://ubuntuforums.org/showthread.php?t=1253453&highlight=xnee
 
      savannah bug: #30134 "Missing xnee.xpm in gnee"
      savannah bug: #30136 "Configure misses to check for gnome.h"
+
+     Reported problems on N900 are fixed
+
+    * Patches from Tuukka Pasanen, Fabian Keil
 
 
 Changes in version 3.06 ('Dio')
