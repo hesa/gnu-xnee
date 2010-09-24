@@ -1,5 +1,12 @@
 2010-09-24  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/include/libxnee/xnee_fake.h: 
+	Changed fake key fun to macro
+	Added fun to fake xi key
+
+	* libxnee/src/xnee_fake.c: 
+	Added support for replaying XI key event
+
 	* libxnee/src/xnee_expr.c (xnee_expression_handle_prim_sub): 
 	Storing of time altered to work with xi and forced core replay
 	Discard xi events if forced core replay
