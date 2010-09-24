@@ -181,6 +181,28 @@ xnee_replay_synchronize (xnee_data* xd)
 }
 
 
+static void 
+xnee_replay_update_dev_ctr(xnee_data *xd, int type)
+{
+  if ( type == ButtonPress )
+    {
+      xd->button_pressed++;
+    }
+  else if ( type == ButtonRelease )
+    {
+      xd->button_pressed--;
+    }
+  else if ( type == KeyPress )
+    {
+      xd->key_pressed++;
+    }
+  else if ( type == KeyRelease )
+    {
+      xd->key_pressed--;
+    }
+  return ;
+}
+
 /**************************************************************
  *                                                            *
  * xnee_replay_main_loop                                      *
@@ -416,34 +438,16 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 	      switch (xindata.type)
 		{
 		case XNEE_EVENT:
+		
 		  /* if type == 0, break .... BTW, why is it 0?? */
 		  if ( xindata.u.event.type == 0 ) { break ; }
+
 		  /* is it a device event ? */
                    if ( ( xindata.u.event.type >= KeyPress ) 
 		       && (xindata.u.event.type <= MotionNotify) )
 		    {
-		      if ( xindata.u.event.type == ButtonPress )
-			{
-			  xd->button_pressed++;
-			}
-		      else if ( xindata.u.event.type == ButtonRelease )
-			{
-			  xd->button_pressed--;
-			}
-		      if ( xindata.u.event.type == KeyPress )
-			{
-			  xd->key_pressed++;
-			}
-		      else if ( xindata.u.event.type == KeyRelease )
-			{
-			  xd->key_pressed--;
-			}
+		      xnee_replay_update_dev_ctr(xd, xindata.u.event.type);
 		      
-		      
-		      /*		  if ( (xd->button_pressed==0) ||
-			(xd->key_pressed==0) )
-			{
-		      */
 		      ret = xnee_replay_synchronize (xd);
 		      if (ret != XNEE_OK)
 			{
@@ -456,7 +460,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		      xnee_verbose((xd," replay MAIN  new %lu   old %lu\n",xindata.newtime , xindata.oldtime ));
 		      replayable = 
 			xnee_replay_event_handler(xd, 
-						  &xindata, last_elapsed);
+						  &xindata, 
+						  last_elapsed);
 		      
 		    }
 		  else
@@ -487,18 +492,30 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 					      xindata.u.reply.type, 
 					      XNEE_REPLAYED);
 		  break;
+		  
 		case XNEE_PROTO_XINPUT_EVENT_MASTER:
 		  xnee_verbose((xd, "READ A XINPUT EVENT MASTER\n")); 
 		  break;
 		case XNEE_PROTO_XINPUT_EVENT_SLAVE:
 		  xnee_verbose((xd, "READ A XINPUT EVENT SLAVE\n")); 
+		  
+		  xnee_replay_update_dev_ctr(xd, xindata.u.xievent.type);
+		  
+		  ret = xnee_replay_synchronize (xd);
+		  if (ret != XNEE_OK)
+		    {
+		      xnee_verbose((xd, "xnee_replay_main_loop return %d\n", 
+				    ret));
+		      return ret;
+		    }
+
 		  replayable = 
 		    xnee_replay_event_handler(xd, 
 					      &xindata, 
 					      last_elapsed);
 		  
 		  break;
-		  
+
 		default:
 		  fprintf(stderr, "def branch\n");
 		  xnee_verbose((xd, 
