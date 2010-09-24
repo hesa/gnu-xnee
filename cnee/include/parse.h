@@ -111,7 +111,9 @@ enum {
   XNEE_MOUSE_OPTION_KEY             ,
   CNEE_SYNTAX_CHECKER_KEY           ,
   CNEE_GET_XINPUT_EVENT_BASE        ,   
-  CNEE_DISABLE_XINPUT_EVENTS  
+  CNEE_DISABLE_XINPUT_EVENTS        ,
+  CNEE_REPLAY_BACKEND               ,
+  CNEE_FORCE_CORE_REPLAY            
  } ;
 
 

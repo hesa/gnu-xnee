@@ -289,6 +289,7 @@ static xnee_option_t cnee_options_impl[] =
       XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
+
     { 
       CNEE_DISABLE_XINPUT_EVENTS,
       "disable-xinput-events",
@@ -299,6 +300,27 @@ static xnee_option_t cnee_options_impl[] =
       XNEE_OPTION_VISIBLE
     },
 #endif /*  XNEE_XINPUT_SUPPORT*/
+
+    { 
+      CNEE_REPLAY_BACKEND,
+      "replay-backend",
+      "rb",
+      NULL,
+      "<backend>",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+    { 
+      CNEE_FORCE_CORE_REPLAY,
+      "force-core-replay",
+      "fcr",
+      NULL,
+      "Discard record X Input device data, use recorded core device data ",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
     {
       XNEE_LAST_OPTION,
       NULL,
@@ -554,6 +576,21 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
     case CNEE_DISABLE_XINPUT_EVENTS:
       verbose_option("CNEE_DISABLE_XINPUT_EVENTS");
       xnee_disable_xinput(xd) ;
+      ret = XNEE_OK;
+      break;
+#endif /*  XNEE_XINPUT_SUPPORT */
+    case CNEE_REPLAY_BACKEND:
+      verbose_option("CNEE_REPLAY_BACKEND");
+      xnee_set_replay_backend_name(xd, opt_and_args[1]) ;
+      *args_used = 1;
+      ret = XNEE_OK;
+      break;
+
+#ifdef  XNEE_XINPUT_SUPPORT
+    case  CNEE_FORCE_CORE_REPLAY:
+      verbose_option("CNEE_FORCE_CORE_REPLAY");
+      xnee_set_forced_core_device_events (xd) ;
+      *args_used = 0;
       ret = XNEE_OK;
       break;
 #endif /*  XNEE_XINPUT_SUPPORT */
