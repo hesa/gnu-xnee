@@ -36,6 +36,15 @@ int
 xnee_reset_fake( xnee_data *xd);
 
 
+#define xnee_fake_motion_event(xd, scr, x, y, dtime) xnee_fake_motion_event_impl(xd, scr, x, y, dtime, 0)
+
+#define xnee_fake_xi_motion_event(xd, scr, x, y, dtime, dev) xnee_fake_motion_event_impl(xd, scr, x, y, dtime, dev)
+
+#define xnee_fake_button_event(xd, button, bo , dtime)              xnee_fake_button_event_impl (xd, button, bo , dtime, 0) 
+
+#define xnee_fake_xi_button_event(xd, button, bo , dtime, deviceid) xnee_fake_button_event_impl (xd, button, bo , dtime, deviceid) 
+
+
 /**
  * Sends a faked moton event to the display in the distribution list as found in xd.
  * @param xd       xnee's main structure
@@ -43,6 +52,7 @@ xnee_reset_fake( xnee_data *xd);
  * @param x        x coordinate
  * @param y        y coordinate
  * @param dtime    how long before the faking shall take place
+ * @param deviceid Id of the device (XInput extension)
  * @return int     XNEE_OK on success.
  */
 int 
@@ -53,9 +63,6 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 			     unsigned long dtime,
 			     int deviceid);
 
-#define xnee_fake_motion_event(xd, scr, x, y, dtime) xnee_fake_motion_event_impl(xd, scr, x, y, dtime, 0)
-
-#define xnee_fake_xi_motion_event(xd, scr, x, y, dtime, dev) xnee_fake_motion_event_impl(xd, scr, x, y, dtime, dev)
 
 
 /**
@@ -68,7 +75,11 @@ xnee_fake_motion_event_impl (xnee_data* xd,
  * @return int     XNEE_OK on success.
  */
 int
-xnee_fake_button_event (xnee_data* xd, int button, Bool bo , int dtime);
+xnee_fake_button_event_impl (xnee_data* xd, 
+			     int button, 
+			     Bool bo , 
+			     int dtime,
+			     int deviceid);
 
 
 
