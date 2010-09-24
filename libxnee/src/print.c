@@ -342,6 +342,10 @@ xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd )
   (void)xd->data_fp (xd->out_file,"Event" XNEE_HP_EQUALS "%s" XNEE_HP_SEP "Number" XNEE_HP_EQUALS "%d", 
 		     event_name, event_type);
   
+  xnee_handle_xinput_event_human(xd, 
+				 event_type, 
+				 xrec_data);
+
   if ( 1 )
     {
       (void)xd->data_fp (xd->out_file,XNEE_HP_CONTENT_BEGIN); 
