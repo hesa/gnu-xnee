@@ -1891,3 +1891,23 @@ xnee_set_replay_backend_name(xnee_data *xd, char *replay_backend)
     }
   return XNEE_REPLAY_BACKEND_FAILURE;
 }
+
+int
+xnee_is_forced_core_device_events(xnee_data *xd)
+{
+  return (xd->xi_data.forced_core_replay != 0) ;
+}
+
+int
+xnee_set_forced_core_device_events(xnee_data *xd)
+{
+  xd->xi_data.forced_core_replay = 1 ;
+  return XNEE_OK;
+}
+
+int
+xnee_unset_forced_core_device_events(xnee_data *xd)
+{
+  xd->xi_data.forced_core_replay = 0 ;
+  return XNEE_OK;
+}
