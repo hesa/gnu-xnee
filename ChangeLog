@@ -1,5 +1,11 @@
 2010-09-24  Henrik Sandklef  <hesa@sandklef.com>
 
+	* cnee/include/parse.h: 
+	* cnee/src/parse.c: 
+	Added options to handle:
+	forced core replay
+	replay backend
+
 	* libxnee/src/print.c: 
 	Basic functionality of printing xi events for humans added
 
