@@ -6,6 +6,10 @@ Changes in coming version 3.07
         * Forced replaying of X11 core events can be done
         * Backward compatible with olde session files
 
+     Experimental and undocumented features (read the source): 
+        * replay backend
+        * xswine - new swinput backend for Xnee
+
    * Build changes:
 
       --enable-man
