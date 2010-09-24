@@ -173,10 +173,11 @@ typedef struct {
 
 typedef struct _xinput_device
 {
-  char *name;
-  int   deviceid;
-  int   is_slave;
-  int   masterid;
+  char    *name;
+  int      deviceid;
+  int      is_slave;
+  int      masterid;
+  XDevice *device; /* for replay */
   
 } xinput_device ;
 
@@ -186,7 +187,9 @@ typedef struct _xinput_data
   int             xinput_event_base;
   int             xinput_record_mouse;
   int             xinput_record_keyboard;
+  int             nr_of_xi_devices;
   xinput_device   xi_devices[XNEE_NR_OF_XINPUT_DEVICES];
+  int             forced_core_replay;
 } xinput_data;
 
 typedef struct _saved_xinput_event
