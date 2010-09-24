@@ -1,5 +1,40 @@
 2010-09-24  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/print.c: 
+	Basic functionality of printing xi events for humans added
+
+	* libxnee/src/xnee_error.c: 
+	Added: XNEE_XINPUT_EXTENSION_FAILURE, XNEE_REPLAY_BACKEND_FAILURE 
+
+	* libxnee/src/xnee_fake.c: 
+	Added support for xi buttton
+	Moved calc of time to sleep to separate fun
+	(xnee_replay_event_handler_sleep_amt)
+	Added code to find replay session's device id
+	(only  rudimentary support, based on # instead of name)
+
+	* libxnee/src/xnee_record.c: 
+	Removed "#" in front of core event printout
+	Temp. disabling check for screen 
+
+	* libxnee/src/xnee_replay.c: 
+	Restructured duplcate code (new static fun
+	xnee_replay_update_dev_ctr)
+	Added support for xi buttons
+
+	* libxnee/src/xnee_session.c: 
+	Added call to xi init and to set replay backend
+
+	* libxnee/src/xnee_setget.c
+	(xnee_unset_forced_core_device_events): 
+	Added funs to (un)set forced code device replay
+
+	* libxnee/src/xnee_xinput.c: 
+	Human printout of xi events
+	New function to init Xnee's XInput stuff (no device init)
+	Added code to find replay session's device id
+	(only  rudimentary support, based on # instead of name)
+
 	* libxnee/include/libxnee/xnee.h: 
 	Added vars for replay to xi structs
 
