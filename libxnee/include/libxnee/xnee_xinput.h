@@ -59,6 +59,10 @@ enum
 #define xnee_xinput_keyboard_requested(xd)\
   (xd->xi_data.xinput_record_keyboard==1)
 
+
+int
+xnee_init_xinput(xnee_data *xd);
+
 int
 xnee_init_xinput_devices(xnee_data *xd);
 
@@ -76,5 +80,7 @@ xnee_handle_xinput_event(xnee_data * xd,
 
 
 
+XDevice * 
+xnee_get_xinput_device(xnee_data *xd, int deviceid);
 
 #endif /* XNEE_XINPUT_H */
