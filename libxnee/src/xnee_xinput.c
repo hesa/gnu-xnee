@@ -103,14 +103,18 @@ xnee_get_xinput_device(xnee_data *xd, int deviceid)
   int dev_pointer;
   XDeviceInfo *dev_info;
   XDevice *xdevice = NULL ;
+  
+  xnee_verbose((xd, "--->  xnee_get_xinput_device\n"));
 
   if ( xd->xi_data.xi_devices[deviceid].device == NULL )
     {
-      if (!(dev_info = XListInputDevices(xd->data, &count)) || !count)
+      if (!(dev_info = XListInputDevices(xd->fake, &count)) || !count)
 	{
 	  fprintf(stderr, "Cannot list input devices\n");
+
 	  return NULL;
 	}
+      xnee_verbose((xd, "---  xnee_get_xinput_device  count=%d\n", count));
 
       dev_pointer = 0;
       for (i = 0; i < count; i++) 
@@ -125,7 +129,7 @@ xnee_get_xinput_device(xnee_data *xd, int deviceid)
 	  if ( dev_info[i].id  == deviceid) 
 	    {
 	      dev_pointer = i; 
-	      xdevice = XOpenDevice(xd->data, dev_info[dev_pointer].id);
+	      xdevice = XOpenDevice(xd->fake, dev_info[dev_pointer].id);
 	      xd->xi_data.xi_devices[deviceid].device=xdevice;
 	      break;
 	    }
@@ -134,7 +138,7 @@ xnee_get_xinput_device(xnee_data *xd, int deviceid)
       XFreeDeviceList(dev_info);
     }
 
-
+  xnee_verbose((xd, "<---  xnee_get_xinput_device\n"));
   
   /* we may return NULL, so make sure to check */
   return xd->xi_data.xi_devices[deviceid].device;
