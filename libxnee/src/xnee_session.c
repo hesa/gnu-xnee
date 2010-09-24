@@ -410,7 +410,7 @@ xnee_init(xnee_data* xd)
   xd->res_info.y_offset = 0;
 
   xnee_disable_xinput(xd);
-
+  xnee_init_xinput(xd);
 
   /* Init Recording variables
    * Since those are used when recording and replaying. */
@@ -420,6 +420,8 @@ xnee_init(xnee_data* xd)
   XNEE_RETURN_IF_ERR(ret);
 
   xnee_set_x_server_version(xd);
+
+  xnee_set_replay_backend(xd, XNEE_REPLAY_XNEE);
 
   /* Set the signal handler the libxnee's built in */ 
   (void) signal (SIGINT, signal_handler);
