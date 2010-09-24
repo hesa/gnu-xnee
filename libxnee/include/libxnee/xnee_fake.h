@@ -44,6 +44,10 @@ xnee_reset_fake( xnee_data *xd);
 
 #define xnee_fake_xi_button_event(xd, button, bo , dtime, deviceid) xnee_fake_button_event_impl (xd, button, bo , dtime, deviceid) 
 
+#define xnee_fake_key_event(xd, key, bo , dtime)              xnee_fake_key_event_impl (xd, key, bo , dtime, 0) 
+
+#define xnee_fake_xi_key_event(xd, key, bo , dtime, deviceid) xnee_fake_key_event_impl (xd, key, bo , dtime, deviceid) 
+
 
 /**
  * Sends a faked moton event to the display in the distribution list as found in xd.
@@ -89,10 +93,15 @@ xnee_fake_button_event_impl (xnee_data* xd,
  * @param keycode  keycode of the event to be faked
  * @param bo       is it a press or a release
  * @param dtime    how long before the faking shall take place
+ * @param deviceid Id of the device (XInput extension)
  * @return int     XNEE_OK on success.
  */
 int 
-xnee_fake_key_event  (xnee_data* xd, int keycode, Bool bo, int dtime);
+xnee_fake_key_event_impl  (xnee_data* xd, 
+			   int  keycode, 
+			   Bool bo, 
+			   int  dtime,
+			   int  deviceid);
 
 
 /**
