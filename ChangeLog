@@ -1,5 +1,16 @@
 2010-09-24  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_expr.c (xnee_expression_handle_prim_sub): 
+	Storing of time altered to work with xi and forced core replay
+	Discard xi events if forced core replay
+
+	* libxnee/src/xnee_fake.c (xnee_fake_button_event_impl): 
+	Storing last motion event's X and Y coords for use in coming calls
+	to xi fake button
+
+	* libxnee/src/xnee_xinput.c (xnee_get_xinput_device): 
+	Using fake display when listing and setting up xi devices
+
 	* libxnee/test/libtest.c: 
 	Added (c) notice
 
