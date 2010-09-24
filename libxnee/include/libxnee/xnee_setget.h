@@ -858,4 +858,10 @@ xnee_set_replay_backend_name(xnee_data *xd, char *replay_backend);
 
 #define xnee_is_swinput_playback(xd) (xd->replay_backend == XNEE_REPLAY_SWINPUT)
 
+int
+xnee_set_forced_core_device_events(xnee_data *xd);
+
+int
+xnee_unset_forced_core_device_events(xnee_data *xd);
+
 #endif /* XNEE_SETGET_H */ 
