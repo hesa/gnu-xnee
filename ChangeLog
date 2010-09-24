@@ -1,3 +1,18 @@
+2010-09-24  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee.h: 
+	Added vars for replay to xi structs
+
+	* libxnee/include/libxnee/xnee_fake.h: 
+	Changed fake button fun to macro
+	Added fun to fake xi buttons
+
+	* libxnee/include/libxnee/xnee_xinput.h: 
+	Added funs to init Xnee's XInput stuff (no device init)
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+	Added funs to (un)set forced code device replay
+
 2010-09-23  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_strings.c: 
