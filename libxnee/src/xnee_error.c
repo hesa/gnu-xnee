@@ -231,6 +231,13 @@ char error_descr_solut[128][256] =
     "Something went wrong when executing a cli command to an option",
     "Most likely NOT an error in " PACKAGE,
 
+    /* XNEE_XINPUT_EXTENSION_FAILURE    */
+    "Something went wrong when initializing XInput",
+    "Most likely you don't have XInput enabled in your X server" ,
+
+    /*     XNEE_REPLAY_BACKEND_FAILURE   */
+    "Someone requested Xnee to use a replay backend that does not exist",
+    "Most likely this is an error inside " PACKAGE ", please report this as a bug",
 
    /* XNEE_LAST_ERROR */
     "Last error",
