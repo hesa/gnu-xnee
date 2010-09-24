@@ -1,5 +1,8 @@
 2010-09-24  Henrik Sandklef  <hesa@sandklef.com>
 
+	* NEWS: 
+        Notes from ChangeLog turned into (not yet properly) commented notes
+
 	* libxnee/include/libxnee/xnee_fake.h: 
 	Changed fake key fun to macro
 	Added fun to fake xi key
@@ -45,7 +48,7 @@
 	Temp. disabling check for screen 
 
 	* libxnee/src/xnee_replay.c: 
-	Restructured duplcate code (new static fun
+	Restructured duplicate code (new static fun
 	xnee_replay_update_dev_ctr)
 	Added support for xi buttons
 
