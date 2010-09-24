@@ -225,25 +225,21 @@ xnee_record_handle_event_printer(xnee_data * xd,
 	}
       break;
     case ButtonPress:
-#define HIDE_NORMAL_DEV_EVS_IF_XI(xd) if ( xnee_has_xinput(xd)) fprintf (out,"#")
-
-      HIDE_NORMAL_DEV_EVS_IF_XI(xd);
       fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
 	       event_type,
 	       xrec_data->event.u.u.detail,
 	       xrecintd->server_time
 	       );
-      ret = xnee_fake_button_event (xd, (int)xrec_data->event.u.u.detail , True, CurrentTime);
+      ret = xnee_fake_button_event(xd, (int)xrec_data->event.u.u.detail , True, CurrentTime);
       XNEE_RETURN_IF_ERR(ret);
       break;
     case ButtonRelease:
-      HIDE_NORMAL_DEV_EVS_IF_XI(xd);
       fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
 	       event_type,
 	       xrec_data->event.u.u.detail,
 	       xrecintd->server_time
 	       );
-      ret = xnee_fake_button_event (xd,  (int)xrec_data->event.u.u.detail, False, CurrentTime);
+      ret = xnee_fake_button_event(xd,  (int)xrec_data->event.u.u.detail, False, CurrentTime);
       XNEE_RETURN_IF_ERR(ret);
       
       break;
@@ -252,32 +248,33 @@ xnee_record_handle_event_printer(xnee_data * xd,
       ret = xnee_get_screen_nr(xd, 
 			       xd->data,
 			       xrec_data->event.u.keyButtonPointer.root);
-      /*
-
-      if (ret<0)
+      if (0)
 	{
-	  return XNEE_SCREEN_MISSING;
+	  /* Discarding core event that seems to have come from XI */
+	  /* ... anyhow, it's recorded as an XI event  */
+	  ret = XNEE_OK;
 	}
-      */
-      screen = ret;
-      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
-      HIDE_NORMAL_DEV_EVS_IF_XI(xd);
-      fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
-	       event_type,
-	       xrec_data->event.u.keyButtonPointer.rootX,
-	       xrec_data->event.u.keyButtonPointer.rootY,
-	       screen,
-	       xrecintd->server_time
-	       );
-      
-      
-      xd->xnee_info.last_motion = True ;
-      ret = xnee_fake_motion_event (xd,
-				    screen, 
-				    xrec_data->event.u.keyButtonPointer.rootX, 
-				    xrec_data->event.u.keyButtonPointer.rootY, 
-				    CurrentTime);
-      XNEE_RETURN_IF_ERR(ret);
+      else
+	{
+	  screen = ret;
+	  do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
+	  fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
+		   event_type,
+		   xrec_data->event.u.keyButtonPointer.rootX,
+		   xrec_data->event.u.keyButtonPointer.rootY,
+		   screen,
+		   xrecintd->server_time
+		   );
+	  
+	  
+	  xd->xnee_info.last_motion = True ;
+	  ret = xnee_fake_motion_event (xd,
+					screen, 
+					xrec_data->event.u.keyButtonPointer.rootX, 
+					xrec_data->event.u.keyButtonPointer.rootY, 
+					CurrentTime);
+	  XNEE_RETURN_IF_ERR(ret);
+	}
       
       break;
     case CreateNotify:
