@@ -211,8 +211,17 @@ xnee_expression_handle_replay(xnee_data *xd,
   int dummy3;
 
   if (!strncmp("0",tmp,1))  /* EVENT */
-    {    
-      xindata->oldtime = xindata->newtime ;
+    { 
+      unsigned long tmp_time; 
+      int last_type;
+      int last_x;
+      int last_y;
+
+      tmp_time = xindata->newtime;
+      last_type=xindata->u.event.type;
+      last_x=xindata->u.event.x;
+      last_y=xindata->u.event.y;
+
       ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu",
 		   &xindata->type, 
 		   &xindata->u.event.type, 
@@ -227,6 +236,21 @@ xnee_expression_handle_replay(xnee_data *xd,
 	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
 	  ret = 0 ;
 	}   
+      
+      /* If the recorded sessions file has been recorded
+	 with XI enabled, we get one extra Motion event
+	 which will ¤% up the calc sleep funs: 
+	 If so: discard it */
+      if ( (xindata->u.event.screen_nr >= 0 ) && 
+	   (xindata->u.event.screen_nr < 1000))
+	{
+	  xindata->oldtime = tmp_time ;
+	}
+      else
+	{
+	  xindata->newtime = tmp_time ;
+	}
+      
     }   
   else if (!strncmp("1",tmp,1))  /* REQUEST */
     {
@@ -269,43 +293,49 @@ xnee_expression_handle_replay(xnee_data *xd,
     }
   else if (!strncmp("6",tmp,1))    /* XInput Device (master) */
     {
-      xindata->oldtime = xindata->newtime ;
-      ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
-		   &xindata->type, 
-		   &xindata->u.xievent.type, 
-		   &xindata->u.xievent.x,
-		   &xindata->u.xievent.y, 
-		   &xindata->u.xievent.button,
-		   &xindata->u.xievent.keycode, 
-		   &xindata->u.xievent.screen_nr,
-		   &xindata->newtime,
-		   &xindata->u.xievent.deviceid,
-		   xindata->u.xievent.name);
-      if (ret < 10)
+      if ( ! xnee_is_forced_core_device_events(xd))
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
-	  ret = 0;
-	} 
+	  xindata->oldtime = xindata->newtime ;
+	  ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
+		       &xindata->type, 
+		       &xindata->u.xievent.type, 
+		       &xindata->u.xievent.x,
+		       &xindata->u.xievent.y, 
+		       &xindata->u.xievent.button,
+		       &xindata->u.xievent.keycode, 
+		       &xindata->u.xievent.screen_nr,
+		       &xindata->newtime,
+		       &xindata->u.xievent.deviceid,
+		       xindata->u.xievent.name);
+	  if (ret < 10)
+	    {
+	      (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	      ret = 0;
+	    } 
+	}
     }
   else if (!strncmp("7",tmp,1))  /* XInput Device (slave) */
     {
-      xindata->oldtime = xindata->newtime ;
-      ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
-		   &xindata->type, 
-		   &xindata->u.xievent.type, 
-		   &xindata->u.xievent.x,
-		   &xindata->u.xievent.y, 
-		   &xindata->u.xievent.button,
-		   &xindata->u.xievent.keycode, 
-		   &xindata->u.xievent.screen_nr,
-		   &xindata->newtime,
-		   &xindata->u.xievent.deviceid,
-		   xindata->u.xievent.name);
-      if (ret < 10)
+      if ( ! xnee_is_forced_core_device_events(xd))
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
-	  ret = 0;
-	} 
+	  xindata->oldtime = xindata->newtime ;
+	  ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
+		       &xindata->type, 
+		       &xindata->u.xievent.type, 
+		       &xindata->u.xievent.x,
+		       &xindata->u.xievent.y, 
+		       &xindata->u.xievent.button,
+		       &xindata->u.xievent.keycode, 
+		       &xindata->u.xievent.screen_nr,
+		       &xindata->newtime,
+		       &xindata->u.xievent.deviceid,
+		       xindata->u.xievent.name);
+	  if (ret < 10)
+	    {
+	      (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	      ret = 0;
+	    } 
+	}
     }  
   else 
     {
