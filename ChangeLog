@@ -1,3 +1,8 @@
+2010-09-25  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_fake.c: 
+	Removed set/unset of verbose mode
+
 2010-09-24  Henrik Sandklef  <hesa@sandklef.com>
 
 	* NEWS: 
