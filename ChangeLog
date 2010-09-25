@@ -1,3 +1,14 @@
+2010-09-26  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_xinput.c: 
+	Added empty stub for xi human print, if xi disabled
+
+2010-09-25  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_replay.c (xnee_replay_main_loop): 
+	* libxnee/src/xnee_fake.c (xnee_replay_event_handler_sleep_amt): 
+	Removed printf statements (used during devel)
+
 2010-09-25  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_fake.c: 
