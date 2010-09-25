@@ -171,12 +171,13 @@ xnee_replay_event_handler_sleep_amt(xnee_data* xd,
 				     record_first_diff ) ; 
     }
   
-  /*
     printf ("xnee_calc_sleep_amount : %lu : (%lu) : %lu :  %lu ===>  %d\n",     
-   	  last_diff, first_diff,  
-   	  record_last_diff, record_first_diff, 
-   	  sleep_amt);    
-  */  
+	    last_diff, 
+	    first_diff,  
+	    record_last_diff, 
+	    record_first_diff, 
+	    sleep_amt);
+    fflush(stdout);
   
   
 
@@ -215,6 +216,9 @@ xnee_replay_event_handler( xnee_data* xd,
 		KeyPress, 
 		KeyRelease));
   
+  printf ("EH 1.....\n");
+
+#ifdef XNEE_XINPUT_SUPPORT
   if ( xnee_is_forced_core_device_events(xd))
    {
       if ( xindata->type == XNEE_PROTO_XINPUT_EVENT_SLAVE )
@@ -223,10 +227,12 @@ xnee_replay_event_handler( xnee_data* xd,
 	}
       else
 	{
+#endif /* XNEE_XINPUT_SUPPORT*/
 	  /* If we use the last args to the XTestFakexxx functions
 	   * it is harder to synchronize .... 
 	   * XNEE_FAKE_SLEEP is a macro for usleep 
 	   */
+  printf ("EH 2.....\n");
 	  switch (xindata->u.event.type)
 	    {
 	    case KeyPress:
@@ -267,14 +273,13 @@ xnee_replay_event_handler( xnee_data* xd,
 	      x      = (int) xindata->u.event.x ; 
 	      y      = (int) xindata->u.event.y ; 
 
-	      if ( (screen >= 0 ) && (screen < 1000))
+	      if (xnee_is_screen_ok(xd, screen))
 		{
 		  /* xnee_set_verbose(xd); */
 		  sleep_amt = xnee_replay_event_handler_sleep_amt(xd, 
 								  xindata, 
 								  last_elapsed,
 								  0);
-		  
 		  /*xnee_unset_verbose(xd); */
 		  xnee_fake_motion_event (xd,
 					  screen,
@@ -298,6 +303,7 @@ xnee_replay_event_handler( xnee_data* xd,
 	      return_value= XNEE_NOT_REPLAYABLE;
 	      break;
 	    }
+#ifdef XNEE_XINPUT_SUPPORT
 	}
     }
   else
@@ -355,6 +361,7 @@ xnee_replay_event_handler( xnee_data* xd,
 	  ;
 	}
     }
+#endif /* XNEE_XINPUT_SUPPORT*/
   
   if (return_value==0)
     {
@@ -382,8 +389,12 @@ int
 xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int deviceid)
 {
   int i=0;
+
   int size= xd->distr_list_size;
 
+#ifdef XNEE_XINPUT_SUPPORT
+	  XDevice *xdevice;
+#endif /* XNEE_XINPUT_SUPPORT*/
 
   if (!xnee_is_recorder (xd))
     {
@@ -394,7 +405,7 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
 	}
       else if (deviceid != 0 )
 	{
-	  XDevice *xdevice;
+#ifdef XNEE_XINPUT_SUPPORT
 	 
 	  xdevice = xnee_get_xinput_device(xd, deviceid);
 
@@ -409,9 +420,12 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
 				  0,
 				  1);
 
+#endif /* XNEE_XINPUT_SUPPORT*/
 	}
       else
 	{
+	  printf ("fake key %d   in %d\n",
+		  keycode, dtime);
 	  xnee_fake_sleep (dtime);
 	  xnee_verbose((xd, "XTestFakeKeyEvent (%d, %d, %d, %d ))\n",
 			(int) xd->fake, 
@@ -520,6 +534,10 @@ xnee_fake_button_event_impl (xnee_data* xd,
   int i=0;
   int size= xd->distr_list_size;
   
+#ifdef XNEE_XINPUT_SUPPORT
+	  XDevice *xdevice;
+#endif /* XNEE_XINPUT_SUPPORT*/
+
   if (!xnee_is_recorder (xd))
     {
       if (xnee_is_swinput_playback(xd))
@@ -529,6 +547,7 @@ xnee_fake_button_event_impl (xnee_data* xd,
 	}
       else if (deviceid != 0 )
 	{
+#ifdef XNEE_XINPUT_SUPPORT
 	  XDevice *xdevice;
 	 
 	  xdevice = xnee_get_xinput_device(xd, deviceid);
@@ -541,6 +560,7 @@ xnee_fake_button_event_impl (xnee_data* xd,
 				     xnee_xi_last_know_pointer_pos,
 				     2,
 				     1);
+#endif /* XNEE_XINPUT_SUPPORT*/
 	}
       else
 	{
@@ -591,7 +611,12 @@ xnee_fake_motion_event_impl (xnee_data* xd,
   int size= xd->distr_list_size;
   int new_x;
   int new_y;
+#ifdef XNEE_XINPUT_SUPPORT
+  int axes[2];
+  XDevice *xdevice;
+#endif /* XNEE_XINPUT_SUPPORT*/
 
+  printf ("fake motion.....\n");
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   xnee_verbose((xd, "---  delay = %d\n", (int)dtime));
 
@@ -616,6 +641,7 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 			(int) new_y,
 			0));
 
+	  printf ("fake motion.....\n");
 	  XTestFakeMotionEvent(xd->fake, 
 			       screen, 
 			       new_x, 
@@ -624,11 +650,9 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 	}
       else
 	{
-	  int axes[2];
+#ifdef XNEE_XINPUT_SUPPORT
 	  axes[0] = new_x;
 	  axes[1] = new_y;
-	  XDevice *xdevice;
-	  
 	  xnee_verbose((xd, "---  xi find device\n"));
 	 
 	  xdevice = xnee_get_xinput_device(xd, deviceid);
@@ -662,6 +686,7 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 				     axes,
 				     2,
 				     1);
+#endif /* XNEE_XINPUT_SUPPORT*/
 	}
       
       for (i=0; i<size ; i++)
