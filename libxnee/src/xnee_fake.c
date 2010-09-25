@@ -396,10 +396,8 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
 	{
 	  XDevice *xdevice;
 	 
-	  xnee_set_verbose(xd);
 	  xdevice = xnee_get_xinput_device(xd, deviceid);
 
-	  xnee_unset_verbose(xd);
 	  xnee_fake_sleep (dtime); 
 	  
 
@@ -432,8 +430,8 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
 			    (int) bo, 
 			    (int) dtime));
 	      XTestFakeKeyEvent (xd->distr_list[i].dpy, keycode, bo, dtime);
+	      XFlush (xd->distr_list[i].dpy);
 	    }
-	  XFlush (xd->distr_list[i].dpy);
 	}
     }
   xnee_verbose((xd,"\n\n\n"));
