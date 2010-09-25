@@ -612,7 +612,7 @@ xnee_is_screen_ok(xnee_data *xd, int screen)
   if ( (screen >= 0 )  && 
        (screen < 100))
     {
-      ret = 0;
+      ret = 1;
     }
   else 
     {
