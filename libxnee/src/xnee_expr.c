@@ -217,7 +217,11 @@ xnee_expression_handle_replay(xnee_data *xd,
       int last_x;
       int last_y;
 
+#ifdef XNEE_XINPUT_SUPPORT
       tmp_time = xindata->newtime;
+#else
+      xindata->oldtime = xindata->newtime ;
+#endif /* XNEE_XINPUT_SUPPORT */
       last_type=xindata->u.event.type;
       last_x=xindata->u.event.x;
       last_y=xindata->u.event.y;
@@ -236,13 +240,13 @@ xnee_expression_handle_replay(xnee_data *xd,
 	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
 	  ret = 0 ;
 	}   
+#ifdef XNEE_XINPUT_SUPPORT
       
       /* If the recorded sessions file has been recorded
 	 with XI enabled, we get one extra Motion event
 	 which will ¤% up the calc sleep funs: 
 	 If so: discard it */
-      if ( (xindata->u.event.screen_nr >= 0 ) && 
-	   (xindata->u.event.screen_nr < 1000))
+      if (xnee_is_screen_ok(xd, xindata->u.event.screen_nr))
 	{
 	  xindata->oldtime = tmp_time ;
 	}
@@ -250,6 +254,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 	{
 	  xindata->newtime = tmp_time ;
 	}
+#endif /* XNEE_XINPUT_SUPPORT */
       
     }   
   else if (!strncmp("1",tmp,1))  /* REQUEST */
