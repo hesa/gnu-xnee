@@ -564,7 +564,7 @@ xnee_record_from_data_display(xnee_data *xd)
       
     }
 
-  return 1 ;
+  return ret_val ;
   //ret_val;
 }
 
@@ -600,6 +600,37 @@ xnee_get_display_for_recordcontext(xnee_data *xd)
       context_display = xd->control ;
     }
   return context_display;
+}
+
+
+int
+xnee_is_screen_ok(xnee_data *xd, int screen)
+{
+  int ret;
+
+  ret = 0 ;
+  if ( (screen >= 0 )  && 
+       (screen < 100))
+    {
+      ret = 0;
+    }
+  else 
+    {
+      if ( (xd != NULL) && (xd->x_vendor_name != NULL ) )
+	{
+	  
+	  if (strstr(xd->x_vendor_name, "Nokia") )
+	    {
+	      if ( ( xd->x_version_major == 1 ) &&
+		   ( xd->x_version_minor >= 1 ) )
+		{
+		  ret = 1;
+		}
+	    }
+	}
+    }
+  
+  return ret ;
 }
 
 
