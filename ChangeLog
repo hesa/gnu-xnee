@@ -1,5 +1,15 @@
 2010-09-26  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_expr.c (xnee_expression_handle_project): 
+	Better support to handle strangely recorded screen nr
+	More fixes to ifdef away xi (N900)
+
+	* libxnee/src/xnee_fake.c: 
+	More fixes to ifdef away xi (N900)
+
+	* libxnee/src/xnee_utils.c (xnee_is_screen_ok): 
+	New fun to handle strangely recorded screen nr
+
 	* libxnee/src/xnee_xinput.c: 
 	Added empty stub for xi human print, if xi disabled
 
