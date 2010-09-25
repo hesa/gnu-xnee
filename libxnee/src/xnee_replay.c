@@ -517,7 +517,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		  break;
 
 		default:
-		  fprintf(stderr, "def branch\n");
 		  xnee_verbose((xd, 
 				"xnee_replay_MainReplayLoop: Unknown type \n"));
 		  break;
@@ -862,6 +861,7 @@ xnee_replay_init          (xnee_data* xd)
   xd->meta_data.sum_min=0;
 
   xd->first_read_time = 0;
+
 
   if ( xnee_no_rep_resolution(xd) == 0 )
   {
