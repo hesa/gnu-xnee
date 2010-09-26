@@ -204,7 +204,6 @@ xnee_replay_buffer_handler (xnee_data* xd,
       return;
     }
    */
-
       
   xnee_verbose((xd,"---> xnee_replay_buffer_handler "));
   if (rec_or_rep==XNEE_RECEIVED) 
@@ -236,6 +235,15 @@ xnee_replay_buffer_handler (xnee_data* xd,
 	    ( data_type == XNEE_EVENT ) && 
 	    ( data_nr   <= ButtonRelease ) ))
 	{
+	    if (xnee_get_xinput_event_base(xd->fake) > 0)
+	      {
+		if (( (data_nr - xnee_get_xinput_event_base(xd->fake)) >= 0 ) && 
+		    ( (data_nr - xnee_get_xinput_event_base(xd->fake)) <= MotionNotify ) && 
+		    xnee_is_replayer(xd))
+		  {
+		    return;
+		  }
+	      }
 	    if ( ( data_nr >= KeyPress )
 		 && 
 		 ( data_nr <= MotionNotify )
@@ -251,7 +259,6 @@ xnee_replay_buffer_handler (xnee_data* xd,
 	      return;
 
 	    }
-	    
 	  if (data_nr==161)
 	    {
 	      fprintf (stderr, 
@@ -331,6 +338,7 @@ xnee_replay_buffer_handler (xnee_data* xd,
        */
       xd->data_buffer[data_type][data_nr]++;
       xd->meta_data.total_diff++;
+
       xd->meta_data.sum_max++;
       xd->meta_data.sum_min++;
       
