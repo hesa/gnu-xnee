@@ -149,28 +149,32 @@ xnee_get_xinput_event_base(Display *dpy)
 {
   int ret;
   int ext_op;
-  int ext_fi_ev;
+  static int ext_fi_ev = 0 ;
   int ext_fi_er;
   
-  if ( dpy == NULL )
+  if ( ext_fi_ev == 0)
     {
-      dpy = XOpenDisplay(NULL);
-    }
-  if ( dpy == NULL )
-    {
-      return -1;
-    }
-  ret = XQueryExtension(dpy, 
-			XNEE_XINPUT_EXTENSION_NAME, 
-			&ext_op, 
-			&ext_fi_ev, 
-			&ext_fi_er);
-  if ( ! ret )
-    {
-      return -1;
+
+      if ( dpy == NULL )
+	{
+	  dpy = XOpenDisplay(NULL);
+	}
+      if ( dpy == NULL )
+	{
+	  return -1;
+	}
+      ret = XQueryExtension(dpy, 
+			    XNEE_XINPUT_EXTENSION_NAME, 
+			    &ext_op, 
+			    &ext_fi_ev, 
+			    &ext_fi_er);
+      if ( ! ret )
+	{
+	  return -1;
+	}
     }
   return ext_fi_ev;
-}
+    }
 
 
 int
