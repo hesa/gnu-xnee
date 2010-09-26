@@ -170,7 +170,8 @@ xnee_replay_event_handler_sleep_amt(xnee_data* xd,
 				     record_last_diff, 
 				     record_first_diff ) ; 
     }
-  
+
+  /*  
     printf ("xnee_calc_sleep_amount : %lu : (%lu) : %lu :  %lu ===>  %d\n",     
 	    last_diff, 
 	    first_diff,  
@@ -178,8 +179,7 @@ xnee_replay_event_handler_sleep_amt(xnee_data* xd,
 	    record_first_diff, 
 	    sleep_amt);
     fflush(stdout);
-  
-  
+  */
 
   return sleep_amt;
 }
@@ -216,7 +216,6 @@ xnee_replay_event_handler( xnee_data* xd,
 		KeyPress, 
 		KeyRelease));
   
-  printf ("EH 1.....\n");
 
 #ifdef XNEE_XINPUT_SUPPORT
   if ( xnee_is_forced_core_device_events(xd))
@@ -232,7 +231,6 @@ xnee_replay_event_handler( xnee_data* xd,
 	   * it is harder to synchronize .... 
 	   * XNEE_FAKE_SLEEP is a macro for usleep 
 	   */
-  printf ("EH 2.....\n");
 	  switch (xindata->u.event.type)
 	    {
 	    case KeyPress:
@@ -272,6 +270,7 @@ xnee_replay_event_handler( xnee_data* xd,
 	      screen = xindata->u.event.screen_nr ; 
 	      x      = (int) xindata->u.event.x ; 
 	      y      = (int) xindata->u.event.y ; 
+
 
 	      if (xnee_is_screen_ok(xd, screen))
 		{
@@ -424,8 +423,6 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
 	}
       else
 	{
-	  printf ("fake key %d   in %d\n",
-		  keycode, dtime);
 	  xnee_fake_sleep (dtime);
 	  xnee_verbose((xd, "XTestFakeKeyEvent (%d, %d, %d, %d ))\n",
 			(int) xd->fake, 
@@ -616,11 +613,9 @@ xnee_fake_motion_event_impl (xnee_data* xd,
   XDevice *xdevice;
 #endif /* XNEE_XINPUT_SUPPORT*/
 
-  printf ("fake motion.....\n");
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   xnee_verbose((xd, "---  delay = %d\n", (int)dtime));
 
-  
   if (!xnee_is_recorder (xd))
     {
       new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
@@ -641,7 +636,6 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 			(int) new_y,
 			0));
 
-	  printf ("fake motion.....\n");
 	  XTestFakeMotionEvent(xd->fake, 
 			       screen, 
 			       new_x, 
