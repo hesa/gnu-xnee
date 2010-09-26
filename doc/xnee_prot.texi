@@ -400,27 +400,23 @@ with integer milli seconds
 @tab not valid
 
 @item
-0,2,keycode,time
+0,2,void,void,void,keycode,screen,time
 @tab KeyPress on key with keycode, used to replay
 
 @item
-0,3,keycode,time
+0,3,void,void,void,keycode,screen,time
 @tab KeyRelease on key with keycode, used to replay
 
 @item
-0,4,button nr,time
+0,4,void,void,button nr,void,screen,time
 @tab ButtonPress on button nr, used to replay
 
 @item
-0,5,button nr,time
+0,5,void,void,button nr,void,screen,time
 @tab ButtonRelease on button nr, used to replay
 
 @item
-0,6,x,y,time
-@tab MotionNotify on poistion (x,y), used to replay
-
-@item
-0,7-XXX,time
+0,6,x,y,void,void,screen,time
 @tab MotionNotify on poistion (x,y), used to replay
 
 @item
@@ -435,6 +431,45 @@ with integer milli seconds
 3,error number,time
 @tab Recorded error, used during synchronisation 
 
+@item
+6,EB+2,void,void,void,keycode,screen,time
+@tab X Input (master) KeyPress on key with keycode, used to replay
+
+@item
+6,EB+3,void,void,void,keycode,screen,time
+@tab X Input (master) KeyRelease on key with keycode, used to replay
+
+@item
+6,EB+4,void,void,button nr,void,screen,time
+@tab X Input (master) ButtonPress on button nr, used to replay
+
+@item
+6,EB+5,void,void,button nr,void,screen,time
+@tab X Input (master) ButtonRelease on button nr, used to replay
+
+@item
+6,EB+6,x,y,void,void,screen,time
+@tab X Input (master) MotionNotify on poistion (x,y), used to replay
+
+@item
+6,EB+2,void,void,void,keycode,screen,time
+@tab X Input (slave) KeyPress on key with keycode, used to replay
+
+@item
+6,EB+3,void,void,void,keycode,screen,time
+@tab X Input (slave) KeyRelease on key with keycode, used to replay
+
+@item
+6,EB+4,void,void,button nr,void,screen,time
+@tab X Input (slave) ButtonPress on button nr, used to replay
+
+@item
+6,EB+5,void,void,button nr,void,screen,time
+@tab X Input (slave) ButtonRelease on button nr, used to replay
+
+@item
+6,EB+6,x,y,void,void,screen,time
+@tab X Input (slave) MotionNotify on poistion (x,y), used to replay
 
 @end multitable
 time is the time on the server the data was to the recording Xnee

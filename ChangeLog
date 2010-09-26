@@ -1,5 +1,11 @@
 2010-09-26  Henrik Sandklef  <hesa@sandklef.com>
 
+	* doc/xnee_prot.texi: 
+	Added notes on how XI events are stored in session file
+
+	* libxnee/src/xnee_utils.c (xnee_is_screen_ok):
+	Screen nr=0, should of course be an ok screen
+
 	* libxnee/src/xnee_expr.c (xnee_expression_handle_project): 
 	Better support to handle strangely recorded screen nr
 	More fixes to ifdef away xi (N900)
