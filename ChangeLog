@@ -1,5 +1,8 @@
 2010-09-26  Henrik Sandklef  <hesa@sandklef.com>
 
+	* configure.in: 
+	Bumping version to 3.06.95 (in preps for 3.07)
+
 	* doc/xnee_prot.texi: 
 	Added notes on how XI events are stored in session file
 
