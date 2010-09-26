@@ -1,6 +1,19 @@
 2010-09-26  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
+	Bumping version to 3.06.96 (in preps for 3.07)
+
+	* libxnee/src/xnee_fake.c: 
+	Removed printfs
+
+	* libxnee/src/xnee_xinput.c (xnee_get_xinput_event_base): 
+	Preventing more than XQueryExtension call
+	caching value
+
+	* libxnee/src/xnee_buffer.c (xnee_replay_buffer_handler): 
+	Fixed bug in sync buffer 
+
+	* configure.in: 
 	Bumping version to 3.06.95 (in preps for 3.07)
 
 	* doc/xnee_prot.texi: 
