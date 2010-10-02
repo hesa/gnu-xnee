@@ -1,3 +1,9 @@
+2010-10-02  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Adding "-ldl" to linker arg if needed
+	Adding check for XI functions
+
 2010-09-26  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
