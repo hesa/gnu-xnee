@@ -17,7 +17,15 @@ pnee_SOURCES = \
 	callbacks.c callbacks.h \
 	pnee_impl.c pnee_impl.h pnee_types.h 
 
-pnee_LDADD =  -L../../ -L../../libxnee/src $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   $(libgnomeui_LIBS) $(gtk_LIBS)
+
+if XNEE_XINPUT_SUPPORT
+XNEE_XINPUT_SUPPORT_FLAGS = -DXNEE_XINPUT_SUPPORT
+else
+XNEE_XINPUT_SUPPORT_FLAGS =
+endif
+
+
+pnee_LDADD =  -L../../ -L../../libxnee/src $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   $(libgnomeui_LIBS) $(gtk_LIBS)  ${XNEE_XINPUT_SUPPORT_FLAGS} 
 
 if BUILD_STATIC
 STATIC_FLAGS = -static
