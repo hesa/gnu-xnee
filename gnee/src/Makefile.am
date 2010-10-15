@@ -20,7 +20,13 @@ gnee_SOURCES = \
 	recordables.c recordables.h \
 	gnee_xnee.c gnee_xnee.h 
 
-gnee_CFLAGS = ${PEDANTIC_FLAGS} $(libgnomeui_CFLAGS) $(gtk_CFLAGS)
+if XNEE_XINPUT_SUPPORT
+XNEE_XINPUT_SUPPORT_FLAGS = -DXNEE_XINPUT_SUPPORT
+else
+XNEE_XINPUT_SUPPORT_FLAGS =
+endif
+
+gnee_CFLAGS = ${PEDANTIC_FLAGS} $(libgnomeui_CFLAGS) $(gtk_CFLAGS)  ${XNEE_XINPUT_SUPPORT_FLAGS} 
 AM_CFLAGS = ${PEDANTIC_FLAGS} 
 
 if BUILD_STATIC
@@ -30,18 +36,12 @@ STATIC_FLAGS =
 endif
 
 
-if XNEE_XINPUT_SUPPORT
-XNEE_XINPUT_SUPPORT_FLAGS = -DXNEE_XINPUT_SUPPORT
-else
-XNEE_XINPUT_SUPPORT_FLAGS =
-endif
-
 gnee_LDFLAGS =  $(STATIC_FLAGS) 
 
 gnee_LDADD =    \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
 	 ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)  \
-         $(libgnomeui_LIBS) $(gtk_LIBS)  ${XNEE_XINPUT_SUPPORT_FLAGS} 
+         $(libgnomeui_LIBS) $(gtk_LIBS) 
 
 
 

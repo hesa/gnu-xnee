@@ -9,13 +9,6 @@ INCLUDES = \
 
 PNEE=pnee
 noinst_PROGRAMS = $(PNEE)
-pnee_CFLAGS = -DHAVE_STDARG $(PANEL_FLAGS) -Wall -g -DPNEE_PIXDIR=\""$(datadir)/xnee/pixmaps"\" $(libgnomeui_CFLAGS) $(gtk_CFLAGS)
-pnee_SOURCES = \
-	main.c \
-	support.c support.h \
-	interface.c interface.h \
-	callbacks.c callbacks.h \
-	pnee_impl.c pnee_impl.h pnee_types.h 
 
 
 if XNEE_XINPUT_SUPPORT
@@ -24,8 +17,16 @@ else
 XNEE_XINPUT_SUPPORT_FLAGS =
 endif
 
+pnee_CFLAGS = -DHAVE_STDARG $(PANEL_FLAGS) -Wall -g -DPNEE_PIXDIR=\""$(datadir)/xnee/pixmaps"\" $(libgnomeui_CFLAGS) $(gtk_CFLAGS) ${XNEE_XINPUT_SUPPORT_FLAGS} 
+pnee_SOURCES = \
+	main.c \
+	support.c support.h \
+	interface.c interface.h \
+	callbacks.c callbacks.h \
+	pnee_impl.c pnee_impl.h pnee_types.h 
 
-pnee_LDADD =  -L../../ -L../../libxnee/src $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   $(libgnomeui_LIBS) $(gtk_LIBS)  ${XNEE_XINPUT_SUPPORT_FLAGS} 
+
+pnee_LDADD =  -L../../ -L../../libxnee/src $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   $(libgnomeui_LIBS) $(gtk_LIBS)  
 
 if BUILD_STATIC
 STATIC_FLAGS = -static
