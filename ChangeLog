@@ -1,3 +1,16 @@
+2010-10-15  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Updated version number to 3.07
+	Minor fixes when looking for gtk-config, dvipdf
+
+	* gnee/src/Makefile.am (gnee_LDADD): 
+	* pnee/src/Makefile.am (pnee_LDADD): 
+	Added ${XNEE_XINPUT_SUPPORT_FLAGS} to linker args
+
+	* libxnee/src/print.c (xnee_version): 
+	Added 2010 to (c) year
+
 2010-10-02  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
