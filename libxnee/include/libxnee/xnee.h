@@ -190,6 +190,7 @@ typedef struct _xinput_data
   int             nr_of_xi_devices;
   xinput_device   xi_devices[XNEE_NR_OF_XINPUT_DEVICES];
   int             forced_core_replay;
+  int             recording_enabled;
 } xinput_data;
 
 typedef struct _saved_xinput_event

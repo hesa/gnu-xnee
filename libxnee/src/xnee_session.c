@@ -409,7 +409,6 @@ xnee_init(xnee_data* xd)
   xd->res_info.x_offset = 0;
   xd->res_info.y_offset = 0;
 
-  xnee_disable_xinput(xd);
   xnee_init_xinput(xd);
 
   /* Init Recording variables
