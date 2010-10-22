@@ -1,4 +1,4 @@
-AC_INIT(Xnee,3.06.96,bug-xnee@gnu.org)
+AC_INIT(Xnee,3.07.90,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 AM_INIT_AUTOMAKE
 AB_INIT
@@ -31,8 +31,6 @@ LIBS="$LIBS $X_LIBS"
 AC_CHECK_LIB(c, dlopen, LIBDL="", [AC_CHECK_LIB(dl, dlopen, LIBDL="-ldl")])
 AC_CHECK_LIB(c, sem_init, LIBSEMA="CCC", [AC_CHECK_LIB(pthread, sem_init, LIBSEMA="-lpthread")])
 AC_CHECK_LIB(Xtst, XTestFakeMotionEvent, LIBXTST="-lXtst",[AC_CHECK_LIB(Xext,XTestFakeMotionEvent , LIBXTST="-lXext")])
-AC_CHECK_LIB(Xtst, XIQueryVersion, LIBXI="",[AC_CHECK_LIB(Xi, XIQueryVersion, LIBXI="-lXi")])
-AC_CHECK_HEADERS(X11/extensions/XInput2.h, HAS_XI2="true",HAS_XI2="false",)
 
 GENERATION_DIRS=""
 
@@ -242,8 +240,11 @@ else
 fi
 
 
+AM_CONDITIONAL(XNEE_XINPUT_SUPPORT, test x$use_xi2 = xtrue)
 if test x$use_xi2 = xtrue;
 then
+    AC_CHECK_LIB(Xtst, XIQueryVersion, LIBXI="",[AC_CHECK_LIB(Xi, XIQueryVersion, LIBXI="-lXi")])
+    AC_CHECK_HEADERS(X11/extensions/XInput2.h, HAS_XI2="true",HAS_XI2="false",)
     XNEE_XINPUT_SUPPORT_FLAGS=-DXNEE_XINPUT_SUPPORT
 else
     XNEE_XINPUT_SUPPORT_FLAGS= 
@@ -576,6 +577,10 @@ then
     AC_PATH_PROG(DVIPDF,dvipdf,,)
     check_doc_program "$DVIPDF" "dvipdf" "dvipdf"
 
+echo "======================== DVIPDF= $DVIPDF"	
+
+
+
     AC_PATH_PROG(PDF2PS,pdf2ps,,)
     check_doc_program "$PDF2PS" "pdf2ps" ""
 
@@ -824,13 +829,13 @@ then
     show_doc_program "$CONVERT" "convert"  "Can't convert image formats"
     show_doc_program "$TEXI2HTML" "texi2html"  "can not generate html pages"
 #	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
-    show_doc_program "$DVPDF" "dvipdf"   "can not generate pdf from dvi "
+    show_doc_program "$DVIPDF" "dvipdf"   "can not generate pdf from dvi "
     show_doc_program "$PS2PDF" "ps2pdf"  "can not generate pdf"
     show_doc_program "$EPSTOPDF" "epstopdf"  "can not generate pdf"
     show_doc_program "$CONVERT" "convert"  "can not generate convert between formats"
     show_doc_program "$MAKEINFO" "makeinfo"  "can not make info pages"
     show_doc_program "$PKGCFG"   "pkg-config"  "can not get meta info from installed packages"
-    show_doc_program "$GTKCFG"   "gtk-config"  "can not check for header files..."
+    show_doc_program "$GTKCONF"   "gtk-config"  "can not check for header files..."
 fi
 echo ""
 echo "   Building the following components "
