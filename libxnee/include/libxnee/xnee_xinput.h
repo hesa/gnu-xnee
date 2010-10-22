@@ -34,26 +34,21 @@
 #include <X11/extensions/XIproto.h>
 #endif /*  XNEE_XINPUT_SUPPORT */
 
-enum 
-  {
-    XNEE_XINPUT_DISABLED          = -1,
-    XNEE_XINPUT_WAITING           =  0,
-    XNEE_XINPUT_MOUSE_ENABLED     =  1, 
-    XNEE_XINPUT_KEYBOARD_ENABLED  =  2, 
-    XNEE_XINPUT_ENABLED           =  3
-  };
-
-
 
 #define xnee_disable_xinput(xd)  \
-  xd->xi_data.xinput_event_base=XNEE_XINPUT_DISABLED ; \
-  xd->xi_data.xinput_record_mouse=0;                   \
-  xd->xi_data.xinput_record_keyboard=0;
+  xd->xi_data.xinput_event_base      = 0 ; \
+  xd->xi_data.recording_enabled      = 0 ; \
+  xd->xi_data.xinput_record_mouse    = 0;                   \
+  xd->xi_data.xinput_record_keyboard = 0;
+
+#define xnee_xinput_disabled(xd)\
+  (xd->xi_data.recording_enabled != 1)
 
 #define xnee_xinput_request_mouse(xd)     \
   xd->xi_data.xinput_record_mouse=1;
 #define xnee_xinput_request_keyboard(xd)  \
   xd->xi_data.xinput_record_keyboard=1;
+
 #define xnee_xinput_mouse_requested(xd)   \
   (xd->xi_data.xinput_record_mouse==1)
 #define xnee_xinput_keyboard_requested(xd)\

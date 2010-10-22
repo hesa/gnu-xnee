@@ -39,11 +39,12 @@
 int
 xnee_init_xinput(xnee_data *xd)
 {
-  if ( (xd==NULL) || (xd->control==NULL) )
+  if ( xd==NULL )
     {
       return -1;
     }
   xd->xi_data.forced_core_replay = 0;
+  xd->xi_data.recording_enabled  = 1;
 }
 
 int
@@ -202,9 +203,21 @@ xnee_handle_xinput_event(xnee_data * xd,
 {
   static saved_xinput_event sxe;
   FILE *out ;
+
+  if  (xd == NULL ) 
+    {
+      return XNEE_NO_MAIN_DATA;
+    }
+
+
+  if (xnee_xinput_disabled(xd))
+    {
+      return XNEE_OK;
+    }
+
   out = xd->out_file;
   
-  
+
   
   /*
    * Are we using Xinput
@@ -315,6 +328,18 @@ xnee_handle_xinput_event_human(xnee_data * xd,
 {
   static saved_xinput_event sxe;
   FILE *out ;
+
+  if  (xd == NULL ) 
+    {
+      return XNEE_NO_MAIN_DATA;
+    }
+
+
+  if (xnee_xinput_disabled(xd))
+    {
+      return XNEE_OK;
+    }
+
   out = xd->out_file;
   
   /*
@@ -423,7 +448,7 @@ xnee_xinput_add_devices(xnee_data *xd)
   int ret ; 
   char buf[10];
 
-  if ( xd->xi_data.xinput_event_base == XNEE_XINPUT_DISABLED )
+  if ( xd->xi_data.xinput_event_base == 0 )
     {
       return XNEE_OK;
     }
