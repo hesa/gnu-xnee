@@ -1,4 +1,27 @@
+2010-10-23  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Bumped version to 3.07.90 (preps for 3.08)
+	Fixes for dvi to pdf program
+	Check for XI stuff only when XI is enabled
+
+	* cnee/src/Makefile.am: 
+	Cleaned up Makefile
+
+	* libxnee/include/libxnee/xnee.h: 
+	* libxnee/src/xnee_session.c: 
+	Removed disabling of xinput device by default
+	Added recording_enabled to xnee_data struct
+	
+	* libxnee/src/xnee_xinput.c: 
+	Fixes for --disable-xinput-events
+
 2010-10-15  Henrik Sandklef  <hesa@sandklef.com>
+
+	* gnee/src/Makefile.am: 
+	* pnee/src/Makefile.am: 
+	XNEE_XINPUT_SUPPORT_FLAGS is a flag for the compiler (not a linker),
+	changing accordingly
 
 	* configure.in: 
 	Updated version number to 3.07
