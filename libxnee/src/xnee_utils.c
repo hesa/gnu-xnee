@@ -507,6 +507,7 @@ xnee_record_from_data_display(xnee_data *xd)
   if ( (xd != NULL) && (xd->x_vendor_name != NULL ) )
     {
       
+
       /*
        *  Xorg
        */
@@ -521,7 +522,7 @@ xnee_record_from_data_display(xnee_data *xd)
 	       *  versions 1.4 - 1.7
 	       */
 	      if ( ( xd->x_version_minor >= 4 ) &&
-		   ( xd->x_version_minor <= 7 ) )
+		   ( xd->x_version_minor <= 10 ) )
 		{
 
 		  /*
@@ -536,10 +537,13 @@ xnee_record_from_data_display(xnee_data *xd)
 		  else
 		    {
 		  */
-		      ret_val = 1;
 		      /*
 		    }
 		      */
+		}
+	      else
+		{
+		  ret_val=1;
 		}
 	    }
 	}
@@ -561,7 +565,10 @@ xnee_record_from_data_display(xnee_data *xd)
 	      ret_val = 1;
 	    }
 	}
-      
+      else
+	{
+	  ;
+	}
     }
 
   return ret_val ;
