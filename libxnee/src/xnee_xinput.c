@@ -421,9 +421,10 @@ xnee_handle_xinput_event_human(xnee_data * xd,
 	    }
 	  
 	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
-	  fprintf (out, ",XInput Event=%s  Number=%d %s",
-		   xd->xi_data.xi_devices[e->deviceid].name,		  
-		   sxe.type);
+	  (void)xd->data_fp (xd->out_file,
+			     ",XInput Event=%s  Number=%d ",
+			     xd->xi_data.xi_devices[e->deviceid].name,
+			     sxe.type);
 	  (void)xd->data_fp (xd->out_file,"\n");
 
 	  sxe.x = 0;
