@@ -1,3 +1,22 @@
+2010-10-25  hesa  <hesa@sandklef.com>
+
+	* libxnee/src/print.c (xnee_print_distr_list): 
+	Printing display(s) as unsigned ints instead of ints
+
+	* libxnee/src/xnee_record.c: 
+	Setting rContext to 0 (instead of NULL)
+	Fixed some fprintf arg type casts
+
+	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
+	Extending fix for RECORD to be valid for newer Xorg servers
+
+	* libxnee/src/xnee_xinput.c (xnee_handle_xinput_event_human): 
+	Corrected faulty number of args to print function
+	Switched to using stored function (instead of fprintf directly)
+
+	* libxnee/include/libxnee/xnee.h: 
+	Changed type of time variable (saved_xinput_event) to Time
+
 2010-10-23  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
