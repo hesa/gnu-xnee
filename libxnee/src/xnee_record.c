@@ -800,8 +800,8 @@ xnee_has_record_extension(xnee_data *xd)
         ||
         (xd->control == NULL))
   {
-    fprintf(stderr, "cannot look for RECORD extension withou xnee_data or control display %d %d \n", 
-	    xd, xd->control);
+    fprintf(stderr, "cannot look for RECORD extension withou xnee_data or control display %u %u \n", 
+	    (unsigned int)xd, (unsigned)xd->control);
     return XNEE_RECORD_FAILURE;
   }
 
@@ -915,9 +915,9 @@ xnee_unsetup_recording(xnee_data *xd)
 
   if (xd->record_setup->rContext != 0)
     {
-      xnee_verbose((xd, "---  disabling context %d on %d \n", 
-		    (int)xd->record_setup->rContext, 
-		    context_display));
+      xnee_verbose((xd, "---  disabling context %u on %u \n", 
+		    (unsigned int)xd->record_setup->rContext, 
+		    (unsigned int)context_display));
   
       (void)XRecordDisableContext(xd->control, 
 				  xd->record_setup->rContext);
@@ -926,7 +926,7 @@ xnee_unsetup_recording(xnee_data *xd)
       (void)XRecordFreeContext(xd->control, 
 			       xd->record_setup->rContext);
 
-      xd->record_setup->rContext = NULL;
+      xd->record_setup->rContext = 0;
     }
 
 
