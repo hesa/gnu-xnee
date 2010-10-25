@@ -195,13 +195,13 @@ typedef struct _xinput_data
 
 typedef struct _saved_xinput_event
 {
-  int button;
-  int type;
-  int x;
-  int y;
-  int deviceid;
-  int detail;
-  int time;
+  int  button;
+  int  type;
+  int  x;
+  int  y;
+  int  deviceid;
+  int  detail;
+  Time time;
 } saved_xinput_event ;
 
 
