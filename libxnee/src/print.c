@@ -1036,8 +1036,8 @@ xnee_print_distr_list (xnee_data* xd, /*@null@*/ FILE *out)
     }
   for (i=0 ; i<(int)xd->distr_list_size ; i++)
     {
-      fprintf (out, "Distribution display[%d]=%d\n", 
-	       i, (int)xd->distr_list[i].dpy);
+      fprintf (out, "Distribution display[%d]=%u\n", 
+	       i, (unsigned int)xd->distr_list[i].dpy);
     }
   return (XNEE_OK);
 }
@@ -1778,9 +1778,9 @@ xnee_print_xnee_data(xnee_data *xd)
   fprintf (stderr, "xnee_data\n");
   fprintf (stderr, "  xd:          %u\n", (int)xd);
   fprintf (stderr, "  xd->data:    %u\n", (int)xd->data);
-  fprintf (stderr, "  xd->control: %u\n", (int)xd->control);
-  fprintf (stderr, "  xd->fake:    %u\n", (int)xd->fake);
-  fprintf (stderr, "  xd->grab:    %u\n", (int)xd->grab);
+  fprintf (stderr, "  xd->control: %x\n", (unsigned int)xd->control);
+  fprintf (stderr, "  xd->fake:    %x\n", (unsigned int)xd->fake);
+  fprintf (stderr, "  xd->grab:    %x\n", (unsigned int)xd->grab);
   return XNEE_OK;
 }
 
