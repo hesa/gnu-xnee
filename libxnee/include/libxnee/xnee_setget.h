@@ -850,6 +850,17 @@ xnee_set_no_feedback(xnee_data *xd);
 int
 xnee_has_xinput2(xnee_data *xd);
 
+
+int
+xnee_set_no_reparent_recording(xnee_data *xd);
+
+int
+xnee_unset_no_reparent_recording(xnee_data *xd);
+
+int
+xnee_is_no_reparent_recording(xnee_data *xd);
+
+
 int
 xnee_set_replay_backend(xnee_data *xd, int replay_backend);
 
