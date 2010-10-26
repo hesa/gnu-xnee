@@ -1,4 +1,27 @@
+2010-10-27  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee_session.h: 
+	Added prototype for: 
+  	  xnee_set_x_server_version(xnee_data *xd);
+
+	* libxnee/include/libxnee/xnee_xinput.h: 
+	Added prototype for: 
+  	  xnee_handle_xinput_event_human
+
+	* libxnee/include/libxnee/xnee_utils.h: 
+	Added prototype for: 
+	  xnee_is_screen_ok
+
 2010-10-26  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+	Added prototypes for: 
+	  xnee_set_no_reparent_recording
+	  xnee_unset_no_reparent_recording
+	  xnee_is_no_reparent_recording
+
+	* libxnee/include/libxnee/xnee_xinput.h: 
+	Added prototype for: xnee_set_x_server_version
 
 	* libxnee/src/xnee_alloc.c: 
 	#ifdef:ed (the very odd) NULL pointer check 
