@@ -206,10 +206,12 @@ xnee_expression_handle_replay(xnee_data *xd,
 			      xnee_intercept_data * xindata)
 {
   int ret = 0;
+#ifdef XNEE_XINPUT_SUPPORT
+  unsigned long tmp_time;  
+#endif /* XNEE_XINPUT_SUPPORT */
 
   if (!strncmp("0",tmp,1))  /* EVENT */
     { 
-/*       unsigned long tmp_time;  */
       int last_type;
       int last_x;
       int last_y;
