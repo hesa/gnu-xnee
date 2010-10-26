@@ -1,3 +1,55 @@
+2010-10-26  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_alloc.c: 
+	#ifdef:ed (the very odd) NULL pointer check 
+
+	* libxnee/src/print.c: 
+	fprintf pointers with "%p" instead of "%d" or "%u"
+	Added inclusion of xnee_xinput.h
+	
+	* libxnee/src/xnee_xinput.c: 
+	Added server_time to args when xinput2 disabled
+	
+	* libxnee/src/xnee_utils.c: 
+	Removed old crappy commented out code
+	
+	* libxnee/src/xnee_setget.c: 
+	* libxnee/src/xnee_session.c: 
+	* libxnee/src/xnee_resource.c: 
+	* libxnee/src/xnee_replay.c: 
+	* libxnee/src/xnee_record.c: 
+	* libxnee/src/xnee_range.c: 
+	* libxnee/src/xnee_keysym.c: 
+	fprintf pointers with "%p" instead of "%d" or "%u"
+
+	* libxnee/src/xnee_window.c: 
+	* libxnee/src/xnee_plugin.c: 
+	* libxnee/src/xnee_grab.c: 
+	* libxnee/src/xnee_fileop.c: 
+	Added 2010 to (c) year
+	fprintf pointers with "%p" instead of "%d" or "%u"
+
+	* libxnee/src/xnee_fake.c: 
+	#ifdef:ed away code
+	fprintf pointers with "%p" instead of "%d" or "%u"
+
+	* libxnee/src/xnee_expr.c: 
+	#ifdef:ed away code
+	Removed unused variables
+	
+	* libxnee/src/xnee_display.c: 
+	fprintf pointers with "%p" instead of "%d" or "%u"
+
+	* libxnee/src/xnee_buffer.c: 
+	#ifdef:ed away code
+	Added 2010 to (c) year
+
+	* libxnee/src/xnee_xinput.c: 
+	fprintf pointers with "%p" instead of "%d" or "%u"
+
+	* libxnee/src/Makefile.am (PEDANTIC_FLAGS): 
+	Added  -fno-strict-aliasing -Wno-unused-parameter  
+
 2010-10-25  hesa  <hesa@sandklef.com>
 
 	* libxnee/src/print.c (xnee_print_distr_list): 
