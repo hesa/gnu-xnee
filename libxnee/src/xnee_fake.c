@@ -36,11 +36,14 @@
 #include "libxnee/xnee_keysym.h"
 #include "libxnee/xnee_display.h"
 #include "libxnee/xnee_xinput.h"
+#include "libxnee/xnee_utils.h"
 
 
 static int loop_nr = 0;
 
+#ifdef XNEE_XINPUT_SUPPORT
 static int xnee_xi_last_know_pointer_pos[]={0,0};
+#endif /* XNEE_XINPUT_SUPPORT */
 
 int
 xnee_reset_fake( xnee_data *xd)
@@ -204,7 +207,7 @@ xnee_replay_event_handler( xnee_data* xd,
   int y ; 
 
 
-  xnee_verbose((xd, "---  xnee_replay_event_handler fake=%d\n ", (int)xd->fake));
+  xnee_verbose((xd, "---  xnee_replay_event_handler fake=%p\n ", (void*)xd->fake));
   XTestGrabControl (xd->fake, True); 
   xnee_verbose((xd, "---  xnee_replay_event_handler 0\n "));
   XFlush(xd->fake);                 
@@ -424,8 +427,8 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
       else
 	{
 	  xnee_fake_sleep (dtime);
-	  xnee_verbose((xd, "XTestFakeKeyEvent (%d, %d, %d, %d ))\n",
-			(int) xd->fake, 
+	  xnee_verbose((xd, "XTestFakeKeyEvent (%p, %d, %d, %d ))\n",
+			(void*) xd->fake, 
 			(int) keycode, 
 			(int) bo, 
 			(int) dtime));
@@ -435,8 +438,8 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
 	  for (i=0; i<size ; i++)
 	    {
 	      XTestGrabControl (xd->distr_list[i].dpy, True); 
-	      xnee_verbose((xd, "XTestFakeKeyEvent (%d, %d, %d, %d )) **\n",
-			    (int) xd->distr_list[i].dpy, 
+	      xnee_verbose((xd, "XTestFakeKeyEvent (%p, %d, %d, %d )) **\n",
+			    (void*) xd->distr_list[i].dpy, 
 			    (int) keycode, 
 			    (int) bo, 
 			    (int) dtime));
@@ -478,8 +481,8 @@ xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
 			       0);
 	}
       xnee_fake_sleep (dtime);
-      xnee_verbose((xd, "XTestFakeKeyEvent (%d, %d, %d, %d ))\n",
-		    (int) xd->fake, 
+      xnee_verbose((xd, "XTestFakeKeyEvent (%p, %d, %d, %d ))\n",
+		    (void*) xd->fake, 
 		    (int) xss->kc.kc, 
 		    (int) bo, 
 		    (int) dtime));
@@ -498,8 +501,8 @@ xnee_fake_key_mod_event (xnee_data* xd, xnee_script_s *xss, Bool bo, int dtime)
 			       True, 
 			       0);
 	}
-      xnee_verbose((xd, "XTestFakeKeyEvent (%d, %d, %d, %d )) **\n",
-		    (int) xd->distr_list[i].dpy, 
+      xnee_verbose((xd, "XTestFakeKeyEvent (%p, %d, %d, %d )) **\n",
+		    (void*) xd->distr_list[i].dpy, 
 		    (int) xss->kc.kc, 
 		    (int) bo, 
 		    (int) dtime));
@@ -562,8 +565,8 @@ xnee_fake_button_event_impl (xnee_data* xd,
       else
 	{
 	  xnee_fake_sleep (dtime); 
-	  xnee_verbose((xd, "XTestFakeButtonEvent (%d, %d, %d, %d)) \n",
-			(int) xd->fake, 
+	  xnee_verbose((xd, "XTestFakeButtonEvent (%p, %d, %d, %d)) \n",
+			(void*) xd->fake, 
 			(int) button, 
 			(int) bo, 
 			(int) dtime));
@@ -573,8 +576,8 @@ xnee_fake_button_event_impl (xnee_data* xd,
       for (i=0; i<size ; i++)
 	{
 	  XTestGrabControl (xd->distr_list[i].dpy, True); 
-	  xnee_verbose((xd, "XTestFakeButtonEvent (%d, %d, %d, %d))  **\n",
-			(int) xd->distr_list[i].dpy, 
+	  xnee_verbose((xd, "XTestFakeButtonEvent (%p, %d, %d, %d))  **\n",
+			(void*) xd->distr_list[i].dpy, 
 			(int) button, 
 			(int) bo, 
 			(int) dtime));
@@ -629,8 +632,8 @@ xnee_fake_motion_event_impl (xnee_data* xd,
       else if (deviceid == 0 )
 	{
 	  xnee_fake_sleep (dtime);
-	  xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))\n",
-			(int) xd->fake, 
+	  xnee_verbose((xd, "XTestFakeMotionEvent (%p, %d, %d, %d, %d))\n",
+			(void*) xd->fake, 
 			(int) screen, 
 			(int) new_x,
 			(int) new_y,
@@ -687,8 +690,8 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 	{
 	  /*       XTestGrabControl (xd->distr_list[i].dpy, True);  */
 	  
-	  xnee_verbose((xd, "XTestFakeMotionEvent (%d, %d, %d, %d, %d))  **\n",
-			(int) xd->distr_list[i].dpy, 
+	  xnee_verbose((xd, "XTestFakeMotionEvent (%p, %d, %d, %d, %d))  **\n",
+			(void*) xd->distr_list[i].dpy, 
 			(int) 0, 
 			(int) x,
 			(int) y,
@@ -731,8 +734,8 @@ xnee_fake_relative_motion_event (xnee_data* xd,
   if (!xnee_is_recorder (xd))
     {
       xnee_fake_sleep (dtime);
-      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%d, %d, %d, %d))\n",
-		    (int) xd->fake, 
+      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%p, %d, %d, %d))\n",
+		    (void*) xd->fake, 
 		    (int) x,
 		    (int) y,
 		    0));
@@ -747,8 +750,8 @@ xnee_fake_relative_motion_event (xnee_data* xd,
     {
       XTestGrabControl (xd->distr_list[i].dpy, True); 
 
-      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%d, %d, %d, %d))  **\n",
-		   (int) xd->distr_list[i].dpy, 
+      xnee_verbose((xd, "XTestFakeRelativeMotionEvent (%p, %d, %d, %d))  **\n",
+		   (void*) xd->distr_list[i].dpy, 
 		   (int) x,
 		   (int) y,
 		    10));
@@ -788,7 +791,7 @@ xnee_type_file(xnee_data *xd)
 
   while (fgets(tmp, 256, xd->rt_file)!=NULL)
     {
-      xnee_verbose ((xd,"  xnee_type_file loop read size=%d \"%s\"\n", 
+      xnee_verbose ((xd,"  xnee_type_file loop read size=%lu \"%s\"\n", 
 		     strlen(tmp),tmp));
       
       for ( i=0 ; (size_t)i<strlen(tmp) ; i++ )
