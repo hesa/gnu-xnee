@@ -145,5 +145,7 @@ xnee_check_true(char *expr);
 int 
 xnee_check_false(char *expr);
 
+int
+xnee_is_screen_ok(xnee_data *xd, int screen);
 
 #endif /*  XNEE_XNEE_UTILS_H */
