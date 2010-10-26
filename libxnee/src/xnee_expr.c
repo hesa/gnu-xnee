@@ -206,13 +206,10 @@ xnee_expression_handle_replay(xnee_data *xd,
 			      xnee_intercept_data * xindata)
 {
   int ret = 0;
-  int dummy1;
-  int dummy2;
-  int dummy3;
 
   if (!strncmp("0",tmp,1))  /* EVENT */
     { 
-      unsigned long tmp_time; 
+/*       unsigned long tmp_time;  */
       int last_type;
       int last_x;
       int last_y;
@@ -296,6 +293,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 	  ret = 0;
 	} 
     }
+#ifdef XNEE_XINPUT_SUPPORT
   else if (!strncmp("6",tmp,1))    /* XInput Device (master) */
     {
       if ( ! xnee_is_forced_core_device_events(xd))
@@ -342,6 +340,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 	    } 
 	}
     }  
+#endif /* XNEE_XINPUT_SUPPORT */
   else 
     {
       ret=-1;
