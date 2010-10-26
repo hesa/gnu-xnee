@@ -572,7 +572,6 @@ xnee_record_from_data_display(xnee_data *xd)
     }
 
   return ret_val ;
-  //ret_val;
 }
 
 
