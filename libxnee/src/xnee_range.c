@@ -314,8 +314,8 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
   int str_len=0;
   int ret=0;
   int i ; 
-  xnee_verbose((xd, " --> add_range_str (%d, %d, %s)\n", 
-		(int)xd,type, range));
+  xnee_verbose((xd, " --> add_range_str (%p, %d, %s)\n", 
+		(void*)xd,type, range));
   str_len=strspn(range, "1234567890-");
 
 
@@ -401,8 +401,8 @@ xnee_add_range_str (xnee_data *xd, int type, char *range)
 	}
     }
 
-  xnee_verbose((xd, " <-- add_range_str (%d, %d, %s) max range=%d\n", 
-		(int)xd,type, range, xnee_get_max_range(xd)));
+  xnee_verbose((xd, " <-- add_range_str (%p, %d, %s) max range=%d\n", 
+		(void*)xd,type, range, xnee_get_max_range(xd)));
 
   return (ret);
 }
@@ -634,7 +634,7 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
 
 /*  */
 
-  xnee_verbose ((xd, "int arg=%d\n", (int)xd));
+  xnee_verbose ((xd, "int arg=%p\n", (void*)xd));
   xnee_verbose ((xd, "nt arg=%d\n", type));
   xnee_verbose ((xd, "string arg=%s\n", range));
 
@@ -650,7 +650,7 @@ xnee_parse_range (xnee_data *xd,int type, char *range)
       buf[next]='\0';
       range+=next+1;
       range_len=range_len - next - 1;
-      xnee_verbose((xd, " -- calling xnee_add_range_str (%d, %d, %s) \n" , (int)xd, type, buf));
+      xnee_verbose((xd, " -- calling xnee_add_range_str (%p, %d, %s) \n" , (void*)xd, type, buf));
 
       ret=xnee_add_range_str (xd, type, buf);
 

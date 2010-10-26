@@ -599,7 +599,7 @@ xnee_setup_rep_recording(xnee_data *xd)
 
   context_display = xnee_get_display_for_recordcontext(xd);
 
-  xnee_verbose ((xd, "creating context .... on control = %d\n", (int)context_display));
+  xnee_verbose ((xd, "creating context .... on control = %p\n", (void*)context_display));
 
 
   xrs->rContext = XRecordCreateContext(context_display, 

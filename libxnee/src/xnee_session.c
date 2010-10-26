@@ -150,7 +150,7 @@ xnee_close_down(xnee_data* xd)
     }
 #endif
 
-  xnee_verbose((xd, "Freeing modifier mapping memory %d ", (int)xd->map));
+  xnee_verbose((xd, "Freeing modifier mapping memory %p ", (void*)xd->map));
   XFreeModifiermap(xd->map);
 
 
@@ -171,7 +171,7 @@ xnee_close_down(xnee_data* xd)
   if ( xd->control!=NULL)  
     {
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3 \n"  ));
-      xnee_verbose((xd, "Closing displays control=%d \n", (int) xd->control));
+      xnee_verbose((xd, "Closing displays control=%p \n", (void*) xd->control));
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3.1 \n"  ));
       XCloseDisplay ( xd->control );
     }
@@ -179,7 +179,7 @@ xnee_close_down(xnee_data* xd)
   if ( xd->fake!=NULL)  
     {
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3 \n"  ));
-      xnee_verbose((xd, "Closing displays fake=%d \n", (int) xd->fake));
+      xnee_verbose((xd, "Closing displays fake=%p \n", (void*) xd->fake));
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3.1 \n"  ));
       XCloseDisplay ( xd->fake );
     }
@@ -189,15 +189,15 @@ xnee_close_down(xnee_data* xd)
   if ( xd->data!=NULL)  
     {
 /*       printf ("close data in %s   ---> %d\n", __func__, xd->data); */
-      xnee_verbose((xd, "Closing displays data=%d \n", (int) xd->data));
+      xnee_verbose((xd, "Closing displays data=%p \n", (void*) xd->data));
 
       
-      xnee_verbose((xd, "Closing displays data=%d  pending:%d\n", (int) xd->data, XPending(xd->data)));
+      xnee_verbose((xd, "Closing displays data=%p  pending:%d\n", (void*) xd->data, XPending(xd->data)));
 
       XFlush(xd->data);
-      xnee_verbose((xd, "Closing displays data=%d  flushed\n", (int) xd->data));
+      xnee_verbose((xd, "Closing displays data=%p  flushed\n", (void*) xd->data));
       usleep(1000*100);
-      xnee_verbose((xd, "Closing displays data=%d slept\n", (int) xd->data));
+      xnee_verbose((xd, "Closing displays data=%p slept\n", (void*) xd->data));
 
       /* 
       XCloseDisplay ( xd->data );
@@ -207,7 +207,7 @@ xnee_close_down(xnee_data* xd)
   XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.41 \n"  )); 
   if ( xd->grab!=NULL)  
     {
-      xnee_verbose((xd, "Closing displays grab=%d \n", (int) xd->grab));
+      xnee_verbose((xd, "Closing displays grab=%p \n", (void*) xd->grab));
       XFlush(xd->grab);
       usleep(1000*1000);
       XCloseDisplay ( xd->grab );
@@ -253,7 +253,6 @@ xnee_set_x_server_version(xnee_data *xd)
 {
   static int vendrel ;
   static Display *dpy;
-  int ret_val = 0;
 
   if (xd==NULL)
     {
@@ -640,8 +639,8 @@ handle_xerr(Display *dpy, XErrorEvent *errevent)
 	  errevent->request_code,errevent->request_code);
   fprintf (stderr, "\terror code minor %u (0x%x)\n", 
 	  errevent->minor_code,errevent->minor_code);
-  fprintf (stderr, "\tdisplay          %d (0x%x)\n", 
-	  (int)dpy, (unsigned int)dpy);
+  fprintf (stderr, "\tdisplay          %p\n", 
+	  (void*)dpy);
 
   ret = XGetErrorText (dpy, 
 		       (int) errevent->error_code, 

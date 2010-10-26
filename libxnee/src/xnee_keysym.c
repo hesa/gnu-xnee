@@ -166,8 +166,8 @@ xnee_token_to_km (xnee_data *xd,
 	  char *nm ;
 
 	  xnee_verbose((xd, "  i=%d\n", i ));
-	  xnee_verbose((xd, "  xd=%d\n", (int)xd ));
-	  xnee_verbose((xd, "  map=%d\n", (int)xd->map ));
+	  xnee_verbose((xd, "  xd=%p\n", (void*)xd ));
+	  xnee_verbose((xd, "  map=%p\n", (void*)xd->map ));
 	  xnee_verbose((xd, "  max_keypermod=%d\n" ,xd->map->max_keypermod ));
 
 	  k = (i-1)*xd->map->max_keypermod ;

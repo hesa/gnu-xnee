@@ -278,7 +278,7 @@ xnee_record_handle_event_printer(xnee_data * xd,
       
       break;
     case CreateNotify:
-      fprintf (out,"0,%u,%lu,0,0,0,0,%lu\n",
+      fprintf (out,"0,%u,%ul,0,0,0,0,%lu\n",
 	       event_type,
 	       xrec_data->event.u.createNotify.window,
 	       xrecintd->server_time
@@ -545,9 +545,9 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
       break;   
     case XRecordClientStarted:
       xnee_verbose((xd,  "ClientStarted \n"));
-      fprintf(stderr,  "ClientStarted %u %u \n", 
-	      (unsigned int) data->id_base, 
-	      (unsigned int) data->data);
+      fprintf(stderr,  "ClientStarted %lu %p \n", 
+	      data->id_base, 
+	      data->data);
       break;
     case XRecordClientDied:
       xnee_verbose((xd,  "ClientDied \n"));
@@ -800,8 +800,8 @@ xnee_has_record_extension(xnee_data *xd)
         ||
         (xd->control == NULL))
   {
-    fprintf(stderr, "cannot look for RECORD extension withou xnee_data or control display %u %u \n", 
-	    (unsigned int)xd, (unsigned)xd->control);
+    fprintf(stderr, "cannot look for RECORD extension withou xnee_data or control display %p %p \n", 
+	    (void*)xd, (void*)xd->control);
     return XNEE_RECORD_FAILURE;
   }
 
@@ -915,9 +915,9 @@ xnee_unsetup_recording(xnee_data *xd)
 
   if (xd->record_setup->rContext != 0)
     {
-      xnee_verbose((xd, "---  disabling context %u on %u \n", 
-		    (unsigned int)xd->record_setup->rContext, 
-		    (unsigned int)context_display));
+      xnee_verbose((xd, "---  disabling context %p on %p \n", 
+		    (void*)xd->record_setup->rContext, 
+		    (void*)context_display));
   
       (void)XRecordDisableContext(xd->control, 
 				  xd->record_setup->rContext);

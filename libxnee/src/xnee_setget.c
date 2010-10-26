@@ -1057,8 +1057,8 @@ xnee_reset_autorepeat (xnee_data *xd)
       return XNEE_OK;
     }
 
-  xnee_verbose((xd,"Resetting autorepeat on (%d) to: ",
-		(xd->fake==NULL)?0:(int)xd->fake));
+  xnee_verbose((xd,"Resetting autorepeat on (%p) to: ",
+		(xd->fake==NULL)?0:(void*)xd->fake));
 
   if (!xd->fake)
     return XNEE_OK;
