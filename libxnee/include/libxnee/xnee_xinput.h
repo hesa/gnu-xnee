@@ -74,6 +74,13 @@ xnee_handle_xinput_event(xnee_data * xd,
 			 Time server_time);
 
 
+int 
+xnee_handle_xinput_event_human(xnee_data * xd, 
+			       int event_type, 
+			       XRecordDatum *xrec_data,
+			       Time server_time);
+
+
 
 XDevice * 
 xnee_get_xinput_device(xnee_data *xd, int deviceid);
