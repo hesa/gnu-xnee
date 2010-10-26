@@ -3,7 +3,7 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef  
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003 2010 Henrik Sandklef  
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -73,7 +73,7 @@ xnee_ungrab_key (xnee_data* xd, int mode)
       xnee_verbose((xd, "---  xnee_ungrab_key\n"));
       xnee_verbose((xd, "window   %d\n", window));
       xnee_verbose((xd, "screen   %d\n", screen));
-      xnee_verbose((xd, "data     %d\n", (int)xd->grab));
+      xnee_verbose((xd, "data     %p\n", (void*)xd->grab));
       xnee_verbose((xd, "stop key %d\n", xd->grab_keys->action_keys[mode].key));
       xnee_verbose((xd, "stop mod %d\n", AnyModifier));
 
@@ -187,7 +187,7 @@ xnee_grab_key (xnee_data* xd, int mode, char *key)
   /* grab key + modifier */
   screen = DefaultScreen (xd->grab);
   window = RootWindow    (xd->grab, screen );
-  xnee_verbose((xd, "grab     %d\n", (int)xd->grab));
+  xnee_verbose((xd, "grab     %p\n", (void*)xd->grab));
   xnee_verbose((xd, "stop key %d\n", ak.key));
   xnee_verbose((xd, "stop mod %d\n", AnyModifier));
   xnee_verbose((xd, "window   %d\n", window));
@@ -381,7 +381,7 @@ xnee_grab_all_keys (xnee_data* xd)
 	      xnee_verbose((xd, "---  xnee_grab_key\n"));
 	      xnee_verbose((xd, "window   %d\n", window));
 	      xnee_verbose((xd, "screen   %d\n", screen));
-	      xnee_verbose((xd, "data     %d\n", (int)xd->grab));
+	      xnee_verbose((xd, "data     %p\n", (void*)xd->grab));
 	      xnee_verbose((xd, "stop key %d\n", xd->grab_keys->action_keys[i].key));
 	      xnee_verbose((xd, "stop mod %d\n", AnyModifier));
 

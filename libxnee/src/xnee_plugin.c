@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004,
- *                      2008, 2009 Henrik Sandklef 
+ *                      2008, 2009, 2010 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -81,7 +81,7 @@ xnee_use_plugin(xnee_data *xd, char *pl_name, unsigned char mode)
       exit(XNEE_PLUGIN_FILE_ERROR);
     }
   
-  xnee_verbose ((xd, "We've got plugin file handle %d\n", (int)xd->plugin_handle));
+  xnee_verbose ((xd, "We've got plugin file handle %p\n", (void*)xd->plugin_handle));
 
   ret = xnee_set_callback (xd, 
 			   &xd->rec_callback,
