@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2010 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -235,6 +235,7 @@ xnee_replay_buffer_handler (xnee_data* xd,
 	    ( data_type == XNEE_EVENT ) && 
 	    ( data_nr   <= ButtonRelease ) ))
 	{
+#ifdef XNEE_XINPUT_SUPPORT
 	    if (xnee_get_xinput_event_base(xd->fake) > 0)
 	      {
 		if (( (data_nr - xnee_get_xinput_event_base(xd->fake)) >= 0 ) && 
@@ -244,6 +245,7 @@ xnee_replay_buffer_handler (xnee_data* xd,
 		    return;
 		  }
 	      }
+#endif /* XNEE_XINPUT_SUPPORT */
 	    if ( ( data_nr >= KeyPress )
 		 && 
 		 ( data_nr <= MotionNotify )
