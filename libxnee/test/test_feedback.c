@@ -2,6 +2,7 @@
 #include "libxnee/xnee.h"
 #include "libxnee/feedback.h"
 
+
 int fails;
 int total;
 int verbose;
@@ -55,13 +56,13 @@ test_setfeedback(xnee_data *xd)
   XNEE_TEST_ASSERT(ret, 1, "xnee_is_xosd_feedback");
 
   ptr = xnee_get_xosd_font_impl(xd);
-  XNEE_TEST_ASSERT_DIFF(ptr, NULL, "xnee_get_xosd_font_impl");
+  XNEE_TEST_ASSERT_DIFF_PTR(ptr, NULL, "xnee_get_xosd_font_impl");
   
   ret = xnee_set_xosd_font_impl(xd, xosd_test_font);
   XNEE_TEST_ASSERT(ret, 0, "xnee_set_xosd_font_impl");
   
   ptr = xnee_get_xosd_font_impl(xd);
-  XNEE_TEST_ASSERT_DIFF(ptr, NULL, "xnee_get_xosd_font_impl");
+  XNEE_TEST_ASSERT_DIFF_PTR(ptr, NULL, "xnee_get_xosd_font_impl");
   
 
   ret = feedback(xd, "   ** Testing xosd feedback again\n");

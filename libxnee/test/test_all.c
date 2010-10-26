@@ -757,7 +757,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_project_name(xd, "cdtrs"); 
   orig_str = xnee_get_project_name(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_project_name"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_project_name");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_project_name");
   END_LOOP
 
   /* Testing:
@@ -769,7 +769,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_project_descr(xd, "cdtrs"); 
   orig_str = xnee_get_project_descr(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_project_descr"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_project_descr");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_project_descr");
   END_LOOP
 
   /* Testing:
@@ -781,7 +781,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_creat_date(xd, "cdtrs"); 
   orig_str = xnee_get_creat_date(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_creat_date"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_creat_date");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_creat_date");
   END_LOOP
 
   /* Testing:
@@ -793,7 +793,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_creat_program(xd, "cdtrs"); 
   orig_str = xnee_get_creat_program(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_creat_program"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_creat_program");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_creat_program");
   END_LOOP
 
   /* Testing:
@@ -805,7 +805,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_creat_prog_vers(xd, "cdtrs"); 
   orig_str = xnee_get_creat_prog_vers(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_creat_prog_vers"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_creat_prog_vers");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_creat_prog_vers");
   END_LOOP
 
   /* Testing:
@@ -817,7 +817,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_last_date(xd, "cdtrs"); 
   orig_str = xnee_get_last_date(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_last_date"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_last_date");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_last_date");
   END_LOOP
 
   /* Testing:
@@ -829,7 +829,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_last_program(xd, "cdtrs"); 
   orig_str = xnee_get_last_program(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_last_program"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_last_program");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_last_program");
   END_LOOP
 
   /* Testing:
@@ -841,7 +841,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_last_prog_vers(xd, "cdtrs"); 
   orig_str = xnee_get_last_prog_vers(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_last_prog_vers"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_last_prog_vers");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_last_prog_vers");
   END_LOOP
 
   /* Testing:
@@ -853,7 +853,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_author_name(xd, "cdtrs"); 
   orig_str = xnee_get_author_name(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_author_name"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_author_name");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_author_name");
   END_LOOP
 
   /* Testing:
@@ -865,7 +865,7 @@ int test_all(xnee_data *xd)
   ret      = xnee_set_author_email(xd, "cdtrs"); 
   orig_str = xnee_get_author_email(xd);
   XNEE_TEST_ASSERT(ret, XNEE_OK, "xnee_set_author_email"); 
-  XNEE_TEST_ASSERT_DIFF(orig_str, "cdtrs","xnee_set_author_email");
+  XNEE_TEST_ASSERT_DIFF_STR(orig_str, "cdtrs","xnee_set_author_email");
   END_LOOP
 
   /* Testing:

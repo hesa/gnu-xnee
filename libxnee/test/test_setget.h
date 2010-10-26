@@ -37,7 +37,7 @@ extern int verbose ;
 
 #define XNEE_TEST_ASSERT(ret_val, comp_val, fun_str) \
    { \
-     if ( ret_val != comp_val ) \
+     if ( (int)ret_val != (int)comp_val )	\
        {                    \
            ON_FAIL(fun_str, __LINE__); \
            printf ("   %d != %d\n", ret_val, comp_val); \
@@ -53,10 +53,23 @@ extern int verbose ;
 
 #define XNEE_TEST_ASSERT_DIFF(ret_val, comp_val, fun_str) \
    { \
-     if ( ret_val == comp_val ) \
+     if ( (int)ret_val == (int)comp_val )	\
        {                    \
           ON_FAIL(fun_str, __LINE__);\
           printf ("   %d == %d\n", (int)ret_val, (int)comp_val);	\
+          PRINT_FUN \
+           exit(1); \
+       }\
+     else \
+        ON_OK(fun_str, __LINE__); \
+   }
+
+#define XNEE_TEST_ASSERT_DIFF_PTR(ret_val, comp_val, fun_str) \
+   { \
+     if ( (void*)ret_val == (void*)comp_val )	\
+       {                    \
+          ON_FAIL(fun_str, __LINE__);\
+          printf ("   %p == %p\n", (void*)ret_val, (void*)comp_val);	\
           PRINT_FUN \
            exit(1); \
        }\

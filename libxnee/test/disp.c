@@ -46,7 +46,7 @@ int main()
 
   dpy = XOpenDisplay(NULL);
 
-  printf("    adding display: %u\n", dpy);
+  printf("    adding display: %p\n", (void*)dpy);
   ret = xnee_add_display(dpy, xdl);
   XNEE_TEST_ASSERT(ret, 0, "xnee_add_display");
 

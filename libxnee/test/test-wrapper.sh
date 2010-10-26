@@ -16,7 +16,15 @@ test_program()
 	echo "   .... bailing out"
 	return 1
     fi
+    
+    $1
 }
+
+if [ ! -f ./.libs/libtestcb.so ]
+then
+    cp ./.libs/libtestcb_la-callback_so.o ./.libs/libtestcb.so
+fi
+export LD_LIBRARY_PATH=./.libs
 
 test_program $1
 exit 0
