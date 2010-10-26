@@ -115,7 +115,7 @@ BUF_VERBOSE_FLAG = -DNO_BUF_VERBOSE
 endif
 
 if PEDANTIC
-PEDANTIC_FLAGS =  -W -Wall -pedantic -pedantic-errors  -Werror
+PEDANTIC_FLAGS =  -W -Wall -pedantic -pedantic-errors  -Werror -fno-strict-aliasing -Wno-unused-parameter 
 else
 PEDANTIC_FLAGS = 
 endif
