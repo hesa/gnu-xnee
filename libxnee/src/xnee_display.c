@@ -91,16 +91,16 @@ xnee_setup_display (xnee_data *xd)
 
   xnee_verbose((xd, "-- xnee_setup_display - modifier map\n"));
 
-  xnee_verbose((xd, "Freeing modifier mapping memory %d ", (int)xd->map));
+  xnee_verbose((xd, "Freeing modifier mapping memory %p ", (void*)xd->map));
   XFreeModifiermap(xd->map);
 
-  xnee_verbose((xd," building modifier map on %d\n", (int)xd->fake)); 
+  xnee_verbose((xd," building modifier map on %p\n", (void*)xd->fake)); 
   xd->map = XGetModifierMapping(xd->fake);
 
 
-  xnee_verbose((xd, "display data    %d\n" , (int) xd->data));
-  xnee_verbose((xd, "display control %d\n" , (int) xd->control));
-  xnee_verbose((xd, "display fake    %d\n" , (int) xd->fake));
+  xnee_verbose((xd, "display data    %p\n" , (void*) xd->data));
+  xnee_verbose((xd, "display control %p\n" , (void*) xd->control));
+  xnee_verbose((xd, "display fake    %p\n" , (void*) xd->fake));
 
   xnee_verbose((xd, "-- xnee_setup_display - resolution\n"));
   /* 
@@ -213,8 +213,8 @@ xnee_open_display(xnee_data* xd)
       return dpy;
     }
   
-  xnee_verbose((xd, "Display %s = %d\n", 
-		tmp?tmp:"", (int) dpy));
+  xnee_verbose((xd, "Display %s = %p\n", 
+		tmp?tmp:"", (void*) dpy));
   return dpy;
 }
 
@@ -257,7 +257,7 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
     len =strlen(disp);
     disp+=next+1;
     disp_len=disp_len - next - 1;
-    xnee_verbose((xd,  " ------------------------- (%s) %d    %d     %d\n", buf, len, disp_len, disp_len));
+    xnee_verbose((xd,  " ------------------------- (%s) %lu    %d     %d\n", buf, len, disp_len, disp_len));
     ret=xnee_add_display_str (buf,xd);
     xnee_verbose((xd,  " ------------------------- are we doing fine??? ret=%d\n", ret));
 
@@ -310,7 +310,7 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
     {
       xnee_distr *tmp = xd->distr_list;
       xnee_verbose((xd, 
-		    "Adding Display - allocating memory for the %d time\n", 
+		    "Adding Display - allocating memory for the %lu time\n", 
 		    xd->distr_list_size));
       xd->distr_list = (xnee_distr *) realloc (xd->distr_list, 
 					       xd->distr_list_size);
@@ -332,7 +332,7 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
       xnee_print_error ("Could not open display %s\n", disp_str);
       exit ( XNEE_NOT_OPEN_DISPLAY );
     }
-  xnee_verbose((xd, "Adding Display  - opening display gave us %d\n", (int) dpy));
+  xnee_verbose((xd, "Adding Display  - opening display gave us %p\n", (void*) dpy));
   
   xnee_verbose((xd, "Adding Display  - trying to grab control\n"));
   /*@ignore@*/
@@ -360,7 +360,7 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
 		xtest_version_major,
 		xtest_version_minor));
   
-  xnee_verbose ((xd, "adding to distr list at pos %d\n", 
+  xnee_verbose ((xd, "adding to distr list at pos %lu\n", 
 		 xd->distr_list_size));
   xnee_verbose ((xd, " -- resolution to 0\n"));
 
@@ -408,7 +408,7 @@ xnee_add_display (Display *dpy, xnee_data* xd)
   int xtest_version_major = 0;
   int xtest_version_minor = 0;
 
-  xnee_verbose((xd, "Adding Display \"%d\" to distribution list\n", (int) dpy));
+  xnee_verbose((xd, "Adding Display \"%p\" to distribution list\n", (void*) dpy));
   if (xd->distr_list_size==0) 
     {
       xd->distr_list = (xnee_distr *) calloc (1,sizeof (Display));
@@ -437,11 +437,11 @@ xnee_add_display (Display *dpy, xnee_data* xd)
 			  &xtest_version_major,
 			  &xtest_version_minor) == 0)
     {
-       xnee_print_error ("XTest extension missing on display %d \n", (int)dpy);
+       xnee_print_error ("XTest extension missing on display %p \n", (void*)dpy);
        return (XNEE_NO_TEST_EXT);
     }
-  xnee_verbose ((xd, "  XTest  Release on \"%d\"         %d.%d\n", 
-		 (int)dpy,
+  xnee_verbose ((xd, "  XTest  Release on \"%p\"         %d.%d\n", 
+		 (void*)dpy,
 		 xtest_version_major,
 		 xtest_version_minor));
   

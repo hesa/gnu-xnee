@@ -540,9 +540,11 @@ xnee_xinput_add_devices(xnee_data *xd)
   return XNEE_OK;
 }
 	  
+int
 xnee_handle_xinput_event_human(xnee_data * xd, 
 			       int event_type, 
-			       XRecordDatum *xrec_data)
+			       XRecordDatum *xrec_data,
+			       Time server_time)
 {
   return XNEE_OK;
 }
