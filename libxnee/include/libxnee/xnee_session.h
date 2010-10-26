@@ -114,4 +114,8 @@ xnee_more_to_record(xnee_data *xd);
 void
 xnee_zero_sync_data (xnee_data* xd);
 
+int 
+xnee_set_x_server_version(xnee_data *xd);
+
+
 #endif /* SESSION_*/
