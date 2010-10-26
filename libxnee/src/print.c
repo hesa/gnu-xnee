@@ -32,6 +32,7 @@
 #include "libxnee/feedback.h"
 #include "libxnee/xnee_error.h"
 #include "libxnee/xnee_session.h"
+#include "libxnee/xnee_xinput.h"
 
 
 #define XNEE_HP_SEP " "
@@ -344,7 +345,8 @@ xnee_human_print_event (xnee_data *xd, XRecordInterceptData *xrecintd )
   
   xnee_handle_xinput_event_human(xd, 
 				 event_type, 
-				 xrec_data);
+				 xrec_data,
+				 xrecintd->server_time);
 
   if ( 1 )
     {
@@ -1036,8 +1038,8 @@ xnee_print_distr_list (xnee_data* xd, /*@null@*/ FILE *out)
     }
   for (i=0 ; i<(int)xd->distr_list_size ; i++)
     {
-      fprintf (out, "Distribution display[%d]=%u\n", 
-	       i, (unsigned int)xd->distr_list[i].dpy);
+      fprintf (out, "Distribution display[%d]=%p\n", 
+	       i, (void*)xd->distr_list[i].dpy);
     }
   return (XNEE_OK);
 }
@@ -1074,8 +1076,8 @@ xnee_record_print_record_range (xnee_data *xd, /*@null@*/ FILE* out)
   fprintf (out, "#########################################\n");
   fprintf (out, "#   data_flags          %d\n", 
 	   xd->record_setup->data_flags);
-  fprintf (out, "#   rState              %d\n", 
-	   (int) xd->record_setup->rState);
+  fprintf (out, "#   rState              %p\n", 
+	   (void*)xd->record_setup->rState);
   fprintf (out, "#   xids[0]             %d\n", 
 	   (int) xd->record_setup->xids[0]);
   fprintf (out, "#   xids[1]             %d\n", 
@@ -1776,11 +1778,11 @@ xnee_print_xnee_data(xnee_data *xd)
 {
 
   fprintf (stderr, "xnee_data\n");
-  fprintf (stderr, "  xd:          %u\n", (int)xd);
-  fprintf (stderr, "  xd->data:    %u\n", (int)xd->data);
-  fprintf (stderr, "  xd->control: %x\n", (unsigned int)xd->control);
-  fprintf (stderr, "  xd->fake:    %x\n", (unsigned int)xd->fake);
-  fprintf (stderr, "  xd->grab:    %x\n", (unsigned int)xd->grab);
+  fprintf (stderr, "  xd:          %p\n", (void*)xd);
+  fprintf (stderr, "  xd->data:    %p\n", (void*)xd->data);
+  fprintf (stderr, "  xd->control: %p\n", (void*)xd->control);
+  fprintf (stderr, "  xd->fake:    %p\n", (void*)xd->fake);
+  fprintf (stderr, "  xd->grab:    %p\n", (void*)xd->grab);
   return XNEE_OK;
 }
 
