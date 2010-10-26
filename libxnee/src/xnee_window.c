@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2006, 2007, 2008, 2009 
+ *        Copyright (C) 2006, 2007, 2008, 2009, 2010 
  *                      Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
@@ -380,13 +380,13 @@ xnee_window_try_move(xnee_data *xd)
       return XNEE_OK;
     }
 
-  xnee_verbose((xd, "XMoveWindow(%u,0x%X, %u,%u)\n",
-		(unsigned int)xd->grab,
+  xnee_verbose((xd, "XMoveWindow(%p,0x%X, %u,%u)\n",
+		(void*)xd->grab,
 		rec_ptr->window,
 		(unsigned int)sess_ptr->x ,
 		(unsigned int)sess_ptr->y ));
-  XNEE_WINDOW_DEBUG(("XMoveWindow(%u,0x%X, %u,%u)\n",
-		(unsigned int)xd->grab,
+  XNEE_WINDOW_DEBUG(("XMoveWindow(%p,0x%X, %u,%u)\n",
+		(void*)xd->grab,
 		rec_ptr->window,
 		(unsigned int)sess_ptr->x ,
 		(unsigned int)sess_ptr->y ));
@@ -441,13 +441,13 @@ xnee_window_try_move(xnee_data *xd)
       pos_x = sess_ptr->x + diff_x ;
       pos_y = sess_ptr->y + diff_y ;
 
-      xnee_verbose((xd, "XMoveWindow(%u,0x%X, %u,%u)\n",
-		    (unsigned int)xd->grab,
+      xnee_verbose((xd, "XMoveWindow(%p,0x%X, %u,%u)\n",
+		    (void*)xd->grab,
 		    rec_ptr->window,
 		    (unsigned int)pos_x ,
 		    (unsigned int)pos_y ));
-      XNEE_WINDOW_DEBUG(("XMoveWindow(%u,0x%X, %u,%u)\n",
-		    (unsigned int)xd->grab,
+      XNEE_WINDOW_DEBUG(("XMoveWindow(%p,0x%X, %u,%u)\n",
+		    (void*)xd->grab,
 		    rec_ptr->window,
 		    (unsigned int)pos_x ,
 		    (unsigned int)pos_y ));
