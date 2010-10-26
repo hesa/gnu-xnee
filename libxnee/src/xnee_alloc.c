@@ -393,7 +393,11 @@ xnee_renew_xnee_data(xnee_data *xd)
 int
 xnee_free( /*@only@*/  /*@out@*/ /*@null@*/ void *mem)
 {
+#ifdef __x86_64
+  if ( (mem==NULL) || ((unsigned long)mem==0x1) )
+#else
   if ( (mem==NULL) || ((int)mem==0x1) )
+#endif
    {
       return XNEE_MEMORY_FAULT;
    }
