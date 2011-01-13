@@ -1,4 +1,15 @@
+2011-01-13  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
+	Added support to handle X server from Fedora 13, 14 & NoMachine
+
+	* pnee/src/pnee_impl.c (pnee_start_replaying): 
+	Removed unused variables
+
 2010-10-27  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_expr.c: 
+	#ifdef:ed away an unused var: tmp_time
 
 	* libxnee/include/libxnee/xnee_session.h: 
 	Added prototype for: 
@@ -73,6 +84,7 @@
 	* libxnee/src/Makefile.am (PEDANTIC_FLAGS): 
 	Added  -fno-strict-aliasing -Wno-unused-parameter  
 
+>>>>>>> 1.258
 2010-10-25  hesa  <hesa@sandklef.com>
 
 	* libxnee/src/print.c (xnee_print_distr_list): 
