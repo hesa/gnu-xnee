@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2005, 2006, 2007 Henrik Sandklef 
+ *        Copyright (C) 2005, 2006, 2007, 2011 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -251,7 +251,6 @@ pnee_display_error(int err_nr)
 #define GNEE_BUF_SIZE 8
   gchar buf[GNEE_BUF_SIZE];
   const char *str_ptr = NULL;
-  int i ;
 
   if (my_err_dial==NULL)
     {
@@ -295,7 +294,6 @@ PTHREAD_RETURN_VAL
 pnee_start_replaying (void *pnee_applet_in)
 {
   int ret;
-  int delay;
 
   pnee_panel_applet *pa = (pnee_panel_applet *) pnee_applet_in;
 
