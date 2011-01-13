@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                      2004, 2009, 2010 Henrik Sandklef 
+ *                      2004, 2009, 2010, 2011 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -510,8 +510,11 @@ xnee_record_from_data_display(xnee_data *xd)
 
       /*
        *  Xorg
+       *
+       *    Fedora 13 (X.org 1.8.2), 14 (X.org 1.9.1) calls the server "Fedora project" 
+       *          (thanks to William Bader)
        */
-      if (strstr(xd->x_vendor_name, "X.Org"))
+      if (strstr(xd->x_vendor_name, "X.Org") || strstr(xd->x_vendor_name, "Fedora Project"))
 	{
 	  /*
 	   *  Version 1
@@ -519,10 +522,10 @@ xnee_record_from_data_display(xnee_data *xd)
 	  if ( xd->x_version_major == 1 )
 	    {
 	      /*
-	       *  versions 1.4 - 1.7
+	       *  versions 
 	       */
-	      if ( ( xd->x_version_minor >= 4 ) &&
-		   ( xd->x_version_minor <= 10 ) )
+	      if ( ( xd->x_version_minor >= 3 ) &&
+		   ( xd->x_version_minor <= 9 ) )
 		{
 
 		  /*
@@ -540,10 +543,30 @@ xnee_record_from_data_display(xnee_data *xd)
 		      /*
 		    }
 		      */
+		  ret_val=1;
 		}
 	      else
 		{
-		  ret_val=1;
+		  ret_val=0;
+		}
+	    }
+	  else if ( xd->x_version_major == 6 )
+	    {
+	      if ( xd->x_version_minor == 9 )
+	        {
+		  /*
+		   * NoMachine (nxserver-3.4.0-8) 
+		   *    returns "The X.Org Foundation" 6.9.0
+		   */
+		  ret_val = 1;
+		}
+	      else
+		{
+		  fprintf(stderr, "               WARNING\n");
+		  fprintf(stderr, "You seem to be running NoMachine X server\n");
+		  fprintf(stderr, "with a X server version unkown to " PACKAGE " \n");
+		  fprintf(stderr, "We will assume that it works similar to nxserver-3.4.0-8\n");
+		  ret_val = 1;
 		}
 	    }
 	}
@@ -570,7 +593,15 @@ xnee_record_from_data_display(xnee_data *xd)
 	  ;
 	}
     }
-
+  xnee_verbose((xd, " -- xnee_record_from_data_display()  using the following X serv data\n"));
+  xnee_verbose((xd, "    using the following X serv data\n"));
+  xnee_verbose((xd,   "X info:   %s %d %d %d\n",
+		xd->x_vendor_name, 
+		xd->x_version_major, 
+		xd->x_version_minor, 
+		xd->x_version_minor_sub));
+  xnee_verbose((xd, "<-- %d \n", ret_val));
+  
   return ret_val ;
 }
 
