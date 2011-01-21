@@ -1,3 +1,8 @@
+2011-01-21  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Bumping to version 3.07.92
+
 2011-01-13  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
