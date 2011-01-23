@@ -26,7 +26,7 @@ pnee_SOURCES = \
 	pnee_impl.c pnee_impl.h pnee_types.h 
 
 
-pnee_LDADD =  -L../../ -L../../libxnee/src $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   $(libgnomeui_LIBS) $(gtk_LIBS)  
+pnee_LDADD =  -L../../ -L../../libxnee/src $(INTLLIBS) $(PANEL_LD_FLAGS) -lxnee -lXtst $(LIBSEMA)   $(libgnomeui_LIBS) $(gtk_LIBS)  $(X11_LIBS) $(LIBDL)
 
 if BUILD_STATIC
 STATIC_FLAGS = -static
