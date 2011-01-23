@@ -324,7 +324,8 @@ xnee_handle_xinput_event(xnee_data * xd,
 int 
 xnee_handle_xinput_event_human(xnee_data * xd, 
 			       int event_type, 
-			       XRecordDatum *xrec_data)
+			       XRecordDatum *xrec_data,
+			       Time server_time)
 {
   static saved_xinput_event sxe;
   FILE *out ;
