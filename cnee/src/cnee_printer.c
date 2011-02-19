@@ -88,8 +88,10 @@ xnee_usage_printer(FILE *fd, int tmp_size, char *pre, char *str)
     {
       ret = snprintf (line_buf, 
 		      size,
+		      "%s",
 		      (const char*)str);
-      fprintf (fd, "%s %s\n", pre, line_buf);
+
+      fprintf (fd, "    %s %s\n", pre, line_buf);
 /*       printf ("** '%s'    '%s'\n", line_buf, str); */
 /*       printf (" len =%d   ret=%d   str'%s'\n", */
 /* 	      len, ret, str); */
