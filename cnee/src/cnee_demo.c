@@ -30,6 +30,7 @@
 #include "libxnee/xnee_range.h"
 #include "libxnee/xnee_session.h"
 #include "libxnee/xnee_alloc.h"
+#include "libxnee/xnee_xinput.h"
 
 #include "parse.h"
 #include "cnee_strings.h"
@@ -96,13 +97,21 @@ cnee_demonstration (xnee_data *xd)
   ret = xnee_set_recorder(xd);
   XNEE_RETURN_IF_ERR(ret);
 
+  xnee_init_xinput(xd);
+
   ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 			  "ButtonPress-MotionNotify");
   XNEE_RETURN_IF_ERR(ret);
+#ifdef  XNEE_XINPUT_SUPPORT
+      xnee_xinput_request_mouse(xd);
+#endif /*  XNEE_XINPUT_SUPPORT      */
   
   ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 			  "KeyPress-KeyRelease");
   XNEE_RETURN_IF_ERR(ret);
+#ifdef  XNEE_XINPUT_SUPPORT
+      xnee_xinput_request_mouse(xd);
+#endif /*  XNEE_XINPUT_SUPPORT      */
   
   file = cnee_get_default_filename();
   if (file==NULL)
@@ -119,6 +128,7 @@ cnee_demonstration (xnee_data *xd)
   ret = xnee_set_events_max(xd, 200);
   XNEE_RETURN_IF_ERR(ret);
 
+
   /* Set the cli parameters */
   xnee_set_application_parameters (xd, NULL);
   XNEE_RETURN_IF_ERR(ret);
@@ -133,7 +143,6 @@ cnee_demonstration (xnee_data *xd)
 
       /* start up the action set during parsing the commnd line */
       ret = xnee_start(xd);
-
     }
 
   if ( ret != XNEE_OK)
