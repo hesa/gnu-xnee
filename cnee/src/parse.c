@@ -541,6 +541,13 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
       verbose_option("XNEE_KEYBOARD_OPTION_KEY");
       ret=xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
 			    "KeyPress-KeyRelease");
+#ifdef  XNEE_XINPUT_SUPPORT
+      if ( ret != XNEE_OK )
+	{
+	  break;
+	}
+      xnee_xinput_request_keyboard(xd);
+#endif /*  XNEE_XINPUT_SUPPORT      */
       break;
 
     case XNEE_MOUSE_OPTION_KEY: 
