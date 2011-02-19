@@ -1,5 +1,9 @@
 2011-02-19  Henrik Sandklef  <hesa@sandklef.com>
 
+	* cnee/src/cnee_demo.c (cnee_demonstration): 
+	Added XI support.
+        Savannah: bug #31231: Replay in demo mode malfunctions
+
 	* cnee/src/cnee_printer.c (xnee_usage_printer): 
 	Removed "===" from help printout
 
