@@ -57,10 +57,16 @@ xnee_init_xinput_devices(xnee_data *xd)
 
   int i;
   XIDeviceInfo *xi_info, *dev;
+  static int already_done = 0;
 
   if ( (xd==NULL) || (xd->control==NULL) )
     {
       return -1;
+    }
+
+  if (already_done != 0)
+    {
+      return XNEE_OK;
     }
 
   if (XIQueryVersion(xd->control, &major, &minor) != Success ||
@@ -78,7 +84,7 @@ xnee_init_xinput_devices(xnee_data *xd)
 	
       xd->xi_data.xi_devices[dev->deviceid].name     = strdup(dev->name);
       xd->xi_data.xi_devices[dev->deviceid].deviceid = dev->deviceid;
-      xd->xi_data.xi_devices[dev->deviceid].device        = NULL ;
+      xd->xi_data.xi_devices[dev->deviceid].device   = NULL ;
 
       if (dev->use == XIMasterPointer || dev->use == XIMasterKeyboard)
 	{
@@ -93,6 +99,8 @@ xnee_init_xinput_devices(xnee_data *xd)
 
   XIFreeDeviceInfo(xi_info);
   
+  already_done = 1 ;
+
   return 0;
 }
 
@@ -112,7 +120,6 @@ xnee_get_xinput_device(xnee_data *xd, int deviceid)
       if (!(dev_info = XListInputDevices(xd->fake, &count)) || !count)
 	{
 	  fprintf(stderr, "Cannot list input devices\n");
-
 	  return NULL;
 	}
       xnee_verbose((xd, "---  xnee_get_xinput_device  count=%d\n", count));
@@ -202,6 +209,7 @@ xnee_handle_xinput_event(xnee_data * xd,
 			 Time server_time)
 {
   static saved_xinput_event sxe;
+  static int valuator_counter = 0;
   FILE *out ;
 
   if  (xd == NULL ) 
@@ -218,7 +226,6 @@ xnee_handle_xinput_event(xnee_data * xd,
   out = xd->out_file;
   
 
-  
   /*
    * Are we using Xinput
    *  AND
@@ -232,7 +239,9 @@ xnee_handle_xinput_event(xnee_data * xd,
       deviceKeyButtonPointer *e;
       e = (deviceKeyButtonPointer *) &xrec_data->event ;
       
-      
+      xnee_verbose((xd, "handle xi:: dev-id%d type:%d  ", 
+	      e->deviceid,
+		    event_type));
       ordinary_event_nr = event_type - xd->xi_data.xinput_event_base + 1;
       sxe.type         =  ordinary_event_nr ;
       
@@ -245,6 +254,9 @@ xnee_handle_xinput_event(xnee_data * xd,
 	  sxe.y        = xrec_data->event.u.keyButtonPointer.rootY;
 	  sxe.time     = xrec_data->event.u.keyButtonPointer.time;
 
+/* 	  printf ("\nStore motion : %d  id: %d   %dx%d\n",  */
+/* 		  sxe.type, e->deviceid, sxe.x, sxe.y */
+/* 		  ); */
 	  /* 
 	   * Rest of the data is sent in an Devicevaluator event, 
 	   * store what we have and continue
@@ -256,12 +268,13 @@ xnee_handle_xinput_event(xnee_data * xd,
 	{
 	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
 	  fprintf (out, ",%u,0,0,%d,0,0,%lu,%d,%s\n",
-		   ordinary_event_nr,
-		   e->detail ,
-		   server_time,
-	   /* sxe.time, */
+		   sxe.type,
+		   xrec_data->event.u.u.detail, 
+		   xrec_data->event.u.keyButtonPointer.time,
+		   /* sxe.time, */
 		   e->deviceid,
 		   xd->xi_data.xi_devices[e->deviceid].name);
+
 	}
       else if ( ( ordinary_event_nr ==  KeyPress) || ( ordinary_event_nr ==  KeyRelease) )
 	{
@@ -285,37 +298,53 @@ xnee_handle_xinput_event(xnee_data * xd,
        */
       deviceValuator *e;
       e = (deviceValuator *) &xrec_data->event ;
-      
+
+
+      valuator_counter++;
+
       /*	printf ("deviceValuator: %d %d (%d),  %d, %d (%d %d %d %d %d %d)    sxe.type=%d\n", 
 		e->type, e->deviceid, 	sxe.deviceid,		e->num_valuators, 
 		e->first_valuator, 	e->valuator0, 
 		e->valuator1, e->valuator2, e->valuator3, e->valuator4, e->valuator5,	sxe.type
 		);		*/		
+      if ( valuator_counter < e->num_valuators )
+	{
+	  xnee_verbose((xd, "  valuator not printed %d / %d \n",
+			valuator_counter , e->num_valuators ));
+/* 	  return XNEE_OK; */
+	}
+      valuator_counter = 0 ;
+
       if ( sxe.type == MotionNotify )
 	{
-	  if ( e->num_valuators != 2 )
-	    {
-	      fprintf (stderr, "WARNING: Number of valuators was faulty \n");
-	      return XNEE_XINPUT_EXTENSION_FAILURE;
-	    }
 	 
 	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
 	  fprintf (out, ",%d,%d,%d,0,0,0,%lu,%d,'%s'\n",
 		   sxe.type,
-		   (int)e->valuator0, 
-		   (int)e->valuator1, 
+ 		   (int)e->valuator0,  
+ 		   (int)e->valuator1,  
+/* 		   sxe.x, */
+/* 		   sxe.y, */
 		   server_time,
 		   /* sxe.time, */
 		   e->deviceid,
 		   xd->xi_data.xi_devices[e->deviceid].name);
-	  
-	  sxe.x = 0;
-	  sxe.y = 0;
-	  sxe.button = 0 ;
 	}
+      else
+	{
+	  fprintf (stderr, 
+		   "WARNING: Enough valuators,"
+		   "but non motion/button event so not printing\n");      
+	  return -1;
+	}
+      sxe.x = 0;
+      sxe.y = 0;
+      sxe.button = 0 ;
     }
   else
     {
+      fprintf (stderr, 
+	       "WARNING: Enough valuators ... still not printing\n");      
       return -1;
     }
   return XNEE_OK;
@@ -359,8 +388,6 @@ xnee_handle_xinput_event_human(xnee_data * xd,
       
       ordinary_event_nr = event_type - xd->xi_data.xinput_event_base + 1;
       sxe.type         =  ordinary_event_nr ;
-      
-      /* printf ("GOT %d | detail: %d  saved=%d\n", ordinary_event_nr, xrec_data->event.u.u.detail, sxe.type); */
       
       /* MotionEvent */
       if ( ordinary_event_nr == MotionNotify)
@@ -409,17 +436,6 @@ xnee_handle_xinput_event_human(xnee_data * xd,
 		);		*/		
       if ( sxe.type == MotionNotify )
 	{
-	  if ( e->num_valuators != 2 )
-	    {
-	      printf ("Number of valuators was faulty :(\n");
-	      /*
-	       * HESA HESA HESA
-	       * exit is good when developing
-	       * since it forces an exit on error ..... 
-	       *  FIX LATER
-	       */
-	      exit(1);
-	    }
 	  
 	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
 	  (void)xd->data_fp (xd->out_file,
@@ -465,7 +481,7 @@ xnee_xinput_add_devices(xnee_data *xd)
       fprintf(xd->err_file, "Will not use XInput event\n");
     }
 
-  if ( xnee_xinput_keyboard_requested(xd) || 
+  if ( xnee_xinput_keyboard_requested(xd) && 
        xnee_xinput_mouse_requested(xd) )
     {
       sprintf(buf, "%d-%d", 
