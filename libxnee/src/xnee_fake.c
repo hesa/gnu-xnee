@@ -219,7 +219,6 @@ xnee_replay_event_handler( xnee_data* xd,
 		KeyRelease));
   
 #ifdef XNEE_XINPUT_SUPPORT
-
   if ( xnee_is_forced_core_device_events(xd))
    {
       if ( xindata->type == XNEE_PROTO_XINPUT_EVENT_MASTER )
@@ -359,10 +358,8 @@ xnee_replay_event_handler( xnee_data* xd,
 	}
       else
 	{
-	  fprintf (stderr, 
-		   "fake event: general error  type=%d  (%s:%d)\n",
-		   xindata->type,
-		   __FILE__, __LINE__);
+	  xnee_verbose((xd, 
+			"Not replaying master device events\n"));
 	}
     }
 #endif /* XNEE_XINPUT_SUPPORT*/
