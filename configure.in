@@ -1,5 +1,4 @@
 AC_INIT(Xnee,3.08.90,bug-xnee@gnu.org)
-AC_INIT(Xnee,3.08,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 AM_INIT_AUTOMAKE
 #AB_INIT
@@ -849,6 +848,7 @@ fi
 echo ""
 echo "   Static or dynamic linking for programs ($makestatic)"
 echo "   -------------------------------------"
+echo "BUILD_STATIC:  $BUILD_STATIC"
 if test "x$BUILD_STATIC" != "x" ;
 then
     echo "        dynamic"
