@@ -206,7 +206,6 @@ xnee_replay_event_handler( xnee_data* xd,
   int x ;
   int y ; 
 
-
   xnee_verbose((xd, "---  xnee_replay_event_handler fake=%p\n ", (void*)xd->fake));
   XTestGrabControl (xd->fake, True); 
   xnee_verbose((xd, "---  xnee_replay_event_handler 0\n "));
@@ -219,13 +218,13 @@ xnee_replay_event_handler( xnee_data* xd,
 		KeyPress, 
 		KeyRelease));
   
-
 #ifdef XNEE_XINPUT_SUPPORT
+
   if ( xnee_is_forced_core_device_events(xd))
    {
-      if ( xindata->type == XNEE_PROTO_XINPUT_EVENT_SLAVE )
+      if ( xindata->type == XNEE_PROTO_XINPUT_EVENT_MASTER )
 	{
-	  ;
+	  xnee_verbose ((xd, "ignore master event %d\n", xindata->type));
 	}
       else
 	{
@@ -316,7 +315,7 @@ xnee_replay_event_handler( xnee_data* xd,
 							  xindata, 
 							  last_elapsed,
 							  0);
-	
+
 	  if ( ( xindata->u.xievent.type >= KeyPress ) 
 	       && (xindata->u.xievent.type <= MotionNotify) )
 	    {
@@ -360,7 +359,10 @@ xnee_replay_event_handler( xnee_data* xd,
 	}
       else
 	{
-	  ;
+	  fprintf (stderr, 
+		   "fake event: general error  type=%d  (%s:%d)\n",
+		   xindata->type,
+		   __FILE__, __LINE__);
 	}
     }
 #endif /* XNEE_XINPUT_SUPPORT*/
@@ -619,8 +621,13 @@ xnee_fake_motion_event_impl (xnee_data* xd,
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   xnee_verbose((xd, "---  delay = %d\n", (int)dtime));
 
+  printf ("==== fake motion  ");
+
+
   if (!xnee_is_recorder (xd))
     {
+  printf ("replay  ");
+
       new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
       new_y = xnee_resolution_newy(xd,y) + xd->res_info.y_offset;
       
@@ -638,7 +645,6 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 			(int) new_x,
 			(int) new_y,
 			0));
-
 	  XTestFakeMotionEvent(xd->fake, 
 			       screen, 
 			       new_x, 
@@ -647,6 +653,7 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 	}
       else
 	{
+
 #ifdef XNEE_XINPUT_SUPPORT
 	  axes[0] = new_x;
 	  axes[1] = new_y;
@@ -683,6 +690,14 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 				     axes,
 				     2,
 				     1);
+
+	  /* HESA HESA HEA REMOVE REMOVE REMOVE REMOVE the below */
+	  if (0) 
+	  XTestFakeMotionEvent(xd->fake, 
+			       screen, 
+			       axes[0], 
+			       axes[1], 
+			       0);
 #endif /* XNEE_XINPUT_SUPPORT*/
 	}
       
@@ -755,6 +770,7 @@ xnee_fake_relative_motion_event (xnee_data* xd,
 		   (int) x,
 		   (int) y,
 		    10));
+
       XTestFakeRelativeMotionEvent(xd->distr_list[i].dpy, 
 			   x, 
 			   y, 
@@ -791,7 +807,7 @@ xnee_type_file(xnee_data *xd)
 
   while (fgets(tmp, 256, xd->rt_file)!=NULL)
     {
-      xnee_verbose ((xd,"  xnee_type_file loop read size=%lu \"%s\"\n", 
+      xnee_verbose ((xd,"  xnee_type_file loop read size=" SIZE_T_PRINTF_FMT " \"%s\"\n", 
 		     strlen(tmp),tmp));
       
       for ( i=0 ; (size_t)i<strlen(tmp) ; i++ )
