@@ -5,7 +5,7 @@
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
  *                      2004, 2005, 2006, 2007, 2008
- *                      2009, 2010 Henrik Sandklef      
+ *                      2009, 2010, 2011 Henrik Sandklef      
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -278,7 +278,7 @@ xnee_record_handle_event_printer(xnee_data * xd,
       
       break;
     case CreateNotify:
-      fprintf (out,"0,%u,%ul,0,0,0,0,%lu\n",
+      fprintf (out,"0,%u," CARD32_PRINTF_FMT ",0,0,0," TIME_PRINTF_FMT "\n",
 	       event_type,
 	       xrec_data->event.u.createNotify.window,
 	       xrecintd->server_time
@@ -751,7 +751,7 @@ xnee_setup_recordext (xnee_data *xd)
       return XNEE_OK;
     }
   
-  #ifdef  XNEE_XINPUT_SUPPORT
+#ifdef  XNEE_XINPUT_SUPPORT
      xnee_xinput_add_devices(xd);
      xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
 #endif /*  XNEE_XINPUT_SUPPORT */
