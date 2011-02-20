@@ -41,7 +41,7 @@ gnee_LDFLAGS =  $(STATIC_FLAGS)
 gnee_LDADD =    \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
 	 ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)  \
-         $(libgnomeui_LIBS) $(gtk_LIBS) 
+         $(libgnomeui_LIBS) $(gtk_LIBS) ${LIBXI}
 
 
 
