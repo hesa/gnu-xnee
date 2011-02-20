@@ -5,7 +5,7 @@
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003
  *                      2004, 2005, 2006, 2007, 2008
- *                      2009, 2010  Henrik Sandklef              
+ *                      2009, 2010, 2011  Henrik Sandklef              
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -495,7 +495,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		  
 		case XNEE_PROTO_XINPUT_EVENT_MASTER:
 		  xnee_verbose((xd, "READ A XINPUT EVENT MASTER\n")); 
-		  break;
+/* 		  break; */
 		case XNEE_PROTO_XINPUT_EVENT_SLAVE:
 		  xnee_verbose((xd, "READ A XINPUT EVENT SLAVE\n")); 
 		  
@@ -871,6 +871,8 @@ xnee_replay_init          (xnee_data* xd)
      XNEE_RETURN_VOID_IF_ERR(ret);
   }
   
+  xnee_init_xinput(xd);
+  xnee_init_xinput_devices(xd);
   xnee_verbose((xd, "<--- xnee_replay_init\n")); 
 }
 
