@@ -3,8 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                      2004, 2008, 2009, 2010  Henrik Sandklef 
+ *  Copyright (C) 1999, 2000, 2001, 2002, 2003, 
+ *                2004, 2008, 2009, 2010, 2011  Henrik Sandklef 
  *
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -257,7 +257,6 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
     len =strlen(disp);
     disp+=next+1;
     disp_len=disp_len - next - 1;
-    xnee_verbose((xd,  " ------------------------- (%s) %lu    %d     %d\n", buf, len, disp_len, disp_len));
     ret=xnee_add_display_str (buf,xd);
     xnee_verbose((xd,  " ------------------------- are we doing fine??? ret=%d\n", ret));
 
@@ -309,9 +308,6 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
   else 
     {
       xnee_distr *tmp = xd->distr_list;
-      xnee_verbose((xd, 
-		    "Adding Display - allocating memory for the %lu time\n", 
-		    xd->distr_list_size));
       xd->distr_list = (xnee_distr *) realloc (xd->distr_list, 
 					       xd->distr_list_size);
       if (xd->distr_list==NULL)
@@ -360,8 +356,6 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
 		xtest_version_major,
 		xtest_version_minor));
   
-  xnee_verbose ((xd, "adding to distr list at pos %lu\n", 
-		 xd->distr_list_size));
   xnee_verbose ((xd, " -- resolution to 0\n"));
 
   if  ( (xd!=NULL) && 
