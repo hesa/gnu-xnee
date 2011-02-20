@@ -1,4 +1,52 @@
+2011-02-20  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Removed faulty extra call to AC_INIT
+
+	* gnee/src/Makefile.am (gnee_LDADD): 
+	* pnee/src/Makefile.am (pnee_LDADD): 
+	Added LIBXI to d flags (via LIBXI)
+
+	* configure.in: 
+	Bumped version (to 3.08.90) to start preps for 3.09
+	Removed debug printout
+	Altered check for XI slightly
+
+	* libxnee/src/xnee_xinput.c: 
+	Added (c) year
+
+	* libxnee/src/xnee_replay.c: 
+	Removed call to xnee_init_xinput
+
+	* libxnee/src/xnee_fake.c (xnee_fake_key_event_impl): 
+	Replaced warning print with verbose (was nothing to warn about)
+
+	* libxnee/include/libxnee/xnee_utils.h: 
+	Updated (c) year
+	Added macros for print format
+
+	* libxnee/src/xnee_display.c: 
+	Updated (c) year
+	Minor verbose statements changed
+
+	* libxnee/src/xnee_record.c: 
+	Changed print format
+	Updated (c) year
+
+	* libxnee/src/xnee_replay.c (xnee_replay_synchronize): 
+	Minor tweaks
+	Added init of XI devices
+	
+	* libxnee/src/xnee_fake.c (xnee_replay_event_handler): 
+	Fixes for XI 
+
+	* libxnee/src/xnee_xinput.c (xnee_handle_xinput_event): 
+	Fixes for XI support (num_valuators reworked)
+
 2011-02-19  Henrik Sandklef  <hesa@sandklef.com>
+
+	* cnee/src/parse.c (xnee_parse_cnee_option): 
+	Adding recording of XI keyboard events if XI support
 
 	* cnee/src/cnee_demo.c (cnee_demonstration): 
 	Added XI support.
