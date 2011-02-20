@@ -1,7 +1,8 @@
+AC_INIT(Xnee,3.08.90,bug-xnee@gnu.org)
 AC_INIT(Xnee,3.08,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 AM_INIT_AUTOMAKE
-AB_INIT
+#AB_INIT
 
 
 AC_PROG_INSTALL
@@ -243,7 +244,7 @@ fi
 AM_CONDITIONAL(XNEE_XINPUT_SUPPORT, test x$use_xi2 = xtrue)
 if test x$use_xi2 = xtrue;
 then
-    AC_CHECK_LIB(Xtst, XIQueryVersion, LIBXI="",[AC_CHECK_LIB(Xi, XIQueryVersion, LIBXI="-lXi")])
+    AC_CHECK_LIB(Xtst, XIQueryPointer, LIBXI="",[AC_CHECK_LIB(Xi, XIQueryPointer, LIBXI="-lXi")])
     AC_CHECK_HEADERS(X11/extensions/XInput2.h, HAS_XI2="true",HAS_XI2="false",)
     XNEE_XINPUT_SUPPORT_FLAGS=-DXNEE_XINPUT_SUPPORT
 else
@@ -363,7 +364,6 @@ then
     GTK_MODULES=""
     GTK2_MODULE="gtk+-2.0 "
     GTK2_VERSION="2.0.0"
-
 
     gtk_CFLAGS=`$PKGCFG --cflags $GTK2_MODULE `
     gtk_LIBS=`$PKGCFG --libs $GTK2_MODULE `
@@ -576,10 +576,6 @@ then
 
     AC_PATH_PROG(DVIPDF,dvipdf,,)
     check_doc_program "$DVIPDF" "dvipdf" "dvipdf"
-
-echo "======================== DVIPDF= $DVIPDF"	
-
-
 
     AC_PATH_PROG(PDF2PS,pdf2ps,,)
     check_doc_program "$PDF2PS" "pdf2ps" ""
