@@ -621,12 +621,8 @@ xnee_fake_motion_event_impl (xnee_data* xd,
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   xnee_verbose((xd, "---  delay = %d\n", (int)dtime));
 
-  printf ("==== fake motion  ");
-
-
   if (!xnee_is_recorder (xd))
     {
-  printf ("replay  ");
 
       new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
       new_y = xnee_resolution_newy(xd,y) + xd->res_info.y_offset;
