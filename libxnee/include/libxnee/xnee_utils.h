@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                      2004, 2010  Henrik Sandklef 
+ *                      2004, 2010, 2011  Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -29,6 +29,16 @@
 #ifndef XNEE_XNEE_UTILS_H
 #define XNEE_XNEE_UTILS_H
 #include "xnee.h"
+
+#ifdef LONG64
+#define CARD32_PRINTF_FMT "%ll"
+#define SIZE_T_PRINTF_FMT  "%ll"
+#else
+#define CARD32_PRINTF_FMT "%ld"
+#define SIZE_T_PRINTF_FMT "%d"
+#endif
+#define TIME_PRINTF_FMT  CARD32_PRINTF_FMT
+
 
 /**
  * Removes XNEE_COMMENT_START from the argument
@@ -147,5 +157,7 @@ xnee_check_false(char *expr);
 
 int
 xnee_is_screen_ok(xnee_data *xd, int screen);
+
+
 
 #endif /*  XNEE_XNEE_UTILS_H */
