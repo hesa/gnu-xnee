@@ -871,7 +871,6 @@ xnee_replay_init          (xnee_data* xd)
      XNEE_RETURN_VOID_IF_ERR(ret);
   }
   
-  xnee_init_xinput(xd);
   xnee_init_xinput_devices(xd);
   xnee_verbose((xd, "<--- xnee_replay_init\n")); 
 }
