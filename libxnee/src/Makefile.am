@@ -72,16 +72,16 @@ LIB_XNEE_SOURCE_FILES = xnee.c  \
 	xnee_xinput.c \
 	$(LIBXNEE_H_FILES)
 
-dnl libxnee_la_SOURCES = $(LIB_XNEE_SOURCE_FILES)
+libxnee_la_SOURCES = $(LIB_XNEE_SOURCE_FILES)
 EXTRA_LTLIBRARIES = libxnee.la
 lib_LTLIBRARIES = $(WANTED_LIBXNEE)
 libxnee_la_LDFLAGS = -rpath '$(libdir)'
-libxnee_la_SOURCES = $(LIB_XNEE_SOURCE_FILES) 
+#dnl libxnee_la_SOURCES = $(LIB_XNEE_SOURCE_FILES) 
 libxnee_a_CFLAGS = $(AM_CFLAGS)
 
-dnl noinst_LIBRARIES = libxnee.a 
+#noinst_LIBRARIES = libxnee.a 
 
-dnl noinst_LTLIBRARIES = $(WANTED_LIBXNEE)
+noinst_LTLIBRARIES = $(WANTED_LIBXNEE)
 
 
 if VERBOSE
