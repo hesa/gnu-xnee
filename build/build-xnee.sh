@@ -1,6 +1,11 @@
 #!/bin/sh
 
-make -f Makefile.cvs && ./configure --disable-xinput2 --disable-doc --disable-gnome-applet --disable-gui && make && make check
+# TODO
+#
+# * Add make check
+#
+
+make -f Makefile.cvs && ./configure --disable-xinput2 --disable-doc --disable-gnome-applet --disable-gui && make 
 RET=$?
 
 if [ "$RET" = "0" ]
