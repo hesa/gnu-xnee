@@ -1,5 +1,11 @@
 2011-02-22  Henrik Sandklef  <hesa@sandklef.com>
 
+	* cnee/src/Makefile.am (cnee_SOURCES): 
+	Adding LIBXI (possibly containing libxi) to ld flags
+
+	* libxnee/src/Makefile.am (LIB_XNEE_SOURCE_FILES): 
+	Used "#" for commenting out stuff
+
 	* NEWS: 
 	Added link to debian bug
 
