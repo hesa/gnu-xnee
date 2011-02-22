@@ -1,5 +1,8 @@
 2011-02-22  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_fake.c (xnee_fake_motion_event_impl): 
+	Removed unused (and somewhat stupid) test code
+
 	* cnee/src/Makefile.am (cnee_SOURCES): 
 	Adding LIBXI (possibly containing libxi) to ld flags
 

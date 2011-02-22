@@ -684,13 +684,6 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 				     2,
 				     1);
 
-	  /* HESA HESA HEA REMOVE REMOVE REMOVE REMOVE the below */
-	  if (0) 
-	  XTestFakeMotionEvent(xd->fake, 
-			       screen, 
-			       axes[0], 
-			       axes[1], 
-			       0);
 #endif /* XNEE_XINPUT_SUPPORT*/
 	}
       
