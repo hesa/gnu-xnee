@@ -1,3 +1,8 @@
+2011-02-23  Henrik Sandklef  <hesa@sandklef.com>
+
+	* NEWS: 
+	Prepared for 3.0.9
+
 2011-02-22  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_fake.c (xnee_fake_motion_event_impl): 
