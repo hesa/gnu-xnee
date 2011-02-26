@@ -419,7 +419,8 @@ xnee_device_as_delivered(xnee_data *xd)
 	    (strstr(xd->x_vendor_name, "X.Org") ))
 	{
 	  if ( ( xd->x_version_major == 1 ) &&
-	       ( xd->x_version_minor >= 6 ) )
+	       ( xd->x_version_minor >= 6 ) &&
+	       ( xd->x_version_minor < 6 ) )
 	    {
 	      ret_val = 1;
 	    }
