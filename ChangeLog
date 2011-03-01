@@ -1,5 +1,15 @@
 2011-03-01  Henrik Sandklef  <hesa@sandklef.com>
 
+	* NEWS: 
+	Boiler template for coming version 3.10
+
+2011-02-26  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_range.c (xnee_device_as_delivered): 
+	Not recording device as delivered if X.org > 1.9
+
+2011-03-01  Henrik Sandklef  <hesa@sandklef.com>
+
 	* libxnee/src/xnee_range.c (xnee_device_as_delivered): 
 	Typo (<6   => <9) when checking X.org version
 
