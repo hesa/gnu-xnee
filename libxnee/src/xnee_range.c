@@ -420,7 +420,7 @@ xnee_device_as_delivered(xnee_data *xd)
 	{
 	  if ( ( xd->x_version_major == 1 ) &&
 	       ( xd->x_version_minor >= 6 ) &&
-	       ( xd->x_version_minor < 6 ) )
+	       ( xd->x_version_minor < 9 ) )
 	    {
 	      ret_val = 1;
 	    }
