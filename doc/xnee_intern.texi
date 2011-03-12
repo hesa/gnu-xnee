@@ -91,7 +91,7 @@ During replay the following is done:
 
 
 @subsection Synchronisation is needed
-So by recording more data than just the events to be replayed we can synchornise what was recorded with what is going on when replaying. But the data has to be choosen with respect to that the data:
+So by recording more data than just the events to be replayed we can synchornise what was recorded with what is going on when replaying. But the data has to be chosen with respect to that the data:
 @itemize @bullet
 @item    differs from different sessions (Gimp and Xterm are really different)
 @item    slows down the replay session if there are too many
