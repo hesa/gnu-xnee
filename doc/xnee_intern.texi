@@ -13,7 +13,7 @@ and why some features exists and why some doesn't.
 
 @section Synchronisation
 @cindex Synchronisation
-We will try to go through the basics of how Xnee implememnts synchronisation 
+We will try to go through the basics of how Xnee implements synchronisation 
 and try to tell you, by using examples, why synhronisation is important.
 
 @subsection Why synchronise
