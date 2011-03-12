@@ -24,7 +24,7 @@ follow the Xnee format. For information and specification on this format read
 the Xnee format chapter.
 @ 
 
-The authors of Xnee suggests you start of with a generated project file. To get one 
+The authors of Xnee suggests you start off with a generated project file. To get one 
 such file, type the following
 @code{cnee --mouse --keyboard --write-settings new_proj.xnp}. You will now 
 have a file @code{new_proj.xnp} with some useful values, which you can edit as you wish.
