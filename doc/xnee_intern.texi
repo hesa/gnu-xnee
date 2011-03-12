@@ -58,13 +58,13 @@ Instead we could record some more data than just the mouse and keyboard events.
 During record the following is done:
 @itemize @bullet
 @item	Start galeon (or another web browser) via the GNOME panel
-@item   Record some X data that tells us that a window have been created
+@item   Record some X data that tells us that a window has been created
 @item	Press Ctrl-O which pops up a window
-@item   Record some X data that tells us that a window have been created
+@item   Record some X data that tells us that a window has been created
 @item   Press the left button in the textfield of the popup window
 @item   Enter the URL you want to enter (e.g @url{http://www.gnu.org})
 @item   Click on the OK button 
-@item   Record some X data that tells us that a window have been destroyed
+@item   Record some X data that tells us that a window has been destroyed
 @item   Then click on another URL (e.g GNU Documentation)
 @item   Record some X data that tells us that a some text has been displayed in a window
 @item   Then click on another URL (e.g On-Line Documentation)
