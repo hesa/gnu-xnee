@@ -21,7 +21,7 @@ Xnee consists of one library and two applications
 @section Xnee features
 @cindex features
 
-Xnee can be used for multiple purposes, allthough it was initially designed as a test tool. The most used features are the foloowing:
+Xnee can be used for multiple purposes, although it was initially designed as a test tool. The most used features are the foloowing:
 
 @b{Test tool} - 
         Instead of performing test cases for a GUI (or CLI program) 
@@ -52,7 +52,7 @@ Xnee can be used for multiple purposes, allthough it was initially designed as a
    session without having to record the session.
 
 @b{X11 protocol sniffer} - 
-   Xnee can be used a sniffer for the X11 protocol.
+   Xnee can be used as a sniffer for the X11 protocol.
 
 
 @section Background
