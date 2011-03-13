@@ -3,7 +3,7 @@
 @cindex  Xnee Internals
 This chapter is intended to explain the internal design of libxnee. 
 Hopefully this will lead to a better understanding of how to use Xnee
-and why some features exists and why some doesn't. 
+and why some features exist and why some don't. 
 
 
 
