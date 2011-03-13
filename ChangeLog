@@ -1,3 +1,16 @@
+2011-03-13  Henrik Sandklef  <hesa@sandklef.com>
+
+	* doc/xnee_intern.texi: 
+	Typo fix (exists -> exist, doesn't -> don't)
+
+	* doc/xnee_prot.texi: 
+	Typo
+
+2011-03-12  Henrik Sandklef  <hesa@sandklef.com>
+
+	* doc/xnee_intern.texi: 
+	Language fixes
+
 2011-03-01  Henrik Sandklef  <hesa@sandklef.com>
 
 	* NEWS: 
