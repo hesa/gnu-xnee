@@ -464,7 +464,7 @@ xnee_xinput_add_devices(xnee_data *xd)
 {
   int xinput_ev_base;
   int ret ; 
-  char buf[10];
+  char buf[100];
 
   if ( xd->xi_data.xinput_event_base == 0 )
     {
