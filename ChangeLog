@@ -1,3 +1,13 @@
+2011-04-18  Henrik Sandklef  <hesa@sandklef.com>
+
+	* cnee/test/src/Makefile (X11_INC): 
+	Added -I/usr/local/include
+	to compile test code on freebsd
+
+	* cnee/test/test_all.sh: 
+	* cnee/test/check_mem.sh: 
+	Updated to use "env" to invoke bash script
+
 2011-03-28  Henrik Sandklef  <hesa@bach.sandklef.com>
 
 	* doc/xnee_copying: 
