@@ -569,6 +569,10 @@ xnee_record_from_data_display(xnee_data *xd)
 		  ret_val = 1;
 		}
 	    }
+	  else if ( xd->x_version_major == 7 )
+	    {
+	      ret_val = 1;
+	    }
 	}
       else if (strstr(xd->x_vendor_name, "Sun Microsystems") )
 	{
