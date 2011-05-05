@@ -1,5 +1,11 @@
 Changes in coming version 3.10
 ==============================
+
+
+   * Fixed bugs:
+
+     Savannah: 
+        #33237, Xnee fails to record on RedHat
   
 
 Changes in version 3.09
