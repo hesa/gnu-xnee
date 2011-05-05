@@ -497,13 +497,14 @@ int
 xnee_record_from_data_display(xnee_data *xd)
 {
   int ret_val = 0;
-  /*
-  fprintf (stderr,"X info:   %s %d %d %d\n",
-	  xd->x_vendor_name, 
-	  xd->x_version_major, 
-	  xd->x_version_minor, 
-	  xd->x_version_minor_sub);
-  */
+
+
+  /* fprintf (stderr,"X info:   %s %d %d %d\n", */
+  /* 	  xd->x_vendor_name,  */
+  /* 	  xd->x_version_major,  */
+  /* 	  xd->x_version_minor,  */
+  /* 	  xd->x_version_minor_sub); */
+
   if ( (xd != NULL) && (xd->x_vendor_name != NULL ) )
     {
       
@@ -525,7 +526,7 @@ xnee_record_from_data_display(xnee_data *xd)
 	       *  versions 
 	       */
 	      if ( ( xd->x_version_minor >= 3 ) &&
-		   ( xd->x_version_minor <= 9 ) )
+		   ( xd->x_version_minor <= 10 ) )
 		{
 
 		  /*
@@ -605,7 +606,9 @@ xnee_record_from_data_display(xnee_data *xd)
 		xd->x_version_minor, 
 		xd->x_version_minor_sub));
   xnee_verbose((xd, "<-- %d \n", ret_val));
-  
+
+  /* fprintf (stderr, "Return %d\n", ret_val); */
+
   return ret_val ;
 }
 

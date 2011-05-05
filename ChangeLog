@@ -3,6 +3,8 @@
 	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
 	Added support for X.org >= 7 to xnee_record_from_data_display()
         bug #33237, Xnee fails to record on RedHat
+	(xnee_record_from_data_display): 
+	Adding support for X.org > 1 10
 
 2011-04-18  Henrik Sandklef  <hesa@sandklef.com>
 
