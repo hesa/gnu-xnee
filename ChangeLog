@@ -1,19 +1,19 @@
 2011-05-05  Henrik Sandklef  <hesa@sandklef.com>
 
-	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
+	* libxnee/src/xnee_utils.c (xnee_record_from_data_display):
 	Added support for X.org >= 7 to xnee_record_from_data_display()
         bug #33237, Xnee fails to record on RedHat
-	(xnee_record_from_data_display): 
+	(xnee_record_from_data_display):
 	Adding support for X.org > 1 10
 
 2011-04-18  Henrik Sandklef  <hesa@sandklef.com>
 
-	* cnee/test/src/Makefile (X11_INC): 
+	* cnee/test/src/Makefile (X11_INC):
 	Added -I/usr/local/include
 	to compile test code on freebsd
 
-	* cnee/test/test_all.sh: 
-	* cnee/test/check_mem.sh: 
+	* cnee/test/test_all.sh:
+	* cnee/test/check_mem.sh:
 	Updated to use "env" to invoke bash script
 
 2011-03-28  Henrik Sandklef  <hesa@bach.sandklef.com>
@@ -28,26 +28,26 @@
 
 2011-03-13  Henrik Sandklef  <hesa@sandklef.com>
 
-	* doc/xnee_intro.texi: 
+	* doc/xnee_intro.texi:
 	Typos fixed
 
-	* AUTHORS (Authors): 
+	* AUTHORS (Authors):
 	Added Scott Kostyshak to contributors
 
-	* doc/xnee_intern.texi: 
+	* doc/xnee_intern.texi:
 	Typo fix (exists -> exist, doesn't -> don't)
 
-	* doc/xnee_prot.texi: 
+	* doc/xnee_prot.texi:
 	Typo
 
 2011-03-12  Henrik Sandklef  <hesa@sandklef.com>
 
-	* doc/xnee_intern.texi: 
+	* doc/xnee_intern.texi:
 	Language fixes
 
 2011-03-01  Henrik Sandklef  <hesa@sandklef.com>
 
-	* NEWS: 
+	* NEWS:
 	Boiler template for coming version 3.10
 
 2011-02-26  Henrik Sandklef  <hesa@sandklef.com>
