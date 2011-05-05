@@ -1,3 +1,9 @@
+2011-05-05  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
+	Added support for X.org >= 7 to xnee_record_from_data_display()
+        bug #33237, Xnee fails to record on RedHat
+
 2011-04-18  Henrik Sandklef  <hesa@sandklef.com>
 
 	* cnee/test/src/Makefile (X11_INC): 
@@ -10,19 +16,19 @@
 
 2011-03-28  Henrik Sandklef  <hesa@bach.sandklef.com>
 
-	* doc/xnee_copying: 
+	* doc/xnee_copying:
 	Added 2011 to (c) year
 
 2011-03-25  Henrik Sandklef  <hesa@bruckner.sandklef.com>
 
-	* libxnee/src/xnee_xinput.c (xnee_xinput_add_devices): 
+	* libxnee/src/xnee_xinput.c (xnee_xinput_add_devices):
 	Increased size of xinput device name (to 100)
 
 2011-03-13  Henrik Sandklef  <hesa@sandklef.com>
 
 	* doc/xnee_intro.texi: 
 	Typos fixed
-	
+
 	* AUTHORS (Authors): 
 	Added Scott Kostyshak to contributors
 
@@ -194,7 +200,7 @@
 	
 	* libxnee/src/xnee_utils.c: 
 	Removed old crappy commented out code
-	
+
 	* libxnee/src/xnee_setget.c: 
 	* libxnee/src/xnee_session.c: 
 	* libxnee/src/xnee_resource.c: 
@@ -218,7 +224,7 @@
 	* libxnee/src/xnee_expr.c: 
 	#ifdef:ed away code
 	Removed unused variables
-	
+
 	* libxnee/src/xnee_display.c: 
 	fprintf pointers with "%p" instead of "%d" or "%u"
 
@@ -232,7 +238,6 @@
 	* libxnee/src/Makefile.am (PEDANTIC_FLAGS): 
 	Added  -fno-strict-aliasing -Wno-unused-parameter  
 
->>>>>>> 1.258
 2010-10-25  hesa  <hesa@sandklef.com>
 
 	* libxnee/src/print.c (xnee_print_distr_list): 
