@@ -240,7 +240,7 @@ xnee_handle_xinput_event(xnee_data * xd,
       e = (deviceKeyButtonPointer *) &xrec_data->event ;
       
       xnee_verbose((xd, "handle xi:: dev-id%d type:%d  ", 
-	      e->deviceid,
+		    e->deviceid,
 		    event_type));
       ordinary_event_nr = event_type - xd->xi_data.xinput_event_base + 1;
       sxe.type         =  ordinary_event_nr ;
@@ -254,9 +254,28 @@ xnee_handle_xinput_event(xnee_data * xd,
 	  sxe.y        = xrec_data->event.u.keyButtonPointer.rootY;
 	  sxe.time     = xrec_data->event.u.keyButtonPointer.time;
 
-/* 	  printf ("\nStore motion : %d  id: %d   %dx%d\n",  */
-/* 		  sxe.type, e->deviceid, sxe.x, sxe.y */
-/* 		  ); */
+	  /*
+	  printf ("XI2 Motion (%d/%d): root: %dx%d  XI:%dx%d | xy:%dx%d  axes:%d/%d  %d %d %d %d %d %d \n", 
+		  ((XDeviceMotionEvent*)&xrec_data->event)->type,
+		  ((XDeviceMotionEvent*)&xrec_data->event)->deviceid,
+		  xrec_data->event.u.keyButtonPointer.rootX,
+		  xrec_data->event.u.keyButtonPointer.rootY,
+		  ((XDeviceMotionEvent*)&xrec_data->event)->x_root,
+		  ((XDeviceMotionEvent*)&xrec_data->event)->y_root,
+		  ((XDeviceMotionEvent*)&xrec_data->event)->x,
+		  ((XDeviceMotionEvent*)&xrec_data->event)->y,
+		  ((XDeviceMotionEvent*)&xrec_data->event)->first_axis,
+		  ((XDeviceMotionEvent*)&xrec_data->event)->axes_count,
+		  ((XDeviceMotionEvent*)&xrec_data->event)->axis_data[0],
+		  ((XDeviceMotionEvent*)&xrec_data->event)->axis_data[1],
+		  ((XDeviceMotionEvent*)&xrec_data->event)->axis_data[2],
+		  ((XDeviceMotionEvent*)&xrec_data->event)->axis_data[3],
+		  ((XDeviceMotionEvent*)&xrec_data->event)->axis_data[4],
+		  ((XDeviceMotionEvent*)&xrec_data->event)->axis_data[5]
+
+		  );
+	  */
+
 	  /* 
 	   * Rest of the data is sent in an Devicevaluator event, 
 	   * store what we have and continue
@@ -321,10 +340,10 @@ xnee_handle_xinput_event(xnee_data * xd,
 	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
 	  fprintf (out, ",%d,%d,%d,0,0,0,%lu,%d,'%s'\n",
 		   sxe.type,
- 		   (int)e->valuator0,  
- 		   (int)e->valuator1,  
-/* 		   sxe.x, */
-/* 		   sxe.y, */
+ 		   /* (int)e->valuator0,   */
+ 		   /* (int)e->valuator1,   */
+		   sxe.x,
+		   sxe.y,
 		   server_time,
 		   /* sxe.time, */
 		   e->deviceid,
@@ -464,7 +483,8 @@ xnee_xinput_add_devices(xnee_data *xd)
 {
   int xinput_ev_base;
   int ret ; 
-  char buf[100];
+#define XI_BUF_SIZE 100
+  char buf[XI_BUF_SIZE+1];
 
   if ( xd->xi_data.xinput_event_base == 0 )
     {
@@ -484,20 +504,20 @@ xnee_xinput_add_devices(xnee_data *xd)
   if ( xnee_xinput_keyboard_requested(xd) && 
        xnee_xinput_mouse_requested(xd) )
     {
-      sprintf(buf, "%d-%d", 
+      snprintf(buf, XI_BUF_SIZE, "%d-%d", 
 	      xinput_ev_base,
 	      xinput_ev_base+5);
     }
   else if ( xnee_xinput_mouse_requested(xd))
     {
-      sprintf(buf, "%d,%d-%d", 
+      snprintf(buf, XI_BUF_SIZE, "%d,%d-%d", 
 	      xinput_ev_base,
 	      xinput_ev_base+3,
 	      xinput_ev_base+5);
     }
   else if ( xnee_xinput_keyboard_requested(xd))
     {
-      sprintf(buf, "%d-%d", 
+      snprintf(buf, XI_BUF_SIZE, "%d-%d", 
 	      xinput_ev_base,
 	      xinput_ev_base+2);
     }
