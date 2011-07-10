@@ -1,3 +1,24 @@
+2011-07-10  Henrik Sandklef  <hesa@sandklef.com>
+
+	* cnee/test/src/Makefile (X11_LIB): 
+	Added missing -I and -L to include path 
+
+	* libxnee/src/xnee_session.c (xnee_close_down): 
+	Setting displays to NULL after closing them
+
+	* libxnee/src/xnee_fake.c (xnee_fake_motion_event_impl): 
+	Slightly altered threshold for usleep wrapper (xnee_fake_sleep)
+
+	* libxnee/src/xnee_time.c (xnee_calc_sleep_amount_fast): 
+	Rewrote time diff calculator 
+	Removed printf statements
+
+
+	* libxnee/src/xnee_xinput.c (xnee_handle_xinput_event): 
+	Printing data from stored x event instead of frmo deviceevaluator
+	Replaced 100 as buf size with a macro (XI_BUF_SIZE)
+	spnrintf instead of sprintf
+
 2011-05-05  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_utils.c (xnee_record_from_data_display):
