@@ -1,7 +1,7 @@
 X11_DIR=/usr/X11R6/
 
 X11_INC=-I${X11_DIR}/include -I/usr/local/include
-X11_LIB=-L${X11_DIR}/lib
+X11_LIB=-L${X11_DIR}/lib  -L/usr/X11R6/lib 
 
 OBJS=xgetter.o
 
@@ -11,7 +11,7 @@ objs:
 	gcc ${X11_INC}  -c xgetter.c -o xgetter.o
 
 bin: 
-	gcc  -o xgetter xgetter.o -L/usr/X11R6/lib -lX11
+	gcc  -o xgetter xgetter.o ${X11_LIB} -lX11
 
 clean:
 	-rm *.o ${BIN}
