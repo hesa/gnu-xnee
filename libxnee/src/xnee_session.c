@@ -174,6 +174,7 @@ xnee_close_down(xnee_data* xd)
       xnee_verbose((xd, "Closing displays control=%p \n", (void*) xd->control));
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3.1 \n"  ));
       XCloseDisplay ( xd->control );
+      xd->control = NULL;
     }
 
   if ( xd->fake!=NULL)  
@@ -182,6 +183,7 @@ xnee_close_down(xnee_data* xd)
       xnee_verbose((xd, "Closing displays fake=%p \n", (void*) xd->fake));
       XNEE_DEBUG ( (stderr ," --> xnee_close_down() at 0.3.1 \n"  ));
       XCloseDisplay ( xd->fake );
+      xd->fake = NULL;
     }
  
 
