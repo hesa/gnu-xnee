@@ -3,7 +3,8 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003
+ *                      2011  Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -148,20 +149,75 @@ xnee_calc_sleep_amount(xnee_data *xd,
 		       unsigned long record_last_diff, 
 		       unsigned long recordFirst_diff )
 {
-  Time sleep_amt;
+  /* Time sleep_amt; */
   unsigned long out_of_wack_amt = 0;
   int           out_of_wack     = 0;
   float tmp;
+  float start_diff_percent ;
+  float compensation_factor ;
+  float sleep_amt ; 
+  static stored_recordFirst_diff;
 
-  
   xnee_verbose ((xd, "xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff:" 
 		 "%lu recordFirst_diff: %lu\n",  
 		 last_diff, first_diff, record_last_diff, recordFirst_diff )); 
 
-/*     printf ("xnee_calc_sleep_amount last_diff: %lu first_diff: %lu record_last_diff: %lu recordFirst_diff: %lu\t",   */
-/* 	  last_diff, first_diff, record_last_diff, recordFirst_diff );  */
+  if ( stored_recordFirst_diff != 0 )
+    {
+      start_diff_percent = ((double)stored_recordFirst_diff / (double) first_diff);
+      if ( start_diff_percent < 0.99 ) 
+	{
+	  if ( start_diff_percent < 0.70 ) 
+	    {
+	      compensation_factor=0.5;      
+	    }
+	  else if ( start_diff_percent < 0.80 ) 
+	    {
+	      compensation_factor=0.8;      
+	    }
+	  else
+	    {
+	      compensation_factor=0.9;      
+	    }
+	}
+      else if ( start_diff_percent > 1.01 ) 
+	{
+	  if ( start_diff_percent > 1.3 ) 
+	    {
+	      compensation_factor=1.5;      
+	    }
+	  else if ( start_diff_percent > 1.2 ) 
+	    {
+	      compensation_factor=1.2;      
+	    }
+	  else
+	    {
+	      compensation_factor=1.1;      
+	    }
+	}
+      else 
+	{
+	  compensation_factor=1.0;      
+	}
+    }
+  else
+    {
+      compensation_factor=1.0;      
+    }
+  /* compensation_factor=1.0;       */
   
+  sleep_amt= (record_last_diff*compensation_factor);
 
+  if (sleep_amt > 5.0) 
+    {
+      sleep_amt = sleep_amt - 1.0;
+    }
+
+  stored_recordFirst_diff = recordFirst_diff;
+  return ( sleep_amt );      
+
+  /* printf ("\n\t%d  compensation: %f \n\n", record_last_diff, compensation_factor); */
+  return record_last_diff*compensation_factor;
 
   /* determine where we are from first read  
    * either too fast or too slow */
@@ -179,6 +235,7 @@ xnee_calc_sleep_amount(xnee_data *xd,
   
   if ( out_of_wack==1 ) 
     {
+
       xnee_verbose (( xd, "xnee_calc_sleep_amount: too fast\n" )); 
       /* too fast - we should slow down a bit */
       if ( record_last_diff > last_diff ) 
@@ -194,7 +251,8 @@ xnee_calc_sleep_amount(xnee_data *xd,
 	  if ( out_of_wack_amt > record_last_diff )  
 	    {
 	      xnee_verbose (( xd, "xnee_calc_sleep_amount: 1.1\n" )); 
-	      sleep_amt = record_last_diff;
+	      //	      sleep_amt = record_last_diff;
+	      sleep_amt = out_of_wack_amt ;
 	    }
 	  else 
 	    {
