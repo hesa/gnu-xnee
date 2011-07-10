@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003,
- *                      2010  Henrik Sandklef     
+ *                      2010, 2011  Henrik Sandklef     
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -58,10 +58,11 @@ xnee_fake_sleep(unsigned long period)
 { 
   static unsigned long collected_time=0;
 
-#define SLEEP_THRESH 10
+#define SLEEP_THRESH 4
   if (period>SLEEP_THRESH)
     {
-      usleep (period*1000); 
+      usleep ((period+collected_time)*1000); 
+      collected_time=0;
     }
   else
     {
@@ -673,6 +674,7 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 			(int) new_x,
 			(int) new_y,
 			2,0));
+
 
 	  xnee_xi_last_know_pointer_pos[0]=axes[0];
 	  xnee_xi_last_know_pointer_pos[1]=axes[1];
