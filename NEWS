@@ -1,12 +1,13 @@
 Changes in coming version 3.10
 ==============================
 
-
    * Fixed bugs:
 
      Savannah: 
         #33237, Xnee fails to record on RedHat
-  
+        #33667, Seg fault (on Ubuntu 11.04)
+        #32385: CNEE replay precision
+        #32767: Button key to stop recoring
 
 Changes in version 3.09
 ==============================
