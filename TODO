@@ -10,6 +10,8 @@ libxnee:
 
   xnee_info contains record and replay things, but is handled in xnee_record.c
 
+  clean up in xnee_time (calc_sleep_amount)
+
 doc:
 
 Everywhere:
