@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  * Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 
- *               2005, 2006, 2007, 2009, 2010
+ *               2005, 2006, 2007, 2009, 2010, 2011
  *               Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
@@ -236,7 +236,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 		   &xindata->newtime);
       if (ret < 8)    /* NUM ARGS */
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	  (void)xnee_print_error("Error in file %s: %s \n", xd->data_name, tmp);
 	  ret = 0 ;
 	}   
 #ifdef XNEE_XINPUT_SUPPORT
@@ -265,7 +265,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 		   &xindata->newtime);
       if (ret < 3)
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	  (void)xnee_print_error("Error in file %s: %s \n", xd->data_name, tmp);
 	  ret = 0;
 	}   
     }
@@ -278,7 +278,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 		      &xindata->newtime);
       if (ret < 3)
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	  (void)xnee_print_error("Error in file %s: %s \n", xd->data_name, tmp);
 	  ret = 0;
 	}   
     }
@@ -291,7 +291,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 		      &xindata->newtime);
       if (ret < 3)
 	{
-	  (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	  (void)xnee_print_error("Error in file %s: %s \n", xd->data_name, tmp);
 	  ret = 0;
 	} 
     }
@@ -314,7 +314,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 		       xindata->u.xievent.name);
 	  if (ret < 10)
 	    {
-	      (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	      (void)xnee_print_error("Error in file %s: %s \n", xd->data_name, tmp);
 	      ret = 0;
 	    } 
 	}
@@ -337,7 +337,7 @@ xnee_expression_handle_replay(xnee_data *xd,
 		       xindata->u.xievent.name);
 	  if (ret < 10)
 	    {
-	      (void)xnee_print_error("Error in file %s \n", xd->data_name);
+	      (void)xnee_print_error("Error in file %s: %s \n", xd->data_name, tmp);
 	      ret = 0;
 	    } 
 	}
