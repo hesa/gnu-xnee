@@ -31,7 +31,7 @@
 #include "xnee.h"
 
 #ifdef LONG64
-#define CARD32_PRINTF_FMT "%ll"
+#define CARD32_PRINTF_FMT "%ld"
 #define SIZE_T_PRINTF_FMT  "%ll"
 #else
 #define CARD32_PRINTF_FMT "%ld"
