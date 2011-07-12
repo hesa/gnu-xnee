@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
- *                      2004, 2005, 2006, 2007 Henrik Sandklef
+ *                      2004, 2005, 2006, 2007, 2011 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -43,7 +43,7 @@ char *explain[] = {
 char *examples[] = {
   ""XNEE_CLI " --record --events-to-record 1000 --mouse --keyboard -o /tmp/xnee.xns -e /tmp/xnee.log -v", 
   "Records 1000 events (keyboard and mouse) to file /tmp/xnee.xns and dumps the verbose printout to /tmp/xnee.log",
-  ""XNEE_CLI " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log --no-sync",
+  ""XNEE_CLI " --replay -f /tmp/xnee.xns -v -e /tmp/xnee.log -ns",
   "Read data from /tmp/xnee.xns, replay it and verbose print to file /tmp/xnee.log",
   "For more examples, read the Xnee manual",
   NULL 
