@@ -1,3 +1,14 @@
+2011-07-12  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/include/libxnee/xnee_utils.h: 
+	Changed print format on 64 bit platform
+
+	* libxnee/src/xnee_expr.c: 
+	Added xnee session line which caused the error to err printout
+
+	* libxnee/src/xnee_record.c: 
+	Fixed format error
+
 2011-07-10  Henrik Sandklef  <hesa@sandklef.com>
 
 	* cnee/test/src/Makefile (X11_LIB): 
