@@ -162,5 +162,5 @@ sync.
 @*
 It is possible to tweak the thresholds using the @code{--maximum-threshold},
 @code{--negative-threshold} and @code{--total-diff-threshold} options. Is is
-also possible to turn off synchronisation completely using the @code{--no-sync}
+also possible to turn off synchronisation completely using the @code{-ns}
 option.

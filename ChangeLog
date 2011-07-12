@@ -1,5 +1,8 @@
 2011-07-12  Henrik Sandklef  <hesa@sandklef.com>
 
+	* cnee/src/cnee_strings.c: 
+	Replaced "--no-sync" with -ns
+
 	* libxnee/include/libxnee/xnee_utils.h: 
 	Changed print format on 64 bit platform
 
