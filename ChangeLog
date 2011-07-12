@@ -1,5 +1,11 @@
 2011-07-12  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee_setget.c (xnee_set_unsync_mode): 
+	Added verbose printout on synd mode set/unset
+
+	* doc/xnee_intern.texi: 
+	Replaced "--no-sync" with -ns
+
 	* cnee/src/cnee_strings.c: 
 	Replaced "--no-sync" with -ns
 
