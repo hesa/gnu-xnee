@@ -1710,7 +1710,7 @@ xnee_unset_sync_mode(xnee_data *xd)
 int 
 xnee_set_unsync_mode(xnee_data *xd)
 {
-  xnee_verbose((xd, "Setting no sync\n"));
+  xnee_verbose((xd, "Setting unsync\n"));
   xd->sync = False;
   return XNEE_OK;
 }
