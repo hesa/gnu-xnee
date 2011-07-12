@@ -1,5 +1,11 @@
 2011-07-12  Henrik Sandklef  <hesa@sandklef.com>
 
+	* configure.in: 
+	Bumping to 3.02.91
+
+	* doc/version.texi: 
+	Bumped date
+
 	* libxnee/src/xnee_setget.c (xnee_set_unsync_mode): 
 	Added verbose printout on synd mode set/unset
 
