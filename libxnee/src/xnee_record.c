@@ -278,12 +278,11 @@ xnee_record_handle_event_printer(xnee_data * xd,
       
       break;
     case CreateNotify:
-      fprintf (out,"0,%u," CARD32_PRINTF_FMT ",0,0,0," TIME_PRINTF_FMT "\n",
+      fprintf (out,"0,%u," CARD32_PRINTF_FMT "0,0,0,0,0," TIME_PRINTF_FMT "\n",
 	       event_type,
-	       xrec_data->event.u.createNotify.window,
 	       xrecintd->server_time
 	       );
-      break;
+       break;
     case DestroyNotify:
       fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
 	       event_type,
@@ -909,6 +908,8 @@ xnee_unsetup_recording(xnee_data *xd)
        return XNEE_OK; 
      }
 
+
+
   context_display = xnee_get_display_for_recordcontext(xd);
 
   xnee_verbose((xd, "---> xnee_unsetup_recording\n"));
@@ -918,7 +919,7 @@ xnee_unsetup_recording(xnee_data *xd)
       xnee_verbose((xd, "---  disabling context %p on %p \n", 
 		    (void*)xd->record_setup->rContext, 
 		    (void*)context_display));
-  
+
       (void)XRecordDisableContext(xd->control, 
 				  xd->record_setup->rContext);
 
