@@ -1,7 +1,7 @@
 #!/bin/sh
 
 XNEE_DIST=$1
-XNEE_DIR=$(echo $XNEE_DIST | sed 's,\.tar\.gz,,g')
+XNEE_DIR=$(basename $XNEE_DIST | sed 's,\.tar\.gz,,g')
 
 DEFAULT_CONF_GLAGS="--prefix=/tmp/xnee_build_test"
 
