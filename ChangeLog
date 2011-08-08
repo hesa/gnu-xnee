@@ -1,3 +1,11 @@
+2011-08-08  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Bumping version to 3.10
+
+	* build/test-dist.sh (XNEE_DIR): 
+	Fix for allowing dir path in dist to test
+
 2011-07-12  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
