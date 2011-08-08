@@ -1,5 +1,8 @@
 2011-08-08  Henrik Sandklef  <hesa@sandklef.com>
 
+	* build/build-cvstag.sh (DATE): 
+	Better error messages
+
 	* configure.in: 
 	Bumping version to 3.10
 
