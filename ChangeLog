@@ -1,3 +1,9 @@
+2011-08-25  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Replaced "can not" with "can't"
+	Removed duplicate entry of texi2html
+
 2011-08-08  Henrik Sandklef  <hesa@sandklef.com>
 
 	* build/build-cvstag.sh (DATE): 
