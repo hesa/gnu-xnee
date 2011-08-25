@@ -337,7 +337,7 @@ then
     then
 
 	echo "  ********** ERROR **********"
-	echo "  ** pnee and/or gnee can not be built ** "
+	echo "  ** pnee and/or gnee can't be built ** "
 	echo "  ** " 
 	echo "  ** The following program/package is missing:"
 	echo "  **    pkg-config"
@@ -591,14 +591,14 @@ then
 #	AC_PATH_PROG(DOXYGEN,doxygen,,)
 #	check_doc_program "$DOXYGEN" "doxygen"  "doxygen"
 
-    check_doc_program "$MAKEINFO" "makeinfo" "texi2html texinfo"
+    check_doc_program "$MAKEINFO" "makeinfo" " texinfo"
 
 
     if test x$DOC_NOT_BUILT_WARNING = xtrue ;
     then
 	echo " "
 	echo "  ********** ERROR **********"
-	echo "  ** Documents can not be built ** "
+	echo "  ** Documents can't be built ** "
 	echo "  ** " 
 	echo "  ** The following programs are missing:"
 	for i in $MISSING_PROGRAMS 
@@ -630,7 +630,7 @@ else
         then
 	 echo " "
 	 echo "  ********** ERROR **********"
-	 echo "  ** Man page(s) and images can not be built ** "
+	 echo "  ** Man page(s) and images can't be built ** "
 	 echo "  ** " 
 	 echo "  ** The following programs are missing:"
 	 for i in $MISSING_PROGRAMS 
@@ -706,7 +706,7 @@ then
     if test x$GTK_ERR != x0  ; 
     then
 	echo "  ********** ERROR **********"
-	echo "  ** pnee and/or gnee can not be built ** "
+	echo "  ** pnee and/or gnee can't be built ** "
 	echo "  ** " 
 	echo "  ** The following program/package is missing:"
 	echo "  **   $GTK_MODULES "
@@ -754,7 +754,7 @@ then
     if test x$? != x0 ;
     then
 	echo "  ********** ERROR **********"
-	echo "  ** pnee can not be built ** "
+	echo "  ** pnee can't be built ** "
 	echo "  ** " 
 	echo "  ** The following programs/packages are missing:"
 	echo "  **    $PANEL_APPLET"
@@ -816,21 +816,27 @@ echo "    CONVERT              $CONVERT"
 #echo "    LIB_DIR              $LIB_DIR"
 #echo "    DOC_DIR              $DOC_DIR"
 echo " "
-if test x$builddoc = xtrue || test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
+if test x$builddoc = xtrue ; 
 then
     echo "   Programs used to build documentation and/or guis "
     echo "   -----------------------------------------------------"
     show_doc_program "$DIA" "dia"  "Can't generate pictures from dia sources"
     show_doc_program "$CONVERT" "convert"  "Can't convert image formats"
-    show_doc_program "$TEXI2HTML" "texi2html"  "can not generate html pages"
-#	show_doc_program "$DVI2PS" "dvi2ps"   "can not generate ps "
-    show_doc_program "$DVIPDF" "dvipdf"   "can not generate pdf from dvi "
-    show_doc_program "$PS2PDF" "ps2pdf"  "can not generate pdf"
-    show_doc_program "$EPSTOPDF" "epstopdf"  "can not generate pdf"
-    show_doc_program "$CONVERT" "convert"  "can not generate convert between formats"
-    show_doc_program "$MAKEINFO" "makeinfo"  "can not make info pages"
-    show_doc_program "$PKGCFG"   "pkg-config"  "can not get meta info from installed packages"
-    show_doc_program "$GTKCONF"   "gtk-config"  "can not check for header files..."
+    show_doc_program "$TEXI2HTML" "texi2html"  "can't generate html pages"
+#	show_doc_program "$DVI2PS" "dvi2ps"   "can't generate ps "
+    show_doc_program "$DVIPDF" "dvipdf"   "can't generate pdf from dvi "
+    show_doc_program "$PS2PDF" "ps2pdf"  "can't generate pdf"
+    show_doc_program "$EPSTOPDF" "epstopdf"  "can't generate pdf"
+    show_doc_program "$CONVERT" "convert"  "can't generate convert between formats"
+    show_doc_program "$MAKEINFO" "makeinfo"  "can't make info pages"
+fi
+
+if test x$buildgapplet = xtrue || test x$buildgui = xtrue  ; 
+then
+    echo "   Programs used to build guis "
+    echo "   -----------------------------------------------------"
+    show_doc_program "$PKGCFG"   "pkg-config"  "can't get meta info from installed packages"
+    show_doc_program "$GTKCONF"   "gtk-config"  "can't check for header files..."
 fi
 echo ""
 echo "   Building the following components "
