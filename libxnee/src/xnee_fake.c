@@ -788,7 +788,7 @@ xnee_type_file(xnee_data *xd)
 
   if (!xnee_has_xtest_extension(xd))
     {
-      exit(XNEE_NO_TEST_EXT);
+      return(XNEE_NO_TEST_EXT);
     }
   
   xnee_verbose ((xd,"--- xnee_type_file\n"));

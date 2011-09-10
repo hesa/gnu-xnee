@@ -326,7 +326,7 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
   if (dpy==NULL)
     {
       xnee_print_error ("Could not open display %s\n", disp_str);
-      exit ( XNEE_NOT_OPEN_DISPLAY );
+      return ( XNEE_NOT_OPEN_DISPLAY );
     }
   xnee_verbose((xd, "Adding Display  - opening display gave us %p\n", (void*) dpy));
   

@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 
- *                 2006, 2007, 2010
+ *                 2006, 2007, 2010, 2011
  *                        Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
@@ -144,7 +144,7 @@ xnee_start(xnee_data *xd)
           xnee_verbose((xd, "Can't find Record extension\n"));
           xnee_verbose((xd, "Look in the README file included"));
           xnee_verbose((xd, "in Xnee how to enable it\n"));
-          exit(XNEE_NO_REC_EXT);
+          return(XNEE_NO_REC_EXT);
        }
        ret = xnee_setup_recording(xd);
        XNEE_RETURN_IF_ERR (ret);
@@ -184,7 +184,7 @@ xnee_start(xnee_data *xd)
        */ 
       if ( xnee_has_xtest_extension(xd) == 0)
 	{
-	  exit(XNEE_NO_TEST_EXT);
+	  return(XNEE_NO_TEST_EXT);
 	}
       
       /*

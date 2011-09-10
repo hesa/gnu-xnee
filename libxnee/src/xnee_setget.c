@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                      2004, 2009, 2010  Henrik Sandklef
+ *                      2004, 2009, 2010, 2011 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify1 it under the terms of the GNU General Public License       
@@ -1105,7 +1105,7 @@ xnee_set_replay_offset_str (xnee_data *xd, char *str)
   if (ret != 2 )
     {
       xnee_verbose((xd, "replay offset failed: %d\n", ret));
-      exit(ret);
+      return(ret);
     }
 
   xd->res_info.x_offset = x;
@@ -1227,7 +1227,7 @@ xnee_set_project_file(xnee_data *xd, char *name)
 	  xnee_verbose ((xd, "ERROR: Filename too big\n"));
 	  xnee_verbose ((xd, "... leaving.\n"));
 	  xnee_close_down(xd);
-	  exit(XNEE_WRONG_PARAMS);
+	  return(XNEE_WRONG_PARAMS);
 	}
       strncpy ( buf , XNEE_RESOURCE_DIR, XNEE_PARSE_BUF );
       strncat ( buf ,  "/", XNEE_PARSE_BUF - strlen(buf));
