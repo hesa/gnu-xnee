@@ -1,8 +1,18 @@
+2011-09-10  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee.c (xnee_start): 
+	* libxnee/src/xnee_display.c (xnee_add_display_str): 
+	* libxnee/src/xnee_fake.c (xnee_type_file): 
+	* libxnee/src/xnee_plugin.c (xnee_use_plugin): 
+	* libxnee/src/xnee_setget.c: 
+	Replaced exit with return
+
 2011-08-25  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
 	Replaced "can not" with "can't"
 	Removed duplicate entry of texi2html
+	Removed comment about missing programs when not needed
 
 2011-08-08  Henrik Sandklef  <hesa@sandklef.com>
 
