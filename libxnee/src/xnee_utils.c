@@ -500,9 +500,9 @@ xnee_record_from_data_display(xnee_data *xd)
 
 
   /* fprintf (stderr,"X info:   %s %d %d %d\n", */
-  /* 	  xd->x_vendor_name,  */
-  /* 	  xd->x_version_major,  */
-  /* 	  xd->x_version_minor,  */
+  /* 	  xd->x_vendor_name, */
+  /* 	  xd->x_version_major, */
+  /* 	  xd->x_version_minor, */
   /* 	  xd->x_version_minor_sub); */
 
   if ( (xd != NULL) && (xd->x_vendor_name != NULL ) )
@@ -526,7 +526,7 @@ xnee_record_from_data_display(xnee_data *xd)
 	       *  versions 
 	       */
 	      if ( ( xd->x_version_minor >= 3 ) &&
-		   ( xd->x_version_minor <= 10 ) )
+		   ( xd->x_version_minor <= 12 ) )
 		{
 
 		  /*
