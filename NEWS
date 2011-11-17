@@ -6,6 +6,9 @@ Changes in version 3.11
      bug-xnee@gnu.org: Package of Xnee for Fedora
            Replaced exit calls with return in libxnee
 
+     Savannah: 
+       #30137: gnee crashes on Ubuntu 10.04
+
      Recording in X.org > 1.11 does not work 
 
 
