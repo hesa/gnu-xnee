@@ -45,7 +45,9 @@ upload()
     rm -f    ${PRODUCT}.directive ${PRODUCT}.directive.asc    
     log "Making directives file:"
     DIR=xnee
-    echo "directory: $DIR" > ${PRODUCT}.directive
+    echo "version: 1.1"     > ${PRODUCT}.directive
+    echo "filename: $FILE"     >> ${PRODUCT}.directive
+    echo "directory: $DIR" >> ${PRODUCT}.directive
 
     log "clearsiging directives file:"
     gpg --clearsign ${PRODUCT}.directive
