@@ -1,3 +1,16 @@
+2011-11-17  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Bumping version
+
+2011-11-17  Henrik Sandklef  <hesa@sandklef.com>
+
+	* build/ftp-upload.sh: 
+	Fix for upload directive syntax
+
+	* libxnee/src/xnee_utils.c (xnee_record_from_data_display): 
+	context display fix now works on Xorg <= 1.12
+
 2011-09-10  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee.c (xnee_start): 

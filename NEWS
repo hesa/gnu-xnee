@@ -6,6 +6,8 @@ Changes in version 3.11
      bug-xnee@gnu.org: Package of Xnee for Fedora
            Replaced exit calls with return in libxnee
 
+     Recording in X.org > 1.11 does not work 
+
 
 Changes in version 3.10
 ==============================
@@ -18,6 +20,7 @@ Changes in version 3.10
         #32385: CNEE replay precision
         #32767: Button key to stop recoring
         #32762: no sync option faulty
+
 
 Changes in version 3.09
 ==============================
