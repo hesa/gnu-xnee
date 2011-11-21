@@ -610,7 +610,7 @@ static xnee_option_t xnee_options_impl[] =
       "retype-press-delay",
       "rpd",
       NULL,
-      "Delay (in milli seconds) after faked key press when retryping file ",
+      "Delay (in milli seconds) after faked key press when retyping file ",
       XNEE_RETYPE_OPTION,
       XNEE_OPTION_VISIBLE
     },
@@ -620,7 +620,7 @@ static xnee_option_t xnee_options_impl[] =
       "retype-release-delay",
       "rrd",
       NULL,
-      "Delay (in milli seconds) after faked key release when retryping file ",
+      "Delay (in milli seconds) after faked key release when retyping file ",
       XNEE_RETYPE_OPTION,
       XNEE_OPTION_VISIBLE
     },
