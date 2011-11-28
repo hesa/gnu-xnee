@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2002, 2003, 2004, 2005, 2007 Henrik Sandklef
+ *        Copyright (C) 2002, 2003, 2004, 2005, 2007, 2011
+ *                       Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -521,7 +522,7 @@ on_record                              (GtkButton       *button,
     
     window = lookup_widget(user_data, "gnee_window");
 
-    xnee_set_verbose(ext_xd);
+/*     xnee_set_verbose(ext_xd); */
     xnee_verbose((ext_xd, "verbose: %d", ext_xd->verbose)); usleep(1000*1000);
 
     if (window != NULL)
@@ -556,7 +557,7 @@ on_replay                              (GtkButton       *button,
     window = lookup_widget(user_data, "gnee_window");
     
     xnee_verbose((ext_xd, "verbose: %d", ext_xd->verbose)); usleep(1000*1000);
-    xnee_set_verbose(ext_xd);
+/*     xnee_set_verbose(ext_xd); */
 
     if (window != NULL)
     {
