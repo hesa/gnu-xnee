@@ -1,3 +1,20 @@
+2011-11-28  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_plugin.c: 
+	Removed code already commented away
+
+	* libxnee/src/xnee_session.c: 
+	Replacing remaining exit with setting interrupt flag
+
+	* libxnee/src/xnee_xinput.c (xnee_handle_xinput_event): 
+	Removed faulty printout
+
+	* gnee/src/callbacks.c: 
+	Removed calls to set verbose mode
+
+	* gnee/src/main.c (main): 
+	Forcing gnee to replay only core events
+
 2011-11-17  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
