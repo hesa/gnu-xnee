@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
- *                      2009, 2010 Henrik Sandklef                    
+ *                      2009, 2010, 2011 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -699,7 +699,7 @@ xnee_err_handler(Display* dpy, XErrorEvent* ev)
 void 
 signal_handler(int sig) 
 {
-   int ret; 
+  int ret; 
   switch (sig)
     {
     case SIGTERM:
@@ -710,7 +710,9 @@ signal_handler(int sig)
       ret = xnee_reset_autorepeat (xd_global);
       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
       
-      exit (sig);
+      xnee_set_interrupt_action(xd_global);
+      
+      break;
 
     case SIGINT:
       fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
@@ -720,12 +722,18 @@ signal_handler(int sig)
       ret = xnee_reset_autorepeat (xd_global);
       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
       
-      exit (sig);
+      xnee_set_interrupt_action(xd_global);
+      
+      break;
+
     default:
       fprintf (stderr, 
 	       "signal_handler error. Unxpected signal (%d)\n .... leaving",
 	       sig);
-      exit (sig);
+      xnee_set_interrupt_action(xd_global);
+      
+      break;
+
     }
 }
 
