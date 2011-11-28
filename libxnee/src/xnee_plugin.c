@@ -87,36 +87,13 @@ xnee_use_plugin(xnee_data *xd, char *pl_name, unsigned char mode)
 			   &xd->rec_callback,
 			   rec_cb);
 
-  if ( ret != XNEE_OK )
-    {
-      /*
-      xnee_close_down(xd);
-      exit(XNEE_PLUGIN_FILE_ERROR);
-      */
-    }
-  
   ret = xnee_set_callback (xd, 
 			   &xd->rep_callback,
 			   rep_cb);
-  if ( ret != XNEE_OK )
-    {
-      /*      
-	      xnee_close_down(xd);
-	      exit(XNEE_PLUGIN_FILE_ERROR);
-      */
-    }
-
 #ifdef USE_DYNAMIC_SYNC_FUN   
   ret = xnee_set_callback (xd, 
 			   &xd->sync_fun,
 			   XNEE_SYNC_FUNCTION_NAME);
-  if ( ret != XNEE_OK )
-    {
-      /*      
-      xnee_close_down(xd);
-      exit(XNEE_PLUGIN_FILE_ERROR);
-      */
-    }
 #endif   /* USE_DYNAMIC_SYNC_FUN    */
 
    return XNEE_OK;
