@@ -3,8 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2002, 2003, 2004, 2005, 2007
- *         Henrik Sandklef
+ *  Copyright (C) 2002, 2003, 2004, 2005, 2007, 2011
+ *       Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -205,6 +205,7 @@ main (int argc, char *argv[])
     gx_set_min_threshold(xd, -20) ;
     gx_set_tot_threshold(xd, 20) ;
     
+    xnee_set_forced_core_device_events (xd) ;
     
     default_tmp_file=gx_get_default_filename();
     gnee_set_rec_file (default_tmp_file);
