@@ -1,4 +1,4 @@
-Changes in version 3.11
+Changes in version coming 3.11
 ==============================
 
    * Fixed bugs:
@@ -10,6 +10,8 @@ Changes in version 3.11
        #30137: gnee crashes on Ubuntu 10.04
 
      Recording in X.org > 1.11 does not work 
+
+     Red Hat Bugzilla – Bug 757733
 
 
 Changes in version 3.10
