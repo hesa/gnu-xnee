@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *   Copyright (C) 2003, 2004, 2005 
- *                 2010 Henrik Sandklef and Jon-Erling Dahl
+ *                 2010, 2011 Henrik Sandklef and Jon-Erling Dahl
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -565,6 +565,7 @@ int
 gx_start_recording(xnee_data* xd)
 {
   int ret;
+
   GNEE_DEBUG(("gx_start_recording\n"));
   
   GNEE_DEBUG(("Setting grab state\n"));
@@ -578,8 +579,6 @@ gx_start_recording(xnee_data* xd)
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
 
   GNEE_DEBUG(("start recording\n"));
-
-  fprintf(stderr, "Recording with outfile: %s\n", xd->out_name);
 
   ret = xnee_start(xd);
   GNEE_IF_ERROR_RETURN(ret,ext_gnee_window);
