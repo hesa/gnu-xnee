@@ -684,7 +684,21 @@ xnee_get_nr_of_data (int type)
      }
    else
      {
-       return xrs->type[type].index;
+       /* 
+	* We're not going to record if only ReparentNotify are recorded 
+	*/
+       if ( ( type == XNEE_DELIVERED_EVENT )
+	    &&
+	    ( xrs->type[type].index == 1)
+	    &&
+	    ( xrs->type[type].data[0] == ReparentNotify))
+	 {
+	   return 0;
+	 }
+       else
+	 {
+	   return xrs->type[type].index;
+	 }
      }
 }
 
