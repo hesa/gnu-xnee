@@ -89,6 +89,8 @@ int
 xnee_start(xnee_data *xd)
 {
    int ret ;
+   int i   ;
+   int data_to_record;
 
    if (xd==NULL)
      {
@@ -126,92 +128,102 @@ xnee_start(xnee_data *xd)
     * are we recording or are we replaying
     */
    if ( xnee_is_recorder(xd) != 0)  
-   {
-     
-      /* 
-       * Print settings 
-       * if verbose mode that is 
-       */
-      xnee_print_xnee_settings       (xd, NULL); 
-      xnee_record_print_record_range (xd, NULL);
-      
-      /*
-       * Do we have XRecord extension on the display
-       *
-       */ 
+     {
+       
+       /* Make sure we arerecording something */
+       for (i=XNEE_EVENT; i<XNEE_NR_OF_TYPES; i++)
+	 {
+	   data_to_record += xnee_get_nr_of_data (i);
+	 }
+       if ( data_to_record == 0 )
+	 {
+	   return XNEE_NO_PROT_CHOOSEN;
+	 }
+       
+       /* 
+	* Print settings 
+	* if verbose mode that is 
+	*/
+       xnee_print_xnee_settings       (xd, NULL); 
+       xnee_record_print_record_range (xd, NULL);
+       
+       /*
+	* Do we have XRecord extension on the display
+	*
+	*/ 
        if ( xnee_has_record_extension(xd) != XNEE_OK)
-       {
-          xnee_verbose((xd, "Can't find Record extension\n"));
-          xnee_verbose((xd, "Look in the README file included"));
-          xnee_verbose((xd, "in Xnee how to enable it\n"));
-          return(XNEE_NO_REC_EXT);
-       }
+	 {
+	   xnee_verbose((xd, "Can't find Record extension\n"));
+	   xnee_verbose((xd, "Look in the README file included"));
+	   xnee_verbose((xd, "in Xnee how to enable it\n"));
+	   return(XNEE_NO_REC_EXT);
+	 }
        ret = xnee_setup_recording(xd);
        XNEE_RETURN_IF_ERR (ret);
        
        ret = xnee_print_sys_info(xd, xnee_get_out_file (xd));
        XNEE_RETURN_IF_ERR (ret);
-
+       
        xnee_print_xnee_settings (xd, xnee_get_out_file (xd)) ;
        xnee_record_print_record_range (xd, xnee_get_out_file (xd)) ;
        
-
+       
        xnee_zero_events_recorded(xd);
        xnee_zero_data_recorded(xd);
        xnee_zero_time_recorded(xd);
-
+       
        /*
         * At last. Time to enter the main loop
         *
         */
        if (xnee_more_to_record(xd)!=0)
-       {
-	 xnee_verbose((xd, "Entering main loop( recorder)\n"));
-	 ret = xnee_record_async(xd);
+	 {
+	   xnee_verbose((xd, "Entering main loop( recorder)\n"));
+	   ret = xnee_record_async(xd);
+	   
+	   if ( (ret != XNEE_OK) &&  (ret != XNEE_OK_LEAVE) )
+	     {
+	       return ret;
+	     }
+	 }
+     }
+   else if ( xnee_is_replayer(xd) != 0 )
+     {
+       xnee_verbose((xd, " (replayer)\n"));
+       /*
+	* Do we have XTest extension on the display
+	*
+	*/ 
+       if ( xnee_has_xtest_extension(xd) == 0)
+	 {
+	   return(XNEE_NO_TEST_EXT);
+	 }
+       
+       /*
+	* Do we have XRecord extension on the display
+	*
+	*/ 
+       if ( xnee_has_record_extension(xd) != XNEE_OK)
+	 {
+	   xnee_verbose((xd, "I can't find Record extension\n"));
+	   xnee_verbose((xd, "Look in the README file how to enable it\n"));
+	   xnee_verbose((xd, "However, I continue without doing syncing\n"));
+	   /*	  xd->sync=False;*/
+	   ret = xnee_unset_sync (xd);
+	   XNEE_RETURN_IF_ERR (ret);
+	 }
+       
+       /*@ignore@*/
+       XTestGrabControl (xnee_get_control_display(xd), True);
+       XTestGrabControl (xnee_get_data_display(xd), True);
+       /*@end@*/
 
-	 if ( (ret != XNEE_OK) &&  (ret != XNEE_OK_LEAVE) )
-	   {
-	     return ret;
-	   }
-       }
-    }
-  else if ( xnee_is_replayer(xd) != 0 )
-  {
-      xnee_verbose((xd, " (replayer)\n"));
-      /*
-       * Do we have XTest extension on the display
-       *
-       */ 
-      if ( xnee_has_xtest_extension(xd) == 0)
-	{
-	  return(XNEE_NO_TEST_EXT);
-	}
-      
-      /*
-       * Do we have XRecord extension on the display
-       *
-       */ 
-      if ( xnee_has_record_extension(xd) != XNEE_OK)
-	{
-	  xnee_verbose((xd, "I can't find Record extension\n"));
-	  xnee_verbose((xd, "Look in the README file how to enable it\n"));
-	  xnee_verbose((xd, "However, I continue without doing syncing\n"));
-	  /*	  xd->sync=False;*/
-	  ret = xnee_unset_sync (xd);
-          XNEE_RETURN_IF_ERR (ret);
-	}
-
-      /*@ignore@*/
-      XTestGrabControl (xnee_get_control_display(xd), True);
-      XTestGrabControl (xnee_get_data_display(xd), True);
-      /*@end@*/
-
-/*       ret = xnee_rep_prepare(xd); */
-/*       XNEE_RETURN_IF_ERR (ret); */
-      
+       /*       ret = xnee_rep_prepare(xd); */
+       /*       XNEE_RETURN_IF_ERR (ret); */
+       
        xnee_record_print_record_range (xd, stderr) ;
-
-      /*
+       
+       /*
        * At last. Time to enter the main loop
        * ... wait to set up recording until all META data from file is read 
        * Thanks: Janice Waddick 
