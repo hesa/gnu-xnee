@@ -304,18 +304,7 @@ on_include_list_row_activated          (GtkTreeView     *treeview,
 void
 fake_on_include_list_row_activated (gpointer user_data, int type)
 {
-  GtkWidget          *source_list;
-  GtkWidget          *destination_list;
-  GtkWidget          *combo_label;
-  
     GNEE_DEBUG(("fake_on_include_list_row_activated\n"));
-  source_list      = lookup_widget(GTK_WIDGET(user_data),
-				   include_list_string);
-  destination_list = lookup_widget(GTK_WIDGET(user_data),
-				   exclude_list_string);
-  combo_label      = lookup_widget(GTK_WIDGET(user_data),
-				   combo_label1_string);
-  
 }
 
 void
@@ -516,10 +505,7 @@ on_record                              (GtkButton       *button,
                                         gpointer         user_data)
 {
     GtkWidget   *window;
-    char         *str;
-    GtkEditable  *disp_edit; 
-    
-    
+
     window = lookup_widget(user_data, "gnee_window");
 
 /*     xnee_set_verbose(ext_xd); */
@@ -610,7 +596,6 @@ void
 on_wait_checkbox_toggled               (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-  gint speed = 0 ; 
   GNEE_DEBUG(("on_wait_checkbox\n"));
   
   use_delay = gtk_toggle_button_get_active(togglebutton);
@@ -679,8 +664,6 @@ void
 on_verbose_logging_checkbox_toggled    (GtkToggleButton *togglebutton,
                                         gpointer         user_data)
 {
-  GtkWidget   *window;
-
   GNEE_DEBUG(("on_verbose_logging_checkbox_toggled\n"));
   if (ext_xd != NULL)
     {
@@ -767,11 +750,10 @@ on_ok_button1_clicked                  (GtkButton       *button,
 	}
       else if ( file_action  == FILE_TO_OPEN)
 	{
-	  int ret;
 	  file = fopen (filename, "rw");
 	  xnee_refresh_ranges(ext_xd);
 	  gnee_remove_all_recordables();
-	  ret = gx_set_rc_byname (ext_xd, filename);
+	  gx_set_rc_byname (ext_xd, filename);
 
 	  if ( gx_get_rc_file (ext_xd) != NULL) 
 	    {
@@ -1561,6 +1543,10 @@ on_button5_clicked                     (GtkButton       *button,
   if (user_data)
     {
       window = lookup_widget(user_data, "gnee_about");
+    }
+  else
+    {
+      return;
     }
 
   if (window)
