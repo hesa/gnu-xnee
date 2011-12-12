@@ -393,6 +393,9 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
   int i=0;
 
   int size= xd->distr_list_size;
+#ifdef XNEE_XINPUT_SUPPORT
+  XDevice *xdevice;
+#endif /* XNEE_XINPUT_SUPPORT*/
 
   if (!xnee_is_recorder (xd))
     {
@@ -531,7 +534,7 @@ xnee_fake_button_event_impl (xnee_data* xd,
   int size= xd->distr_list_size;
   
 #ifdef XNEE_XINPUT_SUPPORT
-	  XDevice *xdevice;
+  XDevice *xdevice;
 #endif /* XNEE_XINPUT_SUPPORT*/
 
   if (!xnee_is_recorder (xd))
@@ -544,8 +547,6 @@ xnee_fake_button_event_impl (xnee_data* xd,
       else if (deviceid != 0 )
 	{
 #ifdef XNEE_XINPUT_SUPPORT
-	  XDevice *xdevice;
-	 
 	  xdevice = xnee_get_xinput_device(xd, deviceid);
 
 	  xnee_fake_sleep (dtime); 
