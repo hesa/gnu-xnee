@@ -38,6 +38,7 @@
 #include <libxnee/xnee_threshold.h>
 #include <libxnee/xnee_setget.h>
 #include <libxnee/xnee_resource.h>
+#include <libxnee/xnee_utils.h>
 
 #ifdef USE_GNEE_DEBUG
 #define GNEE_DEBUG(a) printf a ; fflush(stdout);
