@@ -5,7 +5,7 @@
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
  *                      2004, 2005, 2006, 2007,
- *                      2009 Henrik Sandklef
+ *                      2009, 2011 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -86,15 +86,12 @@ xnee_usage_printer(FILE *fd, int tmp_size, char *pre, char *str)
 
   while (len>0)
     {
-      ret = snprintf (line_buf, 
-		      size,
-		      "%s",
-		      (const char*)str);
-
+      snprintf (line_buf, 
+		size,
+		"%s",
+		(const char*)str);
+      
       fprintf (fd, "    %s %s\n", pre, line_buf);
-/*       printf ("** '%s'    '%s'\n", line_buf, str); */
-/*       printf (" len =%d   ret=%d   str'%s'\n", */
-/* 	      len, ret, str); */
       len = len -  size; 
       str += size - 1;
     }
