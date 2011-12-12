@@ -24,6 +24,7 @@
 
 #include "libxnee/xnee.h"
 #include "libxnee/print.h"
+#include "libxnee/xnee_parse.h"
 #include "libxnee/xnee_xinput.h"
 
 #define XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, devid, fd)	\
@@ -482,7 +483,6 @@ int
 xnee_xinput_add_devices(xnee_data *xd)
 {
   int xinput_ev_base;
-  int ret ; 
 #define XI_BUF_SIZE 100
   char buf[XI_BUF_SIZE+1];
 
@@ -522,10 +522,9 @@ xnee_xinput_add_devices(xnee_data *xd)
 	      xinput_ev_base+2);
     }
 
-  ret=xnee_parse_range (xd, 
-			XNEE_DEVICE_EVENT, 
-			buf);
-  
+  xnee_parse_range (xd, 
+		    XNEE_DEVICE_EVENT, 
+		    buf);
 
   return XNEE_OK;
 }
