@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *   Copyright (C) 2003, 2004, 2005 Henrik Sandklef and Jon-Erling Dahl
+ *   Copyright (C) 2003, 2004, 2005,
+ *                 2011 Henrik Sandklef and Jon-Erling Dahl
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -275,5 +276,7 @@ gx_set_xd_settings();
 int 
 gx_set_use_speed (int val) ;
 
+int
+gnee_set_xosd_feedback();
 
 #endif /* GNEE_XNEE__H */
