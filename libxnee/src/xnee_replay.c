@@ -44,6 +44,7 @@
 #include "libxnee/xnee_utils.h"
 #include "libxnee/xnee_window.h"
 #include "libxnee/xnee_range.h"
+#include "libxnee/xnee_xinput.h"
 
 static int time_out_counter = 0;
 static int diff_counter     = 0;
