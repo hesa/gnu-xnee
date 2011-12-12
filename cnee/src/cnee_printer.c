@@ -75,7 +75,6 @@ xnee_usage_printer(FILE *fd, int tmp_size, char *pre, char *str)
   char line_buf[USAGE_PRINT_LINE_LEN];
 
   int   len = strlen(str);
-  int   ret ;
   int   size = tmp_size;
 
   if (tmp_size>USAGE_PRINT_LINE_LEN)
