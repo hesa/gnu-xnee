@@ -129,13 +129,10 @@ xnee_start(xnee_data *xd)
     */
    if ( xnee_is_recorder(xd) != 0)  
      {
-       fprintf(stderr, "Counting.. \n");
        /* Make sure we arerecording something */
        for (i=XNEE_EVENT; i<XNEE_NR_OF_TYPES; i++)
 	 {
-	   fprintf(stderr, " %d => ", xnee_get_nr_of_data (i));
 	   data_to_record += xnee_get_nr_of_data (i);
-	   fprintf(stderr, " %d \n", data_to_record);
 	 }
        if ( data_to_record == 0 )
 	 {
