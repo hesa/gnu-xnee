@@ -212,18 +212,11 @@ xnee_expression_handle_replay(xnee_data *xd,
 
   if (!strncmp("0",tmp,1))  /* EVENT */
     { 
-      int last_type;
-      int last_x;
-      int last_y;
-
 #ifdef XNEE_XINPUT_SUPPORT
       tmp_time = xindata->newtime;
 #else
       xindata->oldtime = xindata->newtime ;
 #endif /* XNEE_XINPUT_SUPPORT */
-      last_type=xindata->u.event.type;
-      last_x=xindata->u.event.x;
-      last_y=xindata->u.event.y;
 
       ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu",
 		   &xindata->type, 
@@ -443,6 +436,7 @@ xnee_expression_handle_action(xnee_data *xd, char *tmp)
     if (exec_prog != NULL)
       {
 	ret = system (exec_prog);
+	xnee_verbose ((xd, "System call returned %d\n", ret));
 	return XNEE_ACTION_DATA;
       }
   }

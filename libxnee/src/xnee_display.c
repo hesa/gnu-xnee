@@ -234,7 +234,6 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
 {
   char buf[256];
   size_t next;
-  size_t len;
   int ret=0;
   int disp_len;
 
@@ -255,7 +254,6 @@ xnee_add_display_list ( xnee_data* xd, char * disp)
     if (next==0) break; 
     strncpy(buf,disp,next);
     buf[next]='\0';
-    len =strlen(disp);
     disp+=next+1;
     disp_len=disp_len - next - 1;
     ret=xnee_add_display_str (buf,xd);

@@ -3,7 +3,8 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003 2010 Henrik Sandklef  
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003,
+ *                      2010, 2011 Henrik Sandklef  
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -143,7 +144,6 @@ xnee_ungrab_keys (xnee_data* xd)
 int 
 xnee_grab_key (xnee_data* xd, int mode, char *key)
 {
-  int ret;
   int window;
   int screen;
   xnee_action_key ak;
@@ -194,7 +194,7 @@ xnee_grab_key (xnee_data* xd, int mode, char *key)
   xnee_verbose((xd, "screen   %d\n", screen));
 
 
-  ret = XGrabKey (xd->grab,  
+  XGrabKey (xd->grab,  
 	    ak.key,            
 	    AnyModifier,
 	    window,       
@@ -576,7 +576,7 @@ xnee_handle_grab_mouse(xnee_data *xd)
 static int
 xnee_handle_grab_key(xnee_data *xd, KeyCode kc, int mode)
 {
-  int ret ;
+  int ret = XNEE_OK;
 
 /*   xnee_set_verbose(xd); */
 
