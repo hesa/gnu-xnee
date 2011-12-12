@@ -1,3 +1,8 @@
+2011-12-12  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee.c (xnee_start): 
+	Init data counter to 0 
+
 2011-11-28  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_plugin.c: 
@@ -17,8 +22,12 @@
 
 2011-11-17  Henrik Sandklef  <hesa@sandklef.com>
 
+	* pnee/src/callbacks.c: 
+	Added copyright notice (thanks ams)
+
 	* configure.in: 
 	Bumping version
+	Debian => Debian based distros
 
 2011-11-17  Henrik Sandklef  <hesa@sandklef.com>
 
