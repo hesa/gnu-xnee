@@ -1,5 +1,8 @@
 2011-12-12  Henrik Sandklef  <hesa@sandklef.com>
 
+	* libxnee/src/xnee.c (xnee_start): 
+	Removing debug printouts
+
 	* configure.in: 
 	Bumb version
 
