@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2010 Henrik Sandklef                    
+ *        Copyright (C) 2010, 2011 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -85,5 +85,8 @@ xnee_handle_xinput_event_human(xnee_data * xd,
 
 XDevice * 
 xnee_get_xinput_device(xnee_data *xd, int deviceid);
+
+int 
+xnee_xinput_add_devices(xnee_data *xd);
 
 #endif /* XNEE_XINPUT_H */
