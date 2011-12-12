@@ -74,7 +74,6 @@ xnee_type_help_sub (xnee_data *xd, xnee_option_t *opts, int type)
   char *option_long;
   char *option_short;
   char *option_arg;
-  char *option_descr;
   char *empty_str="";
 
   #define HELP_STR_SIZE 500
@@ -87,7 +86,6 @@ xnee_type_help_sub (xnee_data *xd, xnee_option_t *opts, int type)
 	  option_long  = opts[i].option ;
 	  option_short = opts[i].short_option ;
 	  option_arg   = opts[i].args ;
-	  option_descr = opts[i].description ;
 	  snprintf (my_string, HELP_STR_SIZE, "%s,-%s %s\n",
 		    (option_long ? option_long  : empty_str),
 		    (option_short? option_short : empty_str),
