@@ -637,35 +637,19 @@ int
 xnee_save_or_print(xnee_data *xd, KeyCode kc, int mode)
 {
   int ret; 
-  KeySym ks ;
 
   xnee_verbose((xd, "---> xnee_save_or_print %d %d\n", kc, mode));
-  ks = XKeycodeToKeysym(xd->grab, kc, 0);
   
   if ( mode == XNEE_GRAB_MOUSE )
       {
 	xnee_verbose((xd, "--- xnee_save_or_print treat a mouse\n"));
 	ret = xnee_handle_grab_mouse(xd);
       }
-#ifdef USE_OBSOLETE
-    else if (IsModifierKey (ks))
-      {
-	xnee_verbose((xd, "--- xnee_save_or_print treat a modifier\n"));
-	ret = xnee_handle_grab_modifier(xd, kc, mode);
-      }
-#endif
   else
     {
       xnee_verbose((xd, "--- xnee_save_or_print treat an ordinary key\n")); 
       ret = xnee_handle_grab_key(xd, kc, mode); 
     }
-
-/*   if ( ret == XNEE_GRAB_DO_SAVE ) */
-/*     printf (" DO SAVE\n"); */
-/*   else if ( ret == XNEE_GRAB_DO_PRINT ) */
-/*     printf (" DO PRINT\n"); */
-/*   else if ( ret == XNEE_GRAB_DONT_PRINT ) */
-/*     printf (" DONT PRINT\n"); */
 
    xnee_verbose((xd, "<--- xnee_save_or_print %d\n", ret));
   return ret;
