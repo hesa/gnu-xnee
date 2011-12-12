@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2002, 2003, 2004, 2005 Henrik Sandklef
+ *        Copyright (C) 2002, 2003, 2004, 2005, 2011 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -191,7 +191,6 @@ gnee_move_recordable(GtkWidget* gnee_window,
   GtkTreeIter         incl_iter; 
   
   int valid;
-  int incl_valid;
   gint row_count=0;
 
 
@@ -202,10 +201,6 @@ gnee_move_recordable(GtkWidget* gnee_window,
   
   incl_store = 
     g_object_get_data (G_OBJECT(gnee_window), include_store_name);
-  
-  incl_valid = 
-    gtk_tree_model_get_iter_first (GTK_TREE_MODEL(incl_store), &incl_iter);
-  
   
   while (valid)
     {
@@ -304,6 +299,7 @@ gnee_recordable2xd(GtkWidget* gnee_window,
       row_count++;
       valid = gtk_tree_model_iter_next (GTK_TREE_MODEL(incl_store), &incl_iter);
     } 
+  
 }
 
 
@@ -320,7 +316,6 @@ gnee_remove_type(GtkWidget* gnee_window,
   GtkTreeIter         incl_iter; 
   
   int valid;
-  int incl_valid;
   gint row_count=0;
 
 
@@ -329,9 +324,6 @@ gnee_remove_type(GtkWidget* gnee_window,
   
   incl_store = 
     g_object_get_data (G_OBJECT(gnee_window), include_store_name);
-  
-  incl_valid = 
-    gtk_tree_model_get_iter_first (GTK_TREE_MODEL(incl_store), &incl_iter);
   
   
   valid = gtk_tree_model_get_iter_first (GTK_TREE_MODEL(excl_store), &iter);
@@ -349,9 +341,6 @@ gnee_remove_type(GtkWidget* gnee_window,
       gtk_tree_store_remove(GTK_TREE_STORE(excl_store), &iter);
 
 
-      /* find last pos in resulting tree */
-      incl_valid = 
-	gtk_tree_model_get_iter_first (GTK_TREE_MODEL(incl_store), &incl_iter);
       while (valid)
 	{
 	  valid = 
