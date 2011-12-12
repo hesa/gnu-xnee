@@ -171,7 +171,7 @@ main (int argc, char *argv[])
       {
 	if (strncmp(argv[i],version_string, strlen(version_string))==0)
 	  {
-	    fprintf (stderr, "%s %s, part of project ", 
+	    fprintf (stderr, "%s %s, part of project %s", 
 		     GNEE,
 		     VERSION,
 		     PACKAGE);
