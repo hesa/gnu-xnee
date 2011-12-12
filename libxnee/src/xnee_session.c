@@ -616,21 +616,7 @@ xnee_rep_prepare(xnee_data *xd)
 int
 handle_xerr(Display *dpy, XErrorEvent *errevent)
 {
-  int ret ; 
   /*@out@*/ char tmp[100]="";
-
-/*   fprintf (stderr, "Error received:  %d\n",  */
-/* 	   errevent->error_code); */
-
-  /*  if (errevent->type==0)
-    {
-       return XNEE_OK; 
-    }
-  else if (errevent->type==161)
-    {
-       return XNEE_OK; 
-    }
-  */
 
   fprintf (stderr, "Error received:\n");
   fprintf (stderr, "\terror type       %u (0x%x)\n", 
@@ -644,10 +630,11 @@ handle_xerr(Display *dpy, XErrorEvent *errevent)
   fprintf (stderr, "\tdisplay          %p\n", 
 	  (void*)dpy);
 
-  ret = XGetErrorText (dpy, 
-		       (int) errevent->error_code, 
-		       tmp, 
-		       100);
+  XGetErrorText (dpy, 
+		 (int) errevent->error_code, 
+		 tmp, 
+		 100);
+  
   fprintf (stderr, " %s\n", (char *)tmp);
   fprintf (stderr, "This error can be ignored\n");
   return XNEE_OK;
