@@ -1,4 +1,4 @@
-AC_INIT(Xnee,3.10.92,bug-xnee@gnu.org)
+AC_INIT(Xnee,3.10.93,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 AM_INIT_AUTOMAKE
 #AB_INIT
@@ -46,7 +46,7 @@ then
     echo ""
     echo "Make sure you have them installed before building Xnee"
     echo ""
-    echo "  ... on Debian do: apt-get install libxtst-dev"
+    echo "  ... on Debian based distros do: apt-get install libxtst-dev"
     echo " "
     exit 1
 fi
@@ -298,8 +298,8 @@ give_deb_hint()
 {
     if test "x$DEBS_TO_INSTALL" != "x" 
     then
-	echo "  **       If you are using Debian or Debian based distro "
-	echo "  **       (e.g Trisquel, Gnewsense, Ubuntu), try:"
+	echo "  **       If you are using a Debian based distro "
+	echo "  **       (e.g Trisquel, Debian, Gnewsense, Ubuntu), try:"
 	echo "               apt-get install $DEBS_TO_INSTALL"
 	echo "  **"
     fi
@@ -407,7 +407,7 @@ then
   	echo " * WARNING, missing program: gtk-config *"
   	echo " **************************************** "
   	echo ""
-  	echo "     On Debian, install like: libgtk2.0-dev"
+  	echo "     On Debian based distros, install like: libgtk2.0-dev"
   	echo ""
   	echo "However, I will try my best to continue without gtk-config. "
   	echo "Will not be able to check for gtk/gnome header files"
@@ -424,7 +424,7 @@ then
         if test x$MISSING_GNOME_H != x0  ; 
         then
   	  echo "Missing GNOME header file (gnome.h), you need to install development packages"
-	  echo "On a Debian based system do:"
+	  echo "On a Debian based distro system do:"
   	  echo ""
   	  echo "     sudo apt-get install libgnomeui-dev "
   	  echo ""
