@@ -300,6 +300,9 @@ int
 xnee_is_future_clients_str(xnee_data *xd);
 
 int
+xnee_is_future_clients (xnee_data *xd);
+
+int
 xnee_is_all_clients (xnee_data *xd);
  
 
@@ -604,6 +607,9 @@ xnee_get_new_window_pos (xnee_data *xd);
 
 int
 xnee_get_new_window_pos_value (xnee_data *xd);
+
+int
+xnee_set_new_window_pos_value (xnee_data *xd, int val);
 
 int
 xnee_unset_new_window_pos (xnee_data *xd);
