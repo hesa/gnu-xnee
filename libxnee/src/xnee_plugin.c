@@ -46,19 +46,16 @@ xnee_use_plugin(xnee_data *xd, char *pl_name, unsigned char mode)
 
   const char *rec_cb ;
   const char *rep_cb ;
-  const char *sync_cb ;
 
   if (mode==0)
     {
       rec_cb  = XNEE_RECORD_CALLBACK_NAME;
       rep_cb  = XNEE_REPLAY_CALLBACK_NAME;
-      sync_cb = XNEE_SYNC_FUNCTION_NAME;
     }
   else
     {
       rec_cb  = EXT_RECORD_CALLBACK_NAME;
       rep_cb  = EXT_REPLAY_CALLBACK_NAME;
-      sync_cb = EXT_SYNC_FUNCTION_NAME;
     }
 
   xnee_verbose ((xd, "Using plugin file: %s\n", pl_name));
