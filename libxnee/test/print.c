@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *   Copyright (C) 2006, 2007, 2010
+ *   Copyright (C) 2006, 2007, 2010, 2011
  *                        Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
@@ -25,6 +25,9 @@
 
 #include "test_setget.h"
 #include "libxnee/xnee.h"
+#include "libxnee/xnee_display.h"
+#include "libxnee/xnee_range.h"
+#include "libxnee/xnee_session.h"
 
 
 
@@ -130,7 +133,6 @@ test_printfuns(xnee_data *xd)
   xError               err_impl;
   int req_type ;
   int ev_type ;
-  int rep_type ;
   int i ;
 
   XRecordInterceptData *xrecintd  = &xrecintd_impl;
@@ -139,8 +141,6 @@ test_printfuns(xnee_data *xd)
   xEvent               *ev        = &ev_impl;
   xGenericReply        *rep       = &rep_impl;
   xError               *err       = &err_impl;
-
-  char *tmp_str;
 
   ret = xnee_print_event_info(xd);
   XNEE_TEST_ASSERT(ret, 0, "xnee_print_event_info");
@@ -228,7 +228,6 @@ test_printfuns(xnee_data *xd)
 
   memset(xrecintd, 0, sizeof(XRecordInterceptData));  
   memset(xrec_data, 0, sizeof(XRecordDatum));  
-  rep_type = 0;
   rep->type = X_Reply;
   xrec_data->reply = *(xGenericReply*)&req ;
   xrecintd->data = (unsigned char*) xrec_data;

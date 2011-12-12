@@ -1,5 +1,8 @@
 #include "test_setget.h"
 #include "libxnee/xnee.h"
+#include "libxnee/xnee_session.h"
+
+int test_all(xnee_data *xd);
 
 int fails;
 int total;

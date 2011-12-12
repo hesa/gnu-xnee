@@ -1,5 +1,6 @@
 #include "libxnee/xnee.h"
 #include "libxnee/xnee_callback.h"
+#include "libxnee/xnee_plugin.h"
 
 
 

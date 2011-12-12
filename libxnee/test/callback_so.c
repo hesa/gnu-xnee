@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "libxnee/xnee.h"
+#include "libxnee/xnee_session.h"
 
 void 
 xnee_record_dispatch_external (XPointer xpoint_xnee_data,

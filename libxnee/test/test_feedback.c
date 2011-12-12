@@ -1,6 +1,7 @@
 #include "test_setget.h"
 #include "libxnee/xnee.h"
 #include "libxnee/feedback.h"
+#include "libxnee/xnee_session.h"
 
 
 int fails;

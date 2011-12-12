@@ -60,7 +60,6 @@ int test_datastrings()
   int nr;
   int test_succ=0;
   int test_fail=0;
-  char tmp[32];
 
   /*****************************************/
   printf ("\n Test 1: ");

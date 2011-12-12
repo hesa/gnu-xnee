@@ -1,5 +1,7 @@
 #include "test_setget.h"
 #include "libxnee/xnee.h"
+#include "libxnee/xnee_display.h"
+#include "libxnee/xnee_session.h"
 
 
 

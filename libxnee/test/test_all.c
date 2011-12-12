@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *   Copyright (C) 2006, 2007, 2010
+ *   Copyright (C) 2006, 2007, 2010, 2011
  *                        Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
@@ -24,6 +24,9 @@
  ****/
 
 #include "test_setget.h"
+#include "libxnee/xnee_session.h"
+#include "libxnee/xnee_setget.h"
+
 #define DUMMY_FILE_NO ((FILE*)0)
 #define DUMMY_INT ((int)177)
 
@@ -713,7 +716,7 @@ int test_all(xnee_data *xd)
    *
    */
     BEGIN_LOOP
-  xnee_set_new_window_pos_value (xd, DUMMY_INT-1); 
+    xnee_set_new_window_pos_value (xd, DUMMY_INT-1); 
   orig     = xnee_get_new_window_pos_value(xd);
   
   ret      = xnee_set_new_window_pos_value (xd, DUMMY_INT); 
