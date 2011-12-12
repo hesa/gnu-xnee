@@ -462,6 +462,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 			xnee_replay_event_handler(xd, 
 						  &xindata, 
 						  last_elapsed);
+		      xnee_verbose((xd," replayable :%d\n",replayable ));
 		      
 		    }
 		  else
@@ -513,7 +514,8 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		    xnee_replay_event_handler(xd, 
 					      &xindata, 
 					      last_elapsed);
-		  
+		  xnee_verbose((xd," replayable :%d\n",replayable ));
+
 		  break;
 
 		default:
