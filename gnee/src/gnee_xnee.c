@@ -44,6 +44,8 @@
 #include <libxnee/xnee_session.h>
 #include <libxnee/xnee_alloc.h>
 
+#include <callbacks.h>
+
 
 /* static gnee_xnee gx ;  */
 /* static pthread_t action_thread; */
@@ -75,9 +77,9 @@ gx_is_using_rec_display(gnee_xnee *gx)  { return (gx->use_rec_display!=0); }
 static int 
 gx_is_using_rep_display(gnee_xnee *gx)  { return (gx->use_rep_display!=0); }
 
-static int 
+/*static int 
 gx_is_using_speed(gnee_xnee *gx)        { return (gx->use_speed!=0);}
-
+*/
 
 
 
@@ -163,12 +165,15 @@ gnee_set_xosd_feedback()
   return gnee_set_cb ("xosd_fb_b", 1);
 }
 
+/*
 static int
 gnee_set_stderr_feedback()
 {
   GNEE_DEBUG(("gnee_set_stderr\n"));
   gnee_set_cb ("stderr_fb_b", 1);
+  return XNEE_OK;
 }
+*/
 
 static int 
 gnee_set_various_display(int use_recording_display)
@@ -508,6 +513,7 @@ gx_set_xd_settings()
 }
 
 
+/*
 static int
 gx_init_xnee (xnee_data *xd)
 {
@@ -533,7 +539,7 @@ gx_init_xnee (xnee_data *xd)
   need_init=0;
   return 0;
 }
-
+*/
 
 void
 gnee_reset_gnee()
@@ -627,7 +633,7 @@ gx_stop_replaying(xnee_data* xd)
   return 0;
 }
 
-
+/*
 static char *gx_modifiers[] = {
   "None", 
   "Any", 
@@ -639,7 +645,7 @@ static char *gx_modifiers[] = {
   "Shift+Alt", 
   "Control+Shift+Alt", 
   NULL };
-
+*/
 static char *gx_keys[] = {
   "None", 
   "space", 
