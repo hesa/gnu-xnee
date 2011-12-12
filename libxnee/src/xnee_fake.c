@@ -394,10 +394,6 @@ xnee_fake_key_event_impl  (xnee_data* xd, int keycode, Bool bo, int dtime, int d
 
   int size= xd->distr_list_size;
 
-#ifdef XNEE_XINPUT_SUPPORT
-	  XDevice *xdevice;
-#endif /* XNEE_XINPUT_SUPPORT*/
-
   if (!xnee_is_recorder (xd))
     {
       if (xnee_is_swinput_playback(xd))
