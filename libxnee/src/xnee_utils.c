@@ -607,8 +607,6 @@ xnee_record_from_data_display(xnee_data *xd)
 		xd->x_version_minor_sub));
   xnee_verbose((xd, "<-- %d \n", ret_val));
 
-  /* fprintf (stderr, "Return %d\n", ret_val); */
-
   return ret_val ;
 }
 
