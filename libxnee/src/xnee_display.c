@@ -33,6 +33,7 @@
 #include "libxnee/print_varargs.h"
 #include "libxnee/xnee_resolution.h"
 #include "libxnee/xnee_display.h"
+#include "libxnee/xnee_xinput.h"
 
 /**************************************************************
  *                                                            *
