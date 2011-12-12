@@ -145,7 +145,6 @@ xnee_record_handle_event_printer(xnee_data * xd,
   int rx;
   int ry;
   Window dummy_window;
-  int new_window_pos;
   FILE *out ;
   int ret ; 
   unsigned int screen ;
@@ -290,7 +289,6 @@ xnee_record_handle_event_printer(xnee_data * xd,
 	       );
       break;
     case ReparentNotify:
-      new_window_pos = xnee_get_new_window_pos(xd);
       
       if ( ! xnee_is_no_reparent_recording(xd))
 	{
