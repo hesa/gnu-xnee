@@ -3,7 +3,8 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 2010 Henrik Sandklef                    
+ *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
+ *                      2010, 2011 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -32,6 +33,7 @@
 #include "libxnee/xnee_threshold.h"
 #include "libxnee/xnee_setget.h"
 #include "libxnee/xnee_resolution.h"
+#include "libxnee/xnee_xinput.h"
 
 
 
