@@ -24,7 +24,7 @@
 
 #include "libxnee/xnee.h"
 #include "libxnee/print.h"
-#include "libxnee/xnee_parse.h"
+#include "libxnee/xnee_range.h"
 #include "libxnee/xnee_xinput.h"
 
 #define XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, devid, fd)	\
@@ -46,6 +46,8 @@ xnee_init_xinput(xnee_data *xd)
     }
   xd->xi_data.forced_core_replay = 0;
   xd->xi_data.recording_enabled  = 1;
+  
+  return XNEE_OK;
 }
 
 int
