@@ -1,5 +1,101 @@
 2011-12-12  Henrik Sandklef  <hesa@sandklef.com>
 
+	* gnee/src/gnee_xnee.h: 
+	Added inclusion of xnee_utils.h
+
+	* gnee/src/gnee_xnee.c: 
+	Removed unused variables
+
+	* gnee/src/main.c: 
+	Corrected faulty version printout
+
+	* gnee/src/recordables.c: 
+	Removed unused variable
+	Added 2011 to (c) year	
+	
+	* gnee/src/callbacks.c (on_ok_button1_clicked): 
+	Removed unused variable
+
+	* gnee/src/gnee_xnee.h: 
+	Added proto for gnee_set_xosd_feedback
+
+	* cnee/src/cnee_printer.c: 
+	Added 2011 to (c) year
+	Removed unused variable
+	(xnee_usage_printer): 
+	Removed unused variable
+
+	* cnee/src/cnee_fake.c (xnee_type_help_sub): 
+	Removed unused variable: option_descr
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+	Added proto for : 
+	      xnee_is_future_clients
+              xnee_set_new_window_pos_value
+	
+	* libxnee/include/libxnee/xnee_xinput.h: 
+	Added proto for xnee_xinput_add_devices
+
+	* libxnee/src/xnee_display.c: 
+	* libxnee/src/xnee_expr.c: 
+	* libxnee/src/xnee_grab.c: 
+	Removed unused variables
+
+	* libxnee/src/xnee_plugin.c: 
+	Removed unused handling of sync callback
+
+	* libxnee/src/xnee_record.c: 
+	Removed new_window_pos
+	
+	* libxnee/src/xnee_utils.c: 
+	Removed unused printout code
+
+	* libxnee/src/xnee_time.c: 
+	Added type (unsigned long) for stored_recordFirst_diff
+
+	* libxnee/src/xnee_xinput.c (xnee_xinput_add_devices): 
+	Removed unused and/or obsolete code
+	Added inclusion of xnee_range.h		
+	(xnee_init_xinput): return XNEE_OK
+
+	* libxnee/src/xnee_display.c: 
+	Added inclusion of xnee_xinput.h	
+	
+	* libxnee/src/xnee_session.c (handle_xerr): 
+	Removed unused and/or obsolete code
+
+	* libxnee/src/xnee_buffer.c: 
+	Added inclusion of xnee_xinput.h
+	Added 2011 to (c) years
+	
+	* libxnee/src/xnee_grab.c (xnee_save_or_print): 
+	Removed obsolete and/or unused code
+
+	* libxnee/src/xnee_fake.c (xnee_fake_key_event_impl): 
+	Moved declaration of XDevice*
+
+	* libxnee/src/xnee_replay.c: 
+	Printout of replayable added
+	Added inclusion of xnee_xinput.h
+
+	* libxnee/include/libxnee/xnee_setget.h: 
+	Added prototype for int xnee_is_forced_core_device_events
+
+	* libxnee/src/print.c (xnee_store_mouse_pos): 
+	Bool bo removed, since not used
+
+	* configure.in: 
+	Bumping version to 3.10.92
+
+	* gnee/src/gnee_xnee.c (gx_start_recording): 
+	Removed printout (stderr)
+
+	* libxnee/src/xnee.c (xnee_start): 
+	Returning (XNEE_NO_PROT_CHOOSEN) if nothing to record
+
+	* libxnee/src/xnee_range.c (xnee_get_nr_of_data): 
+	Not counting reparentnotify among data to record
+
 	* libxnee/src/xnee.c (xnee_start): 
 	Removing debug printouts
 
