@@ -294,29 +294,27 @@ xnee_add_display_str (char * disp_str, xnee_data* xd)
   int xtest_error_basep = 0;
   int xtest_version_major = 0;
   int xtest_version_minor = 0;
-  
+  xnee_distr *xdist;
+
   xnee_verbose((xd, "Adding Display \"%s\" to distribution list\n", disp_str));
   
+  xdist = xd->distr_list;
   if (xd->distr_list_size==0) 
     {
-      xnee_verbose((xd, 
-		    "Adding Display - allocating memory for the first time\n"
-		    ));
-      xd->distr_list = (xnee_distr *) calloc (1,sizeof (xnee_distr));
+      xdist = NULL;
     }
-  else 
+
+  xnee_distr *tmp = xd->distr_list;
+  xd->distr_list = (xnee_distr *) realloc (xd->distr_list, 
+					   (xd->distr_list_size+1)*sizeof (xnee_distr));
+
+  if (xd->distr_list==NULL)
     {
-      xnee_distr *tmp = xd->distr_list;
-      xd->distr_list = (xnee_distr *) realloc (xd->distr_list, 
-					       xd->distr_list_size);
-      if (xd->distr_list==NULL)
-	{
-	  /*@ignore@*/
-	  xd->distr_list = tmp;
-	  /*@end@*/
-	  tmp = NULL;
-	  return XNEE_MEMORY_FAULT;
-	}
+      /*@ignore@*/
+      xd->distr_list = tmp;
+      /*@end@*/
+      tmp = NULL;
+      return XNEE_MEMORY_FAULT;
     }
   
   
