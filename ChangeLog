@@ -1,3 +1,9 @@
+2011-12-13  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_display.c (xnee_add_display_str): 
+	Fixed mem error in realloc
+	Replaced alloc+realloc with only realloc
+
 2011-12-12  Henrik Sandklef  <hesa@sandklef.com>
 
 	* gnee/src/gnee_xnee.h: 
