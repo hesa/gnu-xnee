@@ -1,3 +1,13 @@
+2012-01-05  Henrik Sandklef  <hesa@bach.sandklef.com>
+
+	* configure.in (libgnomeui_LIBS): 
+	Changed the printout when not finding gtk-config
+
+2011-11-21  Henrik Sandklef  <hesa@bach.sandklef.com>
+
+	* libxnee/src/xnee_resource.c (]): 
+	Type fixed
+
 2011-12-13  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_display.c (xnee_add_display_str): 
@@ -128,6 +138,7 @@
 	* gnee/src/main.c (main): 
 	Forcing gnee to replay only core events
 
+>>>>>>> 1.297
 2011-11-17  Henrik Sandklef  <hesa@sandklef.com>
 
 	* pnee/src/callbacks.c: 

@@ -407,10 +407,11 @@ then
   	echo " * WARNING, missing program: gtk-config *"
   	echo " **************************************** "
   	echo ""
-  	echo "     On Debian based distros, install like: libgtk2.0-dev"
+  	echo "     On Debian based distros, install sth like: libgtk2.0-dev"
   	echo ""
   	echo "However, I will try my best to continue without gtk-config. "
-  	echo "Will not be able to check for gtk/gnome header files"
+  	echo "Will not be able to check for gtk/gnome header files properly"
+  	echo "On most platforms this implies no problem"
   	echo ""
       else	
         GTK_PREFIX=`$GTKCONF --prefix`
