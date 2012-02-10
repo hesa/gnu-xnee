@@ -326,7 +326,7 @@ static xnee_option_t cnee_options_impl[] =
       "record-replay",
       "rr",
       NULL,
-      "Record and replay a sessions (press q to stop recording)",
+      "Record and replay a session (press q to stop recording)",
       XNEE_GENERAL_OPTION,
       XNEE_OPTION_VISIBLE
     },
