@@ -321,6 +321,16 @@ static xnee_option_t cnee_options_impl[] =
       XNEE_OPTION_VISIBLE
     },
 
+    { 
+      CNEE_RECORD_REPLAY_OPTION_KEY,
+      "record-replay",
+      "rr",
+      NULL,
+      "Record and replay a sessions (press q to stop recording)",
+      XNEE_GENERAL_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+  
     {
       XNEE_LAST_OPTION,
       NULL,
@@ -601,6 +611,12 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
       ret = XNEE_OK;
       break;
 #endif /*  XNEE_XINPUT_SUPPORT */
+    case  CNEE_RECORD_REPLAY_OPTION_KEY:
+      verbose_option("CNEE_RECORD_REPLAY_OPTION_KEY");
+      cnee_record_replay(xd);
+      ret = XNEE_OK_LEAVE;
+      break;
+
 
     default:
       ret = XNEE_NO_OPTION_KEY;

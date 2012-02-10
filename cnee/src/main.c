@@ -96,6 +96,7 @@ int main(int argc,char *argv[])
   if ( ret != XNEE_OK)
     {
       cnee_handle_err(ret);
+      return ret;
     }
 
   if (ret==XNEE_OK)
@@ -107,6 +108,7 @@ int main(int argc,char *argv[])
   if ( ret != XNEE_OK)
   {
     cnee_handle_err(ret);
+    return ret;
   }
 
   /* hey, we are fin(n)ished .... close down */

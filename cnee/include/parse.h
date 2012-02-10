@@ -113,8 +113,9 @@ enum {
   CNEE_GET_XINPUT_EVENT_BASE        ,   
   CNEE_DISABLE_XINPUT_EVENTS        ,
   CNEE_REPLAY_BACKEND               ,
-  CNEE_FORCE_CORE_REPLAY            
- } ;
+  CNEE_FORCE_CORE_REPLAY            ,
+  CNEE_RECORD_REPLAY_OPTION_KEY
+} ;
 
 
 #endif /* CNEE_PARSE_H */

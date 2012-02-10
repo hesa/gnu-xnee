@@ -215,3 +215,133 @@ cnee_demonstration (xnee_data *xd)
   /* Since we are here, we can exit gracefully */
   exit(XNEE_OK); 
 }
+
+
+
+int
+cnee_record_replay (xnee_data *xd)
+{
+  int ret;
+  char *file; 
+
+  /* Setup for recording */
+  ret = xnee_set_recorder(xd);
+  XNEE_RETURN_IF_ERR(ret);
+
+  xnee_init_xinput(xd);
+
+  ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
+			  "ButtonPress-MotionNotify");
+  XNEE_RETURN_IF_ERR(ret);
+#ifdef  XNEE_XINPUT_SUPPORT
+      xnee_xinput_request_mouse(xd);
+#endif /*  XNEE_XINPUT_SUPPORT      */
+  
+  ret = xnee_parse_range (xd, XNEE_DEVICE_EVENT, 
+			  "KeyPress-KeyRelease");
+  XNEE_RETURN_IF_ERR(ret);
+#ifdef  XNEE_XINPUT_SUPPORT
+      xnee_xinput_request_mouse(xd);
+#endif /*  XNEE_XINPUT_SUPPORT      */
+  
+  file = cnee_get_default_filename();
+  if (file==NULL)
+    {
+      return XNEE_FILE_NOT_FOUND;
+    }
+  
+  ret = xnee_set_out_name(xd, file);
+  XNEE_RETURN_IF_ERR(ret);
+
+  ret = xnee_set_interval(xd, CNEE_DEMO_DELAYED_START);
+  XNEE_RETURN_IF_ERR(ret);
+
+  ret = xnee_set_key (xd, XNEE_GRAB_STOP, "q");
+  XNEE_RETURN_IF_ERR(ret);
+
+  /* Set the cli parameters */
+  xnee_set_application_parameters (xd, NULL);
+  XNEE_RETURN_IF_ERR(ret);
+
+  ret = xnee_prepare(xd);
+  if (ret==XNEE_OK)
+    {
+      fprintf (stderr, 
+	       "Xnee will now start recording your "
+	       "mouse and keyboard in %d seconds\n", 
+	       CNEE_DEMO_DELAYED_START);
+
+      /* start up the action set during parsing the commnd line */
+      ret = xnee_start(xd);
+    }
+
+  if ( ret != XNEE_OK)
+    {
+      xnee_print_error (PACKAGE " failed to start\n");
+      xnee_print_error ("   Error number:    %d\n", ret);
+      xnee_print_error ("   Error string:    '%s'\n", 
+			xnee_get_err_description(ret));
+      xnee_print_error ("   Solution string: '%s'\n", 
+			xnee_get_err_solution(ret));
+      exit(ret);
+    }
+  else
+    {
+      fprintf (stderr, "Reording went well....\n");
+    }
+
+  ret = xnee_renew_xnee_data(xd);
+  XNEE_RETURN_IF_ERR(ret);
+
+  ret = xnee_set_data_name (xd, file);
+  XNEE_RETURN_IF_ERR(ret);
+  
+  ret = xnee_set_replayer (xd);
+  XNEE_RETURN_IF_ERR(ret);
+
+  ret = xnee_prepare(xd); 
+  if (ret==XNEE_OK)
+    {
+      fprintf (stderr, 
+	       "Xnee will now replay your recorded "
+	       "mouse and keyboard events in %d seconds\n", 
+	       CNEE_DEMO_DELAYED_START);
+
+      /* start up the action set during parsing the commnd line */
+      ret = xnee_start(xd);
+    }
+  if ( ret != XNEE_OK)
+    {
+      xnee_print_error (PACKAGE " failed to start\n");
+      xnee_print_error ("   Error number:    %d\n", ret);
+      xnee_print_error ("   Error string:    '%s'\n", 
+			xnee_get_err_description(ret));
+      xnee_print_error ("   Solution string: '%s'\n", 
+			xnee_get_err_solution(ret));
+      exit(ret);
+    }
+  else
+    {
+      fprintf (stderr, "Replay went well....\n");
+    }
+
+  fprintf (stderr, "By the way, you can find the recorded file here:\n\t%s\n",
+	   file);
+  fprintf (stderr, "To replay that file again, type the following command\n");
+
+  fprintf (stderr, 
+	   "\t"
+	   XNEE_CLI " --%s --%s %s\n", 
+	   xnee_key2string(xd, xnee_options, XNEE_REPLAY_OPTION_KEY),
+	   xnee_key2string(xd, cnee_options, CNEE_FILE_OPTION_KEY),
+	   file);
+
+  xnee_free (file);
+
+
+  /* hey, we are fin(n)ished .... close down */
+  xnee_close_down(xd);
+
+  /* Since we are here, we can exit gracefully */
+  exit(XNEE_OK); 
+}
