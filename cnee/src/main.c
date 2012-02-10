@@ -113,7 +113,7 @@ int main(int argc,char *argv[])
   xnee_close_down(xd);
   
   /* Since we are here, we can exit gracefully */
-  exit(XNEE_OK); 
+  exit(ret); 
 }
 
 
