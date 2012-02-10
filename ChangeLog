@@ -1,5 +1,8 @@
 2012-02-10  Henrik Sandklef  <hesa@sandklef.com>
 
+	* configure.in: 
+	Bumped version
+
 	* cnee/src/parse.c: 
 	* cnee/include/parse.h: 
 	* cnee/src/main.c: 
@@ -19,7 +22,7 @@
 	* libxnee/src/xnee_display.c (xnee_add_display_str): 
 	Fixed mem error in realloc
 	Replaced alloc+realloc with only realloc
-	
+
 
 2011-12-12  Henrik Sandklef  <hesa@sandklef.com>
 
