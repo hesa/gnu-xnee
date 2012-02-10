@@ -5,8 +5,8 @@
 #  this one instead. You are on your own though :)
 #
 
-PACKAGE=\"Xnee\"
-VERSION=\"2.06\"
+PACKAGE=\"\"
+VERSION=\"\"
 #
 # gnee uses config.h (copied from config.xnee)
 #

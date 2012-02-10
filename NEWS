@@ -1,3 +1,11 @@
+Changes in version coming 3.12
+==============================
+
+   * Fixed bugs:
+
+     Savannah
+       bug #35029, Segmentation fault when using stop...
+
 Changes in version 3.11
 ==============================
 
