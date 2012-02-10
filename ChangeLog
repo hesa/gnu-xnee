@@ -1,5 +1,11 @@
 2012-02-10  Henrik Sandklef  <hesa@sandklef.com>
 
+	* cnee/src/parse.c: 
+	* cnee/include/parse.h: 
+	* cnee/src/main.c: 
+	* cnee/src/cnee_demo.c: 
+	Added option: record-replay
+
 	* cnee/src/main.c (main): 
 	Returning from main with the last return value
 
@@ -13,6 +19,7 @@
 	* libxnee/src/xnee_display.c (xnee_add_display_str): 
 	Fixed mem error in realloc
 	Replaced alloc+realloc with only realloc
+	
 
 2011-12-12  Henrik Sandklef  <hesa@sandklef.com>
 
