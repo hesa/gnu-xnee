@@ -277,7 +277,7 @@ xnee_record_handle_event_printer(xnee_data * xd,
       
       break;
     case CreateNotify:
-      fprintf (out,"0,%u," CARD32_PRINTF_FMT "0,0,0,0,0," TIME_PRINTF_FMT "\n",
+      fprintf (out,"0,%u,0,0,0,0,0," TIME_PRINTF_FMT "\n",
 	       event_type,
 	       xrecintd->server_time
 	       );
