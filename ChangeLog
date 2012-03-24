@@ -1,4 +1,12 @@
+2012-03-24  Henrik Sandklef  <hesa@sandklef.com>
+
+	* configure.in: 
+	Fixed faulty printout in xosd option (configure script)
+
 2012-02-10  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_record.c (xnee_record_handle_event_printer): 
+	Corrected faulty print statement (too few arguments)
 
 	* configure.in: 
 	Bumped version
