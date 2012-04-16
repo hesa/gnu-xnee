@@ -75,8 +75,16 @@ xnee_init_xinput_devices(xnee_data *xd)
   if (XIQueryVersion(xd->control, &major, &minor) != Success ||
       (major * 1000 + minor) < (XI_2_Major * 1000 + XI_2_Minor))
     {
-      fprintf(stderr, "XI2 not supported.\n");
-      return EXIT_FAILURE;
+      if (major  < XI_2_Major )
+	{
+	  fprintf(stderr, "XI2 not supported\n");
+	  return EXIT_FAILURE;
+	}
+      else
+	{
+	  fprintf(stderr, "XI2 may not be supported (minor: %d/%d)\n", 
+		  minor, XI_2_Minor);
+	}
     }
 
   xi_info = XIQueryDevice(xd->control, XIAllDevices, &nr_of_devices);
@@ -162,10 +170,10 @@ xnee_get_xinput_event_base(Display *dpy)
   int ext_op;
   static int ext_fi_ev = 0 ;
   int ext_fi_er;
-  
+
   if ( ext_fi_ev == 0)
     {
-
+      
       if ( dpy == NULL )
 	{
 	  dpy = XOpenDisplay(NULL);
@@ -185,7 +193,7 @@ xnee_get_xinput_event_base(Display *dpy)
 	}
     }
   return ext_fi_ev;
-    }
+}
 
 
 int
@@ -312,7 +320,6 @@ xnee_handle_xinput_event(xnee_data * xd,
     }
   else if ( event_type == xd->xi_data.xinput_event_base)
     {
-      
       /*
        *
        *  DaviceValuator event
