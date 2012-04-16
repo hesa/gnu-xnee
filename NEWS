@@ -1,10 +1,16 @@
 Changes in version coming 3.12
 ==============================
 
+   * New option: --record-replay, -rr
+        Record and replay a session (press q to stop recording)
+
    * Fixed bugs:
 
      Savannah
-       bug #35029, Segmentation fault when using stop...
+        bug #35029, Segmentation fault when using stop...
+
+     Bug-xnee mailing list:
+        WARNING: Enough valuators ... still not printing
 
 Changes in version 3.11
 ==============================
