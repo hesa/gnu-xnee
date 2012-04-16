@@ -1,3 +1,9 @@
+2012-04-17  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_xinput.c: 
+	Added (c) year 2012
+	Ok if minor differs when querying XI extension
+
 2012-03-24  Henrik Sandklef  <hesa@sandklef.com>
 
 	* configure.in: 
