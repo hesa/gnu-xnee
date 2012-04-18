@@ -236,6 +236,7 @@ xnee_handle_xinput_event(xnee_data * xd,
 
   out = xd->out_file;
   
+  /* printf ("\nXI HE base=%d   event_type=%d  last:%d  \n",xd->xi_data.xinput_event_base, event_type, sxe.type);   */
 
   /*
    * Are we using Xinput
@@ -250,7 +251,7 @@ xnee_handle_xinput_event(xnee_data * xd,
       deviceKeyButtonPointer *e;
       e = (deviceKeyButtonPointer *) &xrec_data->event ;
       
-      xnee_verbose((xd, "handle xi:: dev-id%d type:%d  ", 
+    xnee_verbose((xd, "handle xi:: dev-id%d type:%d  ", 
 		    e->deviceid,
 		    event_type));
       ordinary_event_nr = event_type - xd->xi_data.xinput_event_base + 1;
@@ -344,9 +345,10 @@ xnee_handle_xinput_event(xnee_data * xd,
 	}
       valuator_counter = 0 ;
 
+
+
       if ( sxe.type == MotionNotify )
 	{
-	 
 	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
 	  fprintf (out, ",%d,%d,%d,0,0,0,%lu,%d,'%s'\n",
 		   sxe.type,
@@ -363,7 +365,7 @@ xnee_handle_xinput_event(xnee_data * xd,
 	{
 	  fprintf (stderr, 
 		   "WARNING: Enough valuators,"
-		   "but non motion/button event so not printing\n");      
+		   "but non motion/button event (%d) so not printing\n", sxe.type);      
 	  return -1;
 	}
       sxe.x = 0;
@@ -527,7 +529,7 @@ xnee_xinput_add_devices(xnee_data *xd)
   else if ( xnee_xinput_keyboard_requested(xd))
     {
       snprintf(buf, XI_BUF_SIZE, "%d-%d", 
-	      xinput_ev_base,
+	      xinput_ev_base+1,
 	      xinput_ev_base+2);
     }
 
