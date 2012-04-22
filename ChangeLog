@@ -1,3 +1,8 @@
+2012-04-19  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_xinput.c (xnee_xinput_add_devices): 
+	Not recording mouse event when wanting to record kbd only
+
 2012-04-17  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_xinput.c: 
