@@ -1,3 +1,11 @@
+Changes in coming version 3.13
+==============================
+
+   * Fixed bugs:
+
+     Bug-xnee mailing list:
+        WARNING: Enough valuators ... still not printing
+
 Changes in coming version 3.12
 ==============================
 
@@ -8,9 +16,6 @@ Changes in coming version 3.12
 
      Savannah
         bug #35029, Segmentation fault when using stop...
-
-     Bug-xnee mailing list:
-        WARNING: Enough valuators ... still not printing
 
 Changes in version 3.11
 ==============================
