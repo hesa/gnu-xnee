@@ -1,3 +1,12 @@
+2012-06-28  Henrik Sandklef  <hesa@sandklef.com>
+
+	* libxnee/src/xnee_xinput.c:
+	* libxnee/src/xnee_record.c:
+        Don't record non XI events if XI is in use
+
+	* libxnee/src/xnee_resource.c:
+        correct handling of --all-events
+
 2012-04-19  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_xinput.c (xnee_xinput_add_devices): 
