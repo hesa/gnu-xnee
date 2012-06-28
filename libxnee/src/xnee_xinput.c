@@ -33,6 +33,8 @@
   else								\
     fprintf (fd, "%d", XNEE_PROTO_XINPUT_EVENT_SLAVE);
 
+#define XNEE_XINPUT_IS_SLAVE(xd, devid)     	\
+  xd->xi_data.xi_devices[devid].is_slave
 
 
 #ifdef XNEE_XINPUT_SUPPORT
@@ -221,6 +223,7 @@ xnee_handle_xinput_event(xnee_data * xd,
 {
   static saved_xinput_event sxe;
   static int valuator_counter = 0;
+  int event_base;
   FILE *out ;
 
   if  (xd == NULL ) 
@@ -236,27 +239,33 @@ xnee_handle_xinput_event(xnee_data * xd,
 
   out = xd->out_file;
   
-  /* printf ("\nXI HE base=%d   event_type=%d  last:%d  \n",xd->xi_data.xinput_event_base, event_type, sxe.type);   */
+   /* printf ("\nXI HE base=%d   event_type=%d  last:%d  \n",xd->xi_data.xinput_event_base, event_type, sxe.type);    */
+
+  event_base = xd->xi_data.xinput_event_base;
 
   /*
    * Are we using Xinput
    *  AND
    * the event is a xinput device event
    */
-  if ( ( xd->xi_data.xinput_event_base > 0 )          &&
-       ( event_type > xd->xi_data.xinput_event_base ) &&
-       ( event_type <= (xd->xi_data.xinput_event_base + 6) ))
+  if ( ( event_base > 0 )          &&
+       ( event_type > event_base ) &&
+       ( event_type <= (event_base + 6) ))
     {
+      /* printf ("XI XI :: "); */
+
       int ordinary_event_nr ;
       deviceKeyButtonPointer *e;
       e = (deviceKeyButtonPointer *) &xrec_data->event ;
       
-    xnee_verbose((xd, "handle xi:: dev-id%d type:%d  ", 
+      xnee_verbose((xd, "handle xi:: dev-id%d type:%d  ", 
 		    e->deviceid,
 		    event_type));
-      ordinary_event_nr = event_type - xd->xi_data.xinput_event_base + 1;
+      ordinary_event_nr = event_type - event_base + 1;
       sxe.type         =  ordinary_event_nr ;
       
+      /* printf ("%d \n", ordinary_event_nr); */
+
       /* printf ("GOT %d | detail: %d  saved=%d\n", ordinary_event_nr, xrec_data->event.u.u.detail, sxe.type); */
       
       /* MotionEvent */
@@ -319,8 +328,10 @@ xnee_handle_xinput_event(xnee_data * xd,
 		   xd->xi_data.xi_devices[e->deviceid].name);
 	}
     }
-  else if ( event_type == xd->xi_data.xinput_event_base)
+  else if ( event_type == event_base)
     {
+      /* printf (" -:: SAME ::- "); */
+
       /*
        *
        *  DaviceValuator event
@@ -349,17 +360,20 @@ xnee_handle_xinput_event(xnee_data * xd,
 
       if ( sxe.type == MotionNotify )
 	{
-	  XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
-	  fprintf (out, ",%d,%d,%d,0,0,0,%lu,%d,'%s'\n",
-		   sxe.type,
- 		   /* (int)e->valuator0,   */
- 		   /* (int)e->valuator1,   */
-		   sxe.x,
-		   sxe.y,
-		   server_time,
-		   /* sxe.time, */
-		   e->deviceid,
-		   xd->xi_data.xi_devices[e->deviceid].name);
+	  if (XNEE_XINPUT_IS_SLAVE(xd, e->deviceid))
+	    {
+	      XNEE_XINPUT_PRINT_MASTER_OR_SLAVE(xd, e->deviceid, out);
+	      fprintf (out, ",%d,%d,%d,0,0,0,%lu,%d,'%s'\n",
+		       sxe.type,
+		       /* (int)e->valuator0,   */
+		       /* (int)e->valuator1,   */
+		       sxe.x,
+		       sxe.y,
+		       server_time,
+		       /* sxe.time, */
+		       e->deviceid,
+		       xd->xi_data.xi_devices[e->deviceid].name);
+	    }
 	}
       else
 	{
@@ -375,7 +389,7 @@ xnee_handle_xinput_event(xnee_data * xd,
   else
     {
       fprintf (stderr, 
-	       "WARNING: Enough valuators ... still not printing\n");      
+	       "WARNING: Enough valuators ... Xnee believes this to not be a valid XI event\n");      
       return -1;
     }
   return XNEE_OK;

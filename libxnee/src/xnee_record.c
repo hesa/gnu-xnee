@@ -5,7 +5,7 @@
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003 
  *                      2004, 2005, 2006, 2007, 2008
- *                      2009, 2010, 2011 Henrik Sandklef      
+ *                      2009, 2010, 2011, 2012  Henrik Sandklef      
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -150,236 +150,255 @@ xnee_record_handle_event_printer(xnee_data * xd,
   unsigned int screen ;
   char *win_name;
   int do_print = 1;
-
+  int event_base;
   
   out = xd->out_file;
 
   XNEE_DEBUG ( (stderr ," -- xnee_record_handle_event() at 3 (%d)  \n" ,event_type ));
-  
-  switch(event_type)
-    {	  
-    case KeyPress:
-      kc = xrec_data->event.u.u.detail;
+ 
+
+  /*
+   * If XI is in use, don't print device events as core event
+   *   only print as XI event
+   * 
+   * event_base must be set (>0)
+   * event_type must be within event_base and event_base+5
+   *
+   */
+  event_base = xd->xi_data.xinput_event_base ;
+  if  ( ( event_base       >  0 ) && 
+	( event_base       <= event_type ) && 
+	( (event_base + 6) >  event_type ) ) 
+    {
+      ret = xnee_handle_xinput_event(xd, 
+				     event_type, 
+				     xrec_data,
+				     xrecintd->server_time);
       
-      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_PRESS);
-      
-      if (do_print==XNEE_GRAB_DO_PRINT)
-	{
-	  fprintf (out,"0,%u,0,0,0,%d,0,%lu\n",
-		   event_type,
-		   kc,
-		   xrecintd->server_time
-		   );
-	  ret = xnee_fake_key_event  (xd, kc, True, CurrentTime );
-	  XNEE_RETURN_IF_ERR (ret);
+      /* printf ("XI <----  %d \n", ret); */
+    }
+  else
+    {
+      /* printf ("CORE:: %d (%d)\n", event_type, event_base); */
+      switch(event_type)
+	{	  
+	case KeyPress:
+	  if  ( event_base > 0 ) { break; }
+	  kc = xrec_data->event.u.u.detail;
 	  
-	}
-      else if (do_print==XNEE_GRAB_DO_SAVE)
-	{
-	  char buf[64];
-	  ret = snprintf (buf, 64, "0,%u,0,0,0,%d,0,%lu\n",
-			  event_type,
-			  kc,
-			  xrecintd->server_time);
-	  if (ret<3)
+	  do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_PRESS);
+	  
+	  if (do_print==XNEE_GRAB_DO_PRINT)
 	    {
-	      return   XNEE_MEMORY_FAULT    ;
+	      fprintf (out,"0,%u,0,0,0,%d,0,%lu\n",
+		       event_type,
+		       kc,
+		       xrecintd->server_time
+		       );
+	      ret = xnee_fake_key_event  (xd, kc, True, CurrentTime );
+	      XNEE_RETURN_IF_ERR (ret);
+	      
 	    }
-	  ret = xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
-	  XNEE_RETURN_IF_ERR(ret);
-	}
-      else if (do_print==XNEE_GRAB_DONT_PRINT)
-	{
-	  return XNEE_GRAB_CONFUSION;
-	}
-      break;
-    case KeyRelease:
-      kc = xrec_data->event.u.u.detail;
-      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_RELEASE);
-      
-      if (do_print==XNEE_GRAB_DO_PRINT)
-	{
-	  fprintf (out,"0,%u,0,0,0,%d,0,%lu\n",
+	  else if (do_print==XNEE_GRAB_DO_SAVE)
+	    {
+	      char buf[64];
+	      ret = snprintf (buf, 64, "0,%u,0,0,0,%d,0,%lu\n",
+			      event_type,
+			      kc,
+			      xrecintd->server_time);
+	      if (ret<3)
+		{
+		  return   XNEE_MEMORY_FAULT    ;
+		}
+	      ret = xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
+	      XNEE_RETURN_IF_ERR(ret);
+	    }
+	  else if (do_print==XNEE_GRAB_DONT_PRINT)
+	    {
+	      return XNEE_GRAB_CONFUSION;
+	    }
+	  break;
+	case KeyRelease:
+	  if  ( event_base > 0 ) { break; }
+	  kc = xrec_data->event.u.u.detail;
+	  do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_KM_RELEASE);
+	  
+	  if (do_print==XNEE_GRAB_DO_PRINT)
+	    {
+	      fprintf (out,"0,%u,0,0,0,%d,0,%lu\n",
+		       event_type,
+		       xrec_data->event.u.u.detail,
+		       xrecintd->server_time
+		       );
+	      ret = xnee_fake_key_event  (xd, (int) xrec_data->event.u.u.detail , False, CurrentTime);
+	      XNEE_RETURN_IF_ERR(ret);
+	    }
+	  else if (do_print==XNEE_GRAB_DO_SAVE)
+	    {
+	      char buf[64];
+	      ret = snprintf (buf, 64, "0,%u,0,0,0,%d,0,%lu\n",
+			      event_type,
+			      kc,
+			      xrecintd->server_time);
+	      if (ret<3)
+		{
+		  return   XNEE_MEMORY_FAULT    ;
+		}
+	      ret = xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
+	      XNEE_RETURN_IF_ERR(ret);
+	      
+	    }
+	  break;
+	case ButtonPress:
+	  if  ( event_base > 0 ) { break; }
+	  fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
 		   event_type,
 		   xrec_data->event.u.u.detail,
 		   xrecintd->server_time
 		   );
-	  ret = xnee_fake_key_event  (xd, (int) xrec_data->event.u.u.detail , False, CurrentTime);
+	  ret = xnee_fake_button_event(xd, (int)xrec_data->event.u.u.detail , True, CurrentTime);
 	  XNEE_RETURN_IF_ERR(ret);
-	}
-      else if (do_print==XNEE_GRAB_DO_SAVE)
-	{
-	  char buf[64];
-	  ret = snprintf (buf, 64, "0,%u,0,0,0,%d,0,%lu\n",
-			  event_type,
-			  kc,
-			  xrecintd->server_time);
-	  if (ret<3)
-	    {
-	      return   XNEE_MEMORY_FAULT    ;
-	    }
-	  ret = xnee_grab_handle_buffer (xd, buf, XNEE_GRAB_BUFFER_SAVE);
-	  XNEE_RETURN_IF_ERR(ret);
-	  
-	}
-      break;
-    case ButtonPress:
-      fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
-	       event_type,
-	       xrec_data->event.u.u.detail,
-	       xrecintd->server_time
-	       );
-      ret = xnee_fake_button_event(xd, (int)xrec_data->event.u.u.detail , True, CurrentTime);
-      XNEE_RETURN_IF_ERR(ret);
-      break;
-    case ButtonRelease:
-      fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
-	       event_type,
-	       xrec_data->event.u.u.detail,
-	       xrecintd->server_time
-	       );
-      ret = xnee_fake_button_event(xd,  (int)xrec_data->event.u.u.detail, False, CurrentTime);
-      XNEE_RETURN_IF_ERR(ret);
-      
-      break;
-    case MotionNotify:  
-      kc = 0;
-      ret = xnee_get_screen_nr(xd, 
-			       xd->data,
-			       xrec_data->event.u.keyButtonPointer.root);
-      if (0)
-	{
-	  /* Discarding core event that seems to have come from XI */
-	  /* ... anyhow, it's recorded as an XI event  */
-	  ret = XNEE_OK;
-	}
-      else
-	{
-	  screen = ret;
-	  do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
-	  fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
+	  break;
+	case ButtonRelease:
+	  if  ( event_base > 0 ) { break; }
+	  fprintf (out,"0,%u,0,0,%d,0,0,%lu\n",
 		   event_type,
-		   xrec_data->event.u.keyButtonPointer.rootX,
-		   xrec_data->event.u.keyButtonPointer.rootY,
-		   screen,
+		   xrec_data->event.u.u.detail,
 		   xrecintd->server_time
 		   );
-	  
-	  
-	  xd->xnee_info.last_motion = True ;
-	  ret = xnee_fake_motion_event (xd,
-					screen, 
-					xrec_data->event.u.keyButtonPointer.rootX, 
-					xrec_data->event.u.keyButtonPointer.rootY, 
-					CurrentTime);
+	  ret = xnee_fake_button_event(xd,  (int)xrec_data->event.u.u.detail, False, CurrentTime);
 	  XNEE_RETURN_IF_ERR(ret);
-	}
-      
-      break;
-    case CreateNotify:
-      fprintf (out,"0,%u,0,0,0,0,0," TIME_PRINTF_FMT "\n",
-	       event_type,
-	       xrecintd->server_time
-	       );
-       break;
-    case DestroyNotify:
-      fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
-	       event_type,
-	       xrecintd->server_time
-	       );
-      break;
-    case ReparentNotify:
-      
-      if ( ! xnee_is_no_reparent_recording(xd))
-	{
+	  
+	  break;
+	case MotionNotify:  
+	  if  ( event_base > 0 ) { break; }
+	  kc = 0;
+	  ret = xnee_get_screen_nr(xd, 
+				   xd->data,
+				   xrec_data->event.u.keyButtonPointer.root);
+	  if (0)
+	    {
+	      /* Discarding core event that seems to have come from XI */
+	      /* ... anyhow, it's recorded as an XI event  */
+	      ret = XNEE_OK;
+	    }
+	  else
+	    {
+	      screen = ret;
+	      do_print = xnee_save_or_print(xd, kc, XNEE_GRAB_MOUSE);
+	      fprintf (out,"0,%u,%d,%d,0,0,%u,%lu\n",
+		       event_type,
+		       xrec_data->event.u.keyButtonPointer.rootX,
+		       xrec_data->event.u.keyButtonPointer.rootY,
+		       screen,
+		       xrecintd->server_time
+		       );
+	      
+	      
+	      xd->xnee_info.last_motion = True ;
+	      ret = xnee_fake_motion_event (xd,
+					    screen, 
+					    xrec_data->event.u.keyButtonPointer.rootX, 
+					    xrec_data->event.u.keyButtonPointer.rootY, 
+					    CurrentTime);
+	      XNEE_RETURN_IF_ERR(ret);
+	    }
+	  
+	  break;
+	case CreateNotify:
+	  fprintf (out,"0,%u,0,0,0,0,0," TIME_PRINTF_FMT "\n",
+		   event_type,
+		   xrecintd->server_time
+		   );
+	  break;
+	case DestroyNotify:
 	  fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
 		   event_type,
-		   xrecintd->server_time );
-	} 
-      XGetWindowAttributes(xd->grab, 
-			   xrec_data->event.u.reparent.window,
-			   &window_attributes_return);
-      
-      XTranslateCoordinates (xd->grab, 
-			     xrec_data->event.u.reparent.window, 
-			     window_attributes_return.root, 
-			     -window_attributes_return.border_width,
-			     -window_attributes_return.border_width,
-			     &rx, 
-			     &ry, 
-			     &dummy_window);
-      
-      /* 
-       * Prevent the same window pos to be printed more than once 
-       */
-      if ( (last_record_window_pos_win != 
-	    xrec_data->event.u.reparent.window) ||
-	   (last_record_window_pos_par != 
-	    xrec_data->event.u.reparent.parent) )
-	{
-	  
-	  XFlush(xd->grab);
-	  if (!XFetchName(xd->grab, xrec_data->event.u.reparent.window, &win_name)) 
-	    { /* Get window name if any */
-	      xnee_verbose((xd," window has has no name\n"));
-	      win_name=NULL;
-	    } 
-	  else if (win_name) 
-	    {
-	      xnee_verbose((xd," window has has name '%s'\n", win_name));
-	    }
-	  fprintf (out, 
-		   "%s:%d,%d:%u,%u,%u,%u,%u,%d:%dx%d+%d+%d:%d,%d:%s\n", 
-		   XNEE_NEW_WINDOW_MARK,
-		   rx,
-		   ry,
-		   (unsigned int) xrec_data->event.u.reparent.event,
-		   (unsigned int) xrec_data->event.u.reparent.window,
-		   (unsigned int) xrec_data->event.u.reparent.parent,
-		   (unsigned int) xrec_data->event.u.reparent.x,
-		   (unsigned int) xrec_data->event.u.reparent.y,
-		   xrec_data->event.u.reparent.override,
-		   window_attributes_return.x,
-		   window_attributes_return.y,
-		   window_attributes_return.width,
-		   window_attributes_return.height,
-		   window_attributes_return.border_width,
-		   window_attributes_return.border_width,
-		   win_name?win_name:""
+		   xrecintd->server_time
 		   );
-	  if (win_name) 
+	  break;
+	case ReparentNotify:
+	  
+	  if ( ! xnee_is_no_reparent_recording(xd))
 	    {
-	      xnee_verbose((xd," freeing window name\n"));
-	      XFree(win_name);
+	      fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
+		       event_type,
+		       xrecintd->server_time );
 	    } 
-	  last_record_window_pos_win = 
-	    xrec_data->event.u.reparent.window;
-	  last_record_window_pos_par = 
-	    xrec_data->event.u.reparent.parent;
-	}
-      break;
-    default:
-      {
-	ret = xnee_handle_xinput_event(xd, 
-				       event_type, 
-				       xrec_data,
-				       xrecintd->server_time);
-
-	if ( ret != 0 )
+	  XGetWindowAttributes(xd->grab, 
+			       xrec_data->event.u.reparent.window,
+			       &window_attributes_return);
+	  
+	  XTranslateCoordinates (xd->grab, 
+				 xrec_data->event.u.reparent.window, 
+				 window_attributes_return.root, 
+				 -window_attributes_return.border_width,
+				 -window_attributes_return.border_width,
+				 &rx, 
+				 &ry, 
+				 &dummy_window);
+	  
+	  /* 
+	   * Prevent the same window pos to be printed more than once 
+	   */
+	  if ( (last_record_window_pos_win != 
+		xrec_data->event.u.reparent.window) ||
+	       (last_record_window_pos_par != 
+		xrec_data->event.u.reparent.parent) )
+	    {
+	      
+	      XFlush(xd->grab);
+	      if (!XFetchName(xd->grab, xrec_data->event.u.reparent.window, &win_name)) 
+		{ /* Get window name if any */
+		  xnee_verbose((xd," window has has no name\n"));
+		  win_name=NULL;
+		} 
+	      else if (win_name) 
+		{
+		  xnee_verbose((xd," window has has name '%s'\n", win_name));
+		}
+	      fprintf (out, 
+		       "%s:%d,%d:%u,%u,%u,%u,%u,%d:%dx%d+%d+%d:%d,%d:%s\n", 
+		       XNEE_NEW_WINDOW_MARK,
+		       rx,
+		       ry,
+		       (unsigned int) xrec_data->event.u.reparent.event,
+		       (unsigned int) xrec_data->event.u.reparent.window,
+		       (unsigned int) xrec_data->event.u.reparent.parent,
+		       (unsigned int) xrec_data->event.u.reparent.x,
+		       (unsigned int) xrec_data->event.u.reparent.y,
+		       xrec_data->event.u.reparent.override,
+		       window_attributes_return.x,
+		       window_attributes_return.y,
+		       window_attributes_return.width,
+		       window_attributes_return.height,
+		       window_attributes_return.border_width,
+		       window_attributes_return.border_width,
+		       win_name?win_name:""
+		       );
+	      if (win_name) 
+		{
+		  xnee_verbose((xd," freeing window name\n"));
+		  XFree(win_name);
+		} 
+	      last_record_window_pos_win = 
+		xrec_data->event.u.reparent.window;
+	      last_record_window_pos_par = 
+		xrec_data->event.u.reparent.parent;
+	    }
+	  break;
+	default:
 	  {
 	    fprintf (out,"0,%u,0,0,0,0,0,%lu\n", 
 		     event_type,
 		     xrecintd->server_time);
 	  }
-	break;
-      }
+	} 
     }
-  
   return XNEE_OK;
 }
-
-
-/**************************************************************
+  
+  /**************************************************************
  *                                                            *
  * xnee_record_handle_event                                   *
  *                                                            *
@@ -476,7 +495,6 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
   int           ret;
 
   XNEE_DEBUG ( (stderr ," --> xnee_record_dispatch()  \n"  ));
-
 
   if ( (data==NULL) || (!data->data) )
     {
