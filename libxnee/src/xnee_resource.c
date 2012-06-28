@@ -1171,8 +1171,7 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
 
     case XNEE_ALL_EVENTS_KEY:
       verbose_option("XNEE_ALL_EVENTS_KEY");
-      ret = xnee_set_all_clients(xd);
-      INC_ARGS_USED(*args_used, opt_and_args[1]);
+      ret = xnee_parse_range(xd, XNEE_EVENT, "7-31");
       break;
 
     case XNEE_ALL_CLIENTS_KEY:
