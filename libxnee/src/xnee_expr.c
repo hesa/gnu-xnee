@@ -314,26 +314,27 @@ xnee_expression_handle_replay(xnee_data *xd,
     }
   else if (!strncmp("7",tmp,1))  /* XInput Device (slave) */
     {
-      if ( ! xnee_is_forced_core_device_events(xd))
+      /*
+       * If forced core play is set, we fill in details to be used as a core event
+       * 
+      */
+      xindata->oldtime = xindata->newtime ;
+      ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
+		   &xindata->type, 
+		   &xindata->u.xievent.type, 
+		   &xindata->u.xievent.x,
+		   &xindata->u.xievent.y, 
+		   &xindata->u.xievent.button,
+		   &xindata->u.xievent.keycode, 
+		   &xindata->u.xievent.screen_nr,
+		   &xindata->newtime,
+		   &xindata->u.xievent.deviceid,
+		   xindata->u.xievent.name);
+      if (ret < 10)
 	{
-	  xindata->oldtime = xindata->newtime ;
-	  ret = sscanf(tmp, "%d,%d,%d,%d,%d,%d,%d,%lu,%d,%s",
-		       &xindata->type, 
-		       &xindata->u.xievent.type, 
-		       &xindata->u.xievent.x,
-		       &xindata->u.xievent.y, 
-		       &xindata->u.xievent.button,
-		       &xindata->u.xievent.keycode, 
-		       &xindata->u.xievent.screen_nr,
-		       &xindata->newtime,
-		       &xindata->u.xievent.deviceid,
-		       xindata->u.xievent.name);
-	  if (ret < 10)
-	    {
-	      (void)xnee_print_error("Error in file %s: %s \n", xd->data_name, tmp);
-	      ret = 0;
-	    } 
-	}
+	  (void)xnee_print_error("Error in file %s: %s \n", xd->data_name, tmp);
+	  ret = 0;
+	} 
     }  
 #endif /* XNEE_XINPUT_SUPPORT */
   else 
