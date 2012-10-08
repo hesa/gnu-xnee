@@ -1,10 +1,15 @@
 Changes in coming version 3.13
 ==============================
 
+   If XInput is present, record only XI events (discard core events).
+   Forced core replay is now done using XI events (if no core events are available).
+
    * Fixed bugs:
 
      Bug-xnee mailing list:
         WARNING: Enough valuators ... still not printing
+
+     
 
 Changes in coming version 3.12
 ==============================
