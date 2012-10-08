@@ -218,10 +218,11 @@ xnee_replay_event_handler( xnee_data* xd,
 		xindata->u.event.type, 
 		KeyPress, 
 		KeyRelease));
-  
+
 #ifdef XNEE_XINPUT_SUPPORT
   if ( xnee_is_forced_core_device_events(xd))
    {
+
       if ( xindata->type == XNEE_PROTO_XINPUT_EVENT_MASTER )
 	{
 	  xnee_verbose ((xd, "ignore master event %d\n", xindata->type));
@@ -229,6 +230,7 @@ xnee_replay_event_handler( xnee_data* xd,
       else
 	{
 #endif /* XNEE_XINPUT_SUPPORT*/
+
 	  /* If we use the last args to the XTestFakexxx functions
 	   * it is harder to synchronize .... 
 	   * XNEE_FAKE_SLEEP is a macro for usleep 
@@ -609,15 +611,19 @@ xnee_fake_motion_event_impl (xnee_data* xd,
   int new_x;
   int new_y;
 #ifdef XNEE_XINPUT_SUPPORT
-  int axes[2];
+  int axes[3];
   XDevice *xdevice;
 #endif /* XNEE_XINPUT_SUPPORT*/
-
+  
   xnee_verbose((xd, "---> xnee_fake_motion_event\n"));
   xnee_verbose((xd, "---  delay = %d\n", (int)dtime));
 
   if (!xnee_is_recorder (xd))
     {
+
+      /* printf ("    res: %dx%d\n", x, y); */
+      /* printf ("    res: %dx%d\n", new_x, new_y); */
+
 
       new_x = xnee_resolution_newx(xd,x) + xd->res_info.x_offset;
       new_y = xnee_resolution_newy(xd,y) + xd->res_info.y_offset;
@@ -664,6 +670,7 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 	  
 	  xnee_fake_sleep (dtime);
 
+
 	  xnee_verbose((xd, "XTestFakeDeviceMotionEvent (%d, %d, %d, {%d, %d}, %d, %d))\n",
 			(int) xd->fake, 
 			(int) xdevice,
@@ -675,13 +682,15 @@ xnee_fake_motion_event_impl (xnee_data* xd,
 
 	  xnee_xi_last_know_pointer_pos[0]=axes[0];
 	  xnee_xi_last_know_pointer_pos[1]=axes[1];
+
 	  XTestFakeDeviceMotionEvent(xd->fake, 
 				     xdevice,
 				     False,
 				     0,
 				     axes,
 				     2,
-				     1);
+				     0);
+
 
 #endif /* XNEE_XINPUT_SUPPORT*/
 	}
