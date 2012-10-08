@@ -1,3 +1,13 @@
+2012-10-09  Henrik Sandklef  <hesa@sandklef.com>
+
+	* pnee/Makefile.am:
+	* gnee/Makefile.am:
+	* Makefile.am:
+	* configure.in:
+
+	"Restructuerd incl/excl of builds, as a preparation for obsoleting gui and
+	applet."
+
 2012-06-28  Henrik Sandklef  <hesa@sandklef.com>
 
 	* libxnee/src/xnee_xinput.c:
