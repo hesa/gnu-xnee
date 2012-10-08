@@ -428,7 +428,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		    }
 		}
 	      
-/* 	      printf (" EE "); */
+ 	      /* printf (" EE   %d\n", xindata.type);  */
 
 	      /*
 	       *
@@ -438,7 +438,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 
 	      switch (xindata.type)
 		{
-		case XNEE_EVENT:
+		case XNEE_PROTO_EVENT:
 		
 		  /* if type == 0, break .... BTW, why is it 0?? */
 		  if ( xindata.u.event.type == 0 ) { break ; }
@@ -447,6 +447,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
                    if ( ( xindata.u.event.type >= KeyPress ) 
 		       && (xindata.u.event.type <= MotionNotify) )
 		    {
+
 		      xnee_replay_update_dev_ctr(xd, xindata.u.event.type);
 		      
 		      ret = xnee_replay_synchronize (xd);
@@ -479,14 +480,14 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 						  XNEE_REPLAYED);
 		    }
 		  break;
-		case XNEE_REQUEST:
+		case XNEE_PROTO_REQUEST:
 		  xnee_verbose((xd, "READ A REQUEST\n")); 
 		  xnee_replay_buffer_handler ( xd, 
 					       XNEE_REQUEST, 
 					       xindata.u.request.type, 
 					       XNEE_REPLAYED);
                   break;
-		case XNEE_REPLY:
+		case XNEE_PROTO_REPLY:
 		  xnee_verbose((xd, "READ A REPLY\n")); 
 		  xnee_replay_buffer_handler ( 
 					      xd, 
@@ -506,6 +507,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		  ret = xnee_replay_synchronize (xd);
 		  if (ret != XNEE_OK)
 		    {
+		      printf ("     ------------------ internal return\n");
 		      xnee_verbose((xd, "xnee_replay_main_loop return %d\n", 
 				    ret));
 		      return ret;
