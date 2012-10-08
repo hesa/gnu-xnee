@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+if BUILDPNEE
+
 SUBDIRS = pics src man
 
 EXTRA_DIST = \
@@ -25,3 +27,4 @@ install-data-local: pnee.server
 	mkdir -p $(DESTDIR)$(PANEL_SERVER_DIR)
 	cp pnee.server  $(DESTDIR)$(PANEL_SERVER_DIR)/
 
+endif

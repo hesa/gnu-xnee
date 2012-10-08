@@ -1,5 +1,7 @@
 ## Process this file with automake to produce Makefile.in
 
+if BUILDGUI
+
 SUBDIRS = src man
 ##po
 
@@ -29,3 +31,4 @@ dist-hook:
 	  done \
 	fi
 
+endif
