@@ -513,9 +513,11 @@ xnee_record_from_data_display(xnee_data *xd)
        *  Xorg
        *
        *    Fedora 13 (X.org 1.8.2), 14 (X.org 1.9.1) calls the server "Fedora project" 
-       *          (thanks to William Bader)
+       *          (thanks to William Bader, and Olf Astrand)
        */
-      if (strstr(xd->x_vendor_name, "X.Org") || strstr(xd->x_vendor_name, "Fedora Project"))
+      if (strstr(xd->x_vendor_name, "X.Org") || 
+	  strstr(xd->x_vendor_name, "Fedora Project") ||
+	  strstr(xd->x_vendor_name, "Red Hat, Inc.") )
 	{
 	  /*
 	   *  Version 1
