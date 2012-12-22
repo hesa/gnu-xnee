@@ -773,7 +773,7 @@ echo	exit 1
     AC_SUBST(PANEL_FLAGS)
     AC_SUBST(PANEL_LD_FLAGS)
 #        AC_OUTPUT([ pnee/Makefile pnee/src/Makefile  pnee/pixmaps/Makefile ])
-    MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN pnee/Makefile pnee/src/Makefile pnee/pixmaps/Makefile"
+    MAKEFILES_TO_GEN="$MAKEFILES_TO_GEN pnee/Makefile pnee/data/Makefile pnee/src/Makefile pnee/pixmaps/Makefile"
     add_incl "pnee"
 else
     add_excl "pnee"

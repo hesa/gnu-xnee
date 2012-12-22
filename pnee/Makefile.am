@@ -2,7 +2,7 @@
 
 if BUILDPNEE
 
-SUBDIRS = pics src man
+SUBDIRS = pics src man data
 
 EXTRA_DIST = \
 	autogen.sh \

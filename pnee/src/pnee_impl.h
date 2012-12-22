@@ -30,11 +30,12 @@
 
 #include <gdk/gdk.h>
 #include <gtk/gtk.h>
+/*
 #include <gtk/gtklabel.h>
 #include <gtk/gtkbox.h>
 #include <gtk/gtkimage.h>
 #include <gtk/gtkimage.h>
-
+*/
 
 #include <pthread.h>
 
