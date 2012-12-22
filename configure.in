@@ -61,7 +61,7 @@ AC_ARG_ENABLE(gui,
 	    esac],[buildgui=false])
 
 AC_ARG_ENABLE(gnome-applet,
-    [  --enable-gnome-applet   build the Gnome Panel frontend to Xnee],
+    [  --enable-gnome-applet   build the Gnome Panel frontend to Xnee (obsoleted)],
     [case "${enableval}" in
 	yes) buildgapplet=true ;;
 	no)  buildgapplet=false ;;
@@ -340,6 +340,7 @@ then
 
 	echo "  ********** ERROR **********"
 	echo "  ** pnee and/or gnee can't be built ** "
+	echo "  **   ..it is obsoleted and not cuurently supported" 
 	echo "  ** " 
 	echo "  ** The following program/package is missing:"
 	echo "  **    pkg-config"
@@ -430,9 +431,9 @@ then
   	  echo "Missing GNOME header file (gnome.h), you need to install development packages"
 	  echo "On a Debian based distro system do:"
   	  echo ""
-  	  echo "     sudo apt-get install libgnomeui-dev "
+  	  echo "     sudo apt-get install libgnome2-dev"
   	  echo ""
-  	  exit 1
+echo  	  exit 1
         fi	
       fi
   
@@ -751,7 +752,7 @@ then
     AC_SUBST(PANEL_SERVER_DIR)
     AC_SUBST(PANEL_APPLET_DIR)
 #    AC_PATH_PROG(GCONFTOOL, gconftool-2)
-    PANEL_APPLET=libpanelapplet-2.0
+    PANEL_APPLET=libpanelapplet-4.0
     PANEL_FLAGS=`$PKGCFG --cflags $PANEL_APPLET`
     PANEL_LD_FLAGS=`$PKGCFG  --libs $PANEL_APPLET`
     $PKGCFG $PANEL_APPLET
@@ -763,11 +764,11 @@ then
 	echo "  ** The following programs/packages are missing:"
 	echo "  **    $PANEL_APPLET"
 	echo "  ** " 
-	DEBS_TO_INSTALL=" libpanel-applet2-dev"
+	DEBS_TO_INSTALL=" libpanel-applet-4-dev"
 	help_on_missing_progrs pnee "--disable-gnome-applet"
 	echo "  ** " 
 	echo "  ********** ERROR **********"
-	exit 1
+echo	exit 1
     fi
     AC_SUBST(PANEL_FLAGS)
     AC_SUBST(PANEL_LD_FLAGS)
