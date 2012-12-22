@@ -1,4 +1,4 @@
-AC_INIT(Xnee,3.14,bug-xnee@gnu.org)
+AC_INIT(Xnee,3.15,bug-xnee@gnu.org)
 AC_CONFIG_AUX_DIR(./autotools/)
 AM_INIT_AUTOMAKE
 #AB_INIT
@@ -786,7 +786,7 @@ echo "Making the following Makefiles:"
 echo "  $MAKEFILES_TO_GEN"
 #AC_OUTPUT([ $MAKEFILES_TO_GEN ])
 dnl libxnee/test/Makefile 
-AC_OUTPUT([ Makefile libxnee/Makefile libxnee/src/Makefile examples/Makefile libxnee/test/Makefile sessions/Makefile share/Makefile doc/Makefile cnee/Makefile cnee/src/Makefile gnee/Makefile gnee/src/Makefile gnee/man/Makefile pnee/Makefile pnee/src/Makefile pnee/pics/Makefile  pnee/man/Makefile  pixmap/Makefile man/Makefile  ])
+AC_OUTPUT([ Makefile libxnee/Makefile libxnee/src/Makefile examples/Makefile libxnee/test/Makefile sessions/Makefile share/Makefile doc/Makefile cnee/Makefile cnee/src/Makefile gnee/Makefile gnee/src/Makefile gnee/man/Makefile pnee/Makefile pnee/src/Makefile pnee/pics/Makefile  pnee/man/Makefile  pnee/data/Makefile  pixmap/Makefile man/Makefile  ])
 
 #
 # Final words 
