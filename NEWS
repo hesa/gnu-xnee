@@ -1,4 +1,25 @@
-Changes in coming version 3.13
+Changes in coming version 3.15
+==============================
+
+  * Fixed bugs:
+
+    Savannah:
+      bug #36662: 2 extra lines, not really needed, printed to recorded log files
+      bug #37895: pnee/data/pnee.server.in file missing in 3.14 tarball?
+
+
+Changes in version 3.14
+==============================
+
+  If XInput is present, record only XI events (discard core events).
+  Forced core replay is now done using XI events (if no core events are 
+available).
+
+  * Fixed bugs:
+
+    Bug-xnee mailing list: “WARNING: Enough valuators … still not printing”
+
+Changes in version 3.13
 ==============================
 
    If XInput is present, record only XI events (discard core events).
@@ -11,7 +32,7 @@ Changes in coming version 3.13
 
      
 
-Changes in coming version 3.12
+Changes in version 3.12
 ==============================
 
    * New option: --record-replay, -rr
