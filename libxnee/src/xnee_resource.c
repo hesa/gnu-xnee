@@ -635,6 +635,16 @@ static xnee_option_t xnee_options_impl[] =
       XNEE_OPTION_VISIBLE
     },
 
+    {
+      XNEE_MAX_WINDOW_MOVES,
+      "max-window-moves",
+      "mwm",
+      NULL,
+      "Maximum times Xnee will try to move a window to the position it was in when recorded",
+      XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
 
     {
       XNEE_LAST_OPTION,

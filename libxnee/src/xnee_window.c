@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 2006, 2007, 2008, 2009, 2010 
+ *        Copyright (C) 2006, 2007, 2008, 2009, 2010, 2013
  *                      Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
@@ -45,7 +45,6 @@
 #define XNEE_WINDOW_DEBUG(a) 
 #endif
 
-#define MAX_NR_OF_MOVES     10
 #define XNEE_WINDOW_BUFFER_SIZE 10
 static int received_index = 0;
 static int session_index  = 0;
@@ -411,8 +410,7 @@ xnee_window_try_move(xnee_data *xd)
 			 &ry, 
 			 &child);
   
-  
-  while ( nr_of_moves<MAX_NR_OF_MOVES)
+  while ( nr_of_moves<xnee_get_max_nr_of_moves(xd))
     {
       
 

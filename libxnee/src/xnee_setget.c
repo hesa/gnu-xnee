@@ -4,7 +4,7 @@
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
  *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                      2004, 2009, 2010, 2011 Henrik Sandklef
+ *                      2004, 2009, 2010, 2011, 2013 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify1 it under the terms of the GNU General Public License       
@@ -1910,4 +1910,27 @@ xnee_unset_forced_core_device_events(xnee_data *xd)
 {
   xd->xi_data.forced_core_replay = 0 ;
   return XNEE_OK;
+}
+
+
+int 
+xnee_get_max_nr_of_moves(xnee_data *xd)
+{
+  if (xd==NULL)
+    {
+      return -1;
+    }
+  return xd->max_nr_of_moves;
+}
+
+int 
+xnee_set_max_nr_of_moves(xnee_data *xd, int moves)
+{
+  if (xd==NULL)
+    {
+      return -1;
+    }
+
+  xd->max_nr_of_moves = moves ;
+  return 0 ;
 }

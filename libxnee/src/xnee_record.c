@@ -1067,7 +1067,6 @@ xnee_record_async(xnee_data *xd)
     {
       xnee_verbose((xd, " --- xnee_record_async() loop\n"));
 
-
       /* Interrupt variable set? */
       if (xnee_is_interrupt_action(xd))
 	{
@@ -1078,6 +1077,7 @@ xnee_record_async(xnee_data *xd)
 	  xnee_unset_interrupt_action(xd);
 	  xnee_verbose((xd, "leaving loop  (%d)\n", 
 			ret));
+
 	  break;
 	}
 
@@ -1124,8 +1124,6 @@ xnee_record_async(xnee_data *xd)
        */  
       usleep (100*100);
     }
-
-
 
   if (ret == XNEE_OK)
     {

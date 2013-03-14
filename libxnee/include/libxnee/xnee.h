@@ -663,6 +663,7 @@ typedef struct
   /*@only@*/ /*@null@*/ 
   xnee_record_init_data    xnee_info ; 
   int             no_reparent_recording ;
+  int             max_nr_of_moves;
 
   /*@only@*/ /*@null@*/ 
   xnee_recordext_setup     *record_setup;

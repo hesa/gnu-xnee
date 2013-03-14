@@ -377,6 +377,7 @@ xnee_init(xnee_data* xd)
 
 
   xd->no_reparent_recording = 0;
+  xd->max_nr_of_moves       = 10;
 
   for (i=0;i<XNEE_NR_OF_TYPES;i++)
     {
@@ -518,6 +519,7 @@ xnee_process_replies(xnee_data *xd)
 	}
       last_count=count;
     }
+
   (void)xnee_process_count (XNEE_PROCESS_RESET);
   return XNEE_OK;
 }
@@ -703,6 +705,7 @@ signal_handler(int sig)
 
     case SIGINT:
       fprintf  (stderr,  "sighandler SIGINT (%d)\n", sig);
+
       ret = xnee_ungrab_keys(xd_global);
       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
       
@@ -710,7 +713,6 @@ signal_handler(int sig)
       XNEE_PRINT_ERROR_IF_NOT_OK(ret);
       
       xnee_set_interrupt_action(xd_global);
-      
       break;
 
     default:
