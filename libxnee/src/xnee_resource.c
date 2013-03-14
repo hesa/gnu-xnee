@@ -1504,7 +1504,15 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
       *args_used = 0;
       break;
 
+    case XNEE_MAX_WINDOW_MOVES:
+      verbose_option("XNEE_MAX_WINDOW_MOVES");
+      opt_int = xnee_str2int(xd, opt_and_args[1]);
+      ret = xnee_set_max_nr_of_moves(xd, opt_int);
+      *args_used = 1;
+      break;
 
+
+      
 
 
 

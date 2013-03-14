@@ -318,6 +318,8 @@ xnee_window_try_move(xnee_data *xd)
   XWindowAttributes win_attributes;
   Window child;
 
+  printf ("  MAX: %d\n", xnee_get_max_nr_of_moves(xd));
+
   xnee_verbose((xd, "Trying to move window %d %d \n",
 	  session_index,
 	  received_index));
