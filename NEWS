@@ -1,4 +1,16 @@
-Changes in coming version 3.15
+Changes in coming version 3.16
+==============================
+
+  * New features:
+
+    Gnee can record XInput events
+
+  * Fixed bugs:
+
+    Savannah:
+
+
+Changes in version 3.15
 ==============================
 
   * Fixed bugs:
