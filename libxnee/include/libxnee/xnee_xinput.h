@@ -50,6 +50,11 @@
 #define xnee_xinput_request_keyboard(xd)  \
   xd->xi_data.xinput_record_keyboard=1;
 
+#define xnee_xinput_unrequest_mouse(xd)     \
+  xd->xi_data.xinput_record_mouse=0;
+#define xnee_xinput_unrequest_keyboard(xd)  \
+  xd->xi_data.xinput_record_keyboard=0;
+
 #define xnee_xinput_mouse_requested(xd)   \
   (xd->xi_data.xinput_record_mouse==1)
 #define xnee_xinput_keyboard_requested(xd)\
