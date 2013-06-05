@@ -3,7 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *  Copyright (C) 2002, 2003, 2004, 2005, 2007, 2011
+ *  Copyright (C) 2002, 2003, 2004, 2005, 2007, 2011, 2013
  *       Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
