@@ -51,6 +51,7 @@ static int x_offset   = 0;
 static int y_offset   = 0;
 static int use_offset = 0;
 
+const char *predef_string   = "Predefined";
 const char *events_string   = "Events";
 const char *replies_string  = "Replies";
 const char *requests_string = "Requests";
@@ -70,6 +71,9 @@ const char *pause_m_combo_string  = "pause_m_combo";
 const char *resume_m_combo_string = "resume_m_combo";
 const char *mark_m_combo_string   = "mark_m_combo";
 const char *exec_m_combo_string   = "exec_m_combo";
+
+const char *exclude_predef_store_string = "exclude_predef_store";
+const char *include_predef_store_string = "include_predef_store";
 
 const char *exclude_event_store_string = "exclude_event_store";
 const char *include_event_store_string = "include_event_store";
@@ -176,6 +180,12 @@ get_type(GtkWidget* combo_label)
   if (selection != 0)
     {
       if (strncmp(selection, 
+		  predef_string, 
+		  strlen(predef_string) ) == 0)
+        {
+	  type = XNEE_PREDEF_EVENTS;
+        }
+      else if (strncmp(selection, 
 		  events_string, 
 		  strlen(events_string) ) == 0)
         {
@@ -333,7 +343,17 @@ on_combo_label1_changed                (GtkEditable     *editable,
 
     if (selection != 0)
     {
-        if (strcmp(selection, events_string) == 0)
+      
+
+        if (strcmp(selection, predef_string) == 0)
+        {
+            exclude_store = GTK_TREE_STORE
+                (lookup_widget(GTK_WIDGET(user_data), exclude_predef_store_string));
+            include_store = GTK_TREE_STORE
+                (lookup_widget(GTK_WIDGET(user_data), include_predef_store_string));
+            
+        }
+        else if (strcmp(selection, events_string) == 0)
         {
             exclude_store = GTK_TREE_STORE
                 (lookup_widget(GTK_WIDGET(user_data), exclude_event_store_string));

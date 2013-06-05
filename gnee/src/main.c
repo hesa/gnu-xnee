@@ -144,6 +144,7 @@ main (int argc, char *argv[])
     gtk_tree_view_set_model(GTK_TREE_VIEW(include_list),
                             GTK_TREE_MODEL(include_store));
 
+    combo_list = g_list_append(combo_list, _("Predefined"));
     combo_list = g_list_append(combo_list, _("Events"));
     combo_list = g_list_append(combo_list, _("Replies"));
     combo_list = g_list_append(combo_list, _("Requests"));

@@ -27,13 +27,24 @@
 #include "gnee_xnee.h"
 #include "libxnee/xnee.h"
 #include "libxnee/datastrings.h"
+#include "libxnee/xnee_xinput.h"
 
 #define GNEE_HOOKUP_OBJECT(component,widget,name) \
   g_object_set_data (G_OBJECT (component), name, widget)
 
+#define CHECK_EQUALITY(a,b) ( (a!=NULL) && (b!=NULL) && (strlen(a)==strlen(b)) && (strcmp(a,b)==0) )
+
 extern xnee_data   *ext_xd;
 extern GtkWidget   *ext_gnee_window;
 
+
+static int predef_events[10];
+struct data_description gnee_predef_events[]=
+{
+   {0,"Mouse", "All mouse events"}, 
+   {1,"Keyboard", "All keyboard events"}, 
+   {-1,NULL, ""}
+} ;
 
 
 void
@@ -49,9 +60,48 @@ create_recordable_list(GtkWidget* gnee_window,
                        char* exclude_store_name,
                        char* include_store_name);
 
+
+
+
+void store_predef_str(char *selection_value)
+{
+  int i ;
+
+  for (i=0;gnee_predef_events[i].data_nr!=-1;i++)
+    {
+      if (CHECK_EQUALITY(selection_value, 
+			 gnee_predef_events[i].data_name))
+	{
+	  printf ("Will add %s (%d)\n", selection_value, i);
+	  predef_events[i]=1;	  
+	  break;
+	}
+    }
+}
+
+void remove_predef_str(char *selection_value)
+{
+  int i ;
+
+  for (i=0;gnee_predef_events[i].data_nr!=-1;i++)
+    {
+      if (CHECK_EQUALITY(selection_value, 
+			 gnee_predef_events[i].data_name))
+	{
+	  printf ("Will del %s (%d)\n", selection_value, i);
+	  predef_events[i]=0;	  
+	  break;
+	}
+    }
+}
+
 void
 gnee_recordables_create(GtkWidget* gnee_window)
 {
+  create_recordable_list
+    (gnee_window, gnee_predef_events, 
+     "exclude_predef_store", "include_predef_store");
+
   create_recordable_list
     (gnee_window, xnee_get_event_names(), 
      "exclude_event_store", "include_event_store");
@@ -129,14 +179,30 @@ move_between_lists(GtkTreeView* source_list,
         if (include)
         {
 	  GNEE_DEBUG(("will include '%s' %d \n", selection_value, type));
-	  xnee_add_range_str
-	    (xd, type, selection_value);
+	  printf("will include '%s' %d \n", selection_value, type);
+
+	  if (type == XNEE_PREDEF_EVENTS )
+	    {
+	      store_predef_str(selection_value);
+	    }
+	  else
+	    {
+	      xnee_add_range_str
+		(xd, type, selection_value);
+	    }
         }
         else
         {
             GNEE_DEBUG(("will exclude '%s' %d \n", selection_value, type));
-            xnee_rem_data_from_range_str
-                (xd, -1, selection_value);            
+	    if (type == XNEE_PREDEF_EVENTS )
+	      {
+		remove_predef_str(selection_value);
+	      }
+	    else
+	      {
+		xnee_rem_data_from_range_str
+		  (xd, -1, selection_value);            
+	      }
         }
 
         g_free(selection_value);
@@ -299,6 +365,47 @@ gnee_recordable2xd(GtkWidget* gnee_window,
       row_count++;
       valid = gtk_tree_model_iter_next (GTK_TREE_MODEL(incl_store), &incl_iter);
     } 
+
+
+  int i ;
+  for (i=0;gnee_predef_events[i].data_nr!=-1;i++)
+    {
+      if (predef_events[i]==1)
+	{
+	  int ret;
+	  /* Probably a bug here If user adds these and then removes
+	     them we (so far) do not in Xnee remove them from data to
+	     be recorded */
+	  ret = xnee_parse_range (ext_xd, 
+				  XNEE_DEVICE_EVENT, 
+				  gnee_predef_events[i].data_name);
+#ifdef XNEE_XINPUT_SUPPORT
+	  if (gnee_predef_events[i].data_nr==0)
+	    {	    
+	      xnee_xinput_request_mouse(ext_xd);
+	    }
+	  else if (gnee_predef_events[i].data_nr==1)
+	    {	    
+	      xnee_xinput_request_keyboard(ext_xd);
+	    }
+#endif /*  XNEE_XINPUT_SUPPORT      */
+	}
+      else
+	{
+#ifdef XNEE_XINPUT_SUPPORT
+	  if (gnee_predef_events[i].data_nr==0)
+	    {	    
+	      xnee_xinput_unrequest_mouse(ext_xd);
+	    }
+	  else if (gnee_predef_events[i].data_nr==1)
+	    {	    
+	      xnee_xinput_unrequest_keyboard(ext_xd);
+	    }
+#endif /*  XNEE_XINPUT_SUPPORT      */
+	}
+    }
+  
+  
   
 }
 
@@ -377,6 +484,10 @@ void
 gnee_remove_all_recordables()
 {
   GNEE_DEBUG(("Removing events **************** \n"));
+  gnee_remove_type(ext_gnee_window,
+		   "include_predef_store",
+		   "exclude_predef_store",
+		   XNEE_PREDEF_EVENTS);
   gnee_remove_type(ext_gnee_window,
 		   "include_event_store",
 		   "exclude_event_store",

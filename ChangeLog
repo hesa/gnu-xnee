@@ -1,3 +1,17 @@
+2013-06-05  Henrik Sandklef  <hesa@sandklef.com>
+
+	* gnee/src/main.c: 
+	* gnee/src/callbacks.c: 
+	* gnee/src/recordables.c: 
+	Adding support for pre defined event sets
+
+	* libxnee/include/libxnee/xnee_internal.h (_): 
+	Added XNEE_PREDEF_EVENTS for pre defined event sets
+
+	* libxnee/include/libxnee/xnee_xinput.h
+	(xnee_xinput_unrequest_*): macro for unrequesting recording of XI events
+
+
 2012-10-09  Henrik Sandklef  <hesa@sandklef.com>
 
 	* pnee/Makefile.am:
