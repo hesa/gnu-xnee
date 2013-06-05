@@ -101,6 +101,7 @@ enum _xnee_data_types {
   XNEE_PRIMITIVE_DATA    ,
   XNEE_PROJECT_INFORMATION_DATA,
   XNEE_NEW_WINDOW_DATA,
+  XNEE_PREDEF_EVENTS,
   XNEE_NO_DATA          
 } xnee_data_types ;
 
