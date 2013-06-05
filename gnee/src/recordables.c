@@ -366,16 +366,19 @@ gnee_recordable2xd(GtkWidget* gnee_window,
   int i ;
   for (i=0;gnee_predef_events[i].data_nr!=-1;i++)
     {
+      /* Check if we are to record the event */
       if (predef_events[i]==1)
 	{
+	  
+	  /* Add it to record */
 	  int ret;
-	  /* Probably a bug here If user adds these and then removes
-	     them we (so far) do not in Xnee remove them from data to
-	     be recorded */
 	  ret = xnee_parse_range (ext_xd, 
 				  XNEE_DEVICE_EVENT, 
 				  gnee_predef_events[i].data_name);
 #ifdef XNEE_XINPUT_SUPPORT
+	  /* If the data_nr is:
+	     0   =>   request mouse recording
+	     1   =>   request keyboard recording */
 	  if (gnee_predef_events[i].data_nr==0)
 	    {	    
 	      xnee_xinput_request_mouse(ext_xd);
@@ -388,7 +391,9 @@ gnee_recordable2xd(GtkWidget* gnee_window,
 	}
       else
 	{
+	  /* We shall nott record it */
 #ifdef XNEE_XINPUT_SUPPORT
+	  /* un-request mouse or keyboard */
 	  if (gnee_predef_events[i].data_nr==0)
 	    {	    
 	      xnee_xinput_unrequest_mouse(ext_xd);
