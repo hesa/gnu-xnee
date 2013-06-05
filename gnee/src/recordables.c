@@ -72,7 +72,6 @@ void store_predef_str(char *selection_value)
       if (CHECK_EQUALITY(selection_value, 
 			 gnee_predef_events[i].data_name))
 	{
-	  printf ("Will add %s (%d)\n", selection_value, i);
 	  predef_events[i]=1;	  
 	  break;
 	}
@@ -88,7 +87,6 @@ void remove_predef_str(char *selection_value)
       if (CHECK_EQUALITY(selection_value, 
 			 gnee_predef_events[i].data_name))
 	{
-	  printf ("Will del %s (%d)\n", selection_value, i);
 	  predef_events[i]=0;	  
 	  break;
 	}
@@ -179,8 +177,6 @@ move_between_lists(GtkTreeView* source_list,
         if (include)
         {
 	  GNEE_DEBUG(("will include '%s' %d \n", selection_value, type));
-	  printf("will include '%s' %d \n", selection_value, type);
-
 	  if (type == XNEE_PREDEF_EVENTS )
 	    {
 	      store_predef_str(selection_value);
