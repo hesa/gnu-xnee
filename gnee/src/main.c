@@ -175,7 +175,7 @@ main (int argc, char *argv[])
 	    fprintf (stderr, "%s %s, part of project %s", 
 		     GNEE,
 		     VERSION,
-		     PACKAGE);
+		     PACKAGE_NAME);
 	    xnee_version(xd);
 	    exit(XNEE_OK);
 	  }
