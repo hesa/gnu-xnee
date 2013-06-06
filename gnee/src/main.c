@@ -172,10 +172,9 @@ main (int argc, char *argv[])
       {
 	if (strncmp(argv[i],version_string, strlen(version_string))==0)
 	  {
-	    fprintf (stderr, "%s %s, part of project %s", 
+	    fprintf (stderr, "%s %s, part of project ", 
 		     GNEE,
-		     VERSION,
-		     PACKAGE_NAME);
+		     VERSION);
 	    xnee_version(xd);
 	    exit(XNEE_OK);
 	  }
