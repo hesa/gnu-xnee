@@ -2,7 +2,7 @@
   Xnee's Not an Event Emulator enables recording and replaying of X 
   protocol data
   Copyright (C) 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006, 
-                2007, 2008, 2009, 2010, 2011 Henrik Sandklef
+                2007, 2008, 2009, 2010, 2011, 2013 Henrik Sandklef
 
   This program is free software; you can redistribute it and/or
   modify it under the terms of the GNU General Public License
@@ -1757,7 +1757,7 @@ xnee_version(xnee_data* xd)
 {
   xnee_verbose ((xd, " --> xnee_version\n"));
   fprintf (stderr, "%s %s\n",PACKAGE, VERSION);
-  fprintf (stderr, "Copyright (C) 2000, 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010 Henrik Sandklef \n");
+  fprintf (stderr, "Copyright (C) 2000-2013 Henrik Sandklef \n");
   fprintf (stderr, "%s and all its included programs come with ", PACKAGE);
   fprintf (stderr, "NO WARRANTY,\nto the extent permitted by law.\n" );
   fprintf (stderr, "This is free software, and you may redistribute\n");
