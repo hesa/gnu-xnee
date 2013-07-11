@@ -1,4 +1,15 @@
-Changes in coming version 3.16
+Changes in version 3.17
+==============================
+
+  * New features:
+
+  * Fixed bugs:
+
+    Savannah:
+    Mayhem:    #715746 "cnee crashes with exit status 139"
+
+
+Changes in version 3.16
 ==============================
 
   * New features:
