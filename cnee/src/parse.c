@@ -409,6 +409,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
             
     case CNEE_FILE_OPTION_KEY:
       verbose_option("CNEE_FILE_OPTION_KEY");
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       ret = xnee_set_data_name (xd,opt_and_args[1] );
       *args_used = 1;
       break;
@@ -427,6 +428,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_PROJECT_OPTION_KEY:           
       verbose_option("CNEE_PROJECT_OPTION_KEY");
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       ret = xnee_set_project_file(xd, opt_and_args[1]);
       *args_used = 1;
       if (ret==XNEE_SYNTAX_ERROR) 
@@ -460,6 +462,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_WRITE_SETTINGS_OPTION_KEY:    
       verbose_option("CNEE_WRITE_SETTINGS_OPTION_KEY");
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       ret = cnee_write_settings_to_file(xd, opt_and_args[1]);
       if (ret==XNEE_OK) ret = XNEE_OK_LEAVE;
       *args_used = 1;
@@ -479,6 +482,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_PRINT_E_NAME_OPTION_KEY:      
       verbose_option("CNEE_PRINT_E_NAME_OPTION_KEY");
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       ret = xnee_print_data_str(xd, opt_and_args[1], XNEE_EVENT);
       if (ret==XNEE_OK) ret = XNEE_OK_LEAVE;
       *args_used = 1;
@@ -492,6 +496,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_PRINT_ERR_NAME_OPTION_KEY:    
       verbose_option("CNEE_PRINT_ERR_NAME_OPTION_KEY");
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       ret = xnee_print_data_str(xd, opt_and_args[1], XNEE_ERROR);
       if (ret == XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
@@ -510,6 +515,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_PRINT_REQ_NAME_OPTION_KEY:    
       verbose_option("CNEE_PRINT_REQ_NAME_OPTION_KEY");
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       ret = xnee_print_data_str(xd, opt_and_args[1], XNEE_REQUEST);
       if (ret == XNEE_OK) ret = XNEE_OK_LEAVE;
       break;
@@ -523,6 +529,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
     case CNEE_RETYPE_FILE_OPTION_KEY:       
       verbose_option("CNEE_RETYPE_FILE_OPTION_KEY");
       xnee_set_retyper(xd);  
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       ret =  xnee_set_rt_name (xd, opt_and_args[1]); 
       *args_used = 1;
       break;
@@ -535,6 +542,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 
     case CNEE_REMOVE_EVENT_OPTION_KEY:      
       verbose_option("CNEE_REMOVE_EVENT_OPTION_KEY");
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       ret=xnee_rem_data_from_range_str (xd,
 					XNEE_DEVICE_EVENT,
 					opt_and_args[1]) ;
@@ -598,6 +606,7 @@ xnee_parse_cnee_option(xnee_data *xd, char **opt_and_args, int *args_used)
 #endif /*  XNEE_XINPUT_SUPPORT */
     case CNEE_REPLAY_BACKEND:
       verbose_option("CNEE_REPLAY_BACKEND");
+      if (opt_and_args[1]==NULL) return XNEE_MISSING_ARG;
       xnee_set_replay_backend_name(xd, opt_and_args[1]) ;
       *args_used = 1;
       ret = XNEE_OK;
