@@ -528,7 +528,7 @@ xnee_record_from_data_display(xnee_data *xd)
 	       *  versions 
 	       */
 	      if ( ( xd->x_version_minor >= 3 ) &&
-		   ( xd->x_version_minor <= 13 ) )
+		   ( xd->x_version_minor <= 14 ) )
 		{
 
 		  /*
