@@ -6,8 +6,6 @@ Download the following source files into a directory (version numbers given here
 @itemize @bullet
 @item	xnee-3.02.tar.gz
 @end itemize
-
-
 @*
 Unzip the source file
 @example

@@ -138,7 +138,8 @@ To enable this option, use the @code{--human-printouts}.
 To get information about how to use Xnee's command line options please use the man page(s).
 
 @subsection  Project file
-To use a Project file use the @code{--project} option,  e.g @code{cnee --project xnee/projects/netscape.xns}
+To use a Project file use the @code{--project} option,  e.g 
+@code{cnee --project xnee/projects/netscape.xns}.
 
 @subsection  Session file
 To use a session file use the @code{--file} option,  e.g 
