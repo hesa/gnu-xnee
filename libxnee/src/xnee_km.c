@@ -269,7 +269,6 @@ xnee_check_key(xnee_data *xd)
 	  int    mode;
 	  int i ;
 
-
 	  XNextEvent (xd->grab, &my_event);
 
 	  if (my_event.xkey.send_event==1) 

@@ -508,6 +508,7 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
        (void)xnee_process_count(XNEE_PROCESS_INC);
     }
   
+
   /* fix by Ton van Vliet */
   xd = (xnee_data *) (xpoint_xnee_data) ;
 
@@ -534,7 +535,7 @@ xnee_record_dispatch(XPointer xpoint_xnee_data,
        data_type = (int) xrec_data->type;
     }
   
-  
+
   switch(data->category)
     {
     case XRecordFromClient:
@@ -1081,6 +1082,8 @@ xnee_record_async(xnee_data *xd)
 	  break;
 	}
 
+      xnee_verbose((xd, " --- xnee_record_async() loop 2 \n"));
+
       /* has the user pressed a modifier+key */
       if (xnee_check_key (xd)==XNEE_GRAB_DATA)
 	{
@@ -1108,11 +1111,13 @@ xnee_record_async(xnee_data *xd)
 	}
 
 
+      xnee_verbose((xd, " --- xnee_record_async() loop 3\n"));
+
       /* handle data in the RECORD buffer */
       ret = xnee_process_replies(xd);
       XNEE_RETURN_IF_ERR(ret);
 
-       if ( xnee_more_to_record(xd) == 0 ) 
+      if ( xnee_more_to_record(xd) == 0 ) 
 	{
 	  xnee_verbose  ((xd," closing down while loop in async loop\n"));
 	  ret=XNEE_OK;

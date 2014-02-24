@@ -193,7 +193,6 @@ xnee_grab_key (xnee_data* xd, int mode, char *key)
   xnee_verbose((xd, "window   %d\n", window));
   xnee_verbose((xd, "screen   %d\n", screen));
 
-
   XGrabKey (xd->grab,  
 	    ak.key,            
 	    AnyModifier,

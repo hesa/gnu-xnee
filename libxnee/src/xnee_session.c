@@ -688,6 +688,7 @@ xnee_err_handler(Display* dpy, XErrorEvent* ev)
 void 
 signal_handler(int sig) 
 {
+
   int ret; 
   switch (sig)
     {

@@ -1060,8 +1060,10 @@ xnee_reset_autorepeat (xnee_data *xd)
   xnee_verbose((xd,"Resetting autorepeat on (%p) to: ",
 		(xd->fake==NULL)?0:(void*)xd->fake));
 
-  if (!xd->fake)
-    return XNEE_OK;
+  if (!xd->fake) 
+    {
+      return XNEE_OK;
+    }
 
   if (xd->kbd_orig.global_auto_repeat==AutoRepeatModeOn)
     {

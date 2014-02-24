@@ -380,7 +380,7 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
                  /*@ end @*/
               }
 	      
-	      
+
 	      /* Interrupt variable set? */
 	      if (xnee_get_interrupt_action(xd))
 		{
@@ -507,7 +507,6 @@ xnee_replay_main_loop(xnee_data *xd, int read_mode)
 		  ret = xnee_replay_synchronize (xd);
 		  if (ret != XNEE_OK)
 		    {
-		      printf ("     ------------------ internal return\n");
 		      xnee_verbose((xd, "xnee_replay_main_loop return %d\n", 
 				    ret));
 		      return ret;

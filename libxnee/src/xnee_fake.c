@@ -781,7 +781,7 @@ xnee_type_file(xnee_data *xd)
 {
   char tmp[256]="" ;
   int i;
-
+  int mode=123;
   
   xnee_script_s xss;
 
@@ -804,8 +804,28 @@ xnee_type_file(xnee_data *xd)
       xnee_verbose ((xd,"  xnee_type_file loop read size=" SIZE_T_PRINTF_FMT " \"%s\"\n", 
 		     strlen(tmp),tmp));
       
+
       for ( i=0 ; (size_t)i<strlen(tmp) ; i++ )
 	{
+	  if (xnee_check_key (xd)==XNEE_GRAB_DATA) 
+	    {
+	      mode = xnee_handle_rec_key(xd);
+	    }
+
+	  if (mode == XNEE_GRAB_RESUME ) 
+	    {
+	      ;
+	    }
+	  else if (mode == XNEE_GRAB_PAUSE ) 
+	    {
+	      usleep(1000);
+	      break;
+	    }
+	  else if (mode == XNEE_GRAB_STOP ) 
+	    {
+	      return 0;
+	    }
+	  
 	  xnee_char2keycode(xd, tmp[i], &xss.kc); 
 	  
 	  
