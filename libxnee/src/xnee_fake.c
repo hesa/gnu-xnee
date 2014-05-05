@@ -802,10 +802,9 @@ xnee_type_file(xnee_data *xd)
   while (fgets(tmp, 256, xd->rt_file)!=NULL)
     {
       xnee_verbose ((xd,"  xnee_type_file loop read size=" SIZE_T_PRINTF_FMT " \"%s\"\n", 
-		     strlen(tmp),tmp));
-      
+	     strlen(tmp),tmp));
 
-      for ( i=0 ; (size_t)i<strlen(tmp) ; i++ )
+      for ( i=0 ; (size_t)i<strlen(tmp) ;  )
 	{
 	  if (xnee_check_key (xd)==XNEE_GRAB_DATA) 
 	    {
@@ -814,33 +813,39 @@ xnee_type_file(xnee_data *xd)
 
 	  if (mode == XNEE_GRAB_RESUME ) 
 	    {
+	      mode = -1;
 	      ;
 	    }
 	  else if (mode == XNEE_GRAB_PAUSE ) 
 	    {
-	      usleep(1000);
-	      break;
+	      usleep(1000*200);
 	    }
 	  else if (mode == XNEE_GRAB_STOP ) 
 	    {
 	      return 0;
 	    }
+	  else  
+	    {
 	  
-	  xnee_char2keycode(xd, tmp[i], &xss.kc); 
-	  
-	  
-	  xnee_verbose ((xd, "retyping key %c keycode %d\n", 
-			 tmp[i],xss.kc.kc));
-	  
-	  xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
 
- 	  usleep ( 1000 * xnee_get_retype_press_delay(xd)); 
-
-	  xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
- 	  usleep ( 1000 * xnee_get_retype_release_delay(xd)); 
-	  
+	      xnee_char2keycode(xd, tmp[i], &xss.kc); 
+	      
+	      
+	      xnee_verbose ((xd, "retyping key %c keycode %d\n", 
+			     tmp[i],xss.kc.kc));
+	      
+	      xnee_fake_key_mod_event (xd, &xss, XNEE_PRESS, 0);
+	      
+	      usleep ( 1000 * xnee_get_retype_press_delay(xd)); 
+	      
+	      xnee_fake_key_mod_event (xd, &xss, XNEE_RELEASE, 0);
+	      usleep ( 1000 * xnee_get_retype_release_delay(xd)); 
+	      
+	      i++;
+	    }
 	}
     }
+     
   xnee_verbose ((xd,"<--- xnee_type_file\n"));
   return (XNEE_OK);
 }

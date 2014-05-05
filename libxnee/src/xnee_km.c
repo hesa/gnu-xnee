@@ -264,29 +264,30 @@ xnee_check_key(xnee_data *xd)
 
       if ( XCheckMaskEvent ( xd->grab, 0xffffffff , &ev) == True)
 	{
-	  XEvent my_event ;
 	  int    tmp_code;
 	  int    mode;
 	  int i ;
 
-	  XNextEvent (xd->grab, &my_event);
-
-	  if (my_event.xkey.send_event==1) 
+	  if (ev.xkey.send_event==1) 
 	    { 
 	      xnee_verbose ((xd , "send_event==true\n")); 
 	    }
 
-	  if (my_event.type == KeyPress )
+	  if (ev.type == KeyPress )
 	    {
+	      XEvent my_event ;
 	      xnee_verbose ((xd , "##### KeyPress\n")); 
+	      XNextEvent (xd->grab, &my_event);
 	    }
-	  else if (my_event.type == KeyRelease )
+	  else if (ev.type == KeyRelease )
 	    {
 	      xnee_verbose ((xd , "#### KeyRelease\n")); 
+	      return XNEE_GRAB_NODATA;
 	    }
 
+	  tmp_code=ev.xkey.keycode;
 
-	  tmp_code=my_event.xkey.keycode;
+	  
 
 	  xnee_verbose ((xd, "key = %d\n", tmp_code));
 	  mode = xnee_get_grab_mode (xd, tmp_code);
@@ -296,6 +297,8 @@ xnee_check_key(xnee_data *xd)
 	  for (i=XNEE_GRAB_STOP;i<XNEE_GRAB_LAST;i++)
 	    {
 	      xnee_verbose((xd, "     compare %d == %d",tmp_code, xd->grab_keys->action_keys[i].key));
+	      xnee_verbose((xd, "     str:    %s",xd->grab_keys->action_keys[i].str));
+	      xnee_verbose((xd, "     code:   %d",tmp_code));
 	      if ( tmp_code == xd->grab_keys->action_keys[i].key )
 		{
 		  xd->grab_keys->grabbed_action = i ; 
