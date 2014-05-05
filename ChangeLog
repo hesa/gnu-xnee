@@ -1,3 +1,11 @@
+2014-05-05  Henrik Sandklef  <hesa@sandklef.com>
+	* libxnee/src/xnee_fake.c
+	* libxnee/src/xnee_grab.c 
+	* libxnee/src/xnee_km.c
+        Added support for pause/resume/quit when retyping file. Fixed unseen bug
+	when removing events twice from queue (prob always worked since
+	press was followed by release) 
+
 2013-06-05  Henrik Sandklef  <hesa@sandklef.com>
 
 	* gnee/src/main.c: 
