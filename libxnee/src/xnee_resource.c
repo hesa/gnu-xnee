@@ -3,9 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003,
- *                      2004, 2005, 2006, 2007, 2008,
- *                      2009, 2010  Henrik Sandklef
+ *   Copyright (C) 1999, 2000-2010, 2014  Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -642,6 +640,28 @@ static xnee_option_t xnee_options_impl[] =
       NULL,
       "Maximum times Xnee will try to move a window to the position it was in when recorded",
       XNEE_REPLAY_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+
+    {
+      XNEE_RECORD_FROM_DATA_DISPLAY,
+      "record-from-data-display",
+      "rfdd",
+      NULL,
+      "Record from data display. This option is experimental.",
+      XNEE_RECORD_OPTION,
+      XNEE_OPTION_VISIBLE
+    },
+
+
+    {
+      XNEE_RECORD_FROM_CONTROL_DISPLAY,
+      "record-from-control-display",
+      "rfcd",
+      NULL,
+      "Record from control display. This option is experimental.",
+      XNEE_RECORD_OPTION,
       XNEE_OPTION_VISIBLE
     },
 
@@ -1509,6 +1529,18 @@ xnee_parse_option_impl(xnee_data *xd, char **opt_and_args, int *args_used, int s
       opt_int = xnee_str2int(xd, opt_and_args[1]);
       ret = xnee_set_max_nr_of_moves(xd, opt_int);
       *args_used = 1;
+      break;
+
+    case XNEE_RECORD_FROM_DATA_DISPLAY:
+      verbose_option("XNEE_RECORD_FROM_DATA_DISPLAY");
+      ret = xnee_set_override_display(xd, XNEE_OVERRIDE_DISPLAY_DATA);
+      *args_used = 0;
+      break;
+
+    case XNEE_RECORD_FROM_CONTROL_DISPLAY:
+      verbose_option("XNEE_RECORD_FROM_CONTROL_DISPLAY");
+      ret = xnee_set_override_display(xd, XNEE_OVERRIDE_DISPLAY_CONTROL);
+      *args_used = 0;
       break;
 
 
