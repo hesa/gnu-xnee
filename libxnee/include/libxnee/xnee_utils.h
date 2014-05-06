@@ -32,7 +32,7 @@
 
 #ifdef LONG64
 #define CARD32_PRINTF_FMT "%ld"
-#define SIZE_T_PRINTF_FMT  "%ll"
+#define SIZE_T_PRINTF_FMT  "%d"
 #else
 #define CARD32_PRINTF_FMT "%ld"
 #define SIZE_T_PRINTF_FMT "%d"
