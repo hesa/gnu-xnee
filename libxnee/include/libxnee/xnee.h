@@ -3,8 +3,7 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *      Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                    2009, 2010 Henrik Sandklef                    
+ *  Copyright (C) 1999-2003, 2009, 2010, 2014 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -99,8 +98,9 @@ enum return_values
     XNEE_GRAB_CONFUSION    ,
     XNEE_PROJECT_SYNTAX_ERROR  ,
     XNEE_CLI_ERROR         ,
-    XNEE_XINPUT_EXTENSION_FAILURE    ,
+    XNEE_XINPUT_EXTENSION_FAILURE  ,
     XNEE_REPLAY_BACKEND_FAILURE    ,
+    XNEE_OVERRIDE_DISPLAY_FAILURE  ,
     XNEE_LAST_ERROR
   } _return_values;
 
@@ -241,6 +241,14 @@ enum
     XNEE_OBSOLETE_OPTION,
     XNEE_RETYPE_OPTION
   } xnee_option_type;
+
+
+enum
+  {
+    XNEE_OVERRIDE_DISPLAY_NONE,
+    XNEE_OVERRIDE_DISPLAY_DATA,
+    XNEE_OVERRIDE_DISPLAY_CONTROL
+  } xnee_override_display;
 
 typedef struct
 {
@@ -515,7 +523,7 @@ typedef struct
   int data_ranges[XNEE_NR_OF_TYPES] ;  /*!< Count how many data ranges specified */
 
   int             interrupt ;
-
+  int             override_recorded_display;
 
 } xnee_record_init_data ; 
 
