@@ -3,12 +3,14 @@ Changes in version 3.19 (..)
 
   Support for pause/resume/quit when retyping file
 
+  Defaults to use data display for all X.org with minor version nr >= 3
+
   New options:
 
       --record-from-data-display,-rfdd 
        Record from data display. This option is experimental.
 
-       --record-from-control-display,-rfcd 
+      --record-from-control-display,-rfcd 
         Record from control display. This option is experimental.
 
 
