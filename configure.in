@@ -58,7 +58,7 @@ AC_ARG_ENABLE(gui,
 	yes) buildgui=true ;;
 	no)  buildgui=false ;;
 	*) AC_MSG_ERROR(bad value ${enableval} for --disable-gui) ;;
-	    esac],[buildgui=false])
+	    esac],[buildgui=true])
 
 AC_ARG_ENABLE(gnome-applet,
     [  --enable-gnome-applet   build the Gnome Panel frontend to Xnee (obsoleted)],
