@@ -3,8 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                      2004, 2009, 2010, 2011, 2013 Henrik Sandklef
+ *  Copyright (C) 1999-2004, 2009-2011, 2013, 2014 Henrik Sandklef
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify1 it under the terms of the GNU General Public License       
@@ -1935,4 +1934,21 @@ xnee_set_max_nr_of_moves(xnee_data *xd, int moves)
 
   xd->max_nr_of_moves = moves ;
   return 0 ;
+}
+
+int 
+xnee_set_override_display(xnee_data *xd, int mode)
+{
+  if ( (xd==NULL) || (mode<0)  || (mode > XNEE_OVERRIDE_DISPLAY_CONTROL))
+    {
+      return -1;
+    }
+  xd->xnee_info.override_recorded_display = mode;
+  return XNEE_OK;
+}
+
+int 
+xnee_get_override_display(xnee_data *xd)
+{
+  return xd->xnee_info.override_recorded_display;
 }
