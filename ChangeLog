@@ -1,3 +1,20 @@
+2014-05-06  Henrik Sandklef  <hesa@sandklef.com>
+
+	* cnee/src/cnee_printer.c
+	* cnee/src/parse.c
+	* libxnee/include/libxnee/xnee.h
+	* libxnee/include/libxnee/xnee_resource.h
+	* libxnee/include/libxnee/xnee_setget.h
+	* libxnee/include/libxnee/xnee_utils.h
+	* libxnee/src/xnee.c
+	* libxnee/src/xnee_error.c
+	* libxnee/src/xnee_record.c
+	* libxnee/src/xnee_resource.c
+	* libxnee/src/xnee_session.c
+	* libxnee/src/xnee_setget.c
+	* libxnee/src/xnee_utils.c
+	Added feature to manually set display to record from.
+
 2014-05-05  Henrik Sandklef  <hesa@sandklef.com>
 	* libxnee/src/xnee_fake.c
 	* libxnee/src/xnee_grab.c 
