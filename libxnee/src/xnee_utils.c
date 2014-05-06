@@ -3,8 +3,7 @@
  *                                                                   
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 2003, 
- *                      2004, 2009, 2010, 2011, 2013 Henrik Sandklef 
+ *   Copyright (C) 1999-2004, 2009-2011, 2013, 2014 Henrik Sandklef 
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -527,10 +526,11 @@ xnee_record_from_data_display(xnee_data *xd)
 	      /*
 	       *  versions 
 	       */
-	      if ( ( xd->x_version_minor >= 3 ) &&
-		   ( xd->x_version_minor <= 14 ) )
+	      if ( xd->x_version_minor >= 3 )
 		{
-
+		  /* Old check removed. Seems as if all version follow 
+                     same pattern, so let's go for all future. Let's skip:
+                          ( xd->x_version_minor <= 14 ) 
 		  /*
 		   *  Once the XLIB fix is in place
 		   *  this should be enabled 
@@ -618,13 +618,23 @@ Display *
 xnee_get_display_for_recordcontext(xnee_data *xd)
 {
   Display *context_display;
+  int override_mode;
 
   if (xd==NULL)
     {
       return NULL;
     }
 
-  if ( xnee_record_from_data_display(xd))
+  override_mode = xnee_get_override_display(xd);
+  if (override_mode == XNEE_OVERRIDE_DISPLAY_DATA)
+    {
+      context_display = xd->data ;
+    }
+  else if (override_mode == XNEE_OVERRIDE_DISPLAY_CONTROL)
+    {
+      context_display = xd->control ;
+    }
+  else if ( xnee_record_from_data_display(xd))
     {
       /*
        * From X.org 1.6.0 to ????
