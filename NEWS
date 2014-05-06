@@ -1,4 +1,4 @@
-Changes in version 3.19 (..)
+Changes in version 3.19 ('Lucia')
 ==============================
 
   Support for pause/resume/quit when retyping file
@@ -8,7 +8,7 @@ Changes in version 3.19 (..)
   New options:
 
       --record-from-data-display,-rfdd 
-       Record from data display. This option is experimental.
+        Record from data display. This option is experimental.
 
       --record-from-control-display,-rfcd 
         Record from control display. This option is experimental.
