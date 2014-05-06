@@ -3,8 +3,7 @@
  *                                                                    
  * Xnee enables recording and replaying of X protocol data           
  *                                                                   
- *        Copyright (C) 1999, 2000, 2001, 2002, 
- *                      2003, 2010 Henrik Sandklef                    
+ *  Copyright (C) 1999-2003, 2010, 2014 Henrik Sandklef                    
  *                                                                   
  * This program is free software; you can redistribute it and/or     
  * modify it under the terms of the GNU General Public License       
@@ -238,6 +237,10 @@ char error_descr_solut[128][256] =
     /*     XNEE_REPLAY_BACKEND_FAILURE   */
     "Someone requested Xnee to use a replay backend that does not exist",
     "Most likely this is an error inside " PACKAGE ", please report this as a bug",
+
+    /* XNEE_OVERRIDE_DISPLAY_FAILURE*/
+    "Xnee failed to set the (user overridden) display to record",
+    "Report this bug together with the command line."
 
    /* XNEE_LAST_ERROR */
     "Last error",
