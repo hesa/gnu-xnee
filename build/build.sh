@@ -226,7 +226,6 @@ build_cvs()
     cd -
     mv /tmp/xnee_tar/Xnee-cvs-${DATE}.tar.gz ./
 }
-build_cvs
 
 if [ "$BUILD_RPM" != "true" ] ;
     then
