@@ -3,7 +3,7 @@
 	Bumped year and version
 
 	* configure.in
-	Removed deps to gnomeui
+	Removed deps to gnomeuio
 
 2014-05-06  Henrik Sandklef  <hesa@sandklef.com>
 
