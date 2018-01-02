@@ -26,7 +26,7 @@ else
 XNEE_XINPUT_SUPPORT_FLAGS =
 endif
 
-gnee_CFLAGS = ${PEDANTIC_FLAGS} $(libgnomeui_CFLAGS) $(gtk_CFLAGS)  ${XNEE_XINPUT_SUPPORT_FLAGS} 
+gnee_CFLAGS = ${PEDANTIC_FLAGS} $(gtk_CFLAGS)  ${XNEE_XINPUT_SUPPORT_FLAGS} 
 AM_CFLAGS = ${PEDANTIC_FLAGS} 
 
 if BUILD_STATIC
@@ -41,7 +41,7 @@ gnee_LDFLAGS =  $(STATIC_FLAGS)
 gnee_LDADD =    \
 	-L${LIBXNEE_DIR}/ -L${LIBXNEE_DIR}/.. -L${LIBXNEE_DIR}/src -lxnee \
 	 ${X_LIBS} ${X11_LIBS} ${LIBDL} $(LIBSEMA)  \
-         $(libgnomeui_LIBS) $(gtk_LIBS) ${LIBXI}
+         $(gtk_LIBS) ${LIBXI}
 
 
 
